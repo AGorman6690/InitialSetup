@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Copyright 2015: Thomson Reuters. All Rights Reserved. Proprietary and 
+	Confidential information of Thomson Reuters. Disclosure, Use or Reproduction 
+	without the written authorization of Thomson Reuters is prohibited. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:c="http://www.springframework.org/schema/c" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop
+                      http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+                      http://www.springframework.org/schema/beans
+                      http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                      http://www.springframework.org/schema/context
+                      http://www.springframework.org/schema/context/spring-context-4.2.xsd
+                      http://www.springframework.org/schema/mvc
+                      http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+                      http://www.springframework.org/schema/util
+                      http://www.springframework.org/schema/util/spring-util-4.2.xsd">
+
+	<mvc:annotation-driven />
+
+	<!-- create controller and controller advice beans by scanning packages -->
+	<context:component-scan base-package="com.jobsearch.*" />
+
+	<bean name="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/jobsearch" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+
+	<bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+
+<mvc:resources mapping="/static/javascript/**" location="/static/javascript/" />
+
+
+	<!-- enable resolution of ${...} placeholders within @Value annotations 
+		and in XML definitions -->
+	<!-- <context:property-placeholder ignore-unresolvable="false" /> -->
+
+	<!-- enable annotation-driven Spring AOP (i.e. @Aspect, @Pointcut, @Before, 
+		@After, @Around, etc.) -->
+	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
+
+	<!-- enable annotation-driven Spring Web MVC (i.e. @RequestMapping, @RequestParam, 
+		@PathVariable, @RequestBody, @ResponseBody, etc.) -->
+	<!-- <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager"> -->
+	<!-- <mvc:argument-resolvers> -->
+	<!-- <bean class="com.trgr.cobalt.bdbservice.web.AutoSuggestParametersResolver" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- </mvc:argument-resolvers> -->
+	<!-- <mvc:message-converters register-defaults="false"> -->
+	<!-- <bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- <bean class="org.springframework.http.converter.StringHttpMessageConverter" -->
+	<!-- autowire-candidate="false" p:writeAcceptCharset="false"> -->
+	<!-- </bean> -->
+	<!-- convert @ResponseBody objects with Jackson annotations to JSON -->
+	<!-- <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" -->
+	<!-- p:supportedMediaTypes="application/json;charset=UTF-8" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- <constructor-arg> -->
+	<!-- <bean class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean" -->
+	<!-- p:modulesToInstall="com.fasterxml.jackson.datatype.guava.GuavaModule, -->
+	<!-- com.fasterxml.jackson.datatype.jsonorg.JsonOrgModule" -->
+	<!-- p:serializationInclusion="NON_EMPTY" p:failOnUnknownProperties="true" -->
+	<!-- p:autoDetectFields="false" p:autoDetectGettersSetters="false" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- </constructor-arg> -->
+	<!-- </bean> -->
+	<!-- convert @ResponseBody objects with JAXB annotations to XML -->
+	<!-- <bean class="org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConverter" -->
+	<!-- p:supportedMediaTypes="text/xml" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- </mvc:message-converters> -->
+	<!-- <mvc:return-value-handlers> -->
+	<!-- return Location and ID headers from @ResourceLocation methods -->
+	<!-- <bean class="com.trgr.cobalt.infrastructure.spring.location.ResourceLocationReturnValueHandler" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- </mvc:return-value-handlers> -->
+	<!-- </mvc:annotation-driven> -->
+
+	<!-- <mvc:interceptors> -->
+	<!-- enable checking of Cobalt endpoint status -->
+	<!-- <bean class="com.trgr.cobalt.infrastructure.spring.endpointstatus.CobaltEndpointInterceptor" -->
+	<!-- p:allowUnderDevelopment="${cobalt.endpoints.allowUnderDevelopment:true}" -->
+	<!-- p:allowUnderReview="${cobalt.endpoints.allowUnderReview:true}" -->
+	<!-- p:allowRetired="${cobalt.endpoints.allowRetired:false}" -->
+	<!-- p:makeControllerMethodResolver="true" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- enable checking for required Cobalt request headers -->
+	<!-- <bean class="com.trgr.cobalt.infrastructure.spring.web.CobaltHeadersInterceptor" -->
+	<!-- p:requiredHeaders="#{T(org.springframework.util.StringUtils).commaDelimitedListToSet('x-trmr-product,x-trmr-businessunit')}" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- enable loading of session bindings when necessary request headers are 
+		set -->
+	<!-- bean class="com.trgr.cobalt.infrastructure.spring.web.CobaltSessionInterceptor" -->
+	<!-- autowire-candidate="false"> -->
+	<!-- </bean> -->
+	<!-- </mvc:interceptors> -->
+
+	<!-- enable negotiation of content type based on factors such as request 
+		headers and request mappings metadata -->
+	<!-- <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean" -->
+	<!-- p:favorPathExtension="false" p:mediaTypes-ref="negotiableMediaTypes"> -->
+	<!-- </bean> -->
+	<!-- <util:properties id="negotiableMediaTypes"> -->
+	<!-- <prop key="json">application/json</prop> -->
+	<!-- <prop key="xml">text/xml</prop> -->
+	<!-- </util:properties> -->
+
+</beans>
