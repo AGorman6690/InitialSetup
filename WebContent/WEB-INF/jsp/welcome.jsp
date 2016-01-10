@@ -9,8 +9,5 @@
 	<br>
 	<a href="./signin">Sign In</a>
 	
-<!-- 	<br> -->
-<!-- 	<a href="./editCategories">Edit Categories</a> -->
-	
 	
 <%@ include file="./includes/Footer.jsp" %>
