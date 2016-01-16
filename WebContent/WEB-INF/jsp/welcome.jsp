@@ -1,13 +1,11 @@
 <%@ include file="./includes/Header.jsp" %>
 
-
-
 	<div>Welcome to JobSearch</div>
 	
-	<a href="./insertUser">Create New User Account</a>
+	<a href="./createUser">Create New User Account</a>
 	
 	<br>
-	<a href="./signin">Sign In</a>
+	<a href="./signIn">Sign In</a>
 	
 <!-- 	<br> -->
 <!-- 	<a href="./editCategories">Edit Categories</a> -->

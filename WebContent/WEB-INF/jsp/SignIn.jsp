@@ -1,7 +1,7 @@
 <%@ include file="./includes/Header.jsp" %>
 
 	<h1>Sign In With Email</h1>
-	<form:form commandName="user" action="profile" method="post">
+	<form:form commandName="user" action="getProfile" method="GET">
 		<table>
 			<tr>
 				<td>Email:</td>

@@ -2,7 +2,7 @@
 
 <body>
 
-	<form:form action="register" method="post" commandName="user">
+	<form:form action="registerUser" method="post" commandName="user">
 		<table>
 			<tr>
 				<td>First Name:</td>
