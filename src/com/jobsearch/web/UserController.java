@@ -15,13 +15,16 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
+import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.App;
-import com.jobsearch.model.Category;
-import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.model.DataBaseItem;
-import com.jobsearch.model.Job;
-import com.jobsearch.service.FirstService;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.ArrayList;
@@ -33,7 +36,7 @@ import javax.servlet.http.HttpSession;
 
 @Controller
 @SessionAttributes({"user", "app"})
-public class FirstController {
+public class UserController {
 	
 //	@ModelAttribute
 //	public JobSearchUser addUser(){
@@ -42,7 +45,13 @@ public class FirstController {
 //	}
 
 	@Autowired
-	FirstService service;
+	UserServiceImpl userService;
+	
+	@Autowired
+	JobServiceImpl jobService;
+	
+	@Autowired
+	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome(ModelAndView model) {
@@ -57,8 +66,8 @@ public class FirstController {
 		//Initialize the application specific properties.
 		//These application properties are used to hold all the user's options such
 		//as category options to associate with jobs.
-		app.setCategories(service.getCategories());
-		app.setProfiles(service.getProfiles());
+		app.setCategories(categoryService.getCategories());
+		app.setProfiles(userService.getProfiles());
 
 		model.setViewName("welcome");
 
@@ -81,31 +90,31 @@ public class FirstController {
 											@ModelAttribute App app){
 		
 		//From the email provided, set the user object
-		user = service.getUserByEmail(user.getEmailAddress());
+		user = userService.getUserByEmail(user.getEmailAddress());
 		
 		//Set the user's list of category objects.
-		user.setCategories(service.getCategoriesByUserId(user.getUserId()));
+		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 		
 		//Set the user's profile object
-		user.setProfile(service.getProfile(user.getProfileId()));
+		user.setProfile(userService.getProfile(user.getProfileId()));
 		
 		//Set all jobs, active and inactive
-		user.setJobs(service.getJobs(user));
+		user.setJobs(jobService.getJobs(user));
 		
 		//Set active jobs
-		user.setActiveJobs(service.getJobs(user, true));
+		user.setActiveJobs(jobService.getJobs(user, true));
 		
 		//If an employee, set applied to jobs and employement
 		if (user.getProfileId() == 2){
-			user.setAppliedToJobs(service.getAppliedToJobs(user, true));
-			user.setEmployment(service.getEmployment(user,false));
+			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
+			user.setEmployment(jobService.getEmployment(user,false));
 		}
 		
 		
 		//For each user's job, set the categories associated with each job.
 		for(Job job : user.getJobs()){
 			//job.setCategories(service.getCategoriesForJob(job));
-			job.setCategories(service.getCategoriesByJobId(job.getId()));
+			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		}
 
 		//It appears that after setting the "user" object by email as done above,
@@ -138,12 +147,12 @@ public class FirstController {
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user, @ModelAttribute("app") App app){		
 		
-		service.createUser(user);
+		userService.createUser(user);
 		
 		//Need to set the user by email in order to set the user's id.
 		//When the user is created in the database, the user table's id field is auto incremented.
 		//Thus, the user's id needs to be fetched after it is created in the database.
-		user = service.getUserByEmail(user.getEmailAddress());
+		user = userService.getUserByEmail(user.getEmailAddress());
 		
 		//Apparently the user object needs to be re-added to the model in order for the view
 		//to see the changes to the user object...
@@ -190,10 +199,10 @@ public class FirstController {
 										@ModelAttribute("user") JobSearchUser user){
 		
 		//Update database
-		service.deleteCategory(user.getUserId(), categoryId);
+		userService.deleteCategory(user.getUserId(), categoryId);
 		
 		//Update user object to reflect changes
-		user.setCategories(service.getCategoriesByUserId(user.getUserId()));
+		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 		
 		return JSON.stringify(user);
 		
@@ -205,10 +214,10 @@ public class FirstController {
 								@ModelAttribute("user") JobSearchUser user){
 		
 		//Add the category-user to the database
-		service.addCategory(user.getUserId(), categoryId);
+		userService.addCategory(user.getUserId(), categoryId);
 		
 		//Reset the user's category objects
-		user.setCategories(service.getCategoriesByUserId(user.getUserId()));
+		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 			
 		return JSON.stringify(user);
 		
@@ -220,75 +229,17 @@ public class FirstController {
 									@RequestParam int categoryId,
 									@ModelAttribute App app){
 
-		service.addJobCategory(jobId, categoryId);
+		jobService.addJobCategory(jobId, categoryId);
 		
 		//Update selected job's categories to reflect the changes.
 		//NOTE: the app's selected job object is set when user clicks job name.
-		app.getSelectedJob().setCategories(service.getCategoriesByJobId(jobId));
+		app.getSelectedJob().setCategories(categoryService.getCategoriesByJobId(jobId));
 		
 		model.setViewName("profile");
 		return JSON.stringify(app);
 
 	}
-	
-	@RequestMapping(value = "addJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String addJob(ModelAndView model, @RequestParam String jobName,
-						 @ModelAttribute("user") JobSearchUser user){
 
-//		DataBaseItem item = new DataBaseItem();
-//		item.setJobName(jobName);
-//		item.setUserId(userId);
-		
-		//Add the job to the database
-		service.addJob(jobName, user.getUserId());
-		
-		//Set the user's jobs to reflect the changes
-		user.setJobs(service.getJobs(user.getUserId(), true));
-		
-		
-//		model.setViewName("profile");
-//		return model;
-		
-		return JSON.stringify(user);
-		
-	}
-	
-//	@RequestMapping(value = "/markJobComplete", method = RequestMethod.GET)
-//	@ResponseBody
-//	public ModelAndView markJobComplete(ModelAndView model, @RequestBody final DataBaseItem item,
-//											@ModelAttribute App app){
-	@RequestMapping(value = "/markJobComplete", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public String markJobComplete(ModelAndView model, @RequestParam int jobId,
-											@ModelAttribute App app,
-											@ModelAttribute("user") JobSearchUser user){
-		//Update database
-		service.updateJobComplete(jobId);
-		
-		//Update user's active jobs to reflect the changes
-		user.setActiveJobs(service.getJobs(user.getUserId(), true));
-		
-		return JSON.stringify(user);
-
-	}
-	
-	
-	@RequestMapping(value = "findEmployees", method = RequestMethod.GET)
-	public ModelAndView findEmployees(ModelAndView model, @ModelAttribute JobSearchUser user){
-		
-		model.setViewName("FindEmployees");
-		return model;
-		
-	}
-	
-	@RequestMapping(value = "findJobs", method = RequestMethod.GET)
-	public ModelAndView findJobs(ModelAndView model, @ModelAttribute JobSearchUser user){
-		
-		model.setViewName("FindJobs");
-		return model;
-		
-	}
 	
 	//****************************************************************************
 	//This needs to be renamed. It does more than get categories
@@ -302,23 +253,23 @@ public class FirstController {
 		
 		//Currently not using this.
 		//Does it make more sense having selectedJob in app?
-		user.setSelectedJob(service.getJob(jobId));
+		user.setSelectedJob(jobService.getJob(jobId));
 		
 		//Set the selected job within the application
-		app.setSelectedJob(service.getJob(jobId));
+		app.setSelectedJob(jobService.getJob(jobId));
 	
 		//app.setCategoriesBySelectedJob(service.getCategoriesByJobId(jobId));
-		app.getSelectedJob().setCategories(service.getCategoriesByJobId(jobId));
+		app.getSelectedJob().setCategories(categoryService.getCategoriesByJobId(jobId));
 		
-		app.getSelectedJob().setApplicants(service.getApplicants(jobId));
+		app.getSelectedJob().setApplicants(userService.getApplicants(jobId));
 		
-		app.getSelectedJob().setEmployees(service.getEmployees(jobId));
+		app.getSelectedJob().setEmployees(userService.getEmployees(jobId));
 		
 
 		
 		
-		app.getSelectedJob().setCategories((ArrayList<Category>) service.getCategoriesByJobId(jobId));
-		app.getSelectedJob().setEmployees(service.getEmployees(jobId));
+		app.getSelectedJob().setCategories((ArrayList<Category>) categoryService.getCategoriesByJobId(jobId));
+		app.getSelectedJob().setEmployees(userService.getEmployees(jobId));
 		
 		return JSON.stringify(app);
 	}
@@ -343,14 +294,14 @@ public class FirstController {
 											@ModelAttribute App app){	
 		
 		//Set the selected category 
-		app.setSelectedCategory(service.getCategory(categoryId));
+		app.setSelectedCategory(categoryService.getCategory(categoryId));
 		
 		//Set the users associated with the category.
 		//This will return only employees if the user is an employer and vice versa.
-		app.getSelectedCategory().setUsers(service.getUsers(categoryId, user.getProfileId()));		
+		app.getSelectedCategory().setUsers(userService.getUsers(categoryId, user.getProfileId()));		
 		
 		//Set the active jobs associated with the selected category
-		app.getSelectedCategory().setJobs(service.getJobsByCategory(categoryId, true));
+		app.getSelectedCategory().setJobs(jobService.getJobsByCategory(categoryId, true));
 		
 		return JSON.stringify(app);
 	}
@@ -364,10 +315,10 @@ public class FirstController {
 											@ModelAttribute App app){	
 		
 		//Set the selected user 
-		app.setSelectedUser(service.getUser(userId));
+		app.setSelectedUser(userService.getUser(userId));
 		
 		//Set the active jobs associated with the selected user
-		app.getSelectedUser().setJobs(service.getJobs(userId, true));
+		app.getSelectedUser().setJobs(jobService.getJobs(userId, true));
 
 		return JSON.stringify(app);
 	}
@@ -406,10 +357,10 @@ public class FirstController {
 										@ModelAttribute("user") JobSearchUser user){
 
 		//Add application to database
-		service.applyForJob(jobId, user.getUserId());
+		jobService.applyForJob(jobId, user.getUserId());
 		
 		//Update user object to reflect the changes
-		user.setAppliedToJobs(service.getAppliedToJobs(user, true));
+		user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
 		
 		model.setViewName("profile");
 		return model;
@@ -426,10 +377,10 @@ public class FirstController {
 										@ModelAttribute App app){
 		
 		//Add employment to the database
-		service.hireApplicant(userId, jobId);
+		userService.hireApplicant(userId, jobId);
 		
 		//Update the employees for the selected job to reflect the changes
-		app.getSelectedJob().setEmployees(service.getEmployees(jobId));
+		app.getSelectedJob().setEmployees(userService.getEmployees(jobId));
 		
 		return JSON.stringify(app);
 		

@@ -1,7 +1,11 @@
-package com.jobsearch.model;
+package com.jobsearch.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Profile;
 
 
 public class JobSearchUser {

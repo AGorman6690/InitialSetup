@@ -3,6 +3,10 @@ package com.jobsearch.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.user.service.JobSearchUser;
+
 public class App {
 	private List<JobSearchUser> users;
 	private List<Category> categories;
