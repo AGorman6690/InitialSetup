@@ -346,7 +346,7 @@ public class FirstRepository {
 	}
 
 
-	public void setUserByEmail(JobSearchUser user) {
+	public void getUserByEmail(JobSearchUser user) {
 		String sql;
 		sql = "select * from user where Email = ?";
 			
