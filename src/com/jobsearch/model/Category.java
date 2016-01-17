@@ -1,10 +1,30 @@
 package com.jobsearch.model;
 
+import java.util.ArrayList;
+
 public class Category {
 	
 	private int id;
 	private String name;
+	private ArrayList<JobSearchUser> users;
+	private ArrayList<Job> jobs;
 	
+	public ArrayList<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(ArrayList<Job> jobs) {
+		this.jobs = jobs;
+	}
+
+	public ArrayList<JobSearchUser> getUsers() {
+		return users;
+	}
+
+	public void setUsers(ArrayList<JobSearchUser> users) {
+		this.users = users;
+	}
+
 	public void setId(int id){
 		this.id = id;
 	}

@@ -3,18 +3,62 @@ package com.jobsearch.model;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class JobSearchUser {
 
 	private int userId;
+	private int profileId;
 	private String firstName;
 	private String lastName;
 	private String emailAddress;
-	private List<Category> categories;
+	private Job selectedJob;
 	private Profile profile;
-	private int profileId;
-	
-	
-	
+	private List<Category> categories;	
+	private ArrayList<Job> jobs;
+	private ArrayList<Job> activeJobs;
+	private ArrayList<Job> appliedToJobs;
+	private ArrayList<Job> employment;
+
+	public ArrayList<Job> getEmployment() {
+		return employment;
+	}
+
+	public void setEmployment(ArrayList<Job> employment) {
+		this.employment = employment;
+	}
+
+	public ArrayList<Job> getAppliedToJobs() {
+		return appliedToJobs;
+	}
+
+	public void setAppliedToJobs(ArrayList<Job> appliedToJobs) {
+		this.appliedToJobs = appliedToJobs;
+	}
+
+	public Job getSelectedJob() {
+		return selectedJob;
+	}
+
+	public void setSelectedJob(Job selectedJob) {
+		this.selectedJob = selectedJob;
+	}
+
+	public ArrayList<Job> getActiveJobs() {
+		return activeJobs;
+	}
+
+	public void setActiveJobs(ArrayList<Job> activeJobs) {
+		this.activeJobs = activeJobs;
+	}
+
+	public ArrayList<Job> getJobs() {
+		return jobs;
+	}
+
+	public void setJobs(ArrayList<Job> jobs) {
+		this.jobs = jobs;
+	}
+
 	public Profile getProfile() {
 		return profile;
 	}
