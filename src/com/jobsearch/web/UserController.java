@@ -23,7 +23,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.App;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.model.DataBaseItem;
+import com.jobsearch.model.Item;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -99,7 +99,7 @@ public class UserController {
 		user.setProfile(userService.getProfile(user.getProfileId()));
 		
 		//Set all jobs, active and inactive
-		user.setJobs(jobService.getJobs(user));
+		user.setJobs(jobService.getJobs(user.getUserId()));
 		
 		//Set active jobs
 		user.setActiveJobs(jobService.getJobs(user, true));
@@ -134,6 +134,8 @@ public class UserController {
 		
 		return model;
 	}
+	
+	
 	
 	
 	@RequestMapping(value = "/createUser", method = RequestMethod.GET)
@@ -348,7 +350,9 @@ public class UserController {
 //		app.setJobsBySelectedUser(service.getJobs(userId, true));
 //		
 //		return JSON.stringify(app);
-//	}	
+//	}
+	
+
 	
 	
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)

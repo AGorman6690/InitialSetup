@@ -73,10 +73,10 @@ public class JobRepository {
 
 	}
 
-	public ArrayList<Job> getJobs(JobSearchUser user) {
+	public ArrayList<Job> getJobs(int userId) {
 		String sql;
-		sql = "select * from jobs where UserId = ?";
-		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { user.getUserId() });
+		sql = "SELECT * FROM jobs WHERE UserId = ?";
+		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { userId });
 
 	}
 
