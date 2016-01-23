@@ -1,14 +1,5 @@
 <%@ include file="./includes/Header.jsp" %>
 
-	<head>
-		<style>
-			.section{
-				color: red;
-				font-size: 4em;
-			}		
-		</style>	
-	</head>
-
 	<a href="./findJobs">Find Jobs</a>
 
 	<h1>Here is your profile ${user.firstName}</h1>

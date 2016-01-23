@@ -22,16 +22,10 @@
 
 	<mvc:annotation-driven />
 
+	<import resource="classpath:spring-security.xml" />
+
 	<!-- create controller and controller advice beans by scanning packages -->
 	<context:component-scan base-package="com.jobsearch.*" />
-
-	<bean name="dataSource"
-		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/jobsearch" />
-		<property name="username" value="root" />
-		<property name="password" value="" />
-	</bean>
 
 	<bean name="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
 		<constructor-arg ref="dataSource" />
@@ -48,7 +42,9 @@
 	</bean>
 
 
-<mvc:resources mapping="/static/javascript/**" location="/static/javascript/" />
+	<mvc:resources mapping="/static/javascript/**" location="/static/javascript/" />
+	<mvc:resources mapping="/static/css/**" location="/static/css/" />
+	<mvc:resources mapping="/static/External/**" location="/static/External/" />
 
 
 	<!-- enable resolution of ${...} placeholders within @Value annotations 

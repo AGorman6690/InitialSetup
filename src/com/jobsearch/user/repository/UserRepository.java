@@ -40,7 +40,7 @@ public class UserRepository {
 		 * jdbcTemplate.update(sql2);
 		 */
 
-		String sql = "Select * from User wherae userId = " + userId;
+		String sql = "Select * from User where userId = " + userId;
 
 		return jdbcTemplate.query(sql, new ResultSetExtractor<JobSearchUser>() {
 
@@ -64,10 +64,35 @@ public class UserRepository {
 
 	public void createUser(JobSearchUser user) {
 
-		String sql = "insert into user (FirstName, LastName, Email, ProfileId)  values (?, ?, ?, ?)";
+		String insertUser = "insert into user (FirstName, LastName, Email, RoleId)  values (?, ?, ?, ?)";
+
+		jdbcTemplate.update(insertUser,
+				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 0 });
+
+		String insertUserProfile = "insert into user_profile(UserId, ProfileId) values (SELECT LAST_INSERT_ID(), ?)";
+		
+		jdbcTemplate.update(insertUserProfile,
+				new Object[] { user.getProfileId()});
+		
+		/*
+		 * @Override public JobSearchUser extractData(ResultSet rs) throws
+		 * SQLException, DataAccessException { if (rs.next()) { JobSearchUser
+		 * user = new JobSearchUser(); user.setUserId(rs.getInt("UserId"));
+		 * user.setFirstName(rs.getString("FirstName"));
+		 * user.setEmailAddress(rs.getString("Email"));
+		 * user.setLastName(rs.getString("LastName")); return user; }
+		 * 
+		 * return null; }
+		 */
+
+	}
+	
+	public void createAdmin(JobSearchUser user) {
+
+		String sql = "insert into user (FirstName, LastName, Email, RoleId)  values (?, ?, ?, ?)";
 
 		jdbcTemplate.update(sql,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), user.getProfileId() });
+				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1 });
 
 		/*
 		 * @Override public JobSearchUser extractData(ResultSet rs) throws
@@ -126,7 +151,6 @@ public class UserRepository {
 				Profile e = new Profile();
 				e.setId(rs.getInt(1));
 				e.setName(rs.getString(2));
-				e.setName2(rs.getString(3));
 				return e;
 			}
 		});
@@ -145,7 +169,6 @@ public class UserRepository {
 				Profile e = new Profile();
 				e.setId(rs.getInt(1));
 				e.setName(rs.getString(2));
-				e.setName2(rs.getString(3));
 				return e;
 			}
 		});
@@ -253,7 +276,7 @@ public class UserRepository {
 	public void exportUsersCats(JobSearchUser user) {
 
 		for (Category cat : user.getCategories()) {
-			String sql = "insert into usercategories (UserID, CategoryID)  values (?, ?)";
+			String sql = "insert into user_category(UserID, CategoryID)  values (?, ?)";
 			jdbcTemplate.update(sql, new Object[] { user.getUserId(), cat.getId() });
 
 		}
@@ -293,7 +316,7 @@ public class UserRepository {
 	public void deleteUserCategory(int userId, int categoryId) {
 
 		String sql;
-		sql = "DELETE FROM usercategories" + " WHERE userId = ?" + " AND categoryId = ?";
+		sql = "DELETE FROM user_category" + " WHERE userId = ?" + " AND categoryId = ?";
 
 		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 	}
@@ -301,7 +324,7 @@ public class UserRepository {
 	public List<Category> getUserCatergories(int userId, int categoryId) {
 
 		String sql;
-		sql = "select * from usercategories where UserID = ? and CategoryID = ?";
+		sql = "select * from user_category where UserID = ? and CategoryID = ?";
 
 		return this.UserCategoriesRowMapper(sql, new Object[] { userId, categoryId });
 
@@ -310,7 +333,7 @@ public class UserRepository {
 	public void addUserCategory(int userId, int categoryId) {
 
 		String sql;
-		sql = "insert into usercategories (UserID, CategoryID) values (?, ?)";
+		sql = "insert into user_category (UserID, CategoryID) values (?, ?)";
 		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 
 	}
@@ -363,8 +386,9 @@ public class UserRepository {
 
 		// Given a category ID, get all user objects.
 		String sql = "SELECT user.UserId, user.FirstName, user.LastName, user.Email, user.ProfileId" + " FROM user"
-				+ " INNER JOIN usercategories" + " ON user.UserId = usercategories.UserID"
-				+ " AND usercategories.CategoryID = ?" + " AND user.ProfileId <> ?";
+				+ " INNER JOIN user_category "
+				+ " ON user.UserId = user_category.UserID"
+				+ " AND user_category.CategoryID = ?" + " AND user.ProfileId <> ?";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql,
 				new Object[] { categoryId, profileIdNotToInclude });
@@ -373,8 +397,8 @@ public class UserRepository {
 	public ArrayList<JobSearchUser> getApplicants(int jobId) {
 
 		String sql = "SELECT user.UserId, user.FirstName, user.LastName, user.Email, user.ProfileId" + " FROM user"
-				+ " INNER JOIN applications" + " ON user.UserId = applications.UserId" + " INNER JOIN jobs"
-				+ " ON applications.JobId = jobs.Id" + " AND applications.JobId = ?" + " AND jobs.IsActive = 1";
+				+ " INNER JOIN application" + " ON user.UserId = application.UserId" + " INNER JOIN job"
+				+ " ON application.JobId = job.JobId" + " AND application.JobId = ?" + " AND job.IsActive = 1";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
@@ -394,7 +418,7 @@ public class UserRepository {
 	}
 
 	public Profile getProfile(int profileId) {
-		String sql = "SELECT *" + " FROM profiles" + "	WHERE id = ?";
+		String sql = "SELECT *" + " FROM profile" + "	WHERE profileId = ?";
 
 		List<Profile> profiles = this.ProfilesRowMapper(sql, new Object[] { profileId });
 
@@ -411,7 +435,7 @@ public class UserRepository {
 	}
 
 	public ArrayList<Profile> getProfiles() {
-		String sql = "SELECT *" + " FROM profiles";
+		String sql = "SELECT *" + " FROM profile";
 		return this.ProfilesRowMapper(sql);
 	}
 

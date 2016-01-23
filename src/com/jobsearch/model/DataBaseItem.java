@@ -10,10 +10,7 @@ public class DataBaseItem {
 	private String firstName;
 	private String lastName;
 	private int profileId;
-	
-	
 
-	
 	public String getFirstName() {
 		return firstName;
 	}

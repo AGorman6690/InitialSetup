@@ -11,8 +11,22 @@
 <head>
        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
-
+	   <link href="./static/css/global.css" rel="stylesheet"/>
+	   <script src="./static/External/underscore-min.js"></script>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
 <body>
+
+<div>Welcome to JobSearch</div>
+<c:choose>
+
+  <c:when test="${user.getEmailAddress() == null}">
+      <a href="./createUser">Create New User Account</a>
+		<br>
+		<a href="./signIn">Sign In</a>
+    </c:when>
+    <c:otherwise>
+       <a href="./getProfile">View Profile</a>
+    </c:otherwise>
+</c:choose>

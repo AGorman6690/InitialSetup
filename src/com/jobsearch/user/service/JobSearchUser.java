@@ -14,7 +14,10 @@ public class JobSearchUser {
 	private int profileId;
 	private String firstName;
 	private String lastName;
+	private String username;
 	private String emailAddress;
+	private String password;
+	private String matchingPassword;
 	private Job selectedJob;
 	private Profile profile;
 	private List<Category> categories;	
@@ -125,6 +128,35 @@ public class JobSearchUser {
 	
 	public List<Category> getCategories(){
 		return this.categories;		
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getMatchingPassword() {
+		return matchingPassword;
+	}
+
+	public void setMatchingPassword(String matchingPassword) {
+		this.matchingPassword = matchingPassword;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public Object getProfileIds() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

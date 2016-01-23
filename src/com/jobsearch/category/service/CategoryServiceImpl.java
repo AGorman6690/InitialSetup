@@ -14,7 +14,7 @@ public class CategoryServiceImpl {
 	@Autowired
 	CategoryRepository repository;
 
-	public ArrayList<Category> getCategoriesByJobId(int jobId) {
+	public List<Category> getCategoriesByJobId(int jobId) {
 		return repository.getCategoriesByJobId(jobId);
 	}
 

@@ -2,6 +2,8 @@ package com.jobsearch.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -9,19 +11,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.App;
 import com.jobsearch.user.service.JobSearchUser;
 
 @Controller
+@SessionAttributes({"user", "app"})
 public class JobController {
 
 	@Autowired
 	JobServiceImpl jobService;
 	
+	@Autowired
+	CategoryServiceImpl categoryService;
+
 	@RequestMapping(value = "addJob", method = RequestMethod.GET)
 	@ResponseBody
 	public String addJob(ModelAndView model, @RequestParam String jobName, @ModelAttribute("user") JobSearchUser user) {
@@ -64,7 +73,7 @@ public class JobController {
 
 	@RequestMapping(value = "findEmployees", method = RequestMethod.GET)
 	public ModelAndView findEmployees(ModelAndView model, @ModelAttribute JobSearchUser user) {
-
+		model.addObject("user", user);
 		model.setViewName("FindEmployees");
 		return model;
 
@@ -73,6 +82,10 @@ public class JobController {
 	@RequestMapping(value = "findJobs", method = RequestMethod.GET)
 	public ModelAndView findJobs(ModelAndView model, @ModelAttribute JobSearchUser user) {
 
+		List<Category> categories = categoryService.getCategories();
+		
+		model.addObject("categories", categories);
+		
 		model.setViewName("FindJobs");
 		return model;
 

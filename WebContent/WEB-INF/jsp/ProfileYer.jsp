@@ -1,15 +1,6 @@
 <%@ include file="./includes/Header.jsp" %>
 
-	<head>
-		<style>
-			.section{
-				color: red;
-				font-size: 4em;
-			}		
-		</style>	
-		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
-
-	</head>
+	<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 
 	<a href="./findEmployees">Find Employees</a>	
 	

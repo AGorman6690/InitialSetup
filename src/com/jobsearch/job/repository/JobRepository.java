@@ -37,7 +37,7 @@ public class JobRepository {
 	}
 
 	public Job getJob(int jobId) {
-		String sql = "SELECT *" + " FROM jobs" + " WHERE Id = ?";
+		String sql = "SELECT *" + " FROM job" + " WHERE Id = ?";
 
 		List<Job> jobs;
 		jobs = this.JobRowMapper(sql, new Object[] { jobId });
@@ -46,8 +46,8 @@ public class JobRepository {
 	}
 
 	public ArrayList<Job> getAppliedToJobs(JobSearchUser user, Boolean showOnlyActiveJobs) {
-		String sql = "SELECT *" + " FROM jobs" + " INNER JOIN applications" + "	ON jobs.Id = applications.JobId"
-				+ "	AND applications.UserId = ?";
+		String sql = "SELECT *" + " FROM jobs" + " INNER JOIN application" + "	ON jobs.Id = application.JobId"
+				+ "	AND application.UserId = ?";
 
 		if (showOnlyActiveJobs)
 			sql += " AND jobs.IsActive = 1";
@@ -67,7 +67,7 @@ public class JobRepository {
 
 	public void addJob(String jobName, int userId) {
 		String sql;
-		sql = "INSERT INTO jobs (JobName, UserId, IsActive)" + " VALUES (?, ?, 1)";
+		sql = "INSERT INTO job (JobName, UserId, IsActive)" + " VALUES (?, ?, 1)";
 
 		jdbcTemplate.update(sql, new Object[] { jobName, userId });
 
@@ -75,13 +75,13 @@ public class JobRepository {
 
 	public ArrayList<Job> getJobs(JobSearchUser user) {
 		String sql;
-		sql = "select * from jobs where UserId = ?";
+		sql = "select * from job where UserId = ?";
 		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { user.getUserId() });
 
 	}
 
 	public void updateJobComplete(int jobId) {
-		String sql = "UPDATE jobs" + " SET IsActive = ?" + " WHERE Id = ?";
+		String sql = "UPDATE job" + " SET IsActive = ?" + " WHERE JobId = ?";
 
 		jdbcTemplate.update(sql, new Object[] { 0, jobId });
 
@@ -94,7 +94,7 @@ public class JobRepository {
 		// if (isActive) param = 1;
 		// else param = 0;
 
-		String sql = "SELECT *" + " FROM jobs" + " WHERE UserId = ?" + " AND IsActive = ?";
+		String sql = "SELECT *" + " FROM job" + " WHERE UserId = ?" + " AND IsActive = ?";
 
 		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { user.getUserId(), isActive });
 
@@ -102,38 +102,38 @@ public class JobRepository {
 
 	public ArrayList<Job> getJobs(int userId, boolean isActive) {
 
-		String sql = "SELECT *" + " FROM jobs" + " WHERE UserId = ?" + " AND IsActive = ?";
+		String sql = "SELECT *" + " FROM job" + " WHERE UserId = ?" + " AND IsActive = ?";
 
 		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { userId, isActive });
 
 	}
 
 	public void applyForJob(int jobId, int userId) {
-		String sql = "INSERT INTO applications (UserId, JobId)" + " VALUES (?, ?)";
+		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
 
 		jdbcTemplate.update(sql, new Object[] { userId, jobId });
 
 	}
 
 	public ArrayList<Job> getJobsBySelectedCat(int categoryId) {
-		String sql = "SELECT jobs.Id, jobs.JobName, jobs.UserId, jobs.IsActive" + " FROM jobs "
-				+ " INNER JOIN jobscategories" + " ON jobs.Id = jobscategories.JobId"
-				+ " AND jobscategories.CategoryId = ?" + " AND jobs.IsActive = 1";
+		String sql = "SELECT job.Id, job.JobName, job.UserId, job.IsActive" + " FROM job "
+				+ " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
+				+ " AND job_category.CategoryId = ?" + " AND job.IsActive = 1";
 
 		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { categoryId });
 	}
 
 	public ArrayList<Job> getJobsByCategory(int categoryId, boolean showOnlyActiveJobs) {
 
-		String sql = "SELECT *" + " FROM jobs " + " INNER JOIN jobscategories" + " ON jobs.Id = jobscategories.JobId"
-				+ " AND jobscategories.CategoryId = ?" + " AND jobs.IsActive = ?";
+		String sql = "SELECT *" + " FROM job " + " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
+				+ " AND job_category.CategoryId = ?" + " AND job.IsActive = ?";
 
 		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { categoryId, showOnlyActiveJobs });
 	}
 
 	public void addJobCategory(int jobId, int categoryId) {
 		String sql;
-		sql = "INSERT INTO jobscategories (JobId, CategoryId)" + " VALUES (?, ?)";
+		sql = "INSERT INTO job_category (JobId, CategoryId)" + " VALUES (?, ?)";
 
 		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
 

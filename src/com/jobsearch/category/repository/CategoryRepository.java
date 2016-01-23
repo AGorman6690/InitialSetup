@@ -33,31 +33,38 @@ public class CategoryRepository {
 
 	public List<Category> getCategories() {
 
-		String sql = "SELECT * " + " FROM categories";
+		String sql = "SELECT * " + " FROM category";
+
+		return this.CategoryRowMapper(sql, null);
+	}
+	
+	public List<Category> getAllParentCategories() {
+
+		String sql = "SELECT * " + " FROM category Where ParentCategoryId = 0";
 
 		return this.CategoryRowMapper(sql, null);
 	}
 
 	public Category getCategory(int categoryId) {
-		String sql = "SELECT *" + " FROM categories" + "	WHERE CategoryID = ?";
+		String sql = "SELECT *" + " FROM category" + "	WHERE CategoryID = ?";
 
 		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
 	}
 
-	public ArrayList<Category> getCategoriesByJobId(int jobId) {
+	public List<Category> getCategoriesByJobId(int jobId) {
 
 		// Given a job ID, get all category objects
-		String sql = "SELECT categories.CategoryID, categories.Name" + " FROM categories" + " INNER JOIN jobscategories"
-				+ " ON categories.CategoryID = jobscategories.CategoryId" + " AND jobscategories.JobId = ?";
+		String sql = "SELECT category.CategoryID, category.Name" + " FROM category" + " INNER JOIN job_category"
+				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
-		return (ArrayList<Category>) this.CategoryRowMapper(sql, new Object[] { jobId });
+		return (List<Category>) this.CategoryRowMapper(sql, new Object[] { jobId });
 	}
 
 	public List<Category> getCategoriesByUserId(int userId) {
 
 		// Given a user ID, get all category objects
-		String sql = "SELECT *" + " FROM categories" + " INNER JOIN usercategories"
-				+ " ON categories.CategoryID = usercategories.CategoryID" + " AND usercategories.UserID = ?";
+		String sql = "SELECT *" + " FROM category" + " INNER JOIN user_category"
+				+ " ON category.CategoryID = user_category.CategoryID" + " AND user_category.UserID = ?";
 
 		return (ArrayList<Category>) this.CategoryRowMapper(sql, new Object[] { userId });
 	}

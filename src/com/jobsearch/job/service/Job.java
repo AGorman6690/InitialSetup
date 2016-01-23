@@ -1,6 +1,7 @@
 package com.jobsearch.job.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.jobsearch.category.service.Category;
 import com.jobsearch.user.service.JobSearchUser;
@@ -11,11 +12,11 @@ public class Job {
 	private int isActive;
 	private int userId;
 	private String jobName;
-	private ArrayList<Category> categories;
-	private ArrayList<JobSearchUser> employees;
-	private ArrayList<JobSearchUser> applicants;
+	private List<Category> categories;
+	private List<JobSearchUser> employees;
+	private List<JobSearchUser> applicants;
 	
-	public ArrayList<JobSearchUser> getApplicants() {
+	public List<JobSearchUser> getApplicants() {
 		return applicants;
 	}
 
@@ -23,7 +24,7 @@ public class Job {
 		this.applicants = applicants;
 	}
 
-	public ArrayList<JobSearchUser> getEmployees() {
+	public List<JobSearchUser> getEmployees() {
 		return employees;
 	}
 	
@@ -36,11 +37,11 @@ public class Job {
 	public void setIsActive(int isActive) {
 		this.isActive = isActive;
 	}
-	public ArrayList<Category> getCategories() {
+	public List<Category> getCategories() {
 		return categories;
 	}
-	public void setCategories(ArrayList<Category> categories) {
-		this.categories = categories;
+	public void setCategories(List<Category> list) {
+		this.categories = list;
 	}
 	public int getId() {
 		return id;

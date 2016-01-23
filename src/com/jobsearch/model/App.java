@@ -14,8 +14,8 @@ public class App {
 	private Job selectedJob;
 	private JobSearchUser selectedUser;
 	private Category selectedCategory;
-	private ArrayList<Profile> profiles;
-	private ArrayList<JobSearchUser> usersBySelectedCat;
+	private List<Profile> profiles;
+	private List<JobSearchUser> usersBySelectedCat;
 	//private ArrayList<Category> categoriesBySelectedJob;
 //	private ArrayList<Job> jobsBySelectedUser;
 //	private ArrayList<Job> jobsBySelectedCat;
@@ -68,7 +68,7 @@ public class App {
 //		this.categoriesBySelectedJob = categoriesBySelectedJob;
 //	}
 
-	public ArrayList<JobSearchUser> getUsersBySelectedCat() {
+	public List<JobSearchUser> getUsersBySelectedCat() {
 		return usersBySelectedCat;
 	}
 
@@ -88,7 +88,7 @@ public class App {
 		this.users = users;
 	}
 	
-	public ArrayList<Profile> getProfiles() {
+	public List<Profile> getProfiles() {
 		return profiles;
 	}
 

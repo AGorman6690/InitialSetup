@@ -2,6 +2,12 @@
  * 
  */
 
+$('#co_registerUser').click(function(){
+	if($('#co_password').val !== $('co_matchingPassword').val){
+		return false;
+	}
+})
+
 $(document).ready(function(){
 	// '#' gets an html element by its id
 	// '.' gets an html element by one of its classes
