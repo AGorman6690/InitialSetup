@@ -18,6 +18,7 @@
 	 		<form:options items="${app.categories}" itemValue="id" itemLabel="name"/>
 	 	</form:select>		 		 	
 	</form:form>
+
 	
 	<button type="button" id="profileAddCat">Add</button>
 	<br>
@@ -50,10 +51,12 @@
 	<p>Select a job and refresh to display associated categories and applicants</p>
 	<form:form modelAttribute="user">
 		<form:select  path="jobs" multiple="true" id="activeJobs" style= "width: 200px"  >
-			<form:options items="${user.activeJobs}" itemValue="id" itemLabel="jobName"/>
+<%-- 			<form:options items="${user.activeJobs}" itemValue="id" itemLabel="jobName"/> --%>
 		</form:select>
 	</form:form>
 	<br>
+	
+	
 
 <!-- **********************************************	 -->
 <!-- 	****** SELECTED JOB ****** -->
@@ -99,15 +102,24 @@
 	
 	<div id="rateEmployee"></div>
 	
-	<script >				
+	<script >	
+		//test();
+		//alert("${user.userId}");
+ 		getJobs("${user.userId}", document.getElementById("activeJobs"), 1);
+		//alert("after the real getJobs");
+ 		//getJobs(document.getElementById("activeJobs"));
 		document.getElementById("profileDeleteCat").addEventListener("click", deleteCategory);
   		document.getElementById("profileAddCat").addEventListener("click", addCategory);
   		document.getElementById("profileCats").addEventListener("click", showCategory);
-		document.getElementById("addJob").addEventListener("click", addJob);
+	
+		
  		document.getElementById("addCatToJob").addEventListener("click", addCatToJob);
 		document.getElementById("activeJobs").addEventListener("change", getSelectedJob);
 		document.getElementById("markJobComplete").addEventListener("click", markJobComplete);
-		document.getElementById("hireApplicant").addEventListener("click", hireApplicant);		
+		document.getElementById("hireApplicant").addEventListener("click", hireApplicant);	
+		
+		//On add job, pass the element with the job name and the user id
+		$("#addJob").click({element: document.getElementById("jobToAdd"), userId: "${user.userId}"}, addJob);
 	</script>
 		
 <%@ include file="./includes/Footer.jsp" %>

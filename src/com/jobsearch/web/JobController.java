@@ -19,6 +19,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.App;
+import com.jobsearch.model.Item;
 import com.jobsearch.user.service.JobSearchUser;
 
 @Controller
@@ -33,23 +34,28 @@ public class JobController {
 
 	@RequestMapping(value = "addJob", method = RequestMethod.GET)
 	@ResponseBody
-	public String addJob(ModelAndView model, @RequestParam String jobName, @ModelAttribute("user") JobSearchUser user) {
-
-		// DataBaseItem item = new DataBaseItem();
-		// item.setJobName(jobName);
-		// item.setUserId(userId);
+	public String addJob(ModelAndView model, @RequestParam String jobName, @RequestParam int userId) {
 
 		// Add the job to the database
-		jobService.addJob(jobName, user.getUserId());
+		jobService.addJob(jobName, userId);
+		
+		//Get the user's jobs
+		Item item = new Item();
+		item.setJobs(jobService.getJobs(userId));
 
-		// Set the user's jobs to reflect the changes
-		user.setJobs(jobService.getJobs(user.getUserId(), true));
+		return JSON.stringify(item);
 
-		// model.setViewName("profile");
-		// return model;
+	}
+	
+	
+	@RequestMapping(value = "/getJobs", method = RequestMethod.GET)
+	@ResponseBody
+	public String getJobs(ModelAndView model, @RequestParam int userId){
 
-		return JSON.stringify(user);
-
+		Item item = new Item();		
+		item.setJobs(jobService.getJobs(userId));
+		return JSON.stringify(item);
+		
 	}
 
 	// @RequestMapping(value = "/markJobComplete", method = RequestMethod.GET)

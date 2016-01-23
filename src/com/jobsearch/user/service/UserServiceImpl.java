@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.App;
-import com.jobsearch.model.DataBaseItem;
+import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.repository.UserRepository;
 

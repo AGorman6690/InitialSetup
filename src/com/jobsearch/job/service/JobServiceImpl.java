@@ -18,9 +18,9 @@ public class JobServiceImpl {
 		repository.addJob(jobName, userId);
 	}
 
-	public ArrayList<Job> getJobs(JobSearchUser user) {
+	public ArrayList<Job> getJobs(int userId) {
 
-		return repository.getJobs(user);
+		return repository.getJobs(userId);
 	}
 
 	public ArrayList<Job> getJobs(JobSearchUser user, boolean isActive) {

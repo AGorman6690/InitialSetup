@@ -17,7 +17,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.model.DataBaseItem;
+import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.category.service.Category;
@@ -211,25 +211,25 @@ public class UserRepository {
 
 	}
 
-	public List<DataBaseItem> JobsCategoriesRowMapper(String sql, Object[] args) {
-
-		List<DataBaseItem> list;
-		list = jdbcTemplate.query(sql, args, new RowMapper<DataBaseItem>() {
-
-			@Override
-			public DataBaseItem mapRow(ResultSet rs, int rownumber) throws SQLException {
-				DataBaseItem e = new DataBaseItem();
-				e.setJobId(rs.getInt(2));
-				e.setCategoryId(rs.getInt(3));
-				return e;
-			}
-		});
-
-		// System.out.println(list.get(0));
-
-		return list;
-
-	}
+//	public List<Item> JobsCategoriesRowMapper(String sql, Object[] args) {
+//
+//		List<Item> list;
+//		list = jdbcTemplate.query(sql, args, new RowMapper<Item>() {
+//
+//			@Override
+//			public Item mapRow(ResultSet rs, int rownumber) throws SQLException {
+//				Item e = new Item();
+//				e.setJobId(rs.getInt(2));
+//				e.setCategoryId(rs.getInt(3));
+//				return e;
+//			}
+//		});
+//
+//		// System.out.println(list.get(0));
+//
+//		return list;
+//
+//	}
 
 	// public List<JobSearchUser> EmployeesCategoriesRowMapper(String sql,
 	// Object[] args){

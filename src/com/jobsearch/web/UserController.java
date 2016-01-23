@@ -25,7 +25,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.App;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.model.DataBaseItem;
+import com.jobsearch.model.Item;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -107,11 +107,10 @@ public class UserController {
 
 		// Set the user's profile object
 		user.setProfile(userService.getProfile(user.getProfileId()));
-
-		// Set all jobs, active and inactive
-		user.setJobs(jobService.getJobs(user));
-
-		// Set active jobs
+		
+		//Set all jobs, active and inactive
+		user.setJobs(jobService.getJobs(user.getUserId()));
+		
 		user.setActiveJobs(jobService.getJobs(user, true));
 
 		// If an employee, set applied to jobs and employement
@@ -283,7 +282,8 @@ public class UserController {
 
 		return JSON.stringify(user);
 	}
-
+	
+	
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)
 	@ResponseBody
 	public ModelAndView applyForJob(HttpServletRequest request, ModelAndView model, @RequestParam int jobId,

@@ -31,17 +31,85 @@
 		}		
 	}
 	
-	function populateJobs(arr, e){
-		//	alert("sweet populateJobs");
+	function populateJobs(arr, e, active){
+		//active values:
+		//pass a negative number to populate all jobs, whether active or complete.
+		//pass 0 to populate only completed jobs.
+		//pass 1 to populate only active jobs.
+		
+		//alert("populate jobs length" + arr.length);
+			
 			e.options.length=0;
 			var i;
 			for(i = 0; i < arr.length ; i++){
-				var opt = document.createElement("option");					
-				opt.value = arr[i].id;
-				opt.innerHTML = arr[i].jobName;
-				e.appendChild(opt);
+				//alert(arr[i].jobName);		
+				if(active < 0){
+					var opt = document.createElement("option");					
+					opt.value = arr[i].id;
+					opt.innerHTML = arr[i].jobName;
+					e.appendChild(opt);				
+				}else if(arr[i].isActive == active){
+					
+					var opt = document.createElement("option");					
+					opt.value = arr[i].id;
+					opt.innerHTML = arr[i].jobName;
+					e.appendChild(opt);
+				}
 			}		
 		}	
+	
+	
+	function populateJobs(arr, e, active){
+		//active values:
+		//pass a negative number to populate all jobs, whether active or complete.
+		//pass 0 to populate only completed jobs.
+		//pass 1 to populate only active jobs.
+		
+		//alert("populate jobs length" + arr.length);
+			
+			e.options.length=0;
+			var i;
+			for(i = 0; i < arr.length ; i++){
+			//	alert(arr[i].jobName);		
+				if(active < 0){
+					var opt = document.createElement("option");					
+					opt.value = arr[i].id;
+					opt.innerHTML = arr[i].jobName;
+					e.appendChild(opt);				
+				}else if(arr[i].isActive == active){
+					
+					var opt = document.createElement("option");					
+					opt.value = arr[i].id;
+					opt.innerHTML = arr[i].jobName;
+					e.appendChild(opt);
+				}
+			}		
+		}	
+	
+	function test(){
+		alert("test");
+	}
+	
+	
+	function getJobs(userId, e, jobStatus){		
+	//	function getJobs(e){	
+		alert(e);
+		$.ajax({
+			type: "GET",
+			url: 'http://localhost:8080/JobSearch/getJobs?userId=' + userId,
+	        dataType: 'json',
+			success: _success,
+	        error: _error
+		    });
+			
+			function _success(response){	
+				populateJobs(response.jobs, e, jobStatus);
+			}
+			
+			function _error(response){
+				alert("error");
+			}
+	}
 	//**************************************************************************************************	
 	
 
@@ -196,14 +264,14 @@
 		}
 	}
 	
-	function addJob(){
-		
-		var jobId = document.getElementById("jobToAdd").value;
-		//alert(jobId);
+	function addJob(event){
+		alert("sdfs");
+		var jobName = event.data.element.value;
+		//var jobName = document.getElementById("jobToAdd").value;
 		//Add the usercategory item to the db
 		$.ajax({	 	
 			type: "GET",
-	        url: 'http://localhost:8080/JobSearch/addJob?jobName=' + jobId,
+	        url: "http://localhost:8080/JobSearch/addJob?jobName=" + jobName + "&userId=" + event.data.userId,
 	        dataType: "json", // Response
 	        success: _success,
 	        error: _error
@@ -212,7 +280,7 @@
 		//Executes if the ajax call is successful
 		function _success(response){
 		//	alert("success add job");
-			populateJobs(response.jobs, document.getElementById("activeJobs"));
+			populateJobs(response.jobs, document.getElementById("activeJobs"), 1);
 			$("#jobToAdd").val("");
 		}
 		
