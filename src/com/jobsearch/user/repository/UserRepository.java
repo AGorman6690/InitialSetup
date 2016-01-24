@@ -1,28 +1,21 @@
 package com.jobsearch.user.repository;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.print.attribute.standard.JobOriginatingUserName;
-
-import org.apache.tools.ant.taskdefs.optional.ejb.JbossDeploymentTool;
-import org.objenesis.instantiator.android.AndroidSerializationInstantiator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.Job;
-import com.jobsearch.model.App;
 
 @Repository
 public class UserRepository {
@@ -62,37 +55,52 @@ public class UserRepository {
 
 	}
 
-	public void createUser(JobSearchUser user) {
+	public JobSearchUser createUser(JobSearchUser user) {
 
-		String insertUser = "insert into user (FirstName, LastName, Email, RoleId)  values (?, ?, ?, ?)";
-
-		jdbcTemplate.update(insertUser,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 0 });
-
-		String insertUserProfile = "insert into user_profile(UserId, ProfileId) values (SELECT LAST_INSERT_ID(), ?)";
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call insertUser(?, ?, ?, ?, ?, ?)}");
 		
-		jdbcTemplate.update(insertUserProfile,
-				new Object[] { user.getProfileId()});
+			 cStmt.setString(1, user.getFirstName());
+			 cStmt.setString(2, user.getLastName());
+			 cStmt.setString(3, user.getEmailAddress());
+			 cStmt.setInt(4, new Integer(1));
+			 cStmt.setString(5, user.getPassword());
+			 cStmt.setInt(6, user.getProfileId());
+			 
+			 ResultSet result = cStmt.executeQuery();
+			 
+			 JobSearchUser newUser = new JobSearchUser();
+			 Profile profile = new Profile();
+			 while(result.next()){
+				 newUser = new JobSearchUser();
+				 newUser.setFirstName(result.getString("firstName"));
+				 newUser.setFirstName(result.getString("lastname"));
+				 newUser.setFirstName(result.getString("email"));
+				 newUser.setFirstName(result.getString("roleId"));
+				 
+				 
+				 profile.setId(result.getInt("profileId"));
+				 profile.setName(result.getString("profiletype"));
+				 
+				 newUser.setProfile(profile);
+				 
+			 }
+			 return newUser;
 		
-		/*
-		 * @Override public JobSearchUser extractData(ResultSet rs) throws
-		 * SQLException, DataAccessException { if (rs.next()) { JobSearchUser
-		 * user = new JobSearchUser(); user.setUserId(rs.getInt("UserId"));
-		 * user.setFirstName(rs.getString("FirstName"));
-		 * user.setEmailAddress(rs.getString("Email"));
-		 * user.setLastName(rs.getString("LastName")); return user; }
-		 * 
-		 * return null; }
-		 */
-
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	public void createAdmin(JobSearchUser user) {
 
-		String sql = "insert into user (FirstName, LastName, Email, RoleId)  values (?, ?, ?, ?)";
+		String sql = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
 
 		jdbcTemplate.update(sql,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1 });
+				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), new Integer(2), user.getPassword() });
 
 		/*
 		 * @Override public JobSearchUser extractData(ResultSet rs) throws
