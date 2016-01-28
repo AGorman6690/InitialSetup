@@ -20,15 +20,15 @@ public class Job {
 		return applicants;
 	}
 
-	public void setApplicants(ArrayList<JobSearchUser> applicants) {
-		this.applicants = applicants;
+	public void setApplicants(List<JobSearchUser> list) {
+		this.applicants = list;
 	}
 
 	public List<JobSearchUser> getEmployees() {
 		return employees;
 	}
 	
-	public void setEmployees(ArrayList<JobSearchUser> employees) {
+	public void setEmployees(List<JobSearchUser> employees) {
 		this.employees = employees;
 	}
 	public int getIsActive() {

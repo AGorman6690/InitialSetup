@@ -19,12 +19,10 @@
  	
  	<br>
 		<h1>Available Categories</h1>
-		
-	 	<form:form modelAttribute="app">	 	
+		 	
 	 	<form:select id="allCategories" multiple="true" path="categories" style="width: 200px;">
-	 		<form:options items="${app.categories}" itemValue="id" itemLabel="name"/>
-	 	</form:select>		 		 	
-	</form:form>
+	 		<form:options items="${categories}" itemValue="id" itemLabel="name"/>
+	 	</form:select>		
 
 	<br>
 	<h1>Selected Categories</h1>

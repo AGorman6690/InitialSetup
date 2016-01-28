@@ -26,6 +26,7 @@ import com.jobsearch.model.App;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.model.Item;
+import com.jobsearch.model.Profile;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -37,7 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@SessionAttributes({ "user", "app" })
+@SessionAttributes({ "user" })
 public class UserController {
 
 	// @ModelAttribute
@@ -60,17 +61,8 @@ public class UserController {
 
 		// Set session objects
 		JobSearchUser user = new JobSearchUser();
-		App app = new App();
 
 		model.addObject("user", user);
-		model.addObject("app", app);
-
-		// Initialize the application specific properties.
-		// These application properties are used to hold all the user's options
-		// such
-		// as category options to associate with jobs.
-		app.setCategories(categoryService.getCategories());
-		app.setProfiles(userService.getProfiles());
 
 		model.setViewName("welcome");
 
@@ -99,16 +91,21 @@ public class UserController {
 
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
 	public ModelAndView getProfile(HttpServletRequest request, ModelAndView model,
+<<<<<<< HEAD
 			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
 
 		//From the email provided, set the user object
 		user = userService.getUserByEmail(user.getEmailAddress());
+=======
+			@ModelAttribute("user") JobSearchUser user) {
+>>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
 
 //		// Set the user's list of category objects.
 //		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 
 		// Set the user's profile object
 		user.setProfile(userService.getProfile(user.getProfileId()));
+<<<<<<< HEAD
 		
 //		//Set all jobs, active and inactive
 //		user.setJobs(jobService.getJobs(user.getUserId()));
@@ -126,6 +123,25 @@ public class UserController {
 //			// job.setCategories(service.getCategoriesForJob(job));
 //			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 //		}
+=======
+
+		// Set all jobs, active and inactive
+		user.setJobs(jobService.getJobs(user.getUserId()));
+
+		user.setActiveJobs(jobService.getJobs(user, true));
+
+		// If an employee, set applied to jobs and employement
+		if (user.getProfileId() == 2) {
+			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
+			user.setEmployment(jobService.getEmployment(user, false));
+		}
+
+		// For each user's job, set the categories associated with each job.
+		for (Job job : user.getJobs()) {
+			// job.setCategories(service.getCategoriesForJob(job));
+			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+		}
+>>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
 
 		// It appears that after setting the "user" object by email as done
 		// above,
@@ -135,10 +151,13 @@ public class UserController {
 		// "user" object after it was modified above (or so it seems...)
 		model.addObject("user", user);
 
+<<<<<<< HEAD
 		// Reset the selected job.
 		// This will clear controls on profile page.
 //		app.setSelectedJob(new Job());
 
+=======
+>>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
 		// Set the view to return
 		if (user.getProfileId() == 2)
 			model.setViewName("ProfileYee");
@@ -150,30 +169,26 @@ public class UserController {
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.GET)
 	public ModelAndView createUser(HttpServletRequest request, ModelAndView model,
-			@ModelAttribute("user") JobSearchUser user, @ModelAttribute("app") App app) {
+			@ModelAttribute("user") JobSearchUser user) {
 
+		List<Profile> profiles = userService.getProfiles();
+
+		model.addObject("profiles", profiles);
 		model.setViewName("RegisterUser");
 		return model;
 	}
 
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(HttpServletRequest request, ModelAndView model,
-			@ModelAttribute("user") JobSearchUser user, @ModelAttribute("app") App app) {
+			@ModelAttribute("user") JobSearchUser user) {
 
-		userService.createUser(user);
-
-		// Need to set the user by email in order to set the user's id.
-		// When the user is created in the database, the user table's id field
-		// is auto incremented.
-		// Thus, the user's id needs to be fetched after it is created in the
-		// database.
-		user = userService.getUserByEmail(user.getEmailAddress());
+		user = userService.createUser(user);
 
 		// Apparently the user object needs to be re-added to the model in order
 		// for the view
 		// to see the changes to the user object...
 		model.addObject("user", user);
-
+		model.addObject("categories", categoryService.getCategories());
 		model.setViewName("RegisterCategories");
 		return model;
 	}
@@ -274,6 +289,7 @@ public class UserController {
 
 		return JSON.stringify(user);
 	}
+<<<<<<< HEAD
 	
 	//***********************************************************************
 	@RequestMapping(value="/getAppRateCriteria", method = RequestMethod.GET)
@@ -302,6 +318,9 @@ public class UserController {
 	//***********************************************************************
 	
 	
+=======
+
+>>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)
 	@ResponseBody
 	public ModelAndView applyForJob(HttpServletRequest request, ModelAndView model, @RequestParam int jobId,

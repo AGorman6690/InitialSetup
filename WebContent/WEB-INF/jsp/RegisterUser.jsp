@@ -28,7 +28,7 @@
 				<td>Profile Type:</td>
 				<td>
 				<form:select path="profileId">
-					<form:options items="${app.profiles}" itemValue="id" itemLabel="name"></form:options>
+					<form:options items="${profiles}" itemValue="Id" itemLabel="name" />
 				</form:select>
 			</tr>		
 			<tr>
