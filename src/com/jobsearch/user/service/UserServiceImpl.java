@@ -70,4 +70,5 @@ public class UserServiceImpl {
 		repository.rateEmployee(rateCriterionId, employeeId, jobId, value);		
 	}
 
+
 }

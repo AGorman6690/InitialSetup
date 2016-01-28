@@ -70,6 +70,7 @@ public class UserController {
 		model.setViewName("SignIn");
 		return model;
 	}
+	
 
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
 	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
@@ -144,10 +145,9 @@ public class UserController {
 										@RequestParam int jobId){
 
 		
-		Item item = new Item();
 		userService.rateEmployee(rateCriterionId, employeeId, jobId, value);
 		
-		return JSON.stringify(item);
+		return JSON.stringify("");//JSON.stringify(item);
 		
 	}
 	
@@ -162,5 +162,6 @@ public class UserController {
 
 		return JSON.stringify(userService.getEmployeesByJob(jobId));
 	}
+
 
 }

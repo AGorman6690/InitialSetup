@@ -377,10 +377,12 @@ public class UserRepository {
 	}
 
 	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, int value) {
-		String sql = "INSERT INTO ratings (RateCriterionId, UserId, JobId, Value)"
+		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, Value)"
 				+ " VALUES(?, ?, ?, ?)";
 		
 		jdbcTemplate.update(sql, new Object[]{rateCriterionId, employeeId, jobId, value});
 	}
+
+
 
 }

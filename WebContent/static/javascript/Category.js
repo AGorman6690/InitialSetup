@@ -60,7 +60,7 @@ function addCategoryToUser(categoryId, userId, callback) {
 
 function addCategoryToJob(categoryId, jobId, callback){
 	
-	alert("addCategoryToJob");
+	//alert("addCategoryToJob");
 	$.ajax({	 	
 		type: "GET",                         
         url: 'http://localhost:8080/JobSearch/addCategoryToJob?jobId=' + jobId + '&categoryId=' + categoryId,
@@ -70,7 +70,7 @@ function addCategoryToJob(categoryId, jobId, callback){
     });	
 	
 	function _success(response){
-		alert("success add cat to job");
+		//alert("success add cat to job");
 		callback(response);
 	}
 	

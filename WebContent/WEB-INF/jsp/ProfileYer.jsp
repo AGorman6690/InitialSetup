@@ -6,15 +6,16 @@
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
+		<script src="<c:url value="/static/javascript/Ratings.js" />"></script>
 		<style>
 			.section{
 				color: red;
 				font-size: 4em;
 			}		
 		</style>			
-		<link rel="stylesheet" type="text/css" href="../static/css/ratings.css">
+		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
-
+<!-- ../static/css/  C:/Users/Owner/git/InitialSetup/WebContent/static/css/ratings.css-->
 	<a href="./findEmployees">Find Employees</a>	
 	
 	<h1>Here is your profile ${user.firstName} ${user.userId}</h1>
@@ -117,26 +118,17 @@
 <!-- 	<div id="rateEmployee"></div> -->
 
 	
-	<h1>Selected job name</h1>
-	<input type="text" id="selectedCompletedJob">
+
 	
-	<h1>Employees</h1>
-	<select multiple id="employeesCompletedJob" style="width: 200px">
-	</select>	
-	
-	<h1>Rate the employees</h1>
-	<select  multiple id="rateCriteria" style="width: 200px">	
-	</select>	
-	
-	<h1>Rate value</h1>
-	<input type="text" id="rateValue">	
-	<br>
-	<button type="button" id="submitRating">Submit Rating</button>
-	
-	
+<h1>Rate the employees</h1>
 <div class="main">
-	<ul id="employeesToRate" class="all">
-	</ul>
+
+<!-- 	<ul id="employeesToRate" class="all"> -->
+<!-- 	</ul> -->
+	<select multiple id="employeesToRate" class="all">
+	</select>
+
+
 	<p data-userId="" id="selectedEmployee"  class="selected">  
 	</p>
  	<div class="rating1">
@@ -163,6 +155,57 @@
 		<button value=5 id="ontime5" type="button" class="button5">
 		  Always
 		</button> 
+	</div> 
+	
+	 <div class="rating2">
+		<p class="rating-content">
+		Work Ethic:
+		</p>
+   
+		<button value=1 id="workEthic1" type="button" class="button1">
+		Poor
+		</button>
+		
+		<button value=2 id="workEthic2" type="button" class="button2">
+		  Acceptable at times
+		</button>
+		
+		<button value=3 id="workEthic3" type="button" class="button3">
+		  Acceptable
+		</button>
+		
+		<button value=4 id="workEthic4" type="button" class="button4">
+		  Outstanding at times
+		</button>
+		
+		<button value=5 id="workEthic5" type="button" class="button5">
+		  Outstanding
+		</button> 
+	</div> 
+	
+	 <div class="rating3">
+		<p class="rating-content">
+		Hire Again?:
+		</p>
+   
+		<button value=1 id="hireAgain1" type="button" class="button1">
+		No
+		</button>
+		
+		<button value=2 id="hireAgain2" type="button" class="button2">
+		  Maybe
+		</button>
+		
+		<button value=3 id="hireAgain3" type="button" class="button3">
+		  Yes
+		</button>
+	</div> 
+	
+	
+	 <div class="rating4">
+		<button id="nextEmployee" type="button" class="button1">
+		Next Employee
+		</button>
 	</div> 
 </div>
 	

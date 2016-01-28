@@ -28,15 +28,7 @@ $(document).ready(function(){
 		});
 	});
 	
-	$("#completedJobs").change(function(){		
-		//Get job id
-		var jobId = $("#completedJobs").val();
 
-		//Get the employees for the selected job
-		getEmployeesByJob(jobId, function(response){
-			populateUsers(response, document.getElementById("employeesCompletedJob"));
-		});
-	})
 	
 	$("#markJobComplete").click(function(){
 		var jobId = $("#activeJobs").val();//document.getElementById("selectedJob").name;
@@ -49,7 +41,7 @@ $(document).ready(function(){
 			
 			//Populate the user's completed jobs
 			populateJobs(response, document.getElementById("completedJobs"), 0);
-
+			
 		//	$("#rateEmployee").html(response);
 		});
 	});
