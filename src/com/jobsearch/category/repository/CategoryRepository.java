@@ -30,6 +30,14 @@ public class CategoryRepository {
 			}
 		});
 	}
+	
+	public void addCategoryToJob(int jobId, int categoryId) {
+		String sql;
+		sql = "INSERT INTO job_category (JobId, CategoryId)" + " VALUES (?, ?)";
+
+		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
+
+	}
 
 	public List<Category> getCategories() {
 
@@ -54,7 +62,7 @@ public class CategoryRepository {
 	public List<Category> getCategoriesByJobId(int jobId) {
 
 		// Given a job ID, get all category objects
-		String sql = "SELECT category.CategoryID, category.Name" + " FROM category" + " INNER JOIN job_category"
+		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
 				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
 		return (List<Category>) this.CategoryRowMapper(sql, new Object[] { jobId });
@@ -66,6 +74,14 @@ public class CategoryRepository {
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN user_category"
 				+ " ON category.CategoryID = user_category.CategoryID" + " AND user_category.UserID = ?";
 
-		return (ArrayList<Category>) this.CategoryRowMapper(sql, new Object[] { userId });
+		return this.CategoryRowMapper(sql, new Object[] { userId });
+	}
+	
+
+	public List<Category> getAppCategories() {
+
+		String sql = "SELECT * " + " FROM category";
+
+		return this.CategoryRowMapper(sql, null);
 	}
 }

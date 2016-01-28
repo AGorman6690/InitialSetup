@@ -2,93 +2,95 @@
  * 
  */
 
-$('#co_registerUser').click(function(){
-	if($('#co_password').val !== $('co_matchingPassword').val){
-		return false;
-	}
+$(document).ready(function(){
+	$('#co_registerUser').click(function(){
+		if($('#co_password').val !== $('co_matchingPassword').val){
+			return false;
+		}
+	});
+	
+	$("#hireApplicant").click(function(){
+		
+		var eUser = document.getElementById("applicants");
+		var userId = eUser.options[eUser.selectedIndex].value;			
+		var jobId = $("#activeJobs").val();
+		
+		hireApplicant(userId, jobId, function(response){			
+			populateUsers(response, document.getElementById("employees"));
+		});
+	});
 })
 
-$(document).ready(function(){
-	// '#' gets an html element by its id
-	// '.' gets an html element by one of its classes
-	// each element can only have one id and it has to be unique
-	// each element can have multiple class and do not have to be unique
-	$("#userGetRequest").click(function(){
-		
-		// $ is shorthand for jQuery
-		// $.something is the same as jQuery.something
-		
-		var userId = $("#userId").val();
-		
-		$.ajax({
-	        url: 'http://localhost:8080/JobSearch/getUser?userId=' + userId,
-	        contentType: "application/json", // Request
-	        dataType: "json", // Response
+function getApplicants(jobId, callback){
+	//alert("getApplicants");
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getApplicants?jobId=' + jobId,
+			dataType: "json",
 	        success: _success,
 	        error: _error
 	    });
-		
-		//Executes if the ajax call is successful
+
 		function _success(response){
-			var html = "<div>"+ response.firstName+" "+ response.lastName + " was returned from ajax call</div>";
-			$("#userFromAjaxRequest").append(html);
+			//alert("success getApplicants");
+			callback(response);
 		}
-		
-		//Executs if the ajax call errors out
-		function _error(response){
-			
-		}
-	})
-	
-	
-	
-	$("#userSetRequest").click(function(){
-		
-		var user = {};				
-		user.firstName = document.getElementById('firstName').value;
-		user.lastName = document.getElementById('lastName').value;
-		user.emailAddress = document.getElementById('emailAddress').value;
-		
-		$.ajax({
-			type: "POST",
-	        url: 'http://localhost:8080/JobSearch/setUser', 
-	        contentType: "application/json", // Request
-	        dataType: "json", // Response
-	        cache: false, // Force requested pages not to be cached by the browser
-	        processData: false, // Avoid making query string instead of JSON
-	        data: JSON.stringify(user),// "{'userID': '9', 'userName': 'j'}",
+
+		function _error(response, errorThrown){
+			alert("error getApplicants");
+		} 
+}
+
+function getEmployees(jobId, callback){
+	//alert("getEmployees");
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getEmployees?jobId=' + jobId,
+			dataType: "json",
 	        success: _success,
 	        error: _error
 	    });
-		
-		//Executes if the ajax call is successful
+
 		function _success(response){
-			var html = "<div> success was returned from ajax call</div>";
-			$("#userFromAjaxRequest").append(html);
+		//	alert("success getEmployees");
+			callback(response);
 		}
-		
-		//Executs if the ajax call errors out
-		function _error(response){
-			var html = "<div> failure was returned from ajax call</div>";
-			$("#userFromAjaxRequest").append(html);
-			
-		}
-	})
+
+		function _error(response, errorThrown){
+			alert("error getEmployees");
+		} 
+}
+
+function hireApplicant(userId, jobId, callback){
 	
-	
-	$("#setCategories").click(function(){
-		var user = {};				
-		user.firstName = document.getElementById('firstName').value;
-		user.lastName = document.getElementById('lastName').value;
-		
+	//	alert("1");
 		$.ajax({
 			type: "GET",
-			url: 'http://localhost:8080/JobSearch/setCategories',
-			contentType: "application/json",
-			data: JSON.stingify(user)
+			url: 'http://localhost:8080/JobSearch/hireApplicant?userId=' + userId + '&jobId=' + jobId,
+	        dataType: 'json',
+			success: _success,
+	        error: _error
+		    });
 			
+			function _success(response){
+				//alert("success hire applicant");
+				callback(response);
+			}
 			
-		})
-	})
-	
-});
+			function _error(response, errorThrown){
+				alert("error");
+			}
+	}
+
+function populateUsers(arr, e){ 		
+	//alert("sweet populateUsers");		
+	var i;
+	e.options.length=0;		
+	for(i=0; i< arr.length; i++){
+		//alert("here");
+		var opt = document.createElement('option');
+		opt.value = arr[i].userId;
+		opt.innerHTML = arr[i].firstName;
+		e.appendChild(opt);					
+	}		
+}

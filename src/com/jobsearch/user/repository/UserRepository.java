@@ -19,6 +19,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
@@ -64,10 +65,10 @@ public class UserRepository {
 
 	public void createUser(JobSearchUser user) {
 
-		String insertUser = "insert into user (FirstName, LastName, Email, RoleId)  values (?, ?, ?, ?)";
+		String insertUser = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
 
 		jdbcTemplate.update(insertUser,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 0 });
+				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1, user.getPassword() });
 
 		String insertUserProfile = "insert into user_profile(UserId, ProfileId) values (SELECT LAST_INSERT_ID(), ?)";
 		
@@ -107,23 +108,6 @@ public class UserRepository {
 
 	}
 
-	// This should be combined with the sql, args method...
-	// ******************************************************************************************************
-	public List<JobSearchUser> JobSearchUserRowMapper(String sql, String email) {
-		return jdbcTemplate.query(sql, new Object[] { email }, new RowMapper<JobSearchUser>() {
-			@Override
-			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
-				JobSearchUser e = new JobSearchUser();
-				e.setUserId(rs.getInt(1));
-				e.setFirstName(rs.getString(2));
-				e.setLastName(rs.getString(3));
-				e.setEmailAddress(rs.getString(4));
-				e.setProfileId(rs.getInt(5));
-				return e;
-			}
-		});
-	}
-	// ******************************************************************************************************
 
 	public List<JobSearchUser> JobSearchUserRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
@@ -134,7 +118,7 @@ public class UserRepository {
 				e.setFirstName(rs.getString(2));
 				e.setLastName(rs.getString(3));
 				e.setEmailAddress(rs.getString(4));
-				e.setProfileId(rs.getInt(5));
+				e.setProfileId(rs.getInt(9));
 				return e;
 			}
 		});
@@ -209,6 +193,22 @@ public class UserRepository {
 
 		return list;
 
+	}
+	
+	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args){  
+		
+		List<RateCriterion> list;
+		 list = jdbcTemplate.query(sql, args, new RowMapper<RateCriterion>(){  
+		    
+			 @Override  
+		    public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {  
+				 RateCriterion e = new RateCriterion();  
+		        e.setRateCriterionId(rs.getInt(1));
+		        e.setName(rs.getString(2));
+		        return e;  
+		    }  
+		    });   		 
+		 return (List<RateCriterion>) list;		 
 	}
 
 //	public List<Item> JobsCategoriesRowMapper(String sql, Object[] args) {
@@ -290,7 +290,7 @@ public class UserRepository {
 		// Object args[0] = null;
 		// args[0] = user.getEmailAddress();
 
-		List<JobSearchUser> list = JobSearchUserRowMapper(sql, email);
+		List<JobSearchUser> list = JobSearchUserRowMapper(sql, new Object[]{ email });
 
 		return list.get(0);
 
@@ -300,16 +300,6 @@ public class UserRepository {
 
 		// From the user table, get the ID associated with the user's email
 		user.setUserId(getUserByEmail(user.getEmailAddress()).getUserId());
-
-	}
-
-	public void getUserByEmail(JobSearchUser user) {
-		String sql;
-		sql = "select * from user where Email = ?";
-
-		List<JobSearchUser> list = JobSearchUserRowMapper(sql, user.getEmailAddress());
-
-		user = list.get(0);
 
 	}
 
@@ -324,7 +314,7 @@ public class UserRepository {
 	public List<Category> getUserCatergories(int userId, int categoryId) {
 
 		String sql;
-		sql = "select * from user_category where UserID = ? and CategoryID = ?";
+		sql = "select * from user_category where UserId = ? and CategoryId = ?";
 
 		return this.UserCategoriesRowMapper(sql, new Object[] { userId, categoryId });
 
@@ -396,7 +386,7 @@ public class UserRepository {
 
 	public ArrayList<JobSearchUser> getApplicants(int jobId) {
 
-		String sql = "SELECT user.UserId, user.FirstName, user.LastName, user.Email, user.ProfileId" + " FROM user"
+		String sql = "SELECT *" + " FROM user"
 				+ " INNER JOIN application" + " ON user.UserId = application.UserId" + " INNER JOIN job"
 				+ " ON application.JobId = job.JobId" + " AND application.JobId = ?" + " AND job.IsActive = 1";
 
@@ -404,14 +394,17 @@ public class UserRepository {
 	}
 
 	public ArrayList<JobSearchUser> getEmpolyees(int jobId) {
-		String sql = "SELECT user.UserId, user.FirstName, user.LastName, user.Email, user.ProfileId" + " FROM user"
-				+ " INNER JOIN employment" + " ON user.UserId = employment.UserId" + " AND employment.JobId = ?";
+		
+
+		String sql = "SELECT *" + " FROM user"
+				+ " INNER JOIN application" + " ON user.UserId = application.UserId" 
+				+ " AND application.JobId = ?" + " AND application.IsHired = 1";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
 	public void hireApplicant(int userId, int jobId) {
-		String sql = "INSERT INTO employment (UserId, JobId)" + " VALUES (?, ?)";
+		String sql = "UPDATE application SET IsHired = 1 WHERE UserId = ? AND JobId = ?";
 
 		jdbcTemplate.update(sql, new Object[] { userId, jobId });
 
@@ -437,6 +430,18 @@ public class UserRepository {
 	public ArrayList<Profile> getProfiles() {
 		String sql = "SELECT *" + " FROM profile";
 		return this.ProfilesRowMapper(sql);
+	}
+	
+	public List<RateCriterion> getAppRateCriteria() {
+		String sql = "SELECT * FROM ratecriterion";
+		return this.RateCriterionRowMapper(sql, new Object[] {});
+	}
+
+	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, int value) {
+		String sql = "INSERT INTO ratings (RateCriterionId, UserId, JobId, Value)"
+				+ " VALUES(?, ?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{rateCriterionId, employeeId, jobId, value});
 	}
 
 }

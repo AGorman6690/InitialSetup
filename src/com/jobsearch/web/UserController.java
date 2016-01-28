@@ -101,29 +101,31 @@ public class UserController {
 	public ModelAndView getProfile(HttpServletRequest request, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
 
+		//From the email provided, set the user object
+		user = userService.getUserByEmail(user.getEmailAddress());
 
-		// Set the user's list of category objects.
-		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
+//		// Set the user's list of category objects.
+//		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 
 		// Set the user's profile object
 		user.setProfile(userService.getProfile(user.getProfileId()));
 		
-		//Set all jobs, active and inactive
-		user.setJobs(jobService.getJobs(user.getUserId()));
-		
-		user.setActiveJobs(jobService.getJobs(user, true));
-
-		// If an employee, set applied to jobs and employement
-		if (user.getProfileId() == 2) {
-			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
-			user.setEmployment(jobService.getEmployment(user, false));
-		}
-
-		// For each user's job, set the categories associated with each job.
-		for (Job job : user.getJobs()) {
-			// job.setCategories(service.getCategoriesForJob(job));
-			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-		}
+//		//Set all jobs, active and inactive
+//		user.setJobs(jobService.getJobs(user.getUserId()));
+//		
+//		user.setActiveJobs(jobService.getJobs(user, true));
+//
+//		// If an employee, set applied to jobs and employement
+//		if (user.getProfileId() == 2) {
+//			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
+//			user.setEmployment(jobService.getEmployment(user, false));
+//		}
+//
+//		// For each user's job, set the categories associated with each job.
+//		for (Job job : user.getJobs()) {
+//			// job.setCategories(service.getCategoriesForJob(job));
+//			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+//		}
 
 		// It appears that after setting the "user" object by email as done
 		// above,
@@ -135,7 +137,7 @@ public class UserController {
 
 		// Reset the selected job.
 		// This will clear controls on profile page.
-		app.setSelectedJob(new Job());
+//		app.setSelectedJob(new Job());
 
 		// Set the view to return
 		if (user.getProfileId() == 2)
@@ -176,49 +178,39 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "deleteCategory", method = RequestMethod.GET)
+	@RequestMapping(value = "deleteCategoryFromUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String deleteCategory(HttpServletRequest request, ModelAndView model, @RequestParam int categoryId,
-			@ModelAttribute App app, @ModelAttribute("user") JobSearchUser user) {
+	public String deleteCategoryFromUser(HttpServletRequest request, ModelAndView model, @RequestParam int categoryId,
+											@RequestParam int userId) {
 
 		// Update database
-		userService.deleteCategory(user.getUserId(), categoryId);
+		userService.deleteCategory(userId, categoryId);
 
-		// Update user object to reflect changes
-		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
-
-		return JSON.stringify(user);
+		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 
 	}
-
-	@RequestMapping(value = "addCategory", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "getApplicants", method = RequestMethod.GET)
 	@ResponseBody
-	public String addCategory(ModelAndView model, @RequestParam int categoryId,
-			@ModelAttribute("user") JobSearchUser user) {
+	public String getApplicants(@RequestParam int jobId) {
+		return JSON.stringify(userService.getApplicants(jobId));
+	}
+	
+	@RequestMapping(value = "getEmployees", method = RequestMethod.GET)
+	@ResponseBody
+	public String getEmployees(@RequestParam int jobId) {
+		return JSON.stringify(userService.getEmployees(jobId));
+	}
+
+	@RequestMapping(value = "addCategoryToUser", method = RequestMethod.GET)
+	@ResponseBody
+	public String addCategoryToUser(ModelAndView model, @RequestParam int categoryId, @RequestParam int userId) {
 
 		// Add the category-user to the database
-		userService.addCategory(user.getUserId(), categoryId);
+		userService.addCategoryToUser(userId, categoryId);
 
-		// Reset the user's category objects
-		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
-
-		return JSON.stringify(user);
-
-	}
-
-	@RequestMapping(value = "addCategoryToJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String addCategoryToJob(HttpServletRequest request, ModelAndView model, @RequestParam int jobId,
-			@RequestParam int categoryId, @ModelAttribute App app) {
-
-		jobService.addJobCategory(jobId, categoryId);
-
-		// Update selected job's categories to reflect the changes.
-		// NOTE: the app's selected job object is set when user clicks job name.
-		app.getSelectedJob().setCategories(categoryService.getCategoriesByJobId(jobId));
-
-		model.setViewName("profile");
-		return JSON.stringify(app);
+		//Return the categories associated with the user's id
+		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 
 	}
 
@@ -250,24 +242,24 @@ public class UserController {
 		return JSON.stringify(app);
 	}
 
-	@RequestMapping(value = "getSelectedCategory", method = RequestMethod.GET)
-	@ResponseBody
-	public String getSelectedCategory(HttpServletRequest request, ModelAndView model, @RequestParam int categoryId,
-			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
-
-		// Set the selected category
-		app.setSelectedCategory(categoryService.getCategory(categoryId));
-
-		// Set the users associated with the category.
-		// This will return only employees if the user is an employer and vice
-		// versa.
-		app.getSelectedCategory().setUsers(userService.getUsers(categoryId, user.getProfileId()));
-
-		// Set the active jobs associated with the selected category
-		app.getSelectedCategory().setJobs(jobService.getJobsByCategory(categoryId, true));
-
-		return JSON.stringify(app);
-	}
+//	@RequestMapping(value = "getSelectedCategory", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getSelectedCategory(HttpServletRequest request, ModelAndView model, @RequestParam int categoryId,
+//			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
+//
+//		// Set the selected category
+//		app.setSelectedCategory(categoryService.getCategory(categoryId));
+//
+//		// Set the users associated with the category.
+//		// This will return only employees if the user is an employer and vice
+//		// versa.
+//		app.getSelectedCategory().setUsers(userService.getUsers(categoryId, user.getProfileId()));
+//
+//		// Set the active jobs associated with the selected category
+//		app.getSelectedCategory().setJobs(jobService.getJobsByCategory(categoryId, true));
+//
+//		return JSON.stringify(app);
+//	}
 
 	@RequestMapping(value = "getSelectedUser", method = RequestMethod.GET)
 	@ResponseBody
@@ -282,6 +274,32 @@ public class UserController {
 
 		return JSON.stringify(user);
 	}
+	
+	//***********************************************************************
+	@RequestMapping(value="/getAppRateCriteria", method = RequestMethod.GET)
+	@ResponseBody
+	public String getAppRateCriteria(){
+		return JSON.stringify(userService.getAppRateCriteria());
+	}
+	
+	
+	@RequestMapping(value = "rateEmployee", method = RequestMethod.GET)
+	@ResponseBody
+	public String rateEmployee(ModelAndView model, 
+										@RequestParam int rateCriterionId,
+										@RequestParam int value,			
+										@RequestParam int employeeId,
+										@RequestParam int jobId){
+
+		
+		Item item = new Item();
+		userService.rateEmployee(rateCriterionId, employeeId, jobId, value);
+		
+		return JSON.stringify(item);
+		
+	}
+	
+	//***********************************************************************
 	
 	
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)
@@ -302,17 +320,12 @@ public class UserController {
 
 	@RequestMapping(value = "hireApplicant", method = RequestMethod.GET)
 	@ResponseBody
-	public String hireApplicant(HttpServletRequest request, ModelAndView model, @RequestParam int userId,
-			@RequestParam int jobId, @ModelAttribute JobSearchUser user, @ModelAttribute App app) {
+	public String hireApplicant(@RequestParam int userId, @RequestParam int jobId) {
 
 		// Add employment to the database
 		userService.hireApplicant(userId, jobId);
 
-		// Update the employees for the selected job to reflect the changes
-		app.getSelectedJob().setEmployees(userService.getEmployees(jobId));
-
-		return JSON.stringify(app);
-
+		return JSON.stringify(userService.getEmployees(jobId));
 	}
 
 }

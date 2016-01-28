@@ -1,7 +1,7 @@
 package com.jobsearch.model;
 
 public class RateCriterion {
-	private int id;
+	private int rateCriterionId;
 	private String name;
 	private int userId;
 	private int jobId;
@@ -25,11 +25,11 @@ public class RateCriterion {
 	public void setValue(int value) {
 		this.value = value;
 	}
-	public int getId() {
-		return id;
+	public int getRateCriterionId() {
+		return rateCriterionId;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setRateCriterionId(int rateCriterionId) {
+		this.rateCriterionId = rateCriterionId;
 	}
 	public String getName() {
 		return name;

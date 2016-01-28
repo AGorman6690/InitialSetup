@@ -13,6 +13,11 @@ public class CategoryServiceImpl {
 	
 	@Autowired
 	CategoryRepository repository;
+	
+	public void addCategoryToJob(int jobId, int categoryId) {
+		repository.addCategoryToJob(jobId, categoryId);
+
+	}
 
 	public List<Category> getCategoriesByJobId(int jobId) {
 		return repository.getCategoriesByJobId(jobId);
@@ -21,7 +26,7 @@ public class CategoryServiceImpl {
 	public List<Category> getCategories() {
 		return repository.getCategories();
 	}
-
+	           
 	public List<Category> getCategoriesByUserId(int userId) {
 		return repository.getCategoriesByUserId(userId);
 	}
@@ -29,5 +34,11 @@ public class CategoryServiceImpl {
 	public Category getCategory(int categoryId) {
 		return repository.getCategory(categoryId);
 	}
+	
+	public List<Category> getAppCategories() {
+		return repository.getAppCategories();
+	}
+	
+	
 
 }

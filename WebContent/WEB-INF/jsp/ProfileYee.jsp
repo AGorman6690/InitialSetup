@@ -1,5 +1,20 @@
 <%@ include file="./includes/Header.jsp" %>
 
+	<head>
+		<style>
+			.section{
+				color: red;
+				font-size: 4em;
+			}		
+		</style>	
+		
+		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
+		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
+		<script src="<c:url value="/static/javascript/Category.js" />"></script>
+		<script src="<c:url value="/static/javascript/User.js" />"></script>
+		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
+	</head>
+
 	<a href="./findJobs">Find Jobs</a>
 
 	<h1>Here is your profile ${user.firstName}</h1>
@@ -11,23 +26,17 @@
 	<h1 class="section">Categories</h1>
 	
 	<h1>These are the categories you can select from</h1>
-		
-	<form:form modelAttribute="app">	 	
-	 	<form:select id="allCats" multiple="true" path="categories" style="width: 200px;">
-	 		<form:options items="${app.categories}" itemValue="id" itemLabel="name"/>
-	 	</form:select>		 		 	
-	</form:form>
+			 	
+ 	<select id="appCats" multiple style="width: 200px;">
+ 	</select>		 		 	
 	
 	<button type="button" id="profileAddCat">Add</button>
 	<br>
 	
 	
 	<h1>These are you currently selected categories</h1>		
-	<form:form modelAttribute="user">
-		<form:select path="categories" multiple="true" id="profileCats" style= "width: 200px"  >
-			<form:options items="${user.categories}" itemValue="id" itemLabel="name"/>
-		</form:select>
-	</form:form>
+		<select multiple id="profileCats" style= "width: 200px"  >
+		</select>
 	
 	<button type="button" id="profileDeleteCat">Delete</button>
 
@@ -39,90 +48,69 @@
 	<h1 class="section">Jobs</h1>
 	
 	<h1>Jobs you applied to</h1>
-	<form:form modelAttribute="user">
-		<form:select path="appliedToJobs" multiple="true" id="profileCats" style= "width: 200px"  >
-			<form:options items="${user.appliedToJobs}" itemValue="id" itemLabel="jobName"/>
-		</form:select>
-	</form:form>
+		<select multiple id="jobsAppliedFor" style= "width: 200px"  >
+		</select>
 
 	<h1>Jobs you were hired for</h1>
-	<form:form modelAttribute="user">
-		<form:select path="employment" multiple="true" id="profileCats" style= "width: 200px"  >
-			<form:options items="${user.employment}" itemValue="id" itemLabel="jobName"/>
-		</form:select>
-	</form:form>
+		<select multiple id="jobsHiredFor" style= "width: 200px"  >
+		</select>
 
 	<script>
-
-		document.getElementById("profileDeleteCat").addEventListener("click", deleteCat);
-  		document.getElementById("profileAddCat").addEventListener("click", addCat);
-		
-  		function deleteCat(){
- 			var e = document.getElementById("profileCats");
-			var catId = e.value;
- 			
- 			$.ajax({	 	
- 				type: "GET",
- 		        url: 'http://localhost:8080/JobSearch/deleteCategory?categoryId=' + catId,
- 		        contentType: "application/json", // Request
- 		        dataType: "json", // Response
- 		        success: _success,
-		        error: _error
-		    });
-		
-			
-			//Executes if the ajax call is successful
-			function _success(response){
-				//alert("success");
-				showCategories(response);
-				
-			}
-			
-			//Executs if the ajax call errors out
-			function _error(response, errorThrown){
-				alert("error");
-			}	
-		}
 	
-		function addCat(){
-			//alert("3");
- 			var e = document.getElementById("allCats");
- 			var catId = e.options[e.selectedIndex].value;
- 			
- 			//Add the usercategory item to the db
- 			$.ajax({	 	
- 				type: "GET",
- 		        url: 'http://localhost:8080/JobSearch/addCategory?categoryId=' + catId,
- 		        contentType: "application/json", // Request
- 		        dataType: "json", // Response
- 		        success: _success,
-		        error: _error
-		    });
+		//Get all the application's categories
+		getAppCategories(function(response){
+			//alert(JSON.stringify(response));
+			populateCategories(response, document.getElementById("appCats"));
+		});
 		
-			function _success(response){
-				//alert("success");
-				showCategories(response);
-			}
-			
-			function _error(response, errorThrown){
-				alert("error");
-			}	
+		//Get the user's categories
+		getCategoriesByUser("${user.userId}", function(response){
+			//alert("callback getCategoriesByUser");			
+			populateCategories(response, document.getElementById("profileCats"));
+		});
 	
-		}
+		//Get all active jobs that the user has applied for
+		getApplicationsByUser("${user.userId}", function(response){
+			//alert("callback getApplicationsByUser");			
+			populateJobs(response, document.getElementById("jobsAppliedFor"), 1);
+		});
 		
 		
-		function showCategories(obj){
-			//alert(obj);
-			//alert("show cats");
-			var eCats = document.getElementById("profileCats");
-			$("#profileCats").empty();				
-			for(i = 0; i < obj.categories.length ; i++){
-				var opt = document.createElement("option");					
-				opt.value = obj.categories[i].id;
-				opt.innerHTML = obj.categories[i].name;
-				eCats.appendChild(opt);
-			}
-		}
+		//Get the user's employement. Show both active and inactive jobs
+		getEmploymentByUser("${user.userId}", function(response){
+			//alert("callback getEmploymentByUser");			
+			populateJobs(response, document.getElementById("jobsHiredFor"), -1);
+		});
+		
+		
+		//I have these functions here because the user's Id needs to be in scope.
+		//When these functions are located in an external file, then the user object, and thus the user's id, is out of scope.
+		//If the function is located in an external file, maybe there is a way to bind the user Id, while it is still in scote, to the function?
+		//For now, they are here because it works.
+		//*********************************************************************************************************
+		$("#profileAddCat").click(function(){
+			
+			//Get the category id to add
+			var e = document.getElementById("appCats");
+			var categoryId = e.value;
+			
+			addCategoryToUser(categoryId, "${user.userId}", function(response){
+				populateCategories(response, document.getElementById("profileCats"));
+			});
+		});
+		
+		$("#profileDeleteCat").click(function(){
+			
+			//Get the category id to delete
+			var e = document.getElementById("profileCats");
+			var categoryId = e.value;
+			
+			deleteCategoryFromUser(categoryId, "${user.userId}", function(response){
+				populateCategories(response, document.getElementById("profileCats"));
+			});
+		});
+		//*********************************************************************************************************
+		
 	</script>
 	
 	

@@ -13,6 +13,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.model.App;
 import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.repository.UserRepository;
 
 @Service
@@ -25,7 +26,7 @@ public class UserServiceImpl {
 		repository.createUser(user);
 	}
 
-	public void addCategory(int userId, int categoryId) {
+	public void addCategoryToUser(int userId, int categoryId) {
 
 		// Verify the usercategory table does not already contain this item
 		if (repository.getUserCatergories(userId, categoryId).size() <= 0) {
@@ -42,10 +43,6 @@ public class UserServiceImpl {
 	// repository.setUserCats(user, cats, app);
 	// }
 
-	public void setUserByEmail(JobSearchUser user) {
-		repository.getUserByEmail(user);
-
-	}
 
 	public void setUsersId(JobSearchUser user) {
 		repository.setUsersId(user);
@@ -102,6 +99,14 @@ public class UserServiceImpl {
 
 	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
 		return repository.getEmployeesByCategory(categoryId);
+	}
+	
+	public List<RateCriterion> getAppRateCriteria() {
+		return repository.getAppRateCriteria();
+	}
+
+	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, int value) {
+		repository.rateEmployee(rateCriterionId, employeeId, jobId, value);		
 	}
 
 }

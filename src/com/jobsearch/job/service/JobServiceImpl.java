@@ -1,6 +1,7 @@
 package com.jobsearch.job.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,9 +19,9 @@ public class JobServiceImpl {
 		repository.addJob(jobName, userId);
 	}
 
-	public ArrayList<Job> getJobs(int userId) {
+	public List<Job> getJobs(int userId) {
 
-		return repository.getJobs(userId);
+		return repository.getJobsByUser(userId);
 	}
 
 	public ArrayList<Job> getJobs(JobSearchUser user, boolean isActive) {
@@ -47,20 +48,29 @@ public class JobServiceImpl {
 		return repository.getAppliedToJobs(user, showOnlyActiveJobs);
 	}
 
-	public ArrayList<Job> getJobsByCategory(int categoryId, boolean showOnlyActiveJobs) {
-		return repository.getJobsByCategory(categoryId, showOnlyActiveJobs);
+	public List<Job> getJobsByCategory(int categoryId) {
+		return repository.getJobsByCategory(categoryId);
 	}
 
 	public ArrayList<Job> getEmployment(JobSearchUser user, boolean showOnlyActiveJobs) {
 		return repository.getEmployment(user, showOnlyActiveJobs);
 	}
 
-	public void addJobCategory(int jobId, int categoryId) {
-		repository.addJobCategory(jobId, categoryId);
 
-	}
 
 	public Job getJob(int jobId) {
 		return repository.getJob(jobId);
+	}
+	
+	public List<Job> getApplicationsByUser(int userId) {
+		return repository.getApplicationsByUser(userId);
+	}
+
+	public List<Job> getEmploymentByUser(int userId) {
+		return repository.getEmploymentByUser(userId);
+	}
+
+	public List<Job> getJobsByUser(int userId) {
+		return repository.getJobsByUser(userId);
 	}
 }

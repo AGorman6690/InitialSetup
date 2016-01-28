@@ -62,8 +62,8 @@ public class JobSearchUser {
 		return jobs;
 	}
 
-	public void setJobs(ArrayList<Job> jobs) {
-		this.jobs = jobs;
+	public void setJobs(List<Job> jobs) {
+		this.jobs = (ArrayList<Job>) jobs;
 	}
 
 	public Profile getProfile() {
