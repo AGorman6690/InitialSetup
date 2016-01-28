@@ -1,17 +1,10 @@
 package com.jobsearch.user.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.Job;
-import com.jobsearch.model.App;
-import com.jobsearch.model.Item;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.repository.UserRepository;
@@ -26,47 +19,15 @@ public class UserServiceImpl {
 		return repository.createUser(user);
 	}
 
-	public void addCategoryToUser(int userId, int categoryId) {
-
-		// Verify the usercategory table does not already contain this item
-		if (repository.getUserCatergories(userId, categoryId).size() <= 0) {
-			repository.addUserCategory(userId, categoryId);
-		}
-	}
-
-	public void deleteCategory(int userId, int categoryId) {
-		repository.deleteUserCategory(userId, categoryId);
-
-	}
-
-	// public void setUsersCats(JobSearchUser user, String[] cats, App app) {
-	// repository.setUserCats(user, cats, app);
-	// }
-
-
 	public void setUsersId(JobSearchUser user) {
 		repository.setUsersId(user);
 
 	}
 
-	public void exportUsersCats(JobSearchUser user) {
-		repository.exportUsersCats(user);
-
-	}
-
-	// public void exportJobCategory(DataBaseItem item) {
-	// repository.exportJobCategory(item);
-	//
-	// }
-
 	public JobSearchUser getUserByEmail(String emailAddress) {
 		return repository.getUserByEmail(emailAddress);
 
 	}
-
-	// public ArrayList<Category> getCategoriesForJob(Job job) {
-	// return repository.getCategoriesForJob(job);
-	// }
 
 	public List<JobSearchUser> getUsers(int categoryId, int profileIdNotToInclude) {
 		return repository.getUsers(categoryId, profileIdNotToInclude);
@@ -80,8 +41,8 @@ public class UserServiceImpl {
 		return repository.getApplicants(jobId);
 	}
 
-	public List<JobSearchUser> getEmployees(int jobId) {
-		return repository.getEmpolyees(jobId);
+	public List<JobSearchUser> getEmployeesByJob(int jobId) {
+		return repository.getEmpolyeesByJob(jobId);
 	}
 
 	public void hireApplicant(int userId, int jobId) {

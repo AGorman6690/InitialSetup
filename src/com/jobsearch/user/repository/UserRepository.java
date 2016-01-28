@@ -13,10 +13,10 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.category.service.Category;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.JobSearchUser;
-import com.jobsearch.category.service.Category;
 
 @Repository
 public class UserRepository {
@@ -67,7 +67,6 @@ public class UserRepository {
 		jdbcTemplate.update(insertUser,
 				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1, user.getPassword() });
 
-		String insertUserProfile = "insert into user_profile(UserId, ProfileId) values (SELECT LAST_INSERT_ID(), ?)";
 
 	}
 	//***********************************************************
@@ -235,77 +234,6 @@ public class UserRepository {
 		 return (List<RateCriterion>) list;		 
 	}
 
-//	public List<Item> JobsCategoriesRowMapper(String sql, Object[] args) {
-//
-//		List<Item> list;
-//		list = jdbcTemplate.query(sql, args, new RowMapper<Item>() {
-//
-//			@Override
-//			public Item mapRow(ResultSet rs, int rownumber) throws SQLException {
-//				Item e = new Item();
-//				e.setJobId(rs.getInt(2));
-//				e.setCategoryId(rs.getInt(3));
-//				return e;
-//			}
-//		});
-//
-//		// System.out.println(list.get(0));
-//
-//		return list;
-//
-//	}
-
-	// public List<JobSearchUser> EmployeesCategoriesRowMapper(String sql,
-	// Object[] args){
-	//
-	// List<JobSearchUser> list;
-	// list = jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>(){
-	//
-	// @Override
-	// public JobSearchUser mapRow(ResultSet rs, int rownumber) throws
-	// SQLException {
-	// JobSearchUser e = new JobSearchUser();
-	// e.setFirstName(rs.getString(1));
-	// e.setLastName(rs.getString(2));
-	// e.setEmailAddress(rs.getString(3));
-	// return e;
-	// }
-	// });
-	//
-	//
-	// //System.out.println(list.get(0));
-	//
-	// return list;
-	//
-	// }
-
-
-	// public void setUserCats(JobSearchUser user, String[] cats, App app) {
-	//
-	// List<Category> userCats;
-	// userCats = user.getCategories();
-	//
-	//
-	// for(String strCat : cats){
-	// user.addCategory(app.getCategoryByName(strCat));
-	// }
-	//
-	// for(Category cat : user.getCategories()){
-	// System.out.println(cat.getName());
-	// }
-	//
-	//
-	// }
-
-	public void exportUsersCats(JobSearchUser user) {
-
-		for (Category cat : user.getCategories()) {
-			String sql = "insert into user_category(UserID, CategoryID)  values (?, ?)";
-			jdbcTemplate.update(sql, new Object[] { user.getUserId(), cat.getId() });
-
-		}
-
-	}
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
@@ -327,13 +255,6 @@ public class UserRepository {
 
 	}
 
-	public void deleteUserCategory(int userId, int categoryId) {
-
-		String sql;
-		sql = "DELETE FROM user_category" + " WHERE userId = ?" + " AND categoryId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
-	}
 
 	public List<Category> getUserCatergories(int userId, int categoryId) {
 
@@ -344,13 +265,7 @@ public class UserRepository {
 
 	}
 
-	public void addUserCategory(int userId, int categoryId) {
 
-		String sql;
-		sql = "insert into user_category (UserID, CategoryID) values (?, ?)";
-		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
-
-	}
 
 	// public void exportJobCategory(DataBaseItem item) {
 	// String sql;
@@ -417,7 +332,7 @@ public class UserRepository {
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
-	public ArrayList<JobSearchUser> getEmpolyees(int jobId) {
+	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
 		
 
 		String sql = "SELECT *" + " FROM user"

@@ -1,6 +1,5 @@
 package com.jobsearch.category.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jobsearch.job.service.Job;

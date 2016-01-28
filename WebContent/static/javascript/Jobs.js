@@ -18,7 +18,7 @@ $(document).ready(function(){
 		});
 		
 		//Get the employees for the selected job
-		getEmployees(jobId, function(response){
+		getEmployeesByJob(jobId, function(response){
 			populateUsers(response, document.getElementById("employees"));
 		});
 		
@@ -31,20 +31,19 @@ $(document).ready(function(){
 	$("#completedJobs").change(function(){		
 		//Get job id
 		var jobId = $("#completedJobs").val();
-		//alert(jobId);
+
 		//Get the employees for the selected job
-		getEmployees(jobId, function(response){
-			alert(JSON.stringify(response));
+		getEmployeesByJob(jobId, function(response){
 			populateUsers(response, document.getElementById("employeesCompletedJob"));
 		});
 	})
 	
 	$("#markJobComplete").click(function(){
 		var jobId = $("#activeJobs").val();//document.getElementById("selectedJob").name;
-		alert(jobId);
+		
 		//Mark the job complete
 		markJobComplete(jobId, function(response){
-			
+
 			//Populate the user's active jobs
 			populateJobs(response, document.getElementById("activeJobs"), 1);
 			
@@ -56,7 +55,6 @@ $(document).ready(function(){
 	});
 	
 })
-
 
 
 function addJob(jobName, userId, callback){
@@ -78,9 +76,7 @@ function addJob(jobName, userId, callback){
 	function _error(response){
 		alert("error addJob");
 	}
-
 }
-
 
 function applyForJob() {
 
@@ -94,30 +90,6 @@ function applyForJob() {
 	})
 }
 
-//function getSelectedUser() {
-//	// alert("get jobs");
-//	var e = document.getElementById("employers");
-//	var userId = e.options[e.selectedIndex].value;
-//	$.ajax({
-//		type : "GET",
-//		url : 'http://localhost:8080/JobSearch/getSelectedUser?userId='
-//				+ userId,
-//		contentType : "application/json", // Request
-//		dataType : "json", // Response
-//		success : _success,
-//		error : _error
-//	});
-//
-//	// Populate the selected employer's jobs
-//	function _success(response) {
-//		populateJobs(response.jobs, document
-//				.getElementById("jobs"));
-//	}
-//
-//	function _error(response) {
-//		alert("error");
-//	}
-//}
 
 function markJobComplete(jobId, callback){
 
@@ -129,8 +101,8 @@ function markJobComplete(jobId, callback){
         error: _error
 	    });
 	
-		function _success(response){
-		//alert("success markJobComplete");
+		function _success(response){			
+			//alert("success markJobComplete");
 			callback(response);
 		}
 
@@ -139,36 +111,6 @@ function markJobComplete(jobId, callback){
 		}
 }
 
-//function getSelectedCategory() {
-//	// alert("get jobs");
-//	var e = document.getElementById("categories");
-//	var categoryId = e.options[e.selectedIndex].value;
-//
-//	$.ajax({
-//		type : "GET",
-//		url : 'http://localhost:8080/JobSearch/getSelectedCategory?categoryId='
-//				+ categoryId,
-//		contentType : "application/json", // Request
-//		dataType : "json", // Response
-//		success : _success,
-//		error : _error
-//	});
-//
-//	function _success(response) {
-//
-//		// Clear jobs by selected users
-//		$("#jobs").empty();
-//
-//		populateUsers(response.selectedCategory.users, document
-//				.getElementById("employers"));
-//		populateJobs(response.selectedCategory.jobs, document
-//				.getElementById("jobsBySelectedCat"));
-//	}
-//
-//	function _error(response) {
-//		alert("error");
-//	}
-//}
 
 function getApplicationsByUser(userId, callback){		
 	//	function getJobs(e){	
@@ -203,7 +145,7 @@ function getEmploymentByUser(userId, callback){
 		    });
 			
 			function _success(response){
-				alert("success getEmploymentByUser");
+				//alert("success getEmploymentByUser");
 				callback(response);
 			}
 			
@@ -225,6 +167,7 @@ function getJobsByUser(userId, callback){
 			
 			function _success(response){
 			//	alert("success getJobsByUser");
+				
 				callback(response);
 			}
 			

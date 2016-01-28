@@ -2,7 +2,6 @@ package com.jobsearch.category.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,25 +37,21 @@ public class CategoryRepository {
 		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
 
 	}
+	
+	public void addCategoryToUser(int userId, int categoryId) {
 
-	public List<Category> getCategories() {
+		String sql;
+		sql = "insert into user_category (UserID, CategoryID) values (?, ?)";
+		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 
-		String sql = "SELECT * " + " FROM category";
-
-		return this.CategoryRowMapper(sql, null);
 	}
 	
-	public List<Category> getAllParentCategories() {
+	public void deleteCategoryFromUser(int userId, int categoryId) {
 
-		String sql = "SELECT * " + " FROM category Where ParentCategoryId = 0";
+		String sql;
+		sql = "DELETE FROM user_category" + " WHERE userId = ?" + " AND categoryId = ?";
 
-		return this.CategoryRowMapper(sql, null);
-	}
-
-	public Category getCategory(int categoryId) {
-		String sql = "SELECT *" + " FROM category" + "	WHERE CategoryID = ?";
-
-		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
+		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 	}
 
 	public List<Category> getCategoriesByJobId(int jobId) {

@@ -1,145 +1,18 @@
 <%@ include file="./includes/Header.jsp" %>
 
 	<head>
-		<style>
-			.section{
-				color: red;
-				font-size: 4em;
-			}		
-		</style>	
 		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
-		
-		<script type="text/javascript">
-		
-			function getSelectedCompletedJob(){
-			//	alert("getSelectedCompletedJob");
-				getEmployeesByJob(this.value, "employeesCompletedJob");
-				getEmployeesByJob2(this.value, function(response){
-					//alert("callback getEMployeesByJob2");
-				//	alert(JSON.stringify(response));
-					//alert(response.users.length);
-					$('#employeesToRate').empty();
-					var i;
-					for(i=0; i<response.users.length; i++){
-						$('#employeesToRate').append('<li>' + response.users[i].firstName + '</li>')
-					}
-					
-					$('#employeesToRate').on('click', 'li', function(){
-					//	alert(this.text);
-						$('#selectedEmployee').html(this.innerText);
-					})
-				})
-			
-			}
-			
-		</script>
-		
-<!-- 		<link rel="stylesheet" type="text/css" href="/css/main.css"> -->
-
 		<style>
-		
-.main{
-      position: relative;
-      top: 50px;
-      left: 30px;
-      border-style: solid;
-      width: 500px;
-      height: 300px;
-}
-
-.all{
-  list-style: none;
-  position: absolute;
-  top: -18px;
-  float: left;
-  height: 290px;
-  width: 100px;
-  border: 1px solid black;
-  padding-left: 10px;
-  padding-right: 0px;
-  padding-top: 10px
-}
-
-.list{
-    padding-top: 20px;
-}
-
-.selected{
-  position: absolute;
-  top: -18px;
-  left: 110px;
-  border: 1px solid black;
-  width: 390px;
-  height: 25px;
-}
-
-.rating1{
-  position: absolute;
-  top: 40px;
-  left: 110px;
-  border: 1px solid black;
-  width: 390px;
-  height: 25px;
-}
-
-.rating-content{
-  position: absolute;
-  top: -10px;
-  left: 0px;
-  width: 190px;
-  height: 25px
-}
-
-.button1{
-  position: absolute;
-  left: 70px;
-  width: 50px;
-}
-
-.button2{
-  position: absolute;
-  left: 130px;
-   width: 50px;
-}
-
-.button3{
-  position: absolute;
-  left: 190px;
-   width: 50px;
-}
-
-.button4{
-  position: absolute;
-  left: 250px;
-   width: 50px;
-}
-
-
-.button5{
-  position: absolute;
-  left: 310px;
-   width: 50px;
-}
-
-.ratings{
-  list-style: none;
-  position: absolute;
-  top: 8px;
-  width: 180px;
-  height: 265px;
-  left: 110px;
-  border: 1px solid black;
-  padding-left: 10px;
-  padding-right: 0px;
-  padding-top: 10px
-}
-</style>
-
-
+			.section{
+				color: red;
+				font-size: 4em;
+			}		
+		</style>			
+		<link rel="stylesheet" type="text/css" href="../static/css/ratings.css">
 	</head>
 
 	<a href="./findEmployees">Find Employees</a>	
@@ -262,43 +135,35 @@
 	
 	
 <div class="main">
-  
-
-<ul id="employeesToRate" class="all">
-  </ul>
-
-
-  <p data-userId="" id="selectedEmployee"  class="selected">  
-  </p>
-
-  <div class="rating1">
-    <p class="rating-content">
-    On Time:
-    </p>
-    
-    <button value=1 id="ontime1" type="button" class="button1">
-    Never
-    </button>
-
-    <button value=2 id="ontime2" type="button" class="button2">
-      Rarely
-    </button>
-
-    <button value=3 id="ontime3" type="button" class="button3">
-      Occasionally
-    </button>
-
-    <button value=4 id="ontime4" type="button" class="button4">
-      Mostly
-    </button>
-
-    <button value=5 id="ontime5" type="button" class="button5">
-      Always
-    </button>
-
-  
-  </div>
-  
+	<ul id="employeesToRate" class="all">
+	</ul>
+	<p data-userId="" id="selectedEmployee"  class="selected">  
+	</p>
+ 	<div class="rating1">
+		<p class="rating-content">
+		On Time:
+		</p>
+   
+		<button value=1 id="ontime1" type="button" class="button1">
+		Never
+		</button>
+		
+		<button value=2 id="ontime2" type="button" class="button2">
+		  Rarely
+		</button>
+		
+		<button value=3 id="ontime3" type="button" class="button3">
+		  Occasionally
+		</button>
+		
+		<button value=4 id="ontime4" type="button" class="button4">
+		  Mostly
+		</button>
+		
+		<button value=5 id="ontime5" type="button" class="button5">
+		  Always
+		</button> 
+	</div> 
 </div>
 	
 	<script >	
@@ -325,7 +190,6 @@
  		});
 		
 
-// 		document.getElementById("completedJobs").addEventListener("click", getSelectedCompletedJob);
 // 		document.getElementById("submitRating").addEventListener("click", rateEmployee);
 // 		document.getElementById("ontime5").addEventListener("click", submitOnTimeRating);
 				
@@ -367,7 +231,7 @@
 			});
 		});
 		//*********************************************************************************************************	
-		</script>
+	</script>
 				
 		
 <%@ include file="./includes/Footer.jsp" %>

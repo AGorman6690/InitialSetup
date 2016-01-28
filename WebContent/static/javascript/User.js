@@ -41,11 +41,11 @@ function getApplicants(jobId, callback){
 		} 
 }
 
-function getEmployees(jobId, callback){
+function getEmployeesByJob(jobId, callback){
 	//alert("getEmployees");
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/getEmployees?jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/getEmployeesByJob?jobId=' + jobId,
 			dataType: "json",
 	        success: _success,
 	        error: _error

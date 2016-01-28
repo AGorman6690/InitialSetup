@@ -27,9 +27,9 @@
 			<tr>
 				<td>Profile Type:</td>
 				<td>
-				<form:select path="profileId">
+				<select id="profiles">
 					<form:options items="${profiles}" itemValue="Id" itemLabel="name" />
-				</form:select>
+				</select>
 			</tr>		
 			<tr>
 				<td><input id='co_registerUser' type="submit" value="Create Account" /></td>
@@ -37,6 +37,11 @@
 		</table>
 	</form:form>
 </body>
+
+<script>
+
+</script>
+
 
 
 <%@ include file="./includes/Footer.jsp" %>
