@@ -56,6 +56,7 @@ public class UserController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome(HttpServletRequest request, ModelAndView model) {
 
@@ -90,65 +91,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
-	public ModelAndView getProfile(HttpServletRequest request, ModelAndView model,
-
-
-			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
+	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
 		//From the email provided, set the user object
 		user = userService.getUserByEmail(user.getEmailAddress());
 
 
+//		// Set the user's profile object
+//		user.setProfile(userService.getProfile(user.getProfileId()));
 
-//		// Set the user's list of category objects.
-//		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
-
-		// Set the user's profile object
-		user.setProfile(userService.getProfile(user.getProfileId()));
-
-		
-//		//Set all jobs, active and inactive
-//		user.setJobs(jobService.getJobs(user.getUserId()));
-//		
-//		user.setActiveJobs(jobService.getJobs(user, true));
-//
-//		// If an employee, set applied to jobs and employement
-//		if (user.getProfileId() == 2) {
-//			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
-//			user.setEmployment(jobService.getEmployment(user, false));
-//		}
-//
-//		// For each user's job, set the categories associated with each job.
-//		for (Job job : user.getJobs()) {
-//			// job.setCategories(service.getCategoriesForJob(job));
-//			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-//		}
-
-
-		// Set all jobs, active and inactive
-		user.setJobs(jobService.getJobs(user.getUserId()));
-
-		user.setActiveJobs(jobService.getJobs(user, true));
-
-		// If an employee, set applied to jobs and employement
-		if (user.getProfileId() == 2) {
-			user.setAppliedToJobs(jobService.getAppliedToJobs(user, true));
-			user.setEmployment(jobService.getEmployment(user, false));
-		}
-
-		// For each user's job, set the categories associated with each job.
-		for (Job job : user.getJobs()) {
-			// job.setCategories(service.getCategoriesForJob(job));
-			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-		}
-
-
-		// It appears that after setting the "user" object by email as done
-		// above,
-		// the "user" object needs to be added to the model again.
-		// Without this .addObject statement below, the view does not have
-		// access to the
-		// "user" object after it was modified above (or so it seems...)
 		model.addObject("user", user);
 
 		// Set the view to return
@@ -282,11 +233,6 @@ public class UserController {
 
 		return JSON.stringify(user);
 	}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> ratings
 	
 	//***********************************************************************
 	@RequestMapping(value="/getAppRateCriteria", method = RequestMethod.GET)
@@ -314,13 +260,6 @@ public class UserController {
 	
 	//***********************************************************************
 	
-<<<<<<< HEAD
-	
-=======
-
->>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
-=======
->>>>>>> ratings
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)
 	@ResponseBody
 	public ModelAndView applyForJob(HttpServletRequest request, ModelAndView model, @RequestParam int jobId,
