@@ -22,8 +22,8 @@ public class UserServiceImpl {
 	@Autowired
 	UserRepository repository;
 
-	public void createUser(JobSearchUser user) {
-		repository.createUser(user);
+	public JobSearchUser createUser(JobSearchUser user) {
+		return repository.createUser(user);
 	}
 
 	public void addCategoryToUser(int userId, int categoryId) {
@@ -68,7 +68,7 @@ public class UserServiceImpl {
 	// return repository.getCategoriesForJob(job);
 	// }
 
-	public ArrayList<JobSearchUser> getUsers(int categoryId, int profileIdNotToInclude) {
+	public List<JobSearchUser> getUsers(int categoryId, int profileIdNotToInclude) {
 		return repository.getUsers(categoryId, profileIdNotToInclude);
 	}
 
@@ -76,11 +76,11 @@ public class UserServiceImpl {
 		return repository.getUser(userId);
 	}
 
-	public ArrayList<JobSearchUser> getApplicants(int jobId) {
+	public List<JobSearchUser> getApplicants(int jobId) {
 		return repository.getApplicants(jobId);
 	}
 
-	public ArrayList<JobSearchUser> getEmployees(int jobId) {
+	public List<JobSearchUser> getEmployees(int jobId) {
 		return repository.getEmpolyees(jobId);
 	}
 
@@ -93,11 +93,11 @@ public class UserServiceImpl {
 		return repository.getProfile(profileId);
 	}
 
-	public ArrayList<Profile> getProfiles() {
+	public List<Profile> getProfiles() {
 		return repository.getProfiles();
 	}
 
-	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
+	public List<JobSearchUser> getEmployeesByCategory(int categoryId) {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 	
