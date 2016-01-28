@@ -91,21 +91,21 @@ public class UserController {
 
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
 	public ModelAndView getProfile(HttpServletRequest request, ModelAndView model,
-<<<<<<< HEAD
+
+
 			@ModelAttribute("user") JobSearchUser user, @ModelAttribute App app) {
 
 		//From the email provided, set the user object
 		user = userService.getUserByEmail(user.getEmailAddress());
-=======
-			@ModelAttribute("user") JobSearchUser user) {
->>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
+
+
 
 //		// Set the user's list of category objects.
 //		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
 
 		// Set the user's profile object
 		user.setProfile(userService.getProfile(user.getProfileId()));
-<<<<<<< HEAD
+
 		
 //		//Set all jobs, active and inactive
 //		user.setJobs(jobService.getJobs(user.getUserId()));
@@ -123,7 +123,7 @@ public class UserController {
 //			// job.setCategories(service.getCategoriesForJob(job));
 //			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 //		}
-=======
+
 
 		// Set all jobs, active and inactive
 		user.setJobs(jobService.getJobs(user.getUserId()));
@@ -141,7 +141,7 @@ public class UserController {
 			// job.setCategories(service.getCategoriesForJob(job));
 			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		}
->>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
+
 
 		// It appears that after setting the "user" object by email as done
 		// above,
@@ -151,13 +151,6 @@ public class UserController {
 		// "user" object after it was modified above (or so it seems...)
 		model.addObject("user", user);
 
-<<<<<<< HEAD
-		// Reset the selected job.
-		// This will clear controls on profile page.
-//		app.setSelectedJob(new Job());
-
-=======
->>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
 		// Set the view to return
 		if (user.getProfileId() == 2)
 			model.setViewName("ProfileYee");
@@ -290,6 +283,10 @@ public class UserController {
 		return JSON.stringify(user);
 	}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> ratings
 	
 	//***********************************************************************
 	@RequestMapping(value="/getAppRateCriteria", method = RequestMethod.GET)
@@ -317,10 +314,13 @@ public class UserController {
 	
 	//***********************************************************************
 	
+<<<<<<< HEAD
 	
 =======
 
 >>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
+=======
+>>>>>>> ratings
 	@RequestMapping(value = "applyForJob", method = RequestMethod.GET)
 	@ResponseBody
 	public ModelAndView applyForJob(HttpServletRequest request, ModelAndView model, @RequestParam int jobId,

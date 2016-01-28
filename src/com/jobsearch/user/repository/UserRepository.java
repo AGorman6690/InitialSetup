@@ -56,8 +56,11 @@ public class UserRepository {
 
 	}
 
-<<<<<<< HEAD
-	public void createUser(JobSearchUser user) {
+
+	//Delete????
+	//***********************************************************
+	public void createUser2(JobSearchUser user) {
+
 
 		String insertUser = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
 
@@ -65,13 +68,15 @@ public class UserRepository {
 				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1, user.getPassword() });
 
 		String insertUserProfile = "insert into user_profile(UserId, ProfileId) values (SELECT LAST_INSERT_ID(), ?)";
-=======
+
+	}
+	//***********************************************************
+	
 	public JobSearchUser createUser(JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call insertUser(?, ?, ?, ?, ?, ?)}");
->>>>>>> 0a0afe93534db65c17fbc1b3379b61efa9ca4ab7
-		
+
 			 cStmt.setString(1, user.getFirstName());
 			 cStmt.setString(2, user.getLastName());
 			 cStmt.setString(3, user.getEmailAddress());
