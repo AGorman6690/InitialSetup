@@ -26,14 +26,6 @@ public class UserRepository {
 
 	public JobSearchUser getUser(int userId) {
 
-		/*
-		 * String sql2 =
-		 * "insert into user (UserId, FirstName, LastName, Email)  values ( 4 ,' Alice', 'Anderson', 'ee')"
-		 * ;
-		 * 
-		 * jdbcTemplate.update(sql2);
-		 */
-
 		String sql = "Select * from User where userId = " + userId;
 
 		return jdbcTemplate.query(sql, new ResultSetExtractor<JobSearchUser>() {
@@ -183,22 +175,6 @@ public class UserRepository {
 		return (ArrayList<Profile>) list;
 	}
 
-	// public List<JobSearchUser> UserCategoryRowMapper(String sql, String
-	// email){
-	//
-	// return jdbcTemplate.query(sql, new Object[]{email}, new
-	// RowMapper<JobSearchUser>(){
-	// @Override
-	// public JobSearchUser mapRow(ResultSet rs, int rownumber) throws
-	// SQLException {
-	// JobSearchUser e = new JobSearchUser();
-	// e.setUserId(rs.getInt(1));
-	// e.setFirstName(rs.getString(2));
-	// e.setLastName(rs.getString(3));
-	// return e;
-	// }
-	// });
-	// }
 	public List<Category> UserCategoriesRowMapper(String sql, Object[] args) {
 
 		List<Category> list;
@@ -265,64 +241,6 @@ public class UserRepository {
 
 	}
 
-
-
-	// public void exportJobCategory(DataBaseItem item) {
-	// String sql;
-	// sql = "insert into jobscategories (JobId, CategoryId) values (?, ?)";
-	// jdbcTemplate.update(sql, new Object[]{item.getJobId(),
-	// item.getCategoryId()});
-	//
-	//
-	// }
-
-	// @SuppressWarnings("null")
-	// public ArrayList<Category> getCategoriesForJob(Job job) {
-	//
-	// //Need category Ids associated with job Id.
-	// //Return a list a db items.
-	// String sql = "select * from jobscategories where JobId = ?";
-	// Object[] args = {job.getId()};
-	// List<DataBaseItem> items = this.JobsCategoriesRowMapper(sql, args);
-	//
-	// //Use the db items' category id property to get category objects
-	// ArrayList<Category> cats = new ArrayList<Category>();
-	// List<Category> returnedCats;
-	// sql = "select * from categories where CategoryID = ?";
-	// for (DataBaseItem item : items){
-	//
-	// //Get the category object associated with the db item's category id
-	// returnedCats = this.CategoryRowMapper(sql, new Object[]
-	// {item.getCategoryId()});
-	// cats.add(returnedCats.get(0));
-	//
-	//
-	// }
-	//
-	// return cats;
-	// }
-
-	public ArrayList<JobSearchUser> getUsers(int categoryId, int profileIdNotToInclude) {
-
-		// **************************************************
-		// Should this select statement dynamically created to capture all table
-		// column names?
-		// Reason: because this is selecting all columns from the user table, if
-		// additional columns
-		// are added to the user table, this select string will need to be
-		// updated.
-		// **************************************************
-
-		// Given a category ID, get all user objects.
-		String sql = "SELECT user.UserId, user.FirstName, user.LastName, user.Email, user.ProfileId" + " FROM user"
-				+ " INNER JOIN user_category "
-				+ " ON user.UserId = user_category.UserID"
-				+ " AND user_category.CategoryID = ?" + " AND user.ProfileId <> ?";
-
-		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql,
-				new Object[] { categoryId, profileIdNotToInclude });
-	}
-
 	public ArrayList<JobSearchUser> getApplicants(int jobId) {
 
 		String sql = "SELECT *" + " FROM user"
@@ -336,14 +254,15 @@ public class UserRepository {
 		
 
 		String sql = "SELECT *" + " FROM user"
-				+ " INNER JOIN application" + " ON user.UserId = application.UserId" 
-				+ " AND application.JobId = ?" + " AND application.IsHired = 1";
+				+ " INNER JOIN employment" + " ON user.UserId = employment.UserId" 
+				+ " AND employment.JobId = ?";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
 	public void hireApplicant(int userId, int jobId) {
-		String sql = "UPDATE application SET IsHired = 1 WHERE UserId = ? AND JobId = ?";
+		String sql = "INSERT INTO employment (UserId, JobId)"
+				+ " VALUES(?, ?)";
 
 		jdbcTemplate.update(sql, new Object[] { userId, jobId });
 

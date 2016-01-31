@@ -29,10 +29,6 @@ public class UserServiceImpl {
 
 	}
 
-	public List<JobSearchUser> getUsers(int categoryId, int profileIdNotToInclude) {
-		return repository.getUsers(categoryId, profileIdNotToInclude);
-	}
-
 	public JobSearchUser getUser(int userId) {
 		return repository.getUser(userId);
 	}

@@ -76,14 +76,6 @@ public class JobRepository {
 
 	}
 
-	public ArrayList<Job> getJobsBySelectedCat(int categoryId) {
-		String sql = "SELECT job.Id, job.JobName, job.UserId, job.IsActive" + " FROM job "
-				+ " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
-				+ " AND job_category.CategoryId = ?" + " AND job.IsActive = 1";
-
-		return (ArrayList<Job>) this.JobRowMapper(sql, new Object[] { categoryId });
-	}
-
 	public List<Job> getJobsByCategory(int categoryId) {
 
 		String sql = "SELECT *" + " FROM job " + " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
@@ -92,8 +84,6 @@ public class JobRepository {
 		return  this.JobRowMapper(sql, new Object[] { categoryId });
 	}
 
-
-	
 	public List<Job> getApplicationsByUser(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + "	ON job.JobId = application.JobId"
 				+ "	AND application.UserId = ?";
@@ -105,8 +95,8 @@ public class JobRepository {
 	}
 	
 	public List<Job> getEmploymentByUser(int userId) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + "	ON job.JobId = application.JobId"
-				+ "	AND application.UserId = ? AND application.IsHired = 1";
+		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment" + "	ON job.JobId = employment.JobId"
+				+ "	AND employment.UserId = ?";
 
 //		if (showOnlyActiveJobs)
 //			sql += " AND jobs.IsActive = 1";

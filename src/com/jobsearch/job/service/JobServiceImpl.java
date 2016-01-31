@@ -1,6 +1,5 @@
 package com.jobsearch.job.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,6 @@ public class JobServiceImpl {
 
 	public void applyForJob(int jobId, int userId) {
 		repository.applyForJob(jobId, userId);
-	}
-
-	public ArrayList<Job> getJobsBySelectedCat(int categoryId) {
-		return repository.getJobsBySelectedCat(categoryId);
 	}
 
 	public List<Job> getJobsByCategory(int categoryId) {

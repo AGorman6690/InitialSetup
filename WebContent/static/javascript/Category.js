@@ -169,7 +169,6 @@ function getCategoriesBySuperCat(elementId, callback){
 
 
 function getCategoriesByUser(userId, callback){
-	alert(elementId);
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/getCategoriesByUser?userId=' + userId,
