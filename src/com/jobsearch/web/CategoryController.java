@@ -39,6 +39,18 @@ public class CategoryController {
 		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 
 	}
+		
+//	@RequestMapping(value = "/getCategoryByLevel", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getCategoryByLevel(@RequestParam int level) {
+//		return JSON.stringify(categoryService.getCategoriesByLevel(level));
+//	}
+	
+	@RequestMapping(value = "/getCategoriesBySuperCat", method = RequestMethod.GET)
+	@ResponseBody
+	public String getCategoriesBySuperCat(@RequestParam int superCat) {
+		return JSON.stringify(categoryService.getCategoriesBySuperCategory(superCat));
+	}
 	
 	@RequestMapping(value = "/deleteCategoryFromUser", method = RequestMethod.GET)
 	@ResponseBody

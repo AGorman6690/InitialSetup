@@ -5,5 +5,8 @@
 
 	<div>Post Jobs</div>
 	
+	<a href="./viewRatings">
+		<span>View Ratings</span>
+	</a>
 	
 <%@ include file="./includes/Footer.jsp" %>

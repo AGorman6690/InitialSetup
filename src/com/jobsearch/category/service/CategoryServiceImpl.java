@@ -45,6 +45,14 @@ public class CategoryServiceImpl {
 	public List<Category> getAppCategories() {
 		return repository.getAppCategories();
 	}
+
+//	public List<Category> getCategoriesByLevel(int level) {
+//		return repository.getCategoriesByLevel(level);
+//	}
+
+	public List<Category> getCategoriesBySuperCategory(int superCat) {
+		return repository.getCategoriesBySuperCategory(superCat);
+	}
 	
 	
 

@@ -144,8 +144,32 @@ function getCategoriesByJob(jobId, callback){
 		}
 }
 
+
+function getCategoriesBySuperCat(elementId, callback){
+	
+	var categoryId = getCategoryId(elementId);
+
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getCategoriesBySuperCat?superCat=' + categoryId,
+			dataType: "json",
+	        success: _success,
+	        error: _error
+	    });
+
+		function _success(response){					
+			//alert("success getCategoriesBySuperCat for " + elementId );
+			callback(response, elementId);
+		}
+		
+		function _error(){
+			alert("error getCategoriesBySuperCat");
+		}
+}
+
+
 function getCategoriesByUser(userId, callback){
-	//alert(elementId);
+	alert(elementId);
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/getCategoriesByUser?userId=' + userId,

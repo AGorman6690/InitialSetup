@@ -51,6 +51,12 @@ public class UserController {
 
 		return model;
 	}
+	
+	@RequestMapping(value = "/viewRatings", method = RequestMethod.GET)
+	public ModelAndView viewRatings(ModelAndView model) {
+		model.setViewName("Ratings");
+		return model;
+	}
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public ModelAndView welcomeAgain(HttpServletRequest request, ModelAndView model) {

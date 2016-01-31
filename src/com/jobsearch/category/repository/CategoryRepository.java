@@ -79,4 +79,14 @@ public class CategoryRepository {
 
 		return this.CategoryRowMapper(sql, null);
 	}
+
+//	public List<Category> getCategoriesByLevel(int level) {
+//		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
+//		return this.CategoryRowMapper(sql, new Object[]{ level });
+//	}
+
+	public List<Category> getCategoriesBySuperCategory(int superCat) {
+		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
+		return this.CategoryRowMapper(sql, new Object[]{ superCat });
+	}
 }
