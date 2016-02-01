@@ -56,6 +56,12 @@ public class UserController {
 		model.setViewName("Ratings");
 		return model;
 	}
+	
+	@RequestMapping(value = "/viewApplications", method = RequestMethod.GET)
+	public ModelAndView viewApplications(ModelAndView model) {
+		model.setViewName("Applications");
+		return model;
+	}
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public ModelAndView welcomeAgain(HttpServletRequest request, ModelAndView model) {
@@ -66,6 +72,13 @@ public class UserController {
 //		request.getSession().setAttribute("user", user);
 		model.addObject("user", user);
 
+		return model;
+	}
+	
+	@RequestMapping(value = "/postJob", method = RequestMethod.GET)
+	public ModelAndView postJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+
+		model.setViewName("PostJob");
 		return model;
 	}
 

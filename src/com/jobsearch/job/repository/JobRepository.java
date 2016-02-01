@@ -103,4 +103,10 @@ public class JobRepository {
 
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
+
+
+	public Job getJobByJobNameAndUser(String jobName, int userId) {
+		String sql = "SELECT * FROM job WHERE jobName = ? AND UserId = ?";
+		return JobRowMapper(sql, new Object[]{ jobName, userId }).get(0);
+	}
 }

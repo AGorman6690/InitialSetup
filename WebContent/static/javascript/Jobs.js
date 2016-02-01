@@ -49,11 +49,11 @@ $(document).ready(function(){
 })
 
 
-function addJob(jobName, userId, callback){
+function addJob(jobName, userId, categoryId, callback){
 	
 	$.ajax({	 	
 		type: "GET",
-        url: "http://localhost:8080/JobSearch/addJob?jobName=" + jobName + "&userId=" + userId,
+        url: "http://localhost:8080/JobSearch/addJob?jobName=" + jobName + "&userId=" + userId + '&categoryId=' + categoryId,
         dataType: "json", // Response
         success: _success,
         error: _error

@@ -6,13 +6,18 @@
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
 	
 	<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
+	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
 
 </head>
 
 <div id="0-0" class='show'></div>
 
+<input id='aaa' type='hidden' value=''> 
+
 
 <script>
+$('#aaa').val('2');
+alert($('#aaa').val())
 
 	//alert(2);
 	

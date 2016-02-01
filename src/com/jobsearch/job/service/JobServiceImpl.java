@@ -40,4 +40,8 @@ public class JobServiceImpl {
 	public List<Job> getJobsByUser(int userId) {
 		return repository.getJobsByUser(userId);
 	}
+
+	public Job getJobByJobNameAndUser(String jobName, int userId) {
+		return repository.getJobByJobNameAndUser(jobName, userId);
+	}
 }

@@ -7,6 +7,7 @@
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script>
+		<script src="<c:url value="/static/javascript/Display.js" />"></script>
 		<style>
 			.section{
 				color: red;
@@ -16,7 +17,17 @@
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
 <!-- ../static/css/  C:/Users/Owner/git/InitialSetup/WebContent/static/css/ratings.css-->
-	<a href="./findEmployees">Find Employees</a>	
+	<br>
+	<a href="./findEmployees">Find Employees</a>
+	<br>
+	<a href="./postJob">Post Job</a>	
+	<br>
+	<a href="./editCategories">Edit Your Categories</a>
+	<br>
+	<a href="./viewRatings">View Ratings</a>
+	<br>
+	<a href="./viewApplications">View Applications</a>
+	
 	
 	<h1>Here is your profile ${user.firstName} ${user.userId}</h1>
 	
@@ -51,20 +62,9 @@
 <!-- 	****** JOBS ****** -->
 <!-- **********************************************	 -->
 	
-	<h1 class="section">Jobs</h1>
-		
-	<h1>Here you can create a job</h1>
-	<form>
-		<input type="text" id="jobToAdd">
-		<button type="button" id="addJob">Add Job</button>
-	</form>			
-			
-	<h1>These are your active jobs</h1>
-	<p>Select a job and refresh to display associated categories and applicants</p>
+	<h1>Active jobs</h1>
 	<select multiple id="activeJobs" style= "width: 200px">
 	</select>
-
-	<br>
 
 <!-- **********************************************	 -->
 <!-- 	****** SELECTED JOB ****** -->
@@ -242,14 +242,14 @@
 		//If the function is located in an external file, maybe there is a way to bind the user Id, while it is still in scote, to the function?
 		//For now, they are here because it works.
 		//*********************************************************************************************************
-		$("#addJob").click(function(){
-			var jobName = $("#jobToAdd").val();
-			//alert(jobName);
-			addJob(jobName, "${user.userId}", function(response){
-				populateJobs(response, document.getElementById("activeJobs"), 1);
-				$("#jobToAdd").val("");
-			});
-		});
+// 		$("#addJob").click(function(){
+// 			var jobName = $("#jobToAdd").val();
+// 			//alert(jobName);
+// 			addJob(jobName, "${user.userId}", function(response){
+// 				populateJobs(response, document.getElementById("activeJobs"), 1);
+// 				$("#jobToAdd").val("");
+// 			});
+// 		});
 		
 
 		$("#addCatToUser").click(function(){

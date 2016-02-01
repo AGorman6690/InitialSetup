@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.JobSearchUser;
@@ -23,12 +25,23 @@ public class JobController {
 	@Autowired
 	JobServiceImpl jobService;
 	
+	@Autowired
+	CategoryServiceImpl categoryService;
+	
 	@RequestMapping(value = "/addJob", method = RequestMethod.GET)
 	@ResponseBody
-	public String addJob(@RequestParam String jobName, @RequestParam int userId) {
+	public String addJob(@RequestParam String jobName, @RequestParam int userId,
+							@RequestParam int categoryId) {
 
-		// Add the job to the database
+		// Add the job to the job table
 		jobService.addJob(jobName, userId);
+		
+		//Get the id of the newly created job
+		Job newJob = new Job();
+		newJob = jobService.getJobByJobNameAndUser(jobName, userId);
+		
+		//Add the category to the job
+		categoryService.addCategoryToJob(newJob.getId(), categoryId);
 
 		return JSON.stringify(jobService.getJobsByUser(userId));
 
