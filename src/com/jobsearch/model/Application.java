@@ -1,5 +1,8 @@
 package com.jobsearch.model;
 
+import com.jobsearch.job.service.Job;
+import com.jobsearch.user.service.JobSearchUser;
+
 public class Application {
 	private int applicationId;
 	private int userId;
@@ -8,8 +11,21 @@ public class Application {
 	private int beenViewed;
 	private int isAccepted;
 	private String jobName;
-	
-	
+	private Job job;
+	private JobSearchUser applicant;
+
+	public Job getJob() {
+		return job;
+	}
+	public void setJob(Job job) {
+		this.job = job;
+	}
+	public JobSearchUser getApplicant() {
+		return applicant;
+	}
+	public void setApplicant(JobSearchUser applicant) {
+		this.applicant = applicant;
+	}
 	public String getJobName() {
 		return jobName;
 	}

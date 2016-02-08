@@ -19,12 +19,16 @@ import com.jobsearch.model.Application;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
 public class UserRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	UserServiceImpl userService;
 
 	public JobSearchUser getUser(int userId) {
 
@@ -350,7 +354,7 @@ public class UserRepository {
 
 	//FIX THIS!!!!!!!!!
 	//*****************************************************************************************
-	public List<AppCatJobUser> getApplicationsByEmployer(int userId) {		
+	public List<Application> getApplicationsByEmployer(int userId) {		
 		String sql = "SELECT user.FirstName, job.JobName, application.IsOffered, application.BeenViewed,"
 				+ " application.IsAccepted, category.Name"
 				+ " FROM application"
@@ -360,14 +364,23 @@ public class UserRepository {
 				+ " INNER JOIN job_category ON job.JobId = job_category.JobId"
 				+ " INNER JOIN category ON job_category.CategoryId = category.CategoryId";
 				
-		return this.AppCatJobUserRowMapper(sql, new Object[]{ userId });
+		return this.ApplicationRowMapper(sql, new Object[]{ userId });
 	}
 	//*****************************************************************************************
 	
 	public List<Application> getApplicationsByJob(int jobId) {
+		
+		//Get all applications for job
 		String sql = "SELECT * FROM application WHERE JobId = ?";
-				
-		return ApplicationRowMapper(sql, new Object[]{ jobId });
+		List<Application> applications = ApplicationRowMapper(sql, new Object[]{ jobId });
+		
+		//For each application, set the applicant
+		for(Application application : applications){
+			application.setApplicant(userService.getUser(application.getUserId()));
+			
+		}
+		
+		return applications;
 	}
 	
 	

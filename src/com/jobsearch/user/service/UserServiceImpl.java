@@ -77,7 +77,7 @@ public class UserServiceImpl {
 		repository.rateEmployee(rateCriterionId, employeeId, jobId, value);		
 	}
 
-	public List<AppCatJobUser> getApplicationsByEmployer(int userId) {
+	public List<Application> getApplicationsByEmployer(int userId) {
 		return repository.getApplicationsByEmployer(userId);
 	}
 

@@ -116,6 +116,7 @@ function markJobComplete(jobId, callback){
 function getApplicationsByUser(userId, callback){		
 	//	function getJobs(e){	
 		//alert("getApplicationsByUser");
+	
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/getApplicationsByUser?userId=' + userId,
