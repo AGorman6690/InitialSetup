@@ -14,6 +14,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.model.AppCatJobUser;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.JobSearchUser;
@@ -194,6 +196,39 @@ public class UserRepository {
 
 	}
 	
+	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
+			@Override
+			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {
+				Application e = new Application();
+				e.setApplicationId(rs.getInt(1));
+				e.setUserId(rs.getInt(2));
+				e.setJobId(rs.getInt(3));
+				e.setIsOffered(rs.getInt(4));
+				e.setBeenViewed(rs.getInt(5));
+				e.setIsAccepted(rs.getInt(6));
+				return e;
+			}
+		});
+	}
+	
+
+	public List<AppCatJobUser> AppCatJobUserRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<AppCatJobUser>() {
+			@Override
+			public AppCatJobUser mapRow(ResultSet rs, int rownumber) throws SQLException {
+				AppCatJobUser e = new AppCatJobUser();
+				e.setFirstName(rs.getString(1));
+				e.setJobName(rs.getString(2));
+				e.setIsOffered(rs.getInt(3));
+				e.setBeenViewed(rs.getInt(4));
+				e.setIsAccepted(rs.getInt(5));
+				e.setCategoryName(rs.getString(6));
+				return e;
+			}
+		});
+	}
+	
 	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args){  
 		
 		List<RateCriterion> list;
@@ -249,6 +284,17 @@ public class UserRepository {
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
+	
+
+	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
+		String sql = "SELECT * FROM user"
+				+ " INNER JOIN application On user.UserId = application.UserId"
+				+ " AND application.IsOffered = 1 AND application.JobId = ?";
+				
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+	}
+
+
 
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
 		
@@ -302,6 +348,45 @@ public class UserRepository {
 		jdbcTemplate.update(sql, new Object[]{rateCriterionId, employeeId, jobId, value});
 	}
 
+	//FIX THIS!!!!!!!!!
+	//*****************************************************************************************
+	public List<AppCatJobUser> getApplicationsByEmployer(int userId) {		
+		String sql = "SELECT user.FirstName, job.JobName, application.IsOffered, application.BeenViewed,"
+				+ " application.IsAccepted, category.Name"
+				+ " FROM application"
+				+ " INNER JOIN job ON application.JobId = job.JobId"
+				+ " AND job.UserId = ? AND job.IsActive = 1"
+				+ " INNER JOIN user ON application.UserId = user.UserId"
+				+ " INNER JOIN job_category ON job.JobId = job_category.JobId"
+				+ " INNER JOIN category ON job_category.CategoryId = category.CategoryId";
+				
+		return this.AppCatJobUserRowMapper(sql, new Object[]{ userId });
+	}
+	//*****************************************************************************************
+	
+	public List<Application> getApplicationsByJob(int jobId) {
+		String sql = "SELECT * FROM application WHERE JobId = ?";
+				
+		return ApplicationRowMapper(sql, new Object[]{ jobId });
+	}
+	
+	
+	public void markApplicationViewed(int jobId, int userId) {
+		String sql = "UPDATE application" + " SET BeenViewed = 1"
+				+ " WHERE JobId = ? AND UserId = ?";
+
+		jdbcTemplate.update(sql, new Object[] { jobId, userId });
+		
+	}
+
+
+	public void markApplicationAccepted(int jobId, int userId) {
+		String sql = "UPDATE application" + " SET IsAccepted = 1"
+				+ " WHERE JobId = ? AND UserId = ?";
+
+		jdbcTemplate.update(sql, new Object[] { jobId, userId });
+		
+	}
 
 
 }

@@ -1,5 +1,7 @@
 package com.jobsearch.web;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,17 +53,36 @@ public class UserController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/findJobs", method = RequestMethod.GET)
+	public ModelAndView findJobs(ModelAndView model) {
+		model.setViewName("FindJobs");
+		return model;
+	}
+	
 	@RequestMapping(value = "/viewRatings", method = RequestMethod.GET)
 	public ModelAndView viewRatings(ModelAndView model) {
 		model.setViewName("Ratings");
 		return model;
 	}
 	
-	@RequestMapping(value = "/viewApplications", method = RequestMethod.GET)
+	@RequestMapping(value = "/viewApplicationsR", method = RequestMethod.GET)
 	public ModelAndView viewApplications(ModelAndView model) {
-		model.setViewName("Applications");
+		model.setViewName("R_Applications");
 		return model;
 	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test(ModelAndView model) {
+		model.setViewName("Test");
+		return model;
+	}
+	
+	@RequestMapping(value = "/viewApplicationsE", method = RequestMethod.GET)
+	public ModelAndView viewApplicationsE(ModelAndView model) {
+		model.setViewName("E_Applications");
+		return model;
+	}
+	
 
 	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
 	public ModelAndView welcomeAgain(HttpServletRequest request, ModelAndView model) {
@@ -141,6 +162,14 @@ public class UserController {
 		return JSON.stringify(userService.getApplicants(jobId));
 	}
 	
+	
+	@RequestMapping(value = "/getOfferedApplicantsByJob", method = RequestMethod.GET)
+	@ResponseBody
+	public String getOfferedApplicantsByJob(@RequestParam int jobId) {
+	//This will return all users who have been extended an offer for a particular job
+		return JSON.stringify(userService.getOfferedApplicantsByJob(jobId));
+	}
+	
 	@RequestMapping(value = "/getEmployeesByJob", method = RequestMethod.GET)
 	@ResponseBody
 	public String getEmployeesByJob(@RequestParam int jobId) {
@@ -170,7 +199,6 @@ public class UserController {
 	}
 	
 
-
 	@RequestMapping(value = "/hireApplicant", method = RequestMethod.GET)
 	@ResponseBody
 	public String hireApplicant(@RequestParam int userId, @RequestParam int jobId) {
@@ -180,6 +208,41 @@ public class UserController {
 
 		return JSON.stringify(userService.getEmployeesByJob(jobId));
 	}
-
+	
+	//May want to put this in an Application controller
+	//******************************************************************************************
+	@RequestMapping(value = "/getApplicationsByEmployer", method = RequestMethod.GET)
+	@ResponseBody
+	public String getApplicationsByEmployer(@RequestParam int userId){
+		return JSON.stringify(userService.getApplicationsByEmployer(userId));	
+	}
+	
+	@RequestMapping(value = "/getApplicationsByJob", method = RequestMethod.GET)
+	@ResponseBody
+	public String getApplicationsByJob(@RequestParam int jobId){
+		return JSON.stringify(userService.getApplicationsByJob(jobId));	
+	}
+	
+	@RequestMapping(value = "/markApplicationViewed", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public void markApplicationViewed(@RequestParam int jobId, @RequestParam int userId) {
+		
+		// Update database
+		userService.markApplicationViewed(jobId, userId);
+		
+	}
+	
+	@RequestMapping(value = "/markApplicationAccepted", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@ResponseBody
+	public String markApplicationAccepted(@RequestParam int jobId, @RequestParam int userId) {
+		
+		//Update database
+		userService.markApplicationAccepted(jobId, userId);		
+		userService.hireApplicant(userId, jobId);
+		
+		return JSON.stringify(jobService.getEmploymentByUser(userId));
+		
+	}
+	//******************************************************************************************
 
 }

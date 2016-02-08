@@ -26,7 +26,7 @@
 	<br>
 	<a href="./viewRatings">View Ratings</a>
 	<br>
-	<a href="./viewApplications">View Applications</a>
+	<a href="./viewApplicationsR">View Applications</a>
 	
 	
 	<h1>Here is your profile ${user.firstName} ${user.userId}</h1>
@@ -223,6 +223,7 @@
 		
 		//Get user's categories
 		getCategoriesByUser("${user.userId}", function(response){
+			
 			populateCategories(response, document.getElementById("profileCats"));
 		});
 		

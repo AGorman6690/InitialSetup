@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.CategoryJob;
 
 @Service
 public class JobServiceImpl {
@@ -17,8 +18,8 @@ public class JobServiceImpl {
 		repository.addJob(jobName, userId);
 	}
 
-	public void updateJobComplete(int jobId) {
-		repository.updateJobComplete(jobId);
+	public void markJobComplete(int jobId) {
+		repository.markJobComplete(jobId);
 	}
 
 	public void applyForJob(int jobId, int userId) {
@@ -44,4 +45,17 @@ public class JobServiceImpl {
 	public Job getJobByJobNameAndUser(String jobName, int userId) {
 		return repository.getJobByJobNameAndUser(jobName, userId);
 	}
+
+	public List<Job> getJobOffersByUser(int userId) {
+		return repository.getJobOffersByUser(userId);
+	}
+
+	public List<Job> getActiveJobsByUser_AppCat(int userId) {
+		return repository.getActiveJobsByUser_AppCat(userId);
+	}
+
+	public int getJobCountByCategory(int categoryId) {
+		return repository.getJobCountByCategory(categoryId);
+	}
+
 }

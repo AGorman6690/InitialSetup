@@ -15,7 +15,10 @@
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
 	</head>
 
+	<br>
 	<a href="./findJobs">Find Jobs</a>
+	<br>
+	<a href="./viewApplicationsE">View Applications</a>
 
 	<h1>Here is your profile ${user.firstName}</h1>
 	

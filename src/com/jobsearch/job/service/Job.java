@@ -3,6 +3,7 @@ package com.jobsearch.job.service;
 import java.util.List;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.model.Application;
 import com.jobsearch.user.service.JobSearchUser;
 
 public class Job {
@@ -11,10 +12,28 @@ public class Job {
 	private int isActive;
 	private int userId;
 	private String jobName;
-	private List<Category> categories;
+	private Category category;
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
+	private List<Application> applications;
 	
+	
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
+	}
+
+	public List<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(List<Application> applications) {
+		this.applications = applications;
+	}
+
 	public List<JobSearchUser> getApplicants() {
 		return applicants;
 	}
@@ -36,12 +55,12 @@ public class Job {
 	public void setIsActive(int isActive) {
 		this.isActive = isActive;
 	}
-	public List<Category> getCategories() {
-		return categories;
-	}
-	public void setCategories(List<Category> list) {
-		this.categories = list;
-	}
+//	public List<Category> getCategories() {
+//		return categories;
+//	}
+//	public void setCategories(List<Category> list) {
+//		this.categories = list;
+//	}
 	public int getId() {
 		return id;
 	}

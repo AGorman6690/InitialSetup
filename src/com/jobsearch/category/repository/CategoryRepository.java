@@ -62,6 +62,15 @@ public class CategoryRepository {
 
 		return (List<Category>) this.CategoryRowMapper(sql, new Object[] { jobId });
 	}
+	
+	public Category getCategoryByJobId(int jobId) {
+
+		// Given a job ID, get all category objects
+		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
+				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
+
+		return this.CategoryRowMapper(sql, new Object[] { jobId }).get(0);
+	}
 
 	public List<Category> getCategoriesByUserId(int userId) {
 

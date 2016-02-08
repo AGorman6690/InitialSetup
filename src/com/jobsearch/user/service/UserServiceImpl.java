@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.model.AppCatJobUser;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.repository.UserRepository;
@@ -28,6 +30,11 @@ public class UserServiceImpl {
 		return repository.getUserByEmail(emailAddress);
 
 	}
+	
+
+	public void markApplicationViewed(int jobId, int userId) {
+		repository.markApplicationViewed(jobId, userId);		
+	}
 
 	public JobSearchUser getUser(int userId) {
 		return repository.getUser(userId);
@@ -35,6 +42,10 @@ public class UserServiceImpl {
 
 	public List<JobSearchUser> getApplicants(int jobId) {
 		return repository.getApplicants(jobId);
+	}
+	
+	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
+		return repository.getOfferedApplicantsByJob(jobId);
 	}
 
 	public List<JobSearchUser> getEmployeesByJob(int jobId) {
@@ -66,5 +77,17 @@ public class UserServiceImpl {
 		repository.rateEmployee(rateCriterionId, employeeId, jobId, value);		
 	}
 
+	public List<AppCatJobUser> getApplicationsByEmployer(int userId) {
+		return repository.getApplicationsByEmployer(userId);
+	}
+
+	public void markApplicationAccepted(int jobId, int userId) {
+		repository.markApplicationAccepted(jobId, userId);
+		
+	}
+
+	public List<Application> getApplicationsByJob(int jobId) {
+		return repository.getApplicationsByJob(jobId);
+	}
 
 }

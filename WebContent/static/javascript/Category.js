@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	
+
+	
 	$("#addCatToJob").click(function(){
 	//	alert("jquery addCatToJob111");
 //		var jobId = document.getElementById("selectedJob").name;
@@ -146,7 +148,7 @@ function getCategoriesByJob(jobId, callback){
 
 
 function getCategoriesBySuperCat(elementId, callback){
-	
+	//alert("here")
 	var categoryId = getCategoryId(elementId);
 
 	$.ajax({

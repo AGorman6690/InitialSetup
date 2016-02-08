@@ -17,15 +17,20 @@ $(document).ready(function(){
 			populateUsers(response, document.getElementById("applicants"));
 		});
 		
-		//Get the employees for the selected job
-		getEmployeesByJob(jobId, function(response){
-			populateUsers(response, document.getElementById("employees"));
-		});
+		getOfferedApplicantsByJob(jobId, function(response){
+			populateUsers(response, document.getElementById("offeredApplicants"));
+		})
 		
-		//Get categories for the selected job
-		getCategoriesByJob(jobId, function(response){
-			populateCategories(response, document.getElementById("selectedJobCats"));
-		});
+		
+//		//Get the employees for the selected job
+//		getEmployeesByJob(jobId, function(response){
+//			populateUsers(response, document.getElementById("employees"));
+//		});
+//		
+//		//Get categories for the selected job
+//		getCategoriesByJob(jobId, function(response){
+//			populateCategories(response, document.getElementById("selectedJobCats"));
+//		});
 	});
 	
 
@@ -46,7 +51,11 @@ $(document).ready(function(){
 		});
 	});
 	
+
+	
 })
+
+
 
 
 function addJob(jobName, userId, categoryId, callback){
@@ -91,82 +100,168 @@ function markJobComplete(jobId, callback){
         dataType: "json",
 		success: _success,
         error: _error
-	    });
-	
-		function _success(response){			
-			//alert("success markJobComplete");
-			callback(response);
-		}
+    });
 
-		function _error(response){
-			alert("error markJobComplete");
-		}
+	function _success(response){			
+		//alert("markApplicationUnderConsideration;
+		callback(response);
+	}
+
+	function _error(response){
+		alert("error markJobComplete");
+	}
 }
 
 
 function getApplicationsByUser(userId, callback){		
 	//	function getJobs(e){	
 		//alert("getApplicationsByUser");
-		$.ajax({
-			type: "GET",
-			url: 'http://localhost:8080/JobSearch/getApplicationsByUser?userId=' + userId,
-	        dataType: 'json',
-			success: _success,
-	        error: _error
-		    });
-			
-			function _success(response){
-			//	alert("success getApplicationsByUser");
-				callback(response);
-			}
-			
-			function _error(response){
-				alert("error getApplicationsByUser");
-			}
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getApplicationsByUser?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+	//	alert("success getApplicationsByUser");
+		callback(response);
 	}
+	
+	function _error(response){
+		alert("error getApplicationsByUser");
+	}
+}
 
 function getEmploymentByUser(userId, callback){		
 	//	function getJobs(e){	
 		//alert("getEmploymentByUser");
-		$.ajax({
-			type: "GET",
-			url: 'http://localhost:8080/JobSearch/getEmploymentByUser?userId=' + userId,
-	        dataType: 'json',
-			success: _success,
-	        error: _error
-		    });
-			
-			function _success(response){
-				//alert("success getEmploymentByUser");
-				callback(response);
-			}
-			
-			function _error(response){
-				alert("error getEmploymentByUser");
-			}
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getEmploymentByUser?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+		//alert("success getEmploymentByUser");
+		callback(response);
 	}
+	
+	function _error(response){
+		alert("error getEmploymentByUser");
+	}
+}
 
 function getJobsByUser(userId, callback){		
 	//	function getJobs(e){	
 		//alert("getJobsByUser");
-		$.ajax({
-			type: "GET",
-			url: 'http://localhost:8080/JobSearch/getJobsByUser?userId=' + userId,
-	        dataType: 'json',
-			success: _success,
-	        error: _error
-		    });
-			
-			function _success(response){
-			//	alert("success getJobsByUser");
-				
-				callback(response);
-			}
-			
-			function _error(response){
-				alert("error");
-			}
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getJobsByUser?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+	//	alert("success getJobsByUser");
+		
+		callback(response);
 	}
+	
+	function _error(response){
+		alert("error");
+	}
+}
+
+function getActiveJobsByUser_AppCat(userId, callback){		
+	//	function getJobs(e){	
+		//alert("getActiveJobsByUser_AppCat");
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getActiveJobsByUser_AppCat?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+	//	alert("success getActiveJobsByUser_AppCat");		
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getActiveJobsByUser_AppCat");
+	}
+}
+
+function getJobCountByCategory(categoryId, callback){
+//	alert("getJobCountByCategory")
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getJobCountByCategory?categoryId=' + categoryId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+		//alert("success getJobCountByCategory");	
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getJobCountByCategory");
+	}	
+}
+
+function getSubJobCountByCategory(categoryId, callback){
+//	alert("getSubJobCountByCategory")
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getSubJobCountByCategory?categoryId=' + categoryId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+		//alert("success getSubJobCountByCategory");	
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getSubJobCountByCategory");
+	}	
+}
+
+
+//*******************************************************************
+//Should getApplicationsByEmployers accomplish this?????
+//*******************************************************************
+function getJobOffersByUser(userId, callback){			
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getJobOffersByUser?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+		//alert("success getJobOffersByUser");			
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getJobOffersByUser");
+	}
+}
+
+
 
 function populateJobs(arr, e, active){
 	//active values:

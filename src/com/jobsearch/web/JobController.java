@@ -61,10 +61,27 @@ public class JobController {
 	
 	@RequestMapping(value = "/getJobsByUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String getJobsByUser(ModelAndView model, @RequestParam int userId){
+	public String getJobsByUser(@RequestParam int userId){
 		return JSON.stringify(jobService.getJobsByUser(userId));
 		
 	}
+	
+	@RequestMapping(value = "/getJobCountByCategory", method = RequestMethod.GET)
+	@ResponseBody
+	public String getJobCountByCategory(@RequestParam int categoryId){
+		return JSON.stringify(jobService.getJobCountByCategory(categoryId));
+		
+	}
+	
+
+	@RequestMapping(value = "/getActiveJobsByUser_AppCat", method = RequestMethod.GET)
+	@ResponseBody
+	public String getActiveJobsByUser_AppCat( @RequestParam int userId){
+		//For each each active job, set its category and applications
+		
+		return JSON.stringify(jobService.getActiveJobsByUser_AppCat(userId));		
+	}
+	
 	
 	@RequestMapping(value = "/getJobsByCategory", method = RequestMethod.GET)
 	@ResponseBody
@@ -78,20 +95,29 @@ public class JobController {
 		return JSON.stringify(jobService.getApplicationsByUser(userId));	
 	}
 	
+	@RequestMapping(value = "/getJobOffersByUser", method = RequestMethod.GET)
+	@ResponseBody
+	public String getJobOffersByUser(@RequestParam int userId){
+		return JSON.stringify(jobService.getJobOffersByUser(userId));	
+	}
+
 	@RequestMapping(value = "/getEmploymentByUser", method = RequestMethod.GET)
 	@ResponseBody
 	public String getEmploymentByUser(@RequestParam int userId){
 		return JSON.stringify(jobService.getEmploymentByUser(userId));		
 	}
 
+
 	@RequestMapping(value = "/markJobComplete", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	@ResponseBody
 	public String markJobComplete(@RequestParam int jobId, @ModelAttribute("user") JobSearchUser user) {
 		
 		// Update database
-		jobService.updateJobComplete(jobId);
+		jobService.markJobComplete(jobId);
 		
 		return JSON.stringify(jobService.getJobsByUser(user.getUserId()));
-
 	}
+	
+
+	
 }

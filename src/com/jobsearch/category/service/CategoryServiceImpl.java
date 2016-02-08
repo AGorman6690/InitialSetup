@@ -37,6 +37,10 @@ public class CategoryServiceImpl {
 	public List<Category> getCategoriesByJobId(int jobId) {
 		return repository.getCategoriesByJobId(jobId);
 	}
+	
+	public Category getCategoryByJobId(int jobId) {
+		return repository.getCategoryByJobId(jobId);
+	}
 	           
 	public List<Category> getCategoriesByUserId(int userId) {
 		return repository.getCategoriesByUserId(userId);
