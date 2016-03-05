@@ -60,6 +60,77 @@ function addCategoryToUser(categoryId, userId, callback) {
 	}
 }
 
+function addCategoriesToUser(categoryIds, userId, callback) {
+
+	 
+	 if (categoryIds.length>0){
+		 
+		 //Build a parameter string for the category ids
+		 var catString;
+		 catString = 'category=' + categoryIds[0];
+		 for(var i=1; i<categoryIds.length; i++){
+			 catString += '&category=' + categoryIds[i];
+		 }
+	
+//		 alert(catString)
+		$.ajax({
+			type : "GET",
+			url : 'http://localhost:8080/JobSearch/addCategoriesToUser?' + catString + '&userId=' + userId,
+			contentType : "application/json", // Request
+			dataType : "json", // Response
+			success : _success,
+			error : _error,
+		});
+	
+		function _success(response) {
+			//alert("success addCategoriesToUser");
+			callback(response);
+			//populateCategories(response.categories, document.getElementById("selectedCats"));
+		}
+	
+		function _error() {
+			alert("error addCategoriesToUser");
+		}
+	
+ 	}
+}
+
+
+function removeCategoriesFromUser(categoryIds, userId, callback) {
+
+	 
+	 if (categoryIds.length>0){
+		 
+		 //Build a parameter string for the category ids
+		 var catString;
+		 catString = 'category=' + categoryIds[0];
+		 for(var i=1; i<categoryIds.length; i++){
+			 catString += '&category=' + categoryIds[i];
+		 }
+	
+//		 alert(catString)
+		$.ajax({
+			type : "GET",
+			url : 'http://localhost:8080/JobSearch/removeCategoriesFromUser?' + catString + '&userId=' + userId,
+			contentType : "application/json", // Request
+			dataType : "json", // Response
+			success : _success,
+			error : _error,
+		});
+	
+		function _success(response) {
+//			alert("success removeCategoriesFromUser");
+			callback(response);
+			//populateCategories(response.categories, document.getElementById("selectedCats"));
+		}
+	
+		function _error() {
+			alert("error removeCategoriesFromUser");
+		}
+	
+	}
+}
+
 function addCategoryToJob(categoryId, jobId, callback){
 	
 	//alert("addCategoryToJob");
@@ -148,9 +219,10 @@ function getCategoriesByJob(jobId, callback){
 
 
 function getCategoriesBySuperCat(elementId, callback){
-	//alert("here")
-	var categoryId = getCategoryId(elementId);
-
+	//alert(elementId)
+	
+	var categoryId = elementId; //getCategoryId(elementId);
+	//alert(categoryId)
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/getCategoriesBySuperCat?superCat=' + categoryId,
@@ -161,16 +233,18 @@ function getCategoriesBySuperCat(elementId, callback){
 
 		function _success(response){					
 			//alert("success getCategoriesBySuperCat for " + elementId );
+		//	alert(JSON.stringify(response))
 			callback(response, elementId);
 		}
 		
 		function _error(){
-			alert("error getCategoriesBySuperCat");
+			alert("error getCategoriesBySuperCat " + elementId + " 999");
 		}
 }
 
 
 function getCategoriesByUser(userId, callback){
+	
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/getCategoriesByUser?userId=' + userId,
@@ -180,12 +254,12 @@ function getCategoriesByUser(userId, callback){
 	    });
 
 		function _success(response){					
-		//	alert("success getCategoriesByUser");
+			//alert("success getCategoriesByUser");
 			callback(response);
 		}
 		
 		function _error(){
-			alert("error");
+			alert("error getCategoriesByUser");
 		}
 }
 

@@ -65,6 +65,7 @@ function getOfferedApplicantsByJob(jobId, callback){
 
 
 
+
 function getEmployeesByJob(jobId, callback){
 	//alert("getEmployees");
 	$.ajax({
@@ -88,60 +89,60 @@ function getEmployeesByJob(jobId, callback){
 function hireApplicant(userId, jobId, callback){
 	
 	//	alert("1");
-		$.ajax({
-			type: "GET",
-			url: 'http://localhost:8080/JobSearch/hireApplicant?userId=' + userId + '&jobId=' + jobId,
-	        dataType: 'json',
-			success: _success,
-	        error: _error
-		    });
-			
-			function _success(response){
-				//alert("success hire applicant");
-				callback(response);
-			}
-			
-			function _error(response, errorThrown){
-				alert("error");
-			}
-	}
-
-function populateUsers(arr, e){ 
-//PURPOSE: This will populate an array of user objects into a ***select element***
-	
-	//alert("sweet populateUsers");	
-	var i;
-	e.options.length=0;		
-
-	for(i=0; i< arr.length; i++){
-		//alert("here");
-		var opt = document.createElement('option');
-		opt.value = arr[i].userId;
-		opt.innerHTML = arr[i].firstName;
-		e.appendChild(opt);					
-	}		
-}
-
-function popUl_user(arr, e){
-//PURPOSE: This will populate an array of user objects into an ***unordered list element***
-	
-	//	alert("popUl_user");
-		e.empty();
-		var i;
-		for(i=0; i<arr.length; i++){
-			e.append('<li value=' + arr[i].userId + '>' + arr[i].firstName + '</li>');
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/hireApplicant?userId=' + userId + '&jobId=' + jobId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+	    });
+		
+		function _success(response){
+			//alert("success hire applicant");
+			callback(response);
 		}
 		
-		//Make this more robust. It's hardcoded with respect to 
-		//************************************************
-		//Add click event for each list item.
-		//When a list item is clicked, the following will be displayed
-		e.on('click', 'li', function(){
-			$('#selectedEmployee').html("How did " + this.innerText + " perform?");
-			
-			//Store the employee's id in the input element's value attribute
-			$('#selectedEmployee').val($(this).val());		
-		})
-		//************************************************
-	}
+		function _error(response, errorThrown){
+			alert("error");
+		}
+}
+
+//function populateUsers(arr, e){ 
+////PURPOSE: This will populate an array of user objects into a ***select element***
+//	
+//	//alert("sweet populateUsers");	
+//	var i;
+//	e.options.length=0;		
+//
+//	for(i=0; i< arr.length; i++){
+//		//alert("here");
+//		var opt = document.createElement('option');
+//		opt.value = arr[i].userId;
+//		opt.innerHTML = arr[i].firstName;
+//		e.appendChild(opt);					
+//	}		
+//}
+//
+//function popUl_user(arr, e){
+////PURPOSE: This will populate an array of user objects into an ***unordered list element***
+//	
+//	//	alert("popUl_user");
+//		e.empty();
+//		var i;
+//		for(i=0; i<arr.length; i++){
+//			e.append('<li value=' + arr[i].userId + '>' + arr[i].firstName + '</li>');
+//		}
+//		
+//		//Make this more robust. It's hardcoded with respect to 
+//		//************************************************
+//		//Add click event for each list item.
+//		//When a list item is clicked, the following will be displayed
+//		e.on('click', 'li', function(){
+//			$('#selectedEmployee').html("How did " + this.innerText + " perform?");
+//			
+//			//Store the employee's id in the input element's value attribute
+//			$('#selectedEmployee').val($(this).val());		
+//		})
+//		//************************************************
+//	}
 

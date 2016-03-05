@@ -9,21 +9,8 @@
 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script>
 		<script src="<c:url value="/static/javascript/Display.js" />"></script>
 		<script src="<c:url value="/static/javascript/Application.js" />"></script>
-		<style>
-		
-		
-			.arrow {
-			    width:16px;
-			    height:16px;
-			    background-image: url("./static/css/pictures/downArrows.png");
-			    background-repeat:no-repeat;background-size:16px 16px;
-			    border: 1px solid black;
-				}
-			
-			.job{ background-color: #7CB8E2 }
- 			.applicants{ background-color: #eee  } 
-		</style>	
-				
+
+		<link rel="stylesheet" type="text/css" href="./static/css/expandingTable.css" />	
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head> 
 	

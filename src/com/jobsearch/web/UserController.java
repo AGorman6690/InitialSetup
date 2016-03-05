@@ -59,6 +59,12 @@ public class UserController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/editProfileCategories", method = RequestMethod.GET)
+	public ModelAndView editProfileCategories(ModelAndView model) {
+		model.setViewName("EditProfileCategories");
+		return model;
+	}
+	
 	@RequestMapping(value = "/viewRatings", method = RequestMethod.GET)
 	public ModelAndView viewRatings(ModelAndView model) {
 		model.setViewName("Ratings");

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.category.service.Category;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.CategoryJob;
 
@@ -56,6 +57,11 @@ public class JobServiceImpl {
 
 	public int getJobCountByCategory(int categoryId) {
 		return repository.getJobCountByCategory(categoryId);
+	}
+
+	public int getSubJobCount(int categoryId, int count) {
+		
+		return repository.getSubJobCount(categoryId, count);
 	}
 
 }

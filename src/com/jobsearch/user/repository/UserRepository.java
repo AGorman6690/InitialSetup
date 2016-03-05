@@ -189,7 +189,7 @@ public class UserRepository {
 			@Override
 			public Category mapRow(ResultSet rs, int rownumber) throws SQLException {
 				Category e = new Category();
-				e.setId(rs.getInt(3));
+				e.setId(rs.getInt(2));
 				return e;
 			}
 		});

@@ -2,6 +2,7 @@ package com.jobsearch.job.repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Application;
 import com.jobsearch.model.CategoryJob;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -27,6 +29,9 @@ public class JobRepository {
 	
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	JobServiceImpl jobService;
 	
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
@@ -134,6 +139,7 @@ public class JobRepository {
 				+ " AND job_category.CategoryId = ? AND job.IsActive = 1";
 		
 		int result = jdbcTemplate.queryForObject(sql, new Object[]{categoryId}, int.class);
+		
 		return result;
 	}
 
@@ -164,6 +170,27 @@ public class JobRepository {
 	public Job getJobByJobNameAndUser(String jobName, int userId) {
 		String sql = "SELECT * FROM job WHERE jobName = ? AND UserId = ?";
 		return JobRowMapper(sql, new Object[]{ jobName, userId }).get(0);
+	}
+
+	public int getSubJobCount(int categoryId, int count) {
+		
+
+		List<Category> categories;
+		
+		//For the categoryId pass as the paramenter, get the categories 1 level deep
+		categories = categoryService.getCategoriesBySuperCategory(categoryId);
+		
+		//For each category 1 level deep
+		for(Category category : categories){
+			
+			//Get its job count
+			count += jobService.getJobCountByCategory(category.getId());
+			
+			//Recursively get the job count for the category 1 level deep
+			count = jobService.getSubJobCount(category.getId(), count);
+		}
+		
+		return count;
 	}
 
 

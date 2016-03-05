@@ -29,8 +29,8 @@ public class CategoryServiceImpl {
 		}
 	}
 	
-	public void deleteCategoryFromUser(int userId, int categoryId) {
-		repository.deleteCategoryFromUser(userId, categoryId);
+	public void removeCategoryFromUser(int userId, int categoryId) {
+		repository.removeCategoryFromUser(userId, categoryId);
 
 	}
 
@@ -57,7 +57,5 @@ public class CategoryServiceImpl {
 	public List<Category> getCategoriesBySuperCategory(int superCat) {
 		return repository.getCategoriesBySuperCategory(superCat);
 	}
-	
-	
 
 }

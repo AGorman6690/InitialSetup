@@ -19,6 +19,8 @@
 	<a href="./findJobs">Find Jobs</a>
 	<br>
 	<a href="./viewApplicationsE">View Applications</a>
+	<br>
+	<a href="./editProfileCategories">Edit Profile Categories</a>
 
 	<h1>Here is your profile ${user.firstName}</h1>
 	
@@ -26,39 +28,34 @@
 <!-- 	****** CATEGORIES ****** -->
 <!-- **********************************************	 -->
 	
-	<h1 class="section">Categories</h1>
-	
-	<h1>These are the categories you can select from</h1>
-			 	
- 	<select id="appCats" multiple style="width: 200px;">
- 	</select>		 		 	
-	
-	<button type="button" id="profileAddCat">Add</button>
-	<br>
 	
 	
-	<h1>These are you currently selected categories</h1>		
-		<select multiple id="profileCats" style= "width: 200px"  >
-		</select>
 	
-	<button type="button" id="profileDeleteCat">Delete</button>
-
-	<br>
-	<br>
+	
+	
+	
+	
 <!-- **********************************************	 -->
 <!-- 	****** JOBS ****** -->
 <!-- **********************************************	 -->
 	<h1 class="section">Jobs</h1>
 	
 	<h1>Jobs you applied to</h1>
-		<select multiple id="jobsAppliedFor" style= "width: 200px"  >
-		</select>
+	<div id="appliedTo"></div>
 
 	<h1>Jobs you were hired for</h1>
 		<select multiple id="jobsHiredFor" style= "width: 200px"  >
 		</select>
 
 	<script>
+	
+	
+		
+	
+	
+	
+	
+	
 	
 		//Get all the application's categories
 		getAppCategories(function(response){

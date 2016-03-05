@@ -10,12 +10,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryServiceImpl;
 
 @Repository
 public class CategoryRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired 
+	CategoryServiceImpl categoryService;
 
 	public List<Category> CategoryRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Category>() {
@@ -46,7 +50,7 @@ public class CategoryRepository {
 
 	}
 	
-	public void deleteCategoryFromUser(int userId, int categoryId) {
+	public void removeCategoryFromUser(int userId, int categoryId) {
 
 		String sql;
 		sql = "DELETE FROM user_category" + " WHERE userId = ?" + " AND categoryId = ?";
@@ -95,7 +99,10 @@ public class CategoryRepository {
 //	}
 
 	public List<Category> getCategoriesBySuperCategory(int superCat) {
+		
 		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
+
 		return this.CategoryRowMapper(sql, new Object[]{ superCat });
 	}
+
 }

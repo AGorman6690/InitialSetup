@@ -12,7 +12,26 @@ public class Category {
 	private List<JobSearchUser> users;
 	private List<Job> jobs;
 	private List<Category> subCategories;
+	private int subJobCount;
+	private int jobCount;
 	
+
+	public int getSubJobCount() {
+		return subJobCount;
+	}
+
+	public void setSubJobCount(int subJobCount) {
+		this.subJobCount = subJobCount;
+	}
+
+	public int getJobCount() {
+		return jobCount;
+	}
+
+	public void setJobCount(int jobCount) {
+		this.jobCount = jobCount;
+	}
+
 	public List<Job> getJobs() {
 		return jobs;
 	}

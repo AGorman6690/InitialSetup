@@ -69,7 +69,7 @@ function addJob(jobName, userId, categoryId, callback){
     });
 
 	function _success(response){
-		//alert("success add job");
+		alert("success add job");
 		callback(response);
 		
 	}
@@ -79,16 +79,25 @@ function addJob(jobName, userId, categoryId, callback){
 	}
 }
 
-function applyForJob() {
-
-	// The job id is stored in the input's name attribute (see showJob())
-	var jobId = document.getElementById("jobToApplyFor").name;
-
+function applyForJob(jobId, userId, callback) {
+//	alert(jobId)
+//	alert(userId)
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/applyForJob?jobId=' + jobId,
+		url : 'http://localhost:8080/JobSearch/applyForJob?jobId=' + jobId + '&userId=' + userId,
 		dataType : "json",
-	})
+		success: _success,
+        error: _error
+    });
+
+	function _success(response){			
+		//alert("markApplicationUnderConsideration;
+		callback(response);
+	}
+
+	function _error(response){
+		alert("error applyForJob");
+	}
 }
 
 
@@ -216,6 +225,26 @@ function getJobCountByCategory(categoryId, callback){
 	
 	function _error(response){
 		alert("error getJobCountByCategory");
+	}	
+}
+
+function getJobsByCategory(categoryId, callback){
+//	alert("getJobCountByCategory")
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getJobsByCategory?categoryId=' + categoryId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+		//alert("success getJobsByCategory");	
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getJobsByCategory");
 	}	
 }
 

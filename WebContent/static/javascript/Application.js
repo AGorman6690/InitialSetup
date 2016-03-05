@@ -222,3 +222,95 @@ function renderTable2(arr, e, callback){
 	callback();
 	
 }
+
+function renderTable3(arr, parentId, callback){
+	
+	var r = new Array();
+	var j = -1;
+	
+//	r[++j] = "<table id='" + parentId + "'>" +
+//			"<tr>" +
+//				"<th> </th>" +
+//				"<th> </th>" +
+//				"<th> </th>" +
+//				"<th></th>"
+//			"</tr>";
+//	
+	
+	
+	//Parse the parent's level from its id
+	var parentLevel = getLevel(parentId);
+	
+	//The new level is 1 level deeper than its parent level
+	var newLevel = parseInt(parentLevel) + 1;
+	
+	for (var i in arr){
+		
+		//Master row
+		//List job
+		//*********************************
+		var category = arr[i];
+//		alert(category.id)
+//		alert(category.name)
+		r[++j] = '<div id="' + category.id + '-' + newLevel + '--' + '">';
+		r[++j] = 	'<tr class="category-1" id="' + category.id + '-' + newLevel + '--' + '">';
+		r[++j] = 	'<td>';
+		r[++j] = 		category.name;
+		r[++j] =	'</td>';
+		r[++j] = 	'<td>';
+		r[++j] = 		2;
+		r[++j] = 	'</td>';
+		r[++j] = 	'<td>';
+		r[++j] = 		6;	
+		r[++j] = 	'</td>';	
+		r[++j] = 	'<td><div class="arrow"></div>';
+		r[++j] = 	'</td>';	
+		r[++j] = '</tr>';
+		
+		//*********************************
+		
+		r[++j] = '<div class="subs">';
+		r[++j] = '</div>';
+		r[++j] = '</div>';
+//		//Detail row
+//		//List job's applicants
+//		//*********************************		
+//		//If the job has at least one application
+//		alert('length' + category.subCategories.length)
+//		if(category.subCategories.length > 0 ){
+//			r[++j] = '<tr class="category-">';
+//			r[++j] = '<td colspan="4">'	;
+//			r[++j] = '<table>' +
+//						"<tr>" +
+//							"<th>Category</th>" +
+//							"<th></th>" +
+//							"<th></th>" +
+//							"<th></th>" +
+//							"<th></th>" +
+//						"</tr>";
+//			
+//			//Iterate over applications.
+//			//Build a table row for each application.
+//			for (var k in category.subCategories){
+//				var subCat = category.subCategories[k];
+//				r[++j] = '<tr class="applicant" id="' + subCat.id + '">';
+//				r[++j] = 	'<td>';
+//				r[++j] = 		subCat.name;
+//				r[++j] = 	'</td>';
+//				r[++j] = '</tr>';
+//			}
+			
+//			r[++j] = '</td>';
+//			r[++j] = '</tr>';
+				
+
+//		}		
+	}
+	
+
+//	r[++j] = '</table>';
+	alert(r)
+	$('#' + parentId).html(r.join(''));
+	callback();
+	
+}
