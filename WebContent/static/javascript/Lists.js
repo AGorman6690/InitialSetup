@@ -413,18 +413,130 @@ function appendSubCategories(categoryId){
 	}
 }
 
+function appendJobs(eId, jobs, callback){
+
+	//If there are sub categories
+	if (jobs.length > 0){
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<ul class="list-group">';
+		
+		//For each sub category, create html
+		for(var i=0; i<jobs.length; i++){
+			
+			var id =  jobs[i].id;
+			
+			//Li element. Its id is equal to the category id
+			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
+			
+			//Job name
+			r[++j] = 	'<a href="#" id="' + id + '-Name" >';
+			r[++j] = 	jobs[i].jobName + "  ";
+			r[++j] = 	'</a>';
+			
+			r[++j] = '</li>';	
+		}
+
+		
+		r[++j] = '</ul>'	
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}
+	
+}
+
+function appendUsers(eId, users, callback){
+		//If there are sub categories
+	if (users.length > 0){
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<ul class="list-group">';
+
+		//For each sub category, create html
+		for(var i=0; i<users.length; i++){
+			
+			var id =  users[i].userId;			
+
+			//Li element. Its id is equal to the category id
+			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
+			
+			//Job name
+			r[++j] = 	'<a href="#" id="' + id + '-Name" >';
+			r[++j] = 	users[i].firstName + "  ";
+			r[++j] = 	'</a>';
+			
+			r[++j] = '</li>';	
+		}
+
+		
+		r[++j] = '</ul>'	
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, users);		
+		
+	}
+	
+}
+
+function appendJobs_EmployerActive(eId, jobs, callback){
+
+	//If there are sub categories
+	if (jobs.length > 0){
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+		r[++j] =     '<th>Job Name</th>';
+		r[++j] =     '<th>New Applicants</th>';
+		r[++j] =     '<th>Total Applicants</th>';
+		r[++j] =     '<th>Employees</th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		//For each sub category, create html
+		for(var i=0; i<jobs.length; i++){
+			
+			var id =  jobs[i].id;
+			//Li element. Its id is equal to the category id
+			r[++j] = '<tr id="' + id + '">';
+			//alert(JSON.stringify(jobs[i]))
+			//alert(jobs[i].applications.length)
+			//Job name
+			//alert(JSON.stringify(jobs[i]))
+//			var str = JSON.stringify(jobs[i]);
+//			alert(str)
+			r[++j] = 	'<td><a href="./viewActiveJob_Employer?jobId=' + id + '">';
+			r[++j] =     jobs[i].jobName + '</a></td>'
+			r[++j] = 	'<td>(not built)</td>';
+			r[++j] = 	'<td>' + jobs[i].applications.length + '</td>';
+			r[++j] = 	'<td>' + jobs[i].employees.length + '</td>';
+			
+			r[++j] = '</tr>';	
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}
+	
+}
+
 
 $(document).ready(function(){
 
 	
 	$("#addJob").click(function(){
-		
-		alert($("#userId").val())
-		
+
  		var jobName = $("#jobToAdd").val();
  		var categoryId = $('#selectedCategory').val();
  		var userId = $('#userId').val()
- 		alert(categoryId);
  		addJob(jobName,  userId, categoryId, function(response){
 		
  		});

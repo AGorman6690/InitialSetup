@@ -69,7 +69,7 @@ function addJob(jobName, userId, categoryId, callback){
     });
 
 	function _success(response){
-		alert("success add job");
+		//alert("success add job");
 		callback(response);
 		
 	}
@@ -124,7 +124,7 @@ function markJobComplete(jobId, callback){
 
 function getApplicationsByUser(userId, callback){		
 	//	function getJobs(e){	
-		//alert("getApplicationsByUser");
+//		alert("getApplicationsByUser");
 	
 	$.ajax({
 		type: "GET",

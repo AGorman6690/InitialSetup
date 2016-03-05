@@ -12,8 +12,11 @@
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
+		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
 	</head>
+	
+	<input type="hidden" id="userId" value="${user.userId}"/>
 
 	<br>
 	<a href="./findJobs">Find Jobs</a>
@@ -24,62 +27,28 @@
 
 	<h1>Here is your profile ${user.firstName}</h1>
 	
-<!-- **********************************************	 -->
-<!-- 	****** CATEGORIES ****** -->
-<!-- **********************************************	 -->
-	
-	
-	
-	
-	
-	
-	
-	
-<!-- **********************************************	 -->
-<!-- 	****** JOBS ****** -->
-<!-- **********************************************	 -->
-	<h1 class="section">Jobs</h1>
-	
 	<h1>Jobs you applied to</h1>
-	<div id="appliedTo"></div>
-
+	<div id="container">
+		<div id="appliedTo"></div>
+	</div>
+	
 	<h1>Jobs you were hired for</h1>
-		<select multiple id="jobsHiredFor" style= "width: 200px"  >
-		</select>
-
+	<div id="container">
+		<div id="hiredFor"></div>
+	</div>
 	<script>
 	
 	
-		
-	
-	
-	
-	
-	
-	
-		//Get all the application's categories
-		getAppCategories(function(response){
-			//alert(JSON.stringify(response));
-			populateCategories(response, document.getElementById("appCats"));
-		});
-		
-		//Get the user's categories
-		getCategoriesByUser("${user.userId}", function(response){
-			//alert("callback getCategoriesByUser");			
-			populateCategories(response, document.getElementById("profileCats"));
-		});
-	
 		//Get all active jobs that the user has applied for
-		getApplicationsByUser("${user.userId}", function(response){
-			//alert("callback getApplicationsByUser");			
-			populateJobs(response, document.getElementById("jobsAppliedFor"), 1);
+		getApplicationsByUser($("#userId").val(), function(applications){		
+			appendJobs("appliedTo", applications, function(){})
 		});
 		
 		
 		//Get the user's employement. Show both active and inactive jobs
-		getEmploymentByUser("${user.userId}", function(response){
+		getEmploymentByUser("${user.userId}", function(employment){
 			//alert("callback getEmploymentByUser");			
-			populateJobs(response, document.getElementById("jobsHiredFor"), -1);
+			appendJobs("hiredFor", employment, function(){})
 		});
 		
 		

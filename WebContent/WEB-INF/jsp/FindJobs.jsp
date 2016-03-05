@@ -1,15 +1,17 @@
 <%@ include file="./includes/Header.jsp" %>
-	<script src="<c:url value="/static/javascript/Profile.js" />"></script>
-	<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
-	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/User.js" />"></script>
-	<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
-	<script src="<c:url value="/static/javascript/Lists.js" />"></script>
-	<script src="<c:url value="/static/javascript/Application.js" />"></script>
-	<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
-	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
 
-		
+	<head>
+		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
+		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
+		<script src="<c:url value="/static/javascript/Category.js" />"></script>
+		<script src="<c:url value="/static/javascript/User.js" />"></script>
+		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
+		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/Application.js" />"></script>
+		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
+		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
+
+	</head>
 <!-- 	<span>Search for Jobs</span> -->
 <!-- 	<ul> -->
 <%-- 		<c:forEach items="${categories}" var="category"> --%>

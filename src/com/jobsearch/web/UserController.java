@@ -53,6 +53,13 @@ public class UserController {
 		return model;
 	}
 	
+	@RequestMapping(value = "/findEmployees", method = RequestMethod.GET)
+	public ModelAndView findEmployees(ModelAndView model) {
+		model.setViewName("FindEmployees");
+		return model;
+	}
+	
+	
 	@RequestMapping(value = "/findJobs", method = RequestMethod.GET)
 	public ModelAndView findJobs(ModelAndView model) {
 		model.setViewName("FindJobs");

@@ -1,4 +1,8 @@
+
 <%@ include file="./includes/Header.jsp" %>
+
+
+
 
 	<head>
 	<script src="<c:url value="/static/javascript/Profile.js" />"></script>
@@ -20,11 +24,20 @@
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
 	
+	<c:choose>
+		<c:when test="${user.profileId == 1}">
+			<%@ include file="./includes/Header_Employer.jsp" %>
+		</c:when>
+		<c:otherwise>
+	         
+	    </c:otherwise>
+	</c:choose>
+	
 	<input type="hidden" id="userId" value="${user.userId}"/>
 	<div id="addCategories" style="display: none"></div>
 	<div id="removeCategories" style="display: none"></div>
 	
-	<h1>Current Profile Categories</h1>
+	<h1>Edit Profile</h1>
 	<button type="button" id="saveEditProfileCats">Save</button>
 	
 	<br>
@@ -35,7 +48,7 @@
 	
 	//Get the seed categories.
 	//Seed categories are sub categories to a category with id=0
-	
+
 	
 	getCategoriesByUser($("#userId").val(), function(usersCategories){
 
@@ -58,24 +71,11 @@
 						//Append sub categories
 						appendFirstLevelCategories_ProfileCats(elementId, response, function(){		
 							setCategoriesCheckbox(usersCategories)
-// 							alert("A")
 						})
-						
-// 						if(i = arr.length){
-// 							alert("C")
-// 						}
-					})
-					
-// 					alert("B1")
+					})				
 				}
-				
-// 				alert("D")
-				
-			})
-			
-// 			alert("E")
-		})	
-		
+			})			
+		})			
 	})
 		
 	

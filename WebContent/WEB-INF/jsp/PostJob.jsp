@@ -1,4 +1,5 @@
 <%@ include file="./includes/Header.jsp" %>
+<%@ include file="./includes/Header_Employer.jsp" %>
 
 	<head>
 		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
@@ -14,17 +15,19 @@
 	
 	<input type="hidden" id="userId" value="${user.userId}"/>
 	<input id='selectedCategory' type='hidden'> 
-
-	<h1 class="section">Post A Job</h1>
-		
+	
+	<h1>Post Job</h1>
+	<br>
+	
 	<h1>Job name</h1>
 	<input type="text" id="jobToAdd">		
 
 	<h1>Select a category to place the job in</h1>		
 	
-	<div id='0T'>
+	<div id="container">
+		<div id='0T'>
+		</div>
 	</div>
-	
 	<br>
 	<button type="button" id="addJob" onClick="addJob">Add Job</button>
 	
@@ -46,18 +49,18 @@
 		
 	//	alert('callback1 ' + elementId)
 		appendFirstLevelCategories_PostJob(elementId, response, function(){
-			
+// 			alert('appending to ' + elementId)
 			//alert(JSON.stringify(response))
 			
-			$("li").each(function(){
-				//alert('for each li. id = ' + this.id)
-				getCategoriesBySuperCat(this.id, function(response, elementId){
-					//alert('callback2 ' + elementId)
+			var cats = $('#' + elementId + 'T').find('li');
+			for(var i = 0; i < cats.length; i++){
+				getCategoriesBySuperCat(cats[i].id, function(response, elementId){
+// 					alert('callback2 ' + elementId)
 					appendFirstLevelCategories_PostJob(elementId, response, function(){
 
 					})
 				})
-			})	
+			}	
 		})
 	})	
 	

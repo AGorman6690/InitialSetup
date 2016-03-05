@@ -102,7 +102,10 @@ public class JobRepository {
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 
 			//Get the job's applicants 
-			job.setApplications(userService.getApplicationsByJob(job.getId()));			
+			job.setApplications(userService.getApplicationsByJob(job.getId()));	
+			
+			//Get the job's employees
+			job.setEmployees(userService.getEmployeesByJob(job.getId()));
 		}
 		
 		return activeJobs;
