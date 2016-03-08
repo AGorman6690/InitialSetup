@@ -24,7 +24,11 @@ public class JobServiceImpl {
 	}
 
 	public void applyForJob(int jobId, int userId) {
-		repository.applyForJob(jobId, userId);
+		
+		if (!repository.hasAppliedForJob(jobId, userId)){
+			repository.applyForJob(jobId, userId);	
+		}
+		
 	}
 
 	public List<Job> getJobsByCategory(int categoryId) {
@@ -62,6 +66,10 @@ public class JobServiceImpl {
 	public int getSubJobCount(int categoryId, int count) {
 		
 		return repository.getSubJobCount(categoryId, count);
+	}
+
+	public List<Job> getCompletedJobsByUser(int userId) {
+		return repository.getCompletedJobsByUser(userId);
 	}
 
 }

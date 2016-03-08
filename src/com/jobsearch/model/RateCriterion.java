@@ -5,7 +5,7 @@ public class RateCriterion {
 	private String name;
 	private int userId;
 	private int jobId;
-	private int value;
+	private double value;
 	
 	public int getUserId() {
 		return userId;
@@ -19,10 +19,10 @@ public class RateCriterion {
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
 	}
-	public int getValue() {
+	public double getValue() {
 		return value;
 	}
-	public void setValue(int value) {
+	public void setValue(double value) {
 		this.value = value;
 	}
 	public int getRateCriterionId() {

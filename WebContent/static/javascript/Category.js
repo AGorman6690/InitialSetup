@@ -152,11 +152,11 @@ function addCategoryToJob(categoryId, jobId, callback){
 	}
 }
 
-function deleteCategoryFromUser(categoryId, userId, callback) {
+function removeCategoryFromUser(categoryId, userId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/deleteCategoryFromUser?categoryId=' + categoryId + '&userId=' + userId,
+		url : 'http://localhost:8080/JobSearch/removeCategoryFromUser?categoryId=' + categoryId + '&userId=' + userId,
 		contentType : "application/json", // Request
 		dataType : "json", // Response
 		success : _success,
@@ -164,37 +164,14 @@ function deleteCategoryFromUser(categoryId, userId, callback) {
 	});
 
 	function _success(response) {
-		//alert("success deleteCategoryFromUser");
+		//alert("success removeCategoryFromUser");
 		callback(response);
 
 	}
 
 	function _error(response, errorThrown) {
-		alert("error deleteCategoryFromUser");
+		alert("error removeCategoryFromUser");
 	}
-}
-
-function getAppCategories(callback){
-	//alert("getAppCategories");
-	$.ajax({
-		type: "GET",
-		url: 'http://localhost:8080/JobSearch/getAppCategories',
-			dataType: "json",
-	        success: _success,
-	        error: _error
-	    });
-
-		function _success(response){					
-			//alert("success get categories");
-
-			//populateCategories(response.categories, document.getElementById(elementId))
-			callback(response);	
-		}
-		
-		function _error(){
-			alert("error getAppCategories");
-		}		
-	
 }
 
 function getCategoriesByJob(jobId, callback){

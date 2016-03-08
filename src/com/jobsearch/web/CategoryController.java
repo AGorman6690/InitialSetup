@@ -66,8 +66,6 @@ public class CategoryController {
 	@ResponseBody
 	public String removeCategoriesFromUser(@RequestParam(value="category") int[] categoryIds, @RequestParam int userId) {
 	
-
-		// Add the category-user to the database
 		for(int categoryId : categoryIds){
 			categoryService.removeCategoryFromUser(userId, categoryId);
 		}
@@ -99,9 +97,9 @@ public class CategoryController {
 	
 	}
 	
-	@RequestMapping(value = "/deleteCategoryFromUser", method = RequestMethod.GET)
+	@RequestMapping(value = "/removeCategoryFromUser", method = RequestMethod.GET)
 	@ResponseBody
-	public String deleteCategoryFromUser(@RequestParam int categoryId, @RequestParam int userId) {
+	public String removeCategoryFromUser(@RequestParam int categoryId, @RequestParam int userId) {
 
 		// Update database
 		categoryService.removeCategoryFromUser(userId, categoryId);
@@ -123,10 +121,5 @@ public class CategoryController {
 		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 	}
 	
-	
-	@RequestMapping(value = "/getAppCategories", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAppCategories(){		
-		return JSON.stringify(categoryService.getAppCategories());
-	}
+
 }

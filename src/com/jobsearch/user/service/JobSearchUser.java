@@ -6,6 +6,7 @@ import java.util.List;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.RateCriterion;
 
 
 public class JobSearchUser {
@@ -18,13 +19,26 @@ public class JobSearchUser {
 	private String emailAddress;
 	private String password;
 	private String matchingPassword;
-	private Job selectedJob;
 	private Profile profile;
 	private List<Category> categories;	
 	private ArrayList<Job> jobs;
 	private ArrayList<Job> activeJobs;
 	private ArrayList<Job> appliedToJobs;
 	private ArrayList<Job> employment;
+	private List<RateCriterion> ratings;
+	
+
+	public List<RateCriterion> getRatings() {
+		return ratings;
+	}
+
+	public void setRatings(List<RateCriterion> ratings) {
+		this.ratings = ratings;
+	}
+
+	public void setJobs(ArrayList<Job> jobs) {
+		this.jobs = jobs;
+	}
 
 	public ArrayList<Job> getEmployment() {
 		return employment;
@@ -40,14 +54,6 @@ public class JobSearchUser {
 
 	public void setAppliedToJobs(ArrayList<Job> appliedToJobs) {
 		this.appliedToJobs = appliedToJobs;
-	}
-
-	public Job getSelectedJob() {
-		return selectedJob;
-	}
-
-	public void setSelectedJob(Job selectedJob) {
-		this.selectedJob = selectedJob;
 	}
 
 	public ArrayList<Job> getActiveJobs() {

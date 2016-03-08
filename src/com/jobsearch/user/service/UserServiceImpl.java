@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.model.AppCatJobUser;
-import com.jobsearch.model.Application;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.repository.UserRepository;
@@ -31,10 +31,6 @@ public class UserServiceImpl {
 
 	}
 	
-
-	public void markApplicationViewed(int jobId, int userId) {
-		repository.markApplicationViewed(jobId, userId);		
-	}
 
 	public JobSearchUser getUser(int userId) {
 		return repository.getUser(userId);
@@ -69,25 +65,24 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 	
-	public List<RateCriterion> getAppRateCriteria() {
-		return repository.getAppRateCriteria();
-	}
 
-	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, int value) {
-		repository.rateEmployee(rateCriterionId, employeeId, jobId, value);		
-	}
-
-	public List<Application> getApplicationsByEmployer(int userId) {
-		return repository.getApplicationsByEmployer(userId);
-	}
-
-	public void markApplicationAccepted(int jobId, int userId) {
-		repository.markApplicationAccepted(jobId, userId);
+	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, double value) {
 		
+		if(repository.hasRating(rateCriterionId, employeeId, jobId)){
+			repository.updateRating(rateCriterionId, employeeId, jobId, value);
+		}else{
+			repository.rateEmployee(rateCriterionId, employeeId, jobId, value);
+		}
 	}
 
-	public List<Application> getApplicationsByJob(int jobId) {
-		return repository.getApplicationsByJob(jobId);
+
+	public List<RateCriterion> getRatings(int userId, List<RateCriterion> ratingCriteria) {
+		return repository.getRatingCriteriaValue(userId, ratingCriteria);
 	}
+
+	public List<RateCriterion> getRatingCriteia() {
+		return repository.getRatingCriteria();
+	}
+
 
 }

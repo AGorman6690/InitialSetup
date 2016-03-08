@@ -2,8 +2,8 @@ package com.jobsearch.job.service;
 
 import java.util.List;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.model.Application;
 import com.jobsearch.user.service.JobSearchUser;
 
 public class Job {

@@ -23,7 +23,7 @@
 	
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/login**" access="permitAll" />
-		<intercept-url pattern="/welcome**" access="permitAll" />
+<!-- 		<intercept-url pattern="/welcome**" access="permitAll" /> -->
 		<intercept-url pattern="/signIn**" access="permitAll" />
 		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
 		
@@ -33,7 +33,7 @@
 		<form-login 
 		    login-page="/signIn" 
 		    login-processing-url="/login.do"
-		    default-target-url="/welcome" 
+		    default-target-url="/getProfile" 
 			authentication-failure-url="/login?error" 
 			username-parameter="username"
 			password-parameter="password" />

@@ -1,61 +1,6 @@
 $(document).ready(function(){
-	$("#activeJobs").change(function(){
-		
-		//Get job id
-		var jobId = $("#activeJobs").val();
-		var jobName = $("#activeJobs option:selected").text();
-		
-		//Store the job Id in the input element's name attribute.
-		//This is not really needed.
-		//I was using this element to identity the selected job, rather
-		//than the selected option in the active job drop down.
-		$("#selectedJob").val(jobName);
-		$("#selectedJob").attr("name", jobId);
-
-		//Get the applicants for the selected job
-		getApplicants(jobId, function(response){
-			populateUsers(response, document.getElementById("applicants"));
-		});
-		
-		getOfferedApplicantsByJob(jobId, function(response){
-			populateUsers(response, document.getElementById("offeredApplicants"));
-		})
-		
-		
-//		//Get the employees for the selected job
-//		getEmployeesByJob(jobId, function(response){
-//			populateUsers(response, document.getElementById("employees"));
-//		});
-//		
-//		//Get categories for the selected job
-//		getCategoriesByJob(jobId, function(response){
-//			populateCategories(response, document.getElementById("selectedJobCats"));
-//		});
-	});
-	
-
-	
-	$("#markJobComplete").click(function(){
-		var jobId = $("#activeJobs").val();//document.getElementById("selectedJob").name;
-		
-		//Mark the job complete
-		markJobComplete(jobId, function(response){
-
-			//Populate the user's active jobs
-			populateJobs(response, document.getElementById("activeJobs"), 1);
-			
-			//Populate the user's completed jobs
-			populateJobs(response, document.getElementById("completedJobs"), 0);
-			
-		//	$("#rateEmployee").html(response);
-		});
-	});
-	
-
 	
 })
-
-
 
 
 function addJob(jobName, userId, categoryId, callback){
@@ -70,8 +15,7 @@ function addJob(jobName, userId, categoryId, callback){
 
 	function _success(response){
 		//alert("success add job");
-		callback(response);
-		
+		callback(response);		
 	}
 
 	function _error(response){
@@ -102,7 +46,7 @@ function applyForJob(jobId, userId, callback) {
 
 
 function markJobComplete(jobId, callback){
-
+	alert('job complete ' + jobId)
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/markJobComplete?jobId=' + jobId,
@@ -112,7 +56,7 @@ function markJobComplete(jobId, callback){
     });
 
 	function _success(response){			
-		//alert("markApplicationUnderConsideration;
+//		alert("success markJobComplete")
 		callback(response);
 	}
 
@@ -205,6 +149,27 @@ function getActiveJobsByUser_AppCat(userId, callback){
 	
 	function _error(response){
 		alert("error getActiveJobsByUser_AppCat");
+	}
+}
+
+function getCompletedJobsByUser(userId, callback){		
+	//	function getJobs(e){	
+		//alert("getActiveJobsByUser_AppCat");
+	$.ajax({
+		type: "GET",
+		url: 'http://localhost:8080/JobSearch/getCompletedJobsByUser?userId=' + userId,
+        dataType: 'json',
+		success: _success,
+        error: _error
+    });
+	
+	function _success(response){
+	//	alert("success getCompletedJobByUser");		
+		callback(response);
+	}
+	
+	function _error(response){
+		alert("error getCompletedJobByUser");
 	}
 }
 

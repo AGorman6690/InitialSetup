@@ -1,4 +1,4 @@
-package com.jobsearch.model;
+package com.jobsearch.application.service;
 
 import com.jobsearch.job.service.Job;
 import com.jobsearch.user.service.JobSearchUser;

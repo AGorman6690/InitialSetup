@@ -1,37 +1,29 @@
 
 <%@ include file="./includes/Header.jsp" %>
 
-
-
-
-	<head>
-	<script src="<c:url value="/static/javascript/Profile.js" />"></script>
-	<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
-	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/User.js" />"></script>
-	<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
-	<script src="<c:url value="/static/javascript/Lists.js" />"></script>
-	<script src="<c:url value="/static/javascript/Application.js" />"></script>
-	<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
-	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
-		
-		<style>
-			.section{
-				color: red;
-				font-size: 4em;
-			}		
-		</style>			
-		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
-	</head>
-	
 	<c:choose>
 		<c:when test="${user.profileId == 1}">
 			<%@ include file="./includes/Header_Employer.jsp" %>
 		</c:when>
 		<c:otherwise>
-	         
+	         <%@ include file="./includes/Header_Employee.jsp" %>
 	    </c:otherwise>
 	</c:choose>
+
+	<head>
+		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
+		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
+		<script src="<c:url value="/static/javascript/Category.js" />"></script>
+		<script src="<c:url value="/static/javascript/User.js" />"></script>
+		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
+		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/Application.js" />"></script>
+		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
+		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />		
+		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
+	</head>
+	
+
 	
 	<input type="hidden" id="userId" value="${user.userId}"/>
 	<div id="addCategories" style="display: none"></div>

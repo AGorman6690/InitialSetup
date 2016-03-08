@@ -42,6 +42,9 @@ public class CategoryRepository {
 
 	}
 	
+	
+	
+	
 	public void addCategoryToUser(int userId, int categoryId) {
 
 		String sql;
@@ -86,17 +89,6 @@ public class CategoryRepository {
 	}
 	
 
-	public List<Category> getAppCategories() {
-
-		String sql = "SELECT * " + " FROM category";
-
-		return this.CategoryRowMapper(sql, null);
-	}
-
-//	public List<Category> getCategoriesByLevel(int level) {
-//		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
-//		return this.CategoryRowMapper(sql, new Object[]{ level });
-//	}
 
 	public List<Category> getCategoriesBySuperCategory(int superCat) {
 		

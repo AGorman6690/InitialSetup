@@ -27,7 +27,7 @@ function appendFirstLevelCategories(eId, arr, callback){
 			r[++j] = 	'</a>';
 			
 			//Number of active jobs in the category
-			r[++j] = 	'<a class="btn btn-info btn-sm margin-both" onclick="showJobs(\'' + id + '\')">';
+			r[++j] = 	'<a class="btn btn-info btn-sm margin-horiz" onclick="showJobs(\'' + id + '\')">';
 			r[++j] =	arr[i].jobCount + '</a>';
 			
 //			alert(arr[i].jobCount)
@@ -312,6 +312,10 @@ function showJobs(categoryId){
 	
 }
 
+function setEmployeeId(e){
+	$("#employeeId").val(e.target.id);
+}
+
 function applyToJob(jobId){
 
 	applyForJob(jobId, $("#userId").val(), function(response){
@@ -464,26 +468,95 @@ function appendUsers(eId, users, callback){
 			
 			//Job name
 			r[++j] = 	'<a href="#" id="' + id + '-Name" >';
-			r[++j] = 	users[i].firstName + "  ";
+			r[++j] = 	users[i].firstName + "  " + users[i].lastName;
 			r[++j] = 	'</a>';
+
 			
 			r[++j] = '</li>';	
 		}
 
-		
+
 		r[++j] = '</ul>'	
-		$("#" + eId).append(r.join(''));
-				
+		$("#" + eId).append(r.join(''));				
 		callback(eId, users);		
 		
 	}
 	
 }
 
+function appendUsers_RateEmployees(eId, users, callback){
+	//If there are sub categories
+	if (users.length > 0){
+		var j = -1;
+		var r = new Array();
+		
+		var containerId = 'rateEmployees';
+		r[++j] = '<div class="list-group" id="' + containerId + '">';
+	
+		//For each sub category, create html
+		for(var i=0; i<users.length; i++){
+			
+			var id =  users[i].userId;			
+	
+			r[++j] = '<a href="#" id="' + id + '" class="list-group-item margin-hori"';
+			r[++j] = ' onclick="activateItem(\'' + id + '\',\'' + containerId + '\',\'active\')">';
+			r[++j] = 	users[i].firstName;
+			r[++j] = '</a>';	
+		}
+	
+		
+		r[++j] = '</div>'	
+		$("#" + eId).append(r.join(''));
+				
+		
+		$("#" + containerId + " a").click(setEmployeeId);
+		
+
+		
+		callback();		
+		
+	}
+
+}
+
+
+
+function activateItem(itemId, containerId, className){
+	var items = $("#" + containerId).find("a")
+	
+	for(var i = 0; i<items.length; i++){				
+		if($('#' + items[i].id).hasClass(className) == 1){
+			$('#' + items[i].id).removeClass(className);
+		}			
+	}
+	
+	$('#' + itemId).addClass(className);
+}
+
+function activateButton(buttonId, containerId, className){
+	
+	var items = $("#" + containerId).find("button")
+
+	for(var i = 0; i<items.length; i++){	
+		if($('#' + items[i].id).hasClass(className) == 1){
+			$('#' + items[i].id).removeClass(className);
+			$('#' + items[i].id).addClass('btn-default');
+		}			
+	}
+	
+	$('#' + buttonId).removeClass('btn-default');
+	$('#' + buttonId).addClass(className);
+}
+
+function hire(userId){
+	hireApplicant(userId, $("#jobId").val())
+}
+
 function appendJobs_EmployerActive(eId, jobs, callback){
 
 	//If there are sub categories
 	if (jobs.length > 0){
+		
 		var j = -1;
 		var r = new Array();
 		r[++j] = '<table class="table table-condensed">';
@@ -515,6 +588,99 @@ function appendJobs_EmployerActive(eId, jobs, callback){
 			r[++j] = 	'<td>' + jobs[i].applications.length + '</td>';
 			r[++j] = 	'<td>' + jobs[i].employees.length + '</td>';
 			
+			r[++j] = '</tr>';	
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}
+	
+}
+
+function appendApplicants(eId, applicants, callback){
+
+	//If there are sub categories
+	if (applicants.length > 0){
+		
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+		
+		r[++j] =     '<th>Applicants Name</th>';
+//		alert(JSON.stringify(applicants[0].ratings[0]))
+		for(var k = 0; k < applicants[0].ratings.length; k++){
+			r[++j] =     '<th>' + applicants[0].ratings[k].name + '</th>';
+		}
+
+		r[++j] =     '<th> </th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		
+		//For each sub category, create html
+		for(var i=0; i<applicants.length; i++){
+			
+			var id =  applicants[i].userId;
+
+			r[++j] = '<tr id="' + id + '">';
+			r[++j] = 	'<td><a href="#">';
+			r[++j] =     applicants[i].firstName + " " + applicants[i].lastName + '</a></td>';			
+			for(k = 0; k < applicants[0].ratings.length; k++){
+				r[++j] = 	'<td>' + applicants[i].ratings[k].value + '</td>';	
+			}
+			r[++j] = 	'<td><a class="btn btn-info btn-sm margin-hori"'
+			r[++j] =	'onclick="hire(\'' + id + '\')">';
+			r[++j] =	'Hire</a></td>';			
+			r[++j] = '</tr>';	
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}
+	
+}
+
+function appendJobs_EmployerComplete(eId, jobs, callback){
+
+	//If there are sub categories
+	if (jobs.length > 0){
+		
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+		r[++j] =     '<th>Job Name</th>';
+		r[++j] =     '<th>  </th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		//For each sub category, create html
+		for(var i=0; i<jobs.length; i++){
+			
+			var id =  jobs[i].id;			
+			r[++j] = '<tr id="' + id + '">';
+
+			//Job name
+			//alert(JSON.stringify(jobs[i]))
+//			var str = JSON.stringify(jobs[i]);
+//			alert(str)
+			r[++j] = 	'<td><a href="./viewActiveJob_Employer?jobId=' + id + '">';
+			r[++j] =     jobs[i].jobName + '</a></td>'	
+			r[++j] = 	'<td><a href="./rateEmployees?jobId=' + id + '" class="btn btn-info btn-sm margin-hori">';
+			r[++j] =	'Rate Employees</a></td>';
 			r[++j] = '</tr>';	
 		}
 
@@ -565,6 +731,45 @@ $(document).ready(function(){
 		}
 
 		removeCategoriesFromUser(ids, $('#userId').val())
+	})
+	
+	$(".rate-values").click(function(){	
+		activateButton($(this).attr('id'), $(this).parent().attr('id'), 'button-active')
+	})
+	
+	$("#workEthic button").click(function(){
+		$("#workEthicRating").val($(this).val())
+	})
+	
+	$("#onTime button").click(function(){
+		$("#onTimeRating").val($(this).val())
+	})
+	
+	$("#hireAgain button").click(function(){
+		$("#hireAgainRating").val($(this).val())
+	})
+	
+
+	$("#submitRating").click(function(){
+		
+//		alert($("#onTimeRating").val())
+//		alert($("#workEthicRating").val())
+//		alert($("#hireAgainRating").val())
+//		alert($("#employeeId").val())
+//		
+		var jobId = $("#jobId").val();
+		
+		
+		var employeeId = $("#employeeId").val();
+		var rating1 = $("#workEthicRating").val();
+		var rating2 =  $("#onTimeRating").val();
+		var rating3 =  $("#hireAgainRating").val();
+		
+		if(employeeId != "" && rating1 != "" && rating2 != "" && rating3 != ""){			
+			rateEmployee(1, rating1, jobId, employeeId);
+			rateEmployee(2, rating2, jobId, employeeId);
+			rateEmployee(3, rating3, jobId, employeeId);
+		}
 	})
 		
 });

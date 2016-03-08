@@ -10,11 +10,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.Application;
 import com.jobsearch.model.CategoryJob;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -32,6 +33,9 @@ public class JobRepository {
 	
 	@Autowired
 	JobServiceImpl jobService;
+	
+	@Autowired
+	ApplicationServiceImpl applicationService;
 	
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
@@ -102,7 +106,7 @@ public class JobRepository {
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 
 			//Get the job's applicants 
-			job.setApplications(userService.getApplicationsByJob(job.getId()));	
+			job.setApplications(applicationService.getApplicationsByJob(job.getId()));	
 			
 			//Get the job's employees
 			job.setEmployees(userService.getEmployeesByJob(job.getId()));
@@ -110,6 +114,11 @@ public class JobRepository {
 		
 		return activeJobs;
 
+	}
+	
+	public List<Job> getCompletedJobsByUser(int userId) {
+		String sql =  "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";		
+		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
 	public void markJobComplete(int jobId) {
@@ -195,6 +204,16 @@ public class JobRepository {
 		
 		return count;
 	}
+
+	public boolean hasAppliedForJob(int jobId, int userId) {
+		String sql = "SELECT COUNT(*) FROM application WHERE jobId = ? AND userID = ?";
+		int count = jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, int.class);
+		
+		if (count > 0) return true;
+		else return false;
+	}
+
+
 
 
 

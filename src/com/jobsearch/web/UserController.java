@@ -22,6 +22,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -43,31 +44,36 @@ public class UserController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome(ModelAndView model) {
 
-		// Set session objects
+//		// Set session objects
 		JobSearchUser user = new JobSearchUser();
 
 		model.addObject("user", user);
 
-		model.setViewName("welcome");
+		model.setViewName("Welcome");
 
 		return model;
 	}
 	
-	@RequestMapping(value = "/findEmployees", method = RequestMethod.GET)
-	public ModelAndView findEmployees(ModelAndView model) {
+	@RequestMapping(value = "/viewFindEmployees", method = RequestMethod.GET)
+	public ModelAndView viewFindEmployees(ModelAndView model) {
 		model.setViewName("FindEmployees");
 		return model;
 	}
 	
+	@RequestMapping(value = "/rateEmployees", method = RequestMethod.GET)
+	public ModelAndView rateEmployees(ModelAndView model) {
+		model.setViewName("RateEmployees");
+		return model;
+	}
 	
-	@RequestMapping(value = "/findJobs", method = RequestMethod.GET)
-	public ModelAndView findJobs(ModelAndView model) {
+	@RequestMapping(value = "/viewFindJobs", method = RequestMethod.GET)
+	public ModelAndView viewFindJobs(ModelAndView model) {
 		model.setViewName("FindJobs");
 		return model;
 	}
 	
-	@RequestMapping(value = "/editProfileCategories", method = RequestMethod.GET)
-	public ModelAndView editProfileCategories(ModelAndView model) {
+	@RequestMapping(value = "/viewEditProfileCategories", method = RequestMethod.GET)
+	public ModelAndView viewEditProfileCategories(ModelAndView model) {
 		model.setViewName("EditProfileCategories");
 		return model;
 	}
@@ -78,39 +84,9 @@ public class UserController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/viewApplicationsR", method = RequestMethod.GET)
-	public ModelAndView viewApplications(ModelAndView model) {
-		model.setViewName("R_Applications");
-		return model;
-	}
-	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ModelAndView test(ModelAndView model) {
-		model.setViewName("Test");
-		return model;
-	}
-	
-	@RequestMapping(value = "/viewApplicationsE", method = RequestMethod.GET)
-	public ModelAndView viewApplicationsE(ModelAndView model) {
-		model.setViewName("E_Applications");
-		return model;
-	}
-	
 
-	@RequestMapping(value = "/welcome", method = RequestMethod.GET)
-	public ModelAndView welcomeAgain(HttpServletRequest request, ModelAndView model) {
-
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-		JobSearchUser user = userService.getUserByEmail(auth.getName());
-//		request.getSession().setAttribute("user", user);
-		model.addObject("user", user);
-
-		return model;
-	}
-	
-	@RequestMapping(value = "/postJob", method = RequestMethod.GET)
-	public ModelAndView postJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
+	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
 		model.setViewName("PostJob");
 		return model;
@@ -125,22 +101,18 @@ public class UserController {
 	
 
 	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
-	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	public ModelAndView getProfile(ModelAndView model) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-		//From the email provided, set the user object
-		user = userService.getUserByEmail(user.getEmailAddress());
-
-
-//		// Set the user's profile object
-//		user.setProfile(userService.getProfile(user.getProfileId()));
+		JobSearchUser user = userService.getUserByEmail(auth.getName());
 
 		model.addObject("user", user);
 
-		// Set the view to return
 		if (user.getProfileId() == 2)
-			model.setViewName("ProfileYee");
+			model.setViewName("EmployeeProfile");
 		else
-			model.setViewName("ProfileYer");
+			model.setViewName("EmployerProfile");
 
 		return model;
 	}
@@ -149,30 +121,53 @@ public class UserController {
 	public ModelAndView createUser(HttpServletRequest request, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
-		List<Profile> profiles = userService.getProfiles();
-
-		model.addObject("profiles", profiles);
+//		List<Profile> profiles = userService.getProfiles();
+//
+//		model.addObject("profiles", profiles);
 		model.setViewName("RegisterUser");
 		return model;
 	}
+	
+	//THIS RETURNS PROFILE OBJECTS. PERHPAS A NEW CONTROLLER MAKES SENSE.
+	//***************************************************************************
+	@RequestMapping(value = "/getProfiles", method = RequestMethod.GET)
+	@ResponseBody
+	public String getProfiles(){
+
+		List<Profile> profiles = userService.getProfiles();
+		return JSON.stringify(profiles);
+	}
+	//***************************************************************************
 
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.createUser(user);
-
-		// Apparently the user object needs to be re-added to the model in order
-		// for the view
-		// to see the changes to the user object...
 		model.addObject("user", user);
-		model.setViewName("RegisterCategories");
+
+		if (user.getProfileId() == 2)
+			model.setViewName("EmployeeProfile");
+		else
+			model.setViewName("EmployerProfile");
+
 		return model;
 	}
 	
 	@RequestMapping(value = "/getApplicants", method = RequestMethod.GET)
 	@ResponseBody
 	public String getApplicants(@RequestParam int jobId) {
-		return JSON.stringify(userService.getApplicants(jobId));
+		
+		List<JobSearchUser> applicants = userService.getApplicants(jobId);
+		
+//		//This is the rate criteria for the application. Rate Criterion should have its own controller.
+//		List<RateCriterion> ratingCriteria = userService.getRatingCriteia();
+		
+		for(JobSearchUser applicant : applicants){
+			applicant.setRatings(userService.getRatingCriteia());
+			applicant.setRatings(userService.getRatings(applicant.getUserId(), applicant.getRatings()));
+		}
+		
+		return JSON.stringify(applicants);
 	}
 	
 	
@@ -188,19 +183,13 @@ public class UserController {
 	public String getEmployeesByJob(@RequestParam int jobId) {
 		return JSON.stringify(userService.getEmployeesByJob(jobId));
 	}
-
-	@RequestMapping(value="/getAppRateCriteria", method = RequestMethod.GET)
-	@ResponseBody
-	public String getAppRateCriteria(){
-		return JSON.stringify(userService.getAppRateCriteria());
-	}
 	
 	
 	@RequestMapping(value = "/rateEmployee", method = RequestMethod.GET)
 	@ResponseBody
 	public String rateEmployee(ModelAndView model, 
 										@RequestParam int rateCriterionId,
-										@RequestParam int value,			
+										@RequestParam double value,			
 										@RequestParam int employeeId,
 										@RequestParam int jobId){
 
@@ -221,41 +210,5 @@ public class UserController {
 
 		return JSON.stringify(userService.getEmployeesByJob(jobId));
 	}
-	
-	//May want to put this in an Application controller
-	//******************************************************************************************
-	@RequestMapping(value = "/getApplicationsByEmployer", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicationsByEmployer(@RequestParam int userId){
-		return JSON.stringify(userService.getApplicationsByEmployer(userId));	
-	}
-	
-	@RequestMapping(value = "/getApplicationsByJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicationsByJob(@RequestParam int jobId){
-		return JSON.stringify(userService.getApplicationsByJob(jobId));	
-	}
-	
-	@RequestMapping(value = "/markApplicationViewed", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public void markApplicationViewed(@RequestParam int jobId, @RequestParam int userId) {
-		
-		// Update database
-		userService.markApplicationViewed(jobId, userId);
-		
-	}
-	
-	@RequestMapping(value = "/markApplicationAccepted", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public String markApplicationAccepted(@RequestParam int jobId, @RequestParam int userId) {
-		
-		//Update database
-		userService.markApplicationAccepted(jobId, userId);		
-		userService.hireApplicant(userId, jobId);
-		
-		return JSON.stringify(jobService.getEmploymentByUser(userId));
-		
-	}
-	//******************************************************************************************
 
 }

@@ -18,32 +18,39 @@
 		</style>			
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
-<!-- ../static/css/  C:/Users/Owner/git/InitialSetup/WebContent/static/css/ratings.css-->
-	
-	
-	
 
-  
-
-	
 	<h1>Here is your profile ${user.firstName} ${user.userId}</h1>
 	
 	<input type="hidden" id="userId" value="${user.userId}">
-<!-- **********************************************	 -->
-<!-- 	****** JOBS ****** -->
-<!-- **********************************************	 -->
 	
-	<h1>Active jobs</h1>
+	
 	<div class="container">
+		<h1>Active jobs</h1>
 		<div id="activeJobs"></div>
+		
+		<br>
+		<h1>Completed jobs</h1>
+		<div id="completedJobs"></div>
 	</div>
 	
 	<script >		
 		
 		//Get and populate user's active and completed jobs
  		getActiveJobsByUser_AppCat($("#userId").val(), function(jobs){
-//  			alert(JSON.stringify(jobs))
- 			appendJobs_EmployerActive("activeJobs", jobs, function(elementId, jobs){})		
+			if(jobs.length>0){
+ 				appendJobs_EmployerActive("activeJobs", jobs, function(elementId, jobs){})	
+			}else{
+				$("#activeJobs").append("<div>No active jobs</div>")
+			}
+ 		});
+		
+		//Get and populate user's active and completed jobs
+ 		getCompletedJobsByUser($("#userId").val(), function(jobs){
+			if(jobs.length>0){
+				appendJobs_EmployerComplete("completedJobs", jobs, function(elementId, jobs){})	
+			}else{
+				$("#completedJobs").append("<div>No completed jobs</div>")
+			}		
  		});
 		
 	</script>

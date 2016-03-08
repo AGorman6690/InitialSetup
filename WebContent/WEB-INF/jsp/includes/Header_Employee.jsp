@@ -7,8 +7,8 @@
     </div>
     <ul class="nav navbar-nav">
       <li class="active"><a href="./getProfile">Home</a></li>
-      <li><a href="./viewFindEmployees">Find Employees</a></li>
-      <li><a href="./viewPostJob">Post Job</a></li>
+<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
+      <li><a href="./viewFindJobs">Find Jobs</a></li>
       <li><a href="./viewEditProfileCategories">Edit Profile</a></li>
 <!-- 	   	      <li><a href="./viewRatings">View Ratings</a></li> -->
 <!-- 	  	      <li><a href="./viewApplicationsR">View Applications</a></li> -->

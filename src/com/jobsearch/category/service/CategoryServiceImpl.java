@@ -23,8 +23,7 @@ public class CategoryServiceImpl {
 	
 	public void addCategoryToUser(int userId, int categoryId) {
 
-		// Verify the usercategory table does not already contain this item
-		if (userRepository.getUserCatergories(userId, categoryId).size() <= 0) {
+		if (!userRepository.hasCategory(userId, categoryId)) {
 			repository.addCategoryToUser(userId, categoryId);
 		}
 	}
@@ -46,13 +45,6 @@ public class CategoryServiceImpl {
 		return repository.getCategoriesByUserId(userId);
 	}
 	
-	public List<Category> getAppCategories() {
-		return repository.getAppCategories();
-	}
-
-//	public List<Category> getCategoriesByLevel(int level) {
-//		return repository.getCategoriesByLevel(level);
-//	}
 
 	public List<Category> getCategoriesBySuperCategory(int superCat) {
 		return repository.getCategoriesBySuperCategory(superCat);

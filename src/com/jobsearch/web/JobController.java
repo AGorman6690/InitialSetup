@@ -83,12 +83,19 @@ public class JobController {
 
 	@RequestMapping(value = "/getActiveJobsByUser_AppCat", method = RequestMethod.GET)
 	@ResponseBody
-	public String getActiveJobsByUser_AppCat( @RequestParam int userId){
+	public String getActiveJobsByUser_AppCat(@RequestParam int userId){
 		//For each active job, set its category and applications
 		
 		return JSON.stringify(jobService.getActiveJobsByUser_AppCat(userId));		
 	}
 	
+	@RequestMapping(value = "/getCompletedJobsByUser", method = RequestMethod.GET)
+	@ResponseBody
+	public String getCompletedJobsByUser(@RequestParam int userId){
+		//For each active job, set its category and applications
+		
+		return JSON.stringify(jobService.getCompletedJobsByUser(userId));	
+	}
 	
 	@RequestMapping(value = "/getJobsByCategory", method = RequestMethod.GET)
 	@ResponseBody

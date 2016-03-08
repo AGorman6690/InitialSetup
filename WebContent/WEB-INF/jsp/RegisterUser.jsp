@@ -1,5 +1,9 @@
 <%@ include file="./includes/Header.jsp" %>
 
+<head>
+	<script src="<c:url value="/static/javascript/User.js" />"></script>
+</head>
+
 <body>
 
 	<form:form action="registerUser" method="post" commandName="user">
@@ -28,7 +32,6 @@
 				<td>Profile Type:</td>
 				<td>
 				<select id="profiles">
-					<form:options items="${profiles}" itemValue="Id" itemLabel="name" />
 				</select>
 			</tr>		
 			<tr>
@@ -40,6 +43,17 @@
 
 <script>
 
+	getProfiles(function(profiles){
+
+		var e = document.getElementById("profiles");
+		var i;
+		for(i = 0; i < profiles.length ; i++){
+			var opt = document.createElement("option");					
+			opt.value = profiles[i].id;
+			opt.innerHTML = profiles[i].name;
+			e.appendChild(opt);
+		}
+	})
 </script>
 
 
