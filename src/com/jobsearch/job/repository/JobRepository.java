@@ -1,5 +1,6 @@
 package com.jobsearch.job.repository;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,9 +15,12 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.CategoryJob;
+import com.jobsearch.model.Profile;
+import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -72,11 +76,32 @@ public class JobRepository {
 
 	}
 
-	public void addJob(String jobName, int userId) {
-		String sql;
-		sql = "INSERT INTO job (JobName, UserId, IsActive)" + " VALUES (?, ?, 1)";
+	public List<Job> addJob(CreateJobDTO jobDto) {
+		List<Job> jobsCreatedByUser = new ArrayList<>();
+		
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?)}");
 
-		jdbcTemplate.update(sql, new Object[] { jobName, userId });
+			 cStmt.setString(1, jobDto.getJobName());
+			 cStmt.setInt(2, jobDto.getUserId());
+			 cStmt.setInt(3, jobDto.getCategoryId());
+			 
+			 ResultSet result = cStmt.executeQuery();
+			 
+			 Job job = new Job();
+			 while(result.next()){
+				 job.setId(result.getInt("JobId"));
+				 job.setJobName(result.getString("JobName"));
+				 job.setIsActive(result.getInt("isActive"));
+				 job.setUserId(result.getInt("UserId"));
+				 jobsCreatedByUser.add(job);
+			 }
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return jobsCreatedByUser;
 
 	}
 
@@ -178,31 +203,9 @@ public class JobRepository {
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
-
 	public Job getJobByJobNameAndUser(String jobName, int userId) {
 		String sql = "SELECT * FROM job WHERE jobName = ? AND UserId = ?";
 		return JobRowMapper(sql, new Object[]{ jobName, userId }).get(0);
-	}
-
-	public int getSubJobCount(int categoryId, int count) {
-		
-
-		List<Category> categories;
-		
-		//For the categoryId pass as the paramenter, get the categories 1 level deep
-		categories = categoryService.getCategoriesBySuperCategory(categoryId);
-		
-		//For each category 1 level deep
-		for(Category category : categories){
-			
-			//Get its job count
-			count += jobService.getJobCountByCategory(category.getId());
-			
-			//Recursively get the job count for the category 1 level deep
-			count = jobService.getSubJobCount(category.getId(), count);
-		}
-		
-		return count;
 	}
 
 	public boolean hasAppliedForJob(int jobId, int userId) {

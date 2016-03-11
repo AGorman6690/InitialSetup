@@ -90,7 +90,7 @@ public class CategoryRepository {
 	
 
 
-	public List<Category> getCategoriesBySuperCategory(int superCat) {
+	public List<Category> getSubCategories(int superCat) {
 		
 		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
 

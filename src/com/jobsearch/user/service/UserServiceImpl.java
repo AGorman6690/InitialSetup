@@ -9,6 +9,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
+import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.repository.UserRepository;
 
 @Service
@@ -30,7 +31,6 @@ public class UserServiceImpl {
 		return repository.getUserByEmail(emailAddress);
 
 	}
-	
 
 	public JobSearchUser getUser(int userId) {
 		return repository.getUser(userId);
@@ -39,7 +39,7 @@ public class UserServiceImpl {
 	public List<JobSearchUser> getApplicants(int jobId) {
 		return repository.getApplicants(jobId);
 	}
-	
+
 	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
 		return repository.getOfferedApplicantsByJob(jobId);
 	}
@@ -64,17 +64,10 @@ public class UserServiceImpl {
 	public List<JobSearchUser> getEmployeesByCategory(int categoryId) {
 		return repository.getEmployeesByCategory(categoryId);
 	}
-	
 
-	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, double value) {
-		
-		if(repository.hasRating(rateCriterionId, employeeId, jobId)){
-			repository.updateRating(rateCriterionId, employeeId, jobId, value);
-		}else{
-			repository.rateEmployee(rateCriterionId, employeeId, jobId, value);
-		}
+	public void rateEmployee(RatingDTO ratingDto) {
+		repository.updateRating(ratingDto);
 	}
-
 
 	public List<RateCriterion> getRatings(int userId, List<RateCriterion> ratingCriteria) {
 		return repository.getRatingCriteriaValue(userId, ratingCriteria);
@@ -83,6 +76,5 @@ public class UserServiceImpl {
 	public List<RateCriterion> getRatingCriteia() {
 		return repository.getRatingCriteria();
 	}
-
 
 }

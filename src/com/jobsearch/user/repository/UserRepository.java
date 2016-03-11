@@ -19,6 +19,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
+import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -27,79 +28,76 @@ public class UserRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	UserServiceImpl userService;
 
 	public JobSearchUser getUser(int userId) {
 
 		String sql = "Select * from User where userId = ?";
-		
+
 		return JobSearchUserRowMapper(sql, new Object[] { userId }).get(0);
 
 	}
 
-
-	//Delete????
-	//***********************************************************
+	// Delete????
+	// ***********************************************************
 	public void createUser2(JobSearchUser user) {
-
 
 		String insertUser = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
 
-		jdbcTemplate.update(insertUser,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), 1, user.getPassword() });
-
+		jdbcTemplate.update(insertUser, new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(),
+				1, user.getPassword() });
 
 	}
-	//***********************************************************
-	
+	// ***********************************************************
+
 	public JobSearchUser createUser(JobSearchUser user) {
 
 		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call insertUser(?, ?, ?, ?, ?, ?)}");
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call insertUser(?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, user.getFirstName());
-			 cStmt.setString(2, user.getLastName());
-			 cStmt.setString(3, user.getEmailAddress());
-			 cStmt.setInt(4, new Integer(1));
-			 cStmt.setString(5, user.getPassword());
-			 cStmt.setInt(6, user.getProfileId());
-			 
-			 ResultSet result = cStmt.executeQuery();
-			 
-			 JobSearchUser newUser = new JobSearchUser();
-			 Profile profile = new Profile();
-			 while(result.next()){
-				 newUser = new JobSearchUser();
-				 newUser.setFirstName(result.getString("firstName"));
-				 newUser.setFirstName(result.getString("lastname"));
-				 newUser.setFirstName(result.getString("email"));
-				 newUser.setFirstName(result.getString("roleId"));
-				 
-				 
-				 profile.setId(result.getInt("profileId"));
-				 profile.setName(result.getString("profiletype"));
-				 
-				 newUser.setProfile(profile);
-				 
-			 }
-			 return newUser;
-		
+			cStmt.setString(1, user.getFirstName());
+			cStmt.setString(2, user.getLastName());
+			cStmt.setString(3, user.getEmailAddress());
+			cStmt.setInt(4, new Integer(1));
+			cStmt.setString(5, user.getPassword());
+			cStmt.setInt(6, user.getProfileId());
+
+			ResultSet result = cStmt.executeQuery();
+
+			JobSearchUser newUser = new JobSearchUser();
+			Profile profile = new Profile();
+			while (result.next()) {
+				newUser = new JobSearchUser();
+				newUser.setFirstName(result.getString("firstName"));
+				newUser.setFirstName(result.getString("lastname"));
+				newUser.setFirstName(result.getString("email"));
+				newUser.setFirstName(result.getString("roleId"));
+
+				profile.setId(result.getInt("profileId"));
+				profile.setName(result.getString("profiletype"));
+
+				newUser.setProfile(profile);
+
+			}
+			return newUser;
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
 	public void createAdmin(JobSearchUser user) {
 
 		String sql = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql,
-				new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(), new Integer(2), user.getPassword() });
+		jdbcTemplate.update(sql, new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(),
+				new Integer(2), user.getPassword() });
 
 		/*
 		 * @Override public JobSearchUser extractData(ResultSet rs) throws
@@ -113,7 +111,6 @@ public class UserRepository {
 		 */
 
 	}
-
 
 	public List<JobSearchUser> JobSearchUserRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
@@ -185,40 +182,39 @@ public class UserRepository {
 
 	}
 
-	
+	// public List<AppCatJobUser> AppCatJobUserRowMapper(String sql, Object[]
+	// args) {
+	// return jdbcTemplate.query(sql, args, new RowMapper<AppCatJobUser>() {
+	// @Override
+	// public AppCatJobUser mapRow(ResultSet rs, int rownumber) throws
+	// SQLException {
+	// AppCatJobUser e = new AppCatJobUser();
+	// e.setFirstName(rs.getString(1));
+	// e.setJobName(rs.getString(2));
+	// e.setIsOffered(rs.getInt(3));
+	// e.setBeenViewed(rs.getInt(4));
+	// e.setIsAccepted(rs.getInt(5));
+	// e.setCategoryName(rs.getString(6));
+	// return e;
+	// }
+	// });
+	// }
 
-//	public List<AppCatJobUser> AppCatJobUserRowMapper(String sql, Object[] args) {
-//		return jdbcTemplate.query(sql, args, new RowMapper<AppCatJobUser>() {
-//			@Override
-//			public AppCatJobUser mapRow(ResultSet rs, int rownumber) throws SQLException {
-//				AppCatJobUser e = new AppCatJobUser();
-//				e.setFirstName(rs.getString(1));
-//				e.setJobName(rs.getString(2));
-//				e.setIsOffered(rs.getInt(3));
-//				e.setBeenViewed(rs.getInt(4));
-//				e.setIsAccepted(rs.getInt(5));
-//				e.setCategoryName(rs.getString(6));
-//				return e;
-//			}
-//		});
-//	}
-	
-	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args){  
-		
+	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args) {
+
 		List<RateCriterion> list;
-		 list = jdbcTemplate.query(sql, args, new RowMapper<RateCriterion>(){  
-		    
-			 @Override  
-		    public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {  
-				 RateCriterion e = new RateCriterion();  
-		        e.setRateCriterionId(rs.getInt(1));
-		        e.setName(rs.getString(2));
-		        return e;  
-		    }  
-		    });   		 
-		 return (List<RateCriterion>) list;		 
-	}
+		list = jdbcTemplate.query(sql, args, new RowMapper<RateCriterion>() {
 
+			@Override
+			public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {
+				RateCriterion e = new RateCriterion();
+				e.setRateCriterionId(rs.getInt(1));
+				e.setName(rs.getString(2));
+				return e;
+			}
+		});
+		return (List<RateCriterion>) list;
+	}
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
@@ -227,7 +223,7 @@ public class UserRepository {
 		// Object args[0] = null;
 		// args[0] = user.getEmailAddress();
 
-		List<JobSearchUser> list = JobSearchUserRowMapper(sql, new Object[]{ email });
+		List<JobSearchUser> list = JobSearchUserRowMapper(sql, new Object[] { email });
 
 		return list.get(0);
 
@@ -240,7 +236,6 @@ public class UserRepository {
 
 	}
 
-
 	public boolean hasCategory(int userId, int categoryId) {
 
 		String sql;
@@ -248,9 +243,9 @@ public class UserRepository {
 
 		List<Category> categories = this.UserCategoriesRowMapper(sql, new Object[] { userId, categoryId });
 
-		if (categories.size() > 0 ){
+		if (categories.size() > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
 
@@ -258,37 +253,30 @@ public class UserRepository {
 
 	public ArrayList<JobSearchUser> getApplicants(int jobId) {
 
-		String sql = "SELECT *" + " FROM user"
-				+ " INNER JOIN application" + " ON user.UserId = application.UserId" + " INNER JOIN job"
-				+ " ON application.JobId = job.JobId" + " AND application.JobId = ?" + " AND job.IsActive = 1";
+		String sql = "SELECT *" + " FROM user" + " INNER JOIN application" + " ON user.UserId = application.UserId"
+				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?"
+				+ " AND job.IsActive = 1";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
-	
 
 	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
-		String sql = "SELECT * FROM user"
-				+ " INNER JOIN application On user.UserId = application.UserId"
+		String sql = "SELECT * FROM user" + " INNER JOIN application On user.UserId = application.UserId"
 				+ " AND application.IsOffered = 1 AND application.JobId = ?";
-				
-		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+
+		return JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
-
-
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
-		
 
-		String sql = "SELECT *" + " FROM user"
-				+ " INNER JOIN employment" + " ON user.UserId = employment.UserId" 
+		String sql = "SELECT *" + " FROM user" + " INNER JOIN employment" + " ON user.UserId = employment.UserId"
 				+ " AND employment.JobId = ?";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
 	public void hireApplicant(int userId, int jobId) {
-		String sql = "INSERT INTO employment (UserId, JobId)"
-				+ " VALUES(?, ?)";
+		String sql = "INSERT INTO employment (UserId, JobId)" + " VALUES(?, ?)";
 
 		jdbcTemplate.update(sql, new Object[] { userId, jobId });
 
@@ -302,7 +290,6 @@ public class UserRepository {
 		return profiles.get(0);
 	}
 
-
 	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
 		String sql = "SELECT *" + " FROM user" + "	INNER JOIN usercategories"
 				+ "	ON user.UserId = usercategories.userID" + " AND user.ProfileId = 2"
@@ -315,71 +302,45 @@ public class UserRepository {
 		String sql = "SELECT *" + " FROM profile";
 		return this.ProfilesRowMapper(sql);
 	}
-	
 
-	public void rateEmployee(int rateCriterionId, int employeeId, int jobId, double value) {
-		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, Value)"
-				+ " VALUES(?, ?, ?, ?)";
-		
-		jdbcTemplate.update(sql, new Object[]{rateCriterionId, employeeId, jobId, value});
-	}
-	
-
-	public void updateRating(int rateCriterionId, int employeeId, int jobId, double value) {
+	public void updateRating(RatingDTO ratingDto) {
 		String sql = "UPDATE rating SET Value = ? WHERE RateCriterionId = ? AND UserId = ? AND JobId = ?";
-	
-		jdbcTemplate.update(sql, new Object[]{value, rateCriterionId, employeeId, jobId});
-		
-	}
 
-	public boolean hasRating(int rateCriterionId, int employeeId, int jobId) {
-		String sql = "SELECT COUNT(*)" + " FROM rating " + " WHERE RateCriterionId = ? AND"
-				+ " UserId = ? AND JobId = ?";
-		
-		int result = jdbcTemplate.queryForObject(sql, new Object[]{rateCriterionId, employeeId, jobId}, int.class);
-		
-		if(result == 0 ){
-			return false;
-		}else{
-			return true;
-		}
-	}
+		jdbcTemplate.update(sql, new Object[] { ratingDto.getValue(), ratingDto.getRateCriterionId(), ratingDto.getEmployeeId(), ratingDto.getJobId()});
 
+	}
 
 	public double getRating(int userId) {
-		
+
 		return 0;
 	}
 
-
 	public List<RateCriterion> getRatingCriteria() {
 		String sql = "SELECT * FROM ratecriterion";
-		return this.RateCriterionRowMapper(sql, new Object[]{});
+		return this.RateCriterionRowMapper(sql, new Object[] {});
 	}
-
 
 	public List<RateCriterion> getRatingCriteriaValue(int userId, List<RateCriterion> ratingCriteria) {
-		
-		for(RateCriterion rateCriterion : ratingCriteria){
-			String sql = "SELECT COUNT(*) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
-			int count = jdbcTemplate.queryForObject(sql, new Object[]{userId, rateCriterion.getRateCriterionId()}, int.class);
-			
-			if(count > 0){
-				sql = "SELECT SUM(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
-				double sum = jdbcTemplate.queryForObject(sql, new Object[]{userId, rateCriterion.getRateCriterionId()}, double.class);
 
-				//round to 1 decimal place
+		for (RateCriterion rateCriterion : ratingCriteria) {
+			String sql = "SELECT COUNT(*) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
+			int count = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterion.getRateCriterionId() },
+					int.class);
+
+			if (count > 0) {
+				sql = "SELECT SUM(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
+				double sum = jdbcTemplate.queryForObject(sql,
+						new Object[] { userId, rateCriterion.getRateCriterionId() }, double.class);
+
+				// round to 1 decimal place
 				rateCriterion.setValue(Math.round((sum / count) * 10.0) / 10.0);
-			}else{
+			} else {
 				rateCriterion.setValue(0);
 			}
-				
+
 		}
-		
+
 		return ratingCriteria;
 	}
-
-
-
 
 }

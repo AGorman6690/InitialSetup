@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,19 +62,6 @@ public class CategoryController {
 		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 
 	}
-	
-	@RequestMapping(value = "/removeCategoriesFromUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String removeCategoriesFromUser(@RequestParam(value="category") int[] categoryIds, @RequestParam int userId) {
-	
-		for(int categoryId : categoryIds){
-			categoryService.removeCategoryFromUser(userId, categoryId);
-		}
-		
-		//Return the categories associated with the user's id
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-
-	}
 		
 //	@RequestMapping(value = "/getCategoryByLevel", method = RequestMethod.GET)
 //	@ResponseBody
@@ -81,17 +69,11 @@ public class CategoryController {
 //		return JSON.stringify(categoryService.getCategoriesByLevel(level));
 //	}
 	
-	@RequestMapping(value = "/getCategoriesBySuperCat", method = RequestMethod.GET)
+	@RequestMapping(value = "category/{superCategory}/subCategories", method = RequestMethod.GET)
 	@ResponseBody
-	public String getCategoriesBySuperCat(@RequestParam int superCat) {
+	public String getSubCategories(@PathVariable int superCategory) {
 	
-		List<Category> categories = categoryService.getCategoriesBySuperCategory(superCat);
-		
-		for(Category category : categories){
-			//category.setSubCategories(categoryService.getCategoriesBySuperCategory(category.getId()));
-			category.setJobCount(jobService.getJobCountByCategory(category.getId()));
-			category.setSubJobCount(jobService.getSubJobCount(category.getId(), 0));
-		}
+		List<Category> categories = categoryService.getSubCategories(superCategory);
 		
 		return JSON.stringify(categories);
 	
@@ -107,19 +89,4 @@ public class CategoryController {
 		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 
 	}
-	
-	@RequestMapping(value = "/getCategoryByJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCategoryByJob(@RequestParam int jobId){		
-		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
-	}
-	
-	
-	@RequestMapping(value = "/getCategoriesByUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCategoriesByUser(@RequestParam int userId){		
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-	}
-	
-
 }

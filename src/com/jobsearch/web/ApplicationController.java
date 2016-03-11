@@ -61,5 +61,22 @@ public class ApplicationController {
 		return JSON.stringify(jobService.getEmploymentByUser(userId));
 		
 	}
+	
+	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
+	@ResponseBody
+	public String applyForJob(@RequestParam int jobId, @RequestParam int userId) {
 
+		// Add application to database
+		jobService.applyForJob(jobId, userId);
+		
+		return JSON.stringify(jobService.getApplicationsByUser(userId));
+
+	}
+
+	@RequestMapping(value = "/getApplicationsByUser", method = RequestMethod.GET)
+	@ResponseBody
+	public String getApplicationsByUser(@RequestParam int userId){
+		return JSON.stringify(jobService.getApplicationsByUser(userId));	
+	}
+	
 }

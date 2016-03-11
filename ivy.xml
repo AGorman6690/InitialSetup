@@ -85,6 +85,12 @@
         <dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.5.4" />
         <dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.5.4" />
         <dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.5.4" />
+        <dependency org="com.fasterxml.jackson" name="jackson-datatype-guava" rev="1.9.2"/>
+        <dependency org="com.fasterxml.jackson" name="jackson-datatype-json-org" rev="1.8.0"/>
+        <dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-hppc" rev="2.7.2"/>
+        <dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-joda" rev="2.7.2"/>        
+        <dependency org="org.json" name="json" rev="20160212"/>
+        
         
         <!-- Apache Libraries -->
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.4"/>

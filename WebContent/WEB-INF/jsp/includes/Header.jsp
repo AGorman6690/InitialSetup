@@ -29,9 +29,11 @@
 	   
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
+<meta name="_csrf" content="${_csrf.token}"/>
+<meta name="_csrf_header" content="${_csrf.headerName}"/>
 </head>
 <body>
-
 <!-- To conviently change accounts during debugging -->
 <!-- ******************************************** -->
 <a href="./signIn">Sign In</a>

@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
-import com.jobsearch.model.CategoryJob;
 
 @Service
 public class JobServiceImpl {
 
 	@Autowired
 	JobRepository repository;
+	
+	@Autowired
+	CategoryServiceImpl categoryService;
 
-	public void addJob(String jobName, int userId) {
-		repository.addJob(jobName, userId);
+	public List<Job> addJob(CreateJobDTO jobDto) {
+		return repository.addJob(jobDto);
 	}
 
 	public void markJobComplete(int jobId) {
@@ -24,17 +27,17 @@ public class JobServiceImpl {
 	}
 
 	public void applyForJob(int jobId, int userId) {
-		
-		if (!repository.hasAppliedForJob(jobId, userId)){
-			repository.applyForJob(jobId, userId);	
+
+		if (!repository.hasAppliedForJob(jobId, userId)) {
+			repository.applyForJob(jobId, userId);
 		}
-		
+
 	}
 
 	public List<Job> getJobsByCategory(int categoryId) {
 		return repository.getJobsByCategory(categoryId);
 	}
-	
+
 	public List<Job> getApplicationsByUser(int userId) {
 		return repository.getApplicationsByUser(userId);
 	}
@@ -64,8 +67,24 @@ public class JobServiceImpl {
 	}
 
 	public int getSubJobCount(int categoryId, int count) {
-		
-		return repository.getSubJobCount(categoryId, count);
+
+		List<Category> categories;
+
+		// For the categoryId pass as the paramenter, get the categories 1 level
+		// deep
+		categories = categoryService.getSubCategories(categoryId);
+
+		// For each category 1 level deep
+		for (Category category : categories) {
+
+			// Get its job count
+			count += getJobCountByCategory(category.getId());
+
+			// Recursively get the job count for the category 1 level deep
+			count = getSubJobCount(category.getId(), count);
+		}
+
+		return count;
 	}
 
 	public List<Job> getCompletedJobsByUser(int userId) {

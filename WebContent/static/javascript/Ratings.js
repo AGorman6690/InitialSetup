@@ -5,11 +5,19 @@ $(document).ready(function(){
 
 function rateEmployee(rateCriterionId, value, jobId, employeeId){
 //	alert("rateEmployee");
+	
+	var rating = {};
+	rating.rateCriterionId = rateCriterionId;
+	rating.value = value;
+	rating.jobId = jobId;
+	rating.employeeId = employeeId;
+	
 	$.ajax({
-		type: "GET",
-		url: 'http://localhost:8080/JobSearch/rateEmployee?rateCriterionId=' + rateCriterionId + '&value=' + value +
-				'&jobId=' + jobId + '&employeeId=' + employeeId,
-			dataType: "json",
+		type: "POST",
+		url: 'http://localhost:8080/JobSearch/user/rate',
+			contentType : "application/json",
+			dataType: "application/json",
+			data: JSON.stringify(rating),
 	        success: _success,
 	        error: _error
 	    });
