@@ -1,73 +1,12 @@
 
-.section {
-	color: red;
-	font-size: 4em;
-}
-
 .co_jobCategory{
 	list-style-type: none;
 }
 
-#container{
+#employerMenu{
 	position: relative;
-	width: 750px;
-	height: 500px;
+/* 	left: 15px; */
+/* 	right: -15px; */
+	margin: 10px 10px 10px 10px;
 }
 
-.rate-employees{
-	position: absoloute;
-	width: 200px;
-/* 	position: absolute; */
-	float: left;
-	height: 100%
-}
-
-
-.border{
-	
-	border: 1px solid red;
-}
-
-.rate-criteria{
-	font-size: 15px;
-	display: inline;
-	height: 100%
-}
-
-.rate-group{
-	position: absolute;
-	float: left;	
-	display: inline;	
-}
-
-.rate-employees{
-	width: 200px;
-}
-.criteria1{
-	top: 2%;
-}
-
-.criteria2{
-	top: 12%;
-}
-
-.criteria3{
-	top: 22%;
-}
-
-.button-active{
-	background-color: #e6ac00;
-}
-
-.rate-values{
-	position: absolute;
-/* 	float: left; */
-	vertical-align: middle;
-	display: inline;
-/* 	height:20px; */
-	
-}
-
-a.list-group-item.active{
-	
-}

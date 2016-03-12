@@ -1,127 +1,49 @@
 
+.rate-criteria{
+	font-size: 15px;
+	display: inline;
+	height: 100%
+}
 
-.main{
-      position: relative;
-      top: 50px;
-      left: 30px;
-      border-style: solid;
-      width: 600px;
-      height: 300px;
+.rate-group{
+	position: absolute;
+	float: left;	
+	display: inline;	
+}
+
+.rate-employees{
+	width: 200px;
+}
+.criteria1{
+	top: 2%;
+}
+
+.criteria2{
+	top: 12%;
+}
+
+.criteria3{
+	top: 22%;
+}
+
+.rate-values{
+	position: absolute;
+/* 	float: left; */
+	vertical-align: middle;
+	display: inline;
+/* 	height:20px; */
+	
+}
+
+.button-active{
+	background-color: #e6ac00;
 }
 
 
-
-.all{
-/*   list-style: none; */
-  position: absolute;
-/*   top: -18px; */
-  float: left;
-  height: 300px;
-  width: 100px;
-  border: 1px solid black;
-  padding-left: 10px;
-  padding-right: 0px;
-  padding-top: 10px
+.rate-employees{
+	position: absoloute;
+	width: 200px;
+/* 	position: absolute; */
+	float: left;
+	height: 100%
 }
-
-.list{
-    padding-top: 20px;
-}
-
-.selected{
-  position: absolute;
-  top: -18px;
-  left: 110px;
-  border: 1px solid black;
-  width: 490px;
-  height: 25px;
-}
-
-.rating1{
-  position: absolute;
-  top: 40px;
-  left: 110px;
-  border: 1px solid black;
-  width: 490px;
-  height: 25px;
-}
-
-.rating2{
-  position: absolute;
-  top: 100px;
-  left: 110px;
-  border: 1px solid black;
-  width: 490px;
-  height: 25px;
-}
-
-.rating3{
-  position: absolute;
-  top: 160px;
-  left: 110px;
-  border: 1px solid black;
-  width: 490px;
-  height: 25px;
-}
-
-.rating4{
-  position: absolute;
-  top: 220px;
-  left: 110px;
-  border: 1px solid black;
-  width: 490px;
-  height: 25px;
-}
-
-.rating-content{
-  position: absolute;
-  top: -10px;
-  left: 0px;
-  width: 190px;
-  height: 25px
-}
-
-.button1{
-  position: absolute;
-  left: 90px;
-  width: 50px;
-}
-
-.button2{
-  position: absolute;
-  left: 170px;
-   width: 50px;
-}
-
-.button3{
-  position: absolute;
-  left: 250px;
-   width: 50px;
-}
-
-.button4{
-  position: absolute;
-  left: 330px;
-   width: 50px;
-}
-
-
-.button5{
-  position: absolute;
-  left: 410px;
-   width: 50px;
-}
-
-.ratings{
-  list-style: none;
-  position: absolute;
-  top: 8px;
-  width: 180px;
-  height: 265px;
-  left: 110px;
-  border: 1px solid black;
-  padding-left: 10px;
-  padding-right: 0px;
-  padding-top: 10px
-}
-

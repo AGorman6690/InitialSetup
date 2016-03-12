@@ -80,11 +80,14 @@ public class JobRepository {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
 		
 		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?)}");
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJobName());
 			 cStmt.setInt(2, jobDto.getUserId());
 			 cStmt.setInt(3, jobDto.getCategoryId());
+			 cStmt.setString(4, jobDto.getDescription());
+			 cStmt.setString(5, jobDto.getLocation());
+			 cStmt.setInt(6, jobDto.getOpenings());
 			 
 			 ResultSet result = cStmt.executeQuery();
 			 
@@ -94,6 +97,9 @@ public class JobRepository {
 				 job.setJobName(result.getString("JobName"));
 				 job.setIsActive(result.getInt("isActive"));
 				 job.setUserId(result.getInt("UserId"));
+				 job.setDescription(result.getString("Description"));
+				 job.setLocation(result.getString("Location"));
+				 job.setOpenings(result.getInt("Openings"));
 				 jobsCreatedByUser.add(job);
 			 }
 		} catch (SQLException e) {

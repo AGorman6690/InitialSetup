@@ -26,7 +26,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.JobSearchUser;
 
 @Controller
-@SessionAttributes({ "user" })
+@SessionAttributes({ "user", "job" })
 public class JobController {
 
 	@Autowired
@@ -35,15 +35,17 @@ public class JobController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
-	@RequestMapping(value = "/createJob", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/createJob", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String addJob(@RequestBody CreateJobDTO jobDto) {
+//	public ModelAndView addJob(@RequestBody CreateJobDTO jobDto, ModelAndView model) {
+	public ModelAndView addJob(@ModelAttribute("job") CreateJobDTO jobDto, ModelAndView model) {
 
-		// Add the job to the job table
+		//Add the job to the job table
 		List<Job> jobsCreatedByUser = jobService.addJob(jobDto);
-
-		return JSON.stringify(jobsCreatedByUser);
-
+	 
+		model.setViewName("EmployerProfile");
+		//return JSON.stringify(jobsCreatedByUser);
+		return model;
 	}
 
 	@RequestMapping(value = "/viewActiveJob_Employer", method = RequestMethod.GET)
@@ -95,9 +97,10 @@ public class JobController {
 	}
 
 
-	@RequestMapping(value = "/job/{jobID}/markComplete", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
 	@ResponseBody
-	public String markJobComplete(@RequestParam int jobId, @ModelAttribute("user") JobSearchUser user) {
+	public String markJobComplete(@PathVariable int jobId, @ModelAttribute("user") JobSearchUser user) {
+	//public String markJobComplete(@PathVariable int jobId) {
 
 		// Update database
 		jobService.markJobComplete(jobId);
@@ -105,11 +108,11 @@ public class JobController {
 		return JSON.stringify(jobService.getJobsByUser(user.getUserId()));
 	}
 	
-
-	@RequestMapping(value = "/job/{jobID}/category", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCategoryByJob(@PathVariable int jobId){		
-		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
-	}
+//
+//	@RequestMapping(value = "/job/{jobID}/category", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getCategoryByJob(@PathVariable int jobId){		
+//		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
+//	}
 
 }

@@ -62,7 +62,7 @@ function markJobComplete(jobId, callback) {
 	alert('job complete ' + jobId)
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/markJobComplete?jobId=' + jobId,
+		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/markComplete',
 		dataType : "json",
 		success : _success,
 		error : _error

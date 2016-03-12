@@ -1,0 +1,18 @@
+
+.post-job-input{
+	width: 200px;
+}
+
+.post-job-openings{
+	height: 30px;
+}
+
+.post-job-container{
+	position: relative;
+	left: 25px;
+	margin: 35px 0px 50px 0px;
+}
+
+.post-job-description{
+	width: 500px;
+}

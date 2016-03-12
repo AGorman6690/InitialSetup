@@ -78,7 +78,7 @@ function hireApplicant(userId, jobId, callback){
 	//	alert("1");
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/hireApplicant?userId=' + userId + '&jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/user/hire?userId=' + userId + '&jobId=' + jobId,
         dataType: 'json',
 		success: _success,
         error: _error

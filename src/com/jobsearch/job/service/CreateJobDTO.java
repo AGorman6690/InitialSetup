@@ -12,6 +12,40 @@ public class CreateJobDTO {
 
 	@JsonProperty("categoryId")
 	int categoryId;
+	
+	@JsonProperty("openings")
+	int openings;
+	
+	@JsonProperty("location")
+	String location;
+	
+	@JsonProperty("description")
+	String description;
+	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public int getOpenings() {
+		return openings;
+	}
+
+	public void setOpenings(int openings) {
+		this.openings = openings;
+	}
 
 	public String getJobName() {
 		return jobName;

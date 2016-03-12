@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.CreateJobDTO;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Profile;
@@ -30,7 +32,7 @@ import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" })
+@SessionAttributes({ "user", "job" })
 public class UserController {
 
 	@Autowired
@@ -87,7 +89,10 @@ public class UserController {
 
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-
+		
+		CreateJobDTO job = new CreateJobDTO();
+		model.addObject("job", job);
+		
 		model.setViewName("PostJob");
 		return model;
 	}

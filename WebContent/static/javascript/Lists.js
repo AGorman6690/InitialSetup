@@ -114,7 +114,7 @@ function appendFirstLevelCategories_PostJob(eId, arr, callback){
 			var id =  arr[i].id;
 			
 			//Li element. Its id is equal to the category id
-			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
+			r[++j] = '<li id="' + id + '" class="category-list-item list-group-item">';
 			
 			//Category name
 			r[++j] = 	'<a href="#" id="' + id + 'Name" >';
@@ -130,7 +130,7 @@ function appendFirstLevelCategories_PostJob(eId, arr, callback){
 			//sub categories 1 level deep.
 			//Also on click, the categor
 			r[++j] = 	'<a onclick="appendSecondLevelCategories_PostJob(\'' + id + '\')" id="#' + id + 'C"';
-			r[++j] =    'data-target="#' + id + 'T" data-toggle="collapse" class="btn margin-hori btn-success btn-sm">';
+			r[++j] =    'data-target="#' + id + 'T" data-toggle="collapse" class="category-list-down-arrow btn btn-success btn-sm">';
 			r[++j] = 		'<span class="glyphicon glyphicon-menu-down"></span>';
 			r[++j] =	'</a>';
 			
@@ -549,7 +549,8 @@ function activateButton(buttonId, containerId, className){
 }
 
 function hire(userId){
-	hireApplicant(userId, $("#jobId").val())
+	var jobId = $("#jobId").val();
+	hireApplicant(userId, jobId)
 }
 
 function appendJobs_EmployerActive(eId, jobs, callback){

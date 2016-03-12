@@ -11,13 +11,40 @@ public class Job {
 	private int id;
 	private int isActive;
 	private int userId;
+	private int openings;
+	private String location;
 	private String jobName;
+	private String description;
 	private Category category;
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	
 	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public int getOpenings() {
+		return openings;
+	}
+
+	public void setOpenings(int openings) {
+		this.openings = openings;
+	}
+
 	public Category getCategory() {
 		return category;
 	}

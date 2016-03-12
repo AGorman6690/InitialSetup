@@ -17,9 +17,6 @@ public class CategoryRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
-	@Autowired 
-	CategoryServiceImpl categoryService;
 
 	public List<Category> CategoryRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Category>() {
@@ -42,9 +39,7 @@ public class CategoryRepository {
 
 	}
 	
-	
-	
-	
+		
 	public void addCategoryToUser(int userId, int categoryId) {
 
 		String sql;
