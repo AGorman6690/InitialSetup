@@ -40,17 +40,12 @@ public class UserRepository {
 
 	}
 
-	// Delete????
-	// ***********************************************************
-	public void createUser2(JobSearchUser user) {
+	public void validateUser(int userId) {
 
-		String insertUser = "insert into user (FirstName, LastName, Email, RoleId, password)  values (?, ?, ?, ?, ?)";
+		String sql = "Update user Set enabled = 1 where userId = ?";
 
-		jdbcTemplate.update(insertUser, new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(),
-				1, user.getPassword() });
-
+		jdbcTemplate.update(sql, new Object[] { userId });
 	}
-	// ***********************************************************
 
 	public JobSearchUser createUser(JobSearchUser user) {
 
@@ -71,10 +66,10 @@ public class UserRepository {
 			Profile profile = new Profile();
 			while (result.next()) {
 				newUser = new JobSearchUser();
+				newUser.setUserId(result.getInt("userId"));
 				newUser.setFirstName(result.getString("firstName"));
-				newUser.setFirstName(result.getString("lastname"));
-				newUser.setFirstName(result.getString("email"));
-				newUser.setFirstName(result.getString("roleId"));
+				newUser.setLastName(result.getString("lastname"));
+				newUser.setEmailAddress(result.getString("email"));
 
 				profile.setId(result.getInt("profileId"));
 				profile.setName(result.getString("profiletype"));
@@ -306,7 +301,8 @@ public class UserRepository {
 	public void updateRating(RatingDTO ratingDto) {
 		String sql = "UPDATE rating SET Value = ? WHERE RateCriterionId = ? AND UserId = ? AND JobId = ?";
 
-		jdbcTemplate.update(sql, new Object[] { ratingDto.getValue(), ratingDto.getRateCriterionId(), ratingDto.getEmployeeId(), ratingDto.getJobId()});
+		jdbcTemplate.update(sql, new Object[] { ratingDto.getValue(), ratingDto.getRateCriterionId(),
+				ratingDto.getEmployeeId(), ratingDto.getJobId() });
 
 	}
 

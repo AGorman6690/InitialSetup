@@ -50,10 +50,36 @@ public class UserController {
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();
 
+		List<Profile> profiles = userService.getProfiles();
+		model.addObject("profiles", profiles);
 		model.addObject("user", user);
 
 		model.setViewName("Welcome");
 
+		return model;
+	}
+
+	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
+	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+			@ModelAttribute("user") JobSearchUser user) {
+
+		userService.validateUser(userId);
+
+		if (user.getProfileId() == 2)
+			model.setViewName("EmployeeProfile");
+		else
+			model.setViewName("EmployerProfile");
+
+		model.addObject("user", user);
+		return model;
+	}
+
+	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
+	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+
+		user = userService.createUser(user);
+		model.addObject("user", user);
+		model.setViewName("EmailValidateMessage");
 		return model;
 	}
 
@@ -89,18 +115,26 @@ public class UserController {
 
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-		
+
 		CreateJobDTO job = new CreateJobDTO();
 		model.addObject("job", job);
-		
+
 		model.setViewName("PostJob");
 		return model;
 	}
 
-	@RequestMapping(value = "/signIn", method = RequestMethod.GET)
-	public ModelAndView signIn(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView logout(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
-		model.setViewName("SignIn");
+		model.setViewName("Welcome");
+
+		user = new JobSearchUser();
+
+		model.addObject("user", user);
+
+		List<Profile> profiles = userService.getProfiles();
+		model.addObject("profiles", profiles);
+
 		return model;
 	}
 
@@ -129,8 +163,7 @@ public class UserController {
 
 	@RequestMapping(value = "/user/{userId}/removeCategories", method = RequestMethod.PUT)
 	@ResponseBody
-	public String removeCategories(@PathVariable int userId,
-			@RequestParam(required = true) List<Integer> category) {
+	public String removeCategories(@PathVariable int userId, @RequestParam(required = true) List<Integer> category) {
 
 		for (int categoryId : category) {
 			categoryService.removeCategoryFromUser(userId, categoryId);
@@ -151,20 +184,6 @@ public class UserController {
 		return JSON.stringify(profiles);
 	}
 	// ***************************************************************************
-
-	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
-	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-
-		user = userService.createUser(user);
-		model.addObject("user", user);
-
-		if (user.getProfileId() == 2)
-			model.setViewName("EmployeeProfile");
-		else
-			model.setViewName("EmployerProfile");
-
-		return model;
-	}
 
 	@RequestMapping(value = "/getApplicants", method = RequestMethod.GET)
 	@ResponseBody

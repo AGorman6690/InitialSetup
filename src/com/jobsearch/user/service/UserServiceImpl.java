@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.email.Mailer;
 import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
@@ -18,8 +19,19 @@ public class UserServiceImpl {
 	@Autowired
 	UserRepository repository;
 
+	@Autowired
+	Mailer mailer;
+
 	public JobSearchUser createUser(JobSearchUser user) {
-		return repository.createUser(user);
+
+		JobSearchUser newUser = repository.createUser(user);
+
+		if (newUser.getEmailAddress() != null) {
+			mailer.sendMail(user.getEmailAddress(), "email verification",
+					"please click the link to verify your email http://localhost:8080/JobSearch/validateEmail?userId="
+							+ newUser.getUserId());
+		}
+		return newUser;
 	}
 
 	public void setUsersId(JobSearchUser user) {
@@ -75,6 +87,10 @@ public class UserServiceImpl {
 
 	public List<RateCriterion> getRatingCriteia() {
 		return repository.getRatingCriteria();
+	}
+
+	public void validateUser(int userId) {
+		repository.validateUser(userId);
 	}
 
 }

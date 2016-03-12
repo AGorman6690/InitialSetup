@@ -102,7 +102,8 @@
         
         <dependency org="javax.servlet" name="servlet-api" rev="2.5"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0"/>
-        
+        <dependency org="javax.mail" name="javax.mail-api" rev="1.5.5"/>
+        <dependency org="com.sun.mail" name="javax.mail" rev="1.5.5"/>
         
     </dependencies>
 
