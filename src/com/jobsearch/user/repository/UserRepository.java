@@ -271,10 +271,20 @@ public class UserRepository {
 	}
 
 	public void hireApplicant(int userId, int jobId) {
-		String sql = "INSERT INTO employment (UserId, JobId)" + " VALUES(?, ?)";
+		
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call hire_applicant(?, ?)}");
 
-		jdbcTemplate.update(sql, new Object[] { userId, jobId });
+			cStmt.setInt(1, userId);
+			cStmt.setInt(2, jobId);
+			
+			cStmt.executeQuery();
 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 
 	public Profile getProfile(int profileId) {

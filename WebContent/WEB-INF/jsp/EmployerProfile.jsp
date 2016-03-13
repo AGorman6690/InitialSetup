@@ -2,14 +2,15 @@
 <%@ include file="./includes/Header_Employer.jsp" %>
 
 	<head>
-		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
-		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
-		<script src="<c:url value="/static/javascript/Ratings.js" />"></script>
-		<script src="<c:url value="/static/javascript/Display.js" />"></script>
+<%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
+<%-- 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script> --%>
+<%-- 		<script src="<c:url value="/static/javascript/Display.js" />"></script> --%>
 		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<link rel="stylesheet" type="text/css" href="./static/css/employerProfile.css" />
+		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />		
 		<style>
 			.section{
 				color: red;
@@ -19,25 +20,29 @@
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
 
-	<h1>Here is your profile ${user.firstName} ${user.userId}</h1>
-	
 	<input type="hidden" id="userId" value="${user.userId}">
 	
-	
-	<div class="container">
-		<h1>Active jobs</h1>
-		<div id="activeJobs"></div>
-		
-		<br>
-		<h1>Completed jobs</h1>
-		<div id="completedJobs"></div>
-	</div>
-	
+<!-- 	<div class="page-container"> -->
+		<div class="container">
+			<div style="width: 750px" class="panel panel-success">
+			  <div class="panel-heading">
+			    Active Jobs
+			  </div>
+			  <div id="activeJobs" class="color-panel panel-body"></div>
+			</div>
+			<div style="width: 750px" class="panel panel-success">
+			  <div class="panel-heading">
+			    Completed Jobs
+			  </div>
+			  <div id="completedJobs" class="color-panel panel-body"></div>
+			</div>
+		</div>
+<!-- 	</div> -->
 	<script >		
 		
 		//Get and populate user's active and completed jobs
- 		getActiveJobsByUser_AppCat($("#userId").val(), function(jobs){
-			if(jobs.length>0){
+ 		getActiveJobsByUser($("#userId").val(), function(jobs){
+ 			if(jobs.length>0){
  				appendJobs_EmployerActive("activeJobs", jobs, function(elementId, jobs){})	
 			}else{
 				$("#activeJobs").append("<div>No active jobs</div>")

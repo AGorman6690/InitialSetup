@@ -81,7 +81,10 @@ public class UserServiceImpl {
 		repository.updateRating(ratingDto);
 	}
 
-	public List<RateCriterion> getRatings(int userId, List<RateCriterion> ratingCriteria) {
+	public List<RateCriterion> getRatings(int userId) {
+		
+		List<RateCriterion> ratingCriteria = this.getRatingCriteia();
+		
 		return repository.getRatingCriteriaValue(userId, ratingCriteria);
 	}
 

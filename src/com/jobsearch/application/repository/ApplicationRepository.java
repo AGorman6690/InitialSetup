@@ -86,5 +86,16 @@ public class ApplicationRepository {
 		
 		return applications;
 	}
+
+
+	public Application getApplication(int jobId, int userId) {
+		// TODO Auto-generated method stub
+		String sql = "SELECT * FROM application WHERE JobId = ? and UserId = ?";
+		List<Application> applications = this.ApplicationRowMapper(sql, new Object[]{ jobId, userId });
+		
+		if(applications.size() > 0) return applications.get(0);
+		else return null;
+
+	}
 	
 }

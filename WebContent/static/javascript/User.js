@@ -75,7 +75,8 @@ function getEmployeesByJob(jobId, callback){
 
 function hireApplicant(userId, jobId, callback){
 	
-	//	alert("1");
+//		alert(userId)
+//		alert(jobId)
 	$.ajax({
 		type: "GET",
 		url: 'http://localhost:8080/JobSearch/user/hire?userId=' + userId + '&jobId=' + jobId,
@@ -86,6 +87,7 @@ function hireApplicant(userId, jobId, callback){
 		
 		function _success(response){
 //			alert("success hire applicant");
+//			alert(JSON.stringify(response))
 			callback(response);
 		}
 		

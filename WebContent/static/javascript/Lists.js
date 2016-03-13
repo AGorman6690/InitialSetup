@@ -523,7 +523,7 @@ function appendUsers_RateEmployees(eId, users, callback){
 
 function activateItem(itemId, containerId, className){
 	var items = $("#" + containerId).find("a")
-	
+
 	for(var i = 0; i<items.length; i++){				
 		if($('#' + items[i].id).hasClass(className) == 1){
 			$('#' + items[i].id).removeClass(className);
@@ -548,10 +548,33 @@ function activateButton(buttonId, containerId, className){
 	$('#' + buttonId).addClass(className);
 }
 
-function hire(userId){
-	var jobId = $("#jobId").val();
-	hireApplicant(userId, jobId)
+
+function hire(userId, jobId){
+	
+	hireApplicant(userId, jobId, function(activeJob){
+		renderActiveJobsApplicantsAndEmployees(activeJob, "applicants", "employees")
+	})
+		
 }
+
+function renderActiveJobsApplicantsAndEmployees(activeJob, applicantsDivId, employeesDivId){
+	
+	if(unacceptedApplicantsExist(activeJob.applicants)){
+		appendApplicants("applicants", activeJob.applicants, jobId, function(){});
+	}else{
+		$("#" + applicantsDivId).empty();
+		$("#" + applicantsDivId).append("<div>No applicants</div>");
+	}
+
+
+	if(activeJob.employees.length > 0){
+		appendEmployees("employees", activeJob.employees, function(){});
+	}else{
+		$("#" + employeesDivId).empty();
+		$("#" + employeesDivId).append("<div>No employees</div>");
+	}
+}
+
 
 function appendJobs_EmployerActive(eId, jobs, callback){
 
@@ -560,7 +583,7 @@ function appendJobs_EmployerActive(eId, jobs, callback){
 		
 		var j = -1;
 		var r = new Array();
-		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<table class="table table-hover">';
 		r[++j] = '<thead>';
 		r[++j] =   '<tr>';
 		r[++j] =     '<th>Job Name</th>';
@@ -575,20 +598,13 @@ function appendJobs_EmployerActive(eId, jobs, callback){
 		for(var i=0; i<jobs.length; i++){
 			
 			var id =  jobs[i].id;
-			//Li element. Its id is equal to the category id
+
 			r[++j] = '<tr id="' + id + '">';
-			//alert(JSON.stringify(jobs[i]))
-			//alert(jobs[i].applications.length)
-			//Job name
-			//alert(JSON.stringify(jobs[i]))
-//			var str = JSON.stringify(jobs[i]);
-//			alert(str)
 			r[++j] = 	'<td><a href="./viewActiveJob_Employer?jobId=' + id + '">';
 			r[++j] =     jobs[i].jobName + '</a></td>'
 			r[++j] = 	'<td>(not built)</td>';
 			r[++j] = 	'<td>' + jobs[i].applications.length + '</td>';
-			r[++j] = 	'<td>' + jobs[i].employees.length + '</td>';
-			
+			r[++j] = 	'<td>' + jobs[i].employees.length + '</td>';			
 			r[++j] = '</tr>';	
 		}
 
@@ -602,8 +618,8 @@ function appendJobs_EmployerActive(eId, jobs, callback){
 	
 }
 
-function appendApplicants(eId, applicants, callback){
-
+function appendApplicants(eId, applicants, jobId, callback){
+	$("#" + eId).empty();
 	//If there are sub categories
 	if (applicants.length > 0){
 		
@@ -612,8 +628,8 @@ function appendApplicants(eId, applicants, callback){
 		r[++j] = '<table class="table table-condensed">';
 		r[++j] = '<thead>';
 		r[++j] =   '<tr>';
-		
-		r[++j] =     '<th>Applicants Name</th>';
+
+		r[++j] =     '<th>Applicant Name</th>';
 //		alert(JSON.stringify(applicants[0].ratings[0]))
 		for(var k = 0; k < applicants[0].ratings.length; k++){
 			r[++j] =     '<th>' + applicants[0].ratings[k].name + '</th>';
@@ -627,7 +643,65 @@ function appendApplicants(eId, applicants, callback){
 		
 		//For each sub category, create html
 		for(var i=0; i<applicants.length; i++){
+	
+			var id =  applicants[i].userId;
+
+			if(applicants[i].application.isAccepted == 0){
+
+				r[++j] = '<tr id="' + id + '">';
+				r[++j] = 	'<td><a href="#">';
+				r[++j] =     applicants[i].firstName + " " + applicants[i].lastName + '</a></td>';			
+				for(k = 0; k < applicants[0].ratings.length; k++){
+					r[++j] = 	'<td>' + applicants[i].ratings[k].value + '</td>';	
+				}
+				r[++j] = 	'<td><a class="hire btn btn-info btn-sm margin-hori"';
+				r[++j] =	'onclick="hire(\'' + id + '\',' + '\'' + jobId + '\')">';
+//				r[++j] = 	' href="./user/hire?userId=' + id + '&jobId=' + jobId + '">'
+				r[++j] =	'Hire</a></td>';			
+				r[++j] = '</tr>';	
+				
+
 			
+			}
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback();		
+
+		
+	}
+	
+}
+
+function appendEmployees(eId, applicants, callback){
+	$("#" + eId).empty();
+	//If there are sub categories
+	if (applicants.length > 0){
+		
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+
+		r[++j] =     '<th>Employee Name</th>';
+//		alert(JSON.stringify(applicants[0].ratings[0]))
+		for(var k = 0; k < applicants[0].ratings.length; k++){
+			r[++j] =     '<th>' + applicants[0].ratings[k].name + '</th>';
+		}
+
+		r[++j] =     '<th> </th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		
+		//For each sub category, create html
+		for(var i=0; i<applicants.length; i++){
+	
 			var id =  applicants[i].userId;
 
 			r[++j] = '<tr id="' + id + '">';
@@ -636,9 +710,7 @@ function appendApplicants(eId, applicants, callback){
 			for(k = 0; k < applicants[0].ratings.length; k++){
 				r[++j] = 	'<td>' + applicants[i].ratings[k].value + '</td>';	
 			}
-			r[++j] = 	'<td><a class="btn btn-info btn-sm margin-hori"'
-			r[++j] =	'onclick="hire(\'' + id + '\')">';
-			r[++j] =	'Hire</a></td>';			
+			r[++j] = 	'<td></td>';	
 			r[++j] = '</tr>';	
 		}
 
@@ -646,7 +718,7 @@ function appendApplicants(eId, applicants, callback){
 		r[++j] = '</table>';
 		$("#" + eId).append(r.join(''));
 				
-		callback(eId, jobs);		
+		callback();		
 		
 	}
 	
@@ -659,7 +731,7 @@ function appendJobs_EmployerComplete(eId, jobs, callback){
 		
 		var j = -1;
 		var r = new Array();
-		r[++j] = '<table class="table table-condensed">';
+		r[++j] = '<table class="table table-hover">';
 		r[++j] = '<thead>';
 		r[++j] =   '<tr>';
 		r[++j] =     '<th>Job Name</th>';
@@ -689,7 +761,7 @@ function appendJobs_EmployerComplete(eId, jobs, callback){
 		r[++j] = '</table>';
 		$("#" + eId).append(r.join(''));
 				
-		callback(eId, jobs);		
+		callback();		
 		
 	}
 	

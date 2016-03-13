@@ -49,8 +49,22 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/viewActiveJob_Employer", method = RequestMethod.GET)
-	public ModelAndView viewActiveJob_Employer(ModelAndView model) {
+	public ModelAndView viewActiveJob_Employer(@RequestParam int jobId, ModelAndView model) {
+		
+		Job activeJob = jobService.getJob(jobId);
+		model.addObject("job", JSON.stringify(activeJob));
+		//model.addObject("job", activeJob);
 		model.setViewName("ViewActiveJob_Employer");
+		return model;
+	}
+	
+	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
+	public ModelAndView viewEditJob(ModelAndView model) {
+		
+//		Job activeJob = jobService.getJob(jobId);
+//		model.addObject("job", JSON.stringify(activeJob));
+
+		model.setViewName("EditJob");
 		return model;
 	}
 
@@ -68,12 +82,12 @@ public class JobController {
 
 	}
 
-	@RequestMapping(value = "/getActiveJobsByUser_AppCat", method = RequestMethod.GET)
+	@RequestMapping(value = "/jobs/active/user", method = RequestMethod.GET)
 	@ResponseBody
-	public String getActiveJobsByUser_AppCat(@RequestParam int userId) {
+	public String getActiveJobsByUser(@RequestParam int userId) {
 		// For each active job, set its category and applications
 
-		return JSON.stringify(jobService.getActiveJobsByUser_AppCat(userId));
+		return JSON.stringify(jobService.getActiveJobsByUser(userId));
 	}
 
 	@RequestMapping(value = "/getCompletedJobsByUser", method = RequestMethod.GET)
@@ -97,15 +111,17 @@ public class JobController {
 	}
 
 
-	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.POST)
 	@ResponseBody
-	public String markJobComplete(@PathVariable int jobId, @ModelAttribute("user") JobSearchUser user) {
-	//public String markJobComplete(@PathVariable int jobId) {
+	public ModelAndView markJobComplete(@PathVariable("jobId") int jobId, @ModelAttribute("user") JobSearchUser user) {
 
 		// Update database
 		jobService.markJobComplete(jobId);
+		
+		ModelAndView model = new ModelAndView();
+		model.setViewName("EmployerProfile");
 
-		return JSON.stringify(jobService.getJobsByUser(user.getUserId()));
+		return model;
 	}
 	
 //

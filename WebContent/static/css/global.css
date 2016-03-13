@@ -10,3 +10,12 @@
 	margin: 10px 10px 10px 10px;
 }
 
+.page-container{
+	position: relative;
+/* 	left: 25px; */
+	margin: 35px 0px 50px 0px;
+}
+
+.color-panel{
+	background-color: #fffef4;
+}

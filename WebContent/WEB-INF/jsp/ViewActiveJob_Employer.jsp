@@ -1,77 +1,95 @@
 <%@ include file="./includes/Header.jsp" %>
 <%@ include file="./includes/Header_Employer.jsp" %>
 	<head>
-		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
-		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
+<%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
 		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
-		<script src="<c:url value="/static/javascript/Application.js" />"></script>
-		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
-		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
+<%-- 		<script src="<c:url value="/static/javascript/Application.js" />"></script> --%>
+		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
+		<link rel="stylesheet" type="text/css" href="./static/css/employerActiveJob.css" />
 
 	</head>
 
 	<input type="hidden" id="userId" value="${user.userId}"/>
-	<input type="hidden" id="jobId"/>
 
-	<br>
-	<h1>Job</h1>
-	<div id="jobName">(it would be nice to pass the entire job JSON object to this page, not just the job id)</div>
-	
-	<br>	
-	<div id="container">
-	
-		<br>
-		<button id="markJobComplete" type="button" class="btn btn-default">Mark Job Complete</button>
-	
-		<br>
-		<h1>Applicants</h1>
-		<div id="applicants">
+	<div class="container">
+		<div class="job-options btn-group" role="group" aria-label="...">
+		  <a href="./job/edit"><button type="button" class="btn btn-default">Edit Job</button></a>
+		  <button id="markJobComplete" type="button" class="btn btn-default">Mark Job Complete</button>
 		</div>
-	
-		<br>
-		<h1>Employees</h1>
 
-		<div id="employees">
+		<div>
+			<div style="width: 500px" class="panel panel-info">
+			  <div class="panel-heading">
+			    Job Name
+			  </div>
+			  <div id="jobName" class="panel-body"></div>
+			</div>
+			
+			<div style="width: 500px" class="panel panel-info">
+			  <div class="panel-heading">
+			    Job Location
+			  </div>
+			  <div id="jobLocation" class="panel-body"></div>
+			</div>
+			
+			<div style="width: 500px" class="panel panel-info">
+			  <div class="panel-heading">
+			    Job Description
+			  </div>
+			  <div id="jobDescription" class="panel-body"></div>
+			</div>
+			
 		</div>
 		
-	
+		<br>	
+		<div id="container">
+		
+			<div style="width: 750px" class="panel panel-warning">
+			  <div class="panel-heading">
+			    Applicants
+			  </div>
+			  <div id="applicants" class="panel-body"></div>
+			</div>
+		
+			<div style="width: 750px" class="panel panel-warning">
+			  <div class="panel-heading">
+			    Employees
+			  </div>
+			  <div id="employees" class="panel-body"></div>
+			</div>
+		</div>		
 	</div>
-	
-	<script>
-		var jobId = parent.document.URL.substring(parent.document.URL.indexOf('?jobId=') + 7, parent.document.URL.length);
-		$("#jobId").val(jobId)
 
-		getApplicants(jobId, function(users){
-			
-// 			for(var i = 0; i<user.length; i++){
-				
-				
-// 			})
-			
-			if(users.length > 0){
-				appendApplicants("applicants", users, function(){})
-			}else{
-				$("#applicants").append("<div>No applicants</div>")
-			}
-				
-		})
+	<script type="text/javascript">
+
+		var activeJob = ${job};
+		$("#jobName").html(activeJob.jobName);		
+		$("#jobLocation").html(activeJob.location);
+		$("#jobDescription").html(activeJob.description);
 		
-		getEmployeesByJob(jobId, function(users){
-			
-			if(users.length > 0){
-				appendUsers("employees", users, function(){})
-			}else{
-				$("#employees").append("<div>No employees</div>")
-			}
-			
-		})
+		var jobId = activeJob.id;
+
 		
+		renderActiveJobsApplicantsAndEmployees(activeJob, "applicants", "employees")
 		
+// 		if(unacceptedApplicantsExist(activeJob.applicants)){
+// 			appendApplicants("applicants", activeJob.applicants, jobId, function(){});
+// 		}else{
+// 			$("#applicants").append("<div>No applicants</div>");
+// 		}
+
+		
+// 		if(activeJob.employees.length > 0){
+// 			appendEmployees("employees", activeJob.employees, function(){});
+// 		}else{
+// 			$("#employees").append("<div>No employees</div>");
+// 		}
+				
 		document.getElementById("markJobComplete").addEventListener("click", function() {
-		    markJobComplete(jobId, function(){})
+		    markJobComplete(activeJob.id, function(){})
 		});
 
 

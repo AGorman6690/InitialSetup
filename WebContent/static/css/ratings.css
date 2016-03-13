@@ -1,5 +1,5 @@
 
-.rate-criteria{
+.rate-label{
 	font-size: 15px;
 	display: inline;
 	height: 100%
@@ -8,22 +8,24 @@
 .rate-group{
 	position: absolute;
 	float: left;	
-	display: inline;	
+	display: inline;
+	margin: 10px 0px 0px 10px;	
+/* 	left: 220px; */
 }
 
 .rate-employees{
 	width: 200px;
 }
 .criteria1{
-	top: 2%;
+	top: 0px;
 }
 
 .criteria2{
-	top: 12%;
+	top: 40px;
 }
 
 .criteria3{
-	top: 22%;
+	top: 80px;
 }
 
 .rate-values{
@@ -39,6 +41,12 @@
 	background-color: #e6ac00;
 }
 
+.rate-submit {
+	position: absolute;
+	float: left;
+	display: block;
+	bottom: 10px;
+}
 
 .rate-employees{
 	position: absoloute;

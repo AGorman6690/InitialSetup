@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.service.UserServiceImpl;
 
 @Service
 public class JobServiceImpl {
@@ -17,7 +20,13 @@ public class JobServiceImpl {
 	
 	@Autowired
 	CategoryServiceImpl categoryService;
+	
+	@Autowired
+	ApplicationServiceImpl applicationService;
 
+	@Autowired
+	UserServiceImpl userService;
+	
 	public List<Job> addJob(CreateJobDTO jobDto) {
 		return repository.addJob(jobDto);
 	}
@@ -51,16 +60,13 @@ public class JobServiceImpl {
 		return repository.getJobsByUser(userId);
 	}
 
-	public Job getJobByJobNameAndUser(String jobName, int userId) {
-		return repository.getJobByJobNameAndUser(jobName, userId);
-	}
 
 	public List<Job> getJobOffersByUser(int userId) {
 		return repository.getJobOffersByUser(userId);
 	}
 
-	public List<Job> getActiveJobsByUser_AppCat(int userId) {
-		return repository.getActiveJobsByUser_AppCat(userId);
+	public List<Job> getActiveJobsByUser(int userId) {
+		return repository.getActiveJobsByUser(userId);
 	}
 
 	public int getJobCountByCategory(int categoryId) {
@@ -71,7 +77,7 @@ public class JobServiceImpl {
 
 		List<Category> categories;
 
-		// For the categoryId pass as the paramenter, get the categories 1 level
+		// For the categoryId passed as the paramenter, get the categories 1 level
 		// deep
 		categories = categoryService.getSubCategories(categoryId);
 
@@ -90,6 +96,31 @@ public class JobServiceImpl {
 
 	public List<Job> getCompletedJobsByUser(int userId) {
 		return repository.getCompletedJobsByUser(userId);
+	}
+
+
+	public Job getJob(int jobId) {
+		// TODO Auto-generated method stub
+		Job job = repository.getJob(jobId);
+		
+		// Get job applicants
+		job.setApplicants(userService.getApplicants(jobId));
+		
+		// Set each applicant's rating
+		for(JobSearchUser applicant : job.getApplicants()){
+			applicant.setRatings(userService.getRatings(applicant.getUserId()));
+			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
+		}
+		
+		// Get job employees
+		job.setEmployees(userService.getEmployeesByJob(jobId));		
+		
+		// Set each employee's rating
+		for(JobSearchUser employee : job.getEmployees()){
+			employee.setRatings(userService.getRatings(employee.getUserId()));
+		}
+		
+		return job;
 	}
 
 }

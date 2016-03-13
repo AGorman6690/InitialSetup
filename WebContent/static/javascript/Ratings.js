@@ -6,6 +6,11 @@ $(document).ready(function(){
 function rateEmployee(rateCriterionId, value, jobId, employeeId){
 //	alert("rateEmployee");
 	
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
+
+	
 	var rating = {};
 	rating.rateCriterionId = rateCriterionId;
 	rating.value = value;
@@ -16,13 +21,14 @@ function rateEmployee(rateCriterionId, value, jobId, employeeId){
 		type: "POST",
 		url: 'http://localhost:8080/JobSearch/user/rate',
 			contentType : "application/json",
-			dataType: "application/json",
+			headers : headers,			
+//			dataType: "application/json",
 			data: JSON.stringify(rating),
 	        success: _success,
 	        error: _error
 	    });
 
-		function _success(response){
+		function _success(){
 //			alert("success rateEmpoyee");
 			//callback(response);
 		}

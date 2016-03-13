@@ -2,6 +2,15 @@ $(document).ready(function() {
 
 })
 
+function unacceptedApplicantsExist(applicants){
+
+	for(var i = 0; i < applicants.length; i++){		
+		if(applicants[i].application.isAccepted == 0) return true;
+	}
+	
+	return false;
+}
+
 function addJob(jobName, userId, categoryId, callback) {
 	// var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
 	// var csrfToken =
@@ -58,22 +67,26 @@ function applyForJob(jobId, userId, callback) {
 	}
 }
 
+
 function markJobComplete(jobId, callback) {
-	alert('job complete ' + jobId)
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
 	$.ajax({
-		type : "GET",
+		type : "POST",
 		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/markComplete',
-		dataType : "json",
+//		dataType : "json",
+		headers : headers,
 		success : _success,
 		error : _error
 	});
 
-	function _success(response) {
+	function _success() {
 		// alert("success markJobComplete")
-		callback(response);
+		callback();
 	}
 
-	function _error(response) {
+	function _error() {
 		alert("error markJobComplete");
 	}
 }
@@ -144,13 +157,13 @@ function getJobsByUser(userId, callback) {
 	}
 }
 
-function getActiveJobsByUser_AppCat(userId, callback) {
+function getActiveJobsByUser(userId, callback) {
 	// function getJobs(e){
-	// alert("getActiveJobsByUser_AppCat");
+	// alert("getActiveJobsByUser");
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://localhost:8080/JobSearch/getActiveJobsByUser_AppCat?userId='
+				url : 'http://localhost:8080/JobSearch/jobs/active/user?userId='
 						+ userId,
 				dataType : 'json',
 				success : _success,
@@ -158,18 +171,18 @@ function getActiveJobsByUser_AppCat(userId, callback) {
 			});
 
 	function _success(response) {
-		// alert("success getActiveJobsByUser_AppCat");
+		// alert("success getActiveJobsByUser");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getActiveJobsByUser_AppCat");
+		alert("error getActiveJobsByUser");
 	}
 }
 
 function getCompletedJobsByUser(userId, callback) {
 	// function getJobs(e){
-	// alert("getActiveJobsByUser_AppCat");
+	// alert("getActiveJobsByUser");
 	$.ajax({
 		type : "GET",
 		url : 'http://localhost:8080/JobSearch/getCompletedJobsByUser?userId='
@@ -277,34 +290,3 @@ function getJobOffersByUser(userId, callback) {
 	}
 }
 
-function populateJobs(arr, e, active) {
-	// active values:
-	// pass a negative number to populate all jobs, whether active or complete.
-	// pass 0 to populate only completed jobs.
-	// pass 1 to populate only active jobs.
-
-	// alert(arr.length);
-
-	e.options.length = 0;
-	var i;
-	for (i = 0; i < arr.length; i++) {
-		// alert(arr[i].id);
-		// If negative, then populate all jobs
-		if (active < 0) {
-			// alert("populate jobs length" + arr.length);
-			var opt = document.createElement("option");
-			opt.value = arr[i].id;
-			opt.innerHTML = arr[i].jobName;
-			e.appendChild(opt);
-
-			// else only populate active or inactive jobs as specified by active
-			// parameter
-		} else if (arr[i].isActive == active) {
-
-			var opt = document.createElement("option");
-			opt.value = arr[i].id;
-			opt.innerHTML = arr[i].jobName;
-			e.appendChild(opt);
-		}
-	}
-}

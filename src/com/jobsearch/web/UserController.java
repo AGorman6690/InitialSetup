@@ -90,7 +90,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/rateEmployees", method = RequestMethod.GET)
-	public ModelAndView rateEmployees(ModelAndView model) {
+	public ModelAndView viewRateEmployees(ModelAndView model) {
 		model.setViewName("RateEmployees");
 		return model;
 	}
@@ -196,8 +196,7 @@ public class UserController {
 		// List<RateCriterion> ratingCriteria = userService.getRatingCriteia();
 
 		for (JobSearchUser applicant : applicants) {
-			applicant.setRatings(userService.getRatingCriteia());
-			applicant.setRatings(userService.getRatings(applicant.getUserId(), applicant.getRatings()));
+			applicant.setRatings(userService.getRatings(applicant.getUserId()));
 		}
 
 		return JSON.stringify(applicants);
@@ -230,8 +229,15 @@ public class UserController {
 
 		// Add employment to the database
 		userService.hireApplicant(userId, jobId);
-
-		return JSON.stringify(userService.getEmployeesByJob(jobId));
+		
+		
+		Job activeJob = jobService.getJob(jobId);
+		
+//		ModelAndView model = new ModelAndView();
+//		model.addObject("job", JSON.stringify(activeJob));		
+//		model.setViewName("ViewActiveJob_Employer");
+//		return model;
+		return JSON.stringify(activeJob);
 	}
 
 	@RequestMapping(value = "/user/{userId}/employment", method = RequestMethod.GET)

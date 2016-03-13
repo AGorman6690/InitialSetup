@@ -3,6 +3,7 @@ package com.jobsearch.user.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Profile;
@@ -26,7 +27,16 @@ public class JobSearchUser {
 	private ArrayList<Job> appliedToJobs;
 	private ArrayList<Job> employment;
 	private List<RateCriterion> ratings;
+	private Application application;
 	
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
+	}
 
 	public List<RateCriterion> getRatings() {
 		return ratings;

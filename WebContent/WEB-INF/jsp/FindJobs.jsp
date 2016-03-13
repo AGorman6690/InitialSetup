@@ -2,7 +2,6 @@
 <%@ include file="./includes/Header_Employee.jsp" %>
 
 	<head>
-		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>

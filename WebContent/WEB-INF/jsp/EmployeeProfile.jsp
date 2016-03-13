@@ -2,7 +2,6 @@
 <%@ include file="./includes/Header_Employee.jsp" %>
 
 	<head>
-		<script src="<c:url value="/static/javascript/Profile.js" />"></script>
 		<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
@@ -12,8 +11,6 @@
 	
 	<input type="hidden" id="userId" value="${user.userId}"/>
 
-	<h1>Here is your profile ${user.firstName}</h1>
-	
 	<h1>Jobs you applied to</h1>
 	<div id="container">
 		<div id="appliedTo"></div>

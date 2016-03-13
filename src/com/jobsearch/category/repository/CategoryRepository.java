@@ -71,7 +71,14 @@ public class CategoryRepository {
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
 				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
-		return this.CategoryRowMapper(sql, new Object[] { jobId }).get(0);
+		List<Category> categories = this.CategoryRowMapper(sql, new Object[] { jobId });
+		
+		if (categories.size() > 0){
+			return categories.get(0);
+		}else{
+			return null;
+		}
+		
 	}
 
 	public List<Category> getCategoriesByUserId(int userId) {

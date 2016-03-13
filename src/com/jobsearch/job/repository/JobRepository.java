@@ -53,11 +53,14 @@ public class JobRepository {
 				e.setJobName(rs.getString(2));
 				e.setUserId(rs.getInt(3));
 				e.setIsActive(rs.getInt(4));
+				e.setDescription(rs.getString(5));
+				e.setLocation(rs.getString(6));
 				return e;
 			}
 		});
 
 	}
+	
 	
 	public List<CategoryJob> CategoryJobRowMapper(String sql, Object[] args) {
 
@@ -118,7 +121,7 @@ public class JobRepository {
 	}
 	
 
-	public List<Job> getActiveJobsByUser_AppCat(int userId) {
+	public List<Job> getActiveJobsByUser(int userId) {
 		
 	
 //		String sql = "SELECT job.JobId, job.JobName, category.CategoryId, category.Name FROM job "
@@ -209,17 +212,20 @@ public class JobRepository {
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
-	public Job getJobByJobNameAndUser(String jobName, int userId) {
-		String sql = "SELECT * FROM job WHERE jobName = ? AND UserId = ?";
-		return JobRowMapper(sql, new Object[]{ jobName, userId }).get(0);
-	}
-
 	public boolean hasAppliedForJob(int jobId, int userId) {
 		String sql = "SELECT COUNT(*) FROM application WHERE jobId = ? AND userID = ?";
 		int count = jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, int.class);
 		
 		if (count > 0) return true;
 		else return false;
+	}
+
+	public Job getJob(int jobId) {
+		String sql = "SELECT * FROM job WHERE JobId=?";
+		List<Job> jobs = this.JobRowMapper(sql, new Object[]{ jobId });
+		
+		if(jobs.size() > 0) return jobs.get(0);
+		else return null;
 	}
 
 

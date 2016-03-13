@@ -33,6 +33,11 @@ public class ApplicationServiceImpl {
 	public List<Application> getApplicationsByJob(int jobId) {
 		return repository.getApplicationsByJob(jobId);
 	}
+
+
+	public Application getApplication(int jobId, int userId) {
+		return repository.getApplication(jobId, userId);
+	}
 	
 
 }
