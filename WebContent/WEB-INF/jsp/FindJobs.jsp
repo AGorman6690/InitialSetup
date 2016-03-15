@@ -6,38 +6,33 @@
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
-		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 		<script src="<c:url value="/static/javascript/Application.js" />"></script>
-		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
-		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
+<!-- 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" /> -->
+<!-- 		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" /> -->
+		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
 
 	</head>
-<!-- 	<span>Search for Jobs</span> -->
-<!-- 	<ul> -->
-<%-- 		<c:forEach items="${categories}" var="category"> --%>
-<%-- 			<li class="co_jobCategory">${ category.getName()} --%>
-<!-- 				<ul> -->
-<%-- 					<c:forEach items="${category.getCategories()}" var="subcategory"> --%>
-<%-- 						<li class="co_jobCategory">${ subcategory.getName()}</li> --%>
-<%-- 					</c:forEach> --%>
-<!-- 				</ul> -->
-<!-- 			</li> -->
-<%-- 		</c:forEach> --%>
-<!-- 	</ul> -->
 
-	<input type="hidden" id="userId" value="${user.userId}"/>
-
-	<h1>Select a category to view jobs</h1>
+	<body>
+		<input type="hidden" id="userId" value="${user.userId}"/>
+		<div class="container">
+			<div style="width: 750px" class="panel panel-success">
+			  <div class="panel-heading">
+			    Select a category to view jobs
+			  </div>
+			  <div id='0T' class="color-panel panel-body"></div>
+			</div>
+			
+			<div style="width: 750px" class="panel panel-success">
+			  <div class="panel-heading">
+			    Available Jobs
+			  </div>
+			  <div id='jobList' class="color-panel panel-body"></div>
+			</div>
+		</div>
 	
-	<div id='0T'>
-	</div>
-	
-	<br>
-	<h1>Available Jobs</h1>
-	<div id="jobs">
-		<ul class="list-group" id="jobList">
-		</ul>	
-	</div>
+	</body>
 	
 	<script>
 	
@@ -47,14 +42,14 @@
 	getCategoriesBySuperCat('0', function(response, elementId){
 		
 
-		appendFirstLevelCategories(elementId, response, function(){
+		appendFirstLevelCategories_FindJobs(elementId, response, function(){
 			
 			var arr = $('#' + elementId + 'T').find('li');
 			for(var i = 0; i < arr.length; i++){
 
 				getCategoriesBySuperCat(arr[i].id, function(response, elementId){
 
-					appendFirstLevelCategories(elementId, response, function(){
+					appendFirstLevelCategories_FindJobs(elementId, response, function(){
 			
 					})
 				})

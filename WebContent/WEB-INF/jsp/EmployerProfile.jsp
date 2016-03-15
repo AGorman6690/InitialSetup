@@ -8,7 +8,7 @@
 <%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
 <%-- 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script> --%>
 <%-- 		<script src="<c:url value="/static/javascript/Display.js" />"></script> --%>
-		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 		<link rel="stylesheet" type="text/css" href="./static/css/employerProfile.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />		
 		<style>
@@ -20,9 +20,8 @@
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 	</head>
 
-	<input type="hidden" id="userId" value="${user.userId}">
-	
-<!-- 	<div class="page-container"> -->
+	<body>
+		<input type="hidden" id="userId" value="${user.userId}">
 		<div class="container">
 			<div style="width: 750px" class="panel panel-success">
 			  <div class="panel-heading">
@@ -37,7 +36,8 @@
 			  <div id="completedJobs" class="color-panel panel-body"></div>
 			</div>
 		</div>
-<!-- 	</div> -->
+	</body>
+	
 	<script >		
 		
 		//Get and populate user's active and completed jobs

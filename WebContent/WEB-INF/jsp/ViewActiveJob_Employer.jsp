@@ -5,7 +5,7 @@
 		<script src="<c:url value="/static/javascript/Category.js" />"></script>
 		<script src="<c:url value="/static/javascript/User.js" />"></script>
 <%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
-		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 <%-- 		<script src="<c:url value="/static/javascript/Application.js" />"></script> --%>
 		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/employerActiveJob.css" />
@@ -73,7 +73,7 @@
 		var jobId = activeJob.id;
 
 		
-		renderActiveJobsApplicantsAndEmployees(activeJob, "applicants", "employees")
+		appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, "applicants", "employees")
 		
 // 		if(unacceptedApplicantsExist(activeJob.applicants)){
 // 			appendApplicants("applicants", activeJob.applicants, jobId, function(){});

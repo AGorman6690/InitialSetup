@@ -1,6 +1,6 @@
 
 
-function appendFirstLevelCategories(eId, arr, callback){
+function appendFirstLevelCategories_FindJobs(eId, arr, callback){
 	//PARAMETERS:
 	//1) eId is the category id. It will be used to identify the div element in which
 	//	to append the html to. The div element id equals the category id with a 'T' appended to the end.
@@ -27,16 +27,16 @@ function appendFirstLevelCategories(eId, arr, callback){
 			r[++j] = 	'</a>';
 			
 			//Number of active jobs in the category
-			r[++j] = 	'<a class="btn btn-info btn-sm margin-horiz" onclick="showJobs(\'' + id + '\')">';
+			r[++j] = 	'<a class="find-jobs-job-count btn btn-info btn-sm" onclick="appendJobs_Available(\'' + id + '\')">';
 			r[++j] =	arr[i].jobCount + '</a>';
 			
 //			alert(arr[i].jobCount)
 			//When this hyperlink is clicked, the below div is expanded.
 			//The inner html is the job count of ALL its sub categories, not just
 			//sub categories 1 level deep.
-			//Also on click, the categor
-			r[++j] = 	'<a onclick="appendSecondLevelCategories(\'' + id + '\')" id="#' + id + 'C"';
-			r[++j] =  	'data-target="#' + id + 'T" data-toggle="collapse" class="btn margin-both btn-success btn-sm">';
+			//Also on click, the category
+			r[++j] = 	'<a  onclick="appendSecondLevelCategories_FindJobs(\'' + id + '\')" id="#' + id + 'C"';
+			r[++j] =  	'data-target="#' + id + 'T" data-toggle="collapse" class="find-jobs-sub-job-count btn btn-success btn-sm">';
 			r[++j] = 		'<span class="glyphicon glyphicon-menu-down padding-hori">' + "  " + arr[i].subJobCount + '</span>';
 			r[++j] =	'</a>';
 			
@@ -61,7 +61,7 @@ function appendFirstLevelCategories(eId, arr, callback){
 }
 
 
-function appendSecondLevelCategories(elementId){
+function appendSecondLevelCategories_FindJobs(elementId){
 	
 	var e = $('#' + elementId);
 	
@@ -83,7 +83,7 @@ function appendSecondLevelCategories(elementId){
 				//to the original category. 
 				getCategoriesBySuperCat(response[i].id, function(response, elementId){
 					
-					appendFirstLevelCategories(elementId, response, function(){						
+					appendFirstLevelCategories_FindJobs(elementId, response, function(){						
 					
 					})						
 				})			
@@ -289,28 +289,7 @@ function appendSecondLevelCategories_ProfileCats(elementId){
 	}
 }
 
-function showJobs(categoryId){
-	
-	var jobs = getJobsByCategory(categoryId, function(response){
 
-		$('#jobList').empty();
-		var j = -1;
-		var r = new Array();
-		var id;
-		for(var i=0; i<response.length; i++){
-			id = response[i].id;
-			r[++j] = '<li class="list-group-item margin-hori">';
-			r[++j] = response[i].jobName;
-			r[++j] = 	'<a class="btn btn-info btn-sm margin-hori" onclick="applyToJob(\'' + id + '\')">';
-			r[++j] =	'Apply</a>';
-			r[++j] = '</li>';
-		}
-	
-		$("#jobList").append(r.join(''));
-		
-	});
-	
-}
 
 function setEmployeeId(e){
 	$("#employeeId").val(e.target.id);
@@ -324,33 +303,13 @@ function applyToJob(jobId){
 }
 
 function selectCategory(categoryId){
-//	alert(categoryId)
-//	selectedId = categoryId;
-//	alert(selectedId)
-	$("#selectedCategory").val(categoryId);
-	
-	//alert($("#selectedCategory").val())
-	
+
+	$("#selectedCategory").val(categoryId);	
 	uncheckCheckboxes("0T", categoryId + "Click");
-	
-//	//If checked, then
-//	if($('#' + categoryId + "Click").is(':checked')){
-//		
-//		//append div element 
-//		var e = $("<div id='" + categoryId + 'Add' + "'></div>");
-//		$("#selectedCategories").append(e);
-//
-//	}else{		
-//		$('#' + categoryId + "Add").remove();
-//		//alert('false2')
-//	}
 	
 }
 
 function selectCategory2(categoryId){
-//	alert(categoryId)
-//	selectedId = categoryId;
-//	alert(selectedId)
 
 	
 //	//If checked, then
@@ -373,8 +332,7 @@ function selectCategory2(categoryId){
 		var e = $("<div id='" + categoryId + '-Add' + "'></div>");
 		$("#removeCategories").append(e);
 
-	}
-	
+	}	
 }
 
 function uncheckCheckboxes(parentId, excludeId){
@@ -399,23 +357,23 @@ function getCategoryId(id){
 }
 
 
-function appendSubCategories(categoryId){
-	
-	//For each seed (the "T" is simply the div element in which the sub categories
-	//will be appended to),
-	var arr = $('#' + categoryId + 'T').find('li');
-	for(var i = 0; i < arr.length; i++){
-		
-		//get sub categories.
-		getCategoriesBySuperCat(arr[i].id, function(response, elementId){
-
-			//Append sub categories
-			appendFirstLevelCategories_ProfileCats(elementId, response, function(){		
-				alert("firsst")
-			})
-		})
-	}
-}
+//function appendSubCategories(categoryId){
+//	
+//	//For each seed (the "T" is simply the div element in which the sub categories
+//	//will be appended to),
+//	var arr = $('#' + categoryId + 'T').find('li');
+//	for(var i = 0; i < arr.length; i++){
+//		
+//		//get sub categories.
+//		getCategoriesBySuperCat(arr[i].id, function(response, elementId){
+//
+//			//Append sub categories
+//			appendFirstLevelCategories_ProfileCats(elementId, response, function(){		
+//				alert("firsst")
+//			})
+//		})
+//	}
+//}
 
 function appendJobs(eId, jobs, callback){
 
@@ -440,7 +398,6 @@ function appendJobs(eId, jobs, callback){
 			
 			r[++j] = '</li>';	
 		}
-
 		
 		r[++j] = '</ul>'	
 		$("#" + eId).append(r.join(''));
@@ -451,41 +408,41 @@ function appendJobs(eId, jobs, callback){
 	
 }
 
-function appendUsers(eId, users, callback){
-		//If there are sub categories
-	if (users.length > 0){
-		var j = -1;
-		var r = new Array();
-		r[++j] = '<ul class="list-group">';
-
-		//For each sub category, create html
-		for(var i=0; i<users.length; i++){
-			
-			var id =  users[i].userId;			
-
-			//Li element. Its id is equal to the category id
-			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
-			
-			//Job name
-			r[++j] = 	'<a href="#" id="' + id + '-Name" >';
-			r[++j] = 	users[i].firstName + "  " + users[i].lastName;
-			r[++j] = 	'</a>';
-
-			
-			r[++j] = '</li>';	
-		}
-
-
-		r[++j] = '</ul>'	
-		$("#" + eId).append(r.join(''));				
-		callback(eId, users);		
-		
-	}
-	
-}
+//function appendUsers(eId, users, callback){
+//		//If there are sub categories
+//	if (users.length > 0){
+//		var j = -1;
+//		var r = new Array();
+//		r[++j] = '<ul class="list-group">';
+//
+//		//For each sub category, create html
+//		for(var i=0; i<users.length; i++){
+//			
+//			var id =  users[i].userId;			
+//
+//			//Li element. Its id is equal to the category id
+//			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
+//			
+//			//Job name
+//			r[++j] = 	'<a href="#" id="' + id + '-Name" >';
+//			r[++j] = 	users[i].firstName + "  " + users[i].lastName;
+//			r[++j] = 	'</a>';
+//
+//			
+//			r[++j] = '</li>';	
+//		}
+//
+//
+//		r[++j] = '</ul>'	
+//		$("#" + eId).append(r.join(''));				
+//		callback(eId, users);		
+//		
+//	}
+//	
+//}
 
 function appendUsers_RateEmployees(eId, users, callback){
-	//If there are sub categories
+
 	if (users.length > 0){
 		var j = -1;
 		var r = new Array();
@@ -493,7 +450,6 @@ function appendUsers_RateEmployees(eId, users, callback){
 		var containerId = 'rateEmployees';
 		r[++j] = '<div class="list-group" id="' + containerId + '">';
 	
-		//For each sub category, create html
 		for(var i=0; i<users.length; i++){
 			
 			var id =  users[i].userId;			
@@ -503,20 +459,14 @@ function appendUsers_RateEmployees(eId, users, callback){
 			r[++j] = 	users[i].firstName;
 			r[++j] = '</a>';	
 		}
-	
 		
 		r[++j] = '</div>'	
-		$("#" + eId).append(r.join(''));
-				
+		$("#" + eId).append(r.join(''));				
 		
-		$("#" + containerId + " a").click(setEmployeeId);
-		
-
-		
+		$("#" + containerId + " a").click(setEmployeeId);		
 		callback();		
 		
 	}
-
 }
 
 
@@ -552,12 +502,12 @@ function activateButton(buttonId, containerId, className){
 function hire(userId, jobId){
 	
 	hireApplicant(userId, jobId, function(activeJob){
-		renderActiveJobsApplicantsAndEmployees(activeJob, "applicants", "employees")
+		appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, "applicants", "employees")
 	})
 		
 }
 
-function renderActiveJobsApplicantsAndEmployees(activeJob, applicantsDivId, employeesDivId){
+function appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, applicantsDivId, employeesDivId){
 	
 	if(unacceptedApplicantsExist(activeJob.applicants)){
 		appendApplicants("applicants", activeJob.applicants, jobId, function(){});
@@ -566,7 +516,6 @@ function renderActiveJobsApplicantsAndEmployees(activeJob, applicantsDivId, empl
 		$("#" + applicantsDivId).append("<div>No applicants</div>");
 	}
 
-
 	if(activeJob.employees.length > 0){
 		appendEmployees("employees", activeJob.employees, function(){});
 	}else{
@@ -574,7 +523,6 @@ function renderActiveJobsApplicantsAndEmployees(activeJob, applicantsDivId, empl
 		$("#" + employeesDivId).append("<div>No employees</div>");
 	}
 }
-
 
 function appendJobs_EmployerActive(eId, jobs, callback){
 
@@ -616,6 +564,140 @@ function appendJobs_EmployerActive(eId, jobs, callback){
 		
 	}
 	
+}
+
+function appendJobs_EmployeeAppliedTo(eId, jobs, callback){
+
+	//If there are sub categories
+	if (jobs.length > 0){
+		
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-hover">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+		r[++j] =     '<th>Job Name</th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		//For each sub category, create html
+		for(var i=0; i<jobs.length; i++){			
+			var id =  jobs[i].id;
+			r[++j] = '<tr id="' + id + '">';
+			r[++j] = 	'<td>';
+			r[++j] =     jobs[i].jobName + '</td>';		
+			r[++j] = '</tr>';	
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}	
+}
+
+function appendJobs_Available_OLD(categoryId){
+	
+	var jobs = getJobsByCategory(categoryId, function(response){
+
+		$('#jobList').empty();
+		var j = -1;
+		var r = new Array();
+		var id;
+		for(var i=0; i<response.length; i++){
+			id = response[i].id;
+			r[++j] = '<li class="list-group-item margin-hori">';
+			r[++j] = response[i].jobName;
+			r[++j] = 	'<a class="btn btn-info btn-sm margin-hori" onclick="applyToJob(\'' + id + '\')">';
+			r[++j] =	'Apply</a>';
+			r[++j] = '</li>';
+		}
+	
+		$("#jobList").append(r.join(''));
+		
+	});
+	
+}
+
+function appendJobs_Available(categoryId){
+	
+	var jobs = getJobsByCategory(categoryId, function(jobs){
+
+		$('#jobList').empty();
+		//If there are sub categories
+		if (jobs.length > 0){
+			
+			var j = -1;
+			var r = new Array();
+			r[++j] = '<table class="table table-hover">';
+			r[++j] = 	'<thead>';
+			r[++j] =   		'<tr>';
+			r[++j] =     	'<th>Job Name</th>';
+			r[++j] =     	'<th>  </th>';
+			r[++j] =   	'</tr>';
+			r[++j] = 	'</thead>';
+			r[++j] = 	'<tbody>';
+			
+			for(var i=0; i<jobs.length; i++){
+				
+				if (jobs[i].isActive == 1){				
+					var id =  jobs[i].id;			
+					r[++j] = '<tr id="' + id + '">';
+					r[++j] = 	'<td width="120px"><a>';
+					r[++j] =    	jobs[i].jobName;
+					r[++j] =	'</a></td>';
+					r[++j] = 	'<td><a onclick="applyToJob(\'' + id + '\')" class="btn btn-info btn-sm margin-hori">';
+					r[++j] =	'Apply</a></td>';
+					r[++j] = '</tr>';	
+				}
+			}
+
+			r[++j] = 	'</tbody>';
+			r[++j] = '</table>';			
+			$("#jobList").append(r.join(''));					
+			callback();					
+		}
+	});	
+}
+
+
+
+function appendJobs_EmployeeHiredFor(eId, jobs, callback){
+
+	//If there are sub categories
+	if (jobs.length > 0){
+		
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<table class="table table-hover">';
+		r[++j] = '<thead>';
+		r[++j] =   '<tr>';
+		r[++j] =     '<th>Job Name</th>';
+		r[++j] =   '</tr>';
+		r[++j] = '</thead>';
+		r[++j] = '<tbody>';
+		
+		//For each sub category, create html
+		for(var i=0; i<jobs.length; i++){
+			
+			var id =  jobs[i].id;
+
+			r[++j] = '<tr id="' + id + '">';
+			r[++j] = 	'<td>';
+			r[++j] =     jobs[i].jobName + '</td>';		
+			r[++j] = '</tr>';	
+		}
+
+		r[++j] = '</tbody>';
+		r[++j] = '</table>';
+		$("#" + eId).append(r.join(''));
+				
+		callback(eId, jobs);		
+		
+	}	
 }
 
 function appendApplicants(eId, applicants, jobId, callback){
@@ -777,7 +859,6 @@ $(document).ready(function(){
  		var categoryId = $('#selectedCategory').val();
  		var userId = $('#userId').val()
  		addJob(jobName,  userId, categoryId, function(response){
-		
  		});
 	});
 	

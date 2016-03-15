@@ -7,7 +7,7 @@
 <%-- 		<script src="<c:url value="/static/javascript/User.js" />"></script> --%>
 <%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
 <%-- 		<script src="<c:url value="/static/javascript/Display.js" />"></script> --%>
-		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
 	</head>

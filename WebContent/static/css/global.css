@@ -19,3 +19,13 @@
 .color-panel{
 	background-color: #fffef4;
 }
+
+.find-jobs-job-count{
+	margin: 5px 5px 5px 5px;
+	height: 30px;
+}
+
+.find-jobs-sub-job-count{
+	margin: 5px 5px 5px 5px;
+	height: 30px;
+}

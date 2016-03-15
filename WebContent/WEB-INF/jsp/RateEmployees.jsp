@@ -8,7 +8,7 @@
 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script>
 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script>
 		<script src="<c:url value="/static/javascript/Display.js" />"></script>
-		<script src="<c:url value="/static/javascript/Lists.js" />"></script>
+		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 			
 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" />
 		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
