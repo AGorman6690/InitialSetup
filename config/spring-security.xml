@@ -9,9 +9,12 @@
 	<beans:bean name="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/jobsearch" />
-		<beans:property name="username" value="root" />
-		<beans:property name="password" value="" />
+<!-- 		<beans:property name="url" value="jdbc:mysql://ec2-54-84-39-231.compute-1.amazonaws.com:3306/jobsearch" /> -->
+<!-- 		<beans:property name="username" value="root" /> -->
+<!-- 		<beans:property name="password" value="" /> -->
+		<beans:property name="url" value="jdbc:mysql://jobsearch.cxzdgqketr0w.us-east-1.rds.amazonaws.com:3306/jobsearch" />
+		<beans:property name="username" value="jobsearch" />
+		<beans:property name="password" value="password" />
 	</beans:bean>
       
       <!-- enable use-expressions -->

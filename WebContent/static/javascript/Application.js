@@ -19,7 +19,7 @@ $(document).ready(function(){
 function getApplicationsByEmployer(userId, callback){
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/getApplicationsByEmployer?userId=' + userId,
+		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getApplicationsByEmployer?userId=' + userId,
         dataType: 'json',
 		success: _success,
         error: _error
@@ -40,7 +40,7 @@ function markApplicationAccepted(jobId, userId){ //, callback){
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/markApplicationAccepted?jobId=' + jobId + '&userId=' + userId,
+		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/markApplicationAccepted?jobId=' + jobId + '&userId=' + userId,
         dataType: "json",
 		success: _success,
         error: _error
@@ -60,7 +60,7 @@ function markApplicationViewed(jobId, userId){ //, callback){
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/markApplicationViewed?jobId=' + jobId + '&userId=' + userId,
+		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/markApplicationViewed?jobId=' + jobId + '&userId=' + userId,
         dataType: "json",
 		success: _success,
         error: _error
@@ -80,7 +80,7 @@ function markApplicationViewed(jobId, userId){ //, callback){
 
 	$.ajax({
 		type: "GET",
-		url: 'http://localhost:8080/JobSearch/markApplicationViewed?jobId=' + jobId + '&userId=' + userId,
+		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/markApplicationViewed?jobId=' + jobId + '&userId=' + userId,
         dataType: "json",
 		success: _success,
         error: _error

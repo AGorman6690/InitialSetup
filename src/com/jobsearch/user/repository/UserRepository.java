@@ -34,17 +34,19 @@ public class UserRepository {
 
 	public JobSearchUser getUser(int userId) {
 
-		String sql = "Select * from User where userId = ?";
+		String sql = "select u.*, up.* from user u inner join user_profile up on u.userid = up.userid where u.userid = ?";
 
-		return JobSearchUserRowMapper(sql, new Object[] { userId }).get(0);
+		return JobSearchUserProfileRowMapper(sql, new Object[] { userId }).get(0);
 
 	}
 
-	public void validateUser(int userId) {
+	public JobSearchUser validateUser(int userId) {
 
 		String sql = "Update user Set enabled = 1 where userId = ?";
 
 		jdbcTemplate.update(sql, new Object[] { userId });
+		
+		return getUser(userId);
 	}
 
 	public JobSearchUser createUser(JobSearchUser user) {
@@ -117,6 +119,21 @@ public class UserRepository {
 				e.setLastName(rs.getString(3));
 				e.setEmailAddress(rs.getString(4));
 				e.setProfileId(rs.getInt(9));
+				return e;
+			}
+		});
+	}
+	
+	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
+			@Override
+			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
+				JobSearchUser e = new JobSearchUser();
+				e.setUserId(rs.getInt(1));
+				e.setFirstName(rs.getString(2));
+				e.setLastName(rs.getString(3));
+				e.setEmailAddress(rs.getString(4));
+				e.setProfileId(rs.getInt("up.profileId"));
 				return e;
 			}
 		});
@@ -213,12 +230,12 @@ public class UserRepository {
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
-		sql = "select * from user where Email = ?";
+		sql = "select u.*, up.* from user u inner join user_profile up on u.userid = up.userid where u.Email = ?";
 
 		// Object args[0] = null;
 		// args[0] = user.getEmailAddress();
 
-		List<JobSearchUser> list = JobSearchUserRowMapper(sql, new Object[] { email });
+		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
 		return list.get(0);
 

@@ -63,9 +63,11 @@ public class UserController {
 	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
-		userService.validateUser(userId);
+		user = userService.validateUser(userId);
 
-		if (user.getProfileId() == 2)
+		model.addObject("user", user);
+		
+		if (user.getProfileId() == 1)
 			model.setViewName("EmployeeProfile");
 		else
 			model.setViewName("EmployerProfile");
@@ -147,7 +149,7 @@ public class UserController {
 
 		model.addObject("user", user);
 
-		if (user.getProfileId() == 2)
+		if (user.getProfileId() == 1)
 			model.setViewName("EmployeeProfile");
 		else
 			model.setViewName("EmployerProfile");

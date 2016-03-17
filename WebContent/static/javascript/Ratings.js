@@ -19,7 +19,7 @@ function rateEmployee(rateCriterionId, value, jobId, employeeId){
 	
 	$.ajax({
 		type: "POST",
-		url: 'http://localhost:8080/JobSearch/user/rate',
+		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/rate',
 			contentType : "application/json",
 			headers : headers,			
 //			dataType: "application/json",
