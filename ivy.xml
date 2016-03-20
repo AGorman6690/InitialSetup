@@ -105,6 +105,9 @@
         <dependency org="javax.mail" name="javax.mail-api" rev="1.5.5"/>
         <dependency org="com.sun.mail" name="javax.mail" rev="1.5.5"/>
         
+        <!-- Google Maps -->
+        <dependency org="com.google.maps" name="google-maps-services" rev="0.1.11"/>
+        
     </dependencies>
 
 </ivy-module>

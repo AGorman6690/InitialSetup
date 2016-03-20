@@ -9,8 +9,10 @@
 <%-- 		<script src="<c:url value="/static/javascript/Ratings.js" />"></script> --%>
 <%-- 		<script src="<c:url value="/static/javascript/Display.js" />"></script> --%>
 		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
+		
 		<link rel="stylesheet" type="text/css" href="./static/css/employerProfile.css" />
-		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />		
+		<link rel="stylesheet" type="text/css" href="./static/css/global.css" />	
+			
 		<style>
 			.section{
 				color: red;
@@ -36,6 +38,13 @@
 			  <div id="completedJobs" class="color-panel panel-body"></div>
 			</div>
 		</div>
+		
+	 <div id="map" style="width: 320px; height: 480px;"></div>
+	  <div>
+	    <input id="address" type="textbox" value="Sydney, NSW">
+	    <input type="button" value="Encode" onclick="codeAddress()">
+	  </div>
+	  
 	</body>
 	
 	<script >		
@@ -58,6 +67,8 @@
 			}		
  		});
 		
+	
+	 
 	</script>
 				
 		

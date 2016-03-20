@@ -18,8 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CreateJobDTO;
+import com.jobsearch.job.service.FilterJobsDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -35,19 +39,22 @@ public class JobController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
-	@RequestMapping(value = "/createJob", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/job/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 //	public ModelAndView addJob(@RequestBody CreateJobDTO jobDto, ModelAndView model) {
 	public ModelAndView addJob(@ModelAttribute("job") CreateJobDTO jobDto, ModelAndView model) {
-
+		
 		//Add the job to the job table
+		@SuppressWarnings("unused")
 		List<Job> jobsCreatedByUser = jobService.addJob(jobDto);
 	 
 		model.setViewName("EmployerProfile");
 		//return JSON.stringify(jobsCreatedByUser);
 		return model;
 	}
+	
 
+	
 	@RequestMapping(value = "/viewActiveJob_Employer", method = RequestMethod.GET)
 	public ModelAndView viewActiveJob_Employer(@RequestParam int jobId, ModelAndView model) {
 		
@@ -75,6 +82,21 @@ public class JobController {
 
 	}
 
+	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
+	@ResponseBody
+	public String filterJobs(@RequestParam int radius, @RequestParam String fromAddress,@RequestParam(value="category") int[] categoryIds) {
+		
+		FilterJobsDTO filter = new FilterJobsDTO();
+		
+		filter.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds));
+		filter.setDistanceFromLat(jobService.getLatAndLng(fromAddress));
+		filter.setDistanceFromLng(jobService.getLatAndLng(fromAddress));
+		filter.setRadius(radius);
+		
+		return JSON.stringify(filter);
+
+	}
+	
 	@RequestMapping(value = "/getJobCountByCategory", method = RequestMethod.GET)
 	@ResponseBody
 	public String getJobCountByCategory(@RequestParam int categoryId) {
@@ -90,7 +112,7 @@ public class JobController {
 		return JSON.stringify(jobService.getActiveJobsByUser(userId));
 	}
 
-	@RequestMapping(value = "/getCompletedJobsByUser", method = RequestMethod.GET)
+	@RequestMapping(value = "/jobs/completed/user", method = RequestMethod.GET)
 	@ResponseBody
 	public String getCompletedJobsByUser(@RequestParam int userId) {
 		// For each active job, set its category and applications

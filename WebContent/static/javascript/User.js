@@ -15,7 +15,7 @@ function getApplicants(jobId, callback){
 	//alert("getApplicants");
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getApplicants?jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/getApplicants?jobId=' + jobId,
 			dataType: "json",
 	        success: _success,
 	        error: _error
@@ -35,7 +35,7 @@ function getOfferedApplicantsByJob(jobId, callback){
 	//alert("getOfferedApplicantsByJob");
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getOfferedApplicantsByJob?jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/getOfferedApplicantsByJob?jobId=' + jobId,
 			dataType: "json",
 	        success: _success,
 	        error: _error
@@ -56,7 +56,7 @@ function getEmployeesByJob(jobId, callback){
 	//alert("getEmployees");
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getEmployeesByJob?jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/getEmployeesByJob?jobId=' + jobId,
 			dataType: "json",
 	        success: _success,
 	        error: _error
@@ -79,7 +79,7 @@ function hireApplicant(userId, jobId, callback){
 //		alert(jobId)
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/hire?userId=' + userId + '&jobId=' + jobId,
+		url: 'http://localhost:8080/JobSearch/user/hire?userId=' + userId + '&jobId=' + jobId,
         dataType: 'json',
 		success: _success,
         error: _error
@@ -100,7 +100,7 @@ function getProfiles(callback){
 	//	alert("1");
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getProfiles',
+		url: 'http://localhost:8080/JobSearch/getProfiles',
         dataType: 'json',
 		success: _success,
         error: _error

@@ -60,6 +60,66 @@ function appendFirstLevelCategories_FindJobs(eId, arr, callback){
 	}
 }
 
+function appendFirstLevelCategories_FilterCategories(eId, arr, callback){
+	//PARAMETERS:
+	//1) eId is the category id. It will be used to identify the div element in which
+	//	to append the html to. The div element id equals the category id with a 'T' appended to the end.
+	//2) arr is a list of category objects (i.e. sub categories to append)
+
+	
+	//If there are sub categories
+	if (arr.length > 0){
+		var j = -1;
+		var r = new Array();
+		r[++j] = '<ul class="list-group">';
+		
+		//For each sub category, create html
+		for(var i=0; i<arr.length; i++){
+			
+			var id =  arr[i].id;
+			
+			//Li element. Its id is equal to the category id
+			r[++j] = '<li id="' + id + '" class="list-group-item">';
+			
+			//Category name
+			r[++j] = 	'<a href="#" id="' + id + 'Name" >';
+			r[++j] = 	arr[i].name + "  ";
+			r[++j] = 	'</a>';
+			
+			//Checkbox to select the category
+			r[++j] = '<input id="' + id + '-Click" type="checkbox" class="margin-hori"';
+			r[++j] = 'onClick="selectCategory2(\'' + id + '\')">';
+			
+//			alert(arr[i].jobCount)
+			//When this hyperlink is clicked, the below div is expanded.
+			//The inner html is the job count of ALL its sub categories, not just
+			//sub categories 1 level deep.
+			//Also on click, the category
+			r[++j] = 	'<a  onclick="appendSecondLevelCategories_FindJobs(\'' + id + '\')" id="#' + id + 'C"';
+			r[++j] =  	'data-target="#' + id + 'F" data-toggle="collapse" class="find-jobs-sub-job-count btn btn-success btn-sm">';
+			r[++j] = 		'<span class="glyphicon glyphicon-menu-down padding-hori"></span>';
+			r[++j] =	'</a>';
+			
+			//This div will eventually hold the category's sub categories.
+			//When this category's sub categories need to be set,
+			//this div id will be passed to this function and have this
+			//html appended to it (see append method at end of this function).
+			r[++j] = 	'<div id="' + id + 'F" class="panel-collapse collapse">';
+			r[++j] = 	'</div>';
+			
+			r[++j] = '</li>';	
+		}
+
+		r[++j] = '</ul>'
+		//alert('about to append to ' + eId)
+		//This is the id of div that will hold the sub categories 
+		$("#" + eId + "F").append(r.join(''));
+				
+		callback();		
+		
+	}
+}
+
 
 function appendSecondLevelCategories_FindJobs(elementId){
 	
@@ -345,6 +405,23 @@ function uncheckCheckboxes(parentId, excludeId){
 		}
 	}
 	
+}
+
+function getCheckedCheckboxesId(parentId){
+
+	var checkedIds = new Array();
+	var arr = $("#" + parentId).find("input[type=checkbox]");	
+	
+	var j = -1;
+	
+	for(var i = 0 ; i < arr.length; i++){
+		
+		if($(arr[i]).is(':checked')){
+			checkedIds[++j] = getCategoryId(arr[i].id)
+		}
+	}
+	
+	return checkedIds;
 }
 
 function getCategoryId(id){

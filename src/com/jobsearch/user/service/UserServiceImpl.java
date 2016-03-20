@@ -28,7 +28,7 @@ public class UserServiceImpl {
 
 		if (newUser.getEmailAddress() != null) {
 			mailer.sendMail(user.getEmailAddress(), "email verification",
-					"please click the link to verify your email http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/validateEmail?userId="
+					"please click the link to verify your email http://localhost:8080/JobSearch/validateEmail?userId="
 							+ newUser.getUserId());
 		}
 		return newUser;

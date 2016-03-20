@@ -44,21 +44,33 @@ public class JobRepository {
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
-		return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
-
-			@Override
-			public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
-				Job e = new Job();
-				e.setId(rs.getInt(1));
-				e.setJobName(rs.getString(2));
-				e.setUserId(rs.getInt(3));
-				e.setIsActive(rs.getInt(4));
-				e.setDescription(rs.getString(5));
-				e.setLocation(rs.getString(6));
-				return e;
-			}
-		});
-
+		try{
+			
+	
+			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
+	
+				@Override
+				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
+					Job e = new Job();
+					e.setId(rs.getInt("JobId"));
+					e.setJobName(rs.getString("JobName"));
+					e.setUserId(rs.getInt("UserId"));
+					e.setIsActive(rs.getInt("IsActive"));
+					e.setDescription(rs.getString("Description"));
+					e.setStreetAddress(rs.getString("StreetAddress"));
+					e.setCity(rs.getString("City"));
+					e.setState(rs.getString("State"));
+					e.setZipCode(rs.getString("ZipCode"));
+					e.setLat(rs.getFloat("Lat"));
+					e.setLng(rs.getFloat("Lng"));
+					return e;
+				}
+			});
+		}catch(Exception e){
+			return null;
+		}
+		
+		
 	}
 	
 	
@@ -83,14 +95,19 @@ public class JobRepository {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
 		
 		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?, ?, ?, ?)}");
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJobName());
 			 cStmt.setInt(2, jobDto.getUserId());
 			 cStmt.setInt(3, jobDto.getCategoryId());
 			 cStmt.setString(4, jobDto.getDescription());
-			 cStmt.setString(5, jobDto.getLocation());
-			 cStmt.setInt(6, jobDto.getOpenings());
+			 //cStmt.setInt(6, jobDto.getOpenings());
+			 cStmt.setString(5, jobDto.getStreetAddress());
+			 cStmt.setString(6, jobDto.getCity());
+			 cStmt.setString(7, jobDto.getState());
+			 cStmt.setString(8, jobDto.getZipCode());
+			 cStmt.setFloat(9,  jobDto.getLat());
+			 cStmt.setFloat(10,  jobDto.getLng());
 			 
 			 ResultSet result = cStmt.executeQuery();
 			 
@@ -101,9 +118,16 @@ public class JobRepository {
 				 job.setIsActive(result.getInt("isActive"));
 				 job.setUserId(result.getInt("UserId"));
 				 job.setDescription(result.getString("Description"));
-				 job.setLocation(result.getString("Location"));
-				 job.setOpenings(result.getInt("Openings"));
+//				 job.setOpenings(result.getInt("Openings"));
+				 job.setStreetAddress(result.getString("StreetAddress"));
+				 job.setCity(result.getString("City"));
+				 job.setState(result.getString("State"));
+				 job.setZipCode(result.getString("ZipCode"));
+				 job.setLat(result.getFloat("Lat"));
+				 job.setLng(result.getFloat("Lng"));
+				 
 				 jobsCreatedByUser.add(job);
+				 
 			 }
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -229,7 +253,51 @@ public class JobRepository {
 	}
 
 
+	public List<Job> getFilteredJobs(int radius, double lat, double lng, int[] categoryIds) {
+		// TODO Auto-generated method stub
+		
+		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
+		String sql = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) )"
+					+ " AS distance FROM job";
+		
+		int distanceFilterArgs = 4;
+		String sql2; 
+		Object[] args;
+		//If there is not category filter
+		if(categoryIds == null){
+			args = new Object[distanceFilterArgs];
+			args[0] = lat;
+			args[1] = lng;
+			args[2] = lat;
+			args[3] = radius;
+			sql2 = " WHERE job.IsActive = 1";
+			
+		//Else append AND conditions for category Ids
+		}else{
+			args = new Object[distanceFilterArgs + categoryIds.length];
+			args[0] = lat;
+			args[1] = lng;
+			args[2] = lat;
 
+			sql2 = " INNER JOIN job_category ON job.JobId = job_category.JobId AND job.IsActive = 1 AND (";
+			for(int i = 0; i < categoryIds.length; i++){
+				if(i < categoryIds.length - 1){
+					sql2 += " job_category.CategoryId = ? OR";
+				}else{
+					sql2 += " job_category.CategoryId = ?)";
+				}
+			
+				args[3 + i] = categoryIds[i];				
+			}
+			
+			sql += sql2;			
+			args[args.length - 1] = radius;
+			
+		}
 
+		sql += " HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
+		return this.JobRowMapper(sql, args );
+	}
 
 }

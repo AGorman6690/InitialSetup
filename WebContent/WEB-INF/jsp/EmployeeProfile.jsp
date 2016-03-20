@@ -34,6 +34,7 @@
 	
 		//Get all active jobs that the user has applied for
 		getApplicationsByUser($("#userId").val(), function(applications){		
+			
 			appendJobs_EmployeeAppliedTo("appliedTo", applications, function(){})
 		});
 		

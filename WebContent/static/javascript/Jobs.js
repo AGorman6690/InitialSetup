@@ -11,6 +11,36 @@ function unacceptedApplicantsExist(applicants){
 	return false;
 }
 
+function getFilteredJobs(radius, fromAddress, categories, callback){
+	
+	// Build a parameter string for the category ids
+	var catString = "";
+	if (categories.length > 0){		
+//		catString = 'category=' + categories[0];
+		for (var i = 0; i < categories.length; i++) {
+			catString += '&category=' + categories[i];
+		}
+	}else catString = "&category=-1";
+	
+	alert(catString)
+	$.ajax({
+		type : "GET",
+		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + radius + '&fromAddress=' + fromAddress + "," + catString,
+		dataType : 'json',
+		success : _success,
+		error : _error
+	});
+
+	function _success(response) {
+		// alert("success getApplicationsByUser");
+		callback(response);
+	}
+
+	function _error(response) {
+		alert("error getApplicationsByUser");
+	}
+}
+
 function addJob(jobName, userId, categoryId, callback) {
 	// var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
 	// var csrfToken =
@@ -24,7 +54,7 @@ function addJob(jobName, userId, categoryId, callback) {
 
 	$.ajax({
 		type : "POST",
-		url : "http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/createJob",
+		url : "http://localhost:8080/JobSearch/job/post",
 		headers : headers,
 		contentType : "application/json",
 		dataType : "application/json", // Response
@@ -49,7 +79,7 @@ function applyForJob(jobId, userId, callback) {
 			"meta[name='_csrf']").attr("content");
 	$.ajax({
 		type : "POST",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/job/apply?jobId=' + jobId
+		url : 'http://localhost:8080/JobSearch/job/apply?jobId=' + jobId
 				+ '&userId=' + userId,
 		headers : headers,
 		dataType : "json",
@@ -74,7 +104,7 @@ function markJobComplete(jobId, callback) {
 			"meta[name='_csrf']").attr("content");
 	$.ajax({
 		type : "POST",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/job/' + jobId + '/markComplete',
+		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/markComplete',
 //		dataType : "json",
 		headers : headers,
 		success : _success,
@@ -97,7 +127,7 @@ function getApplicationsByUser(userId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getApplicationsByUser?userId='
+		url : 'http://localhost:8080/JobSearch/getApplicationsByUser?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,
@@ -119,7 +149,7 @@ function getEmploymentByUser(userId, callback) {
 	// alert("getEmploymentByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/' + userId + '/employment',
+		url : 'http://localhost:8080/JobSearch/user/' + userId + '/employment',
 		dataType : 'json',
 		success : _success,
 		error : _error
@@ -140,7 +170,7 @@ function getJobsByUser(userId, callback) {
 	// alert("getJobsByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobsByUser?userId=' + userId,
+		url : 'http://localhost:8080/JobSearch/getJobsByUser?userId=' + userId,
 		dataType : 'json',
 		success : _success,
 		error : _error
@@ -163,7 +193,7 @@ function getActiveJobsByUser(userId, callback) {
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/jobs/active/user?userId='
+				url : 'http://localhost:8080/JobSearch/jobs/active/user?userId='
 						+ userId,
 				dataType : 'json',
 				success : _success,
@@ -185,7 +215,7 @@ function getCompletedJobsByUser(userId, callback) {
 	// alert("getActiveJobsByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getCompletedJobsByUser?userId='
+		url : 'http://localhost:8080/JobSearch/jobs/completed/user?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,
@@ -207,7 +237,7 @@ function getJobCountByCategory(categoryId, callback) {
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobCountByCategory?categoryId='
+				url : 'http://localhost:8080/JobSearch/getJobCountByCategory?categoryId='
 						+ categoryId,
 				dataType : 'json',
 				success : _success,
@@ -228,7 +258,7 @@ function getJobsByCategory(categoryId, callback) {
 	// alert("getJobCountByCategory")
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobsByCategory?categoryId='
+		url : 'http://localhost:8080/JobSearch/getJobsByCategory?categoryId='
 				+ categoryId,
 		dataType : 'json',
 		success : _success,
@@ -250,7 +280,7 @@ function getSubJobCountByCategory(categoryId, callback) {
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getSubJobCountByCategory?categoryId='
+				url : 'http://localhost:8080/JobSearch/getSubJobCountByCategory?categoryId='
 						+ categoryId,
 				dataType : 'json',
 				success : _success,
@@ -273,7 +303,7 @@ function getSubJobCountByCategory(categoryId, callback) {
 function getJobOffersByUser(userId, callback) {
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobOffersByUser?userId='
+		url : 'http://localhost:8080/JobSearch/getJobOffersByUser?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,

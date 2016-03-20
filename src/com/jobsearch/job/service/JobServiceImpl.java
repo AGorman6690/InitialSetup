@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -28,8 +31,45 @@ public class JobServiceImpl {
 	UserServiceImpl userService;
 	
 	public List<Job> addJob(CreateJobDTO jobDto) {
-		return repository.addJob(jobDto);
+		
+		//Build full address
+		String address = jobDto.getStreetAddress() + " " 
+							+ jobDto.getCity() + " "
+							+ jobDto.getState() + " " 
+							+ jobDto.getZipCode();
+		
+		GeocodingResult[] results = getLatAndLng(address);
+
+		//If the address was successfully be converted to lat/lng
+		if (results.length > 0){
+			jobDto.setLat((float) results[0].geometry.location.lat);
+			jobDto.setLng((float) results[0].geometry.location.lng);
+			return repository.addJob(jobDto);
+		}else return null;
+		
 	}
+	
+	
+	//This method does not fit in any controllers
+	//******************************************************************
+	//******************************************************************
+	public GeocodingResult[] getLatAndLng(String address){
+		
+		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI");
+		
+		try {
+			return GeocodingApi.geocode(context, address).await();
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
+	//******************************************************************
+	//******************************************************************
 	
 
 	public void markJobComplete(int jobId) {
@@ -121,6 +161,22 @@ public class JobServiceImpl {
 		}
 		
 		return job;
+	}
+
+
+	public List<Job> getFilteredJobs(int radius, String fromAddress, int[] categoryIds) {
+		// TODO Auto-generated method stub
+		
+		
+		GeocodingResult[] results = getLatAndLng(fromAddress);
+		
+		if (results.length > 0){
+			
+			if(categoryIds[0] ==  -1) categoryIds = null;
+			
+			return repository.getFilteredJobs(radius, results[0].geometry.location.lat, 
+								results[0].geometry.location.lng, categoryIds);
+		}else return null;
 	}
 
 }

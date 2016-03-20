@@ -13,6 +13,7 @@
 	</head>
 
 	<input type="hidden" id="userId" value="${user.userId}"/>
+	
 
 	<div class="container">
 		<div class="job-options btn-group" role="group" aria-label="...">
@@ -33,6 +34,23 @@
 			    Job Location
 			  </div>
 			  <div id="jobLocation" class="panel-body"></div>
+			  
+			  	<div class="job-location-container input-group">
+				  <span class="job-location-label input-group-addon" id="sizing-addon2">Street Address</span>
+				  <input id="jobStreetAddress" type="text" value="" class="form-control" aria-describedby="sizing-addon2">
+				</div>
+			  	<div class="job-location-container input-group">
+				  <span class="job-location-label input-group-addon" id="sizing-addon2">City</span>
+				  <input id="jobCity" type="text" class="form-control" aria-describedby="sizing-addon2">
+				</div>		
+			  	<div class="job-location-container input-group">
+				  <span class="job-location-label input-group-addon" id="sizing-addon2">State</span>
+				  <input id="jobState"  type="text" class="form-control" aria-describedby="sizing-addon2">
+				</div>	
+			  	<div class="job-location-container input-group">
+				  <span class="job-location-label input-group-addon" id="sizing-addon2">Zip Code</span>
+				  <input id="jobZipCode" type="text" class="form-control"  aria-describedby="sizing-addon2">
+				</div>											
 			</div>
 			
 			<div style="width: 500px" class="panel panel-info">
@@ -65,10 +83,16 @@
 
 	<script type="text/javascript">
 
+	
 		var activeJob = ${job};
+		
 		$("#jobName").html(activeJob.jobName);		
-		$("#jobLocation").html(activeJob.location);
+		$("#jobStreetAddress").val(activeJob.streetAddress);
+		$("#jobCity").val(activeJob.city);
+		$("#jobState").val(activeJob.state);
+		$("#jobZipCode").val(activeJob.zipCode);
 		$("#jobDescription").html(activeJob.description);
+		
 		
 		var jobId = activeJob.id;
 

@@ -49,7 +49,7 @@ public class UserController {
 
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();
-
+		
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);
 		model.addObject("user", user);
@@ -149,7 +149,7 @@ public class UserController {
 
 		model.addObject("user", user);
 
-		if (user.getProfileId() == 1)
+		if (user.getProfileId() == 2)
 			model.setViewName("EmployeeProfile");
 		else
 			model.setViewName("EmployerProfile");
