@@ -37,7 +37,7 @@
 						<c:forEach items="${employees }" var="employee">
 							<a href="#" id="${employee.getUserId() }"
 								class="list-group-item margin-hori"	>
-								employee.getFirstName() employee.getLastName()</a>
+								${employee.getFirstName()} ${ employee.getLastName()}</a>
 						</c:forEach>
 					</div>
 				</div>
