@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.Application;
 import com.jobsearch.email.Mailer;
-import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;
@@ -28,7 +26,7 @@ public class UserServiceImpl {
 
 		if (newUser.getEmailAddress() != null) {
 			mailer.sendMail(user.getEmailAddress(), "email verification",
-					"please click the link to verify your email http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/validateEmail?userId="
+					"please click the link to verify your email http://localhost:8080/JobSearch/validateEmail?userId="
 							+ newUser.getUserId());
 		}
 		return newUser;

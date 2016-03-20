@@ -28,19 +28,18 @@ public class JobRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-	
+
 	@Autowired
 	CategoryServiceImpl categoryService;
-	
+
 	@Autowired
 	UserServiceImpl userService;
-	
+
 	@Autowired
 	JobServiceImpl jobService;
-	
+
 	@Autowired
 	ApplicationServiceImpl applicationService;
-	
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
@@ -60,8 +59,7 @@ public class JobRepository {
 		});
 
 	}
-	
-	
+
 	public List<CategoryJob> CategoryJobRowMapper(String sql, Object[] args) {
 
 		return jdbcTemplate.query(sql, args, new RowMapper<CategoryJob>() {
@@ -79,79 +77,88 @@ public class JobRepository {
 
 	}
 
-	public List<Job> addJob(CreateJobDTO jobDto) {
+	public void addJob(List<CreateJobDTO> jobDtos) {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
-		
-		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, jobDto.getJobName());
-			 cStmt.setInt(2, jobDto.getUserId());
-			 cStmt.setInt(3, jobDto.getCategoryId());
-			 cStmt.setString(4, jobDto.getDescription());
-			 cStmt.setString(5, jobDto.getLocation());
-			 cStmt.setInt(6, jobDto.getOpenings());
-			 
-			 ResultSet result = cStmt.executeQuery();
-			 
-			 Job job = new Job();
-			 while(result.next()){
-				 job.setId(result.getInt("JobId"));
-				 job.setJobName(result.getString("JobName"));
-				 job.setIsActive(result.getInt("isActive"));
-				 job.setUserId(result.getInt("UserId"));
-				 job.setDescription(result.getString("Description"));
-				 job.setLocation(result.getString("Location"));
-				 job.setOpenings(result.getInt("Openings"));
-				 jobsCreatedByUser.add(job);
-			 }
+		try {
+			ResultSet result = null;
+			for (CreateJobDTO job : jobDtos) {
+					CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+							.prepareCall("{call create_Job(?, ?, ?, ?, ?)}");
+
+					cStmt.setString(1, job.getJobName());
+					cStmt.setInt(2, job.getUserId());
+					cStmt.setString(3, job.getDescription());
+					cStmt.setString(4, job.getLocation());
+					cStmt.setInt(5, job.getOpenings());
+
+					result = cStmt.executeQuery();
+
+					Job createdJob = new Job();
+					while (result.next()) {
+						createdJob.setId(result.getInt("JobId"));
+						createdJob.setJobName(result.getString("JobName"));
+						createdJob.setIsActive(result.getInt("isActive"));
+						createdJob.setUserId(result.getInt("UserId"));
+						createdJob.setDescription(result.getString("Description"));
+						createdJob.setLocation(result.getString("Location"));
+						createdJob.setOpenings(result.getInt("Openings"));
+					}
+					for(Integer categoryId: job.getCategoryIds()){
+						 cStmt = jdbcTemplate.getDataSource().getConnection()
+								.prepareCall("{call insertJobCategories(?, ?)}");
+
+						cStmt.setInt(1, createdJob.getId());
+						cStmt.setInt(2, categoryId);
+
+						cStmt.executeQuery();
+					}
+			}
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		return jobsCreatedByUser;
-
 	}
 
 	public List<Job> getJobsByUser(int userId) {
 		String sql = "SELECT * FROM job WHERE UserId = ?";
-		return  this.JobRowMapper(sql, new Object[] { userId });
+		return this.JobRowMapper(sql, new Object[] { userId });
 
 	}
-	
 
 	public List<Job> getActiveJobsByUser(int userId) {
-		
-	
-//		String sql = "SELECT job.JobId, job.JobName, category.CategoryId, category.Name FROM job "
-//				+ " INNER JOIN job_category ON job_category.JobId = job.JobId"
-//				+ " INNER JOIN category ON category.CategoryId = job_category.CategoryId"
-//				+ " AND job.UserId = ? AND IsActive = 1";
-		
-		//Get active jobs
-		String sql =  "SELECT * FROM job WHERE IsActive = 1 AND UserId = ?";		
+
+		// String sql = "SELECT job.JobId, job.JobName, category.CategoryId,
+		// category.Name FROM job "
+		// + " INNER JOIN job_category ON job_category.JobId = job.JobId"
+		// + " INNER JOIN category ON category.CategoryId =
+		// job_category.CategoryId"
+		// + " AND job.UserId = ? AND IsActive = 1";
+
+		// Get active jobs
+		String sql = "SELECT * FROM job WHERE IsActive = 1 AND UserId = ?";
 		List<Job> activeJobs = this.JobRowMapper(sql, new Object[] { userId });
-		
-		//For each active job, set its category and list of applications		
-		for (Job job : activeJobs){
-			
-			//Get job's category		
+
+		// For each active job, set its category and list of applications
+		for (Job job : activeJobs) {
+
+			// Get job's category
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 
-			//Get the job's applicants 
-			job.setApplications(applicationService.getApplicationsByJob(job.getId()));	
-			
-			//Get the job's employees
+			// Get the job's applicants
+			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
+
+			// Get the job's employees
 			job.setEmployees(userService.getEmployeesByJob(job.getId()));
 		}
-		
+
 		return activeJobs;
 
 	}
-	
+
 	public List<Job> getCompletedJobsByUser(int userId) {
-		String sql =  "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";		
+		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
@@ -161,8 +168,6 @@ public class JobRepository {
 		jdbcTemplate.update(sql, new Object[] { jobId });
 
 	}
-
-
 
 	public void applyForJob(int jobId, int userId) {
 		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
@@ -176,19 +181,18 @@ public class JobRepository {
 		String sql = "SELECT *" + " FROM job " + " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
 				+ " AND job_category.CategoryId = ?";
 
-		return  this.JobRowMapper(sql, new Object[] { categoryId });
-	}
-	
-	public int getJobCountByCategory(int categoryId) {	
-		
-		String sql = "SELECT COUNT(*)" + " FROM job " + " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
-				+ " AND job_category.CategoryId = ? AND job.IsActive = 1";
-		
-		int result = jdbcTemplate.queryForObject(sql, new Object[]{categoryId}, int.class);
-		
-		return result;
+		return this.JobRowMapper(sql, new Object[] { categoryId });
 	}
 
+	public int getJobCountByCategory(int categoryId) {
+
+		String sql = "SELECT COUNT(*)" + " FROM job " + " INNER JOIN job_category"
+				+ " ON job.JobId = job_category.JobId" + " AND job_category.CategoryId = ? AND job.IsActive = 1";
+
+		int result = jdbcTemplate.queryForObject(sql, new Object[] { categoryId }, int.class);
+
+		return result;
+	}
 
 	public List<Job> getApplicationsByUser(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
@@ -196,15 +200,14 @@ public class JobRepository {
 
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
-	
+
 	public List<Job> getJobOffersByUser(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
 				+ "	AND application.UserId = ? AND applicaion.IsOffered = 1";
 
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
-	
-	
+
 	public List<Job> getEmploymentByUser(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment" + "	ON job.JobId = employment.JobId"
 				+ "	AND employment.UserId = ?";
@@ -214,22 +217,22 @@ public class JobRepository {
 
 	public boolean hasAppliedForJob(int jobId, int userId) {
 		String sql = "SELECT COUNT(*) FROM application WHERE jobId = ? AND userID = ?";
-		int count = jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, int.class);
-		
-		if (count > 0) return true;
-		else return false;
+		int count = jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, int.class);
+
+		if (count > 0)
+			return true;
+		else
+			return false;
 	}
 
 	public Job getJob(int jobId) {
 		String sql = "SELECT * FROM job WHERE JobId=?";
-		List<Job> jobs = this.JobRowMapper(sql, new Object[]{ jobId });
-		
-		if(jobs.size() > 0) return jobs.get(0);
-		else return null;
+		List<Job> jobs = this.JobRowMapper(sql, new Object[] { jobId });
+
+		if (jobs.size() > 0)
+			return jobs.get(0);
+		else
+			return null;
 	}
-
-
-
-
 
 }

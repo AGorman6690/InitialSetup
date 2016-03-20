@@ -45,15 +45,40 @@
 <meta name="_csrf" content="${_csrf.token}" />
 <meta name="_csrf_header" content="${_csrf.headerName}" />
 </head>
-<body style="height: 100%; width:95%; margin:auto">
-	<!-- To conviently change accounts during debugging -->
-	<!-- ******************************************** -->
-	<c:choose>
-		<c:when test="${user.getFirstName() != null}">
-    		<a href="./logout">Log out</a>
- 		</c:when>
-	</c:choose>
-	<br>
-	<!-- ******************************************** -->
+<body style="height: 100%; width: 95%; margin: auto">
 
-	<!-- <div>Welcome to JobSearch</div> -->
+	<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<c:choose>
+			<c:when test="${user.getFirstName() != null}">
+				<div class="navbar-header">
+					<a id="home" class="navbar-brand" href="http://localhost:8080/JobSearch/getProfile">Labor Vault</a>
+				</div>
+			</c:when>
+		</c:choose>
+		<ul class="nav navbar-nav">
+			<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
+			<c:choose>
+				<c:when test="${user.getProfileId() == 1}">
+					<li><a href="http://localhost:8080/JobSearch/viewFindJobs">Find Jobs</a></li>
+				</c:when>
+				<c:when test="${user.getProfileId() == 2}">
+					<li><a href="http://localhost:8080/JobSearch/viewFindEmployees">Find Employees</a></li>
+					<li><a href="http://localhost:8080/JobSearch/viewPostJob">Post Job</a></li>
+				</c:when>
+			</c:choose>
+
+			<c:choose>
+				<c:when test="${user.getFirstName() != null}">
+					<li><a href="http://localhost:8080/JobSearch/viewProfile">Profile</a></li>
+					<li><a href="http://localhost:8080/JobSearch/logout">Log out</a></li>
+				</c:when>
+			</c:choose>
+
+
+
+			<!-- 	   	      <li><a href="./viewRatings">View Ratings</a></li> -->
+			<!-- 	  	      <li><a href="./viewApplicationsR">View Applications</a></li> -->
+		</ul>
+	</div>
+	</nav>

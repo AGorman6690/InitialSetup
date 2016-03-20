@@ -2,45 +2,81 @@ $(document).ready(function() {
 
 })
 
-function unacceptedApplicantsExist(applicants){
-
-	for(var i = 0; i < applicants.length; i++){		
-		if(applicants[i].application.isAccepted == 0) return true;
-	}
-	
-	return false;
-}
-
-function addJob(jobName, userId, categoryId, callback) {
-	// var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
-	// var csrfToken =
-	var headers = {};
-	headers[$("meta[name='_csrf_header']").attr("content")] = $(
-			"meta[name='_csrf']").attr("content");
-	var newJob = {};
-	newJob.jobName = jobName;
-	newJob.userId = userId;
-	newJob.categoryId = categoryId;
+function hireApplicant(userId, jobId) {
 
 	$.ajax({
-		type : "POST",
-		url : "http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/createJob",
-		headers : headers,
-		contentType : "application/json",
-		dataType : "application/json", // Response
-		data : JSON.stringify(newJob),
+		type : "GET",
+		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/hire/user/'
+				+ userId,
+		dataType : 'json',
 		success : _success,
 		error : _error
 	});
 
 	function _success(response) {
-		// alert("success add job");
-		callback(response);
+		var employeeHtml = $("#application_" + userId);
+		$("#application_" + userId).remove();
+		$("#employees").append(employeeHtml);
 	}
 
-	function _error(response) {
-		alert("error addJob");
+	function _error(response, errorThrown) {
+
 	}
+}
+
+function unacceptedApplicantsExist(applicants) {
+
+	for (var i = 0; i < applicants.length; i++) {
+		if (applicants[i].application.isAccepted == 0)
+			return true;
+	}
+
+	return false;
+}
+
+function addJobToCart() {
+	$("#submitJobsContainer").show();
+
+	var job = {};
+
+	job.jobName = document.getElementsByName('jobName')[0].value;
+	job.location = document.getElementsByName('location')[0].value;
+	job.description = document.getElementsByName('description')[0].value;
+	job.categoryIds = [];
+	job.userId = document.getElementsByName('userId')[0].value;
+
+	var categoryIds = document.getElementsByName('categoryId');
+
+	for (var i = 0; i < categoryIds.length; i++) {
+		if (categoryIds[i].checked) {
+			job.categoryIds.push(categoryIds[i].value);
+		}
+	}
+
+	jobs.push(job);
+
+	$("#pendingJobSubmissions").append(
+			"<div id='job_" + jobCount + "'><a>" + job.jobName + "</a></div>")
+	jobCount++;
+}
+
+function submitJobs(jobName, userId, categoryId, callback) {
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
+
+	$.ajax({
+		type : "POST",
+		url : "http://localhost:8080/JobSearch/createJob",
+		headers : headers,
+		contentType : "application/json",
+		dataType : "application/json", // Response
+		data : JSON.stringify(jobs)
+	}).done(function() {
+		$('#home')[0].click();
+	}).error(function() {
+		$('#home')[0].click();
+	});
 }
 
 function applyForJob(jobId, userId, callback) {
@@ -49,7 +85,7 @@ function applyForJob(jobId, userId, callback) {
 			"meta[name='_csrf']").attr("content");
 	$.ajax({
 		type : "POST",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/job/apply?jobId=' + jobId
+		url : 'http://localhost:8080/JobSearch/job/apply?jobId=' + jobId
 				+ '&userId=' + userId,
 		headers : headers,
 		dataType : "json",
@@ -58,46 +94,33 @@ function applyForJob(jobId, userId, callback) {
 	});
 
 	function _success(response) {
-		// alert("markApplicationUnderConsideration;
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error applyForJob");
 	}
 }
 
-
-function markJobComplete(jobId, callback) {
+function markJobComplete(jobId) {
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
 	$.ajax({
-		type : "POST",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/job/' + jobId + '/markComplete',
-//		dataType : "json",
-		headers : headers,
-		success : _success,
-		error : _error
+		type : "PUT",
+		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/markComplete',
+		headers : headers
+	}).done(function() {
+		$('#home')[0].click();
+	}).error(function() {
+		$('#home')[0].click();
 	});
-
-	function _success() {
-		// alert("success markJobComplete")
-		callback();
-	}
-
-	function _error() {
-		alert("error markJobComplete");
-	}
 }
 
 function getApplicationsByUser(userId, callback) {
-	// function getJobs(e){
-	// alert("getApplicationsByUser");
 
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getApplicationsByUser?userId='
+		url : 'http://localhost:8080/JobSearch/getApplicationsByUser?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,
@@ -105,87 +128,51 @@ function getApplicationsByUser(userId, callback) {
 	});
 
 	function _success(response) {
-		// alert("success getApplicationsByUser");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getApplicationsByUser");
 	}
 }
 
 function getEmploymentByUser(userId, callback) {
-	// function getJobs(e){
-	// alert("getEmploymentByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/' + userId + '/employment',
+		url : 'http://localhost:8080/JobSearch/user/' + userId + '/employment',
 		dataType : 'json',
 		success : _success,
 		error : _error
 	});
 
 	function _success(response) {
-		// alert("success getEmploymentByUser");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getEmploymentByUser");
 	}
 }
 
 function getJobsByUser(userId, callback) {
-	// function getJobs(e){
-	// alert("getJobsByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobsByUser?userId=' + userId,
+		url : 'http://localhost:8080/JobSearch/getJobsByUser?userId=' + userId,
 		dataType : 'json',
 		success : _success,
 		error : _error
 	});
 
 	function _success(response) {
-		// alert("success getJobsByUser");
-
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error");
 	}
 }
 
 function getActiveJobsByUser(userId, callback) {
-	// function getJobs(e){
-	// alert("getActiveJobsByUser");
-	$
-			.ajax({
-				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/jobs/active/user?userId='
-						+ userId,
-				dataType : 'json',
-				success : _success,
-				error : _error
-			});
-
-	function _success(response) {
-		// alert("success getActiveJobsByUser");
-		callback(response);
-	}
-
-	function _error(response) {
-		alert("error getActiveJobsByUser");
-	}
-}
-
-function getCompletedJobsByUser(userId, callback) {
-	// function getJobs(e){
-	// alert("getActiveJobsByUser");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getCompletedJobsByUser?userId='
+		url : 'http://localhost:8080/JobSearch/jobs/active/user?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,
@@ -193,21 +180,36 @@ function getCompletedJobsByUser(userId, callback) {
 	});
 
 	function _success(response) {
-		// alert("success getCompletedJobByUser");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getCompletedJobByUser");
+	}
+}
+
+function getCompletedJobsByUser(userId, callback) {
+	$.ajax({
+		type : "GET",
+		url : 'http://localhost:8080/JobSearch/getCompletedJobsByUser?userId='
+				+ userId,
+		dataType : 'json',
+		success : _success,
+		error : _error
+	});
+
+	function _success(response) {
+		callback(response);
+	}
+
+	function _error(response) {
 	}
 }
 
 function getJobCountByCategory(categoryId, callback) {
-	// alert("getJobCountByCategory")
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobCountByCategory?categoryId='
+				url : 'http://localhost:8080/JobSearch/getJobCountByCategory?categoryId='
 						+ categoryId,
 				dataType : 'json',
 				success : _success,
@@ -215,20 +217,17 @@ function getJobCountByCategory(categoryId, callback) {
 			});
 
 	function _success(response) {
-		// alert("success getJobCountByCategory");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getJobCountByCategory");
 	}
 }
 
 function getJobsByCategory(categoryId, callback) {
-	// alert("getJobCountByCategory")
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobsByCategory?categoryId='
+		url : 'http://localhost:8080/JobSearch/getJobsByCategory?categoryId='
 				+ categoryId,
 		dataType : 'json',
 		success : _success,
@@ -236,21 +235,18 @@ function getJobsByCategory(categoryId, callback) {
 	});
 
 	function _success(response) {
-		// alert("success getJobsByCategory");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getJobsByCategory");
 	}
 }
 
 function getSubJobCountByCategory(categoryId, callback) {
-	// alert("getSubJobCountByCategory")
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getSubJobCountByCategory?categoryId='
+				url : 'http://localhost:8080/JobSearch/getSubJobCountByCategory?categoryId='
 						+ categoryId,
 				dataType : 'json',
 				success : _success,
@@ -258,12 +254,10 @@ function getSubJobCountByCategory(categoryId, callback) {
 			});
 
 	function _success(response) {
-		// alert("success getSubJobCountByCategory");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getSubJobCountByCategory");
 	}
 }
 
@@ -273,7 +267,7 @@ function getSubJobCountByCategory(categoryId, callback) {
 function getJobOffersByUser(userId, callback) {
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getJobOffersByUser?userId='
+		url : 'http://localhost:8080/JobSearch/getJobOffersByUser?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,
@@ -281,12 +275,9 @@ function getJobOffersByUser(userId, callback) {
 	});
 
 	function _success(response) {
-		// alert("success getJobOffersByUser");
 		callback(response);
 	}
 
 	function _error(response) {
-		alert("error getJobOffersByUser");
 	}
 }
-

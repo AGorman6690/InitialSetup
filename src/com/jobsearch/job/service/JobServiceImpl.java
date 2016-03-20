@@ -17,20 +17,20 @@ public class JobServiceImpl {
 
 	@Autowired
 	JobRepository repository;
-	
+
 	@Autowired
 	CategoryServiceImpl categoryService;
-	
+
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
 	@Autowired
 	UserServiceImpl userService;
-	
-	public List<Job> addJob(CreateJobDTO jobDto) {
-		return repository.addJob(jobDto);
+
+	public void addJob(List<CreateJobDTO> jobDtos) {
+		repository.addJob(jobDtos);
 	}
-	
+
 
 	public void markJobComplete(int jobId) {
 		repository.markJobComplete(jobId);
@@ -102,24 +102,24 @@ public class JobServiceImpl {
 	public Job getJob(int jobId) {
 		// TODO Auto-generated method stub
 		Job job = repository.getJob(jobId);
-		
+
 		// Get job applicants
 		job.setApplicants(userService.getApplicants(jobId));
-		
+
 		// Set each applicant's rating
 		for(JobSearchUser applicant : job.getApplicants()){
 			applicant.setRatings(userService.getRatings(applicant.getUserId()));
 			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
 		}
-		
+
 		// Get job employees
-		job.setEmployees(userService.getEmployeesByJob(jobId));		
-		
+		job.setEmployees(userService.getEmployeesByJob(jobId));
+
 		// Set each employee's rating
 		for(JobSearchUser employee : job.getEmployees()){
 			employee.setRatings(userService.getRatings(employee.getUserId()));
 		}
-		
+
 		return job;
 	}
 

@@ -19,7 +19,7 @@ function getAppRateCriteria(callback){
 	//alert("get getAppRateCriteria");
 	$.ajax({
 		type: "GET",
-		url: 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getAppRateCriteria',
+		url: 'http://localhost:8080/JobSearch/getAppRateCriteria',
 			dataType: "json",
 	        success: _success,
 	        error: _error

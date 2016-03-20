@@ -3,20 +3,15 @@ package com.jobsearch.user.repository;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;
@@ -95,18 +90,6 @@ public class UserRepository {
 
 		jdbcTemplate.update(sql, new Object[] { user.getFirstName(), user.getLastName(), user.getEmailAddress(),
 				new Integer(2), user.getPassword() });
-
-		/*
-		 * @Override public JobSearchUser extractData(ResultSet rs) throws
-		 * SQLException, DataAccessException { if (rs.next()) { JobSearchUser
-		 * user = new JobSearchUser(); user.setUserId(rs.getInt("UserId"));
-		 * user.setFirstName(rs.getString("FirstName"));
-		 * user.setEmailAddress(rs.getString("Email"));
-		 * user.setLastName(rs.getString("LastName")); return user; }
-		 * 
-		 * return null; }
-		 */
-
 	}
 
 	public List<JobSearchUser> JobSearchUserRowMapper(String sql, Object[] args) {
@@ -193,25 +176,6 @@ public class UserRepository {
 		return list;
 
 	}
-
-	// public List<AppCatJobUser> AppCatJobUserRowMapper(String sql, Object[]
-	// args) {
-	// return jdbcTemplate.query(sql, args, new RowMapper<AppCatJobUser>() {
-	// @Override
-	// public AppCatJobUser mapRow(ResultSet rs, int rownumber) throws
-	// SQLException {
-	// AppCatJobUser e = new AppCatJobUser();
-	// e.setFirstName(rs.getString(1));
-	// e.setJobName(rs.getString(2));
-	// e.setIsOffered(rs.getInt(3));
-	// e.setBeenViewed(rs.getInt(4));
-	// e.setIsAccepted(rs.getInt(5));
-	// e.setCategoryName(rs.getString(6));
-	// return e;
-	// }
-	// });
-	// }
-
 	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args) {
 
 		List<RateCriterion> list;

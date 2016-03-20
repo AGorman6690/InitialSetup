@@ -31,7 +31,7 @@ function addCategoryToUser(categoryId, userId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/addCategoryToUser?categoryId='
+		url : 'http://localhost:8080/JobSearch/addCategoryToUser?categoryId='
 				+ categoryId + '&userId=' + userId,
 		contentType : "application/json", // Request
 		dataType : "json", // Response
@@ -65,7 +65,7 @@ function addCategoriesToUser(categoryIds, userId, callback) {
 		// alert(catString)
 		$.ajax({
 			type : "GET",
-			url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/addCategoriesToUser?'
+			url : 'http://localhost:8080/JobSearch/addCategoriesToUser?'
 					+ catString + '&userId=' + userId,
 			contentType : "application/json", // Request
 			dataType : "json", // Response
@@ -102,7 +102,7 @@ function removeCategoriesFromUser(categoryIds, userId, callback) {
 
 		$.ajax({
 			type : "PUT",
-			url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/' + userId
+			url : 'http://localhost:8080/JobSearch/user/' + userId
 					+ '/removeCategories?' + catString,
 			headers : headers,
 			contentType : "application/json", // Request
@@ -130,7 +130,7 @@ function addCategoryToJob(categoryId, jobId, callback) {
 	// alert("addCategoryToJob");
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/addCategoryToJob?jobId=' + jobId
+		url : 'http://localhost:8080/JobSearch/addCategoryToJob?jobId=' + jobId
 				+ '&categoryId=' + categoryId,
 		dataType : "json", // Response
 		success : _success,
@@ -152,7 +152,7 @@ function getCategoriesByJob(jobId, callback) {
 	$
 			.ajax({
 				type : "GET",
-				url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/getCategoryByJob?jobId='
+				url : 'http://localhost:8080/JobSearch/getCategoryByJob?jobId='
 						+ jobId,
 				dataType : "json",
 				success : _success,
@@ -176,7 +176,7 @@ function getCategoriesBySuperCat(elementId, callback) {
 	// alert(categoryId)
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/category/' + categoryId
+		url : 'http://localhost:8080/JobSearch/category/' + categoryId
 				+ '/subCategories',
 		dataType : "json",
 		success : _success,
@@ -198,7 +198,7 @@ function getCategoriesByUser(userId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://ec2-54-84-39-231.compute-1.amazonaws.com:8080/JobSearch/user/' + userId + '/categories',
+		url : 'http://localhost:8080/JobSearch/user/' + userId + '/categories',
 		dataType : "json",
 		success : _success,
 		error : _error
