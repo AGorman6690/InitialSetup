@@ -18,9 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
+
+import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationServiceImpl;
+
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.FilterJobsDTO;
@@ -28,6 +33,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
 @SessionAttributes({ "user", "job" })
@@ -37,39 +43,52 @@ public class JobController {
 	JobServiceImpl jobService;
 
 	@Autowired
+	UserServiceImpl userService;
+
+	@Autowired
 	CategoryServiceImpl categoryService;
 
-	@RequestMapping(value = "/job/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseBody
-//	public ModelAndView addJob(@RequestBody CreateJobDTO jobDto, ModelAndView model) {
-	public ModelAndView addJob(@ModelAttribute("job") CreateJobDTO jobDto, ModelAndView model) {
-		
-		//Add the job to the job table
-		@SuppressWarnings("unused")
-		List<Job> jobsCreatedByUser = jobService.addJob(jobDto);
-	 
-		model.setViewName("EmployerProfile");
-		//return JSON.stringify(jobsCreatedByUser);
-		return model;
+//<<<<<<< HEAD
+//	@RequestMapping(value = "/job/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@ResponseBody
+////	public ModelAndView addJob(@RequestBody CreateJobDTO jobDto, ModelAndView model) {
+//	public ModelAndView addJob(@ModelAttribute("job") CreateJobDTO jobDto, ModelAndView model) {
+//		
+//		//Add the job to the job table
+//		@SuppressWarnings("unused")
+//		List<Job> jobsCreatedByUser = jobService.addJob(jobDto);
+//	 
+//		model.setViewName("EmployerProfile");
+//		//return JSON.stringify(jobsCreatedByUser);
+//		return model;
+//=======
+	@Autowired
+	ApplicationServiceImpl applicationService;
+
+	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
+
+		// Add the job to the job table
+		jobService.addJob(jobDtos);
+
 	}
 	
 
-	
-	@RequestMapping(value = "/viewActiveJob_Employer", method = RequestMethod.GET)
-	public ModelAndView viewActiveJob_Employer(@RequestParam int jobId, ModelAndView model) {
-		
-		Job activeJob = jobService.getJob(jobId);
-		model.addObject("job", JSON.stringify(activeJob));
-		//model.addObject("job", activeJob);
-		model.setViewName("ViewActiveJob_Employer");
+	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
+	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
+
+		Job selectedJob = jobService.getJob(jobId);
+
+		model.addObject("job", selectedJob);
+		model.setViewName("Job");
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {
-		
-//		Job activeJob = jobService.getJob(jobId);
-//		model.addObject("job", JSON.stringify(activeJob));
+
+		// Job activeJob = jobService.getJob(jobId);
+		// model.addObject("job", JSON.stringify(activeJob));
 
 		model.setViewName("EditJob");
 		return model;
@@ -132,25 +151,33 @@ public class JobController {
 		return JSON.stringify(jobService.getJobOffersByUser(userId));
 	}
 
-
-	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.POST)
+	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.PUT)
 	@ResponseBody
-	public ModelAndView markJobComplete(@PathVariable("jobId") int jobId, @ModelAttribute("user") JobSearchUser user) {
-
+	public void markJobComplete(@PathVariable("jobId") int jobId) {
 		// Update database
 		jobService.markJobComplete(jobId);
-		
-		ModelAndView model = new ModelAndView();
-		model.setViewName("EmployerProfile");
+	}
 
+	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
+	public ModelAndView viewRateEmployees(@PathVariable int jobId, ModelAndView model) {
+
+		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+
+		model.addObject("employees", employees);
+
+		model.setViewName("RateEmployees");
 		return model;
 	}
-	
-//
-//	@RequestMapping(value = "/job/{jobID}/category", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getCategoryByJob(@PathVariable int jobId){		
-//		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
-//	}
 
+	@RequestMapping(value = "/job/{jobId}/hire/user/{userId}", method = RequestMethod.GET)
+	@ResponseBody
+	public String hireApplicant(@PathVariable int jobId, @PathVariable int userId) {
+
+		// Add employment to the database
+		userService.hireApplicant(userId, jobId);
+
+		Job activeJob = jobService.getJob(jobId);
+
+		return JSON.stringify(activeJob);
+	}
 }

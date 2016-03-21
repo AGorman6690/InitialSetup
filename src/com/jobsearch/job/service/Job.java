@@ -21,11 +21,20 @@ public class Job {
 	private String zipCode;
 	private float lat;
 	private float lng;
+	private List<Integer> categoryIds;
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	
 	
+	public List<Integer> getCategoryIds() {
+		return categoryIds;
+	}
+
+	public void setCategoryIds(List<Integer> categoryIds) {
+		this.categoryIds = categoryIds;
+	}
+
 	public float getLat() {
 		return lat;
 	}

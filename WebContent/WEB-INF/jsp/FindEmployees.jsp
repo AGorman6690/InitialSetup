@@ -1,5 +1,4 @@
 <%@ include file="./includes/Header.jsp" %>
-<%@ include file="./includes/Header_Employer.jsp" %>
 	<head>
 		<script src="<c:url value="/static/javascript/Employee.js" />"></script>		
 	</head>

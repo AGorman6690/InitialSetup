@@ -8,7 +8,7 @@ $(document).ready(function(){
 			return false;
 		}
 	});
-	
+
 })
 
 function getApplicants(jobId, callback){
@@ -28,7 +28,7 @@ function getApplicants(jobId, callback){
 
 		function _error(response, errorThrown){
 			alert("error getApplicants");
-		} 
+		}
 }
 
 function getOfferedApplicantsByJob(jobId, callback){
@@ -48,7 +48,7 @@ function getOfferedApplicantsByJob(jobId, callback){
 
 		function _error(response, errorThrown){
 			alert("error getOfferedApplicantsByJob");
-		} 	
+		}
 }
 
 
@@ -69,6 +69,7 @@ function getEmployeesByJob(jobId, callback){
 
 		function _error(response, errorThrown){
 			alert("error getEmployees");
+
 		} 
 }
 
@@ -93,8 +94,10 @@ function hireApplicant(userId, jobId, callback){
 		
 		function _error(response, errorThrown){
 			alert("error hireApplicant");
+
 		}
 }
+
 
 function getProfiles(callback){
 	//	alert("1");
@@ -105,12 +108,12 @@ function getProfiles(callback){
 		success: _success,
         error: _error
 	    });
-		
+
 		function _success(response){
 //			alert("success getProfiles");
 			callback(response);
 		}
-		
+
 		function _error(response){
 			alert(JSON.stringify(response))
 			alert("error getProfiles");

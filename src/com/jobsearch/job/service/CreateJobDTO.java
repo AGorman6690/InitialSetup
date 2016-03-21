@@ -1,5 +1,7 @@
 package com.jobsearch.job.service;
 
+import java.util.List;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class CreateJobDTO {
@@ -10,12 +12,12 @@ public class CreateJobDTO {
 	@JsonProperty("userId")
 	int userId;
 
-	@JsonProperty("categoryId")
-	int categoryId;
-	
+	@JsonProperty("categoryIds")
+	List<Integer> categoryIds;
+
 	@JsonProperty("openings")
 	int openings;
-	
+
 	@JsonProperty("description")
 	String description;
 	
@@ -36,7 +38,6 @@ public class CreateJobDTO {
 	
 	@JsonProperty("lng")
 	float lng;
-	
 
 	public float getLat() {
 		return lat;
@@ -118,11 +119,11 @@ public class CreateJobDTO {
 		this.userId = userId;
 	}
 
-	public int getCategoryId() {
-		return categoryId;
+	public List<Integer> getCategoryIds() {
+		return categoryIds;
 	}
 
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
+	public void setCategoryIds(List<Integer> categoryIds) {
+		this.categoryIds = categoryIds;
 	}
 }

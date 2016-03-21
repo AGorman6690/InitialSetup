@@ -5,9 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.Application;
 import com.jobsearch.email.Mailer;
-import com.jobsearch.model.AppCatJobUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;

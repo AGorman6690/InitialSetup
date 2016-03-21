@@ -1,0 +1,33 @@
+<ul class="list-group">
+		
+
+<li id="<%- { category.id }%>" class="category-list-item list-group-item">
+			
+			<a href="#" id="' + id + 'Name" >
+			r[++j] = 	arr[i].name + "  ";
+			r[++j] = 	'</a>';
+			
+			//Checkbox to select the category
+			r[++j] = '<input id="' + id + 'Click" type="checkbox" class="margin-hori"';
+			r[++j] = 'onClick="selectCategory(\'' + id + '\')">';
+			
+			//When this hyperlink is clicked, the below div is expanded.
+			//The inner html is the job count of ALL its sub categories, not just
+			//sub categories 1 level deep.
+			//Also on click, the categor
+			r[++j] = 	'<a onclick="appendSecondLevelCategories_PostJob(\'' + id + '\')" id="#' + id + 'C"';
+			r[++j] =    'data-target="#' + id + 'T" data-toggle="collapse" class="category-list-down-arrow btn btn-success btn-sm">';
+			r[++j] = 		'<span class="glyphicon glyphicon-menu-down"></span>';
+			r[++j] =	'</a>';
+			
+			//This div will eventually hold the category's sub categories.
+			//When this category's sub categories need to be set,
+			//this div id will be passed to this function and have this
+			//html appended to it (see append method at end of this function).
+			r[++j] = 	'<div id="' + id + 'T" class="panel-collapse collapse">';
+			r[++j] = 	'</div>';
+			
+			r[++j] = '</li>';	
+		}
+
+		r[++j] = '</ul>'

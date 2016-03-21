@@ -1,5 +1,4 @@
 <%@ include file="./includes/Header.jsp"%>
-<%@ include file="./includes/Header_Employee.jsp"%>
 
 <head>
 <script src="<c:url value="/static/javascript/Jobs.js" />"></script>
@@ -103,46 +102,53 @@
 </body>
 
 <script>
-	//Get the seed categories.
-	//Seed categories are sub categories to a category with id=0
-	getCategoriesBySuperCat('0', function(response, elementId) {
 
-		appendFirstLevelCategories_FindJobs(elementId, response, function() {
-
-			var arr = $('#' + elementId + 'T').find('li');
-			for (var i = 0; i < arr.length; i++) {
-
-				getCategoriesBySuperCat(arr[i].id,
-						function(response, elementId) {
-
-							appendFirstLevelCategories_FindJobs(elementId,
-									response, function() {
-
-									})
-						})
-			}
-		})
-	})
-	
+	var pageContext = "findJob";
 	
 	getCategoriesBySuperCat('0', function(response, elementId) {
+	
+		appendCategories(elementId, response);
+	});
+// 	//Get the seed categories.
+// 	//Seed categories are sub categories to a category with id=0
+// 	getCategoriesBySuperCat('0', function(response, elementId) {
 
-		appendFirstLevelCategories_FilterCategories(elementId, response, function() {
+// 		appendFirstLevelCategories_FindJobs(elementId, response, function() {
 
-			var arr = $('#' + elementId + 'F').find('li');
-			for (var i = 0; i < arr.length; i++) {
+// 			var arr = $('#' + elementId + 'T').find('li');
+// 			for (var i = 0; i < arr.length; i++) {
 
-				getCategoriesBySuperCat(arr[i].id,
-						function(response, elementId) {
+// 				getCategoriesBySuperCat(arr[i].id,
+// 						function(response, elementId) {
 
-					appendFirstLevelCategories_FilterCategories(elementId,
-									response, function() {
+// 							appendFirstLevelCategories_FindJobs(elementId,
+// 									response, function() {
 
-									})
-						})
-			}
-		})
-	})
+// 									})
+// 						})
+// 			}
+// 		})
+// 	})
+	
+	
+// 	getCategoriesBySuperCat('0', function(response, elementId) {
+
+// 		appendFirstLevelCategories_FilterCategories(elementId, response, function() {
+
+// 			var arr = $('#' + elementId + 'F').find('li');
+// 			for (var i = 0; i < arr.length; i++) {
+
+// 				getCategoriesBySuperCat(arr[i].id,
+// 						function(response, elementId) {
+
+// 					appendFirstLevelCategories_FilterCategories(elementId,
+// 									response, function() {
+
+// 									})
+// 						})
+// 			}
+// 		})
+// 	})
 
 	function filterJobs() {
 		var radius = $("#radius").val();
