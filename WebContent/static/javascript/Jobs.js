@@ -40,13 +40,12 @@ function getFilteredJobs(radius, fromAddress, categories, callback){
 	// Build a parameter string for the category ids
 	var catString = "";
 	if (categories.length > 0){		
-//		catString = 'category=' + categories[0];
 		for (var i = 0; i < categories.length; i++) {
 			catString += '&category=' + categories[i];
 		}
 	}else catString = "&category=-1";
 	
-	alert(catString)
+
 	$.ajax({
 		type : "GET",
 		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + radius + '&fromAddress=' + fromAddress + "," + catString,
@@ -77,17 +76,10 @@ function addJobToCart() {
 	job.state = document.getElementsByName('state')[0].value;
 	job.zipCode = document.getElementsByName('zipCode')[0].value;
 	job.description = document.getElementsByName('description')[0].value;
-	job.categoryIds = [];
 	job.userId = document.getElementsByName('userId')[0].value;
 
-	var categoryIds = document.getElementsByName('categoryId');
-
-	for (var i = 0; i < categoryIds.length; i++) {
-		if (categoryIds[i].checked) {
-			job.categoryIds.push(categoryIds[i].value);
-		}
-	}
-
+	job.categoryIds = getCategoryIds("selectedCategories");
+	
 	jobs.push(job);
 
 	$("#pendingJobSubmissions").append(

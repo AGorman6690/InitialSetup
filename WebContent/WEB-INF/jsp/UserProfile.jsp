@@ -31,10 +31,10 @@
 
 	getCategoriesByUser($("#userId").val(), function(usersCategories){
 
-		getCategoriesBySuperCat('0', function(response, elementId){
+		getCategoriesBySuperCat('0', function(response, categoryId){
 
 			//Append seed categories
-			appendCategories(elementId, response);
+			appendCategories(categoryId, "T", response);
 		})
 	})
 

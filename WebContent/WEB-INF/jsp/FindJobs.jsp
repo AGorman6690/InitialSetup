@@ -25,7 +25,7 @@
 			<div class="panel-heading">Filters</div>
 
 
-			<div class="color-panel panel-body">
+			<div style="position:relative" class="color-panel panel-body">
 				
 				<ul class="list-group">
 					<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning" data-toggle="collapse" data-target="#collapseDistance">
@@ -73,7 +73,9 @@
 					</li>
 					
 					<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning" data-toggle="collapse" data-target="#0F">
-					Categories</a>
+					Categories</a><div id="selectedCategories" style="display:inline-block"></div>
+					
+					
 						<div class="collapse" id="0F">
 						</div>
 						
@@ -87,10 +89,10 @@
 
 			</div>
 		</div>
-		<div style="width: 750px" class="panel panel-success">
-			<div class="panel-heading">Select a category to view jobs</div>
-			<div id='0T' class="color-panel panel-body"></div>
-		</div>
+<!-- 		<div style="width: 750px" class="panel panel-success"> -->
+<!-- 			<div class="panel-heading">Select a category to view jobs</div> -->
+<!-- 			<div id='0T' class="color-panel panel-body"></div> -->
+<!-- 		</div> -->
 
 		<div style="width: 750px" class="panel panel-success">
 			<div class="panel-heading">Available Jobs</div>
@@ -104,51 +106,16 @@
 <script>
 
 	var pageContext = "findJob";
+
+// 	getCategoriesBySuperCat('0', function(response, categoryId) {
+
+// 		appendCategories(categoryId, "T", response);
+// 	});
 	
-	getCategoriesBySuperCat('0', function(response, elementId) {
-	
-		appendCategories(elementId, response);
+	getCategoriesBySuperCat('0', function(response, categoryId) {
+		
+		appendCategories(categoryId, "F", response);
 	});
-// 	//Get the seed categories.
-// 	//Seed categories are sub categories to a category with id=0
-// 	getCategoriesBySuperCat('0', function(response, elementId) {
-
-// 		appendFirstLevelCategories_FindJobs(elementId, response, function() {
-
-// 			var arr = $('#' + elementId + 'T').find('li');
-// 			for (var i = 0; i < arr.length; i++) {
-
-// 				getCategoriesBySuperCat(arr[i].id,
-// 						function(response, elementId) {
-
-// 							appendFirstLevelCategories_FindJobs(elementId,
-// 									response, function() {
-
-// 									})
-// 						})
-// 			}
-// 		})
-// 	})
-	
-	
-// 	getCategoriesBySuperCat('0', function(response, elementId) {
-
-// 		appendFirstLevelCategories_FilterCategories(elementId, response, function() {
-
-// 			var arr = $('#' + elementId + 'F').find('li');
-// 			for (var i = 0; i < arr.length; i++) {
-
-// 				getCategoriesBySuperCat(arr[i].id,
-// 						function(response, elementId) {
-
-// 					appendFirstLevelCategories_FilterCategories(elementId,
-// 									response, function() {
-
-// 									})
-// 						})
-// 			}
-// 		})
-// 	})
 
 	function filterJobs() {
 		var radius = $("#radius").val();
@@ -156,11 +123,11 @@
 				+ $("#fromCity").val() + " " + $("#fromState").val() + " "
 				+ $("#fromZipCode").val());
 		
-		var categories = getCheckedCheckboxesId("0F");
+		var categories = getCategoryIds("selectedCategories");
 
 			if (radius != "" && fromAddress != "") {
 				getFilteredJobs(radius, fromAddress, categories, function(filter) {
-// 					alert(JSON.stringify(filter))
+
 					var myLatLng = {
 						lat : filter.distanceFromLat,
 						lng : filter.distanceFromLng

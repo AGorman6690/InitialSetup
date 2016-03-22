@@ -12,6 +12,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -41,7 +42,8 @@ public class JobServiceImpl {
 								+ jobDto.getState() + " " 
 								+ jobDto.getZipCode();
 			
-			GeocodingResult[] results = getLatAndLng(address);
+			GoogleClient maps = new GoogleClient();
+			GeocodingResult[] results = maps.getLatAndLng(address);
 	
 			//If the address was successfully be converted to lat/lng
 			if (results.length > 0){
@@ -52,27 +54,6 @@ public class JobServiceImpl {
 			
 		}
 }
-	
-	//This method does not fit in any controllers
-	//******************************************************************
-	//******************************************************************
-	public GeocodingResult[] getLatAndLng(String address){
-		
-		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI");
-		
-		try {
-			return GeocodingApi.geocode(context, address).await();
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
-		
-	}
-	//******************************************************************
-	//******************************************************************
 	
 
 	public void markJobComplete(int jobId) {
@@ -170,8 +151,8 @@ public class JobServiceImpl {
 	public List<Job> getFilteredJobs(int radius, String fromAddress, int[] categoryIds) {
 		// TODO Auto-generated method stub
 		
-		
-		GeocodingResult[] results = getLatAndLng(fromAddress);
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(fromAddress);
 		
 		if (results.length > 0){
 			

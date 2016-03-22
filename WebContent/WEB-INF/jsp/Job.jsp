@@ -4,9 +4,8 @@
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
-<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
-<link rel="stylesheet" type="text/css"
-	href="./static/css/employerActiveJob.css" />
+
+<link rel="stylesheet" type="text/css" href="./static/css/employerActiveJob.css" />
 
 </head>
 
@@ -25,10 +24,29 @@
 			<div id="jobName" class="panel-body">${job.getJobName() }</div>
 		</div>
 
-		<div style="width: 500px" class="panel panel-info">
-			<div class="panel-heading">Job Location</div>
-			<div id="jobLocation" class="panel-body">${job.getLocation() }</div>
-		</div>
+			<div style="width: 500px" class="panel panel-info">
+			  <div class="panel-heading">
+			    Job Location
+			  </div>
+			  <div id="jobLocation" class="panel-body"></div>
+			  
+			  	<div class="job-location-container input-group">
+				  <span style="width: 125px" class="job-location-label input-group-addon" id="sizing-addon2">Street Address</span>
+				  <div id="jobStreetAddress" class="panel-body">${job.getStreetAddress() }</div>
+				</div>
+			  	<div class="job-location-container input-group">
+				  <span style="width: 125px" class="job-location-label input-group-addon" id="sizing-addon2">City</span>
+				  <div id="jobCity" class="panel-body">${job.getCity() }</div>
+				</div>		
+			  	<div class="job-location-container input-group">
+				  <span style="width: 125px" class="job-location-label input-group-addon" id="sizing-addon2">State</span>
+				  <div id="jobState" class="panel-body">${job.getState() }</div>
+				</div>	
+			  	<div class="job-location-container input-group">
+				  <span style="width: 125px" class="job-location-label input-group-addon" id="sizing-addon2">Zip Code</span>
+				  <div id="jobZipCode" class="panel-body">${job.getZipCode() }</div>
+				</div>											
+			</div>
 
 		<div style="width: 500px" class="panel panel-info">
 			<div class="panel-heading">Job Description</div>
@@ -51,25 +69,28 @@
 
 									<th>Applicant Name</th>
 									<c:forEach items="${job.getApplicants().get(0).getRatings() }"
-										var="rating">
-										<th>${rating.getName() }</th>
-									</c:forEach>
+ 										var="rating"> 
+ 										<th>${rating.getName() }</th> 
+ 									</c:forEach> 
 								</tr>
 							</thead>
 							<tbody>
 								<c:forEach items="${job.getApplicants() }" var="applicant">
-
-									<tr id="applicant_${applicant.getUserId() }">
-
-										<td><a href="#">${applicant.getFirstName() }
-												${applicant.getLastName() } </a></td>
-										<c:forEach items="${applicant.getRatings()}" var="rating">
-											<td>${rating.getValue() }</td>
-										</c:forEach>
-										<td><button class="hire btn btn-info btn-sm margin-hori"
-												onclick="hireApplicant(${applicant.getUserId()},${job.getId() })">
-												Hire</button></td>
-									</tr>
+									<c:choose>
+										<c:when test="${applicant.getApplication().isAccepted == 0 }">
+											<tr id="applicant_${applicant.getUserId() }">
+		
+												<td><a href="#">${applicant.getFirstName() }
+														${applicant.getLastName() } </a></td>
+												<c:forEach items="${applicant.getRatings()}" var="rating">
+													<td>${rating.getValue() }</td>
+												</c:forEach>
+												<td><button class="hire btn btn-info btn-sm margin-hori"
+														onclick="hireApplicant(${applicant.getUserId()},${job.getId() })">
+														Hire</button></td>
+											</tr>
+										</c:when>
+									</c:choose>
 								</c:forEach>
 							</tbody>
 						</table>
@@ -125,10 +146,10 @@
 </div>
 
 <script type="text/javascript">
-		var activeJob = ${job};
+// 	var activeJob = ${job}; 
+	
+// 	appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, "applicants", "employees"); 
 
-		appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, "applicants", "employees");
-
-	</script>
+</script>
 
 <%@ include file="./includes/Footer.jsp"%>

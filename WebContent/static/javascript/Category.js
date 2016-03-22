@@ -26,6 +26,17 @@ $(document).ready(
 		})
 
 
+function getCategoryIds(containerId){
+
+	var elements = $("#" + containerId).children()
+	var ids = new Array();
+	for(var i=0; i<elements.length; i++){
+		ids[i] = getCategoryId(elements[i].id);
+	}
+	
+	return ids;
+}
+		
 function addCategoryToUser(categoryId, userId, callback) {
 	// alert("add category");
 
@@ -169,11 +180,8 @@ function getCategoriesByJob(jobId, callback) {
 	}
 }
 
-function getCategoriesBySuperCat(elementId, callback) {
-	// alert(elementId)
+function getCategoriesBySuperCat(categoryId, callback) {
 
-	var categoryId = elementId; // getCategoryId(elementId);
-	// alert(categoryId)
 	$.ajax({
 		type : "GET",
 		url : 'http://localhost:8080/JobSearch/category/' + categoryId
@@ -186,11 +194,11 @@ function getCategoriesBySuperCat(elementId, callback) {
 	function _success(response) {
 		// alert("success getCategoriesBySuperCat for " + elementId );
 		// alert(JSON.stringify(response))
-		callback(response, elementId);
+		callback(response, categoryId);
 	}
 
 	function _error() {
-		alert("error getCategoriesBySuperCat " + elementId + " 999");
+		alert("error getCategoriesBySuperCat " + categoryId + " 999");
 	}
 }
 

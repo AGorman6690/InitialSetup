@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 
 function rateEmployee(rateCriterionId, value, jobId, employeeId){
-//	alert("rateEmployee");
+	alert("rateEmployee");
 	
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(

@@ -1,7 +1,24 @@
+function addCategoryToSelection(event){
 
-function appendCategories(eId, arr, callback) {
+	var newButtonId = event.id + "-selected";
+	if($('#selectedCategories').find('#' + newButtonId).length == 0){
+	
+		var html = '<button type="button" class="selected-category btn btn-success" id="' + newButtonId + '"';
+			html += ' onclick="removeCategoryFromSelection(this)">';
+			html += $(event).html();
+			html += '<span style="margin: 5px 5px 5px 5px" class="glyphicon glyphicon-remove"></span></button>';	
+			
+			$("#selectedCategories").append(html);			
+	}
+}
+
+function removeCategoryFromSelection(event){
+	$("#" + event.id).remove();
+}
+
+function appendCategories(categoryId, subCategoryDivIdKey, arr, callback) {
 	// PARAMETERS:
-	// 1) eId is the category id. It will be used to identify the div element in
+	// 1) categoryId is the category id. It will be used to identify the div element in
 	// which
 	// to append the html to. The div element id equals the category id with a
 	// 'T' appended to the end.
@@ -18,21 +35,22 @@ function appendCategories(eId, arr, callback) {
 		for (var i = 0; i < arr.length; i++) {
 
 			var id = arr[i].id;
+			var categoryName = arr[i].name;
 
 			// Li element. Its id is equal to the category id
 			r[++j] = '<li id="' + id + '" class="list-group-item">';
 
 			// Category name
-			r[++j] = '<a href="#" id="' + id + 'Name" >';
-			r[++j] = arr[i].name + "  ";
+			r[++j] = '<a id="' + id + '-Name" onclick="addCategoryToSelection(this)"'; //\'' + id + '\', \'' + categoryName + '\'"' 
+			r[++j] = '>' + categoryName;
 			r[++j] = '</a>';
 
 			if (pageContext === "postJob" || pageContext === "profile") {
 				// Checkbox to select the category
-				r[++j] = '<input id="'
-						+ id
-						+ 'Click" type="checkbox" class="margin-hori" name="categoryId" value="'
-						+ id + '">';
+//				r[++j] = '<input id="'
+//						+ id
+//						+ 'Click" type="checkbox" class="margin-hori" name="categoryId" value="'
+//						+ id + '">';
 
 			} else if (pageContext === "findJob") {
 				// Number of active jobs in the category
@@ -40,56 +58,63 @@ function appendCategories(eId, arr, callback) {
 						+ id + '\')">';
 				r[++j] = arr[i].jobCount + '</a>';
 			}
-
+			
+			
 			// When this hyperlink is clicked, the below div is expanded.
 			// The inner html is the job count of ALL its sub categories, not
 			// just
 			// sub categories 1 level deep.
 			// Also on click, the category
-			r[++j] = '<a  onclick="appendNextLevelCategories(\'' + id
-					+ '\')" id="#' + id + 'C"';
+			r[++j] = '<a style="margin: 0px 0px 10px 10px; height: 25px" onclick="appendNextLevelCategories(\'' + id
+					+ '\', \'' + subCategoryDivIdKey + '\')" id="#' + id + '-C"';
 			r[++j] = 'data-target="#'
-					+ id
-					+ 'T" data-toggle="collapse" class="find-jobs-sub-job-count btn btn-success btn-sm">';
-			r[++j] = '<span class="glyphicon glyphicon-menu-down padding-hori">'
-					+ "  " + arr[i].subJobCount + '</span>';
-			r[++j] = '</a>';
+					+ id + subCategoryDivIdKey + '"'
+					+ ' data-toggle="collapse" class="find-jobs-sub-job-count btn btn-success btn-sm">';
+			
+			
+			r[++j] = '<span style="vertical-align: middle" class="glyphicon glyphicon-menu-down padding-hori">'
+			if (pageContext === "findJob"){
+				r[++j] = "  " + arr[i].subJobCount;
+			}
+			r[++j] = '</span></a>';
 
 			// This div will eventually hold the category's sub categories.
 			// When this category's sub categories need to be set,
 			// this div id will be passed to this function and have this
 			// html appended to it (see append method at end of this function).
-			r[++j] = '<div id="' + id + 'T" class="panel-collapse collapse">';
+			r[++j] = '<div id="' + id + subCategoryDivIdKey + '" class="panel-collapse collapse">';
 			r[++j] = '</div>';
 
 			r[++j] = '</li>';
 		}
 
 		r[++j] = '</ul>'
-		// alert('about to append to ' + eId)
+		// alert('about to append to ' + categoryId)
 		// This is the id of div that will hold the sub categories
-		$("#" + eId + "T").append(r.join(''));
+		$("#" + categoryId + subCategoryDivIdKey).append(r.join(''));
 
 	}
 }
 
-function appendNextLevelCategories(elementId) {
+function appendNextLevelCategories(elementId, subCategoryDivIdKey) {
 
-	var e = $('#' + elementId);
 	//When the 'second' data attribute is set to true,
 	//that signifies the category's second level has been set.
 	//So when the category is collapsed and then re-expanded, the
 	//below code will not execute again. It only needs to execute once.
-	if(e.data('second') != 'true'){
-		e.data('second', 'true');
+	var nextLevelDiv = $('#' + elementId + subCategoryDivIdKey);
+	if(nextLevelDiv.data('second') != 'true'){
+		nextLevelDiv.data('second', 'true');
+		
+		var clickedCategory = $('#' + elementId);
 		
 		// Get the categories 1 level deep.
 		// The li element holds the category Id without anything appended to the
 		// end.
-		getCategoriesBySuperCat(e.closest('li').attr('id'), function(response,
-				elementId) {
+		getCategoriesBySuperCat(clickedCategory.closest('li').attr('id'), function(response,
+				categoryId) {
 	
-			appendCategories(elementId, response)
+			appendCategories(categoryId, subCategoryDivIdKey, response)
 		});
 	}
 }
@@ -148,25 +173,6 @@ function getCategoryId(id){
 	var idEnd = id.indexOf("-");
 	return id.substring(0, idEnd);
 }
-
-// function appendSubCategories(categoryId){
-//
-// //For each seed (the "T" is simply the div element in which the sub
-// categories
-// //will be appended to),
-// var arr = $('#' + categoryId + 'T').find('li');
-// for(var i = 0; i < arr.length; i++){
-//
-// //get sub categories.
-// getCategoriesBySuperCat(arr[i].id, function(response, elementId){
-//
-// //Append sub categories
-// appendFirstLevelCategories_ProfileCats(elementId, response, function(){
-// alert("firsst")
-// })
-// })
-// }
-// }
 
 function appendJobs(eId, jobs, callback) {
 
@@ -419,7 +425,7 @@ $(document).ready(
 
 			$("#submitRating").click(
 					function() {
-
+							alert(3452)
 						// alert($("#onTimeRating").val())
 						// alert($("#workEthicRating").val())
 						// alert($("#hireAgainRating").val())

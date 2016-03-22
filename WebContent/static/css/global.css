@@ -1,4 +1,7 @@
-
+.border{
+	border: 5px solid red;
+}
+        
 .co_jobCategory{
 	list-style-type: none;
 }
@@ -36,4 +39,13 @@
 
 .job-location-container{
 	width: 100%;
+}
+
+.selected-category{
+	margin-left: 10px;
+	margin-bottom: 10px;
+}
+
+a:hover{
+	 cursor:pointer;
 }

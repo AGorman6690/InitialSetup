@@ -32,6 +32,7 @@ import com.jobsearch.job.service.FilterJobsDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -107,9 +108,10 @@ public class JobController {
 		
 		FilterJobsDTO filter = new FilterJobsDTO();
 		
+		GoogleClient maps = new GoogleClient();
 		filter.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds));
-		filter.setDistanceFromLat(jobService.getLatAndLng(fromAddress));
-		filter.setDistanceFromLng(jobService.getLatAndLng(fromAddress));
+		filter.setDistanceFromLat(maps.getLatAndLng(fromAddress));
+		filter.setDistanceFromLng(maps.getLatAndLng(fromAddress));
 		filter.setRadius(radius);
 		
 		return JSON.stringify(filter);

@@ -11,16 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.CategoryJob;
-import com.jobsearch.model.Profile;
-import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -70,23 +65,6 @@ public class JobRepository {
 		}
 		
 		
-	}
-
-	public List<CategoryJob> CategoryJobRowMapper(String sql, Object[] args) {
-
-		return jdbcTemplate.query(sql, args, new RowMapper<CategoryJob>() {
-
-			@Override
-			public CategoryJob mapRow(ResultSet rs, int rownumber) throws SQLException {
-				CategoryJob e = new CategoryJob();
-				e.setJobId(rs.getInt(1));
-				e.setJobName(rs.getString(2));
-				e.setCategoryId(rs.getInt(3));
-				e.setCategoryName(rs.getString(4));
-				return e;
-			}
-		});
-
 	}
 
 	public void addJob(List<CreateJobDTO> jobDtos) {
@@ -144,15 +122,14 @@ public class JobRepository {
 
 			 cStmt.setString(1, jobDto.getJobName());
 			 cStmt.setInt(2, jobDto.getUserId());
-//			 cStmt.setInt(3, jobDto.getCategoryId());
-			 cStmt.setString(4, jobDto.getDescription());
+			 cStmt.setString(3, jobDto.getDescription());
 			 //cStmt.setInt(6, jobDto.getOpenings());
-			 cStmt.setString(5, jobDto.getStreetAddress());
-			 cStmt.setString(6, jobDto.getCity());
-			 cStmt.setString(7, jobDto.getState());
-			 cStmt.setString(8, jobDto.getZipCode());
-			 cStmt.setFloat(9,  jobDto.getLat());
-			 cStmt.setFloat(10,  jobDto.getLng());
+			 cStmt.setString(4, jobDto.getStreetAddress());
+			 cStmt.setString(5, jobDto.getCity());
+			 cStmt.setString(6, jobDto.getState());
+			 cStmt.setString(7, jobDto.getZipCode());
+			 cStmt.setFloat(8,  jobDto.getLat());
+			 cStmt.setFloat(9,  jobDto.getLng());
 			 
 
 			 
@@ -176,11 +153,11 @@ public class JobRepository {
 //				 jobsCreatedByUser.add(job);
 			 }
 			 
-				for(Integer categoryId: createdJob.getCategoryIds()){
+				for(Integer categoryId: jobDto.getCategoryIds()){
 					 cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
 		
-					cStmt.setInt(1, createdJob.getUserId());
+					cStmt.setInt(1, createdJob.getId());
 					cStmt.setInt(2, categoryId);
 		
 					cStmt.executeQuery();

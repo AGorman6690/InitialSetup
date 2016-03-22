@@ -9,6 +9,7 @@
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 <link rel="stylesheet" type="text/css"
 	href="./static/css/categories.css" />
+	<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
 <link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
 </head>
 
@@ -91,19 +92,26 @@
 					</div>
 
 					<br>
+					
+					<div class="container">
+					<div style="min-height: 50px" id="selectedCategories">
+					</div>
+					</div>
 					<div class="container">
 						<div class="row">
 							<label class="col-sm-2 form-control-label">Job Category</label> <input
 								id="selectedCategory" type="hidden"></input>
+								
+								
+								
 							<div class="category-list-container form-group col-sm-10">
 								<div id='0T'></div>
 							</div>
+
 						</div>
 					</div>
 
 					<input name="userId" value="${user.userId}" type="hidden"></input>
-
-
 
 					<div class="form-group row">
 						<div class="col-sm-offset-2 col-sm-10">
@@ -120,8 +128,8 @@
 
 <script>
 	var pageContext = "postJob";
-	getCategoriesBySuperCat('0', function(response, elementId) {
-		appendCategories(elementId, response);
+	getCategoriesBySuperCat('0', function(response, categoryId) {
+		appendCategories(categoryId, "T", response);
 	})
 	var jobs = [];
 	var jobCount = 1;
