@@ -1,6 +1,7 @@
 package com.jobsearch.job.repository;
 
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -39,8 +40,7 @@ public class JobRepository {
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
 		try{
-			
-	
+
 			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
 	
 				@Override
@@ -57,6 +57,8 @@ public class JobRepository {
 					e.setZipCode(rs.getString("ZipCode"));
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
+					e.setStartDate(rs.getDate("StartDate"));
+					e.setEndDate(rs.getDate("EndDate"));
 					return e;
 				}
 			});
@@ -118,7 +120,8 @@ public class JobRepository {
 //		List<Job> jobsCreatedByUser = new ArrayList<>();
 
 		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJobName());
 			 cStmt.setInt(2, jobDto.getUserId());
@@ -130,6 +133,8 @@ public class JobRepository {
 			 cStmt.setString(7, jobDto.getZipCode());
 			 cStmt.setFloat(8,  jobDto.getLat());
 			 cStmt.setFloat(9,  jobDto.getLng());
+			 cStmt.setDate(10, (Date) jobDto.getStartDate());
+			 cStmt.setDate(11, (Date) jobDto.getEndDate());
 			 
 
 			 
@@ -319,13 +324,12 @@ public class JobRepository {
 				}
 			
 				args[3 + i] = categoryIds[i];				
-			}
-			
-			sql += sql2;			
+			}			
+					
 			args[args.length - 1] = radius;
 			
 		}
-
+		sql += sql2;	
 		sql += " HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
 		return this.JobRowMapper(sql, args );
 

@@ -53,7 +53,9 @@ public class UserController {
 
 		return model;
 	}
+	
 
+	
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
 	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
@@ -211,9 +213,9 @@ public class UserController {
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDto) {
+	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO[] ratingDtos) {
 
-		userService.rateEmployee(ratingDto);
+		userService.rateEmployee(ratingDtos);
 	}
 
 

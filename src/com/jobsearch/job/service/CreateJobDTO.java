@@ -1,5 +1,8 @@
 package com.jobsearch.job.service;
 
+
+
+import java.sql.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
@@ -38,6 +41,51 @@ public class CreateJobDTO {
 	
 	@JsonProperty("lng")
 	float lng;
+	
+	@JsonProperty("startDate")
+	Date startDate;
+	
+	@JsonProperty("endDate")
+	Date endDate;
+	
+	@JsonProperty("stringStartDate")
+	String stringStartDate;
+	
+	@JsonProperty("stringEndDate")
+	String stringEndDate;
+
+	
+	public String getStringStartDate() {
+		return stringStartDate;
+	}
+
+	public void setStringStartDate(String stringStartDate) {
+		this.stringStartDate = stringStartDate;
+	}
+
+	public String getStringEndDate() {
+		return stringEndDate;
+	}
+
+	public void setStringEndDate(String stringEndDate) {
+		this.stringEndDate = stringEndDate;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
 
 	public float getLat() {
 		return lat;

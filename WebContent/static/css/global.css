@@ -46,6 +46,6 @@
 	margin-bottom: 10px;
 }
 
-a:hover{
+#filterJobTable tr:hover{
 	 cursor:pointer;
 }

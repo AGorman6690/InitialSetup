@@ -3,9 +3,6 @@
 <head>
 <script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
-<%-- 		<script src="<c:url value="/static/javascript/User.js" />"></script> --%>
-<%-- 		<script src="<c:url value="/static/javascript/RateCriterion.js" />"></script> --%>
-<%-- 		<script src="<c:url value="/static/javascript/Display.js" />"></script> --%>
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 <link rel="stylesheet" type="text/css"
 	href="./static/css/categories.css" />
@@ -79,9 +76,30 @@
 							</div>
 						</div>														
 					</div>
-
+					
+<!-- 					***************************************************************** -->
+<!-- 					NOTE: Found the date rage picker here: http://www.daterangepicker.com/ -->
+<!-- 					***************************************************************** -->
 					<div class="container">
-						<div class="row">
+						<div class="form-group row">
+							<label class="post-job-label col-sm-2 form-control-label" for="jobDescription">Job Start and End Dates</label>
+							<div class="col-sm-10">
+							<input style="width: 250px" class="form-control" type="text" id="dateRange" />								
+								<script type="text/javascript">
+									$(function() {
+									    $('#dateRange').daterangepicker({
+									        locale: {
+									            format: 'MM/DD/YYYY'
+									        }
+									    });
+									});
+								</script>
+							</div>	
+						</div>
+					</div>
+					
+					<div class="container">
+						<div style="margin-bottom: 25px" class="row">
 							<label class="col-sm-2 form-control-label" for="jobDescription">Job
 								Description</label>
 							<div class="post-job-description col-sm-10">
@@ -91,20 +109,34 @@
 						</div>
 					</div>
 
-					<br>
+
+				
+<!-- 					<div class="container"> -->
+<!-- 						<div class="form-group row"> -->
+<!-- 							<label for="jobDuration" class="post-job-label col-sm-2 form-control-label">Duration (days) -->
+<!-- 								</label> -->
+<!-- 							<div class="col-sm-10"> -->
+<!-- 								<input name="jobDuration" type="text" -->
+<!-- 									class="post-job-input form-control" id="jobDuration" -->
+<!-- 									placeholder="Job Duration (days)"></input> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+										
+					
 					
 					<div class="container">
-					<div style="min-height: 50px" id="selectedCategories">
+						<div class="row">
+							<label class="post-job-label col-sm-2 form-control-label">Categories</label>
+							<div style="min-height: 50px; display:inline" id="selectedCategories">
+							</div>
+						</div>
 					</div>
-					</div>
+					
 					<div class="container">
 						<div class="row">
-							<label class="col-sm-2 form-control-label">Job Category</label> <input
-								id="selectedCategory" type="hidden"></input>
-								
-								
-								
-							<div class="category-list-container form-group col-sm-10">
+							<input id="selectedCategory" type="hidden"></input>
+							<div style="margin-left: 125px" class="category-list-container form-group col-sm-10">
 								<div id='0T'></div>
 							</div>
 
@@ -129,10 +161,12 @@
 <script>
 	var pageContext = "postJob";
 	getCategoriesBySuperCat('0', function(response, categoryId) {
-		appendCategories(categoryId, "T", response);
+		appendCategories(categoryId, "T", response, function(){});
 	})
 	var jobs = [];
 	var jobCount = 1;
+	
+
 </script>
 
 <%@ include file="./includes/Footer.jsp"%>

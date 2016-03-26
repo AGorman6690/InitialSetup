@@ -2,10 +2,13 @@ package com.jobsearch.web;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.sql.Date;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -69,14 +72,60 @@ public class JobController {
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
 
+		
+		
 		// Add the job to the job table
 		jobService.addJob(jobDtos);
 
 	}
 	
 
+//	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress, 
+//									@RequestParam(value="category") int[] categoryIds,
+//									@RequestParam DateTime startDate,
+//									@RequestParam DateTime endDate ) {
+	
+	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
+	@ResponseBody
+	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress, 
+			@RequestParam(value="category") int[] categoryIds) {
+
+		
+		FilterJobsDTO filteredJobs = new FilterJobsDTO();
+		filteredJobs.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds)); //, startDate, endDate));
+		
+		//Set the filter criteria specified by user
+		GoogleClient maps = new GoogleClient();
+		filteredJobs.setDistanceFromLat(maps.getLatAndLng(fromAddress));
+		filteredJobs.setDistanceFromLng(maps.getLatAndLng(fromAddress));
+		filteredJobs.setRadius(radius);
+		
+		filteredJobs.setFromAddress(fromAddress);
+		filteredJobs.setCategoryIds(categoryIds);
+		
+
+		return JSON.stringify(filteredJobs);
+
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/user/{userId}/apply", method = RequestMethod.GET)
+	public ModelAndView applyForJob(@PathVariable int jobId, @PathVariable int userId, ModelAndView model) {
+
+		// Add application to database
+		jobService.applyForJob(jobId, userId);
+		
+//		ModelAndView model = new ModelAndView();
+		model.setViewName("EmployeeProfile");
+		
+		//return JSON.stringify(jobService.getApplicationsByUser(userId));
+		return model;
+
+	}
+	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
+		
+		
 
 		Job selectedJob = jobService.getJob(jobId);
 
@@ -99,22 +148,6 @@ public class JobController {
 	@ResponseBody
 	public String getJobsByUser(@RequestParam int userId) {
 		return JSON.stringify(jobService.getJobsByUser(userId));
-
-	}
-
-	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
-	@ResponseBody
-	public String filterJobs(@RequestParam int radius, @RequestParam String fromAddress,@RequestParam(value="category") int[] categoryIds) {
-		
-		FilterJobsDTO filter = new FilterJobsDTO();
-		
-		GoogleClient maps = new GoogleClient();
-		filter.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds));
-		filter.setDistanceFromLat(maps.getLatAndLng(fromAddress));
-		filter.setDistanceFromLng(maps.getLatAndLng(fromAddress));
-		filter.setRadius(radius);
-		
-		return JSON.stringify(filter);
 
 	}
 	
@@ -163,9 +196,11 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
 	public ModelAndView viewRateEmployees(@PathVariable int jobId, ModelAndView model) {
 
-		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
-
+		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);		
 		model.addObject("employees", employees);
+		
+		Job job = jobService.getJob(jobId);
+		model.addObject("job", job);
 
 		model.setViewName("RateEmployees");
 		return model;

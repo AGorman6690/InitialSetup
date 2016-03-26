@@ -75,8 +75,12 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingDTO ratingDto) {
-		repository.updateRating(ratingDto);
+	public void rateEmployee(RatingDTO[] ratingDtos) {
+		
+		for(RatingDTO ratingDto : ratingDtos){
+			repository.updateRating(ratingDto);
+		}
+		
 	}
 
 	public List<RateCriterion> getRatings(int userId) {

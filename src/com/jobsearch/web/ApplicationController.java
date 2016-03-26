@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -62,16 +64,6 @@ public class ApplicationController {
 		
 	}
 	
-	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	@ResponseBody
-	public String applyForJob(@RequestParam int jobId, @RequestParam int userId) {
-
-		// Add application to database
-		jobService.applyForJob(jobId, userId);
-		
-		return JSON.stringify(jobService.getApplicationsByUser(userId));
-
-	}
 
 	@RequestMapping(value = "/getApplicationsByUser", method = RequestMethod.GET)
 	@ResponseBody

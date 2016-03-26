@@ -35,57 +35,36 @@ function unacceptedApplicantsExist(applicants) {
 }
 
 
-function getFilteredJobs(radius, fromAddress, categories, callback){
+//function getFilteredJobs(radius, fromAddress, categories, callback){
+function getFilteredJobs(filter, callback){
 	
 	// Build a parameter string for the category ids
 	var catString = "";
-	if (categories.length > 0){		
-		for (var i = 0; i < categories.length; i++) {
-			catString += '&category=' + categories[i];
+	if (filter.categories.length > 0){		
+		for (var i = 0; i < filter.categories.length; i++) {
+			catString += '&category=' + filter.categories[i];
 		}
 	}else catString = "&category=-1";
-	
 
 	$.ajax({
-		type : "GET",
-		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + radius + '&fromAddress=' + fromAddress + "," + catString,
-		dataType : 'json',
-		success : _success,
-		error : _error
-	});
+		type : "GET", 
+		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + filter.radius + '&fromAddress='
+				+ filter.fromAddress + catString,//  + "&startDate=" + filter.startDate
+//				+ "&endDate=" + filter.endDate,
+			dataType : "json",
+			success : _success,
+			error : _error
+		});
 
-	function _success(response) {
-		// alert("success getApplicationsByUser");
-		callback(response);
-	}
+		function _success(response) {
+			callback(response)
+		}
 
-	function _error(response) {
-		alert("error getApplicationsByUser");
-	}
+		function _error(response) {
+		}
+
 }
 
-
-function addJobToCart() {
-	$("#submitJobsContainer").show();
-
-	var job = {};
-
-	job.jobName = document.getElementsByName('jobName')[0].value;
-	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
-	job.city = document.getElementsByName('city')[0].value;
-	job.state = document.getElementsByName('state')[0].value;
-	job.zipCode = document.getElementsByName('zipCode')[0].value;
-	job.description = document.getElementsByName('description')[0].value;
-	job.userId = document.getElementsByName('userId')[0].value;
-
-	job.categoryIds = getCategoryIds("selectedCategories");
-	
-	jobs.push(job);
-
-	$("#pendingJobSubmissions").append(
-			"<div id='job_" + jobCount + "'><a>" + job.jobName + "</a></div>")
-	jobCount++;
-}
 
 function submitJobs(jobName, userId, categoryId, callback) {
 	var headers = {};
@@ -106,7 +85,33 @@ function submitJobs(jobName, userId, categoryId, callback) {
 	});
 }
 
-function applyForJob(jobId, userId, callback) {
+
+function addJobToCart() {
+	$("#submitJobsContainer").show();
+
+	var job = {};
+
+	job.jobName = document.getElementsByName('jobName')[0].value;
+	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
+	job.city = document.getElementsByName('city')[0].value;
+	job.state = document.getElementsByName('state')[0].value;
+	job.zipCode = document.getElementsByName('zipCode')[0].value;
+	job.description = document.getElementsByName('description')[0].value;
+	job.userId = document.getElementsByName('userId')[0].value;
+	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
+	job.stringEndDate = $("#dateRange").data('daterangepicker').endDate;
+	job.categoryIds = getCategoryIds("selectedCategories");
+	
+	jobs.push(job);
+
+	$("#pendingJobSubmissions").append(
+			"<div id='job_" + jobCount + "'><a>" + job.jobName + "</a></div>")
+	jobCount++;
+}
+
+
+
+function applyForJob(jobId, userId) {
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
@@ -121,10 +126,27 @@ function applyForJob(jobId, userId, callback) {
 	});
 
 	function _success(response) {
-		callback(response);
 	}
 
 	function _error(response) {
+	}
+}
+
+function getJob(jobId) {
+
+	$.ajax({
+		type : "GET",
+		url : 'http://localhost:8080/JobSearch/job/' + jobId,
+		dataType : "json",
+		success : _success,
+		error : _error
+	});
+
+	function _success(response) {
+	}
+
+	function _error(response) {
+		alert('error')
 	}
 }
 

@@ -1,5 +1,7 @@
 package com.jobsearch.job.service;
 
+
+import java.util.Date;
 import java.util.List;
 
 import com.jobsearch.application.service.Application;
@@ -21,12 +23,31 @@ public class Job {
 	private String zipCode;
 	private float lat;
 	private float lng;
+	private Date startDate;
+	private Date endDate;
+	private Double distanceFromFilterLocation;
 	private List<Integer> categoryIds;
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	
 	
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
 	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
@@ -160,5 +181,23 @@ public class Job {
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
+
+	public Double getDistanceFromFilterLocation() {
+		return distanceFromFilterLocation;
+	}
+
+	public void setDistanceFromFilterLocation(double distanceFromFilterLocation) {
+		this.distanceFromFilterLocation = distanceFromFilterLocation;
+	}
+
+//	@Override
+//	public int compareTo(Job another) {
+//		// TODO Auto-generated method stub
+//        if (this.getDistanceFromFilterLocation()<another.getDistanceFromFilterLocation()){
+//            return -1;
+//        }else{
+//            return 1;
+//        }
+//	}
 
 }

@@ -1,7 +1,13 @@
 package com.jobsearch.job.service;
 
+
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,13 +51,26 @@ public class JobServiceImpl {
 			GoogleClient maps = new GoogleClient();
 			GeocodingResult[] results = maps.getLatAndLng(address);
 	
-			//If the address was successfully be converted to lat/lng
+			//If the address was successfully converted to lat/lng
 			if (results.length > 0){
+				
+				//Convert the string dates to a java.sql.Date				
+				try {
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					java.util.Date date = sdf.parse(jobDto.getStringStartDate());
+					jobDto.setStartDate(new java.sql.Date(date.getTime()));
+					date = sdf.parse(jobDto.getStringEndDate());
+					jobDto.setEndDate(new java.sql.Date(date.getTime()));
+					
+				} catch (ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
 				jobDto.setLat((float) results[0].geometry.location.lat);
 				jobDto.setLng((float) results[0].geometry.location.lng);
 				repository.addJob(jobDto);
-			}
-			
+			}			
 		}
 }
 	
@@ -156,10 +175,25 @@ public class JobServiceImpl {
 		
 		if (results.length > 0){
 			
+			double filterLng = results[0].geometry.location.lng;
+			double filterLat = results[0].geometry.location.lat;
+			
 			if(categoryIds[0] ==  -1) categoryIds = null;
 			
-			return repository.getFilteredJobs(radius, results[0].geometry.location.lat, 
-								results[0].geometry.location.lng, categoryIds);
+			//Get the filtered jobs
+			List<Job> filteredJobs = repository.getFilteredJobs(radius, filterLat,
+					filterLng, categoryIds);
+		
+			//For each filtered job, calculate the distance between the user's specified filter lat/lng 
+			for(Job job : filteredJobs){
+				job.setDistanceFromFilterLocation(GoogleClient.getDistance(filterLat, filterLng, job.getLat(), job.getLng()));
+			}
+
+			//Sort the filtered jobs by distance from user's specified lat/lng in ascending order.
+//			Collections.sort(filteredJobs, 
+//	                (job1, job2) -> job1.getDistanceFromFilterLocation().compareTo(job2.getDistanceFromFilterLocation()));
+			return  filteredJobs;
+					
 		}else return null;
 	}
 

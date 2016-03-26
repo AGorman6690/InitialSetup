@@ -12,11 +12,19 @@
 <input type="hidden" id="userId" value="${user.userId}" />
 
 <div class="container">
-	<div class="job-options btn-group" role="group" aria-label="...">
-		<a href="./edit" class="btn btn-default">Edit Job</a>
-		<button onclick="markJobComplete(${job.getId()})" id="markJobComplete"
-			class="btn btn-default">Mark Job Complete</button>
-	</div>
+
+			<div class="job-options btn-group" role="group" aria-label="...">
+				<c:choose>
+					<c:when test="${user.getProfileId() == 1}">
+						<a href="./edit" class="btn btn-default">Edit Job</a>
+						<button onclick="markJobComplete(${job.getId()})" id="markJobComplete"
+							class="btn btn-default">Mark Job Complete</button>
+					</c:when>
+					<c:when test="${user.getProfileId() == 2}">
+						<a href="./${job.getId()}/user/${user.getUserId()}/apply" class="btn btn-default">Apply</a>
+					</c:when>	
+				</c:choose>				
+			</div>
 
 	<div>
 		<div style="width: 500px" class="panel panel-info">
@@ -55,94 +63,98 @@
 
 	</div>
 
-	<br>
-	<div id="container">
-
-		<div style="width: 750px" class="panel panel-warning">
-			<div class="panel-heading">Applicants</div>
-			<div id="applicants" class="panel-body">
-				<c:choose>
-					<c:when test="${job.getApplicants().size() > 0 }">
-						<table class="table table-condensed">
-							<thead>
-								<tr>
-
-									<th>Applicant Name</th>
-									<c:forEach items="${job.getApplicants().get(0).getRatings() }"
- 										var="rating"> 
- 										<th>${rating.getName() }</th> 
- 									</c:forEach> 
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${job.getApplicants() }" var="applicant">
-									<c:choose>
-										<c:when test="${applicant.getApplication().isAccepted == 0 }">
-											<tr id="applicant_${applicant.getUserId() }">
+	<c:choose>
+		<c:when test="${user.getProfileId() == 1}">
+			<br>
+			<div id="container">
 		
-												<td><a href="#">${applicant.getFirstName() }
-														${applicant.getLastName() } </a></td>
-												<c:forEach items="${applicant.getRatings()}" var="rating">
+				<div style="width: 750px" class="panel panel-warning">
+					<div class="panel-heading">Applicants</div>
+					<div id="applicants" class="panel-body">
+						<c:choose>
+							<c:when test="${job.getApplicants().size() > 0 }">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+		
+											<th>Applicant Name</th>
+											<c:forEach items="${job.getApplicants().get(0).getRatings() }"
+		 										var="rating"> 
+		 										<th>${rating.getName() }</th> 
+		 									</c:forEach> 
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${job.getApplicants() }" var="applicant">
+											<c:choose>
+												<c:when test="${applicant.getApplication().isAccepted == 0 }">
+													<tr id="applicant_${applicant.getUserId() }">
+				
+														<td><a href="#">${applicant.getFirstName() }
+																${applicant.getLastName() } </a></td>
+														<c:forEach items="${applicant.getRatings()}" var="rating">
+															<td>${rating.getValue() }</td>
+														</c:forEach>
+														<td><button class="hire btn btn-info btn-sm margin-hori"
+																onclick="hireApplicant(${applicant.getUserId()},${job.getId() })">
+																Hire</button></td>
+													</tr>
+												</c:when>
+											</c:choose>
+										</c:forEach>
+									</tbody>
+								</table>
+							</c:when>
+							<c:otherwise>
+								<div id="noApplicants">
+									<div>No applicants</div>
+								</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
+		
+				<div style="width: 750px" class="panel panel-warning">
+					<div class="panel-heading">Employees</div>
+					<div id="employees" class="panel-body">
+						<c:choose>
+							<c:when test="${job.getEmployees().size() > 0 }">
+								<table class="table table-condensed">
+									<thead>
+										<tr>
+											<th>Employee Name</th>
+											<c:forEach items="${job.getEmployees().get(0).getRatings() }"
+												var="rating">
+												<th>${rating.getName() }</th>
+											</c:forEach>
+										</tr>
+									</thead>
+									<tbody>
+										<c:forEach items="${job.getEmployees() }" var="employee">
+											<tr id="employee_${employee.getUserId() }">
+		
+												<td><a href="#">${employee.getFirstName() }
+														${employee.getLastName() } </a></td>
+												<c:forEach items="${employee.getRatings()}" var="rating">
 													<td>${rating.getValue() }</td>
 												</c:forEach>
-												<td><button class="hire btn btn-info btn-sm margin-hori"
-														onclick="hireApplicant(${applicant.getUserId()},${job.getId() })">
-														Hire</button></td>
 											</tr>
-										</c:when>
-									</c:choose>
-								</c:forEach>
-							</tbody>
-						</table>
-					</c:when>
-					<c:otherwise>
-						<div id="noApplicants">
-							<div>No applicants</div>
-						</div>
-					</c:otherwise>
-				</c:choose>
-			</div>
-		</div>
-
-		<div style="width: 750px" class="panel panel-warning">
-			<div class="panel-heading">Employees</div>
-			<div id="employees" class="panel-body">
-				<c:choose>
-					<c:when test="${job.getEmployees().size() > 0 }">
-						<table class="table table-condensed">
-							<thead>
-								<tr>
-									<th>Employee Name</th>
-									<c:forEach items="${job.getEmployees().get(0).getRatings() }"
-										var="rating">
-										<th>${rating.getName() }</th>
-									</c:forEach>
-								</tr>
-							</thead>
-							<tbody>
-								<c:forEach items="${job.getEmployees() }" var="employee">
-									<tr id="employee_${employee.getUserId() }">
-
-										<td><a href="#">${employee.getFirstName() }
-												${employee.getLastName() } </a></td>
-										<c:forEach items="${employee.getRatings()}" var="rating">
-											<td>${rating.getValue() }</td>
 										</c:forEach>
-									</tr>
-								</c:forEach>
-							</tbody>
-						</table>
-					</c:when>
-					<c:otherwise>
-						<div id="noEmployees">
-							<div>No Employees</div>
-						</div>
-					</c:otherwise>
-				</c:choose>
-
+									</tbody>
+								</table>
+							</c:when>
+							<c:otherwise>
+								<div id="noEmployees">
+									<div>No Employees</div>
+								</div>
+							</c:otherwise>
+						</c:choose>
+		
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
+		</c:when>
+	</c:choose>
 </div>
 
 <script type="text/javascript">
