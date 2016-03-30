@@ -1,24 +1,19 @@
 package com.jobsearch.job.service;
 
 
-import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
-import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -37,6 +32,8 @@ public class JobServiceImpl {
 	@Autowired
 	UserServiceImpl userService;
 
+	@Autowired
+	GoogleClient maps;
 	
 	public void addJob(List<CreateJobDTO> jobDtos) {
 		
@@ -48,7 +45,6 @@ public class JobServiceImpl {
 								+ jobDto.getState() + " " 
 								+ jobDto.getZipCode();
 			
-			GoogleClient maps = new GoogleClient();
 			GeocodingResult[] results = maps.getLatAndLng(address);
 	
 			//If the address was successfully converted to lat/lng
@@ -170,7 +166,6 @@ public class JobServiceImpl {
 	public List<Job> getFilteredJobs(int radius, String fromAddress, int[] categoryIds) {
 		// TODO Auto-generated method stub
 		
-		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(fromAddress);
 		
 		if (results.length > 0){

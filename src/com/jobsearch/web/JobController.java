@@ -30,12 +30,12 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.FilterJobsDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -52,6 +52,8 @@ public class JobController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
+	@Autowired
+	GoogleClient maps;
 //<<<<<<< HEAD
 //	@RequestMapping(value = "/job/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 //	@ResponseBody
@@ -95,7 +97,6 @@ public class JobController {
 		filteredJobs.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds)); //, startDate, endDate));
 		
 		//Set the filter criteria specified by user
-		GoogleClient maps = new GoogleClient();
 		filteredJobs.setDistanceFromLat(maps.getLatAndLng(fromAddress));
 		filteredJobs.setDistanceFromLng(maps.getLatAndLng(fromAddress));
 		filteredJobs.setRadius(radius);
