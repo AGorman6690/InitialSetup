@@ -3,9 +3,11 @@ package com.jobsearch.job.service;
 
 
 import java.sql.Date;
+import java.sql.Time;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.joda.time.DateTime;
 
 public class CreateJobDTO {
 
@@ -53,8 +55,53 @@ public class CreateJobDTO {
 	
 	@JsonProperty("stringEndDate")
 	String stringEndDate;
-
 	
+	@JsonProperty("startTime")
+	Time startTime;
+
+	@JsonProperty("endTime")
+	Time endTime;
+				 
+	@JsonProperty("stringStartTime")
+	String stringStartTime;
+
+	@JsonProperty("stringEndTime")
+	String stringEndTime;
+	
+	
+	
+	public Time getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getStringStartTime() {
+		return stringStartTime;
+	}
+
+	public void setStringStartTime(String stringStartTime) {
+		this.stringStartTime = stringStartTime;
+	}
+
+	public String getStringEndTime() {
+		return stringEndTime;
+	}
+
+	public void setStringEndTime(String stringEndTime) {
+		this.stringEndTime = stringEndTime;
+	}
+
 	public String getStringStartDate() {
 		return stringStartDate;
 	}

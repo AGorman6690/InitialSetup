@@ -37,20 +37,23 @@ function unacceptedApplicantsExist(applicants) {
 
 //function getFilteredJobs(radius, fromAddress, categories, callback){
 function getFilteredJobs(filter, callback){
-	
+
 	// Build a parameter string for the category ids
-	var catString = "";
+	var categoryIds = "";
 	if (filter.categories.length > 0){		
 		for (var i = 0; i < filter.categories.length; i++) {
-			catString += '&category=' + filter.categories[i];
+			categoryIds += '&categoryId=' + filter.categories[i];
 		}
-	}else catString = "&category=-1";
-
+	}else categoryIds = "&categoryId=-1";
+	
 	$.ajax({
 		type : "GET", 
 		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + filter.radius + '&fromAddress='
-				+ filter.fromAddress + catString,//  + "&startDate=" + filter.startDate
-//				+ "&endDate=" + filter.endDate,
+				+ filter.fromAddress + categoryIds + "&startTime=" + filter.stringStartTime
+				+ "&endTime=" + filter.stringEndTime + "&beforeEndTime=" + filter.beforeEndTime
+				+ "&beforeStartTime=" + filter.beforeStartTime + "&startDate=" + filter.stringStartDate
+				+ "&endDate=" + filter.stringEndDate + "&beforeStartDate=" + filter.beforeStartDate
+				+ "&beforeEndDate=" + filter.beforeEndDate,
 			dataType : "json",
 			success : _success,
 			error : _error
@@ -71,6 +74,7 @@ function submitJobs(jobName, userId, categoryId, callback) {
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
 
+	alert(JSON.stringify(jobs))
 	$.ajax({
 		type : "POST",
 		url : "http://localhost:8080/JobSearch/jobs/post",
@@ -99,9 +103,12 @@ function addJobToCart() {
 	job.description = document.getElementsByName('description')[0].value;
 	job.userId = document.getElementsByName('userId')[0].value;
 	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
-	job.stringEndDate = $("#dateRange").data('daterangepicker').endDate;
+	job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
+	job.stringStartTime = formatTime($("#startTime").val());
+	job.stringEndTime = formatTime($("#endTime").val());
 	job.categoryIds = getCategoryIds("selectedCategories");
 	
+	alert(JSON.stringify(job))
 	jobs.push(job);
 
 	$("#pendingJobSubmissions").append(
@@ -109,6 +116,36 @@ function addJobToCart() {
 	jobCount++;
 }
 
+function formatTime(time){
+	//When converting from string to java.sqlTime on the server,
+	//java.sql.Time.valueOf(someString) needs the parameter string to be in "hh:mm:ss" format.
+
+	if( time == "" ){
+		return "00:00:00";
+	}else{
+		
+		var len = time.length;
+		
+		 //am or pm
+		var dayHalf = time.substring(len - 2);
+		
+		var colon = time.indexOf(":");
+		var hour = time.substring(0, colon);
+		var minutes = time.substring(colon + 1, len - 2);
+		
+		if(dayHalf == "pm"){
+			hour = parseInt(hour) + 12;
+		}
+		
+		if(hour.length == 1){
+			hour = "0" + hour;
+		}
+		
+		return hour + ":" + minutes + ":00";	
+	}
+
+		
+}
 
 
 function applyForJob(jobId, userId) {

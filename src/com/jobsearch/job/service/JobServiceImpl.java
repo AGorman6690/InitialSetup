@@ -51,8 +51,7 @@ public class JobServiceImpl {
 			GoogleClient maps = new GoogleClient();
 			GeocodingResult[] results = maps.getLatAndLng(address);
 	
-			//If the address was successfully converted to lat/lng
-			if (results.length > 0){
+			if (results.length == 1){
 				
 				//Convert the string dates to a java.sql.Date				
 				try {
@@ -62,15 +61,24 @@ public class JobServiceImpl {
 					date = sdf.parse(jobDto.getStringEndDate());
 					jobDto.setEndDate(new java.sql.Date(date.getTime()));
 					
+					//Convert strings to sql Time objects
+					jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
+					jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
+					
 				} catch (ParseException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+//				jobDto.setZipCode(GoogleClient.getAddressComponent(results[0].addressComponents, "POSTAL_CODE"));
 				
 				jobDto.setLat((float) results[0].geometry.location.lat);
 				jobDto.setLng((float) results[0].geometry.location.lng);
 				repository.addJob(jobDto);
-			}			
+			}else if(results.length == 0){
+				//invalid address
+			}else if(results.length > 1) {
+				//ambiguous address
+			}
 		}
 }
 	
@@ -167,34 +175,84 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getFilteredJobs(int radius, String fromAddress, int[] categoryIds) {
+	public List<Job> getFilteredJobs(FilterDTO filter) {
 		// TODO Auto-generated method stub
 		
 		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(fromAddress);
+		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
 		
-		if (results.length > 0){
+		if (results.length == 1){
 			
-			double filterLng = results[0].geometry.location.lng;
-			double filterLat = results[0].geometry.location.lat;
+			filter.setLng((float) results[0].geometry.location.lng);
+			filter.setLat((float) results[0].geometry.location.lat);
 			
-			if(categoryIds[0] ==  -1) categoryIds = null;
 			
+			//If parameter is not filtered, set to null
+			if(filter.categoryIds[0] ==  -1) filter.categoryIds = null;
+			if(filter.getStringEndTime().equals(FilterDTO.ZERO_TIME)) filter.endTime = null;
+			if(filter.getStringStartTime().equals(FilterDTO.ZERO_TIME)) filter.startTime = null;
+
+			
+			
+			int sqlArguementCount = this.getSqlArguementCount(filter); 
+	
 			//Get the filtered jobs
-			List<Job> filteredJobs = repository.getFilteredJobs(radius, filterLat,
-					filterLng, categoryIds);
+			List<Job> filteredJobs = repository.getFilteredJobs(filter, sqlArguementCount);
 		
 			//For each filtered job, calculate the distance between the user's specified filter lat/lng 
 			for(Job job : filteredJobs){
-				job.setDistanceFromFilterLocation(GoogleClient.getDistance(filterLat, filterLng, job.getLat(), job.getLng()));
+				job.setDistanceFromFilterLocation(GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()));
+				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+			
 			}
+			
+			
+
 
 			//Sort the filtered jobs by distance from user's specified lat/lng in ascending order.
 //			Collections.sort(filteredJobs, 
 //	                (job1, job2) -> job1.getDistanceFromFilterLocation().compareTo(job2.getDistanceFromFilterLocation()));
 			return  filteredJobs;
 					
-		}else return null;
+		}else {
+			//the address is ambiguous
+			return null;
+		}
 	}
+
+
+	private int getSqlArguementCount(FilterDTO filter) {
+		
+		//There is at least four arguements for the distance filter
+		int count = 4;
+		
+		
+		//Category filter
+		if(filter.categoryIds != null){
+			count += filter.getCategoryIds().length;
+		}		
+		
+		//Start time filter
+		if(filter.startTime != null){
+			count += 1;
+		}
+		
+		//End time filter
+		if(filter.endTime != null){
+			count += 1;
+		}
+		
+		if(filter.getStartDate() != null){
+			count += 1;
+		}
+		
+		if(filter.getEndDate() != null){
+			count += 1;
+		}
+		
+		
+		return count;
+	}
+
 
 }

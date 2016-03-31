@@ -58,7 +58,6 @@ public class CategoryRepository {
 
 	public List<Category> getCategoriesByJobId(int jobId) {
 
-		// Given a job ID, get all category objects
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
 				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
@@ -67,7 +66,6 @@ public class CategoryRepository {
 	
 	public Category getCategoryByJobId(int jobId) {
 
-		// Given a job ID, get all category objects
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
 				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
@@ -83,7 +81,6 @@ public class CategoryRepository {
 
 	public List<Category> getCategoriesByUserId(int userId) {
 
-		// Given a user ID, get all category objects
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN user_category"
 				+ " ON category.CategoryID = user_category.CategoryID" + " AND user_category.UserID = ?";
 

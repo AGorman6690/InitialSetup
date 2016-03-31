@@ -2,6 +2,7 @@ package com.jobsearch.model;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
+import com.google.maps.model.AddressComponent;
 import com.google.maps.model.GeocodingResult;
 
 public class GoogleClient {
@@ -24,7 +25,7 @@ public class GoogleClient {
 	
 	//Found here: https://rosettacode.org/wiki/Haversine_formula#Java
     public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
-    	final double R = 6372.8; // In kilometers
+    	final double R = 3959; //6372.8 (kilometers), 3595 (miles)
     	double dLat = Math.toRadians(lat2 - lat1);
         double dLon = Math.toRadians(lon2 - lon1);
         lat1 = Math.toRadians(lat1);
@@ -34,5 +35,38 @@ public class GoogleClient {
         double c = 2 * Math.asin(Math.sqrt(a));
         return R * c;
     }
+
+	public static String getAddressComponent(AddressComponent[] addressComponents, String name) {
+		
+		//************************************************
+		//This not finished.
+		//The thought was to export to the database the address components returned from Google,
+		//as opposed to the user's input.
+		//This would do away with typos and make addresses, cities and states uniform.
+		//Address this later.
+		//************************************************
+				
+		//Address components (i.e. zip code, city, state, ect.) are not always returned in the same order.
+		//Therefore the entire AddressComponet array must be searched for a particular address component.
+	
+		for (AddressComponent cmp : addressComponents){
+			
+			//If the component returned more than one type, then
+			//the address is ambiguous (i.e. apparently Google maps cannot tell
+			//whether the address component is a city or state).
+			//Do not add this job.
+			if(cmp.types.length == 1){
+				if(cmp.types[0].name() == name){
+					return cmp.shortName;
+				}
+			}else{
+				//address component is ambiguous
+				return null;
+			}
+			
+		}
+		
+		return null;
+	}
 }
 

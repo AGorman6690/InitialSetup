@@ -10,6 +10,12 @@
 <!-- 		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" /> -->
 <link rel="stylesheet" type="text/css" href="./static/css/global.css" />
 
+<!-- Time picker -->
+<link rel="stylesheet" type="text/css" href="./static/External/jquery.timepicker.css" />
+<script src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
+
+<!-- Checkbox picker -->
+<script src="<c:url value="/static/External/bootstrap-checkbox.min.js" />"></script>
 
 </head>
 
@@ -34,7 +40,7 @@
 						
 							<div class="job-location-container input-group">
 								<span class="job-location-label input-group-addon"
-									id="sizing-addon2">Number of miles</span> <input value="987987" id="radius"
+									id="sizing-addon2">Number of miles</span> <input id="radius"
 									type="text" class="form-control" aria-describedby="sizing-addon2">
 							</div>
 	
@@ -61,7 +67,7 @@
 								</div>
 								<div class="job-location-container input-group">
 									<span class="job-location-label input-group-addon"
-										id="sizing-addon2">Zip Code</span> <input value="55119" id="fromZipCode"
+										id="sizing-addon2">Zip Code</span> <input id="fromZipCode"
 										type="text" class="form-control"
 										aria-describedby="sizing-addon2">
 								</div>
@@ -81,23 +87,27 @@
 					</li>
 					
 					<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning"
-							 data-toggle="collapse" data-target="#collapseDate">Date (currently not working)</a>										
+							 data-toggle="collapse" data-target="#collapseDate">Date</a>										
 						<div class="collapse" id="collapseDate">
-						
-
-										
+			
 							<div class="job-location-container input-group">
 								<span class="job-location-label input-group-addon">Start Date</span>		
-								<div class="input-group date">
-								  <input id='filterStartDate' type="text" class="form-control"><span class="input-group-addon">
-								  <i class="glyphicon glyphicon-th"></i></span>
-								</div>					
+										<input style="float:left" id="startDateBeforeAfter" type="checkbox" checked
+										 data-off-class="btn-success" data-on-class="btn-success">								
+										<div class="input-group date" style="width: 250px">
+									  		<input id='filterStartDate' type="text" class="form-control"><span class="input-group-addon">
+									  		<i class="glyphicon glyphicon-th"></i></span>
+								  		</div>				
 							</div>		
 							<div class="job-location-container input-group">
 								<span class="job-location-label input-group-addon">End Date</span>
-									<div class="input-group date">
-								  		<input id='filterEndDate' type="text" class="form-control"><span class="input-group-addon">
-								  		<i class="glyphicon glyphicon-th"></i></span>
+									<div >
+										<input style="float:left" id="endDateBeforeAfter" type="checkbox" checked
+										 data-off-class="btn-success" data-on-class="btn-success">								
+										<div class="input-group date" style="width: 250px">
+									  		<input id='filterEndDate' type="text" class="form-control"><span class="input-group-addon">
+									  		<i class="glyphicon glyphicon-th"></i></span>
+								  		</div>
 									</div>
 							</div>	
 							<div class="job-location-container input-group">
@@ -106,7 +116,30 @@
 									type="text" class="form-control" aria-describedby="sizing-addon2">
 							</div>																			
 						</div>
-					</li>		
+					</li>	
+					
+						<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning"
+							 data-toggle="collapse" data-target="#collapseTime">Time</a>																			
+						<div class="collapse" id="collapseTime">
+							<div class="job-location-container input-group">
+								<span class="job-location-label input-group-addon">Start Time</span>
+									<input style="float:left" id="startTimeBeforeAfter" type="checkbox" checked
+									 data-off-class="btn-success" data-on-class="btn-success">
+									 
+										<input style="width:100px; " id="filterStartTime" type="text" class="form-control time ui-timepicker-input"
+										 autocomplete="off">		
+									
+							</div>	
+							
+							<div class="job-location-container input-group">
+								<span class="job-location-label input-group-addon">End Time</span>
+									<input style="float:left" id="endTimeBeforeAfter" type="checkbox" checked
+									 data-off-class="btn-success" data-on-class="btn-success">
+									<input style="width:100px; " id="filterEndTime" type="text" 
+									class="form-control time ui-timepicker-input" autocomplete="off">											
+							</div>																			
+						</div>
+					</li>				
 					
 				</ul>
 			
@@ -125,19 +158,89 @@
 
 
 <script>
-
 	$(document).ready(function() {
-		$('.input-group.date').datepicker({
+	$('.input-group.date').datepicker({
+		toggleActive: true});
+
+		$('#filterStartTime').timepicker({
+			'scrollDefault': '7:00am'});
+		
+		$('#filterEndTime').timepicker({'scrollDefault': '5:00pm'});
+	
+		$('#startTimeBeforeAfter').checkboxpicker({
+			  html: true,
+			  offLabel: 'Before',
+			  onLabel: 'After'
+			});
+	
+		$('#endTimeBeforeAfter').checkboxpicker({
+			  html: true,
+			  offLabel: 'Before',
+			  onLabel: 'After'
+			});
+		
+		$('#startDateBeforeAfter').checkboxpicker({
+			  html: true,
+			  offLabel: 'Before',
+			  onLabel: 'After'
+			});	
+		
+		$('#endDateBeforeAfter').checkboxpicker({
+			  html: true,
+			  offLabel: 'Before',
+			  onLabel: 'After'
+			});	
+		
+		$('#startDateBeforeAfter').change(function () {
+		    if (beforeStartDate == 0) {
+		    	beforeStartDate = 1;
+		    } else {
+		    	beforeStartDate = 0;
+		    }
+
 		});
-	} );
+		
+		$('#endTimeBeforeAfter').change(function () {
+		    if (beforeEndTime == 0) {
+		    	beforeEndTime = 1;
+		    } else {
+		    	beforeEndTime = 0;
+		    }
+
+		});
+		
+		$('#startTimeBeforeAfter').change(function () {
+		    if (beforeStartTime == 0) {
+		    	beforeStartTime = 1;
+		    } else {
+		    	beforeStartTime = 0;
+		    }
+
+		});
+		
+		$('#endDateBeforeAfter').change(function () {
+		    if (beforeEndDate == 0) {
+		    	beforeEndDate = 1;
+		    } else {
+		    	beforeEndDate = 0;
+		    }
+
+		});		
+	})
+	
+
 
 	var pageContext = "findJob";
-
 	getCategoriesBySuperCat('0', function(response, categoryId) {
 		
 		appendCategories(categoryId, "F", response);
 	});
-
+	
+	
+	var beforeStartTime = 0;
+	var beforeEndTime = 0;
+	var beforeStartDate = 0;
+	var beforeEndDate = 0;
 	function filterJobs() {
 		
 		var filter = {};
@@ -146,49 +249,53 @@
 		filter.fromAddress = $.trim($("#fromStreetAddress").val() + " "
 				+ $("#fromCity").val() + " " + $("#fromState").val() + " "
 				+ $("#fromZipCode").val());
-
 		filter.categories = getCategoryIds("selectedCategories");
-// 		filter.startDate = ""// $("#filterStartDate").val();
-// 		filter.endDate = ""//$("#filterEndDate").val();
+		filter.stringStartDate = $("#filterStartDate").val();
+		filter.stringEndDate = $("#filterEndDate").val();
+		filter.stringStartTime = formatTime($("#filterStartTime").val());
+		filter.stringEndTime = formatTime($("#filterEndTime").val());
+		filter.beforeStartTime = beforeStartTime;
+		filter.beforeEndTime = beforeEndTime;
+		filter.beforeStartDate = beforeStartDate;
+		filter.beforeEndDate = beforeEndDate;
 		
+// 				alert(JSON.stringify(filter))
 		if (filter.radius != "" && filter.fromAddress != "") {
-
 			getFilteredJobs(filter, function(filter) {
-
+				
 				var myLatLng = {
-					lat : filter.distanceFromLat,
-					lng : filter.distanceFromLng
-				};
-				var zoom;
-
-				if (filter.radius < 5)
-					zoom = 12
-				else if (filter.radius < 25)
-					zoom = 11
-				else if (filter.radius < 50)
-					zoom = 10
-				else if (filter.radius < 100)
-					zoom = 8
-				else if (filter.radius < 500)
-					zoom = 6
-				else
-					zoom = 5;
-
-				var map = new google.maps.Map(document.getElementById('map'), {
-					zoom : zoom,
-					center : myLatLng
-				});
-
-				for (var i = 0; i < filter.jobs.length; i++) {
-					myLatLng = {
-						lat : filter.jobs[i].lat,
-						lng : filter.jobs[i].lng
+						lat : filter.lat,
+						lng : filter.lng
 					};
-					var marker = new google.maps.Marker({
-						position : myLatLng,
-						map : map,
+
+					var zoom;
+					if (filter.radius < 5)
+						zoom = 12
+					else if (filter.radius < 25)
+						zoom = 11
+					else if (filter.radius < 50)
+						zoom = 10
+					else if (filter.radius < 100)
+						zoom = 8
+					else if (filter.radius < 500)
+						zoom = 6
+					else
+						zoom = 5;
+					
+					var map = new google.maps.Map(document.getElementById('map'), {
+						zoom : zoom,
+						center : myLatLng
 					});
-				}
+					for (var i = 0; i < filter.jobs.length; i++) {
+						myLatLng = {
+							lat : filter.jobs[i].lat,
+							lng : filter.jobs[i].lng
+						};
+						var marker = new google.maps.Marker({
+							position : myLatLng,
+							map : map,
+						});
+					}
 				
 				appendFilteredJobsTable(filter.jobs, $("#userId").val())
 				
@@ -197,20 +304,16 @@
 	
 	}
 	
-
 	function initMap() {
-
 		//Eventually initialize it to a user defualt
 		var myLatLng = {
 			lat : 44.954445,
 			lng : -93.091301
 		};
-
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom : 8,
 			center : myLatLng
 		});
-
 	}
 </script>
 

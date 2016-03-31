@@ -6,8 +6,16 @@
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 <link rel="stylesheet" type="text/css"
 	href="./static/css/categories.css" />
-	<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
+
 <link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
+
+
+<!-- Time picker -->
+<link rel="stylesheet" type="text/css" href="./static/External/jquery.timepicker.css" />
+<script src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
+<%-- <script src="<c:url value="/static/External/GruntFile.js" />"></script> --%>
+
+
 </head>
 
 
@@ -81,6 +89,28 @@
 <!-- 					NOTE: Found the date rage picker here: http://www.daterangepicker.com/ -->
 <!-- 					***************************************************************** -->
 					<div class="container">
+					
+						<div class="form-group row">
+							<label for="startTime" class="col-sm-2 form-control-label">Start
+								Time</label>
+							<div class="col-sm-10">
+								<input id="startTime" type="text" class="post-job-input form-control time ui-timepicker-input"
+								 autocomplete="off">
+							</div>
+						</div>
+						
+						
+						
+						
+						<div class="form-group row">
+							<label for="endTime" class="col-sm-2 form-control-label">Estimated End
+								Time</label>
+							<div class="col-sm-10">
+								<input id="endTime" type="text" class="post-job-input form-control time ui-timepicker-input"
+								 autocomplete="off">
+							</div>
+						</div>
+													
 						<div class="form-group row">
 							<label class="post-job-label col-sm-2 form-control-label" for="jobDescription">Job Start and End Dates</label>
 							<div class="col-sm-10">
@@ -159,6 +189,12 @@
 </body>
 
 <script>
+
+$(document).ready(function(){
+	$('#startTime').timepicker({'scrollDefault': '7:00am'});
+	$('#endTime').timepicker({'scrollDefault': '5:00pm'});
+})
+
 	var pageContext = "postJob";
 	getCategoriesBySuperCat('0', function(response, categoryId) {
 		appendCategories(categoryId, "T", response, function(){});

@@ -1,8 +1,11 @@
 package com.jobsearch.job.service;
 
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
+
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
@@ -25,13 +28,62 @@ public class Job {
 	private float lng;
 	private Date startDate;
 	private Date endDate;
+	private Time startTime;
+	private Time endTime;
+	private String stringStartTime;
+	private String stringEndTime;
 	private Double distanceFromFilterLocation;
 	private List<Integer> categoryIds;
+	private List<Category> categories;
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	
 	
+	public List<Category> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<Category> categories) {
+		this.categories = categories;
+	}
+
+	public Time getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Time startTime) {
+		this.startTime = startTime;
+	}
+
+	public Time getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Time endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getStringStartTime() {
+		return stringStartTime;
+	}
+
+	public void setStringStartTime(String stringStartTime) {
+		this.stringStartTime = stringStartTime;
+	}
+
+	public String getStringEndTime() {
+		return stringEndTime;
+	}
+
+	public void setStringEndTime(String stringEndTime) {
+		this.stringEndTime = stringEndTime;
+	}
+
+	public void setDistanceFromFilterLocation(Double distanceFromFilterLocation) {
+		this.distanceFromFilterLocation = distanceFromFilterLocation;
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}

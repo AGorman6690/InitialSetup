@@ -31,7 +31,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.FilterJobsDTO;
+import com.jobsearch.job.service.FilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -88,23 +88,24 @@ public class JobController {
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
 	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress, 
-			@RequestParam(value="category") int[] categoryIds) {
+			@RequestParam(value="categoryId") int[] categoryIds, @RequestParam String startTime,
+			@RequestParam String endTime, @RequestParam boolean beforeStartTime, 
+			@RequestParam boolean beforeEndTime, @RequestParam String startDate,
+			@RequestParam String endDate, @RequestParam boolean beforeStartDate,
+			@RequestParam boolean beforeEndDate) {
+
 
 		
-		FilterJobsDTO filteredJobs = new FilterJobsDTO();
-		filteredJobs.setJobs(jobService.getFilteredJobs(radius, fromAddress, categoryIds)); //, startDate, endDate));
+		FilterDTO filter = new FilterDTO(radius, fromAddress, categoryIds, startTime, endTime,
+				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate);
+
+		filter.setJobs(jobService.getFilteredJobs(filter)); //, startDate, endDate));
 		
 		//Set the filter criteria specified by user
-		GoogleClient maps = new GoogleClient();
-		filteredJobs.setDistanceFromLat(maps.getLatAndLng(fromAddress));
-		filteredJobs.setDistanceFromLng(maps.getLatAndLng(fromAddress));
-		filteredJobs.setRadius(radius);
-		
-		filteredJobs.setFromAddress(fromAddress);
-		filteredJobs.setCategoryIds(categoryIds);
+
 		
 
-		return JSON.stringify(filteredJobs);
+		return JSON.stringify(filter);
 
 	}
 	

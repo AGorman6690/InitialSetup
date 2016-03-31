@@ -282,8 +282,9 @@ function appendFilteredJobsTable(jobs, userId){
 		r[++j] = '<th>Distance</th>';
 		r[++j] = '<th>Categories</th>';
 		r[++j] = '<th>Start Date</th>';
+		r[++j] = '<th>Start Time</th>';
 		r[++j] = '<th>End Date</th>';
-//		r[++j] = '<th> </th>';
+		r[++j] = '<th>End Time</th>';
 		r[++j] = '</tr>';
 		r[++j] = '</thead>';
 //		r[++j] = '<tfoot>';
@@ -300,8 +301,10 @@ function appendFilteredJobsTable(jobs, userId){
 		r[++j] = '<tbody>';
 
 		for (var i = 0; i < jobs.length; i++) {
+			
 			var job = jobs[i];
 			var id = job.id;
+//			alert(JSON.stringify(job))
 
 			r[++j] = '<tr id="' + id + '">';
 			r[++j] = '<td>' + job.jobName + '</td>';
@@ -309,22 +312,22 @@ function appendFilteredJobsTable(jobs, userId){
 			r[++j] = '<td>' + job.state + '</td>';
 			r[++j] = '<td>' + Math.round(job.distanceFromFilterLocation * 10) / 10 + '</td>';
 
-			var categoryNames;
-//			for (var j = 0; j < job.categoryIds.length; j++){
-//				if ( j = job.categoryIds.length - 1){
-//					caregoryNames += job.categoryIds[j];
-//				}else{
-//					caregoryNames += job.categoryIds[j] + ", ";
-//				}
-//			}
-			
-			r[++j] = '<td>' + categoryNames + '</td>';		
+			var categoryNames = "";
+			for (var k = 0; k < job.categories.length; k++){
+				categoryNames += job.categories[k].name;
+				if ( k < job.categories.length - 1){
+					categoryNames +=  ", ";
+				}
+			}
+
+			r[++j] = '<td>' + categoryNames + '</td>';
 			r[++j] = '<td>' + moment(job.startDate).format("MM/DD/YYYY") + '</td>';
-			r[++j] = '<td>' + moment(job.startDate).format("MM/DD/YYYY") + '</td>';
+			r[++j] = '<td>' + job.startTime + '</td>';
+			r[++j] = '<td>' + moment(job.endDate).format("MM/DD/YYYY") + '</td>';
+			r[++j] = '<td>' + job.endTime + '</td>';
 			r[++j] = '</tr>';
 		}
 
-		
 		r[++j] = '</tbody>';
 		r[++j] = '</table>';
 		$("#filteredJobs").append(r.join(''));
