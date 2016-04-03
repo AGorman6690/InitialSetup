@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.jobsearch.category.repository.CategoryRepository;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.user.repository.UserRepository;
+import com.jobsearch.user.service.UserServiceImpl;
 
 @Service
 public class CategoryServiceImpl {
@@ -17,6 +18,9 @@ public class CategoryServiceImpl {
 
 	@Autowired
 	JobServiceImpl jobService;
+	
+	@Autowired
+	UserServiceImpl userService;
 
 	@Autowired
 	UserRepository userRepository;
@@ -34,7 +38,6 @@ public class CategoryServiceImpl {
 
 	public void removeCategoryFromUser(int userId, int categoryId) {
 		repository.removeCategoryFromUser(userId, categoryId);
-
 	}
 
 	public List<Category> getCategoriesByJobId(int jobId) {
@@ -60,4 +63,10 @@ public class CategoryServiceImpl {
 		
 		return categories;
 	}
+
+	public Category getCategory(int categoryId) {
+		
+		return repository.getCategory(categoryId);
+	}
+
 }

@@ -74,7 +74,6 @@ function submitJobs(jobName, userId, categoryId, callback) {
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
 
-	alert(JSON.stringify(jobs))
 	$.ajax({
 		type : "POST",
 		url : "http://localhost:8080/JobSearch/jobs/post",
@@ -108,7 +107,6 @@ function addJobToCart() {
 	job.stringEndTime = formatTime($("#endTime").val());
 	job.categoryIds = getCategoryIds("selectedCategories");
 	
-	alert(JSON.stringify(job))
 	jobs.push(job);
 
 	$("#pendingJobSubmissions").append(
@@ -279,7 +277,7 @@ function getActiveJobsByUser(userId, callback) {
 function getCompletedJobsByUser(userId, callback) {
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/jobs/completed/user?userId='
+		url : 'http://localhost:8080/JobSearch/jobs/completed/employer?userId='
 				+ userId,
 		dataType : 'json',
 		success : _success,

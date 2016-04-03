@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;
@@ -34,6 +36,7 @@ public class UserRepository {
 		return JobSearchUserProfileRowMapper(sql, new Object[] { userId }).get(0);
 
 	}
+
 
 	public JobSearchUser validateUser(int userId) {
 
@@ -191,6 +194,8 @@ public class UserRepository {
 		});
 		return (List<RateCriterion>) list;
 	}
+	
+	
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
@@ -289,17 +294,12 @@ public class UserRepository {
 		return this.ProfilesRowMapper(sql);
 	}
 
-	public void updateRating(RatingDTO ratingDto) {
+	public void updateRating(RateCriterion rc) {
 		String sql = "UPDATE rating SET Value = ? WHERE RateCriterionId = ? AND UserId = ? AND JobId = ?";
 
-		jdbcTemplate.update(sql, new Object[] { ratingDto.getValue(), ratingDto.getRateCriterionId(),
-				ratingDto.getEmployeeId(), ratingDto.getJobId() });
+		jdbcTemplate.update(sql, new Object[] { rc.getValue(), rc.getRateCriterionId(),
+				rc.getEmployeeId(), rc.getJobId() });
 
-	}
-
-	public double getRating(int userId) {
-
-		return 0;
 	}
 
 	public List<RateCriterion> getRatingCriteria() {
@@ -307,27 +307,83 @@ public class UserRepository {
 		return this.RateCriterionRowMapper(sql, new Object[] {});
 	}
 
-	public List<RateCriterion> getRatingCriteriaValue(int userId, List<RateCriterion> ratingCriteria) {
 
-		for (RateCriterion rateCriterion : ratingCriteria) {
-			String sql = "SELECT COUNT(*) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
-			int count = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterion.getRateCriterionId() },
-					int.class);
-
-			if (count > 0) {
-				sql = "SELECT SUM(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ?";
-				double sum = jdbcTemplate.queryForObject(sql,
-						new Object[] { userId, rateCriterion.getRateCriterionId() }, double.class);
-
-				// round to 1 decimal place
-				rateCriterion.setValue(Math.round((sum / count) * 10.0) / 10.0);
-			} else {
-				rateCriterion.setValue(0);
-			}
-
-		}
-
-		return ratingCriteria;
+	public void deleteEndorsements(int employeeId, int jobId) {
+		String sql = "DELETE FROM endorsement WHERE UserId = ? AND JobId = ?";
+		jdbcTemplate.update(sql, new Object[] { employeeId, jobId });
+		
 	}
+
+	public void addEndorsement(Endorsement endorsement) {
+		String sql = "INSERT INTO endorsement (JobId, UserId, CategoryId)"
+				+ " VALUES (?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[] {endorsement.getJobId(),
+						endorsement.getUserId(), endorsement.getCategoryId() });
+		
+	}
+
+
+	public void addComment(RatingDTO ratingDTO) {
+		String sql = "INSERT INTO comment (JobId, UserId,"
+					+ " Comment) VALUES (?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[] {ratingDTO.getJobId(), 
+				ratingDTO.getEmployeeId(), ratingDTO.getComment() });
+		
+	}
+
+	public void deleteComment(int jobId, int employeeId) {
+		String sql = "DELETE FROM comment WHERE JobId = ? AND UserId = ?";
+		
+		jdbcTemplate.update(sql, new Object[] { jobId, employeeId });
+		
+	}
+
+	public String getComment(int jobId, int userId) {
+		String sql = "SELECT Comment FROM comment WHERE JobId = ? AND UserId = ?";
+		
+		String comment = "";
+		try {
+			comment = jdbcTemplate.queryForObject(sql, new Object[]{ jobId, userId }, String.class);
+
+		} catch (Exception e) {
+			// TODO: handle exception
+		}		
+				
+		return comment;
+		
+	}
+
+	public List<Double> getRating(int userId) {
+		String sql = "SELECT Value FROM rating WHERE UserId = ?";
+		return jdbcTemplate.queryForList(sql, new Object[]{ userId }, Double.class);
+	}
+
+	public List<Double> getRatingForJob(int userId, int jobId) {
+		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ?";
+		return jdbcTemplate.queryForList(sql, new Object[]{ userId, jobId }, Double.class);
+	}
+
+	public List<Integer> getEndorsementCategoryIds(int userId) {
+		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? GROUP BY CategoryId";
+		return jdbcTemplate.queryForList(sql, new Object[] { userId }, Integer.class);
+	}
+
+	public int getEndorsementCountByCategory(int userId, int categoryId) {
+		String sql = "SELECT COUNT(*) FROM endorsement WHERE UserId = ? AND CategoryId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId }, Integer.class);
+	}
+
+	public List<Integer> getEndorsementCategoryIdsByJob(int userId, int jobId) {
+		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? AND JobId = ? GROUP BY CategoryId";
+		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Integer.class);
+	}
+
+	public int getEndorsementCountByCategoryAndJob(int userId, int categoryId, int jobId) {
+		String sql = "SELECT COUNT(*) FROM endorsement WHERE UserId = ? AND CategoryId = ? AND JobId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId, jobId }, Integer.class);
+	}
+
 
 }

@@ -30,6 +30,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.CompletedJobDTO;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.FilterDTO;
 import com.jobsearch.job.service.Job;
@@ -52,20 +53,6 @@ public class JobController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
-//<<<<<<< HEAD
-//	@RequestMapping(value = "/job/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@ResponseBody
-////	public ModelAndView addJob(@RequestBody CreateJobDTO jobDto, ModelAndView model) {
-//	public ModelAndView addJob(@ModelAttribute("job") CreateJobDTO jobDto, ModelAndView model) {
-//		
-//		//Add the job to the job table
-//		@SuppressWarnings("unused")
-//		List<Job> jobsCreatedByUser = jobService.addJob(jobDto);
-//	 
-//		model.setViewName("EmployerProfile");
-//		//return JSON.stringify(jobsCreatedByUser);
-//		return model;
-//=======
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
@@ -79,11 +66,6 @@ public class JobController {
 
 	}
 	
-
-//	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress, 
-//									@RequestParam(value="category") int[] categoryIds,
-//									@RequestParam DateTime startDate,
-//									@RequestParam DateTime endDate ) {
 	
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
@@ -125,8 +107,6 @@ public class JobController {
 	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
-		
-		
 
 		Job selectedJob = jobService.getJob(jobId);
 
@@ -167,12 +147,30 @@ public class JobController {
 		return JSON.stringify(jobService.getActiveJobsByUser(userId));
 	}
 
-	@RequestMapping(value = "/jobs/completed/user", method = RequestMethod.GET)
+	@RequestMapping(value = "/jobs/completed/employer", method = RequestMethod.GET)
 	@ResponseBody
-	public String getCompletedJobsByUser(@RequestParam int userId) {
+	public String getCompletedJobsByEmployer(@RequestParam int userId) {
 		// For each active job, set its category and applications
 
-		return JSON.stringify(jobService.getCompletedJobsByUser(userId));
+		return JSON.stringify(jobService.getCompletedJobsByEmployee(userId));
+	}
+	
+	@RequestMapping(value = "/jobs/completed/employee", method = RequestMethod.GET)
+	@ResponseBody
+	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam int jobId, ModelAndView model) {
+		
+		JobSearchUser employee = userService.getUser(userId);
+		employee.setEndorsements(userService.getUsersEndorsements(userId));
+		
+		Job consideredForJob = jobService.getJob(jobId);
+				
+		List<CompletedJobDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);		
+		model.addObject("employee", employee);
+		model.addObject("completedJobDtos", completedJobDtos);
+		model.addObject("consideredForJob", consideredForJob);
+		
+		model.setViewName("EmployeeWorkHistory");
+		return model;
 	}
 
 	@RequestMapping(value = "/getJobsByCategory", method = RequestMethod.GET)

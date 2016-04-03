@@ -7,13 +7,14 @@
 <link rel="stylesheet" type="text/css"
 	href="./static/css/categories.css" />
 
-<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
-
-
 <!-- Time picker -->
 <link rel="stylesheet" type="text/css" href="./static/External/jquery.timepicker.css" />
 <script src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
 <%-- <script src="<c:url value="/static/External/GruntFile.js" />"></script> --%>
+
+
+
+
 
 
 </head>
@@ -185,7 +186,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 </body>
 
 <script>

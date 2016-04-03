@@ -26,7 +26,7 @@
 			<div id="activeJobs" class="color-panel panel-body">
 				<c:choose>
 					<c:when test="${activeJobs.size() > 0 }">
-						<table class="table table-hover">
+						<table id="activeJobsTable" class="table table-hover">
 							<thead>
 								<tr>
 									<th>Job Name</th>
@@ -38,8 +38,7 @@
 							<tbody>
 								<c:forEach items="${activeJobs }" var="activeJob">
 									<tr id="${activeJob.getId()}">
-										<td><a href="./job/${activeJob.getId()}">${activeJob.getJobName()}
-										</a></td>
+										<td>${activeJob.getJobName()}</td>
 										<td>(not built)</td>
 										<td>${activeJob.getApplications().size()}</td>
 										<td>${activeJob.getEmployees().size()}</td>
@@ -88,6 +87,17 @@
 
 	</div>
 </body>
+
+<script>
+
+$(document).ready(function(){
+	$("#activeJobsTable tr td").click(function(){
+		window.location = './job/' + $(this).parent().attr('id');
+	})	
+})
+
+
+</script>
 
 <%@ include file="./includes/Footer.jsp"%>
 

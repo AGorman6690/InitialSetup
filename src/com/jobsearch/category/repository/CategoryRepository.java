@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.model.Endorsement;
 
 @Repository
 public class CategoryRepository {
@@ -95,5 +96,11 @@ public class CategoryRepository {
 
 		return this.CategoryRowMapper(sql, new Object[]{ superCat });
 	}
+
+	public Category getCategory(int categoryId) {
+		String sql = "SELECT * FROM category WHERE CategoryId = ?";
+		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
+	}
+
 
 }

@@ -3,6 +3,7 @@ package com.jobsearch.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.CompletedJobDTO;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.service.JobSearchUser;
@@ -87,7 +90,7 @@ public class UserController {
 		model.setViewName("FindEmployees");
 		return model;
 	}
-
+	
 	@RequestMapping(value = "/viewFindJobs", method = RequestMethod.GET)
 	public ModelAndView viewFindJobs(ModelAndView model) {
 		model.setViewName("FindJobs");
@@ -100,11 +103,6 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/viewRatings", method = RequestMethod.GET)
-	public ModelAndView viewRatings(ModelAndView model) {
-		model.setViewName("Ratings");
-		return model;
-	}
 
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
@@ -140,7 +138,7 @@ public class UserController {
 		}
 
 		List<Job> activeJobs = jobService.getActiveJobsByUser(user.getUserId());
-		List<Job> completedJobs = jobService.getCompletedJobsByUser(user.getUserId());
+		List<Job> completedJobs = jobService.getCompletedJobsByEmployer(user.getUserId());
 
 		model.addObject("user", user);
 
@@ -184,18 +182,18 @@ public class UserController {
 	}
 	// ***************************************************************************
 
-	@RequestMapping(value = "/getApplicants", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicants(@RequestParam int jobId) {
-
-		List<JobSearchUser> applicants = userService.getApplicants(jobId);
-
-		for (JobSearchUser applicant : applicants) {
-			applicant.setRatings(userService.getRatings(applicant.getUserId()));
-		}
-
-		return JSON.stringify(applicants);
-	}
+//	@RequestMapping(value = "/getApplicants", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getApplicants(@RequestParam int jobId) {
+//
+//		List<JobSearchUser> applicants = userService.getApplicants(jobId);
+//
+//		for (JobSearchUser applicant : applicants) {
+//			applicant.setRatings(userService.getRatings(applicant.getUserId()));
+//		}
+//
+//		return JSON.stringify(applicants);
+//	}
 
 	@RequestMapping(value = "/getOfferedApplicantsByJob", method = RequestMethod.GET)
 	@ResponseBody
@@ -213,15 +211,9 @@ public class UserController {
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO[] ratingDtos) {
+	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO){
 
-		userService.rateEmployee(ratingDtos);
+		userService.rateEmployee(ratingDTO);
 	}
 
-
-	@RequestMapping(value = "/user/{userId}/employment", method = RequestMethod.GET)
-	@ResponseBody
-	public String getEmploymentByUser(@PathVariable int userId) {
-		return JSON.stringify(jobService.getEmploymentByUser(userId));
-	}
 }

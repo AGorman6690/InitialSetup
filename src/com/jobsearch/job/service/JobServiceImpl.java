@@ -4,6 +4,7 @@ package com.jobsearch.job.service;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -117,7 +119,17 @@ public class JobServiceImpl {
 	}
 
 	public List<Job> getActiveJobsByUser(int userId) {
-		return repository.getActiveJobsByUser(userId);
+		
+		List<Job> activeJobs =  repository.getActiveJobsByUser(userId);
+		
+		for (Job job : activeJobs) {
+			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
+			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
+			job.setEmployees(userService.getEmployeesByJob(job.getId()));
+		}
+
+		return activeJobs;
+		
 	}
 
 	public int getJobCountByCategory(int categoryId) {
@@ -144,9 +156,29 @@ public class JobServiceImpl {
 
 		return count;
 	}
+	
+	public List<Job> getCompletedJobsByEmployer(int userId) {
+		return repository.getCompletedJobsByEmployer(userId);
+	}
 
-	public List<Job> getCompletedJobsByUser(int userId) {
-		return repository.getCompletedJobsByUser(userId);
+	public List<CompletedJobDTO> getCompletedJobsByEmployee(int userId) {
+		
+	
+		List<Job> completedJobs = repository.getCompletedJobsByEmployee(userId);
+		
+		List<CompletedJobDTO> completedJobDtos = new ArrayList<CompletedJobDTO>();
+		for(Job job : completedJobs){
+			CompletedJobDTO completedJobDto = new CompletedJobDTO();
+			completedJobDto.setJob(job);
+			completedJobDto.getJob().setCategories(categoryService.getCategoriesByJobId(job.getId()));
+			completedJobDto.setComment(userService.getComment(job.getId(), userId));
+			completedJobDto.setRating(userService.getRatingForJob(userId, job.getId()));;
+			completedJobDto.setEndorsements(userService.getUsersEndorsementsByJob(userId, job.getId()));
+			
+			completedJobDtos.add(completedJobDto);
+		}
+		
+		return completedJobDtos;
 	}
 
 
@@ -154,22 +186,37 @@ public class JobServiceImpl {
 		// TODO Auto-generated method stub
 		Job job = repository.getJob(jobId);
 
+		//Get job categories
+		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+		
 		// Get job applicants
 		job.setApplicants(userService.getApplicants(jobId));
 
-		// Set each applicant's rating
+		// Set each applicant's rating, application, and endorsements only for the job's categories
 		for(JobSearchUser applicant : job.getApplicants()){
-			applicant.setRatings(userService.getRatings(applicant.getUserId()));
+//			applicant.setRatings(userService.getRatings(applicant.getUserId()));
+			applicant.setRating(userService.getRating(applicant.getUserId()));
 			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
+			applicant.setEndorsements(userService.getUserEndorsementsByCategory(applicant.getUserId(), 
+											job.getCategories()));
 		}
 
 		// Get job employees
 		job.setEmployees(userService.getEmployeesByJob(jobId));
-
-		// Set each employee's rating
+		
+		// Set each employee's rating, application and endorsements		
 		for(JobSearchUser employee : job.getEmployees()){
-			employee.setRatings(userService.getRatings(employee.getUserId()));
+//			employee.setRatings(userService.getRatings(employee.getUserId()));
+			employee.setRating(userService.getRating(employee.getUserId()));
+			employee.setApplication(applicationService.getApplication(jobId, employee.getUserId()));
+			employee.setEndorsements(userService.getUserEndorsementsByCategory(employee.getUserId(), 
+										job.getCategories()));
 		}
+
+//		// Set each employee's rating
+//		for(JobSearchUser employee : job.getEmployees()){
+//			employee.setRatings(userService.getRatings(employee.getUserId()));
+//		}
 
 		return job;
 	}

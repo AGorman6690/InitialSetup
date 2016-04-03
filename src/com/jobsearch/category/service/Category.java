@@ -3,6 +3,7 @@ package com.jobsearch.category.service;
 import java.util.List;
 
 import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.user.service.JobSearchUser;
 
 public class Category {
@@ -14,7 +15,15 @@ public class Category {
 	private List<Category> subCategories;
 	private int subJobCount;
 	private int jobCount;
-	
+//	private List<Endorsement> endorsements;	
+
+//	public List<Endorsement> getEndorsements() {
+//		return endorsements;
+//	}
+//
+//	public void setEndorsements(List<Endorsement> endorsements) {
+//		this.endorsements = endorsements;
+//	}
 
 	public int getSubJobCount() {
 		return subJobCount;

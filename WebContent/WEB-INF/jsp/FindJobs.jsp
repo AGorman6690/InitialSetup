@@ -6,8 +6,6 @@
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 <script src="<c:url value="/static/javascript/Application.js" />"></script>
-<!-- 		<link rel="stylesheet" type="text/css" href="./static/css/ratings.css" /> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="./static/css/categories.css" /> -->
 <link rel="stylesheet" type="text/css" href="./static/css/global.css" />
 
 <!-- Time picker -->

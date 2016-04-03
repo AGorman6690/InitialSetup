@@ -11,25 +11,25 @@ $(document).ready(function(){
 
 })
 
-function getApplicants(jobId, callback){
-	//alert("getApplicants");
-	$.ajax({
-		type: "GET",
-		url: 'http://localhost:8080/JobSearch/getApplicants?jobId=' + jobId,
-			dataType: "json",
-	        success: _success,
-	        error: _error
-	    });
-
-		function _success(response){
-			//alert("success getApplicants");
-			callback(response);
-		}
-
-		function _error(response, errorThrown){
-			alert("error getApplicants");
-		}
-}
+//function getApplicants(jobId, callback){
+//	//alert("getApplicants");
+//	$.ajax({
+//		type: "GET",
+//		url: 'http://localhost:8080/JobSearch/getApplicants?jobId=' + jobId,
+//			dataType: "json",
+//	        success: _success,
+//	        error: _error
+//	    });
+//
+//		function _success(response){
+//			//alert("success getApplicants");
+//			callback(response);
+//		}
+//
+//		function _error(response, errorThrown){
+//			alert("error getApplicants");
+//		}
+//}
 
 function getOfferedApplicantsByJob(jobId, callback){
 	//alert("getOfferedApplicantsByJob");
@@ -76,10 +76,10 @@ function getEmployeesByJob(jobId, callback){
 
 function hireApplicant(userId, jobId, callback){
 	
-//		alert(userId)
-//		alert(jobId)
-	$.ajax({
+		alert(userId)
+		alert(jobId)
 		type: "GET",
+		$.ajax({
 		url: 'http://localhost:8080/JobSearch/job/' + jobId + '/hire/user/' + userId,
         dataType: 'json',
 		success: _success,
@@ -121,7 +121,7 @@ function getProfiles(callback){
 }
 
 //function rateEmployee(rateCriterionId, value, jobId, employeeId){
-function rateEmployee(ratings){
+function rateEmployee(reviewDTO){
 
 	
 	var headers = {};
@@ -141,7 +141,8 @@ function rateEmployee(ratings){
 			contentType : "application/json",
 			headers : headers,			
 //			dataType: "application/json",
-			data: JSON.stringify(ratings),
+			data: JSON.stringify(reviewDTO), // + 
+//					"&endorsements=" + JSON.stringify(endorsements),
 	        success: _success,
 	        error: _error
 	    });

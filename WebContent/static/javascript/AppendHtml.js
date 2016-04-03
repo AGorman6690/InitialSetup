@@ -286,18 +286,7 @@ function appendFilteredJobsTable(jobs, userId){
 		r[++j] = '<th>End Date</th>';
 		r[++j] = '<th>End Time</th>';
 		r[++j] = '</tr>';
-		r[++j] = '</thead>';
-//		r[++j] = '<tfoot>';
-//		r[++j] = '<tr>';
-//		r[++j] = '<th>Job Name</th>';
-//		r[++j] = '<th>City, State</th>';
-//		r[++j] = '<th>Distance</th>';
-//		r[++j] = '<th>Categories</th>';
-//		r[++j] = '<th>Start Date</th>';
-//		r[++j] = '<th>End Date</th>';
-//		r[++j] = '<th> </th>';
-//		r[++j] = '</tr>';
-//		r[++j] = '</tfoot>';		
+		r[++j] = '</thead>';		
 		r[++j] = '<tbody>';
 
 		for (var i = 0; i < jobs.length; i++) {

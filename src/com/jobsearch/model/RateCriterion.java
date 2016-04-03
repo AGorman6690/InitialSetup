@@ -3,15 +3,15 @@ package com.jobsearch.model;
 public class RateCriterion {
 	private int rateCriterionId;
 	private String name;
-	private int userId;
+	private int employeeId;
 	private int jobId;
 	private double value;
 	
-	public int getUserId() {
-		return userId;
+	public int getEmployeeId() {
+		return employeeId;
 	}
-	public void setUserId(int userId) {
-		this.userId = userId;
+	public void setEmployeeId(int userId) {
+		this.employeeId = userId;
 	}
 	public int getJobId() {
 		return jobId;

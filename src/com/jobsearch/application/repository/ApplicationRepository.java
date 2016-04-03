@@ -75,7 +75,7 @@ public class ApplicationRepository {
 	public List<Application> getApplicationsByJob(int jobId) {
 		
 		//Get all applications for job
-		String sql = "SELECT * FROM application WHERE JobId = ?";
+		String sql = "SELECT * FROM application WHERE JobId = ? AND IsAccepted = 0";
 		List<Application> applications = ApplicationRowMapper(sql, new Object[]{ jobId });
 		
 		//For each application, set the applicant

@@ -9,6 +9,7 @@
 
 </head>
 
+<input type="hidden" id="jobId" value="${job.id}" />
 <input type="hidden" id="userId" value="${user.userId}" />
 
 <div class="container">
@@ -73,15 +74,21 @@
 					<div id="applicants" class="panel-body">
 						<c:choose>
 							<c:when test="${job.getApplicants().size() > 0 }">
-								<table class="table table-condensed">
+								<table id="applicantsTable" class="table table-hover table-striped 
+										table-bordered" cellspacing="0" width="100%">
 									<thead>
 										<tr>
 		
 											<th>Applicant Name</th>
-											<c:forEach items="${job.getApplicants().get(0).getRatings() }"
-		 										var="rating"> 
-		 										<th>${rating.getName() }</th> 
-		 									</c:forEach> 
+											<th>Rating</th>
+											<c:forEach items="${job.getCategories() }"
+ 		 										var="category"> 
+ 		 										<th>${category.getName()} Endorsements</th>  
+ 		 									</c:forEach> 
+ 		 									<c:if test="${fn:length(job.getCategories()) > 1 }"> 		 									
+ 		 										<th>Total Endorsements</th>
+ 		 									</c:if>
+ 		 									<th> </th>
 										</tr>
 									</thead>
 									<tbody>
@@ -89,12 +96,18 @@
 											<c:choose>
 												<c:when test="${applicant.getApplication().isAccepted == 0 }">
 													<tr id="applicant_${applicant.getUserId() }">
-				
 														<td><a href="#">${applicant.getFirstName() }
 																${applicant.getLastName() } </a></td>
-														<c:forEach items="${applicant.getRatings()}" var="rating">
-															<td>${rating.getValue() }</td>
+																
+														<td><a href="#">${applicant.getRating() }</a></td>														
+														<c:set var="total" value = "${0 }" />
+														<c:forEach items="${applicant.getEndorsements()}" var="endorsement">
+															<td>${endorsement.getCount() }</td>
+															<c:set var="total" value="${total + endorsement.getCount() }" />
 														</c:forEach>
+			 		 									<c:if test="${fn:length(job.getCategories()) > 1 }"> 		 									
+			 		 										<td>${total}</td>
+			 		 									</c:if>
 														<td><button class="hire btn btn-info btn-sm margin-hori"
 																onclick="hireApplicant(${applicant.getUserId()},${job.getId() })">
 																Hire</button></td>
@@ -111,22 +124,25 @@
 								</div>
 							</c:otherwise>
 						</c:choose>
-					</div>
-				</div>
+					</div><!-- end applicants panel body -->
+				</div> <!-- end applicants panel -->
 		
 				<div style="width: 750px" class="panel panel-warning">
 					<div class="panel-heading">Employees</div>
 					<div id="employees" class="panel-body">
 						<c:choose>
 							<c:when test="${job.getEmployees().size() > 0 }">
-								<table class="table table-condensed">
+								<table id="employeesTable" class="table table-hover table-striped 
+										table-bordered" cellspacing="0" width="100%">
 									<thead>
-										<tr>
+										<tr>		
 											<th>Employee Name</th>
-											<c:forEach items="${job.getEmployees().get(0).getRatings() }"
-												var="rating">
-												<th>${rating.getName() }</th>
-											</c:forEach>
+											<th>Rating</th>
+											<c:forEach items="${job.getCategories() }"
+ 		 										var="category"> 
+ 		 										<th>${category.getName()} Endorsements</th>  
+ 		 									</c:forEach> 
+ 		 									<th>Total Endorsements</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -135,9 +151,14 @@
 		
 												<td><a href="#">${employee.getFirstName() }
 														${employee.getLastName() } </a></td>
-												<c:forEach items="${employee.getRatings()}" var="rating">
-													<td>${rating.getValue() }</td>
+														
+												<td><a href="#">${employee.getRating() }</a></td>														
+												<c:set var="total" value = "${0 }" />
+												<c:forEach items="${employee.getEndorsements()}" var="endorsement">
+													<td>${endorsement.getCount() }</td>
+													<c:set var="total" value="${total + endorsement.getCount() }" />
 												</c:forEach>
+												<td>${total }</td>
 											</tr>
 										</c:forEach>
 									</tbody>
@@ -149,18 +170,30 @@
 								</div>
 							</c:otherwise>
 						</c:choose>
-		
-					</div>
-				</div>
-			</div>
+					</div> <!-- end employes panel body -->
+				</div> <!-- end employees panel -->
+			</div> <!-- end container -->
 		</c:when>
 	</c:choose>
 </div>
 
 <script type="text/javascript">
-// 	var activeJob = ${job}; 
+
+	$(document).ready(function(){
+		$('#applicantsTable').DataTable();
+		$('#employeesTable').DataTable();
+		
+		$("#applicantsTable tr td").click(function(){
+			
+			elementId = $(this).parent().attr('id');
+			var idBegin = elementId.indexOf("_") + 1;
+			var userId =  elementId.substring(idBegin);
+			window.location = "../jobs/completed/employee/?userId=" + userId + '&jobId=' + $("#jobId").val();
+		})
+				
+	})
 	
-// 	appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob, "applicants", "employees"); 
+	
 
 </script>
 

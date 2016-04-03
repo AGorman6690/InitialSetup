@@ -13,11 +13,13 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.FilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -71,6 +73,7 @@ public class JobRepository {
 		}
 				
 	}
+
 
 	public void addJob(List<CreateJobDTO> jobDtos) {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
@@ -187,36 +190,21 @@ public class JobRepository {
 
 	public List<Job> getActiveJobsByUser(int userId) {
 
-		// String sql = "SELECT job.JobId, job.JobName, category.CategoryId,
-		// category.Name FROM job "
-		// + " INNER JOIN job_category ON job_category.JobId = job.JobId"
-		// + " INNER JOIN category ON category.CategoryId =
-		// job_category.CategoryId"
-		// + " AND job.UserId = ? AND IsActive = 1";
-
 		// Get active jobs
 		String sql = "SELECT * FROM job WHERE IsActive = 1 AND UserId = ?";
-		List<Job> activeJobs = this.JobRowMapper(sql, new Object[] { userId });
+		return this.JobRowMapper(sql, new Object[] { userId });
 
-		// For each active job, set its category and list of applications
-		for (Job job : activeJobs) {
-
-			// Get job's category
-			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
-
-			// Get the job's applicants
-			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
-
-			// Get the job's employees
-			job.setEmployees(userService.getEmployeesByJob(job.getId()));
-		}
-
-		return activeJobs;
 
 	}
-
-	public List<Job> getCompletedJobsByUser(int userId) {
+	
+	public List<Job> getCompletedJobsByEmployer(int userId) {
 		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
+		return this.JobRowMapper(sql, new Object[] { userId });
+	}
+
+	public List<Job> getCompletedJobsByEmployee(int userId) {
+		String sql = "SELECT * FROM job INNER JOIN employment ON job.JobId = employment.JobId"
+						+ " AND job.IsActive = 0 AND employment.UserId = ?";
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
@@ -399,6 +387,8 @@ public class JobRepository {
 		
 		return this.JobRowMapper(sql, args);
 	}
+
+
 
 
 }

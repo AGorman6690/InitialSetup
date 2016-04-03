@@ -6,6 +6,7 @@ import java.util.List;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 
@@ -25,10 +26,36 @@ public class JobSearchUser {
 	private ArrayList<Job> jobs;
 	private ArrayList<Job> activeJobs;
 	private ArrayList<Job> appliedToJobs;
-	private ArrayList<Job> employment;
+	private List<Job> completedJobs;
 	private List<RateCriterion> ratings;
+	private List<Endorsement> endorsements;
 	private Application application;
+	private double rating;
 	
+
+	public List<Job> getCompletedJobs() {
+		return completedJobs;
+	}
+
+	public void setCompletedJobs(List<Job> completedJobs) {
+		this.completedJobs = completedJobs;
+	}
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
+
+	public List<Endorsement> getEndorsements() {
+		return endorsements;
+	}
+
+	public void setEndorsements(List<Endorsement> endorsements) {
+		this.endorsements = endorsements;
+	}
 
 	public Application getApplication() {
 		return application;
@@ -48,14 +75,6 @@ public class JobSearchUser {
 
 	public void setJobs(ArrayList<Job> jobs) {
 		this.jobs = jobs;
-	}
-
-	public ArrayList<Job> getEmployment() {
-		return employment;
-	}
-
-	public void setEmployment(ArrayList<Job> employment) {
-		this.employment = employment;
 	}
 
 	public ArrayList<Job> getAppliedToJobs() {
