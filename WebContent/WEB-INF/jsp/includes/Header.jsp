@@ -16,7 +16,7 @@
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 <!-- <link href="./static/css/global.css" rel="stylesheet" /> -->
 <link href="http://localhost:8080/JobSearch/static/css/global.css" rel="stylesheet" />
-<script src="./static/External/underscore-min.js"></script>
+<script src="http://localhost:8080/JobSearch/static/External/underscore-min.js"></script>
 
 <!-- 	   Bootstrap -->
 <!-- 	   	********************************************************* -->

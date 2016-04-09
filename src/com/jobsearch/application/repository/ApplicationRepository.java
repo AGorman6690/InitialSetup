@@ -26,65 +26,29 @@ public class ApplicationRepository {
 			@Override
 			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {
 				Application e = new Application();
-				e.setApplicationId(rs.getInt(1));
-				e.setUserId(rs.getInt(2));
-				e.setJobId(rs.getInt(3));
-				e.setIsOffered(rs.getInt(4));
-				e.setBeenViewed(rs.getInt(5));
-				e.setIsAccepted(rs.getInt(6));
+				e.setApplicationId(rs.getInt("ApplicationId"));
+				e.setUserId(rs.getInt("UserId"));
+				e.setJobId(rs.getInt("JobId"));
+				e.setBeenViewed(rs.getInt("BeenViewed"));
+				e.setStatus(rs.getInt("Status"));
 				return e;
 			}
 		});
 	}
 	
-	
-	public void markApplicationViewed(int jobId, int userId) {
-		String sql = "UPDATE application" + " SET BeenViewed = 1"
-				+ " WHERE JobId = ? AND UserId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { jobId, userId });
-		
-	}
-
-
-	public void markApplicationAccepted(int jobId, int userId) {
-		String sql = "UPDATE application" + " SET IsAccepted = 1"
-				+ " WHERE JobId = ? AND UserId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { jobId, userId });
-		
-	}
-	
-
-	//FIX THIS!!!!!!!!!
-	//*****************************************************************************************
 	public List<Application> getApplicationsByEmployer(int userId) {		
-		String sql = "SELECT user.FirstName, job.JobName, application.IsOffered, application.BeenViewed,"
-				+ " application.IsAccepted, category.Name"
-				+ " FROM application"
-				+ " INNER JOIN job ON application.JobId = job.JobId"
-				+ " AND job.UserId = ? AND job.IsActive = 1"
-				+ " INNER JOIN user ON application.UserId = user.UserId"
-				+ " INNER JOIN job_category ON job.JobId = job_category.JobId"
-				+ " INNER JOIN category ON job_category.CategoryId = category.CategoryId";
+		String sql = "SELECT * FROM application WHERE UserId = ?";
 				
 		return this.ApplicationRowMapper(sql, new Object[]{ userId });
 	}
-	//*****************************************************************************************
 	
 	public List<Application> getApplicationsByJob(int jobId) {
 		
-		//Get all applications for job
-		String sql = "SELECT * FROM application WHERE JobId = ? AND IsAccepted = 0";
-		List<Application> applications = ApplicationRowMapper(sql, new Object[]{ jobId });
-		
-		//For each application, set the applicant
-		for(Application application : applications){
-			application.setApplicant(userService.getUser(application.getUserId()));
-			
-		}
-		
-		return applications;
+		//Get all applications for job.
+		//Less than 3 is anything but accepted
+		String sql = "SELECT * FROM application WHERE JobId = ? AND Status < 3";
+		return ApplicationRowMapper(sql, new Object[]{ jobId });
+
 	}
 
 
@@ -96,6 +60,20 @@ public class ApplicationRepository {
 		if(applications.size() > 0) return applications.get(0);
 		else return null;
 
+	}
+
+
+	public void updateStatus(int applicationId, int status) {
+		String sql = "UPDATE application SET Status = ? WHERE ApplicationId = ?";
+		jdbcTemplate.update(sql, new Object[]{ status, applicationId });
+		
+	}
+
+
+	public Application getApplication(int applicationId) {
+		String sql = "SELECT * FROM application WHERE ApplicationId = ?";
+		return this.ApplicationRowMapper(sql, new Object[]{ applicationId }).get(0);
+		
 	}
 	
 }

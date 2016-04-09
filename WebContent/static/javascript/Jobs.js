@@ -2,32 +2,11 @@ $(document).ready(function() {
 
 })
 
-function hireApplicant(userId, jobId) {
-
-	$.ajax({
-		type : "GET",
-		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/hire/user/'
-				+ userId,
-		dataType : 'json',
-		success : _success,
-		error : _error
-	});
-
-	function _success(response) {
-		var employeeHtml = $("#application_" + userId);
-		$("#application_" + userId).remove();
-		$("#employees").append(employeeHtml);
-	}
-
-	function _error(response, errorThrown) {
-
-	}
-}
 
 function unacceptedApplicantsExist(applicants) {
 
 	for (var i = 0; i < applicants.length; i++) {
-		if (applicants[i].application.isAccepted == 0)
+		if (applicants[i].application.status < 3)
 			return true;
 	}
 
@@ -90,11 +69,13 @@ function submitJobs(jobName, userId, categoryId, callback) {
 
 
 function addJobToCart() {
+	
 	$("#submitJobsContainer").show();
 
 	var job = {};
-
+	
 	job.jobName = document.getElementsByName('jobName')[0].value;
+	
 	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
 	job.city = document.getElementsByName('city')[0].value;
 	job.state = document.getElementsByName('state')[0].value;
@@ -106,6 +87,32 @@ function addJobToCart() {
 	job.stringStartTime = formatTime($("#startTime").val());
 	job.stringEndTime = formatTime($("#endTime").val());
 	job.categoryIds = getCategoryIds("selectedCategories");
+	
+	job.questions = [];
+	var questionElements = $("#addedQuestions").find(".question");
+	for(var i = 0; i < questionElements.length; i++){
+		
+		var questionElement = questionElements[i];
+		var question = {};
+		question.question = $(questionElement).find('textarea').val();
+		question.formatId = $(questionElement).find('input').val();
+		
+		if(question.formatId == 2 || question.formatId == 3){
+			question.answerOptions = [];
+			var answerOptions = $(questionElement).find('.answer-option');
+
+			for(var j = 0; j < answerOptions.length; j++){
+				var answerOption = $(answerOptions[j]).val();
+				if(answerOption != "") {
+					question.answerOptions.push(answerOption);
+				}
+			}			 
+		}
+		
+		job.questions.push(question);
+	}
+	
+//	alert(JSON.stringify(job))
 	
 	jobs.push(job);
 
@@ -205,8 +212,7 @@ function getApplicationsByUser(userId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/getApplicationsByUser?userId='
-				+ userId,
+		url : 'http://localhost:8080/JobSearch/applications/user/' + userId,
 		dataType : 'json',
 		success : _success,
 		error : _error

@@ -7,10 +7,16 @@
 <body>
 
 	<div class="container">
-		<div class="job-options btn-group" role="group" aria-label="...">
+		<div class="btn-group" role="group" aria-label="...">	
 			<button class="hire btn btn-info btn-sm margin-hori"
-					onclick="hireApplicant(${employee.getUserId() },${consideredForJob.getId() })">
-					Hire</button>
+			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
+			Decline</button>	
+			<button class="hire btn btn-info btn-sm margin-hori"
+			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
+			Consider</button>																																												
+			<button class="hire btn btn-info btn-sm margin-hori"
+			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )">
+			Hire</button>	
 		</div><!-- end button group -->
 	
 		<div class="panel panel-success">

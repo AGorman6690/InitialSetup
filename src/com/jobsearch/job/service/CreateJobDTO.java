@@ -9,6 +9,8 @@ import java.util.List;
 import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.DateTime;
 
+import com.jobsearch.model.Question;
+
 public class CreateJobDTO {
 
 	@JsonProperty("jobName")
@@ -68,8 +70,19 @@ public class CreateJobDTO {
 	@JsonProperty("stringEndTime")
 	String stringEndTime;
 	
+	@JsonProperty("questions")
+	List<Question> questions;
 	
 	
+	
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
 	public Time getStartTime() {
 		return startTime;
 	}

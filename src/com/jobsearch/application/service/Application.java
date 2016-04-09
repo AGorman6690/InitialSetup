@@ -7,12 +7,17 @@ public class Application {
 	private int applicationId;
 	private int userId;
 	private int jobId;
-	private int isOffered;
 	private int beenViewed;
-	private int isAccepted;
 	private String jobName;
 	private Job job;
 	private JobSearchUser applicant;
+	
+	//Status values:
+	//0: submitted
+	//1: declined
+	//2: considered
+	//3: accepted
+	private int status;
 
 	public Job getJob() {
 		return job;
@@ -50,23 +55,17 @@ public class Application {
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
 	}
-	public int getIsOffered() {
-		return isOffered;
-	}
-	public void setIsOffered(int isOffered) {
-		this.isOffered = isOffered;
-	}
 	public int getBeenViewed() {
 		return beenViewed;
 	}
 	public void setBeenViewed(int beenView) {
 		this.beenViewed = beenView;
 	}
-	public int getIsAccepted() {
-		return isAccepted;
+	public int getStatus() {
+		return status;
 	}
-	public void setIsAccepted(int isAccepted) {
-		this.isAccepted = isAccepted;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	
 }

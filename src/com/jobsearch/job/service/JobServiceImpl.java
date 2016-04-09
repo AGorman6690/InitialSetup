@@ -21,6 +21,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.GoogleClient;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -189,6 +190,10 @@ public class JobServiceImpl {
 		//Get job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		
+		//Set job questions
+		job.setQuestions(this.getQuestions(job.getId()));
+		
+		
 		// Get job applicants
 		job.setApplicants(userService.getApplicants(jobId));
 
@@ -219,6 +224,16 @@ public class JobServiceImpl {
 //		}
 
 		return job;
+	}
+
+
+	private List<Question> getQuestions(int id) {
+		
+		List<Question> questions = repository.getQuestions(id);
+		for(Question q : questions){
+			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
+		}
+		return questions;
 	}
 
 

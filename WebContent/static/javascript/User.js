@@ -74,30 +74,29 @@ function getEmployeesByJob(jobId, callback){
 }
 
 
-function hireApplicant(userId, jobId, callback){
+
+function updateApplicationStatus(applicationId, status){
 	
-		alert(userId)
-		alert(jobId)
-		type: "GET",
-		$.ajax({
-		url: 'http://localhost:8080/JobSearch/job/' + jobId + '/hire/user/' + userId,
-        dataType: 'json',
-		success: _success,
-        error: _error
-	    });
-		
-		function _success(response){
-//			alert("success hire applicant");
-//			alert(JSON.stringify(response))
-			callback(response);
-		}
-		
-		function _error(response, errorThrown){
-			alert("error hireApplicant");
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
+	
+	$.ajax({
+	type: "POST",
+	url: 'http://localhost:8080/JobSearch/application/status/update?id=' + applicationId + "&status=" + status,
+	headers : headers,		
+	success: _success,
+    error: _error
+    });
+	
+	function _success(response){
+	}
+	
+	function _error(response, errorThrown){
+		alert("error hireApplicant");
 
-		}
+	}
 }
-
 
 function getProfiles(callback){
 	//	alert("1");

@@ -59,8 +59,6 @@ public class JobController {
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
 
-		
-		
 		// Add the job to the job table
 		jobService.addJob(jobDtos);
 
@@ -205,15 +203,5 @@ public class JobController {
 		return model;
 	}
 
-	@RequestMapping(value = "/job/{jobId}/hire/user/{userId}", method = RequestMethod.GET)
-	@ResponseBody
-	public String hireApplicant(@PathVariable int jobId, @PathVariable int userId) {
 
-		// Add employment to the database
-		userService.hireApplicant(userId, jobId);
-
-		Job activeJob = jobService.getJob(jobId);
-
-		return JSON.stringify(activeJob);
-	}
 }

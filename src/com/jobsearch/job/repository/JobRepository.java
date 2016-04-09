@@ -20,6 +20,7 @@ import com.jobsearch.job.service.FilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -74,7 +75,30 @@ public class JobRepository {
 				
 	}
 
+	public List<Question> QuestionRowMapper(String sql, Object[] args) {
 
+		try{
+
+			return jdbcTemplate.query(sql, args, new RowMapper<Question>() {
+	
+				@Override
+				public Question mapRow(ResultSet rs, int rownumber) throws SQLException {
+					Question e = new Question();
+					e.setQuestionId(rs.getInt("QuestionId"));
+					e.setJobId(rs.getInt("JobId"));
+					e.setFormatId(rs.getInt("FormatId"));
+					e.setQuestion(rs.getString("Question"));
+
+					return e;
+				}
+			});
+			
+		}catch(Exception e){
+			return null;
+		}
+				
+	}
+	
 	public void addJob(List<CreateJobDTO> jobDtos) {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
 
@@ -149,38 +173,68 @@ public class JobRepository {
 			 ResultSet result = cStmt.executeQuery();
 			 
 			 Job createdJob = new Job();
-			 while(result.next()){
+			 result.next();
+//			 while(result.next()){
 				 createdJob.setId(result.getInt("JobId"));
-//				 job.setJobName(result.getString("JobName"));
-//				 job.setIsActive(result.getInt("isActive"));
-//				 job.setUserId(result.getInt("UserId"));
-//				 job.setDescription(result.getString("Description"));
-////				 job.setOpenings(result.getInt("Openings"));
-//				 job.setStreetAddress(result.getString("StreetAddress"));
-//				 job.setCity(result.getString("City"));
-//				 job.setState(result.getString("State"));
-//				 job.setZipCode(result.getString("ZipCode"));
-//				 job.setLat(result.getFloat("Lat"));
-//				 job.setLng(result.getFloat("Lng"));
-				 
-//				 jobsCreatedByUser.add(job);
-			 }
-			 
-				for(Integer categoryId: jobDto.getCategoryIds()){
-					 cStmt = jdbcTemplate.getDataSource().getConnection()
-							.prepareCall("{call insertJobCategories(?, ?)}");
+//			 }
+		 
+			for(Integer categoryId: jobDto.getCategoryIds()){
+				 cStmt = jdbcTemplate.getDataSource().getConnection()
+						.prepareCall("{call insertJobCategories(?, ?)}");
+			
+				cStmt.setInt(1, createdJob.getId());
+				cStmt.setInt(2, categoryId);
+			
+				cStmt.executeQuery();
+			}
+			
+			for(Question question : jobDto.getQuestions()){
 		
-					cStmt.setInt(1, createdJob.getId());
-					cStmt.setInt(2, categoryId);
-		
-					cStmt.executeQuery();
-				}
+				question.setJobId(createdJob.getId());
+				this.addQuestion(question);
+			}
 			 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
+	private void addQuestion(Question question) {
+		
+		
+		CallableStatement cStmt;
+		try {
+			cStmt = jdbcTemplate.getDataSource().getConnection().
+					prepareCall("{call insert_question(?, ?, ?)}");
+			
+			cStmt.setString(1, question.getQuestion());
+			cStmt.setInt(2, question.getFormatId());
+			cStmt.setInt(3, question.getJobId());
+			
+			ResultSet result = cStmt.executeQuery();	
+			result.next();
+			int createdQuestionId = result.getInt(("QuestionId"));		
+			
+			
+			if(question.getAnswerOptions() != null){
+				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
+				for(String answerOption : question.getAnswerOptions()){
+					jdbcTemplate.update(sql, new Object[]{ createdQuestionId, answerOption });
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+
+	
+		
+
+		
+	}
+
 
 	public List<Job> getJobsByUser(int userId) {
 		String sql = "SELECT * FROM job WHERE UserId = ?";
@@ -386,6 +440,19 @@ public class JobRepository {
 		sql += " HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
 		
 		return this.JobRowMapper(sql, args);
+	}
+
+
+	public List<Question> getQuestions(int id) {
+		String sql = "SELECT * FROM question WHERE JobId = ?";
+		return this.QuestionRowMapper(sql, new Object[]{ id });
+	}
+
+	public List<String> getAnswerOptions(int questionId) {
+		
+		String sql = "Select AnswerOption FROM answer_option WHERE QuestionId = ?";
+		return jdbcTemplate.queryForList(sql, new Object[]{ questionId }, String.class);
+
 	}
 
 

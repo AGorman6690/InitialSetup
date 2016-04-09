@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -30,45 +32,26 @@ public class ApplicationController {
 	@Autowired
 	JobServiceImpl jobService;
 	
-	@RequestMapping(value = "/getApplicationsByEmployer", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicationsByEmployer(@RequestParam int userId){
-		return JSON.stringify(applicationService.getApplicationsByEmployer(userId));	
-	}
+
 	
 	
-	@RequestMapping(value = "/getApplicationsByJob", method = RequestMethod.GET)
+	@RequestMapping(value = "/applications/job/{jobId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getApplicationsByJob(@RequestParam int jobId){
+	public String getApplicationsByJob(@PathVariable int jobId){
 		return JSON.stringify(applicationService.getApplicationsByJob(jobId));	
 	}
 	
-	@RequestMapping(value = "/markApplicationViewed", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
-	@ResponseBody
-	public void markApplicationViewed(@RequestParam int jobId, @RequestParam int userId) {
-		
-		// Update database
-		applicationService.markApplicationViewed(jobId, userId);
-		
-	}
 	
-	@RequestMapping(value = "/markApplicationAccepted", method = RequestMethod.GET, produces = APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/applications/user/{userId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String markApplicationAccepted(@RequestParam int jobId, @RequestParam int userId) {
-		
-		//Update database
-		applicationService.markApplicationAccepted(jobId, userId);		
-		userService.hireApplicant(userId, jobId);
-		
-		return JSON.stringify(jobService.getEmploymentByUser(userId));
-		
-	}
-	
-
-	@RequestMapping(value = "/getApplicationsByUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicationsByUser(@RequestParam int userId){
+	public String getApplicationsByUser(@PathVariable int userId){
 		return JSON.stringify(jobService.getApplicationsByUser(userId));	
+	}
+	
+	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateStatus(@RequestParam int id, @RequestParam int status) {
+		applicationService.updateStatus(id, status);
 	}
 	
 }

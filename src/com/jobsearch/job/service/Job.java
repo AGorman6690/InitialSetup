@@ -9,6 +9,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.JobSearchUser;
 
 public class Job {
@@ -38,8 +39,17 @@ public class Job {
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
+	private List<Question> questions;
 	
 	
+	public List<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
+
 	public List<Category> getCategories() {
 		return categories;
 	}

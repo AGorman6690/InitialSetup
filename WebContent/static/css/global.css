@@ -89,3 +89,11 @@ textarea {
     -moz-text-align-last: left; /* Firefox 12+ */
     text-align-last: left;
 }
+
+.job-options {
+	margin-bottom: 10px;
+}
+
+.job-info{
+	margin-top: 10px;
+}
