@@ -5,13 +5,6 @@
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 
-<!-- Bootstrap Drop down -->
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
-
-<!-- Latest compiled and minified JavaScript --> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
-
 </head>
 
 <input type="hidden" id="jobId" value="${job.id}" />
@@ -78,6 +71,47 @@
 				<div style="width: 750px" class="panel panel-warning">
 					<div class="panel-heading">Applicants</div>
 					<div id="applicants" class="panel-body">
+						<div id="applicantFilters" class="panel panel-success">
+							<div class="panel-heading">Filters</div>
+							<div class="panel-body">
+							
+								<div style="margin-bottom:5px">
+									<label class="control-label">Ratings</label>
+								</div>
+								<div style="margin-bottom:5px">
+									<label class="control-label">Endorsements</label>
+									<select title="Select endorsements" class="hide-show-columns selectpicker" multiple data-style="btn-primary">
+										
+	 									<c:if test="${fn:length(job.getCategories()) > 1 }"> 		 									
+	 										<option>Total Endorsements</option>
+	 									</c:if>										
+										<c:forEach items="${job.getCategories() }" var="category">																
+											<option value="${category.getId()}">${category.getName()} Endorsements</option>
+										</c:forEach>										
+									</select>
+								</div>
+								<div style="margin-bottom:5px">
+									<label class="control-label">Questions</label>
+									<select title="Select questions" class="hide-show-columns selectpicker" multiple data-style="btn-primary">
+										<c:forEach items="${job.getQuestions() }" var="question">																
+											<option value="${category.getQuestionId()}">${question.getQuestion() }</option>
+										</c:forEach>
+									</select>									
+								</div>
+								<div style="margin-bottom:5px">
+									<label class="control-label">Application Status</label>
+									<select title="Select status" class="hide-show-rows selectpicker" multiple data-style="btn-primary">												
+										<option value="0">Submitted</option>
+										<option value="1">Declined</option>
+										<option value="3">Considered</option>
+										<option value="4">Accepted</option>
+									</select>									
+								</div>
+<!-- 								<button onclick="filterApplicants()" type="button" class="btn btn-success">Filter</button> -->
+							</div>
+						</div>
+					
+					
 						<c:choose>
 							<c:when test="${job.getApplicants().size() > 0 }">
 								<table id="applicantsTable" class="table table-hover table-striped 
@@ -94,7 +128,10 @@
  		 									<c:if test="${fn:length(job.getCategories()) > 1 }"> 		 									
  		 										<th>Total Endorsements</th>
  		 									</c:if>
- 		 									<th> </th>
+ 		 									<c:forEach items="${job.getQuestions() }" var="question">
+ 		 										<th>${question.getQuestion() }</th>
+ 		 									</c:forEach>
+ 		 									<th>Application Status</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -102,8 +139,8 @@
 											<c:choose>
 												<c:when test="${applicant.getApplication().status < 3 }">
 													<tr id="applicant_${applicant.getUserId() }">
-														<td class="clickToWorkHistory">${applicant.getFirstName() }
-																${applicant.getLastName() }</td>
+														<td class="clickToWorkHistory">${applicant.getFirstName() } ${applicant.getLastName() }</td>
+																
 																
 														<td class="clickToWorkHistory">${applicant.getRating() }</td>														
 														<c:set var="total" value = "${0 }" />
@@ -114,17 +151,80 @@
 			 		 									<c:if test="${fn:length(job.getCategories()) > 1 }"> 		 									
 			 		 										<td class="clickToWorkHistory">${total}</td>
 			 		 									</c:if>
+			 		 									<c:forEach items="${applicant.getAnswers() }" var="answer">
+			 		 										<c:set var="questionFormatId" value="${answer.getQuestionFormatId() }" />
+			 		 										<c:choose>
+			 		 											<c:when test="${questionFormatId == 0 }">
+			 		 												<c:choose>
+			 		 													<c:when test="${answer.getAnswerBoolean() == 1 }">
+			 		 														<td class="clickToWorkHistory">Yes</td>
+			 		 													</c:when>
+			 		 													<c:otherwise>
+			 		 														<td class="clickToWorkHistory">No</td>
+			 		 													</c:otherwise>
+		 		 													</c:choose>			 		 												
+			 		 											</c:when>
+			 		 											<c:when test="${questionFormatId == 1 }">
+			 		 												<td class="clickToWorkHistory">${answer.getAnswerText()}</td>
+			 		 											</c:when>
+			 		 											<c:otherwise>
+			 		 												<c:forEach items="${answer.getAnswers() }" var="multipleAnswer" varStatus="stat">
+			 		 													<c:set var="out" value="${stat.first ? '' : out} ${multipleAnswer }" />
+			 		 												</c:forEach>
+			 		 												<td class="clickToWorkHistory">${out }</td>
+			 		 											</c:otherwise>
+			 		 										</c:choose>
+			 		 										
+			 		 									</c:forEach>
 														<td>
 <!-- 															<div class="btn-group" role="group" aria-label="...">	 -->
-																<button class="btn btn-info btn-sm"
-																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
-																Decline</button>	
-																<button class="btn btn-info btn-sm"
-																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
-																Consider</button>																																												
-																<button class="btn btn-info btn-sm"
-																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )">
-																Hire</button>	
+													
+																<c:choose>
+																	<c:when test="${applicant.getApplication().getStatus() == 1 }">
+																		<button class="btn btn-info btn-sm" >
+																		Decline</button>	
+																	</c:when>
+																	<c:otherwise>
+																		<button class="btn btn-default btn-sm" 
+																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
+																		Decline</button>
+																	</c:otherwise>																																														
+																</c:choose>																
+																
+																<c:choose>
+																	<c:when test="${applicant.getApplication().getStatus() == 2 }">
+																		<button class="btn btn-info btn-sm"> 																		
+																		Consider</button>	
+																	</c:when>
+																	<c:otherwise>
+																		<button class="btn btn-default btn-sm" 
+																		onclick="updateApplicationStatus2(${applicant.getApplication().getApplicationId()}, 2 )">
+																		Consider</button>
+																	</c:otherwise>																									
+																</c:choose>
+																
+																<c:choose>
+																	<c:when test="${applicant.getApplication().getStatus() == 3 }">
+																		<button class="btn btn-info btn-sm"> 																		
+																		Hire</button>	
+																	</c:when>
+																	<c:otherwise>
+																		<button class="btn btn-default btn-sm" 
+																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )">
+																		Hire</button>
+																	</c:otherwise>																									
+																</c:choose>																
+																																
+<%-- 																<input type="hidden" value="${applicant.getApplication().getStatus() }"></input> --%>
+<!-- 																<button class="btn btn-info btn-sm"  -->
+<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )"> --%>
+<!-- 																Decline</button> -->
+<!-- 																<button class="btn btn-info btn-sm" -->
+<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )"> --%>
+<!-- 																Consider</button>																																												 -->
+<!-- 																<button class="btn btn-info btn-sm" -->
+<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )"> --%>
+<!-- 																Hire</button>	 -->
 <!-- 															</div> -->
 														</td>
 																
@@ -141,7 +241,7 @@
 								</div>
 							</c:otherwise>
 						</c:choose>
-					</div><!-- end applicants panel body -->
+					</div> <!-- end applicants panel body -->
 				</div> <!-- end applicants panel -->
 		
 				<div style="width: 750px" class="panel panel-warning">
@@ -187,59 +287,59 @@
 								</div>
 							</c:otherwise>
 						</c:choose>
-					</div> <!-- end employes panel body -->
+					</div> <!-- end employees panel body -->
 				</div> <!-- end employees panel -->
 			</div> <!-- end container -->
 		</c:when>
 		
 		<c:when test="${user.getProfileId() == 2}">
+
 			<c:choose>
 				<c:when test="${job.getQuestions().size() > 0}">
 				
 					<div class="panel panel-danger">
 						<div class="panel-heading">Questions</div>
-						<div class="panel-body">
+						<div id="questions" class="panel-body">
 							<c:forEach items="${job.getQuestions() }" var="question">
-								<div class="panel panel-warning">
+								<div id="question-${question.getQuestionId() }" class="panel panel-warning question">
 									<div class="panel-heading">Question</div>
 									<div class="panel-body">
 										<textarea class="form-control" rows="3">${question.question}</textarea>
 									
 										<div class="dropdown" style="margin-top: 10px">
-											<input type="hidden"></input> 									
-<!-- 											<a class="btn btn-primary dropdown-toggle" type="button" -->
-<!-- 												data-toggle="dropdown">Dropdown Example <span -->
-<!-- 												class="caret"></span></a> -->
-<!-- 											<ul class="dropdown-menu">	 -->
+											<input class="question-format-id" type="hidden" value=${question.getFormatId() }></input> 	
+
 												<c:choose>										
 													<c:when test="${question.getFormatId() == 0 }">
-<!-- 														<li class="answer-format-item" value="0"><a>Yes</a></li> -->
-<!-- 														<li class="answer-format-item" value="1"><a>No</a></li> -->
-
-														<select class="selectpicker" data-style="btn-primary" title="Select an answer">															
-															<option>Yes</option>
-															<option>No</option>															
+														<select title="Select an answer" class="selectpicker" data-style="btn-primary">															
+<!-- 															<option value="-1" selected="selected">Select an answer</option> -->
+															<option value="1">Yes</option>
+															<option value="0">No</option>															
 														</select>													
 													</c:when>
+													<c:when test="${question.getFormatId() == 1 }">
+														<textarea class="form-control answer-text" rows="3" placeholder="Answer"></textarea>
+													</c:when>													
 													<c:when test="${question.getFormatId() == 2 }">
-														<select class="selectpicker" data-style="btn-primary" title="Select an answer">
+														<select title="Select an answer" class="selectpicker" data-style="btn-primary">
+<!-- 															<option value="-1" selected="selected">Select an answer</option> -->
 															<c:forEach items="${question.getAnswerOptions() }" var="option">
-																<option>${option }</option>
+																<option value="${option.getAnswerOptionId()}">${option.getAnswerOption() }</option>
 															</c:forEach>
 														</select>
 													</c:when>
 													<c:when test="${question.getFormatId() == 3 }">
-														<select class="selectpicker" multiple data-style="btn-primary" title="Select an answer">
-															<c:forEach items="${question.getAnswerOptions() }" var="option">
-																<option>${option }</option>
+														<select title="Select an answer" class="selectpicker" multiple data-style="btn-primary">
+<!-- 															<option value="-1" selected="selected">Select an answer</option> -->
+															<c:forEach items="${question.getAnswerOptions() }" var="option">																
+																<option value="${option.getAnswerOptionId()}">${option.getAnswerOption() }</option>
 															</c:forEach>
 														</select>
 													</c:when>													
 												</c:choose>
 <!-- 											</ul> -->
 										</div>										
-									</div>
-								
+									</div>								
 								</div>
 							</c:forEach>						
 						</div>
@@ -258,7 +358,7 @@
 				
 				</c:choose>
 		
-		</c:when>
+		</c:when> 
 	</c:choose>
 </div>
 
@@ -268,7 +368,8 @@
 	$(document).ready(function(){
 		$('#applicantsTable').DataTable();
 		$('#employeesTable').DataTable();
-		
+
+
 		$(".clickToWorkHistory").click(function(){			
 			elementId = $(this).parent().attr('id');
 			var idBegin = elementId.indexOf("_") + 1;
@@ -276,20 +377,122 @@
 			window.location = "../jobs/completed/employee/?userId=" + userId + '&jobId=' + $("#jobId").val();
 		})
 		
-// 		$("#hireApplicant").click(function(){
-// 			window.location = "../job/" + $("#jobId").val();
-// 		})
+		$(".hide-show-columns").change(function(){
+			filterApplicants();
+		})
 
 
     
 		
 	});
 	
+	function updateApplicationStatus2(id, f ){
+		alert(345)
+	}
+	
+	function filterApplicants(){
+
+		var headers = $("#applicantsTable").find("thead tr th");		
+		var headerNames = [];
+		var i = 0;		
+		var j = 0;		
+		var headersToShow = $(".hide-show-columns").find(":selected")
+								.map(function(){ return $(this).html() }).get();
+		
+// 		alert(endorsementsToShow)
+			
+		for(i = 0; i < headers.length; i++){
+			var header = headers[i];
+			var headerName = $(header).text();
+
+			if(headerName != "Applicant Name" && headerName != "Rating"
+					&& headerName != "Application Status"){
+				
+				var showColumn = 0;
+				for(j = 0; j < headersToShow.length; j++){
+					if(headerName == headersToShow[j]){
+						showColumn = 1;
+					}
+				}	
+
+				if(showColumn == 1){					
+					$("#applicantsTable td:nth-child(" + parseInt(i + 1) + ")").show();
+					$("#applicantsTable th:nth-child(" + parseInt(i + 1) + ")").show();
+				}else{
+					$("#applicantsTable td:nth-child(" + parseInt(i + 1) + ")").hide();
+					$("#applicantsTable th:nth-child(" + parseInt(i + 1) + ")").hide();
+				}
+			}
+		}	
+	}
+	
 	function apply(){
 		
+		var userId = $("#userId").val();
+		var applicationDTO = {};
 		
+		applicationDTO.jobId = $("#jobId").val();
+		applicationDTO.userId = userId;
+		applicationDTO.answers = [];
 		
+		var questions = $("#questions").find(".question");
+		var invalidAnswer = 0;
 		
+		for(var i = 0; i < questions.length; i++){
+			
+			var questionElement = questions[i];
+			var questionFormatId = $(questionElement).find(".question-format-id").val();
+			
+			var answer = {};
+			answer.answerText = "";
+			answer.answerBoolean = -1;
+			answer.answerOptionId = -1;
+			answer.answerOptionIds = [];
+			
+			if(questionFormatId == 0){
+				answer.answerBoolean = $(questionElement).find('select').find(":selected").val();
+				if(answer.answerBoolean == "") invalidAnswer = 1;
+			}else if(questionFormatId == 1){
+				answer.answerText = $(questionElement).find('.answer-text').val()
+				if(answer.answerText == "") invalidAnswer = 1;
+			}else if(questionFormatId == 2){
+				answer.answerOptionId = $(questionElement).find('select').find(":selected").val();
+				if(answer.answerOptionId == "") invalidAnswer = 1;
+			}else if(questionFormatId == 3){
+				answer.answerOptionIds = $(questionElement).find('select').find(":selected").map(function(){ return this.value }).get();
+				if(answer.answerOptionIds == "") invalidAnswer = 1;
+			}
+			
+			var questionElementId = $(questionElement).attr('id');			
+			answer.questionId = questionElementId.substring(questionElementId.indexOf("-") + 1);
+			answer.userId = userId;
+			
+			applicationDTO.answers.push(answer);
+		}
+		
+// 		alert(JSON.stringify(applicationDTO))		
+
+		if(invalidAnswer == 0){
+			var headers = {};
+			headers[$("meta[name='_csrf_header']").attr("content")] = $(
+					"meta[name='_csrf']").attr("content");
+			$.ajax({
+				type : "POST",
+				url : 'http://localhost:8080/JobSearch/job/apply',
+				headers : headers,
+				dataType : "json",
+				contentType : "application/json",
+				data : JSON.stringify(applicationDTO),
+				success : _success,
+				error : _error
+			});
+		
+			function _success(response) {
+			}
+		
+			function _error(response) {
+			}
+		}
 	}
 	
 	

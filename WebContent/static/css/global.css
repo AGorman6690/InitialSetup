@@ -97,3 +97,7 @@ textarea {
 .job-info{
 	margin-top: 10px;
 }
+
+.hide-table-column{
+	display: none;
+}

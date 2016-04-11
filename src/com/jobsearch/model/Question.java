@@ -7,13 +7,13 @@ public class Question {
 	private String question;
 	private int formatId;
 	private int jobId;
-	private List<String> answerOptions;
+	private List<AnswerOption> answerOptions;
 	
 	
-	public List<String> getAnswerOptions() {
+	public List<AnswerOption> getAnswerOptions() {
 		return answerOptions;
 	}
-	public void setAnswerOptions(List<String> answerOptions) {
+	public void setAnswerOptions(List<AnswerOption> answerOptions) {
 		this.answerOptions = answerOptions;
 	}
 	public int getQuestionId() {

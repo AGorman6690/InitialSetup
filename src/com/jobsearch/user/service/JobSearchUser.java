@@ -6,6 +6,7 @@ import java.util.List;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
@@ -31,7 +32,15 @@ public class JobSearchUser {
 	private List<Endorsement> endorsements;
 	private Application application;
 	private double rating;
+	private List<Answer> answers;
 	
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
 
 	public List<Job> getCompletedJobs() {
 		return completedJobs;

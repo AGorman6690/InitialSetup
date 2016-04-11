@@ -96,13 +96,15 @@ function addJobToCart() {
 		var question = {};
 		question.question = $(questionElement).find('textarea').val();
 		question.formatId = $(questionElement).find('input').val();
+
 		
-		if(question.formatId == 2 || question.formatId == 3){
+		if(question.formatId == 0 || question.formatId == 2 || question.formatId == 3){
 			question.answerOptions = [];
 			var answerOptions = $(questionElement).find('.answer-option');
 
 			for(var j = 0; j < answerOptions.length; j++){
-				var answerOption = $(answerOptions[j]).val();
+				var answerOption = {};
+				answerOption.answerOption = $(answerOptions[j]).val();
 				if(answerOption != "") {
 					question.answerOptions.push(answerOption);
 				}
@@ -112,7 +114,6 @@ function addJobToCart() {
 		job.questions.push(question);
 	}
 	
-//	alert(JSON.stringify(job))
 	
 	jobs.push(job);
 
@@ -153,7 +154,7 @@ function formatTime(time){
 }
 
 
-function applyForJob(jobId, userId) {
+function apply(jobId, userId) {
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");

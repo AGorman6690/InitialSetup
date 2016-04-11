@@ -27,6 +27,7 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -89,11 +90,11 @@ public class JobController {
 
 	}
 	
-	@RequestMapping(value = "/job/{jobId}/user/{userId}/apply", method = RequestMethod.GET)
-	public ModelAndView applyForJob(@PathVariable int jobId, @PathVariable int userId, ModelAndView model) {
+	@RequestMapping(value = "/job/apply",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ModelAndView applyForJob(@RequestBody ApplicationDTO applicationDto, ModelAndView model) {
 
 		// Add application to database
-		jobService.applyForJob(jobId, userId);
+		jobService.applyForJob(applicationDto);
 		
 //		ModelAndView model = new ModelAndView();
 		model.setViewName("EmployeeProfile");

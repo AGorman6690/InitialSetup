@@ -203,15 +203,10 @@
 								<div class="panel-heading">New Question</div>
 								<div class="panel-body">
 
-									<div>
-										<textarea style="display: inline" name="question"
-											class="form-control" rows="3"></textarea>
-									</div>
-
-									<div class="dropdown" style="margin-top: 10px">
+									<div class="dropdown" style="margin-bottom: 10px">
 										<input type="hidden"></input> 									
 										<a class="btn btn-primary dropdown-toggle" type="button"
-											data-toggle="dropdown">Dropdown Example <span
+											data-toggle="dropdown">Question Format <span
 											class="caret"></span></a>
 										<ul class="dropdown-menu">
 											<li class="answer-format-item" value="0"><a>Yes/No</a></li>
@@ -222,6 +217,12 @@
 											<li class="answer-format-item" value="3"><a>Select
 													multiple answers from list</a></li>
 										</ul>
+									</div>
+									
+									
+									<div>
+										<textarea style="display: inline" name="question"
+											class="form-control" rows="3"></textarea>
 									</div>
 	
 									<div class="answer-list-input"></div>
@@ -316,8 +317,9 @@
 		var j = -1;
 		var r = [];
 
-		r[++j] = '<ul class="list-group" style="width: 225px">';
-		r[++j] = '<button onclick="addItem(this)" type="button" class="btn">Add item</button>';
+		r[++j] = '<ul class="list-group" style="width: 225px; margin: 10px 0px 5px 0px">';
+		r[++j] = '<button style="margin-bottom: 5px" onclick="addItem(this)" type="button" class="btn btn-warning">Add answer option</button>';
+		r[++j] = getItem();
 		r[++j] = getItem();
 		r[++j] = '</ul>';
 

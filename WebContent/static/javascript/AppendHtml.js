@@ -123,12 +123,6 @@ function setEmployeeId(e) {
 	$("#employeeId").val(e.target.id);
 }
 
-function applyToJob(jobId) {
-
-	applyForJob(jobId, $("#userId").val(), function(response) {
-		alert("Application Received!")
-	})
-}
 
 function selectCategory(categoryId) {
 

@@ -15,10 +15,12 @@ import org.springframework.stereotype.Service;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.GoogleClient;
 import com.jobsearch.model.Question;
@@ -90,12 +92,25 @@ public class JobServiceImpl {
 		repository.markJobComplete(jobId);
 	}
 
-	public void applyForJob(int jobId, int userId) {
-
-		if (!repository.hasAppliedForJob(jobId, userId)) {
-			repository.applyForJob(jobId, userId);
+	public void applyForJob(ApplicationDTO applicationDto) {
+		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
+		
+		//Whether the applicant answered all the questions is handled on the client side.
+		//At this point, all questions have a valid answer.
+		for(Answer answer : applicationDto.getAnswers()){			
+			
+			if (answer.getAnswerText() != ""){
+				repository.addTextAnswer(answer);
+			}else if(answer.getAnswerBoolean() != -1){
+				repository.addBooleanAnswer(answer);	
+			}else if(answer.getAnswerOptionId() != -1){
+				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
+			}else if(answer.getAnswerOptionIds().size() > 0){
+				for(int answerOptionId : answer.getAnswerOptionIds()){
+					repository.addOptionAnswer(answer, answerOptionId);
+				}
+			}
 		}
-
 	}
 
 	public List<Job> getJobsByCategory(int categoryId) {
@@ -204,6 +219,7 @@ public class JobServiceImpl {
 			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
 			applicant.setEndorsements(userService.getUserEndorsementsByCategory(applicant.getUserId(), 
 											job.getCategories()));
+			applicant.setAnswers(this.getAnswers(job.getQuestions(), applicant.getUserId()));
 		}
 
 		// Get job employees
@@ -227,9 +243,33 @@ public class JobServiceImpl {
 	}
 
 
-	private List<Question> getQuestions(int id) {
+	public List<Answer> getAnswers(List<Question> questions, int userId) {
 		
-		List<Question> questions = repository.getQuestions(id);
+		List<Answer> answers = new ArrayList<Answer>();
+		
+		for(Question question : questions){
+			Answer answer;
+			
+			if(question.getFormatId() == 2 || question.getFormatId() == 3){
+				answer = new Answer();
+				answer.setAnswers(repository.getAnswers(question.getQuestionId(), userId));
+//			}else if(question.getFormatId() == 2){
+//				answer = repository.getAnswer(question.getQuestionId(), userId);
+//				
+			}else{
+				answer = repository.getAnswer(question.getQuestionId(), userId);
+			}				
+			
+			answer.setQuestionFormatId(question.getFormatId());
+			answers.add(answer);
+		}
+		return answers;
+	}
+
+
+	private List<Question> getQuestions(int jobId) {
+		
+		List<Question> questions = repository.getQuestions(jobId);
 		for(Question q : questions){
 			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
 		}
@@ -315,6 +355,8 @@ public class JobServiceImpl {
 		
 		return count;
 	}
+
+
 
 
 }
