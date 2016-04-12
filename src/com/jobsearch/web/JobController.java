@@ -108,6 +108,8 @@ public class JobController {
 	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
 
 		Job selectedJob = jobService.getJob(jobId);
+		
+		//
 
 		model.addObject("job", selectedJob);
 		model.setViewName("Job");
@@ -161,7 +163,7 @@ public class JobController {
 		JobSearchUser employee = userService.getUser(userId);
 		employee.setEndorsements(userService.getUsersEndorsements(userId));
 		employee.setApplication(applicationService.getApplication(jobId, userId));
-		model.addObject("user", employee);
+		model.addObject("worker", employee);
 		
 		Job consideredForJob = jobService.getJob(jobId);
 		model.addObject("consideredForJob", consideredForJob);

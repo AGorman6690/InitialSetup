@@ -5,41 +5,41 @@
 </head>
 
 <body>
-
+	<input type="hidden" value="${worker.getUserId() }"></input>
 	<div class="container">
 		<div id="applicationStatus" class="btn-group" role="group" aria-label="...">	
 			<c:choose>
-				<c:when test="${user.getApplication().getStatus() == 1 }">
+				<c:when test="${worker.getApplication().getStatus() == 1 }">
 					<button class="update-application-status btn btn-info btn-sm" >
 					Decline</button>	
 				</c:when>
 				<c:otherwise>
 					<button class="update-application-status btn btn-default btn-sm" 
-					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 1 )">
+					onclick="updateApplicationStatus(${worker.getApplication().getApplicationId()}, 1 )">
 					Decline</button>
 				</c:otherwise>																																														
 			</c:choose>																
 			
 			<c:choose>
-				<c:when test="${user.getApplication().getStatus() == 2 }">
+				<c:when test="${worker.getApplication().getStatus() == 2 }">
 					<button class="update-application-status btn btn-info btn-sm"> 																		
 					Consider</button>	
 				</c:when>
 				<c:otherwise>
 					<button class="update-application-status btn btn-default btn-sm" 
-					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 2 )">
+					onclick="updateApplicationStatus(${worker.getApplication().getApplicationId()}, 2 )">
 					Consider</button>
 				</c:otherwise>																									
 			</c:choose>
 			
 			<c:choose>
-				<c:when test="${user.getApplication().getStatus() == 3 }">
+				<c:when test="${worker.getApplication().getStatus() == 3 }">
 					<button class="update-application-status btn btn-info btn-sm"> 																		
 					Hire</button>	
 				</c:when>
 				<c:otherwise>
 					<button class="update-application-status btn btn-default btn-sm" 
-					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 3 )">
+					onclick="updateApplicationStatus(${worker.getApplication().getApplicationId()}, 3 )">
 					Hire</button>
 				</c:otherwise>																									
 			</c:choose>																
@@ -49,7 +49,7 @@
 		<div class="panel panel-success">
 			<div class="panel-heading">Endorsements</div>
 			<div class="panel-body">
-				<c:forEach items="${user.getEndorsements() }" var="e">
+				<c:forEach items="${worker.getEndorsements() }" var="e">
 					<a href="#">${e.getCategoryName() }<span style="margin-left:5px" class="badge">
 					${e.getCount() }</span></a><br>
 				</c:forEach>
