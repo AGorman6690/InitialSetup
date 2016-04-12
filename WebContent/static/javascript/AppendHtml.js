@@ -36,12 +36,9 @@ function appendCategories(categoryId, subCategoryDivIdKey, arr, callback) {
 
 			var id = arr[i].id;
 			var categoryName = arr[i].name;
-
-			// Li element. Its id is equal to the category id
+			
 			r[++j] = '<li id="' + id + '" class="list-group-item">';
-
-			// Category name
-			r[++j] = '<a id="' + id + '-Name" onclick="addCategoryToSelection(this)"'; //\'' + id + '\', \'' + categoryName + '\'"' 
+			r[++j] = '<a style="cursor: pointer" id="' + id + '-Name" onclick="addCategoryToSelection(this)"'; //\'' + id + '\', \'' + categoryName + '\'"' 
 			r[++j] = '>' + categoryName;
 			r[++j] = '</a>';
 
@@ -65,8 +62,9 @@ function appendCategories(categoryId, subCategoryDivIdKey, arr, callback) {
 			// just
 			// sub categories 1 level deep.
 			// Also on click, the category
-			r[++j] = '<a style="margin: 0px 0px 10px 10px; height: 25px" onclick="appendNextLevelCategories(\'' + id
-					+ '\', \'' + subCategoryDivIdKey + '\')" id="#' + id + '-C"';
+			r[++j] = '<a style="margin: 0px 0px 10px 10px; height: 25px" '
+						+ 'onclick="appendNextLevelCategories(\'' + id
+						+ '\', \'' + subCategoryDivIdKey + '\')" id="#' + id + '-C"';
 			r[++j] = 'data-target="#'
 					+ id + subCategoryDivIdKey + '"'
 					+ ' data-toggle="collapse" class="find-jobs-sub-job-count btn btn-success btn-sm">';

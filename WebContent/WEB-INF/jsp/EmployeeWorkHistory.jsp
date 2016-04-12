@@ -7,22 +7,49 @@
 <body>
 
 	<div class="container">
-		<div class="btn-group" role="group" aria-label="...">	
-			<button class="hire btn btn-info btn-sm margin-hori"
-			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
-			Decline</button>	
-			<button class="hire btn btn-info btn-sm margin-hori"
-			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
-			Consider</button>																																												
-			<button class="hire btn btn-info btn-sm margin-hori"
-			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )">
-			Hire</button>	
+		<div id="applicationStatus" class="btn-group" role="group" aria-label="...">	
+			<c:choose>
+				<c:when test="${user.getApplication().getStatus() == 1 }">
+					<button class="update-application-status btn btn-info btn-sm" >
+					Decline</button>	
+				</c:when>
+				<c:otherwise>
+					<button class="update-application-status btn btn-default btn-sm" 
+					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 1 )">
+					Decline</button>
+				</c:otherwise>																																														
+			</c:choose>																
+			
+			<c:choose>
+				<c:when test="${user.getApplication().getStatus() == 2 }">
+					<button class="update-application-status btn btn-info btn-sm"> 																		
+					Consider</button>	
+				</c:when>
+				<c:otherwise>
+					<button class="update-application-status btn btn-default btn-sm" 
+					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 2 )">
+					Consider</button>
+				</c:otherwise>																									
+			</c:choose>
+			
+			<c:choose>
+				<c:when test="${user.getApplication().getStatus() == 3 }">
+					<button class="update-application-status btn btn-info btn-sm"> 																		
+					Hire</button>	
+				</c:when>
+				<c:otherwise>
+					<button class="update-application-status btn btn-default btn-sm" 
+					onclick="updateApplicationStatus(${user.getApplication().getApplicationId()}, 3 )">
+					Hire</button>
+				</c:otherwise>																									
+			</c:choose>																
+
 		</div><!-- end button group -->
 	
 		<div class="panel panel-success">
 			<div class="panel-heading">Endorsements</div>
 			<div class="panel-body">
-				<c:forEach items="${employee.getEndorsements() }" var="e">
+				<c:forEach items="${user.getEndorsements() }" var="e">
 					<a href="#">${e.getCategoryName() }<span style="margin-left:5px" class="badge">
 					${e.getCount() }</span></a><br>
 				</c:forEach>
@@ -92,6 +119,28 @@
 	</div> <!-- end container -->
 </body>
 
+
+<script>
+$(document).ready(function(){
+	$(".update-application-status").click(function(){
+		
+		var buttons = $("#applicationStatus").find('button');
+		for(var i = 0; i < buttons.length; i++){
+			var button = buttons[i];
+			if($(button).hasClass("btn-info")){
+				$(button).removeClass("btn-info");
+				$(button).addClass("btn-default");
+			}
+		}
+		
+		$(this).addClass('btn-info');
+	})
+
+})
+
+
+
+</script>
 
 
 

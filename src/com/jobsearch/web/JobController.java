@@ -160,14 +160,15 @@ public class JobController {
 		
 		JobSearchUser employee = userService.getUser(userId);
 		employee.setEndorsements(userService.getUsersEndorsements(userId));
+		employee.setApplication(applicationService.getApplication(jobId, userId));
+		model.addObject("user", employee);
 		
 		Job consideredForJob = jobService.getJob(jobId);
-				
-		List<CompletedJobDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);		
-		model.addObject("employee", employee);
-		model.addObject("completedJobDtos", completedJobDtos);
 		model.addObject("consideredForJob", consideredForJob);
-		
+				
+		List<CompletedJobDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);			
+		model.addObject("completedJobDtos", completedJobDtos);
+
 		model.setViewName("EmployeeWorkHistory");
 		return model;
 	}

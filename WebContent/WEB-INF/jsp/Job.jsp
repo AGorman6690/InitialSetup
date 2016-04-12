@@ -177,15 +177,14 @@
 			 		 										
 			 		 									</c:forEach>
 														<td>
-<!-- 															<div class="btn-group" role="group" aria-label="...">	 -->
-													
+															<div id="applicationStatus">
 																<c:choose>
 																	<c:when test="${applicant.getApplication().getStatus() == 1 }">
-																		<button class="btn btn-info btn-sm" >
+																		<button class="update-application-status btn btn-info btn-sm" >
 																		Decline</button>	
 																	</c:when>
 																	<c:otherwise>
-																		<button class="btn btn-default btn-sm" 
+																		<button class="update-application-status btn btn-default btn-sm" 
 																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
 																		Decline</button>
 																	</c:otherwise>																																														
@@ -193,39 +192,28 @@
 																
 																<c:choose>
 																	<c:when test="${applicant.getApplication().getStatus() == 2 }">
-																		<button class="btn btn-info btn-sm"> 																		
+																		<button class="update-application-status btn btn-info btn-sm"> 																		
 																		Consider</button>	
 																	</c:when>
 																	<c:otherwise>
-																		<button class="btn btn-default btn-sm" 
-																		onclick="updateApplicationStatus2(${applicant.getApplication().getApplicationId()}, 2 )">
+																		<button class="update-application-status btn btn-default btn-sm" 
+																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
 																		Consider</button>
 																	</c:otherwise>																									
 																</c:choose>
 																
-																<c:choose>
-																	<c:when test="${applicant.getApplication().getStatus() == 3 }">
-																		<button class="btn btn-info btn-sm"> 																		
-																		Hire</button>	
-																	</c:when>
-																	<c:otherwise>
-																		<button class="btn btn-default btn-sm" 
-																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )">
-																		Hire</button>
-																	</c:otherwise>																									
-																</c:choose>																
-																																
-<%-- 																<input type="hidden" value="${applicant.getApplication().getStatus() }"></input> --%>
-<!-- 																<button class="btn btn-info btn-sm"  -->
-<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )"> --%>
-<!-- 																Decline</button> -->
-<!-- 																<button class="btn btn-info btn-sm" -->
-<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )"> --%>
-<!-- 																Consider</button>																																												 -->
-<!-- 																<button class="btn btn-info btn-sm" -->
-<%-- 																onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )"> --%>
-<!-- 																Hire</button>	 -->
-<!-- 															</div> -->
+<%-- 																<c:choose> --%>
+<%-- 																	<c:when test="${applicant.getApplication().getStatus() == 3 }"> --%>
+<!-- 																		<button class="update-application-status btn btn-info btn-sm"> 																		 -->
+<!-- 																		Hire</button>	 -->
+<%-- 																	</c:when> --%>
+<%-- 																	<c:otherwise> --%>
+<!-- 																		<button class="update-application-status btn btn-default btn-sm"  -->
+<%-- 																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )"> --%>
+<!-- 																		Hire</button> -->
+<%-- 																	</c:otherwise>																									 --%>
+<%-- 																</c:choose>																 --%>
+															</div>
 														</td>
 																
 													</tr>
@@ -381,14 +369,25 @@
 			filterApplicants();
 		})
 
+		
+		$(".update-application-status").click(function(){
+			
+			var buttons = $("#applicationStatus").find('button');
+			for(var i = 0; i < buttons.length; i++){
+				var button = buttons[i];
+				if($(button).hasClass("btn-info")){
+					$(button).removeClass("btn-info");
+					$(button).addClass("btn-default");
+				}
+			}
+			
+			$(this).addClass('btn-info');
+		})
+		
 
     
 		
 	});
-	
-	function updateApplicationStatus2(id, f ){
-		alert(345)
-	}
 	
 	function filterApplicants(){
 
