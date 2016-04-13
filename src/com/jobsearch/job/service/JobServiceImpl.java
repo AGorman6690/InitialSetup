@@ -26,6 +26,7 @@ import com.jobsearch.model.GoogleClient;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Service
 public class JobServiceImpl {
@@ -57,27 +58,24 @@ public class JobServiceImpl {
 			GeocodingResult[] results = maps.getLatAndLng(address);
 	
 			if (results.length == 1){
-				
-				//Convert the string dates to a java.sql.Date				
-				try {
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-					java.util.Date date = sdf.parse(jobDto.getStringStartDate());
-					jobDto.setStartDate(new java.sql.Date(date.getTime()));
-					date = sdf.parse(jobDto.getStringEndDate());
-					jobDto.setEndDate(new java.sql.Date(date.getTime()));
+				 
+				//Convert strings to sql Date objects
+				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate(), "MM/dd/yyyy"));
+				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate(), "MM/dd/yyyy"));
 					
-					//Convert strings to sql Time objects
-					jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
-					jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
-					
-				} catch (ParseException e1) {
-					e1.printStackTrace();
-				}
+				//Convert strings to sql Time objects
+				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
+				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
 				
+				//Address this idea later
+				//***************************************************************
 //				jobDto.setZipCode(GoogleClient.getAddressComponent(results[0].addressComponents, "POSTAL_CODE"));
+				//***************************************************************
+				
 				
 				jobDto.setLat((float) results[0].geometry.location.lat);
 				jobDto.setLng((float) results[0].geometry.location.lng);
+				
 				repository.addJob(jobDto);
 			}else if(results.length == 0){
 				//invalid address
@@ -117,12 +115,12 @@ public class JobServiceImpl {
 		return repository.getJobsByCategory(categoryId);
 	}
 
-	public List<Job> getApplicationsByUser(int userId) {
-		return repository.getApplicationsByUser(userId);
+	public List<Job> getJobsAppliedTo(int userId) {
+		return repository.getJobsAppliedTo(userId);
 	}
 
-	public List<Job> getEmploymentByUser(int userId) {
-		return repository.getEmploymentByUser(userId);
+	public List<Job> getJobsHiredFor(int userId) {
+		return repository.getJobsHiredFor(userId);
 	}
 
 	public List<Job> getJobsByUser(int userId) {
@@ -173,20 +171,36 @@ public class JobServiceImpl {
 		return count;
 	}
 	
-	public List<Job> getCompletedJobsByEmployer(int userId) {
-		return repository.getCompletedJobsByEmployer(userId);
+	public List<CompletedJobDTO> getCompletedJobsByEmployer(int userId) {
+		//FYI : As of now, this method could return a list of Jobs, not CompletedJobDTOs, and still
+		//contain all the information that is currently being rendered on jsp pages.
+		//It is returning CompletedJobDTO because the getCompletedJobsBy***Employee*** needs CompltedJobDTOs.
+		//Rather than creating two separate list properties in the user class to hold both Job objects
+		//and CompltedJobDTO objects, I chose this because in the future perhaps additional completed job info
+		//(i.e. past employees, comments, ratings) would also be nice to display on the employer page.
+		
+		List<Job> completedJobs = repository.getCompletedJobsByEmployer(userId);
+		
+		List<CompletedJobDTO> completedJobDtos = new ArrayList<CompletedJobDTO>();
+		for(Job job : completedJobs){
+			CompletedJobDTO completedJobDto = new CompletedJobDTO();			
+			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
+			completedJobDto.setJob(job);			
+			completedJobDtos.add(completedJobDto);
+		}
+		
+		return completedJobDtos;
 	}
 
-	public List<CompletedJobDTO> getCompletedJobsByEmployee(int userId) {
-		
+	public List<CompletedJobDTO> getCompletedJobsByEmployee(int userId) {		
 	
 		List<Job> completedJobs = repository.getCompletedJobsByEmployee(userId);
 		
 		List<CompletedJobDTO> completedJobDtos = new ArrayList<CompletedJobDTO>();
 		for(Job job : completedJobs){
 			CompletedJobDTO completedJobDto = new CompletedJobDTO();
+			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
 			completedJobDto.setJob(job);
-			completedJobDto.getJob().setCategories(categoryService.getCategoriesByJobId(job.getId()));
 			completedJobDto.setComment(userService.getComment(job.getId(), userId));
 			completedJobDto.setRating(userService.getRatingForJob(userId, job.getId()));;
 			completedJobDto.setEndorsements(userService.getUsersEndorsementsByJob(userId, job.getId()));

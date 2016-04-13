@@ -26,42 +26,42 @@ public class CategoryController {
 	@Autowired
 	JobServiceImpl jobService;
 	
-	@RequestMapping(value = "/addCategoryToJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String addCategoryToJob(@RequestParam int jobId,	@RequestParam int categoryId) {
-
-		categoryService.addCategoryToJob(jobId, categoryId);
-
-		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
-
-	}
+//	@RequestMapping(value = "/addCategoryToJob", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String addCategoryToJob(@RequestParam int jobId,	@RequestParam int categoryId) {
+//
+//		categoryService.addCategoryToJob(jobId, categoryId);
+//
+//		return JSON.stringify(categoryService.getCategoriesByJobId(jobId));
+//
+//	}
 	
-	@RequestMapping(value = "/addCategoryToUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String addCategoryToUser(@RequestParam int categoryId, @RequestParam int userId) {
-
-		// Add the category-user to the database
-		categoryService.addCategoryToUser(userId, categoryId);
-
-		//Return the categories associated with the user's id
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-
-	}
+//	@RequestMapping(value = "/addCategoryToUser", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String addCategoryToUser(@RequestParam int categoryId, @RequestParam int userId) {
+//
+//		// Add the category-user to the database
+//		categoryService.addCategoryToUser(userId, categoryId);
+//
+//		//Return the categories associated with the user's id
+//		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
+//
+//	}
 	
-	@RequestMapping(value = "/addCategoriesToUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String addCategoriesToUser(@RequestParam(value="category") int[] categoryIds, @RequestParam int userId) {
-	
-
-		// Add the category-user to the database
-		for(int categoryId : categoryIds){
-			categoryService.addCategoryToUser(userId, categoryId);
-		}
-		
-		//Return the categories associated with the user's id
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-
-	}
+//	@RequestMapping(value = "/addCategoriesToUser", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String addCategoriesToUser(@RequestParam(value="category") int[] categoryIds, @RequestParam int userId) {
+//	
+//
+//		// Add the category-user to the database
+//		for(int categoryId : categoryIds){
+//			categoryService.addCategoryToUser(userId, categoryId);
+//		}
+//		
+//		//Return the categories associated with the user's id
+//		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
+//
+//	}
 		
 //	@RequestMapping(value = "/getCategoryByLevel", method = RequestMethod.GET)
 //	@ResponseBody
@@ -79,14 +79,14 @@ public class CategoryController {
 	
 	}
 	
-	@RequestMapping(value = "/removeCategoryFromUser", method = RequestMethod.GET)
-	@ResponseBody
-	public String removeCategoryFromUser(@RequestParam int categoryId, @RequestParam int userId) {
-
-		// Update database
-		categoryService.removeCategoryFromUser(userId, categoryId);
-
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-
-	}
+//	@RequestMapping(value = "/removeCategoryFromUser", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String removeCategoryFromUser(@RequestParam int categoryId, @RequestParam int userId) {
+//
+//		// Update database
+//		categoryService.removeCategoryFromUser(userId, categoryId);
+//
+//		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
+//
+//	}
 }

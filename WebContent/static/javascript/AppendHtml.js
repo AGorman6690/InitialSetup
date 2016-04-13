@@ -1,9 +1,11 @@
 function addCategoryToSelection(event){
 
-	var newButtonId = event.id + "-selected";
+
+	var newButtonId = $(event).parent().attr('id') + "-selected";
+
 	if($('#selectedCategories').find('#' + newButtonId).length == 0){
 	
-		var html = '<button type="button" class="selected-category btn btn-success" id="' + newButtonId + '"';
+		var html = '<button type="button" class="btn btn-success" id="' + newButtonId + '"';
 			html += ' onclick="removeCategoryFromSelection(this)">';
 			html += $(event).html();
 			html += '<span style="margin: 5px 5px 5px 5px" class="glyphicon glyphicon-remove"></span></button>';	
@@ -11,6 +13,7 @@ function addCategoryToSelection(event){
 			$("#selectedCategories").append(html);			
 	}
 }
+
 
 function removeCategoryFromSelection(event){
 	$("#" + event.id).remove();
@@ -43,11 +46,7 @@ function appendCategories(categoryId, subCategoryDivIdKey, arr, callback) {
 			r[++j] = '</a>';
 
 			if (pageContext === "postJob" || pageContext === "profile") {
-				// Checkbox to select the category
-//				r[++j] = '<input id="'
-//						+ id
-//						+ 'Click" type="checkbox" class="margin-hori" name="categoryId" value="'
-//						+ id + '">';
+
 
 			} else if (pageContext === "findJob") {
 				// Number of active jobs in the category
@@ -166,96 +165,6 @@ function getCategoryId(id){
 	return id.substring(0, idEnd);
 }
 
-function appendJobs(eId, jobs, callback) {
-
-	// If there are sub categories
-	if (jobs.length > 0) {
-		var j = -1;
-		var r = new Array();
-		r[++j] = '<ul class="list-group">';
-
-		// For each sub category, create html
-		for (var i = 0; i < jobs.length; i++) {
-
-			var id = jobs[i].id;
-
-			// Li element. Its id is equal to the category id
-			r[++j] = '<li id="' + id + '" class="list-group-item margin-hori">';
-
-			// Job name
-			r[++j] = '<a href="#" id="' + id + '-Name" >';
-			r[++j] = jobs[i].jobName + "  ";
-			r[++j] = '</a>';
-
-			r[++j] = '</li>';
-		}
-
-		r[++j] = '</ul>'
-		$("#" + eId).append(r.join(''));
-
-		callback(eId, jobs);
-
-	}
-
-}
-
-
-
-function appendUsers_ApplicantsAndEmployeesForActiveJob(activeJob,
-		applicantsDivId, employeesDivId) {
-
-	if (unacceptedApplicantsExist(activeJob.applicants)) {
-		appendApplicants("applicants", activeJob.applicants, jobId, function() {
-		});
-	} else {
-		$("#" + applicantsDivId).empty();
-		$("#" + applicantsDivId).append("<div>No applicants</div>");
-	}
-
-	if (activeJob.employees.length > 0) {
-		appendEmployees("employees", activeJob.employees, function() {
-		});
-	} else {
-		$("#" + employeesDivId).empty();
-		$("#" + employeesDivId).append("<div>No employees</div>");
-	}
-}
-
-
-
-function appendJobs_EmployeeAppliedTo(eId, jobs, callback) {
-
-	// If there are sub categories
-	if (jobs.length > 0) {
-
-		var j = -1;
-		var r = new Array();
-		r[++j] = '<table class="table table-hover">';
-		r[++j] = '<thead>';
-		r[++j] = '<tr>';
-		r[++j] = '<th>Job Name</th>';
-		r[++j] = '</tr>';
-		r[++j] = '</thead>';
-		r[++j] = '<tbody>';
-
-		// For each sub category, create html
-		for (var i = 0; i < jobs.length; i++) {
-			var id = jobs[i].id;
-			r[++j] = '<tr id="' + id + '">';
-			r[++j] = '<td>';
-			r[++j] = jobs[i].jobName + '</td>';
-			r[++j] = '</tr>';
-		}
-
-		r[++j] = '</tbody>';
-		r[++j] = '</table>';
-		$("#" + eId).append(r.join(''));
-
-		callback(eId, jobs);
-
-	}
-}
-
 
 function appendFilteredJobsTable(jobs, userId){
 	$("#filteredJobs").empty();
@@ -321,41 +230,6 @@ function appendFilteredJobsTable(jobs, userId){
 		
 	}
 	
-}
-
-function appendJobs_EmployeeHiredFor(eId, jobs, callback) {
-
-	// If there are sub categories
-	if (jobs.length > 0) {
-
-		var j = -1;
-		var r = new Array();
-		r[++j] = '<table class="table table-hover">';
-		r[++j] = '<thead>';
-		r[++j] = '<tr>';
-		r[++j] = '<th>Job Name</th>';
-		r[++j] = '</tr>';
-		r[++j] = '</thead>';
-		r[++j] = '<tbody>';
-
-		// For each sub category, create html
-		for (var i = 0; i < jobs.length; i++) {
-
-			var id = jobs[i].id;
-
-			r[++j] = '<tr id="' + id + '">';
-			r[++j] = '<td>';
-			r[++j] = jobs[i].jobName + '</td>';
-			r[++j] = '</tr>';
-		}
-
-		r[++j] = '</tbody>';
-		r[++j] = '</table>';
-		$("#" + eId).append(r.join(''));
-
-		callback(eId, jobs);
-
-	}
 }
 
 $(document).ready(

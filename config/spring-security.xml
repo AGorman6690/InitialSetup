@@ -32,7 +32,7 @@
 		<form-login 
 		    login-page="/signIn" 
 		    login-processing-url="/login.do"
-		    default-target-url="/getProfile" 
+		    default-target-url="/user/profile" 
 			authentication-failure-url="/login?error" 
 			username-parameter="username"
 			password-parameter="password" />

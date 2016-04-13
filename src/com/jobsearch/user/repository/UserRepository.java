@@ -1,10 +1,12 @@
 package com.jobsearch.user.repository;
 
 import java.sql.CallableStatement;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +19,7 @@ import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;
+import com.jobsearch.user.service.EditProfileDTO;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -115,11 +118,18 @@ public class UserRepository {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
 				JobSearchUser e = new JobSearchUser();
-				e.setUserId(rs.getInt(1));
-				e.setFirstName(rs.getString(2));
-				e.setLastName(rs.getString(3));
-				e.setEmailAddress(rs.getString(4));
-				e.setProfileId(rs.getInt("up.profileId"));
+				e.setUserId(rs.getInt("UserId"));
+				e.setFirstName(rs.getString("FirstName"));
+				e.setLastName(rs.getString("LastName"));
+				e.setEmailAddress(rs.getString("Email"));
+				e.setProfileId(rs.getInt("ProfileId"));
+				e.setHomeLat(rs.getFloat("HomeLat"));
+				e.setHomeLng(rs.getFloat("HomeLng"));
+				e.setHomeCity(rs.getString("HomeCity"));
+				e.setHomeState(rs.getString("HomeState"));
+				e.setHomeZipCode(rs.getString("HomeZipCode"));
+				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
+				
 				return e;
 			}
 		});
@@ -273,14 +283,6 @@ public class UserRepository {
 		}		
 	}
 
-	public Profile getProfile(int profileId) {
-		String sql = "SELECT *" + " FROM profile" + "	WHERE profileId = ?";
-
-		List<Profile> profiles = this.ProfilesRowMapper(sql, new Object[] { profileId });
-
-		return profiles.get(0);
-	}
-
 	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
 		String sql = "SELECT *" + " FROM user" + "	INNER JOIN usercategories"
 				+ "	ON user.UserId = usercategories.userID" + " AND user.ProfileId = 2"
@@ -383,6 +385,53 @@ public class UserRepository {
 	public int getEndorsementCountByCategoryAndJob(int userId, int categoryId, int jobId) {
 		String sql = "SELECT COUNT(*) FROM endorsement WHERE UserId = ? AND CategoryId = ? AND JobId = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId, jobId }, Integer.class);
+	}
+
+
+	public void deleteAvailability(int userId) {
+		String sql = "DELETE FROM availability WHERE UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ userId });
+		
+	}
+
+
+	public void addAvailability(int userId, Date sqlDate) {
+		String sql = "INSERT INTO availability (UserId, Day) VALUES(?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ userId, sqlDate });
+		
+	}
+
+
+	public List<String> getAvailableDates(int userId) {
+		String sql = "SELECT Day FROM availability WHERE UserId = ?";
+		return jdbcTemplate.queryForList(sql, new Object[]{ userId }, String.class);
+	}
+
+
+	public void setHomeLocation(EditProfileDTO editProfileDTO) {
+		String sql = "INSERT INTO user (HomeLat, HomeLng, HomeCity, HomeState, HomeZipCode) "
+				+ "VALUES (?, ?, ?, ?, ?) WHERE UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{editProfileDTO.getHomeLat(),editProfileDTO.getHomeLng(),
+								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
+								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
+		
+	}
+	
+	public void updateHomeLocation(EditProfileDTO editProfileDTO) {
+		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+				+ " HomeZipCode = ? WHERE UserId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{editProfileDTO.getHomeLat(),editProfileDTO.getHomeLng(),
+								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
+								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
+		
+	}
+
+
+	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
+		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ maxWorkRadius, userId });
+		
 	}
 
 

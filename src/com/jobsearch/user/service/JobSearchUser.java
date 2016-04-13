@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.CompletedJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.Endorsement;
@@ -24,16 +25,88 @@ public class JobSearchUser {
 	private String matchingPassword;
 	private Profile profile;
 	private List<Category> categories;	
-	private ArrayList<Job> jobs;
-	private ArrayList<Job> activeJobs;
-	private ArrayList<Job> appliedToJobs;
-	private List<Job> completedJobs;
+	private List<Job> jobs;
+	private List<Job> activeJobs;
+	private List<Job> jobsAppliedTo;
+	private List<Job> jobsHiredFor;
+	private List<CompletedJobDTO> completedJobs;
 	private List<RateCriterion> ratings;
 	private List<Endorsement> endorsements;
 	private Application application;
 	private double rating;
 	private List<Answer> answers;
-	
+	private List<String> availableDates;
+	private float homeLat;
+	private float homeLng;
+	private String homeCity;
+	private String homeState;
+	private String homeZipCode;
+	private int maxWorkRadius; //Units = miles
+		
+	public float getHomeLat() {
+		return homeLat;
+	}
+
+	public void setHomeLat(float homeLat) {
+		this.homeLat = homeLat;
+	}
+
+	public float getHomeLng() {
+		return homeLng;
+	}
+
+	public void setHomeLng(float homeLng) {
+		this.homeLng = homeLng;
+	}
+
+	public String getHomeCity() {
+		return homeCity;
+	}
+
+	public void setHomeCity(String homeCity) {
+		this.homeCity = homeCity;
+	}
+
+	public String getHomeState() {
+		return homeState;
+	}
+
+	public void setHomeState(String homeState) {
+		this.homeState = homeState;
+	}
+
+	public String getHomeZipCode() {
+		return homeZipCode;
+	}
+
+	public void setHomeZipCode(String homeZipCode) {
+		this.homeZipCode = homeZipCode;
+	}
+
+	public int getMaxWorkRadius() {
+		return maxWorkRadius;
+	}
+
+	public void setMaxWorkRadius(int maxWorkRadius) {
+		this.maxWorkRadius = maxWorkRadius;
+	}
+
+	public List<Job> getJobsHiredFor() {
+		return jobsHiredFor;
+	}
+
+	public void setJobsHiredFor(List<Job> jobsHiredFor) {
+		this.jobsHiredFor = jobsHiredFor;
+	}
+
+	public List<String> getAvailableDates() {
+		return availableDates;
+	}
+
+	public void setAvailableDates(List<String> availableDates) {
+		this.availableDates = availableDates;
+	}
+
 	public List<Answer> getAnswers() {
 		return answers;
 	}
@@ -42,11 +115,11 @@ public class JobSearchUser {
 		this.answers = answers;
 	}
 
-	public List<Job> getCompletedJobs() {
+	public List<CompletedJobDTO> getCompletedJobs() {
 		return completedJobs;
 	}
 
-	public void setCompletedJobs(List<Job> completedJobs) {
+	public void setCompletedJobs(List<CompletedJobDTO> completedJobs) {
 		this.completedJobs = completedJobs;
 	}
 
@@ -82,27 +155,23 @@ public class JobSearchUser {
 		this.ratings = ratings;
 	}
 
-	public void setJobs(ArrayList<Job> jobs) {
-		this.jobs = jobs;
+	public List<Job> getJobsAppliedTo() {
+		return jobsAppliedTo;
 	}
 
-	public ArrayList<Job> getAppliedToJobs() {
-		return appliedToJobs;
+	public void setJobsAppliedTo(List<Job> jobsAppliedTo) {
+		this.jobsAppliedTo = jobsAppliedTo;
 	}
 
-	public void setAppliedToJobs(ArrayList<Job> appliedToJobs) {
-		this.appliedToJobs = appliedToJobs;
-	}
-
-	public ArrayList<Job> getActiveJobs() {
+	public List<Job> getActiveJobs() {
 		return activeJobs;
 	}
 
-	public void setActiveJobs(ArrayList<Job> activeJobs) {
+	public void setActiveJobs(List<Job> activeJobs) {
 		this.activeJobs = activeJobs;
 	}
 
-	public ArrayList<Job> getJobs() {
+	public List<Job> getJobs() {
 		return jobs;
 	}
 

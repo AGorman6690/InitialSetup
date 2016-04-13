@@ -48,7 +48,8 @@ function getFilteredJobs(filter, callback){
 }
 
 
-function submitJobs(jobName, userId, categoryId, callback) {
+//function submitJobs(jobName, userId, categoryId, callback) {
+function submitJobs() {	
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
@@ -209,40 +210,40 @@ function markJobComplete(jobId) {
 	});
 }
 
-function getApplicationsByUser(userId, callback) {
+//function getApplicationsByUser(userId, callback) {
+//
+//	$.ajax({
+//		type : "GET",
+//		url : 'http://localhost:8080/JobSearch/applications/user/' + userId,
+//		dataType : 'json',
+//		success : _success,
+//		error : _error
+//	});
+//
+//	function _success(response) {
+//		callback(response);
+//	}
+//
+//	function _error(response) {
+//	}
+//}
 
-	$.ajax({
-		type : "GET",
-		url : 'http://localhost:8080/JobSearch/applications/user/' + userId,
-		dataType : 'json',
-		success : _success,
-		error : _error
-	});
-
-	function _success(response) {
-		callback(response);
-	}
-
-	function _error(response) {
-	}
-}
-
-function getEmploymentByUser(userId, callback) {
-	$.ajax({
-		type : "GET",
-		url : 'http://localhost:8080/JobSearch/user/' + userId + '/employment',
-		dataType : 'json',
-		success : _success,
-		error : _error
-	});
-
-	function _success(response) {
-		callback(response);
-	}
-
-	function _error(response) {
-	}
-}
+//function getEmploymentByUser(userId, callback) {
+//	$.ajax({
+//		type : "GET",
+//		url : 'http://localhost:8080/JobSearch/user/' + userId + '/employment',
+//		dataType : 'json',
+//		success : _success,
+//		error : _error
+//	});
+//
+//	function _success(response) {
+//		callback(response);
+//	}
+//
+//	function _error(response) {
+//	}
+//}
 
 function getJobsByUser(userId, callback) {
 	$.ajax({

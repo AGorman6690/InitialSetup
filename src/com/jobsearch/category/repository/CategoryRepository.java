@@ -32,29 +32,29 @@ public class CategoryRepository {
 		});
 	}
 	
-	public void addCategoryToJob(int jobId, int categoryId) {
-		String sql;
-		sql = "INSERT INTO job_category (JobId, CategoryId)" + " VALUES (?, ?)";
-
-		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
-
-	}
+//	public void addCategoryToJob(int jobId, int categoryId) {
+//		String sql;
+//		sql = "INSERT INTO job_category (JobId, CategoryId)" + " VALUES (?, ?)";
+//
+//		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
+//
+//	}
 	
 		
 	public void addCategoryToUser(int userId, int categoryId) {
 
 		String sql;
-		sql = "insert into user_category (UserID, CategoryID) values (?, ?)";
+		sql = "INSERT INTO user_category (UserId, CategoryId) VALUES (?, ?)";
 		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 
 	}
 	
-	public void removeCategoryFromUser(int userId, int categoryId) {
+	public void deleteCategoriesFromUser(int userId) {
 
 		String sql;
-		sql = "DELETE FROM user_category" + " WHERE userId = ?" + " AND categoryId = ?";
+		sql = "DELETE FROM user_category" + " WHERE UserId = ?";
 
-		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
+		jdbcTemplate.update(sql, new Object[] { userId });
 	}
 
 	public List<Category> getCategoriesByJobId(int jobId) {

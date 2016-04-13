@@ -1,8 +1,8 @@
-package com.jobsearch.model;
+package com.jobsearch.utilities;
 
-public class MathExtensions {
+public final class MathUtility {
 	
-	public double round(double number, int decimalPlaces, int minRoundingValue){
+	public static double round(double number, int decimalPlaces, int minRoundingValue){
 		
 		double multiplyer = Math.pow(10, decimalPlaces);		
 		

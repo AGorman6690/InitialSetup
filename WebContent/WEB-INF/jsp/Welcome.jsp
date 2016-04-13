@@ -1,8 +1,10 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <div style="width: 80%; height: 800px; margin: auto">
-	<div
-		style="float: left; width: 40%; height: 25%; border: 1px gray; border-radius: 2px; margin: auto">
+	<div style="float: left; width: 40%; height: 25%; border: 1px gray; border-radius: 2px; margin: auto">
+
+		
+		
 		<p>Sign In</p>
 		<form:form commandName="user" action="./login.do" method="POST">
 			<table>
@@ -10,19 +12,23 @@
 					<td>Email:</td>
 				</tr>
 				<tr>
-					<td><form:input path="username" /></td>
+					<td><form:input path="username" id="userName" /></td>
 				</tr>
 				<tr>
 					<td>Password:</td>
 				</tr>
 				<tr>
-					<td><form:password path="password" /></td>
+					<td><form:password path="password" id="password"/></td>
 				</tr>
+
 				<tr>
 					<td><input type="submit" value="Sign in" /></td>
 				</tr>
 			</table>
 		</form:form>
+		
+		<button id="debug1">Employer</button>
+		<button id="debug2">Employee</button>
 	</div>
 
 	<div
@@ -69,5 +75,25 @@
 		</form:form>
 	</div>
 </div>
+
+<script>
+
+	$(document).ready(function(){
+		$("#debug1").click(function(){
+			$("#password").val('1');
+			$("#userName").val('1');
+			$("input[type=submit]")[0].click();
+			
+		})
+		
+		$("#debug2").click(function(){
+			$("#password").val('2');
+			$("#userName").val('2');
+			$("input[type=submit]")[0].click();
+			
+		})		
+	})
+
+</script>
 
 <%@ include file="./includes/Footer.jsp"%>

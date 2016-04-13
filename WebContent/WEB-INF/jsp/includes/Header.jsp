@@ -74,7 +74,7 @@
 		<c:choose>
 			<c:when test="${user.getFirstName() != null}">
 				<div class="navbar-header">
-					<a id="home" class="navbar-brand" href="http://localhost:8080/JobSearch/getProfile">Labor Vault</a>
+					<a id="home" class="navbar-brand" href="http://localhost:8080/JobSearch/user/profile">Labor Vault</a>
 				</div>
 			</c:when>
 		</c:choose>

@@ -199,7 +199,6 @@ public class JobRepository {
 	
 	
 	public void addJob(CreateJobDTO jobDto) {
-//		List<Job> jobsCreatedByUser = new ArrayList<>();
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
@@ -219,29 +218,25 @@ public class JobRepository {
 			 cStmt.setDate(11, (Date) jobDto.getEndDate());
 			 cStmt.setTime(12,  jobDto.getStartTime());
 			 cStmt.setTime(13,  jobDto.getEndTime());
-			 
 
-			 
 			 ResultSet result = cStmt.executeQuery();
 			 
 			 Job createdJob = new Job();
 			 result.next();
-//			 while(result.next()){
-				 createdJob.setId(result.getInt("JobId"));
-//			 }
-		 
-			for(Integer categoryId: jobDto.getCategoryIds()){
-				 cStmt = jdbcTemplate.getDataSource().getConnection()
-						.prepareCall("{call insertJobCategories(?, ?)}");
-			
-				cStmt.setInt(1, createdJob.getId());
-				cStmt.setInt(2, categoryId);
-			
-				cStmt.executeQuery();
+			 createdJob.setId(result.getInt("JobId"));
+			 
+			 for(Integer categoryId: jobDto.getCategoryIds()){
+				cStmt = jdbcTemplate.getDataSource().getConnection()
+							.prepareCall("{call insertJobCategories(?, ?)}");
+				
+					cStmt.setInt(1, createdJob.getId());
+					cStmt.setInt(2, categoryId);
+				
+					cStmt.executeQuery();
 			}
-			
+
 			for(Question question : jobDto.getQuestions()){
-		
+			
 				question.setJobId(createdJob.getId());
 				this.addQuestion(question);
 			}
@@ -342,7 +337,7 @@ public class JobRepository {
 		return result;
 	}
 
-	public List<Job> getApplicationsByUser(int userId) {
+	public List<Job> getJobsAppliedTo(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
 				+ "	AND application.UserId = ?";
 
@@ -356,7 +351,7 @@ public class JobRepository {
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
-	public List<Job> getEmploymentByUser(int userId) {
+	public List<Job> getJobsHiredFor(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment" + "	ON job.JobId = employment.JobId"
 				+ "	AND employment.UserId = ?";
 

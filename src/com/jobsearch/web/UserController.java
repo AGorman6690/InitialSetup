@@ -26,6 +26,9 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingDTO;
+import com.jobsearch.user.service.AvailabilityDTO;
+import com.jobsearch.user.service.EditProfileDTO;
+import com.jobsearch.user.service.FindEmployeesDTO;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -129,28 +132,34 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/getProfile", method = RequestMethod.GET)
+	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+		
+		try {
 
-		if (user.getUserId() == 0) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			user = userService.getUserByEmail(auth.getName());
+			if (user.getUserId() == 0) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+				user = userService.getUserByEmail(auth.getName());
+			}
+			
+			user = userService.getProfile(user);			
+
+			model.addObject("user", user);
+
+
+			if (user.getProfileId() == 1)
+				model.setViewName("EmployerProfile");
+			else
+				model.setViewName("EmployeeProfile");
+
+			return model;
+		} catch (Exception e) {
+			// TODO: handle exception
 		}
+		
+		
+		return null;
 
-		List<Job> activeJobs = jobService.getActiveJobsByUser(user.getUserId());
-		List<Job> completedJobs = jobService.getCompletedJobsByEmployer(user.getUserId());
-
-		model.addObject("user", user);
-
-		model.addObject("activeJobs", activeJobs);
-		model.addObject("completedJobs", completedJobs);
-
-		if (user.getProfileId() == 1)
-			model.setViewName("EmployerProfile");
-		else
-			model.setViewName("EmployeeProfile");
-
-		return model;
 	}
 
 	@RequestMapping(value = "/user/{userId}/categories", method = RequestMethod.GET)
@@ -159,17 +168,17 @@ public class UserController {
 		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
 	}
 
-	@RequestMapping(value = "/user/{userId}/removeCategories", method = RequestMethod.PUT)
-	@ResponseBody
-	public String removeCategories(@PathVariable int userId, @RequestParam(required = true) List<Integer> category) {
-
-		for (int categoryId : category) {
-			categoryService.removeCategoryFromUser(userId, categoryId);
-		}
-
-		// Return the categories associated with the user's id
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-	}
+//	@RequestMapping(value = "/user/{userId}/removeCategories", method = RequestMethod.PUT)
+//	@ResponseBody
+//	public String removeCategories(@PathVariable int userId, @RequestParam(required = true) List<Integer> category) {
+//
+//		for (int categoryId : category) {
+//			categoryService.removeCategoryFromUser(userId, categoryId);
+//		}
+//
+//		// Return the categories associated with the user's id
+//		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
+//	}
 
 	// THIS RETURNS PROFILE OBJECTS. PERHPAS A NEW CONTROLLER MAKES SENSE.
 	// ***************************************************************************
@@ -182,18 +191,22 @@ public class UserController {
 	}
 	// ***************************************************************************
 
-//	@RequestMapping(value = "/getApplicants", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getApplicants(@RequestParam int jobId) {
-//
-//		List<JobSearchUser> applicants = userService.getApplicants(jobId);
-//
-//		for (JobSearchUser applicant : applicants) {
-//			applicant.setRatings(userService.getRatings(applicant.getUserId()));
-//		}
-//
-//		return JSON.stringify(applicants);
-//	}
+	
+	
+	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityDTO availabilityDTO){
+
+		userService.updateAvailability(availabilityDTO);
+	}
+	
+
+	@RequestMapping(value = "/user/profile/edit", method = RequestMethod.POST)
+	@ResponseBody
+	public void editProfile(ModelAndView model, @RequestBody EditProfileDTO editProfileDTO){
+
+		userService.editProfile(editProfileDTO);
+	}
 
 	@RequestMapping(value = "/getOfferedApplicantsByJob", method = RequestMethod.GET)
 	@ResponseBody
@@ -208,6 +221,13 @@ public class UserController {
 	public String getEmployeesByJob(@RequestParam int jobId) {
 		return "";
 	}
+	
+	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
+	@ResponseBody
+	public String findEmployees(@RequestParam int userId,
+									@RequestParam(value="date") String[] dates) {
+		return "";
+	}	
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody

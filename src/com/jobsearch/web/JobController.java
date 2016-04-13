@@ -60,7 +60,6 @@ public class JobController {
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
 
-		// Add the job to the job table
 		jobService.addJob(jobDtos);
 
 	}

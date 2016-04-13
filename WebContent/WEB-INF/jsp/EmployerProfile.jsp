@@ -25,7 +25,7 @@
 			<div class="panel-heading">Active Jobs</div>
 			<div id="activeJobs" class="color-panel panel-body">
 				<c:choose>
-					<c:when test="${activeJobs.size() > 0 }">
+					<c:when test="${user.getActiveJobs().size() > 0 }">
 						<table id="activeJobsTable" class="table table-hover">
 							<thead>
 								<tr>
@@ -36,7 +36,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${activeJobs }" var="activeJob">
+								<c:forEach items="${user.getActiveJobs() }" var="activeJob">
 									<tr id="${activeJob.getId()}">
 										<td>${activeJob.getJobName()}</td>
 										<td>(not built)</td>
@@ -57,7 +57,7 @@
 			<div class="panel-heading">Completed Jobs</div>
 			<div id="completedJobs" class="color-panel panel-body">
 				<c:choose>
-					<c:when test="${completedJobs.size() > 0 }">
+					<c:when test="${user.getCompletedJobs().size() > 0 }">
 						<table class="table table-hover">
 							<thead>
 								<tr>
@@ -66,12 +66,12 @@
 								</tr>
 							</thead>
 							<tbody>
-								<c:forEach items="${completedJobs }" var="completedJob">
-									<tr id="${completedJob.getId() }">
+								<c:forEach items="${user.getCompletedJobs() }" var="completedJobDTO">
+									<tr id="${completedJobDTO.getJob().getId() }">
 										<td><a href="./job/${completedJob.getId() }">
-												${completedJob.getJobName() }</a></td>
+												${completedJobDTO.getJob().getJobName() }</a></td>
 										<td><a
-											href="./job/${completedJob.getId() }/rateEmployees"
+											href="./job/${completedJobDTO.getJob().getId() }/rateEmployees"
 											class="btn btn-info btn-sm margin-hori"> Rate Employees</a></td>
 									</tr>
 								</c:forEach>
@@ -92,7 +92,7 @@
 
 $(document).ready(function(){
 	$("#activeJobsTable tr td").click(function(){
-		window.location = './job/' + $(this).parent().attr('id');
+		window.location = '../job/' + $(this).parent().attr('id');
 	})	
 })
 

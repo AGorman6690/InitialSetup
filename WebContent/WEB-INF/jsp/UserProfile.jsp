@@ -14,29 +14,150 @@
 	</head>
 
 
+	<body>
+	<input type="hidden" id="userId" value="${user.userId}"/>	
+		<div class="container">
+			<h1>Edit Profile</h1>
+			<button type="button" class="btn btn-warning" id="save">Save</button>
+	
+			<div style="width: 750px" class="panel panel-info">		
+				<div class="panel-heading">Home Location</div>
+				<div class="panel-body">
+					<div class="form-group row">
+						<label for="homeCity"
+							class="post-job-label col-sm-2 form-control-label">City</label>
+						<div class="col-sm-10">
+							<input name="city" type="text"
+								class="post-job-input form-control" id="homeCity"
+								value="${user.getHomeCity() }"></input>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="homeState"
+							class="post-job-label col-sm-2 form-control-label">State</label>
+						<div class="col-sm-10">
+							<input name="state" type="text"
+								class="post-job-input form-control" id="homeState"
+								value="${user.getHomeState() }"></input>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="homeZipCode"
+							class="post-job-label col-sm-2 form-control-label">Zip
+							Code</label>
+						<div class="col-sm-10">
+							<input name="zipCode" type="text"
+								class="post-job-input form-control" id="homeZipCode" 
+								value="${user.getHomeZipCode() }"></input>
+						</div>
+					</div>
+				</div>
+			</div><!-- end home location panel -->
+			
+			<div class="panel panel-info">	
+				<div class="panel-heading">Maximum Distance Willing To Work From Home Location</div>
+				<div class="panel-body">
+					<div class="form-group row">
+						<label for="maxWorkRadius"
+							class="post-job-label col-sm-2 form-control-label">Distance from home location</label>
+						<div class="col-sm-10">							
+							<c:choose>
+								<c:when test="${user.getMaxWorkRadius() == -1 }">
+									<input name="state" type="text"
+										class="post-job-input form-control" id="maxWorkRadius"
+										></input>
+								</c:when>
+								<c:otherwise>
+									<input name="state" type="text"
+										class="post-job-input form-control" id="maxWorkRadius"
+										value="${user.getMaxWorkRadius() }"></input>
+								</c:otherwise>
+							</c:choose>								
+						</div>
+					</div>		
+				</div>
+			</div><!-- end max work radius panel -->			
+	
+			<div class="panel panel-info">	
+				<div class="panel-heading">Categories</div>
+				<div class="panel-body">
+					<div style="display: inline" id="selectedCategories">
+						<c:forEach items="${user.getCategories() }" var="category">
+							<button type="button" class="btn btn-success" 
+								id="${category.getId() }-selected" onclick="removeCategoryFromSelection(this)">
+								${category.getName() }
+							<span style="margin: 5px 5px 5px 5px" class="glyphicon glyphicon-remove">
+							</span></button>
+						</c:forEach>									
+					</div>
+					<div id="addCategories" style="display: none"></div>
+					<div id="removeCategories" style="display: none"></div>	
+					<br>
+					<div id="0T"></div>			
+				</div>
+			</div><!-- end categories panel -->
+			
+		</div><!-- end container -->
+	</body>
 
-	<input type="hidden" id="userId" value="${user.userId}"/>
-	<div id="addCategories" style="display: none"></div>
-	<div id="removeCategories" style="display: none"></div>
-
-	<h1>Edit Profile</h1>
-	<button type="button" id="saveEditProfileCats">Save</button>
-
-	<br>
-	<div id="0T"></div>
 
 
 	<script>
-	var pageContext = "profile";
+	
+	$(document).ready(function(){
+		$("#save").click(function(){
+			
+			var editProfileDTO = {};
+			editProfileDTO.userId = $("#userId").val();
+			editProfileDTO.homeCity = $("#homeCity").val();
+			editProfileDTO.homeState = $("#homeState").val();
+			editProfileDTO.homeZipCode = $("#homeZipCode").val();
+			editProfileDTO.maxWorkRadius = $("#maxWorkRadius").val();
+			
+			editProfileDTO.categoryIds = [];			
+			var categories = $('#selectedCategories').find("button");			
+			for(var i = 0; i < categories.length; i++){
+				var id = categories[i].id;
+				editProfileDTO.categoryIds.push(id.substring(0, id.indexOf("-")));
+			}
 
-	getCategoriesByUser($("#userId").val(), function(usersCategories){
+			var headers = {};
+			headers[$("meta[name='_csrf_header']").attr("content")] = $(
+					"meta[name='_csrf']").attr("content");
 
-		getCategoriesBySuperCat('0', function(response, categoryId){
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:8080/JobSearch/user/profile/edit",
+				headers : headers,
+				contentType : "application/json",
+				dataType : "application/json", // Response
+				data : JSON.stringify(editProfileDTO)
+			}).done(function() {
+				
+			}).error(function() {
 
-			//Append seed categories
-			appendCategories(categoryId, "T", response);
+			});
+						
 		})
 	})
+	
+	var pageContext = "profile";
+	
+	getCategoriesBySuperCat('0', function(response, categoryId) {
+		appendCategories(categoryId, "T", response, function() {
+		});
+	})
+	
+	
+
+// 	getCategoriesByUser($("#userId").val(), function(usersCategories){
+
+// 		getCategoriesBySuperCat('0', function(response, categoryId){
+
+// 			//Append seed categories
+// 			appendCategories(categoryId, "T", response);
+// 		})
+// 	})
 
 
 	</script>

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.GoogleClient;
+import com.jobsearch.utilities.DateUtility;
 
 public class FilterDTO {
 
@@ -166,27 +167,8 @@ public class FilterDTO {
 		this.setEndTime(java.sql.Time.valueOf(endTime));
 		
 		//Convert strings to sql Date objects
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-		java.util.Date date = null;
-		
-		try {
-			date = sdf.parse(startDate);
-			this.setStartDate(new java.sql.Date(date.getTime()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		try {
-			date = sdf.parse(endDate);
-			this.setEndDate(new java.sql.Date(date.getTime()));
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-
+		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
+		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));
 
 	}
 
