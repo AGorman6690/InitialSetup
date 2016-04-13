@@ -60,8 +60,8 @@ public class JobServiceImpl {
 			if (results.length == 1){
 				 
 				//Convert strings to sql Date objects
-				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate(), "MM/dd/yyyy"));
-				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate(), "MM/dd/yyyy"));
+				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
+				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
 					
 				//Convert strings to sql Time objects
 				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
@@ -90,30 +90,6 @@ public class JobServiceImpl {
 		repository.markJobComplete(jobId);
 	}
 
-	public void applyForJob(ApplicationDTO applicationDto) {
-		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
-		
-		//Whether the applicant answered all the questions is handled on the client side.
-		//At this point, all questions have a valid answer.
-		for(Answer answer : applicationDto.getAnswers()){			
-			
-			if (answer.getAnswerText() != ""){
-				repository.addTextAnswer(answer);
-			}else if(answer.getAnswerBoolean() != -1){
-				repository.addBooleanAnswer(answer);	
-			}else if(answer.getAnswerOptionId() != -1){
-				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
-			}else if(answer.getAnswerOptionIds().size() > 0){
-				for(int answerOptionId : answer.getAnswerOptionIds()){
-					repository.addOptionAnswer(answer, answerOptionId);
-				}
-			}
-		}
-	}
-
-	public List<Job> getJobsByCategory(int categoryId) {
-		return repository.getJobsByCategory(categoryId);
-	}
 
 	public List<Job> getJobsAppliedTo(int userId) {
 		return repository.getJobsAppliedTo(userId);
@@ -121,15 +97,6 @@ public class JobServiceImpl {
 
 	public List<Job> getJobsHiredFor(int userId) {
 		return repository.getJobsHiredFor(userId);
-	}
-
-	public List<Job> getJobsByUser(int userId) {
-		return repository.getJobsByUser(userId);
-	}
-
-
-	public List<Job> getJobOffersByUser(int userId) {
-		return repository.getJobOffersByUser(userId);
 	}
 
 	public List<Job> getActiveJobsByUser(int userId) {
@@ -220,7 +187,7 @@ public class JobServiceImpl {
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		
 		//Set job questions
-		job.setQuestions(this.getQuestions(job.getId()));
+		job.setQuestions(applicationService.getQuestions(job.getId()));
 		
 		
 		// Get job applicants
@@ -233,7 +200,7 @@ public class JobServiceImpl {
 			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
 			applicant.setEndorsements(userService.getUserEndorsementsByCategory(applicant.getUserId(), 
 											job.getCategories()));
-			applicant.setAnswers(this.getAnswers(job.getQuestions(), applicant.getUserId()));
+			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
 		}
 
 		// Get job employees
@@ -255,41 +222,6 @@ public class JobServiceImpl {
 
 		return job;
 	}
-
-
-	public List<Answer> getAnswers(List<Question> questions, int userId) {
-		
-		List<Answer> answers = new ArrayList<Answer>();
-		
-		for(Question question : questions){
-			Answer answer;
-			
-			if(question.getFormatId() == 2 || question.getFormatId() == 3){
-				answer = new Answer();
-				answer.setAnswers(repository.getAnswers(question.getQuestionId(), userId));
-//			}else if(question.getFormatId() == 2){
-//				answer = repository.getAnswer(question.getQuestionId(), userId);
-//				
-			}else{
-				answer = repository.getAnswer(question.getQuestionId(), userId);
-			}				
-			
-			answer.setQuestionFormatId(question.getFormatId());
-			answers.add(answer);
-		}
-		return answers;
-	}
-
-
-	private List<Question> getQuestions(int jobId) {
-		
-		List<Question> questions = repository.getQuestions(jobId);
-		for(Question q : questions){
-			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
-		}
-		return questions;
-	}
-
 
 	public List<Job> getFilteredJobs(FilterDTO filter) {
 		// TODO Auto-generated method stub

@@ -25,9 +25,6 @@ public class CategoryServiceImpl {
 	@Autowired
 	UserRepository userRepository;
 
-//	public void addCategoryToJob(int jobId, int categoryId) {
-//		repository.addCategoryToJob(jobId, categoryId);
-//	}
 
 	public void addCategoryToUser(int userId, int categoryId) {
 		repository.addCategoryToUser(userId, categoryId);

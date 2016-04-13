@@ -32,14 +32,6 @@ public class CategoryRepository {
 		});
 	}
 	
-//	public void addCategoryToJob(int jobId, int categoryId) {
-//		String sql;
-//		sql = "INSERT INTO job_category (JobId, CategoryId)" + " VALUES (?, ?)";
-//
-//		jdbcTemplate.update(sql, new Object[] { jobId, categoryId });
-//
-//	}
-	
 		
 	public void addCategoryToUser(int userId, int categoryId) {
 

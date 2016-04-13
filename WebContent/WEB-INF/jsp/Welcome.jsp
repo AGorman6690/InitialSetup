@@ -27,8 +27,8 @@
 			</table>
 		</form:form>
 		
-		<button id="debug1">Employer</button>
-		<button id="debug2">Employee</button>
+		<button id="debug1">Employer (UserId = 1)</button>
+		<button id="debug2">Employee (UserId = 2)</button>
 	</div>
 
 	<div

@@ -30,8 +30,8 @@
 							<thead>
 								<tr>
 									<th>Job Name</th>
-									<th>New Applicants</th>
-									<th>Total Applicants</th>
+									<th>New Applications</th>
+									<th>Open Applications</th>
 									<th>Employees</th>
 								</tr>
 							</thead>
@@ -71,7 +71,7 @@
 										<td><a href="./job/${completedJob.getId() }">
 												${completedJobDTO.getJob().getJobName() }</a></td>
 										<td><a
-											href="./job/${completedJobDTO.getJob().getId() }/rateEmployees"
+											href="../job/${completedJobDTO.getJob().getId() }/rateEmployees"
 											class="btn btn-info btn-sm margin-hori"> Rate Employees</a></td>
 									</tr>
 								</c:forEach>

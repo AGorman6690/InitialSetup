@@ -66,9 +66,6 @@ public class UserServiceImpl {
 		return repository.getApplicants(jobId);
 	}
 
-	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
-		return repository.getOfferedApplicantsByJob(jobId);
-	}
 
 	public List<JobSearchUser> getEmployeesByJob(int jobId) {
 		return repository.getEmpolyeesByJob(jobId);
@@ -313,13 +310,34 @@ public class UserServiceImpl {
 			repository.UpdateMaxWorkRadius(editProfileDTO.getUserId(), editProfileDTO.getMaxWorkRadius());
 		}
 
-		
-
-		
 	}
 
 	public void updateHomeLocation(EditProfileDTO editProfileDTO) {
 		repository.updateHomeLocation(editProfileDTO);
+		
+	}
+
+	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
+		
+		
+		
+		//A valid location must be supplied
+		if((Float) findEmployeesDto.getLat() != null && (Float) findEmployeesDto.getLng() != null
+				&& findEmployeesDto.getRadius() > 0){
+			
+			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
+			for(JobSearchUser employee : employees){
+				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
+				employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(), employee.getCategories()));
+				employee.setRating(this.getRating(employee.getUserId()));
+			}
+			
+			return employees;
+			
+		}
+		
+		return null;
+		
 		
 	}
 

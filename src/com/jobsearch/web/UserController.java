@@ -162,36 +162,6 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/user/{userId}/categories", method = RequestMethod.GET)
-	@ResponseBody
-	public String getCategoriesByUser(@PathVariable int userId) {
-		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-	}
-
-//	@RequestMapping(value = "/user/{userId}/removeCategories", method = RequestMethod.PUT)
-//	@ResponseBody
-//	public String removeCategories(@PathVariable int userId, @RequestParam(required = true) List<Integer> category) {
-//
-//		for (int categoryId : category) {
-//			categoryService.removeCategoryFromUser(userId, categoryId);
-//		}
-//
-//		// Return the categories associated with the user's id
-//		return JSON.stringify(categoryService.getCategoriesByUserId(userId));
-//	}
-
-	// THIS RETURNS PROFILE OBJECTS. PERHPAS A NEW CONTROLLER MAKES SENSE.
-	// ***************************************************************************
-	@RequestMapping(value = "/getProfiles", method = RequestMethod.GET)
-	@ResponseBody
-	public String getProfiles() {
-
-		List<Profile> profiles = userService.getProfiles();
-		return JSON.stringify(profiles);
-	}
-	// ***************************************************************************
-
-	
 	
 	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
 	@ResponseBody
@@ -208,25 +178,21 @@ public class UserController {
 		userService.editProfile(editProfileDTO);
 	}
 
-	@RequestMapping(value = "/getOfferedApplicantsByJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String getOfferedApplicantsByJob(@RequestParam int jobId) {
-		// This will return all users who have been extended an offer for a
-		// particular job
-		return JSON.stringify(userService.getOfferedApplicantsByJob(jobId));
-	}
-
-	@RequestMapping(value = "/getEmployeesByJob", method = RequestMethod.GET)
-	@ResponseBody
-	public String getEmployeesByJob(@RequestParam int jobId) {
-		return "";
-	}
 	
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	@ResponseBody
-	public String findEmployees(@RequestParam int userId,
-									@RequestParam(value="date") String[] dates) {
-		return "";
+	public String findEmployees(@RequestParam String city, @RequestParam String state,
+					@RequestParam String zipCode, @RequestParam int radius,
+					@RequestParam(value="date") List<String> dates,
+					@RequestParam(value="categoryId") List<Integer> categoryIds) {
+		
+		
+		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(city, state, zipCode, radius,
+													dates, categoryIds);
+		
+		List<JobSearchUser> employees = userService.findEmployees(findEmployeesDto);
+		
+		return JSON.stringify(employees);
 	}	
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)

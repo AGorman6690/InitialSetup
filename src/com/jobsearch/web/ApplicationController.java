@@ -33,20 +33,12 @@ public class ApplicationController {
 	JobServiceImpl jobService;
 	
 
-	
-	
 	@RequestMapping(value = "/applications/job/{jobId}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getApplicationsByJob(@PathVariable int jobId){
 		return JSON.stringify(applicationService.getApplicationsByJob(jobId));	
 	}
-	
-	
-//	@RequestMapping(value = "/applications/user/{userId}", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getApplicationsByUser(@PathVariable int userId){
-//		return JSON.stringify(jobService.getApplicationsByUser(userId));	
-//	}
+
 	
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody

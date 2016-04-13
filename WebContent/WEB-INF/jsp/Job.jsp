@@ -99,7 +99,7 @@
 									</select>									
 								</div>
 								<div style="margin-bottom:5px">
-									<label class="control-label">Application Status</label>
+									<label class="control-label">Application Status (Filter Not Built)</label>
 									<select title="Select status" class="hide-show-rows selectpicker" multiple data-style="btn-primary">												
 										<option value="0">Submitted</option>
 										<option value="1">Declined</option>

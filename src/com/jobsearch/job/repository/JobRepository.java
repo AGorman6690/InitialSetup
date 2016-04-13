@@ -76,80 +76,6 @@ public class JobRepository {
 		}
 				
 	}
-
-	public List<Question> QuestionRowMapper(String sql, Object[] args) {
-
-		try{
-
-			return jdbcTemplate.query(sql, args, new RowMapper<Question>() {
-	
-				@Override
-				public Question mapRow(ResultSet rs, int rownumber) throws SQLException {
-					Question e = new Question();
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setJobId(rs.getInt("JobId"));
-					e.setFormatId(rs.getInt("FormatId"));
-					e.setQuestion(rs.getString("Question"));
-
-					return e;
-				}
-			});
-			
-		}catch(Exception e){
-			return null;
-		}
-				
-	}
-	
-	public List<AnswerOption> AnswerOptionRowMapper(String sql, Object[] args) {
-
-		try{
-
-			return jdbcTemplate.query(sql, args, new RowMapper<AnswerOption>() {
-	
-				@Override
-				public AnswerOption mapRow(ResultSet rs, int rownumber) throws SQLException {
-					AnswerOption e = new AnswerOption();
-					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setAnswerOption(rs.getString("AnswerOption"));
-
-
-					return e;
-				}
-			});
-			
-		}catch(Exception e){
-			return null;
-		}
-				
-	}
-	
-	
-	public List<Answer> AnswerRowMapper(String sql, Object[] args) {
-
-		try{
-
-			return jdbcTemplate.query(sql, args, new RowMapper<Answer>() {
-	
-				@Override
-				public Answer mapRow(ResultSet rs, int rownumber) throws SQLException {
-					Answer e = new Answer();
-					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setAnswerText(rs.getString("AnswerText"));
-					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
-					e.setUserId(rs.getInt("UserId"));
-
-					return e;
-				}
-			});
-			
-		}catch(Exception e){
-			return null;
-		}
-				
-	}
 	
 	public void addJob(List<CreateJobDTO> jobDtos) {
 		List<Job> jobsCreatedByUser = new ArrayList<>();
@@ -238,7 +164,7 @@ public class JobRepository {
 			for(Question question : jobDto.getQuestions()){
 			
 				question.setJobId(createdJob.getId());
-				this.addQuestion(question);
+				applicationService.addQuestion(question);
 			}
 			 
 		} catch (SQLException e) {
@@ -247,43 +173,11 @@ public class JobRepository {
 		}
 	}
 
-	private void addQuestion(Question question) {
-		
-		
-		CallableStatement cStmt;
-		try {
-			cStmt = jdbcTemplate.getDataSource().getConnection().
-					prepareCall("{call insert_question(?, ?, ?)}");
-			
-			cStmt.setString(1, question.getQuestion());
-			cStmt.setInt(2, question.getFormatId());
-			cStmt.setInt(3, question.getJobId());
-			
-			ResultSet result = cStmt.executeQuery();	
-			result.next();
-			int createdQuestionId = result.getInt(("QuestionId"));		
-			
-			
-			if(question.getAnswerOptions() != null){
-				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
-				for(AnswerOption answerOption : question.getAnswerOptions()){
-					jdbcTemplate.update(sql, new Object[]{ createdQuestionId, answerOption.getAnswerOption() });
-				}
-			}
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-
-	public List<Job> getJobsByUser(int userId) {
-		String sql = "SELECT * FROM job WHERE UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { userId });
-
-	}
+//	public List<Job> getJobsByUser(int userId) {
+//		String sql = "SELECT * FROM job WHERE UserId = ?";
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//
+//	}
 
 	public List<Job> getActiveJobsByUser(int userId) {
 
@@ -312,20 +206,6 @@ public class JobRepository {
 
 	}
 
-	public void addApplication(int jobId, int userId) {
-		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
-
-		jdbcTemplate.update(sql, new Object[] { userId, jobId });
-
-	}
-
-	public List<Job> getJobsByCategory(int categoryId) {
-
-		String sql = "SELECT *" + " FROM job " + " INNER JOIN job_category" + " ON job.JobId = job_category.JobId"
-				+ " AND job_category.CategoryId = ?";
-
-		return this.JobRowMapper(sql, new Object[] { categoryId });
-	}
 
 	public int getJobCountByCategory(int categoryId) {
 
@@ -344,12 +224,6 @@ public class JobRepository {
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
-	public List<Job> getJobOffersByUser(int userId) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
-				+ "	AND application.UserId = ? AND applicaion.IsOffered = 1";
-
-		return this.JobRowMapper(sql, new Object[] { userId });
-	}
 
 	public List<Job> getJobsHiredFor(int userId) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment" + "	ON job.JobId = employment.JobId"
@@ -483,55 +357,6 @@ public class JobRepository {
 		sql += " HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
 		
 		return this.JobRowMapper(sql, args);
-	}
-
-
-	public List<Question> getQuestions(int id) {
-		String sql = "SELECT * FROM question WHERE JobId = ?";
-		return this.QuestionRowMapper(sql, new Object[]{ id });
-	}
-
-	public List<AnswerOption> getAnswerOptions(int questionId) {
-		
-		String sql = "SELECT * FROM answer_option WHERE QuestionId = ?";
-		return this.AnswerOptionRowMapper(sql, new Object[]{ questionId });
-
-	}
-
-	public void addTextAnswer(Answer answer) {
-		
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerText) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerText() });
-		
-	}
-
-	public void addBooleanAnswer(Answer answer) {
-		
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerBoolean) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerBoolean() });
-		
-	}
-	
-	public void addOptionAnswer(Answer answer, int optionId) {
-		
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerOptionId) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), optionId });
-		
-	}
-
-	public Answer getAnswer(int questionId, int userId) {
-		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
-		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId }).get(0);
-	}
-
-	public List<String> getAnswers(int questionId, int userId) {
-
-		String sql = "SELECT answer_option.AnswerOption FROM answer_option "
-				+ "	WHERE answer_option.AnswerOptionId IN"
-				+ " (SELECT AnswerOptionId FROM answer WHERE QuestionId = ?"
-				+ " AND UserId = ?)";		
-		
-		return jdbcTemplate.queryForList(sql, new Object[]{ questionId, userId }, String.class);
 	}
 
 

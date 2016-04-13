@@ -20,6 +20,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.service.EditProfileDTO;
+import com.jobsearch.user.service.FindEmployeesDTO;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -251,12 +252,6 @@ public class UserRepository {
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
-	public List<JobSearchUser> getOfferedApplicantsByJob(int jobId) {
-		String sql = "SELECT * FROM user" + " INNER JOIN application On user.UserId = application.UserId"
-				+ " AND application.IsOffered = 1 AND application.JobId = ?";
-
-		return JobSearchUserRowMapper(sql, new Object[] { jobId });
-	}
 
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
 
@@ -432,6 +427,109 @@ public class UserRepository {
 		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
 		jdbcTemplate.update(sql, new Object[]{ maxWorkRadius, userId });
 		
+	}
+
+
+	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
+		
+		//******************************************************************************************
+		//NOTE: For optimal performance, we may want to eventually do some testing to determine
+		//the order of these sub queries that executes most efficiently.
+		//******************************************************************************************
+		
+		
+		//**********************************
+		//Summary:
+		//The sub query for the distance each employee is from the specified location is required.
+		//The sub query for availability is optional.
+		//The sub query for categories is optional.
+		//**********************************
+			
+		String sql = "SELECT * FROM user WHERE user.UserId IN";
+		List<Object> argsList = new ArrayList<Object>();
+		
+		int subQueryCount = 1; //1 because the distance sub query is required
+		
+		//Build sub query for availability.
+		//This filter requires the employee to have availability on ALL requested days.
+		//Sub query returns all user ids with availability on ALL requested days.
+		//This sub query is optional.
+		String subQueryDates = null;
+		if (findEmployeesDto.getAvailableDates() != null){
+			
+			subQueryDates = " (SELECT a0.UserId FROM availability a0";
+			
+			//Initialize at 1 because the first date is accounted for in the WHERE clause at the end.
+			//See this SO post for sql details: http://stackoverflow.com/questions/1054299/sql-many-to-many-table-and-query
+			//The sub query takes the form:
+//			SELECT UserId
+//			FROM availability a0
+//			JOIN availability a1 ON a0.UserId = a1.UserId AND a1.Day = X
+//			JOIN availability a2 ON a1.UserId = a2.UserId AND a2.Day = Y
+//			WHERE Day = Z AND a0.UserId IN ([distance sub query])
+			for(int dateCount = 1; dateCount < findEmployeesDto.getAvailableDates().size(); dateCount++){
+				int dateCountMinus1 = dateCount - 1;
+				subQueryDates += " JOIN availability a" + dateCount + " ON a"  + dateCountMinus1 + ".UserId"
+						+ " = a" + dateCount + ".UserId AND a" + dateCount + ".Day = ?"; 
+				argsList.add(findEmployeesDto.getAvailableDates().get(dateCount));
+			}
+			
+			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
+			argsList.add(findEmployeesDto.getAvailableDates().get(0));
+			
+			sql += subQueryDates;
+			subQueryCount += 1;
+					
+		}
+		
+		//Build the sub query for categories.
+		//This sub query has the same structure as the availability sub query.
+		//This returns all user ids that have ALL the requested categories.
+		String subQueryCategories = null;
+		if (findEmployeesDto.getCategoryIds() != null){
+			
+			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
+			
+			for(int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++){
+				int categoryCountMinus1 = categoryCount - 1;
+				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc"  + categoryCountMinus1 + ".UserId"
+						+ " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?"; 
+				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
+			}
+			
+			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
+			argsList.add(findEmployeesDto.getCategoryIds().get(0));
+			
+			sql += subQueryCategories;
+			subQueryCount += 1;
+			
+		}
+		
+
+		
+		//Distance sub query.
+		//This returns all user ids with a home radius within the requested radius.
+		//This sub query is always required.
+		String subQueryDistance = " (SELECT UserId FROM user"
+				+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( user.HomeLat ) ) * cos( radians( user.HomeLng ) - radians(?) ) "
+				+ "+ sin( radians(?) ) * sin( radians( user.HomeLat ) ) ) ) < ? ";
+		
+		sql += subQueryDistance;
+		
+		
+		argsList.add(findEmployeesDto.getLat());
+		argsList.add(findEmployeesDto.getLng());
+		argsList.add(findEmployeesDto.getLat());
+		argsList.add(findEmployeesDto.getRadius());
+		
+		
+		//Need to close the sub queries
+		for (int i = 0; i < subQueryCount; i++){
+			sql += ")";
+		}
+		
+
+		return this.JobSearchUserRowMapper(sql, argsList.toArray());
 	}
 
 
