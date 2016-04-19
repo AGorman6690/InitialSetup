@@ -99,12 +99,12 @@
 									</select>									
 								</div>
 								<div style="margin-bottom:5px">
-									<label class="control-label">Application Status (Filter Not Built)</label>
-									<select title="Select status" class="hide-show-rows selectpicker" multiple data-style="btn-primary">												
-										<option value="0">Submitted</option>
+									<label class="control-label">Application Status</label>
+									<select id="applicationStatus" title="Select status" class="selectpicker" multiple data-style="btn-primary">												
+<!-- 										<option value="0">Submitted</option> -->
 										<option value="1">Declined</option>
-										<option value="3">Considered</option>
-										<option value="4">Accepted</option>
+										<option value="2">Considering</option>
+<!-- 										<option value="3">Accepted</option> -->
 									</select>									
 								</div>
 <!-- 								<button onclick="filterApplicants()" type="button" class="btn btn-success">Filter</button> -->
@@ -153,6 +153,7 @@
 			 		 									</c:if>
 			 		 									<c:forEach items="${applicant.getAnswers() }" var="answer">
 			 		 										<c:set var="questionFormatId" value="${answer.getQuestionFormatId() }" />
+			 		 										
 			 		 										<c:choose>
 			 		 											<c:when test="${questionFormatId == 0 }">
 			 		 												<c:choose>
@@ -164,9 +165,11 @@
 			 		 													</c:otherwise>
 		 		 													</c:choose>			 		 												
 			 		 											</c:when>
+			 		 											
 			 		 											<c:when test="${questionFormatId == 1 }">
 			 		 												<td class="clickToWorkHistory">${answer.getAnswerText()}</td>
 			 		 											</c:when>
+			 		 											
 			 		 											<c:otherwise>
 			 		 												<c:forEach items="${answer.getAnswers() }" var="multipleAnswer" varStatus="stat">
 			 		 													<c:set var="out" value="${stat.first ? '' : out} ${multipleAnswer }" />
@@ -177,42 +180,59 @@
 			 		 										
 			 		 									</c:forEach>
 														<td>
-															<div id="applicationStatus">
+															<div class="applicant-status">
+																<input value="${applicant.getApplication().getStatus()}" class="applicant-status" type="hidden" />
+																
 																<c:choose>
 																	<c:when test="${applicant.getApplication().getStatus() == 1 }">
-																		<button class="update-application-status btn btn-info btn-sm" >
-																		Decline</button>	
+																		<div>
+																			<button value="0" class="update-application-status btn btn-info btn-sm"
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 0 )" >
+																			Declined</button>
+																			
+																			<button style="display: none" value="1" class="update-application-status btn btn-default btn-sm" 
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
+																			Declined</button>
+																		</div>																			
 																	</c:when>
 																	<c:otherwise>
-																		<button class="update-application-status btn btn-default btn-sm" 
-																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
-																		Decline</button>
+																		<div>
+																			<button style="display: none" value="0" class="update-application-status btn btn-info btn-sm"
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 0 )" >
+																			Declined</button>
+																			
+																			<button value="1" class="update-application-status btn btn-default btn-sm" 
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 1 )">
+																			Declined</button>
+																		</div>	
 																	</c:otherwise>																																														
 																</c:choose>																
 																
 																<c:choose>
 																	<c:when test="${applicant.getApplication().getStatus() == 2 }">
-																		<button class="update-application-status btn btn-info btn-sm"> 																		
-																		Consider</button>	
+																		<div>
+																			<button value="0" class="update-application-status btn btn-info btn-sm"
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 0 )" >
+																			Considering</button>
+																			
+																			<button style="display: none" value="2" class="update-application-status btn btn-default btn-sm" 
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
+																			Considering</button>
+																		</div>	
 																	</c:when>
 																	<c:otherwise>
-																		<button class="update-application-status btn btn-default btn-sm" 
-																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
-																		Consider</button>
+																		<div>
+																			<button style="display: none" value="0" class="update-application-status btn btn-info btn-sm"
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 0 )" >
+																			Considering</button>
+																			
+																			<button value="2" class="update-application-status btn btn-default btn-sm" 
+																			onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 2 )">
+																			Considering</button>
+																		</div>	
 																	</c:otherwise>																									
 																</c:choose>
 																
-<%-- 																<c:choose> --%>
-<%-- 																	<c:when test="${applicant.getApplication().getStatus() == 3 }"> --%>
-<!-- 																		<button class="update-application-status btn btn-info btn-sm"> 																		 -->
-<!-- 																		Hire</button>	 -->
-<%-- 																	</c:when> --%>
-<%-- 																	<c:otherwise> --%>
-<!-- 																		<button class="update-application-status btn btn-default btn-sm"  -->
-<%-- 																		onclick="updateApplicationStatus(${applicant.getApplication().getApplicationId()}, 3 )"> --%>
-<!-- 																		Hire</button> -->
-<%-- 																	</c:otherwise>																									 --%>
-<%-- 																</c:choose>																 --%>
 															</div>
 														</td>
 																
@@ -357,12 +377,55 @@
 		$('#applicantsTable').DataTable();
 		$('#employeesTable').DataTable();
 
-
 		$(".clickToWorkHistory").click(function(){			
 			elementId = $(this).parent().attr('id');
 			var idBegin = elementId.indexOf("_") + 1;
 			var userId =  elementId.substring(idBegin);
-			window.location = "../jobs/completed/employee/?userId=" + userId + '&jobId=' + $("#jobId").val();
+			window.location = "../jobs/completed/employee/?userId=" + userId +
+								'&jobId=' + $("#jobId").val() + '&c=0';
+		})
+		
+		$("#applicationStatus").change(function(){
+
+			var i = 0;		
+			var j = 0;		
+			var statusesToShow = $(this).find(":selected")
+									.map(function(){ return $(this).val() }).get();
+			
+			
+			var statuses = $("#applicantsTable").find("tbody input.applicant-status")
+			
+			if(statusesToShow.length == 0){
+				for(i = 0; i < statuses.length; i++){
+					var status = statuses[i];
+					var rows = $(status).parents('tr');
+					var row = rows[0];
+					$(row).hide();
+				}
+			}else if(statusesToShow.length == 2){
+				for(i = 0; i < statuses.length; i++){
+					var status = statuses[i];
+					var rows = $(status).parents('tr');
+					var row = rows[0];
+					$(row).show();
+				}
+			}else{
+				for(i = 0; i < statuses.length; i++){
+					var status = statuses[i];
+					var rows = $(status).parents('tr');
+					var row = rows[0];
+			
+					for(j = 0; j < statusesToShow.length; j++){
+
+						if($(status).val() == statusesToShow[j]){
+							$(row).show();
+							j = statusesToShow.length;
+						}else if(j == statusesToShow.length - 1){
+							$(row).hide();
+						}						
+					}	
+				}
+			}
 		})
 		
 		$(".hide-show-columns").change(function(){
@@ -371,22 +434,29 @@
 
 		
 		$(".update-application-status").click(function(){
+
+			//Store the value of the application status
+			$(this).parent().siblings('input.applicant-status').val($(this).val());
 			
-			var buttons = $("#applicationStatus").find('button');
+			//Show all default buttons
+			var buttons = $(this).parents('div.applicant-status').find('button');
 			for(var i = 0; i < buttons.length; i++){
 				var button = buttons[i];
+				
 				if($(button).hasClass("btn-info")){
-					$(button).removeClass("btn-info");
-					$(button).addClass("btn-default");
+					$(button).hide();
+				}else if($(button).hasClass("btn-default")){
+					$(button).show();
 				}
 			}
 			
-			$(this).addClass('btn-info');
-		})
-		
+			//Toggle the clicked button
+			$(this).hide();
+			var otherButton = $(this).siblings('button')[0];
+			$(otherButton).show();
 
-    
-		
+		})
+
 	});
 	
 	function filterApplicants(){
@@ -487,6 +557,7 @@
 			});
 		
 			function _success(response) {
+				$('#home')[0].click();
 			}
 		
 			function _error(response) {

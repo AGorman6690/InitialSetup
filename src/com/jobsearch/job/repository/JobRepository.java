@@ -252,111 +252,110 @@ public class JobRepository {
 	}
 
 
-	public List<Job> getFilteredJobs(FilterDTO filter, int sqlArguementCount) {
+	public List<Job> getFilteredJobs(FilterDTO filter) {
 		// TODO Auto-generated method stub
 		
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
-		//This calculates the distance between a database row and a given lat/lng.
+		//This calculates the distance between each job and a given lat/lng.
 		String sql = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
 					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) )"
-					+ " AS distance FROM job";
+					+ " AS distance FROM job WHERE job.JobId IN (SELECT job.JobId FROM job";
 
 
-		Object[] args = new Object[sqlArguementCount];
-		int argCount;
+		List<Object> argsList = new ArrayList<Object>();
 	
-		//Arguments for distance filter
-		args[0] = filter.getLat();
-		args[1] = filter.getLng();
-		args[2] = filter.getLat();		
-		argCount = 3;
+		//Arguments for distance filter	
+		argsList.add(filter.getLat());
+		argsList.add(filter.getLng());
+		argsList.add(filter.getLat());	
 			
-		String sql2; 
 		//If there are no categories to filter on
 		if(filter.getCategoryIds() == null){
 
-			sql2 = " WHERE job.IsActive = 1";
+			sql += " WHERE job.IsActive = 1";
 			
 		//Else build the where condition for the categories 		
 		}else{
 	
-			sql2 = " INNER JOIN job_category ON job.JobId = job_category.JobId WHERE job.IsActive = 1 AND (";
+			sql += " INNER JOIN job_category ON job.JobId = job_category.JobId WHERE job.IsActive = 1 AND (";
 			for(int i = 0; i < filter.getCategoryIds().length; i++){
 				if(i < filter.getCategoryIds().length - 1){
-					sql2 += " job_category.CategoryId = ? OR";
+					sql += " job_category.CategoryId = ? OR";
 				}else{
-					sql2 += " job_category.CategoryId = ?)";
+					sql += " job_category.CategoryId = ?)";
 				}
 			
-				args[argCount] = filter.getCategoryIds()[i];
-				argCount += 1;
+				argsList.add(filter.getCategoryIds()[i]);
 			}			
 			
 		}
-		sql += sql2;
-		
-		//Add filter on start time
+
+		//Start time
 		if(filter.getStartTime() != null){
-			sql2 = " AND job.StartTime";
+			sql += " AND job.StartTime";
 			if(filter.getBeforeStartTime()){
-				sql2 += " <= ?";
+				sql += " <= ?";
 			}else{
-				sql2 += " >= ?";
+				sql += " >= ?";
 			}
-			sql += sql2;
 			
-			args[argCount] = filter.getStartTime();
-			argCount += 1;
+			argsList.add(filter.getStartTime());
 		}
 		
-		//Add filter on end time
+		//End time
 		if(filter.getEndTime() != null){
-			sql2 = " AND job.EndTime";
+			sql += " AND job.EndTime";
 			if(filter.getBeforeEndTime()){
-				sql2 += " <= ?";
+				sql += " <= ?";
 			}else{
-				sql2 += " >= ?";
+				sql += " >= ?";
 			}			
-			sql += sql2;
-			
-			args[argCount] = filter.getEndTime();
-			argCount += 1;
+
+			argsList.add(filter.getEndTime());
 		}	
 		
-		//Add filter on start date
+		//Start date
 		if(filter.getStartDate() != null){
-			sql2 = " AND job.StartDate";
+			sql += " AND job.StartDate";
 			if(filter.getBeforeStartDate()){
-				sql2 += " <= ?";
+				sql += " <= ?";
 			}else{
-				sql2 += " >= ?";
+				sql += " >= ?";
 			}			
-			sql += sql2;
-			
-			args[argCount] = filter.getStartDate();
-			argCount += 1;
+
+			argsList.add(filter.getStartDate());
 		}
 		
-		//Add filter on end date
+		//End date
 		if(filter.getEndDate() != null){
-			sql2 = " AND job.EndDate";
+			sql += " AND job.EndDate";
 			if(filter.getBeforeEndDate()){
-				sql2 += " <= ?";
+				sql += " <= ?";
 			}else{
-				sql2 += " >= ?";
+				sql += " >= ?";
 			}			
-			sql += sql2;
 			
-			args[argCount] = filter.getEndDate();
-			argCount += 1;
+			argsList.add(filter.getEndDate());
 		}		
-
-		//Complete the distance filter.
-		//Add radius for distance filter.
-		args[argCount] = filter.getRadius();
-		sql += " HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
 		
-		return this.JobRowMapper(sql, args);
+		//Duration
+		if(filter.getDuration() > 0){
+			sql += " AND job.EndDate - job.StartDate";
+			if(filter.getLessThanDuration()){
+				sql += " <= ?";
+			}else{
+				sql += " >= ?";
+			}
+			
+			argsList.add(filter.getDuration());
+		}
+		
+
+		//Close the sub query and complete the distance filter.
+		argsList.add(filter.getRadius());
+		sql += ") HAVING distance < ? ORDER BY distance LIMIT 0 , 20";
+		
+		return this.JobRowMapper(sql, argsList.toArray());
 	}
 
 

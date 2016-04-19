@@ -318,9 +318,7 @@ public class UserServiceImpl {
 	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
-		
-		
-		
+
 		//A valid location must be supplied
 		if((Float) findEmployeesDto.getLat() != null && (Float) findEmployeesDto.getLng() != null
 				&& findEmployeesDto.getRadius() > 0){
@@ -330,6 +328,9 @@ public class UserServiceImpl {
 				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
 				employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(), employee.getCategories()));
 				employee.setRating(this.getRating(employee.getUserId()));
+				employee.setDistanceFromJob(MathUtility.round(GoogleClient.getDistance(findEmployeesDto.getLat(),
+						findEmployeesDto.getLng(), employee.getHomeLat(), employee.getHomeLng()), 1, 0));
+
 			}
 			
 			return employees;
@@ -337,8 +338,6 @@ public class UserServiceImpl {
 		}
 		
 		return null;
-		
-		
 	}
 
 

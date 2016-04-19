@@ -226,9 +226,11 @@ public class JobServiceImpl {
 	public List<Job> getFilteredJobs(FilterDTO filter) {
 		// TODO Auto-generated method stub
 		
+		
 		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
 		
+		//Filter location must return a valid response
 		if (results.length == 1){
 			
 			filter.setLng((float) results[0].geometry.location.lng);
@@ -239,70 +241,28 @@ public class JobServiceImpl {
 			if(filter.categoryIds[0] ==  -1) filter.categoryIds = null;
 			if(filter.getStringEndTime().equals(FilterDTO.ZERO_TIME)) filter.endTime = null;
 			if(filter.getStringStartTime().equals(FilterDTO.ZERO_TIME)) filter.startTime = null;
+			if(filter.getWorkingDays().get(0).matches("-1")) filter.setWorkingDays(null);
 
-			
-			
-			int sqlArguementCount = this.getSqlArguementCount(filter); 
-	
 			//Get the filtered jobs
-			List<Job> filteredJobs = repository.getFilteredJobs(filter, sqlArguementCount);
+			List<Job> filteredJobs = repository.getFilteredJobs(filter);
 		
 			//For each filtered job, calculate the distance between the user's specified filter lat/lng 
-			for(Job job : filteredJobs){
-				job.setDistanceFromFilterLocation(GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()));
-				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-			
+			if(filteredJobs != null){
+				for(Job job : filteredJobs){
+					job.setDistanceFromFilterLocation(GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()));
+					job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+				
+				}
+				return  filteredJobs;
+			}else{
+				return null;
 			}
 			
-			
-
-
-			//Sort the filtered jobs by distance from user's specified lat/lng in ascending order.
-//			Collections.sort(filteredJobs, 
-//	                (job1, job2) -> job1.getDistanceFromFilterLocation().compareTo(job2.getDistanceFromFilterLocation()));
-			return  filteredJobs;
 					
 		}else {
 			//the address is ambiguous
 			return null;
 		}
 	}
-
-
-	private int getSqlArguementCount(FilterDTO filter) {
-		
-		//There is at least four arguements for the distance filter
-		int count = 4;
-		
-		
-		//Category filter
-		if(filter.categoryIds != null){
-			count += filter.getCategoryIds().length;
-		}		
-		
-		//Start time filter
-		if(filter.startTime != null){
-			count += 1;
-		}
-		
-		//End time filter
-		if(filter.endTime != null){
-			count += 1;
-		}
-		
-		if(filter.getStartDate() != null){
-			count += 1;
-		}
-		
-		if(filter.getEndDate() != null){
-			count += 1;
-		}
-		
-		
-		return count;
-	}
-
-
-
 
 }

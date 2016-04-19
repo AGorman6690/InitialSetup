@@ -109,6 +109,8 @@ public class UserRepository {
 				e.setLastName(rs.getString(3));
 				e.setEmailAddress(rs.getString(4));
 				e.setProfileId(rs.getInt(9));
+				e.setHomeLat(rs.getFloat("HomeLat"));
+				e.setHomeLng(rs.getFloat("HomeLng"));
 				return e;
 			}
 		});

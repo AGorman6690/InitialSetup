@@ -100,6 +100,9 @@
 		})
 		
 		$(document).ready(function(){
+			
+		
+			
 			$('#availableDays').datepicker({
 				toggleActive: true,
 				format: "yyyy-MM-dd",
@@ -126,6 +129,10 @@
 					parameters += "&zipCode=" + $("#homeZipCode").val();
 					
 					//Dates
+					var dates = [];
+// 					var str = $("#arrayDates").val();
+// 					str = str.substring(1, str.length -1);
+// 					dates = str.split(",");	
 					var dates= $("#availableDays").datepicker('getDates');
 					if(dates.length > 0){
 						for(var i = 0; i < dates.length; i++){
@@ -164,13 +171,14 @@
 						r[++j] =			'<th>Categories</th>';
 						r[++j] =			'<th>Endorsements</th>';
 						r[++j] =			'<th>Rating</th>';
+						r[++j] =			'<th>Distance From Job</th>';
 						r[++j] =		'</tr>';
 						r[++j] =	'</thead>';
 						r[++j] = 	'<tbody>';
 						
 						for(var i = 0; i < employees.length; i++){
 							var e = employees[i];
-							r[++j] = '<tr>';
+							r[++j] = '<tr id="user_' + e.userId + '" class="clickToWorkHistory">';
 							r[++j] =	'<td>' + e.firstName + " " + e.lastName + '</td>';
 							
 							var categoryNames = "";
@@ -183,11 +191,21 @@
 							r[++j] = 	'<td>' + categoryNames + '</td>';
 							r[++j] = 	'<td>(not built)</td>';
 							r[++j] = 	'<td>' + e.rating + '</td>';
+							r[++j] = 	'<td>' + e.distanceFromJob + '</td>';
 							r[++j] = '</tr>';
 						}
 						
 						$("#employees").append(r.join(''));
 						$('#filterEmployeesTable').DataTable();
+						
+						$(".clickToWorkHistory").click(function(){	
+// 							alert(3)
+			 				elementId = $(this).attr('id');
+							var idBegin = elementId.indexOf("_") + 1;
+							var userId =  elementId.substring(idBegin);
+							
+							window.location = "./jobs/completed/employee/?userId=" + userId + "&c=1";
+						})
 
 					}
 			

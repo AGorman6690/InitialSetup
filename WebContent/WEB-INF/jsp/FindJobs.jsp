@@ -88,7 +88,7 @@
 							 data-toggle="collapse" data-target="#collapseDate">Date</a>										
 						<div class="collapse" id="collapseDate">
 			
-							<div class="job-location-container input-group">
+							<div class="job-location-container input-group" style="margin-bottom: 10px">
 								<span class="job-location-label input-group-addon">Start Date</span>		
 										<input style="float:left" id="startDateBeforeAfter" type="checkbox" checked
 										 data-off-class="btn-success" data-on-class="btn-success">								
@@ -97,7 +97,7 @@
 									  		<i class="glyphicon glyphicon-th"></i></span>
 								  		</div>				
 							</div>		
-							<div class="job-location-container input-group">
+							<div class="job-location-container input-group" style="margin-bottom: 10px">
 								<span class="job-location-label input-group-addon">End Date</span>
 									<div >
 										<input style="float:left" id="endDateBeforeAfter" type="checkbox" checked
@@ -108,12 +108,17 @@
 								  		</div>
 									</div>
 							</div>	
-							<div class="job-location-container input-group">
+							<div class="job-location-container input-group" style="margin-bottom: 10px">
 								<span class="job-location-label input-group-addon">Duration (days)</span>
+								<input style="float:left" id="lessThanDuration" type="checkbox" checked
+										 data-off-class="btn-success" data-on-class="btn-success">		
 								<input id="filterDuration"
 									type="text" class="form-control" aria-describedby="sizing-addon2">
-							</div>																			
-						</div>
+							
+							</div>	
+								<span class="job-location-label input-group-addon">Working Days (isn't built)</span>
+								<div id='workingDays' class="input-group date" style="margin-bottom: 10px; display: inline">
+					  		</div>			
 					</li>	
 					
 						<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning"
@@ -157,14 +162,39 @@
 
 <script>
 	$(document).ready(function() {
-	$('.input-group.date').datepicker({
-		toggleActive: true});
+		
+		$("#filterDuration").keydown(function(){
+			$("#filterStartDate").val('');
+			$("#filterEndDate").val('');
+		})
+		
+		$("#filterStartDate").change(function(){
+			$("#filterDuration").val('');
+		})
+		
+		$("#filterEndDate").change(function(){
+			$("#filterDuration").val('');
+		})
+		
+		$('#workingDays').datepicker({
+			toggleActive: true,
+			clearBtn: true,
+			todayHighlight: true,
+			startDate: new Date(),
+			multidate: true			
+		});	
+	
+		$('.input-group.date').datepicker({
+			autoclose: true,
+			toggleActive: true});
 
 		$('#filterStartTime').timepicker({
 			'scrollDefault': '7:00am'});
 		
 		$('#filterEndTime').timepicker({'scrollDefault': '5:00pm'});
 	
+		//Combine these???
+		//******************************************************************
 		$('#startTimeBeforeAfter').checkboxpicker({
 			  html: true,
 			  offLabel: 'Before',
@@ -176,7 +206,7 @@
 			  offLabel: 'Before',
 			  onLabel: 'After'
 			});
-		
+
 		$('#startDateBeforeAfter').checkboxpicker({
 			  html: true,
 			  offLabel: 'Before',
@@ -188,6 +218,13 @@
 			  offLabel: 'Before',
 			  onLabel: 'After'
 			});	
+		//******************************************************************
+		
+		$('#lessThanDuration').checkboxpicker({
+			  html: true,
+			  offLabel: 'Less Than',
+			  onLabel: 'Greater Than'
+			});			
 		
 		$('#startDateBeforeAfter').change(function () {
 		    if (beforeStartDate == 0) {
@@ -224,6 +261,16 @@
 		    }
 
 		});		
+		
+		$('#lessThanDuration').change(function () {
+		    if (lessThanDuration == 0) {
+		    	lessThanDuration = 1;
+		    } else {
+		    	lessThanDuration = 0;
+		    }
+
+		});	
+
 	})
 	
 
@@ -234,66 +281,97 @@
 		appendCategories(categoryId, "F", response);
 	});
 	
-	
 	var beforeStartTime = 0;
 	var beforeEndTime = 0;
 	var beforeStartDate = 0;
 	var beforeEndDate = 0;
+	var lessThanDuration = 0;
+	
 	function filterJobs() {
-		
-		var filter = {};
-		
-		filter.radius = $("#radius").val();
-		filter.fromAddress = $.trim($("#fromStreetAddress").val() + " "
+
+		var radius = $("#radius").val();			
+		var address = $.trim($("#fromStreetAddress").val() + " "
 				+ $("#fromCity").val() + " " + $("#fromState").val() + " "
 				+ $("#fromZipCode").val());
-		filter.categories = getCategoryIds("selectedCategories");
-		filter.stringStartDate = $("#filterStartDate").val();
-		filter.stringEndDate = $("#filterEndDate").val();
-		filter.stringStartTime = formatTime($("#filterStartTime").val());
-		filter.stringEndTime = formatTime($("#filterEndTime").val());
-		filter.beforeStartTime = beforeStartTime;
-		filter.beforeEndTime = beforeEndTime;
-		filter.beforeStartDate = beforeStartDate;
-		filter.beforeEndDate = beforeEndDate;
 		
-// 				alert(JSON.stringify(filter))
-		if (filter.radius != "" && filter.fromAddress != "") {
-			getFilteredJobs(filter, function(filter) {
+		if(radius != "" && address != ""){
+			
+			var params = "";
+			params += "?radius=" + radius;
+			params += "&fromAddress=" + address;			
+			params += "&startTime=" + formatTime($("#filterStartTime").val());
+			params += "&endTime=" + formatTime($("#filterEndTime").val());
+			params += "&beforeEndTime=" + beforeEndTime;
+			params += "&beforeStartTime=" + beforeStartTime;
+			params += "&startDate=" + $("#filterStartDate").val();
+			params += "&endDate=" + $("#filterEndDate").val();
+			params += "&beforeStartDate=" + beforeStartDate;
+			params += "&beforeEndDate=" + beforeEndDate;
+			
+			var duration = $("#filterDuration").val();
+			if(duration == ""){
+				duration = 0;
+			}
+			params += "&duration=" + duration;
+			params += "&lessThanDuration=" + lessThanDuration;
+			
+			var i;	
+			
+			//Category ids
+			var categoryIds = getCategoryIds("selectedCategories");
+			if (categoryIds.length > 0){		
+				for (i = 0; i < categoryIds.length; i++) {
+					params += '&categoryId=' + categoryIds[i];
+				}
+			}else params += "&categoryId=-1";
+			
+			// Working days
+			var days = [];
+			var days = $("#workingDays").datepicker('getDates');;
+			if (days.length > 0){		
+				for (i = 0; i < days.length; i++) {
+					params += '&day=' + days[i];
+				}
+			}else params += "&day=-1";
+			
+			
+			
+			getFilteredJobs(params, function(filter) {
 				
 				var myLatLng = {
 						lat : filter.lat,
 						lng : filter.lng
 					};
 
-					var zoom;
-					if (filter.radius < 5)
-						zoom = 12
-					else if (filter.radius < 25)
-						zoom = 11
-					else if (filter.radius < 50)
-						zoom = 10
-					else if (filter.radius < 100)
-						zoom = 8
-					else if (filter.radius < 500)
-						zoom = 6
-					else
-						zoom = 5;
-					
-					var map = new google.maps.Map(document.getElementById('map'), {
-						zoom : zoom,
-						center : myLatLng
+				var zoom;
+				if (filter.radius < 5)
+					zoom = 12
+				else if (filter.radius < 25)
+					zoom = 11
+				else if (filter.radius < 50)
+					zoom = 10
+				else if (filter.radius < 100)
+					zoom = 8
+				else if (filter.radius < 500)
+					zoom = 6
+				else
+					zoom = 5;
+				
+				var map = new google.maps.Map(document.getElementById('map'), {
+					zoom : zoom,
+					center : myLatLng
+				});
+				for (var i = 0; i < filter.jobs.length; i++) {
+					myLatLng = {
+						lat : filter.jobs[i].lat,
+						lng : filter.jobs[i].lng
+					};
+					var marker = new google.maps.Marker({
+						position : myLatLng,
+						map : map,
 					});
-					for (var i = 0; i < filter.jobs.length; i++) {
-						myLatLng = {
-							lat : filter.jobs[i].lat,
-							lng : filter.jobs[i].lng
-						};
-						var marker = new google.maps.Marker({
-							position : myLatLng,
-							map : map,
-						});
-					}
+				}
+				
 				
 				appendFilteredJobsTable(filter.jobs, $("#userId").val())
 				

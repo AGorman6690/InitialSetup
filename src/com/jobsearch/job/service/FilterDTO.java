@@ -77,6 +77,32 @@ public class FilterDTO {
 	@JsonProperty("beforeEndDate")
 	boolean beforeEndDate;
 	
+	@JsonProperty("workingDays")
+	List<String> workingDays;
+	
+	@JsonProperty("duration")
+	double duration;
+	
+	@JsonProperty("lessThanDuration")
+	boolean lessThanDuration;
+	
+	
+	public boolean getLessThanDuration() {
+		return lessThanDuration;
+	}
+
+	public void setLessThanDuration(boolean lessThanDuration) {
+		this.lessThanDuration = lessThanDuration;
+	}
+
+	public List<String> getWorkingDays() {
+		return workingDays;
+	}
+
+	public void setWorkingDays(List<String> workingDays) {
+		this.workingDays = workingDays;
+	}
+
 	public List<Category> getCategories() {
 		return categories;
 	}
@@ -100,9 +126,6 @@ public class FilterDTO {
 	public void setBeforeEndDate(boolean beforeEndDate) {
 		this.beforeEndDate = beforeEndDate;
 	}
-
-	@JsonProperty("duration")
-	double duration;
 	
 	public String getStringStartDate() {
 		return stringStartDate;
@@ -142,10 +165,14 @@ public class FilterDTO {
 	public FilterDTO(int radius, String fromAddress, int[] categoryIds, 
 			String startTime, String endTime, boolean beforeStartTime, 
 			boolean beforeEndTime, String startDate, String endDate, 
-			boolean beforeStartDate2, boolean beforeEndDate2) {
+			boolean beforeStartDate2, boolean beforeEndDate2, List<String> workingDays2,
+			double duration2, boolean lessThanDuration2) {
 		// TODO Auto-generated constructor stub
 			
 		this.setRadius(radius);
+		
+		this.setDuration(duration2);
+		this.setLessThanDuration(lessThanDuration2);
 		
 		this.setFromAddress(fromAddress);
 		this.setCategoryIds(categoryIds);
@@ -169,6 +196,8 @@ public class FilterDTO {
 		//Convert strings to sql Date objects
 		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
 		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));
+		
+		this.setWorkingDays(workingDays2);
 
 	}
 

@@ -1,22 +1,9 @@
 
-function getFilteredJobs(filter, callback){
-
-	// Build a parameter string for the category ids
-	var categoryIds = "";
-	if (filter.categories.length > 0){		
-		for (var i = 0; i < filter.categories.length; i++) {
-			categoryIds += '&categoryId=' + filter.categories[i];
-		}
-	}else categoryIds = "&categoryId=-1";
-	
+function getFilteredJobs(params, callback){
+		
 	$.ajax({
 		type : "GET", 
-		url : 'http://localhost:8080/JobSearch/jobs/filter?radius=' + filter.radius + '&fromAddress='
-				+ filter.fromAddress + categoryIds + "&startTime=" + filter.stringStartTime
-				+ "&endTime=" + filter.stringEndTime + "&beforeEndTime=" + filter.beforeEndTime
-				+ "&beforeStartTime=" + filter.beforeStartTime + "&startDate=" + filter.stringStartDate
-				+ "&endDate=" + filter.stringEndDate + "&beforeStartDate=" + filter.beforeStartDate
-				+ "&beforeEndDate=" + filter.beforeEndDate,
+		url: 'http://localhost:8080/JobSearch/jobs/filter' + params,
 			dataType : "json",
 			success : _success,
 			error : _error
@@ -27,6 +14,7 @@ function getFilteredJobs(filter, callback){
 		}
 
 		function _error(response) {
+			alert('error filter jobs')
 		}
 
 }

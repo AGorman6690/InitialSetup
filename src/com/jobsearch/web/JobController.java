@@ -72,12 +72,14 @@ public class JobController {
 			@RequestParam String endTime, @RequestParam boolean beforeStartTime, 
 			@RequestParam boolean beforeEndTime, @RequestParam String startDate,
 			@RequestParam String endDate, @RequestParam boolean beforeStartDate,
-			@RequestParam boolean beforeEndDate) {
+			@RequestParam boolean beforeEndDate, @RequestParam(value="day") List<String> workingDays,
+			@RequestParam double duration, @RequestParam boolean lessThanDuration) {
 
 
 		
 		FilterDTO filter = new FilterDTO(radius, fromAddress, categoryIds, startTime, endTime,
-				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate);
+				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate,
+				beforeEndDate, workingDays, duration, lessThanDuration);
 
 		filter.setJobs(jobService.getFilteredJobs(filter)); //, startDate, endDate));
 		
@@ -126,19 +128,36 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/completed/employee", method = RequestMethod.GET)
 	@ResponseBody
-	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam int jobId, ModelAndView model) {
+	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam(required=false) Integer jobId,
+												@RequestParam int c, ModelAndView model) {
+		
+		//***************
+		//Context values:
+		//0 = "viewing employee as a prospective applicant for a particular job"
+		//1 = "viewing employee from searching for employees
+		
 		
 		JobSearchUser employee = userService.getUser(userId);
 		employee.setEndorsements(userService.getUsersEndorsements(userId));
-		employee.setApplication(applicationService.getApplication(jobId, userId));
+		if(jobId != null){
+			employee.setApplication(applicationService.getApplication(jobId, userId));
+		}
 		model.addObject("worker", employee);
 		
-		Job consideredForJob = jobService.getJob(jobId);
-		model.addObject("consideredForJob", consideredForJob);
+//		Job consideredForJob = jobService.getJob(jobId);
+//		model.addObject("consideredForJob", consideredForJob);
 				
 		List<CompletedJobDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);			
 		model.addObject("completedJobDtos", completedJobDtos);
-
+		
+		String context = null; 
+		if(c == 0){
+			context = "viewingApplication";
+		}else if (c == 1){
+			context = "findEmployeeSearch";
+		}		
+		model.addObject("context", context);
+		
 		model.setViewName("EmployeeWorkHistory");
 		return model;
 	}

@@ -42,7 +42,16 @@ public class JobSearchUser {
 	private String homeState;
 	private String homeZipCode;
 	private int maxWorkRadius; //Units = miles
+	private double distanceFromJob;
 		
+	public double getDistanceFromJob() {
+		return distanceFromJob;
+	}
+
+	public void setDistanceFromJob(double distanceFromJob) {
+		this.distanceFromJob = distanceFromJob;
+	}
+
 	public float getHomeLat() {
 		return homeLat;
 	}

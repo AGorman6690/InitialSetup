@@ -167,8 +167,9 @@ function getCategoryId(id){
 
 
 function appendFilteredJobsTable(jobs, userId){
-	$("#filteredJobs").empty();
 	
+	$("#filteredJobs").empty();
+
 	// If there are sub categories
 	if (jobs.length > 0) {
 		

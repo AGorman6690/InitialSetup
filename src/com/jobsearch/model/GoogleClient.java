@@ -24,10 +24,10 @@ public class GoogleClient {
 	}
 	
 	//Found here: https://rosettacode.org/wiki/Haversine_formula#Java
-    public static double getDistance(double lat1, double lon1, double lat2, double lon2) {
+    public static double getDistance(double lat1, double lng1, double lat2, double lng2) {
     	final double R = 3959; //6372.8 (kilometers), 3595 (miles)
     	double dLat = Math.toRadians(lat2 - lat1);
-        double dLon = Math.toRadians(lon2 - lon1);
+        double dLon = Math.toRadians(lng2 - lng1);
         lat1 = Math.toRadians(lat1);
         lat2 = Math.toRadians(lat2);
  
