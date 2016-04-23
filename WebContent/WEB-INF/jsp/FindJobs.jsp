@@ -21,6 +21,7 @@
 	<input type="hidden" id="userId" value="${user.userId}" />
 
 	<div class="container">
+		<h1>Find Job</h1>
 		<div style="height: 500px; width: 500px" id="map"></div>
 
 		<div style="margin-top: 15px; width: 750px"

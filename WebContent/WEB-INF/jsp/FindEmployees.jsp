@@ -151,7 +151,7 @@
 // 	 				alert(JSON.stringify(parameters))
 					$.ajax({
 						type : "GET",
-						url : "http://localhost:8080/JobSearch/employees/find" + parameters,
+						url : "http://localhost:8080/JobSearch/employees/filter" + parameters,
 						dataType : "json", // Response
 						success: _success,
 				        error: _error

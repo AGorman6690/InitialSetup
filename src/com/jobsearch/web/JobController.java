@@ -104,6 +104,13 @@ public class JobController {
 
 	}
 	
+	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
+	public ModelAndView viewFindJobs(ModelAndView model) {
+		model.setViewName("FindJobs");
+		return model;
+	}
+
+	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
 

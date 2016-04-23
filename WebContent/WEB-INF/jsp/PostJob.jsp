@@ -53,7 +53,7 @@
 				<!-- 				<div> -->
 				<div class="container">
 					<div class="form-group row">
-						<label for="jobName" class="col-sm-2 form-control-label">Job
+						<label for="jobName" class="post-job-label col-sm-2 form-control-label">Job
 							Name</label>
 						<div class="col-sm-10">
 							<input name="jobName" type="text"
@@ -105,7 +105,7 @@
 				<div class="container">
 
 					<div class="form-group row">
-						<label for="startTime" class="col-sm-2 form-control-label">Start
+						<label for="startTime" class="post-job-label col-sm-2 form-control-label">Start
 							Time</label>
 						<div class="col-sm-10">
 							<input id="startTime" type="text"
@@ -118,7 +118,7 @@
 
 
 					<div class="form-group row">
-						<label for="endTime" class="col-sm-2 form-control-label">Estimated
+						<label for="endTime" class="post-job-label col-sm-2 form-control-label">Estimated
 							End Time</label>
 						<div class="col-sm-10">
 							<input id="endTime" type="text"
@@ -148,7 +148,7 @@
 
 				<div class="container">
 					<div style="margin-bottom: 25px" class="row">
-						<label class="col-sm-2 form-control-label" for="jobDescription">Job
+						<label class="post-job-label col-sm-2 form-control-label" for="jobDescription">Job
 							Description</label>
 						<div class="post-job-description col-sm-10">
 							<textarea name="description" class="form-control"

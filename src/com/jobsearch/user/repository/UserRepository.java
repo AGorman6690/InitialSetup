@@ -165,8 +165,8 @@ public class UserRepository {
 			@Override
 			public Profile mapRow(ResultSet rs, int rownumber) throws SQLException {
 				Profile e = new Profile();
-				e.setId(rs.getInt(1));
-				e.setName(rs.getString(2));
+				e.setId(rs.getInt("ProfileId"));
+				e.setName(rs.getString("ProfileType"));
 				return e;
 			}
 		});

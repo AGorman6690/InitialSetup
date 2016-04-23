@@ -88,18 +88,12 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/viewFindEmployees", method = RequestMethod.GET)
+	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public ModelAndView viewFindEmployees(ModelAndView model) {
 		model.setViewName("FindEmployees");
 		return model;
 	}
 	
-	@RequestMapping(value = "/viewFindJobs", method = RequestMethod.GET)
-	public ModelAndView viewFindJobs(ModelAndView model) {
-		model.setViewName("FindJobs");
-		return model;
-	}
-
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {
 		model.setViewName("UserProfile");
@@ -146,10 +140,9 @@ public class UserController {
 
 			model.addObject("user", user);
 
-
 			if (user.getProfileId() == 1)
 				model.setViewName("EmployerProfile");
-			else
+			else if(user.getProfileId() == 2)
 				model.setViewName("EmployeeProfile");
 
 			return model;
@@ -179,9 +172,9 @@ public class UserController {
 	}
 
 	
-	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
+	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String findEmployees(@RequestParam String city, @RequestParam String state,
+	public String filterEmployees(@RequestParam String city, @RequestParam String state,
 					@RequestParam String zipCode, @RequestParam int radius,
 					@RequestParam(value="date") List<String> dates,
 					@RequestParam(value="categoryId") List<Integer> categoryIds) {
