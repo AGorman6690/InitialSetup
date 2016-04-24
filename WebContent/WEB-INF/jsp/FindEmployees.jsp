@@ -204,7 +204,7 @@
 							var idBegin = elementId.indexOf("_") + 1;
 							var userId =  elementId.substring(idBegin);
 							
-							window.location = "./jobs/completed/employee/?userId=" + userId + "&c=1";
+							window.location = "../jobs/completed/employee/?userId=" + userId + "&c=1";
 						})
 
 					}

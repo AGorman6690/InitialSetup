@@ -13,10 +13,10 @@ public class EditProfileDTO {
 	private List<Integer> categoryIds;
 	
 	@JsonProperty
-	private float homeLat;
+	private Float homeLat;
 	
 	@JsonProperty
-	private float homeLng;
+	private Float homeLng;
 	
 	@JsonProperty
 	private String homeCity;
@@ -83,7 +83,7 @@ public class EditProfileDTO {
 		return homeLat;
 	}
 
-	public void setHomeLat(float homeLat) {
+	public void setHomeLat(Float homeLat) {
 		this.homeLat = homeLat;
 	}
 
@@ -91,7 +91,7 @@ public class EditProfileDTO {
 		return homeLng;
 	}
 
-	public void setHomeLng(float homeLng) {
+	public void setHomeLng(Float homeLng) {
 		this.homeLng = homeLng;
 	}
 		

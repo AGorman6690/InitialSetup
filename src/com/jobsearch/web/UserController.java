@@ -23,6 +23,7 @@ import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingDTO;
@@ -193,6 +194,23 @@ public class UserController {
 	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO){
 
 		userService.rateEmployee(ratingDTO);
+	}
+	
+	@RequestMapping(value = "/dummyData", method = RequestMethod.GET)
+	@ResponseBody
+	public void setDummyData(){
+		
+		int number = 1;
+		
+		if(number == 0){
+			userService.createUsers_DummyData();
+	
+		}
+		
+		if(number == 1){
+			userService.createJobs_DummyData();
+		}
+
 	}
 
 }

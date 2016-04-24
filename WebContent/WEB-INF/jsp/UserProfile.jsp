@@ -52,29 +52,31 @@
 				</div>
 			</div><!-- end home location panel -->
 			
-			<div class="panel panel-info">	
-				<div class="panel-heading">Maximum Distance Willing To Work From Home Location</div>
-				<div class="panel-body">
-					<div class="form-group row">
-						<label for="maxWorkRadius"
-							class="post-job-label col-sm-2 form-control-label">Distance from home location</label>
-						<div class="col-sm-10">							
-							<c:choose>
-								<c:when test="${user.getMaxWorkRadius() == -1 }">
-									<input name="state" type="text"
-										class="post-job-input form-control" id="maxWorkRadius"
-										></input>
-								</c:when>
-								<c:otherwise>
-									<input name="state" type="text"
-										class="post-job-input form-control" id="maxWorkRadius"
-										value="${user.getMaxWorkRadius() }"></input>
-								</c:otherwise>
-							</c:choose>								
-						</div>
-					</div>		
-				</div>
-			</div><!-- end max work radius panel -->			
+			<c:if test="${user.getProfileId() == 2 }" >
+				<div class="panel panel-info">	
+					<div class="panel-heading">Maximum Distance Willing To Work From Home Location</div>
+					<div class="panel-body">
+						<div class="form-group row">
+							<label for="maxWorkRadius"
+								class="post-job-label col-sm-2 form-control-label">Distance from home location</label>
+							<div class="col-sm-10">							
+								<c:choose>
+									<c:when test="${user.getMaxWorkRadius() == -1 }">
+										<input name="state" type="text"
+											class="post-job-input form-control" id="maxWorkRadius"
+											></input>
+									</c:when>
+									<c:otherwise>
+										<input name="state" type="text"
+											class="post-job-input form-control" id="maxWorkRadius"
+											value="${user.getMaxWorkRadius() }"></input>
+									</c:otherwise>
+								</c:choose>								
+							</div>
+						</div>		
+					</div>
+				</div><!-- end max work radius panel -->	
+			</c:if>		
 	
 			<div class="panel panel-info">	
 				<div class="panel-heading">Categories</div>

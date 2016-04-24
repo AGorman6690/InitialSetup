@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Profile;
@@ -354,9 +355,9 @@ public class UserRepository {
 		
 	}
 
-	public List<Double> getRating(int userId) {
-		String sql = "SELECT Value FROM rating WHERE UserId = ?";
-		return jdbcTemplate.queryForList(sql, new Object[]{ userId }, Double.class);
+	public double getRating(int userId) {
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId }, Double.class);
 	}
 
 	public List<Double> getRatingForJob(int userId, int jobId) {
@@ -532,6 +533,117 @@ public class UserRepository {
 		
 
 		return this.JobSearchUserRowMapper(sql, argsList.toArray());
+	}
+
+
+	public void createUsers_DummyData(List<JobSearchUser> users, int dummyCreationId) {
+
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call insertUser_DummyData(?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)}");
+			
+			for(JobSearchUser user : users){
+				cStmt.setString(1, user.getFirstName());
+				cStmt.setString(2, user.getLastName());
+				cStmt.setString(3, user.getEmailAddress());
+				cStmt.setString(4, user.getPassword());
+				cStmt.setInt(5, user.getProfileId());
+				cStmt.setFloat(6, user.getHomeLat());
+				cStmt.setFloat(7,  user.getHomeLng());
+				cStmt.setInt(8,  user.getMaxWorkRadius());
+				cStmt.setInt(9,  dummyCreationId);
+				cStmt.setDouble(10, user.getRating());
+				cStmt.setString(11,  user.getHomeCity());
+				cStmt.setString(12,  user.getHomeState());
+				
+				cStmt.addBatch();
+			}
+
+			cStmt.executeBatch();
+//			cStmt.executeQuery();
+			
+			cStmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			
+			try {
+				jdbcTemplate.getDataSource().getConnection().close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+
+	public int getLastDummyCreationId(String table) {
+		String sql = "SELECT MAX(DummyCreationId) FROM " + table;
+		return jdbcTemplate.queryForObject(sql, Integer.class);
+	}
+
+
+	public List<JobSearchUser> getEmployers() {
+		String sql = "SELECT * FROM user WHERE ProfileId = 2";
+		return this.JobSearchUserRowMapper(sql, new Object[] {});
+	}
+
+
+	public void createJob_DummyData(CreateJobDTO dummyJob, int dummyCreationId) {
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			
+//			for(CreateJobDTO job : dummyJobs){
+				cStmt.setString(1, dummyJob.getJobName());
+				cStmt.setInt(2, dummyJob.getUserId());
+				cStmt.setString(3, dummyJob.getCity());
+				cStmt.setString(4, dummyJob.getState());
+				cStmt.setFloat(5, dummyJob.getLat());
+				cStmt.setFloat(6, dummyJob.getLng());
+				cStmt.setDate(7, dummyJob.getStartDate());
+				cStmt.setDate(8, dummyJob.getEndDate());
+				cStmt.setTime(9, dummyJob.getStartTime());
+				cStmt.setTime(10, dummyJob.getEndTime());
+				cStmt.setInt(11, dummyCreationId);
+				
+//				cStmt.addBatch();
+//			}
+
+//			cStmt.executeBatch();
+			 ResultSet result = cStmt.executeQuery();
+			 
+			 Job createdJob = new Job();
+			 result.next();
+			 createdJob.setId(result.getInt("JobId"));
+			 
+//			 for(Integer categoryId: jobDto.getCategoryIds()){
+//				cStmt = jdbcTemplate.getDataSource().getConnection()
+//							.prepareCall("{call insertJobCategories(?, ?)}");
+//				
+//					cStmt.setInt(1, createdJob.getId());
+//					cStmt.setInt(2, categoryId);
+//				
+//					cStmt.executeQuery();
+//			}
+
+			
+			cStmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			
+			try {
+				jdbcTemplate.getDataSource().getConnection().close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 

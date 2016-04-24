@@ -227,14 +227,18 @@ public class JobServiceImpl {
 		// TODO Auto-generated method stub
 		
 		
-		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
+//		GoogleClient maps = new GoogleClient();
+//		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
+
 		
 		//Filter location must return a valid response
-		if (results.length == 1){
+//		if (results.length == 1){
 			
-			filter.setLng((float) results[0].geometry.location.lng);
-			filter.setLat((float) results[0].geometry.location.lat);
+//			filter.setLng((float) results[0].geometry.location.lng);
+//			filter.setLat((float) results[0].geometry.location.lat);
+		filter.setLat((float) 45.204523);	
+		filter.setLng((float) -93.519745);
+			
 			
 			
 			//If parameter is not filtered, set to null
@@ -259,10 +263,10 @@ public class JobServiceImpl {
 			}
 			
 					
-		}else {
-			//the address is ambiguous
-			return null;
-		}
+//		}else {
+//			//the address is ambiguous
+//			return null;
+//		}
 	}
 
 }

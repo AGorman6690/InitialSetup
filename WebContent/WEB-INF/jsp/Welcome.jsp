@@ -97,6 +97,7 @@
 			</div>
 		</div>
 
+<a href="./dummyData">Set Dummy Data</a>
 
 	</div>
 		

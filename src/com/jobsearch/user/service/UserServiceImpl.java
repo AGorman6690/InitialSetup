@@ -10,8 +10,10 @@ import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
+import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.GoogleClient;
 import com.jobsearch.model.Profile;
@@ -147,20 +149,9 @@ public class UserServiceImpl {
 	}
 
 	public double getRating(int userId) {
-		
-		List<Double> ratingValues = repository.getRating(userId);		
-
-		double total = 0;
-		int count = 0;
-		for(double value : ratingValues){			
-			if(value >= 0){
-				total += value;
-				count += 1;
-			}			
-		}	
 
 		//Round to the nearest tenth. 0 is the minimum value.
-		return  MathUtility.round(total / count, 1, 0);
+		return  MathUtility.round(repository.getRating(userId), 1, 0);
 	}
 	
 	public List<Endorsement> getUserEndorsementsByCategory(int userId, List<Category> categories) {
@@ -294,11 +285,10 @@ public class UserServiceImpl {
 		
 		
 		//Edit home location
-		GoogleClient maps = new GoogleClient();
+		GoogleClient maps = new GoogleClient();			
 		GeocodingResult[] results = maps.getLatAndLng(editProfileDTO.getHomeCity()
-												+ " " + editProfileDTO.getHomeCity()
+												+ " " + editProfileDTO.getHomeState()
 												+ " " + editProfileDTO.getHomeZipCode());
-		
 		if(results.length == 1){
 			editProfileDTO.setHomeLat((float) results[0].geometry.location.lat);
 			editProfileDTO.setHomeLng((float) results[0].geometry.location.lng);
@@ -340,6 +330,30 @@ public class UserServiceImpl {
 		return null;
 	}
 
+	public void createUsers_DummyData() {
+		
+		DummyData dummyData = new DummyData();
+		List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
+		
+		int lastDummyCreationId = repository.getLastDummyCreationId("user");
+		repository.createUsers_DummyData(dummyUsers, lastDummyCreationId + 1);
+
+	
+	}
+	
+	public void createJobs_DummyData(){
+		
+		List<JobSearchUser> dummyEmployers = repository.getEmployers();
+		DummyData dummyData = new DummyData();
+		
+		List<CreateJobDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
+		int lastDummyCreationId = repository.getLastDummyCreationId("job");
+		
+		for(CreateJobDTO dummyJob : dummyJobs){
+			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
+		}
+		
+	}
 
 
 
