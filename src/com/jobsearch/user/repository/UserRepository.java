@@ -355,9 +355,16 @@ public class UserRepository {
 		
 	}
 
-	public double getRating(int userId) {
+	public Double getRating(int userId) {
 		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[]{ userId }, Double.class);
+		
+		Double rating = jdbcTemplate.queryForObject(sql, new Object[]{ userId }, Double.class);
+		
+		if(rating == null){
+			return -1.0;
+		}else{
+			return rating;
+		}
 	}
 
 	public List<Double> getRatingForJob(int userId, int jobId) {

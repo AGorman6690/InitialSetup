@@ -200,14 +200,16 @@ public class UserController {
 	@ResponseBody
 	public void setDummyData(){
 		
-		int number = 1;
+		//Change this and the following conditions
+//		if you wish to create dummy data
+		int number = 0;
 		
 		if(number == 0){
 			userService.createUsers_DummyData();
 	
 		}
 		
-		if(number == 1){
+		if(number == 0){
 			userService.createJobs_DummyData();
 		}
 

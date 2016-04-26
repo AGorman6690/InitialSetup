@@ -184,8 +184,8 @@ function appendFilteredJobsTable(jobs, userId){
 		r[++j] = '<th>Distance</th>';
 		r[++j] = '<th>Categories</th>';
 		r[++j] = '<th>Start Date</th>';
+		r[++j] = '<th>End Date</th>';		
 		r[++j] = '<th>Start Time</th>';
-		r[++j] = '<th>End Date</th>';
 		r[++j] = '<th>End Time</th>';
 		r[++j] = '</tr>';
 		r[++j] = '</thead>';		
@@ -213,8 +213,8 @@ function appendFilteredJobsTable(jobs, userId){
 
 			r[++j] = '<td>' + categoryNames + '</td>';
 			r[++j] = '<td>' + moment(job.startDate).format("MM/DD/YYYY") + '</td>';
-			r[++j] = '<td>' + job.startTime + '</td>';
 			r[++j] = '<td>' + moment(job.endDate).format("MM/DD/YYYY") + '</td>';
+			r[++j] = '<td>' + job.startTime + '</td>';
 			r[++j] = '<td>' + job.endTime + '</td>';
 			r[++j] = '</tr>';
 		}
@@ -224,7 +224,7 @@ function appendFilteredJobsTable(jobs, userId){
 		$("#filteredJobs").append(r.join(''));
 		
 		$("#filterJobTable tr td").click(function(){
-			window.location = './job/' + $(this).parent().attr('id');
+			window.location = '../job/' + $(this).parent().attr('id');
 		})
 		
 		$('#filterJobTable').DataTable();

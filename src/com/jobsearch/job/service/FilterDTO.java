@@ -86,7 +86,18 @@ public class FilterDTO {
 	@JsonProperty("lessThanDuration")
 	boolean lessThanDuration;
 	
+	@JsonProperty("returnJobCount")
+	int returnJobCount;
 	
+	
+	public int getReturnJobCount() {
+		return returnJobCount;
+	}
+
+	public void setReturnJobCount(int returnJobCount) {
+		this.returnJobCount = returnJobCount;
+	}
+
 	public boolean getLessThanDuration() {
 		return lessThanDuration;
 	}
@@ -166,10 +177,12 @@ public class FilterDTO {
 			String startTime, String endTime, boolean beforeStartTime, 
 			boolean beforeEndTime, String startDate, String endDate, 
 			boolean beforeStartDate2, boolean beforeEndDate2, List<String> workingDays2,
-			double duration2, boolean lessThanDuration2) {
+			double duration2, boolean lessThanDuration2, int returnJobCount) {
 		// TODO Auto-generated constructor stub
 			
 		this.setRadius(radius);
+		
+		this.setReturnJobCount(returnJobCount);
 		
 		this.setDuration(duration2);
 		this.setLessThanDuration(lessThanDuration2);

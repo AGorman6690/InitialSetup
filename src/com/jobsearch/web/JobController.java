@@ -73,13 +73,14 @@ public class JobController {
 			@RequestParam boolean beforeEndTime, @RequestParam String startDate,
 			@RequestParam String endDate, @RequestParam boolean beforeStartDate,
 			@RequestParam boolean beforeEndDate, @RequestParam(value="day") List<String> workingDays,
-			@RequestParam double duration, @RequestParam boolean lessThanDuration) {
+			@RequestParam double duration, @RequestParam boolean lessThanDuration,
+			@RequestParam int returnJobCount) {
 
 
 		
 		FilterDTO filter = new FilterDTO(radius, fromAddress, categoryIds, startTime, endTime,
 				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate,
-				beforeEndDate, workingDays, duration, lessThanDuration);
+				beforeEndDate, workingDays, duration, lessThanDuration, returnJobCount);
 
 		filter.setJobs(jobService.getFilteredJobs(filter)); //, startDate, endDate));
 		

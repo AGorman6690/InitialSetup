@@ -353,7 +353,8 @@ public class JobRepository {
 
 		//Close the sub query and complete the distance filter.
 		argsList.add(filter.getRadius());
-		sql += ") HAVING distance < ? ORDER BY distance LIMIT 0 , 200";
+		argsList.add(filter.getReturnJobCount());
+		sql += ") HAVING distance < ? ORDER BY distance LIMIT 0 , ?";
 		
 		return this.JobRowMapper(sql, argsList.toArray());
 	}

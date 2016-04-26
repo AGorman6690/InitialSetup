@@ -5,12 +5,11 @@
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
-<script src="<c:url value="/static/javascript/Application.js" />"></script>
-<link rel="stylesheet" type="text/css" href="./static/css/global.css" />
+
 
 <!-- Time picker -->
-<link rel="stylesheet" type="text/css" href="./static/External/jquery.timepicker.css" />
-<script src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
+<link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/External/jquery.timepicker.css" />
+<script src="<c:url value="http://localhost:8080/JobSearch/static/External/jquery.timepicker.min.js" />"></script>
 
 <!-- Checkbox picker -->
 <script src="<c:url value="/static/External/bootstrap-checkbox.min.js" />"></script>
@@ -32,7 +31,22 @@
 			<div style="position:relative" class="color-panel panel-body">
 				
 				<ul class="list-group">
-					<li class="list-group-item"><a style="margin-bottom: 10px" class="btn btn-warning" data-toggle="collapse" data-target="#collapseDistance">
+					<li class="list-group-item"><a style="margin-bottom: 10px" 
+					class="btn btn-warning" data-toggle="collapse" data-target="#collapseReturnJobCount">
+					Number of Jobs to Return</a>
+					
+						<div class="collapse" id="collapseReturnJobCount">						
+							<div class="job-location-container input-group">
+								<input id="returnJobCount"
+									type="text" class="form-control" aria-describedby="sizing-addon2"
+									 value="20">
+							</div>	
+						</div>
+					</li>				
+				
+				
+					<li class="list-group-item"><a style="margin-bottom: 10px" 
+					class="btn btn-warning" data-toggle="collapse" data-target="#collapseDistance">
 					Distance</a>
 										
 						<div class="collapse" id="collapseDistance">
@@ -40,7 +54,7 @@
 							<div class="job-location-container input-group">
 								<span class="job-location-label input-group-addon"
 									id="sizing-addon2">Number of miles</span> <input id="radius"
-									type="text" class="form-control" aria-describedby="sizing-addon2" value="5000">
+									type="text" class="form-control" aria-describedby="sizing-addon2" value="49">
 							</div>
 	
 							<div>
@@ -189,11 +203,13 @@
 			autoclose: true,
 			toggleActive: true});
 
+
 		$('#filterStartTime').timepicker({
+			
 			'scrollDefault': '7:00am'});
 		
 		$('#filterEndTime').timepicker({'scrollDefault': '5:00pm'});
-	
+		
 		//Combine these???
 		//******************************************************************
 		$('#startTimeBeforeAfter').checkboxpicker({
@@ -308,6 +324,7 @@
 			params += "&endDate=" + $("#filterEndDate").val();
 			params += "&beforeStartDate=" + beforeStartDate;
 			params += "&beforeEndDate=" + beforeEndDate;
+			params += "&returnJobCount=" + $("#returnJobCount").val();
 			
 			var duration = $("#filterDuration").val();
 			if(duration == ""){

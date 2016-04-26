@@ -227,20 +227,19 @@ public class JobServiceImpl {
 		// TODO Auto-generated method stub
 		
 		
-//		GoogleClient maps = new GoogleClient();
-//		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
 
-		
-		//Filter location must return a valid response
+		//**********************************************************************
+		//The below condition has been removed because "Woodbury, MN" returns two results.
+		//I left it as a reminder for whether we want to handle potential ambiguous responses.
+		//**********************************************************************
+//		Filter location must return a valid response
 //		if (results.length == 1){
 			
-//			filter.setLng((float) results[0].geometry.location.lng);
-//			filter.setLat((float) results[0].geometry.location.lat);
-		filter.setLat((float) 45.204523);	
-		filter.setLng((float) -93.519745);
-			
-			
-			
+			filter.setLng((float) results[0].geometry.location.lng);
+			filter.setLat((float) results[0].geometry.location.lat);
+	
 			//If parameter is not filtered, set to null
 			if(filter.categoryIds[0] ==  -1) filter.categoryIds = null;
 			if(filter.getStringEndTime().equals(FilterDTO.ZERO_TIME)) filter.endTime = null;
