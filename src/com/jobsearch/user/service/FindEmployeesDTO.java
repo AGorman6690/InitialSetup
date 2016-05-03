@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.GeocodingResult;
-import com.jobsearch.model.GoogleClient;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
 public class FindEmployeesDTO {

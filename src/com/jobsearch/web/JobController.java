@@ -31,13 +31,13 @@ import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.CompletedJobDTO;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.FilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.GoogleClient;
 import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 

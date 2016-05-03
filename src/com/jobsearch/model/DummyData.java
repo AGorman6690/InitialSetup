@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.CreateJobDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.user.service.JobSearchUser;

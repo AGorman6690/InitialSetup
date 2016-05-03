@@ -37,7 +37,7 @@ import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user"})
+@SessionAttributes({ "user" })
 public class UserController {
 
 	@Autowired
@@ -48,7 +48,7 @@ public class UserController {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
-	
+
 	private JobSearchUser user;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
@@ -56,19 +56,17 @@ public class UserController {
 
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();
-		
+
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);
 		model.addObject("user", user);
-//		request.getSession().setAttribute("user", user);
+		// request.getSession().setAttribute("user", user);
 
 		model.setViewName("Welcome");
 
 		return model;
 	}
-	
 
-	
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
 	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
@@ -77,10 +75,11 @@ public class UserController {
 
 		model.addObject("user", user);
 
-		if (user.getProfileId() == 1)
+		if (user.getProfileId() == 1) {
 			model.setViewName("EmployeeProfile");
-		else
+		} else if (user.getProfileId() == 2) {
 			model.setViewName("EmployerProfile");
+		}
 
 		model.addObject("user", user);
 		return model;
@@ -100,17 +99,16 @@ public class UserController {
 		model.setViewName("FindEmployees");
 		return model;
 	}
-	
+
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {
 		model.setViewName("UserProfile");
 		return model;
 	}
 
-
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-	
+
 		CreateJobDTO job = new CreateJobDTO();
 		model.addObject("job", job);
 
@@ -120,7 +118,7 @@ public class UserController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-		
+
 		model.setViewName("Welcome");
 
 		user = new JobSearchUser();
@@ -135,87 +133,81 @@ public class UserController {
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-		
+
 		try {
 
 			if (user.getUserId() == 0) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();	
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
 			}
-			
-			user = userService.getProfile(user);			
+
+			user = userService.getProfile(user);
 
 			model.addObject("user", user);
 
-			if (user.getProfileId() == 1)
-				model.setViewName("EmployerProfile");
-			else if(user.getProfileId() == 2)
+			if (user.getProfileId() == 1) {
 				model.setViewName("EmployeeProfile");
+			} else if (user.getProfileId() == 2) {
+				model.setViewName("EmployerProfile");
+			}
 
 			return model;
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		
-		
+
 		return null;
 
 	}
 
-	
 	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityDTO availabilityDTO){
+	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityDTO availabilityDTO) {
 
 		userService.updateAvailability(availabilityDTO);
 	}
-	
 
 	@RequestMapping(value = "/user/profile/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public void editProfile(ModelAndView model, @RequestBody EditProfileDTO editProfileDTO){
+	public void editProfile(ModelAndView model, @RequestBody EditProfileDTO editProfileDTO) {
 
 		userService.editProfile(editProfileDTO);
 	}
 
-	
 	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String filterEmployees(@RequestParam String city, @RequestParam String state,
-					@RequestParam String zipCode, @RequestParam int radius,
-					@RequestParam(value="date") List<String> dates,
-					@RequestParam(value="categoryId") List<Integer> categoryIds) {
-		
-		
-		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(city, state, zipCode, radius,
-													dates, categoryIds);
-		
+	public String filterEmployees(@RequestParam String city, @RequestParam String state, @RequestParam String zipCode,
+			@RequestParam int radius, @RequestParam(value = "date") List<String> dates,
+			@RequestParam(value = "categoryId") List<Integer> categoryIds) {
+
+		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(city, state, zipCode, radius, dates, categoryIds);
+
 		List<JobSearchUser> employees = userService.findEmployees(findEmployeesDto);
-		
+
 		return JSON.stringify(employees);
-	}	
+	}
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO){
+	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO) {
 
 		userService.rateEmployee(ratingDTO);
 	}
-	
+
 	@RequestMapping(value = "/dummyData", method = RequestMethod.GET)
 	@ResponseBody
-	public void setDummyData(){
-		
-		//Change this and the following conditions
-//		if you wish to create dummy data
+	public void setDummyData() {
+
+		// Change this and the following conditions
+		// if you wish to create dummy data
 		int number = 0;
-		
-		if(number == 0){
+
+		if (number == 0) {
 			userService.createUsers_DummyData();
-	
+
 		}
-		
-		if(number == 0){
+
+		if (number == 0) {
 			userService.createJobs_DummyData();
 		}
 

@@ -13,7 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.model.GoogleClient;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
 public class FilterDTO {

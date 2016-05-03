@@ -48,7 +48,7 @@ public class UserRepository {
 		String sql = "Update user Set enabled = 1 where userId = ?";
 
 		jdbcTemplate.update(sql, new Object[] { userId });
-		
+
 		return getUser(userId);
 	}
 
@@ -116,7 +116,7 @@ public class UserRepository {
 			}
 		});
 	}
-	
+
 	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
@@ -126,14 +126,14 @@ public class UserRepository {
 				e.setFirstName(rs.getString("FirstName"));
 				e.setLastName(rs.getString("LastName"));
 				e.setEmailAddress(rs.getString("Email"));
-				e.setProfileId(rs.getInt("ProfileId"));
+				e.setProfileId(rs.getInt("up.ProfileId"));
 				e.setHomeLat(rs.getFloat("HomeLat"));
 				e.setHomeLng(rs.getFloat("HomeLng"));
 				e.setHomeCity(rs.getString("HomeCity"));
 				e.setHomeState(rs.getString("HomeState"));
 				e.setHomeZipCode(rs.getString("HomeZipCode"));
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
-				
+
 				return e;
 			}
 		});
@@ -208,8 +208,8 @@ public class UserRepository {
 		});
 		return (List<RateCriterion>) list;
 	}
-	
-	
+
+
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
@@ -265,20 +265,20 @@ public class UserRepository {
 	}
 
 	public void hireApplicant(int userId, int jobId) {
-		
+
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call hire_applicant(?, ?)}");
 
 			cStmt.setInt(1, userId);
 			cStmt.setInt(2, jobId);
-			
+
 			cStmt.executeQuery();
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
 	}
 
 	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
@@ -311,55 +311,55 @@ public class UserRepository {
 	public void deleteEndorsements(int employeeId, int jobId) {
 		String sql = "DELETE FROM endorsement WHERE UserId = ? AND JobId = ?";
 		jdbcTemplate.update(sql, new Object[] { employeeId, jobId });
-		
+
 	}
 
 	public void addEndorsement(Endorsement endorsement) {
 		String sql = "INSERT INTO endorsement (JobId, UserId, CategoryId)"
 				+ " VALUES (?, ?, ?)";
-		
+
 		jdbcTemplate.update(sql, new Object[] {endorsement.getJobId(),
 						endorsement.getUserId(), endorsement.getCategoryId() });
-		
+
 	}
 
 
 	public void addComment(RatingDTO ratingDTO) {
 		String sql = "INSERT INTO comment (JobId, UserId,"
 					+ " Comment) VALUES (?, ?, ?)";
-		
-		jdbcTemplate.update(sql, new Object[] {ratingDTO.getJobId(), 
+
+		jdbcTemplate.update(sql, new Object[] {ratingDTO.getJobId(),
 				ratingDTO.getEmployeeId(), ratingDTO.getComment() });
-		
+
 	}
 
 	public void deleteComment(int jobId, int employeeId) {
 		String sql = "DELETE FROM comment WHERE JobId = ? AND UserId = ?";
-		
+
 		jdbcTemplate.update(sql, new Object[] { jobId, employeeId });
-		
+
 	}
 
 	public String getComment(int jobId, int userId) {
 		String sql = "SELECT Comment FROM comment WHERE JobId = ? AND UserId = ?";
-		
+
 		String comment = "";
 		try {
 			comment = jdbcTemplate.queryForObject(sql, new Object[]{ jobId, userId }, String.class);
 
 		} catch (Exception e) {
 			// TODO: handle exception
-		}		
-				
+		}
+
 		return comment;
-		
+
 	}
 
 	public Double getRating(int userId) {
 		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ?";
-		
+
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[]{ userId }, Double.class);
-		
+
 		if(rating == null){
 			return -1.0;
 		}else{
@@ -396,14 +396,14 @@ public class UserRepository {
 	public void deleteAvailability(int userId) {
 		String sql = "DELETE FROM availability WHERE UserId = ?";
 		jdbcTemplate.update(sql, new Object[]{ userId });
-		
+
 	}
 
 
 	public void addAvailability(int userId, Date sqlDate) {
 		String sql = "INSERT INTO availability (UserId, Day) VALUES(?, ?)";
 		jdbcTemplate.update(sql, new Object[]{ userId, sqlDate });
-		
+
 	}
 
 
@@ -419,56 +419,56 @@ public class UserRepository {
 		jdbcTemplate.update(sql, new Object[]{editProfileDTO.getHomeLat(),editProfileDTO.getHomeLng(),
 								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
 								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
-		
+
 	}
-	
+
 	public void updateHomeLocation(EditProfileDTO editProfileDTO) {
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
 				+ " HomeZipCode = ? WHERE UserId = ?";
-		
+
 		jdbcTemplate.update(sql, new Object[]{editProfileDTO.getHomeLat(),editProfileDTO.getHomeLng(),
 								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
 								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
-		
+
 	}
 
 
 	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
 		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
 		jdbcTemplate.update(sql, new Object[]{ maxWorkRadius, userId });
-		
+
 	}
 
 
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
-		
+
 		//******************************************************************************************
 		//NOTE: For optimal performance, we may want to eventually do some testing to determine
 		//the order of these sub queries that executes most efficiently.
 		//******************************************************************************************
-		
-		
+
+
 		//**********************************
 		//Summary:
 		//The sub query for the distance each employee is from the specified location is required.
 		//The sub query for availability is optional.
 		//The sub query for categories is optional.
 		//**********************************
-			
+
 		String sql = "SELECT * FROM user WHERE user.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
-		
+
 		int subQueryCount = 1; //1 because the distance sub query is required
-		
+
 		//Build sub query for availability.
 		//This filter requires the employee to have availability on ALL requested days.
 		//Sub query returns all user ids with availability on ALL requested days.
 		//This sub query is optional.
 		String subQueryDates = null;
 		if (findEmployeesDto.getAvailableDates() != null){
-			
+
 			subQueryDates = " (SELECT a0.UserId FROM availability a0";
-			
+
 			//Initialize at 1 because the first date is accounted for in the WHERE clause at the end.
 			//See this SO post for sql details: http://stackoverflow.com/questions/1054299/sql-many-to-many-table-and-query
 			//The sub query takes the form:
@@ -480,64 +480,64 @@ public class UserRepository {
 			for(int dateCount = 1; dateCount < findEmployeesDto.getAvailableDates().size(); dateCount++){
 				int dateCountMinus1 = dateCount - 1;
 				subQueryDates += " JOIN availability a" + dateCount + " ON a"  + dateCountMinus1 + ".UserId"
-						+ " = a" + dateCount + ".UserId AND a" + dateCount + ".Day = ?"; 
+						+ " = a" + dateCount + ".UserId AND a" + dateCount + ".Day = ?";
 				argsList.add(findEmployeesDto.getAvailableDates().get(dateCount));
 			}
-			
+
 			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
 			argsList.add(findEmployeesDto.getAvailableDates().get(0));
-			
+
 			sql += subQueryDates;
 			subQueryCount += 1;
-					
+
 		}
-		
+
 		//Build the sub query for categories.
 		//This sub query has the same structure as the availability sub query.
 		//This returns all user ids that have ALL the requested categories.
 		String subQueryCategories = null;
 		if (findEmployeesDto.getCategoryIds() != null){
-			
+
 			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
-			
+
 			for(int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++){
 				int categoryCountMinus1 = categoryCount - 1;
 				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc"  + categoryCountMinus1 + ".UserId"
-						+ " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?"; 
+						+ " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?";
 				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
 			}
-			
+
 			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
 			argsList.add(findEmployeesDto.getCategoryIds().get(0));
-			
+
 			sql += subQueryCategories;
 			subQueryCount += 1;
-			
-		}
-		
 
-		
+		}
+
+
+
 		//Distance sub query.
 		//This returns all user ids with a home radius within the requested radius.
 		//This sub query is always required.
 		String subQueryDistance = " (SELECT UserId FROM user"
 				+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( user.HomeLat ) ) * cos( radians( user.HomeLng ) - radians(?) ) "
 				+ "+ sin( radians(?) ) * sin( radians( user.HomeLat ) ) ) ) < ? ";
-		
+
 		sql += subQueryDistance;
-		
-		
+
+
 		argsList.add(findEmployeesDto.getLat());
 		argsList.add(findEmployeesDto.getLng());
 		argsList.add(findEmployeesDto.getLat());
 		argsList.add(findEmployeesDto.getRadius());
-		
-		
+
+
 		//Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++){
 			sql += ")";
 		}
-		
+
 
 		return this.JobSearchUserRowMapper(sql, argsList.toArray());
 	}
@@ -548,7 +548,7 @@ public class UserRepository {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call insertUser_DummyData(?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)}");
-			
+
 			for(JobSearchUser user : users){
 				cStmt.setString(1, user.getFirstName());
 				cStmt.setString(2, user.getLastName());
@@ -562,19 +562,19 @@ public class UserRepository {
 				cStmt.setDouble(10, user.getRating());
 				cStmt.setString(11,  user.getHomeCity());
 				cStmt.setString(12,  user.getHomeState());
-				
+
 				cStmt.addBatch();
 			}
 
 			cStmt.executeBatch();
 //			cStmt.executeQuery();
-			
+
 			cStmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally{
-			
+
 			try {
 				jdbcTemplate.getDataSource().getConnection().close();
 			} catch (SQLException e) {
@@ -602,7 +602,7 @@ public class UserRepository {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-			
+
 //			for(CreateJobDTO job : dummyJobs){
 				cStmt.setString(1, dummyJob.getJobName());
 				cStmt.setInt(2, dummyJob.getUserId());
@@ -615,34 +615,34 @@ public class UserRepository {
 				cStmt.setTime(9, dummyJob.getStartTime());
 				cStmt.setTime(10, dummyJob.getEndTime());
 				cStmt.setInt(11, dummyCreationId);
-				
+
 //				cStmt.addBatch();
 //			}
 
 //			cStmt.executeBatch();
 			 ResultSet result = cStmt.executeQuery();
-			 
+
 			 Job createdJob = new Job();
 			 result.next();
 			 createdJob.setId(result.getInt("JobId"));
-			 
+
 //			 for(Integer categoryId: jobDto.getCategoryIds()){
 //				cStmt = jdbcTemplate.getDataSource().getConnection()
 //							.prepareCall("{call insertJobCategories(?, ?)}");
-//				
+//
 //					cStmt.setInt(1, createdJob.getId());
 //					cStmt.setInt(2, categoryId);
-//				
+//
 //					cStmt.executeQuery();
 //			}
 
-			
+
 			cStmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally{
-			
+
 			try {
 				jdbcTemplate.getDataSource().getConnection().close();
 			} catch (SQLException e) {
@@ -650,7 +650,7 @@ public class UserRepository {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 

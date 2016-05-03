@@ -1,4 +1,4 @@
-package com.jobsearch.model;
+package com.jobsearch.google;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;

@@ -6,18 +6,18 @@
 	</head>
 
 	<div class="container">
-	
-				
+
+
 		<button id="debug1">Sign in as employer (UserId = 1)</button>
 		<button id="debug2">Sign in a employee (UserId = 2)</button>
-	
-	
+
+
 		<div class="jumbotron">
 			<a href="./jobs/find" style="display: inline; margin-right: 5px"
 			type="button" class="btn btn-info">Looking For Work</a>
-			<h1 style="display: inline; margin: auto">Labor Vault</h1> 
+			<h1 style="display: inline; margin: auto">Labor Vault</h1>
 			<a href="./employees/find" style="display: inline; margin-left: 5px"
-			type="button" class="btn btn-info">Looking To Hire</a> 
+			type="button" class="btn btn-info">Looking To Hire</a>
 		</div>
 
 		<!-- Original code found here -->
@@ -30,12 +30,12 @@
 		                <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
 		                    alt="">
 		                <form:form class="form-signin" commandName="user" action="./login.do" method="POST">
-			                <form:input type="text" class="form-control" placeholder="Email" 
+			                <form:input type="text" class="form-control" placeholder="Email"
 			                	path="username" id="userName"/>
 			                <form:password class="form-control" placeholder="Password"
 			                	path="password" id="password" />
 			                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign In</button>
-			             
+
 		<!-- 	                <label class="checkbox pull-left"> -->
 		<!-- 	                    <input type="checkbox" value="remember-me"> -->
 		<!-- 	                    Remember me -->
@@ -46,12 +46,12 @@
 		            <a id="createAccount" onclick="createAccount()" class="text-center new-account">Create an account </a>
 		        </div>
 		    </div>
-		
+
 		    <div class="row" style="margin-top: 10px">
 		        <div class="col-sm-6 col-md-4 col-md-offset-4">
 
 					<div id="createAccountContainer" style="display: none">
-							
+
 						<p>Create New Account</p>
 						<form:form action="./registerUser" method="POST" commandName="user">
 							<table>
@@ -97,10 +97,10 @@
 			</div>
 		</div>
 
-<a href="./dummyData">Set Dummy Data</a>
+<!-- <a href="./dummyData">Set Dummy Data</a> -->
 
 	</div>
-		
+
 <script>
 
 	$(document).ready(function(){
@@ -108,24 +108,24 @@
 			$("#password").val('1');
 			$("#userName").val('1');
 			$("button[type=submit]")[0].click();
-			
+
 		})
-		
+
 		$("#debug2").click(function(){
 			$("#password").val('2');
 			$("#userName").val('2');
 			$("button[type=submit]")[0].click();
-			
-		})	
-		
+
+		})
+
 
 	})
-	
+
 		function createAccount(){
 			$("#createAccountContainer").toggle();
-			
+
 		}
-	
+
 
 
 </script>
