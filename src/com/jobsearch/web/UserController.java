@@ -2,6 +2,9 @@ package com.jobsearch.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -34,7 +37,7 @@ import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "job" })
+@SessionAttributes({ "user"})
 public class UserController {
 
 	@Autowired
@@ -45,9 +48,11 @@ public class UserController {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
+	
+	private JobSearchUser user;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView welcome(ModelAndView model) {
+	public ModelAndView welcome(ModelAndView model, HttpServletRequest request) {
 
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();
@@ -55,6 +60,7 @@ public class UserController {
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);
 		model.addObject("user", user);
+//		request.getSession().setAttribute("user", user);
 
 		model.setViewName("Welcome");
 
@@ -104,7 +110,7 @@ public class UserController {
 
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-
+	
 		CreateJobDTO job = new CreateJobDTO();
 		model.addObject("job", job);
 
@@ -114,7 +120,7 @@ public class UserController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-
+		
 		model.setViewName("Welcome");
 
 		user = new JobSearchUser();

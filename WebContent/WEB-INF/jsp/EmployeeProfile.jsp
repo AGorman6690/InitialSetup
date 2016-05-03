@@ -24,7 +24,7 @@
 					<tbody>
 					<c:forEach items="${user.getJobsAppliedTo() }" var="job">
 						<c:if test="${job.getIsActive() == 1 }">
-							<td>${job.getJobName() }</td>
+							<tr><td>${job.getJobName() }</td></tr>
 						</c:if>						
 					</c:forEach>				
 					</tbody>
@@ -45,7 +45,7 @@
 					<tbody>
 					<c:forEach items="${user.getJobsHiredFor() }" var="job">
 						<c:if test="${job.getIsActive() == 1 }">
-							<td>${job.getJobName() }</td>
+							<tr><td>${job.getJobName() }</td></tr>
 						</c:if>	
 					</c:forEach>				
 					</tbody>
@@ -64,7 +64,7 @@
 					</thead>
 					<tbody>
 					<c:forEach items="${user.getCompletedJobs() }" var="completedJobDTO">
-						<td>${completedJobDTO.getJob().getJobName() }</td>
+						<tr><td>${completedJobDTO.getJob().getJobName() }</td></tr>
 					</c:forEach>				
 					</tbody>
 				</table>			

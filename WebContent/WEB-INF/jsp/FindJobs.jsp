@@ -54,7 +54,7 @@
 							<div class="job-location-container input-group">
 								<span class="job-location-label input-group-addon"
 									id="sizing-addon2">Number of miles</span> <input id="radius"
-									type="text" class="form-control" aria-describedby="sizing-addon2" value="49">
+									type="text" class="form-control" aria-describedby="sizing-addon2" value="">
 							</div>
 	
 							<div>
@@ -82,7 +82,7 @@
 									<span class="job-location-label input-group-addon"
 										id="sizing-addon2">Zip Code</span> <input id="fromZipCode"
 										type="text" class="form-control"
-										aria-describedby="sizing-addon2" value="55119">
+										aria-describedby="sizing-addon2" value="">
 								</div>
 							</div>					
 						

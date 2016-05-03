@@ -549,19 +549,14 @@
 				type : "POST",
 				url : 'http://localhost:8080/JobSearch/job/apply',
 				headers : headers,
-				dataType : "json",
+// 				dataType : "application/json",
 				contentType : "application/json",
 				data : JSON.stringify(applicationDTO),
-				success : _success,
-				error : _error
-			});
-		
-			function _success(response) {
+			}).done(function() {
 				$('#home')[0].click();
-			}
-		
-			function _error(response) {
-			}
+			}).error(function() {
+				$('#home')[0].click();
+			});
 		}
 	}
 	

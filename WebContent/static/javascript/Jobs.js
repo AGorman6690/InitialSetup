@@ -31,7 +31,7 @@ function submitJobs() {
 		url : "http://localhost:8080/JobSearch/jobs/post",
 		headers : headers,
 		contentType : "application/json",
-		dataType : "application/json", // Response
+//		dataType : "application/json", // Response
 		data : JSON.stringify(jobs)
 	}).done(function() {
 		$('#home')[0].click();

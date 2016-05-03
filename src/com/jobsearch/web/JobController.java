@@ -57,7 +57,9 @@ public class JobController {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+//	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody
+	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
 	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
 
 		jobService.addJob(jobDtos);
@@ -92,17 +94,12 @@ public class JobController {
 
 	}
 	
-	@RequestMapping(value = "/job/apply",method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ModelAndView applyForJob(@RequestBody ApplicationDTO applicationDto, ModelAndView model) {
+	@ResponseBody
+	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
+	public void applyForJob(@RequestBody ApplicationDTO applicationDto, ModelAndView model) {
 
 		applicationService.applyForJob(applicationDto);
 		
-//		ModelAndView model = new ModelAndView();
-		model.setViewName("EmployeeProfile");
-		
-		//return JSON.stringify(jobService.getApplicationsByUser(userId));
-		return model;
-
 	}
 	
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
