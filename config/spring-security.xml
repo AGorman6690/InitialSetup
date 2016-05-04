@@ -24,6 +24,7 @@
 		<intercept-url pattern="/login**" access="permitAll" />
 <!-- 		<intercept-url pattern="/welcome**" access="permitAll" /> -->
 		<intercept-url pattern="/signIn**" access="permitAll" />
+		<intercept-url pattern="/upload**" access="permitAll" />
 		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
 
 		<!-- access denied page -->

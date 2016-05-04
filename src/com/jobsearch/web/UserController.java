@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -192,6 +193,14 @@ public class UserController {
 	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO) {
 
 		userService.rateEmployee(ratingDTO);
+	}
+
+	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
+	public void uploadResume(@RequestParam("file") MultipartFile file) {
+
+		if (file != null) {
+			System.out.println(file.getName());
+		}
 	}
 
 	@RequestMapping(value = "/dummyData", method = RequestMethod.GET)

@@ -215,9 +215,6 @@ public class UserRepository {
 		String sql;
 		sql = "select u.*, up.* from user u inner join user_profile up on u.userid = up.userid where u.Email = ?";
 
-		// Object args[0] = null;
-		// args[0] = user.getEmailAddress();
-
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
 		return list.get(0);

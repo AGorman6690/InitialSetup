@@ -13,26 +13,20 @@ import com.jobsearch.user.service.UserServiceImpl;
 
 @Service
 public class ApplicationServiceImpl {
-	
+
 	@Autowired
 	ApplicationRepository repository;
-	
-	
+
+
 	@Autowired
 	UserServiceImpl userService;
 
 
 
 	public List<Application> getApplicationsByJob(int jobId) {
-		
+
 		List<Application> applications = repository.getApplicationsByJob(jobId);
-		
-		//For each application, set the applicant
-		for(Application application : applications){
-			application.setApplicant(userService.getUser(application.getUserId()));
-			
-		}
-		
+
 		return applications;
 	}
 
@@ -44,31 +38,31 @@ public class ApplicationServiceImpl {
 
 	public void updateStatus(int applicationId, int status) {
 		repository.updateStatus(applicationId, status);
-		
+
 		//If hired
 		if (status == 3){
 			Application application = getApplication(applicationId);
 			userService.hireApplicant(application.getUserId(), application.getJobId());
 		}
-		
+
 	}
 
 
 	public Application getApplication(int applicationId) {
 		return repository.getApplication(applicationId);
 	}
-	
+
 	public void applyForJob(ApplicationDTO applicationDto) {
 		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
-		
+
 		//Whether the applicant answered all the questions is handled on the client side.
 		//At this point, all questions have a valid answer.
-		for(Answer answer : applicationDto.getAnswers()){			
-			
+		for(Answer answer : applicationDto.getAnswers()){
+
 			if (answer.getAnswerText() != ""){
 				repository.addTextAnswer(answer);
 			}else if(answer.getAnswerBoolean() != -1){
-				repository.addBooleanAnswer(answer);	
+				repository.addBooleanAnswer(answer);
 			}else if(answer.getAnswerOptionId() != -1){
 				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
 			}else if(answer.getAnswerOptionIds().size() > 0){
@@ -78,33 +72,33 @@ public class ApplicationServiceImpl {
 			}
 		}
 	}
-	
+
 	public List<Answer> getAnswers(List<Question> questions, int userId) {
-		
+
 		List<Answer> answers = new ArrayList<Answer>();
-		
+
 		for(Question question : questions){
 			Answer answer;
-			
+
 			if(question.getFormatId() == 2 || question.getFormatId() == 3){
 				answer = new Answer();
 				answer.setAnswers(repository.getAnswers(question.getQuestionId(), userId));
 //			}else if(question.getFormatId() == 2){
 //				answer = repository.getAnswer(question.getQuestionId(), userId);
-//				
+//
 			}else{
 				answer = repository.getAnswer(question.getQuestionId(), userId);
-			}				
-			
+			}
+
 			answer.setQuestionFormatId(question.getFormatId());
 			answers.add(answer);
 		}
 		return answers;
 	}
-	
+
 
 	public List<Question> getQuestions(int jobId) {
-		
+
 		List<Question> questions = repository.getQuestions(jobId);
 		for(Question q : questions){
 			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
@@ -115,7 +109,7 @@ public class ApplicationServiceImpl {
 
 	public void addQuestion(Question question) {
 		repository.addQuestion(question);
-		
+
 	}
 
 }
