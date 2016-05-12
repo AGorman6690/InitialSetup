@@ -42,7 +42,6 @@ public class ApplicationRepository {
 				user.setFirstName(rs.getString("FirstName"));
 				user.setLastName(rs.getString("LastName"));
 				user.setEmailAddress(rs.getString("Email"));
-				user.setProfileId(rs.getInt("up.ProfileId"));
 				user.setHomeLat(rs.getFloat("HomeLat"));
 				user.setHomeLng(rs.getFloat("HomeLng"));
 				user.setHomeCity(rs.getString("HomeCity"));
@@ -67,7 +66,7 @@ public class ApplicationRepository {
 
 		//Get all applications for job.
 		//Less than 3 is anything but accepted
-		String sql = "SELECT a.*, u.*"
+		String sql = "SELECT a.*, u.* "
 				+ "FROM application a "
 				+ "inner join user u "
 				+ "on u.userid = a.userid "
@@ -79,7 +78,13 @@ public class ApplicationRepository {
 
 	public Application getApplication(int jobId, int userId) {
 		// TODO Auto-generated method stub
-		String sql = "SELECT * FROM application WHERE JobId = ? and UserId = ?";
+
+		String sql = "SELECT a.*, u.* "
+				+ "FROM application a "
+				+ "inner join user u "
+				+ "on u.userid = a.userid "
+				+ "WHERE JobId = ? and a.UserId = ?";
+
 		List<Application> applications = this.ApplicationRowMapper(sql, new Object[]{ jobId, userId });
 
 		if(applications.size() > 0) return applications.get(0);

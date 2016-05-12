@@ -1,60 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans:beans xmlns="http://www.springframework.org/schema/security"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
     http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
 	<beans:bean name="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<beans:property name="url" value="jdbc:mysql://localhost:3306/jobsearch" />
+		<beans:property name="url"
+			value="jdbc:mysql://localhost:3306/jobsearch" />
 		<beans:property name="username" value="root" />
 		<beans:property name="password" value="" />
-<!-- 		<beans:property name="url" value="jdbc:mysql://jobsearch.cxzdgqketr0w.us-east-1.rds.amazonaws.com:3306/jobsearch" /> -->
-<!-- 		<beans:property name="username" value="jobsearch" /> -->
-<!-- 		<beans:property name="password" value="password" /> -->
+		<!-- <beans:property name="url" value="jdbc:mysql://jobsearch.cxzdgqketr0w.us-east-1.rds.amazonaws.com:3306/jobsearch"
+			/> -->
+		<!-- <beans:property name="username" value="jobsearch" /> -->
+		<!-- <beans:property name="password" value="password" /> -->
 	</beans:bean>
 
-      <!-- enable use-expressions -->
+	<beans:bean name="customFilter"
+		class="com.jobsearch.spring.security.filter.CustomLoginFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+
+	<!-- enable use-expressions -->
 	<http auto-config="true" use-expressions="true">
 
 		<intercept-url pattern="/" access="permitAll" />
 		<intercept-url pattern="/login**" access="permitAll" />
-<!-- 		<intercept-url pattern="/welcome**" access="permitAll" /> -->
+		<!-- <intercept-url pattern="/welcome**" access="permitAll" /> -->
 		<intercept-url pattern="/signIn**" access="permitAll" />
+		<intercept-url pattern="/user**" access="permitAll" />
 		<intercept-url pattern="/upload**" access="permitAll" />
 		<intercept-url pattern="/admin**" access="hasRole('ROLE_ADMIN')" />
 
 		<!-- access denied page -->
-		<access-denied-handler error-page="/403" />
+		<access-denied-handler error-page="/error/LoginError.jsp" />
 
-		<form-login
-		    login-page="/signIn"
-		    login-processing-url="/login.do"
-		    default-target-url="/user/profile"
-			authentication-failure-url="/login?error"
-			username-parameter="username"
-			password-parameter="password" />
-		<logout logout-success-url="/login?logout"  />
- 		<!-- enable csrf protection -->
-<!-- 		<csrf/> -->
+		<custom-filter ref="customFilter" after="FORM_LOGIN_FILTER" />
+
+		<form-login login-page="/signIn" login-processing-url="/login.do"
+			default-target-url="/user/profile" authentication-failure-url="/?error=true"
+			username-parameter="username" password-parameter="password" />
+		<logout logout-success-url="/login?logout" />
+		<!-- enable csrf protection -->
+		<!-- <csrf/> -->
 	</http>
 
 	<!-- Select users and user_roles from database -->
-	<authentication-manager>
-	  <authentication-provider>
-		<jdbc-user-service data-source-ref="dataSource"
-		  users-by-username-query=
-		    "select email, password, enabled from user where email=?"
-		  authorities-by-username-query=
-		    "select a.password, a.enabled, a.firstname, a.lastname, a.email, a.userId,  a.roleId, r.rolename from User a
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider>
+			<jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select email, password, enabled from user where email=?"
+				authorities-by-username-query="select a.password, a.enabled, a.firstname, a.lastname, a.email, a.userId,  a.roleId, r.rolename from User a
                          inner join Role r on a.RoleId = r.RoleId
                          where a.email=?" />
-	  </authentication-provider>
+		</authentication-provider>
 	</authentication-manager>
-
 
 
 </beans:beans>

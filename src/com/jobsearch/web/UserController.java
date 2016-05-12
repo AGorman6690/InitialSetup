@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -53,7 +54,8 @@ public class UserController {
 	private JobSearchUser user;
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView welcome(ModelAndView model, HttpServletRequest request) {
+	public ModelAndView welcome(ModelAndView model, HttpServletRequest request,
+			@RequestParam(required = false) boolean error) {
 
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();
@@ -62,6 +64,10 @@ public class UserController {
 		model.addObject("profiles", profiles);
 		model.addObject("user", user);
 		// request.getSession().setAttribute("user", user);
+
+		if (error) {
+			model.addObject("errorMessage", "Username and/or Password are incorrect");
+		}
 
 		model.setViewName("Welcome");
 
@@ -133,9 +139,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public ModelAndView getProfile(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	public ModelAndView getProfile(ModelAndView model,HttpServletRequest request, @ModelAttribute("user") JobSearchUser user) {
 
 		try {
+
+			if(request.getParameter("redirectUrl") != null && !StringUtils.EMPTY.equals(request.getParameter("redirectUrl"))){
+				model.addObject("redirecUrl", request.getParameter("redirectUrl"));
+			}
 
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -158,6 +168,29 @@ public class UserController {
 		}
 
 		return null;
+
+	}
+
+	@RequestMapping(value = "/newPassword", method = RequestMethod.GET)
+	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+
+		model.setViewName("NewPassword");
+
+		return model;
+
+	}
+
+	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
+	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
+			@RequestParam final String newPassword) {
+
+		if (user.getProfileId() == 1) {
+			model.setViewName("EmployeeProfile");
+		} else if (user.getProfileId() == 2) {
+			model.setViewName("EmployerProfile");
+		}
+
+		return model;
 
 	}
 
@@ -193,6 +226,27 @@ public class UserController {
 	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO) {
 
 		userService.rateEmployee(ratingDTO);
+	}
+
+	@RequestMapping(value = "/user/password/reset", method = RequestMethod.GET)
+	public ModelAndView requestNewPassword(ModelAndView model) {
+
+		model.setViewName("ResetPassword");
+
+		return model;
+	}
+
+	@RequestMapping(value = "/user/password/reset", method = RequestMethod.POST)
+	@ResponseBody
+	public ModelAndView resetPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
+			@RequestParam String redirectUrl) {
+		userService.resetPassword(user);
+
+		model.setViewName("Welcome");
+		model.addObject("redirctUrl", redirectUrl);
+		model.addObject("ResetPasswordMessage", "A new password has been sent to your email");
+
+		return model;
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)

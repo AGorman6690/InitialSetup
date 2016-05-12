@@ -14,6 +14,13 @@
 
 
 <body>
+
+	<c:choose>
+		<c:when test="${redirectUrl != null}">
+			<c:redirect url="${redirectUrl}" />
+		</c:when>
+	</c:choose>
+
 	<input type="hidden" id="userId" value="${user.userId}" />
 	<div class="container">
 		<h1>Edit Profile</h1>
@@ -107,8 +114,8 @@
 			method="POST">
 			<input id="file" type="file" />
 			<input type="hidden" name="${_csrf.parameterName}"
-										value="${_csrf.token}"/>
-			<input id="" type="submit" value="Upload"/>
+				value="${_csrf.token}" />
+			<input id="" type="submit" value="Upload" />
 		</form:form>
 
 	</div>
