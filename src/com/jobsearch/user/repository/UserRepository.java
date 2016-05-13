@@ -653,11 +653,6 @@ public class UserRepository {
 	public void updatePassword(String password, String email) {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 0 WHERE email = ?";
 
-		try{
 		jdbcTemplate.update(sql, new Object[] { password, email });
-		}catch(Exception ex){
-			if(true){}
-		}
-
 	}
 }
