@@ -36,7 +36,7 @@ public class UserRepository {
 
 	public JobSearchUser getUser(int userId) {
 
-		String sql = "select u.*, up.* from user u inner join user_profile up on u.userid = up.userid where u.userid = ?";
+		String sql = "select * from user where userid = ?";
 
 		return JobSearchUserProfileRowMapper(sql, new Object[] { userId }).get(0);
 
@@ -125,13 +125,14 @@ public class UserRepository {
 				e.setFirstName(rs.getString("FirstName"));
 				e.setLastName(rs.getString("LastName"));
 				e.setEmailAddress(rs.getString("Email"));
-				e.setProfileId(rs.getInt("up.ProfileId"));
+				e.setProfileId(rs.getInt("ProfileId"));
 				e.setHomeLat(rs.getFloat("HomeLat"));
 				e.setHomeLng(rs.getFloat("HomeLng"));
 				e.setHomeCity(rs.getString("HomeCity"));
 				e.setHomeState(rs.getString("HomeState"));
 				e.setHomeZipCode(rs.getString("HomeZipCode"));
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
+				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 
 				return e;
 			}
@@ -211,7 +212,7 @@ public class UserRepository {
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
-		sql = "select u.*, up.* from user u inner join user_profile up on u.userid = up.userid where u.Email = ?";
+		sql = "select * from user where Email = ?";
 
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
@@ -638,7 +639,7 @@ public class UserRepository {
 	}
 
 	public boolean resetPassword(String username, String newPassword) {
-		String sql = "UPDATE user SET password = ? WHERE email = ?";
+		String sql = "UPDATE user SET password = ?, createNewPassword = 1 WHERE email = ?";
 
 		int rowsAffected = jdbcTemplate.update(sql, new Object[] { newPassword, username });
 
@@ -647,5 +648,16 @@ public class UserRepository {
 		}
 
 		return false;
+	}
+
+	public void updatePassword(String password, String email) {
+		String sql = "UPDATE user SET password = ?, createNewPassword = 0 WHERE email = ?";
+
+		try{
+		jdbcTemplate.update(sql, new Object[] { password, email });
+		}catch(Exception ex){
+			if(true){}
+		}
+
 	}
 }

@@ -3,11 +3,11 @@
 <div class="row" style="margin-top: 10px">
 	<div class="col-sm-6 col-md-4 col-md-offset-4">
 
-		<div id="createAccountContainer" style="display: none">
+		<div id="createAccountContainer">
 
-			<p>Create New Account</p>
-			<form:form action="/JobSearch/registerUser" method="POST"
-				commandName="user">
+			<p>Create New Password</p>
+			<form:form action="/JobSearch/newPassword" method="POST"
+				commandName="newPassword">
 				<table>
 					<tr>
 						<td>New Password:</td>

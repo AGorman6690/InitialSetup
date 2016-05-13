@@ -362,11 +362,11 @@ public class UserServiceImpl {
 
 		String newPassword = generateRandomPassword();
 
-		boolean passwordUpdated= repository.resetPassword(user.getUsername(), newPassword);
+		boolean passwordUpdated = repository.resetPassword(user.getUsername(), newPassword);
 
-		if(passwordUpdated){
+		if (passwordUpdated) {
 			mailer.sendMail(user.getUsername(), "Labor Vault password reset",
-					"Your new password for labor vault is " + newPassword +"\n");
+					"Your new password for labor vault is " + newPassword + "\n");
 		}
 
 	}
@@ -382,5 +382,9 @@ public class UserServiceImpl {
 			pw += letters.substring(index, index + 1);
 		}
 		return pw;
+	}
+
+	public void updatePassword(String password, String email) {
+		repository.updatePassword(password, email);
 	}
 }

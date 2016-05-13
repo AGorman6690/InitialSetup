@@ -24,7 +24,7 @@ public class JobSearchUser {
 	private String password;
 	private String matchingPassword;
 	private Profile profile;
-	private List<Category> categories;	
+	private List<Category> categories;
 	private List<Job> jobs;
 	private List<Job> activeJobs;
 	private List<Job> jobsAppliedTo;
@@ -43,7 +43,8 @@ public class JobSearchUser {
 	private String homeZipCode;
 	private int maxWorkRadius; //Units = miles
 	private double distanceFromJob;
-		
+	private int createNewPassword;
+
 	public double getDistanceFromJob() {
 		return distanceFromJob;
 	}
@@ -199,11 +200,11 @@ public class JobSearchUser {
 	public int getUserId() {
 		return userId;
 	}
-	
+
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
-	
+
 	public int getProfileId() {
 		return profileId;
 	}
@@ -215,41 +216,41 @@ public class JobSearchUser {
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-	
+
 	public String getLastName() {
 		return lastName;
 	}
-	
+
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	public String getEmailAddress() {
 		return emailAddress;
 	}
-	
+
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
 	}
-	
+
 	public void addCategory(Category category){
-		
+
 		if(this.categories == null){
 			this.categories = new ArrayList<Category>();
 		}
-		this.categories.add(category);			
+		this.categories.add(category);
 	}
-	
+
 	public void setCategories(List<Category> categories){
 		this.categories = categories;
 	}
-	
+
 	public List<Category> getCategories(){
-		return this.categories;		
+		return this.categories;
 	}
 
 	public String getPassword() {
@@ -279,6 +280,14 @@ public class JobSearchUser {
 	public Object getProfileIds() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public int getCreateNewPassword() {
+		return createNewPassword;
+	}
+
+	public void setCreateNewPassword(int createNewPassword) {
+		this.createNewPassword = createNewPassword;
 	}
 
 }

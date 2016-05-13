@@ -66,7 +66,7 @@ public class UserController {
 		// request.getSession().setAttribute("user", user);
 
 		if (error) {
-			model.addObject("errorMessage", "Username and/or Password are incorrect");
+			model.addObject("errorMessage", "Username and/or Password is incorrect");
 		}
 
 		model.setViewName("Welcome");
@@ -139,27 +139,28 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public ModelAndView getProfile(ModelAndView model,HttpServletRequest request, @ModelAttribute("user") JobSearchUser user) {
+	public ModelAndView getProfile(ModelAndView model, HttpServletRequest request,
+			@ModelAttribute("user") JobSearchUser user) {
 
 		try {
-
-			if(request.getParameter("redirectUrl") != null && !StringUtils.EMPTY.equals(request.getParameter("redirectUrl"))){
-				model.addObject("redirecUrl", request.getParameter("redirectUrl"));
-			}
 
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
+				user = userService.getProfile(user);
 			}
-
-			user = userService.getProfile(user);
 
 			model.addObject("user", user);
 
-			if (user.getProfileId() == 1) {
-				model.setViewName("EmployeeProfile");
-			} else if (user.getProfileId() == 2) {
-				model.setViewName("EmployerProfile");
+			if (user.getCreateNewPassword() == 0) {
+				if (user.getProfileId() == 1) {
+					model.setViewName("EmployeeProfile");
+				} else if (user.getProfileId() == 2) {
+					model.setViewName("EmployerProfile");
+				}
+			} else {
+				model.setViewName("NewPassword");
+				model.addObject("newPassword", new JobSearchUser());
 			}
 
 			return model;
@@ -171,18 +172,11 @@ public class UserController {
 
 	}
 
-	@RequestMapping(value = "/newPassword", method = RequestMethod.GET)
-	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-
-		model.setViewName("NewPassword");
-
-		return model;
-
-	}
-
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
-			@RequestParam final String newPassword) {
+			 @ModelAttribute("newPassword") JobSearchUser newPassword) {
+
+		userService.updatePassword(newPassword.getPassword(),user.getEmailAddress());
 
 		if (user.getProfileId() == 1) {
 			model.setViewName("EmployeeProfile");
@@ -243,7 +237,6 @@ public class UserController {
 		userService.resetPassword(user);
 
 		model.setViewName("Welcome");
-		model.addObject("redirctUrl", redirectUrl);
 		model.addObject("ResetPasswordMessage", "A new password has been sent to your email");
 
 		return model;
