@@ -547,7 +547,7 @@
 					"meta[name='_csrf']").attr("content");
 			$.ajax({
 				type : "POST",
-				url : 'http://localhost:8080/JobSearch/job/apply',
+				url : environmentVariables.LaborVaultHost + '/JobSearch/job/apply',
 				headers : headers,
 // 				dataType : "application/json",
 				contentType : "application/json",

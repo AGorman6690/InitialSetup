@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.model.GeocodingResult;
@@ -14,7 +15,6 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
@@ -44,14 +44,16 @@ public class UserServiceImpl {
 	@Autowired
 	Mailer mailer;
 
+	@Value("${host.url}")
+	private String hostUrl;
+
 	public JobSearchUser createUser(JobSearchUser user) {
 
 		JobSearchUser newUser = repository.createUser(user);
 
 		if (newUser.getEmailAddress() != null) {
-			mailer.sendMail(user.getEmailAddress(), "email verification",
-					"please click the link to verify your email http://localhost:8080/JobSearch/validateEmail?userId="
-							+ newUser.getUserId());
+			mailer.sendMail(user.getEmailAddress(), "email verification", "please click the link to verify your email "
+					+ hostUrl + "/JobSearch/validateEmail?userId=" + newUser.getUserId());
 		}
 		return newUser;
 	}

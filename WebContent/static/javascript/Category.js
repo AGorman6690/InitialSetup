@@ -8,15 +8,15 @@ function getCategoryIds(containerId){
 	for(var i=0; i<elements.length; i++){
 		ids[i] = getCategoryId(elements[i].id);
 	}
-	
+
 	return ids;
 }
-		
+
 function getCategoriesBySuperCat(categoryId, callback) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/category/' + categoryId
+		url : environmentVariables.LaborVaultHost + '/JobSearch/category/' + categoryId
 				+ '/subCategories',
 		dataType : "json",
 		success : _success,

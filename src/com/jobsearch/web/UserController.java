@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,6 +54,9 @@ public class UserController {
 
 	private JobSearchUser user;
 
+	@Value( "${host.url}" )
+	private String hostUrl;
+
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome(ModelAndView model, HttpServletRequest request,
 			@RequestParam(required = false) boolean error) {
@@ -63,7 +67,8 @@ public class UserController {
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);
 		model.addObject("user", user);
-		// request.getSession().setAttribute("user", user);
+
+		model.addObject("url", hostUrl);
 
 		if (error) {
 			model.addObject("errorMessage", "Username and/or Password is incorrect");

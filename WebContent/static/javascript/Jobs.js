@@ -1,9 +1,9 @@
 
 function getFilteredJobs(params, callback){
-		
+
 	$.ajax({
-		type : "GET", 
-		url: 'http://localhost:8080/JobSearch/jobs/filter' + params,
+		type : "GET",
+		url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
 			dataType : "json",
 			success : _success,
 			error : _error
@@ -21,14 +21,14 @@ function getFilteredJobs(params, callback){
 
 
 //function submitJobs(jobName, userId, categoryId, callback) {
-function submitJobs() {	
+function submitJobs() {
 	var headers = {};
 	headers[$("meta[name='_csrf_header']").attr("content")] = $(
 			"meta[name='_csrf']").attr("content");
 
 	$.ajax({
 		type : "POST",
-		url : "http://localhost:8080/JobSearch/jobs/post",
+		url : environmentVariables.LaborVaultHost + "/JobSearch/jobs/post",
 		headers : headers,
 		contentType : "application/json",
 //		dataType : "application/json", // Response
@@ -42,13 +42,13 @@ function submitJobs() {
 
 
 function addJobToCart() {
-	
+
 	$("#submitJobsContainer").show();
 
 	var job = {};
-	
+
 	job.jobName = document.getElementsByName('jobName')[0].value;
-	
+
 	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
 	job.city = document.getElementsByName('city')[0].value;
 	job.state = document.getElementsByName('state')[0].value;
@@ -60,17 +60,17 @@ function addJobToCart() {
 	job.stringStartTime = formatTime($("#startTime").val());
 	job.stringEndTime = formatTime($("#endTime").val());
 	job.categoryIds = getCategoryIds("selectedCategories");
-	
+
 	job.questions = [];
 	var questionElements = $("#addedQuestions").find(".question");
 	for(var i = 0; i < questionElements.length; i++){
-		
+
 		var questionElement = questionElements[i];
 		var question = {};
 		question.question = $(questionElement).find('textarea').val();
 		question.formatId = $(questionElement).find('input').val();
 
-		
+
 		if(question.formatId == 0 || question.formatId == 2 || question.formatId == 3){
 			question.answerOptions = [];
 			var answerOptions = $(questionElement).find('.answer-option');
@@ -81,13 +81,13 @@ function addJobToCart() {
 				if(answerOption != "") {
 					question.answerOptions.push(answerOption);
 				}
-			}			 
+			}
 		}
-		
+
 		job.questions.push(question);
 	}
-	
-	
+
+
 	jobs.push(job);
 
 	$("#pendingJobSubmissions").append(
@@ -102,28 +102,28 @@ function formatTime(time){
 	if( time == "" ){
 		return "00:00:00";
 	}else{
-		
+
 		var len = time.length;
-		
+
 		 //am or pm
 		var dayHalf = time.substring(len - 2);
-		
+
 		var colon = time.indexOf(":");
 		var hour = time.substring(0, colon);
 		var minutes = time.substring(colon + 1, len - 2);
-		
+
 		if(dayHalf == "pm"){
 			hour = parseInt(hour) + 12;
 		}
-		
+
 		if(hour.length == 1){
 			hour = "0" + hour;
 		}
-		
-		return hour + ":" + minutes + ":00";	
+
+		return hour + ":" + minutes + ":00";
 	}
 
-		
+
 }
 
 
@@ -131,7 +131,7 @@ function getJob(jobId) {
 
 	$.ajax({
 		type : "GET",
-		url : 'http://localhost:8080/JobSearch/job/' + jobId,
+		url : environmentVariables.LaborVaultHost + '/JobSearch/job/' + jobId,
 		dataType : "json",
 		success : _success,
 		error : _error
@@ -151,7 +151,7 @@ function markJobComplete(jobId) {
 			"meta[name='_csrf']").attr("content");
 	$.ajax({
 		type : "PUT",
-		url : 'http://localhost:8080/JobSearch/job/' + jobId + '/markComplete',
+		url : environmentVariables.LaborVaultHost + '/JobSearch/job/' + jobId + '/markComplete',
 		headers : headers
 	}).done(function() {
 		$('#home')[0].click();

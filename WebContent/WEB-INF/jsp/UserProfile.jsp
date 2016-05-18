@@ -169,7 +169,7 @@
 													.ajax(
 															{
 																type : "POST",
-																url : "http://localhost:8080/JobSearch/user/profile/edit",
+																url : environmentVariables.LaborVaultHost + "/JobSearch/user/profile/edit",
 																headers : headers,
 																contentType : "application/json",
 																dataType : "application/json", // Response

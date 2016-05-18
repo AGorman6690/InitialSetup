@@ -86,7 +86,10 @@
 
 </head>
 
+
 <body style="height: 100%; width: 95%; margin: auto">
+
+<c:set var="LaborVaultHost" scope="session" value="${url}"/>
 
 	<nav class="navbar navbar-default">
 	<div class="container-fluid">
@@ -115,3 +118,11 @@
 		</ul>
 	</div>
 	</nav>
+
+
+<script type="text/javascript">
+	var environmentVariables ={
+			LaborVaultHost: "${url}"
+	};
+
+</script>
