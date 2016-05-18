@@ -376,7 +376,9 @@ public class UserServiceImpl {
 
 		String newPassword = generateRandomPassword();
 
-		boolean passwordUpdated = repository.resetPassword(user.getUsername(), newPassword);
+		String encryptedPassword = encryptPassword(newPassword);
+
+		boolean passwordUpdated = repository.resetPassword(user.getUsername(), encryptedPassword);
 
 		if (passwordUpdated) {
 			mailer.sendMail(user.getUsername(), "Labor Vault password reset",
@@ -399,6 +401,9 @@ public class UserServiceImpl {
 	}
 
 	public void updatePassword(String password, String email) {
-		repository.updatePassword(password, email);
+
+		String encryptedPassword  = encryptPassword(password);
+
+		repository.updatePassword(encryptedPassword, email);
 	}
 }
