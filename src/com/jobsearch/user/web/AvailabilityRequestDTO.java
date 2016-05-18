@@ -1,11 +1,11 @@
-package com.jobsearch.user.service;
+package com.jobsearch.user.web;
 
 import java.sql.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AvailabilityDTO {
+public class AvailabilityRequestDTO {
 	
 	@JsonProperty
 	private int userId;

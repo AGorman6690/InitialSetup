@@ -49,8 +49,23 @@
 				authorities-by-username-query="select a.password, a.enabled, a.firstname, a.lastname, a.email, a.userId,  a.roleId, a.createNewPassword, r.rolename from User a
                          inner join Role r on a.RoleId = r.RoleId
                          where a.email=?" />
+			<password-encoder ref="passwordEncoder" />
 		</authentication-provider>
 	</authentication-manager>
+
+	<!-- Your application may use the PasswordEncryptor in several places, -->
+	<!-- like for example at new user sign-up. -->
+	<beans:bean id="jasyptPasswordEncryptor"
+		class="org.jasypt.util.password.StrongPasswordEncryptor" />
+
+	<!-- This Spring Security-friendly PasswordEncoder implementation will -->
+	<!-- wrap the PasswordEncryptor instance so that it can be used from -->
+	<!-- the security framework. -->
+	<beans:bean id="passwordEncoder" class="org.jasypt.spring.security3.PasswordEncoder">
+		<beans:property name="passwordEncryptor">
+			<beans:ref bean="jasyptPasswordEncryptor" />
+		</beans:property>
+	</beans:bean>
 
 
 </beans:beans>

@@ -112,6 +112,10 @@
         <!-- Hibernate -->
         <dependency org="org.hibernate" name="hibernate-core" rev="5.1.0.Final"/>
 
+		<!-- Password Encryption -->
+		<dependency org="org.jasypt" name="jasypt" rev="1.9.2"/>
+		<dependency org="org.jasypt" name="jasypt-spring3" rev="1.9.2"/>
+		<dependency org="org.jasypt" name="jasypt-springsecurity3" rev="1.9.2"/>
 
     </dependencies>
 

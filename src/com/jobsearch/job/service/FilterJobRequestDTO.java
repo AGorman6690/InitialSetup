@@ -2,94 +2,88 @@ package com.jobsearch.job.service;
 
 import java.sql.Date;
 import java.sql.Time;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 
-import org.joda.time.DateTime;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
-public class FilterDTO {
+public class FilterJobRequestDTO {
 
 	@JsonProperty("jobs")
 	List<Job> jobs;
-	
+
 	@JsonProperty("fromAddress")
 	String fromAddress;
-	
+
 	@JsonProperty("lat")
 	float lat;
-	
+
 	@JsonProperty("lng")
 	float lng;
-	
+
 	@JsonProperty("radius")
 	int radius;
-	
+
 	@JsonProperty("categoryIds")
 	int[] categoryIds;
-	
+
 	@JsonProperty("categories")
 	List<Category> categories;
-	
+
 	@JsonProperty("startDate")
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	Date startDate;
-	
+
 	@JsonProperty("endDate")
 	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	Date endDate;
-	
+
 	@JsonProperty("startTime")
 	Time startTime;
-	
+
 	@JsonProperty("endTime")
 	Time endTime;
 
 	@JsonProperty("stringStartDate")
 	String stringStartDate;
-	
+
 	@JsonProperty("stringEndDate")
 	String stringEndDate;
-				 
+
 	@JsonProperty("stringStartTime")
 	String stringStartTime;
 
 	@JsonProperty("stringEndTime")
 	String stringEndTime;
-	
+
 	@JsonProperty("beforeStartTime")
 	boolean beforeStartTime;
-	
+
 	@JsonProperty("beforeEndTime")
 	boolean beforeEndTime;
-	
+
 	@JsonProperty("beforeStartDate")
 	boolean beforeStartDate;
-	
+
 	@JsonProperty("beforeEndDate")
 	boolean beforeEndDate;
-	
+
 	@JsonProperty("workingDays")
 	List<String> workingDays;
-	
+
 	@JsonProperty("duration")
 	double duration;
-	
+
 	@JsonProperty("lessThanDuration")
 	boolean lessThanDuration;
-	
+
 	@JsonProperty("returnJobCount")
 	int returnJobCount;
-	
-	
+
 	public int getReturnJobCount() {
 		return returnJobCount;
 	}
@@ -137,7 +131,7 @@ public class FilterDTO {
 	public void setBeforeEndDate(boolean beforeEndDate) {
 		this.beforeEndDate = beforeEndDate;
 	}
-	
+
 	public String getStringStartDate() {
 		return stringStartDate;
 	}
@@ -172,44 +166,43 @@ public class FilterDTO {
 
 	public static final String ZERO_TIME = "00:00:00";
 
-
-	public FilterDTO(int radius, String fromAddress, int[] categoryIds, 
-			String startTime, String endTime, boolean beforeStartTime, 
-			boolean beforeEndTime, String startDate, String endDate, 
-			boolean beforeStartDate2, boolean beforeEndDate2, List<String> workingDays2,
-			double duration2, boolean lessThanDuration2, int returnJobCount) {
+	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
+			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
+			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
+			int returnJobCount) {
 		// TODO Auto-generated constructor stub
-			
+
 		this.setRadius(radius);
-		
+
 		this.setReturnJobCount(returnJobCount);
-		
+
 		this.setDuration(duration2);
 		this.setLessThanDuration(lessThanDuration2);
-		
+
 		this.setFromAddress(fromAddress);
 		this.setCategoryIds(categoryIds);
-		
-		this.setStringStartTime(startTime);;
+
+		this.setStringStartTime(startTime);
+		;
 		this.setStringEndTime(endTime);
-		
+
 		this.setStringStartDate(startDate);
 		this.setStringEndDate(endDate);
-		
+
 		this.setBeforeEndTime(beforeEndTime);
 		this.setBeforeStartTime(beforeStartTime);
-		
+
 		this.setBeforeStartDate(beforeStartDate2);
 		this.setBeforeEndDate(beforeEndDate2);
-		
-		//Convert strings to sql Time objects
+
+		// Convert strings to sql Time objects
 		this.setStartTime(java.sql.Time.valueOf(startTime));
 		this.setEndTime(java.sql.Time.valueOf(endTime));
-		
-		//Convert strings to sql Date objects
+
+		// Convert strings to sql Date objects
 		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
 		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));
-		
+
 		this.setWorkingDays(workingDays2);
 
 	}
@@ -261,7 +254,6 @@ public class FilterDTO {
 	public void setStringEndTime(String stringEndTime) {
 		this.stringEndTime = stringEndTime;
 	}
-	
 
 	public int[] getCategoryIds() {
 		return categoryIds;
@@ -287,7 +279,6 @@ public class FilterDTO {
 		this.duration = duration;
 	}
 
-	
 	public int getRadius() {
 		return radius;
 	}
@@ -317,7 +308,7 @@ public class FilterDTO {
 	}
 
 	public void setLat(GeocodingResult geocodingResults[]) {
-		this.lat = (float) geocodingResults[0].geometry.location.lat;		
+		this.lat = (float) geocodingResults[0].geometry.location.lat;
 	}
 
 	public float getLng() {
@@ -327,8 +318,5 @@ public class FilterDTO {
 	public void setLng(GeocodingResult[] geocodingResults) {
 		this.lng = (float) geocodingResults[0].geometry.location.lng;
 	}
-	
-	
-	
-	
+
 }

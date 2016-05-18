@@ -10,205 +10,189 @@ import java.util.List;
 import java.util.Random;
 
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.Job;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.job.service.CreateJobRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 
-
 public class DummyData {
-	
+
 	Random random = new Random();
-	
-//	List<DummyCity> cities;
+
+	// List<DummyCity> cities;
 	List<String> firstNames;
 	List<String> lastNames;
-	
-	public List<CreateJobDTO> getDummyJobs(List<JobSearchUser> dummyEmployers ){
+
+	public List<CreateJobRequestDTO> getDummyJobs(List<JobSearchUser> dummyEmployers) {
 		List<DummyCity> cities = getCities();
-		
-		List<CreateJobDTO> dummyJobs = new ArrayList<CreateJobDTO>();
+
+		List<CreateJobRequestDTO> dummyJobs = new ArrayList<CreateJobRequestDTO>();
 
 		int jobCount = 0;
-		for(JobSearchUser employer : dummyEmployers){
-			
-			
-//			for(int i = 0;i < dummyEmployers.size(); i++){
-				CreateJobDTO createJobDTO = new CreateJobDTO();
-				createJobDTO.setJobName("Job " + jobCount);
-				createJobDTO.setUserId(employer.getUserId());
-				
-				DummyCity dummyCity = getRandomDummyCity(cities);
-				createJobDTO.setCity(dummyCity.name);
-				createJobDTO.setState(dummyCity.state);
-				createJobDTO.setLat(getLatOrLng(dummyCity.population, dummyCity.lat));
-				createJobDTO.setLng(getLatOrLng(dummyCity.population, dummyCity.lng));
-				createJobDTO.setStartDate(getStatDate());
-				createJobDTO.setEndDate(getEndDate(createJobDTO.getStartDate()));
-				createJobDTO.setStartTime(getStartTime());
-				createJobDTO.setEndTime(getEndTime(createJobDTO.getStartTime()));
-				
-				jobCount += 1;
-				dummyJobs.add(createJobDTO);
-				
-				
-				
-//			}
+		for (JobSearchUser employer : dummyEmployers) {
+
+			// for(int i = 0;i < dummyEmployers.size(); i++){
+			CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO();
+			createJobDTO.setJobName("Job " + jobCount);
+			createJobDTO.setUserId(employer.getUserId());
+
+			DummyCity dummyCity = getRandomDummyCity(cities);
+			createJobDTO.setCity(dummyCity.name);
+			createJobDTO.setState(dummyCity.state);
+			createJobDTO.setLat(getLatOrLng(dummyCity.population, dummyCity.lat));
+			createJobDTO.setLng(getLatOrLng(dummyCity.population, dummyCity.lng));
+			createJobDTO.setStartDate(getStatDate());
+			createJobDTO.setEndDate(getEndDate(createJobDTO.getStartDate()));
+			createJobDTO.setStartTime(getStartTime());
+			createJobDTO.setEndTime(getEndTime(createJobDTO.getStartTime()));
+
+			jobCount += 1;
+			dummyJobs.add(createJobDTO);
+
+			// }
 		}
-		
-		
+
 		return dummyJobs;
 	}
 
-		
 	private Time getEndTime(Time startTime) {
-	
+
 		double randomNumber = random.nextDouble();
 		int hoursToAdd;
-		if (randomNumber < 0.1){
+		if (randomNumber < 0.1) {
 			hoursToAdd = 6;
-		}else if(randomNumber < 0.25){
+		} else if (randomNumber < 0.25) {
 			hoursToAdd = 7;
-		}else if(randomNumber < 0.6){
+		} else if (randomNumber < 0.6) {
 			hoursToAdd = 8;
-		}else if(randomNumber < 0.85){
+		} else if (randomNumber < 0.85) {
 			hoursToAdd = 9;
-		}else{
+		} else {
 			hoursToAdd = 10;
 		}
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(startTime);
 		c.add(Calendar.HOUR_OF_DAY, hoursToAdd);
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
 		return java.sql.Time.valueOf(dateFormat.format(c.getTime()));
-				
-	}
 
+	}
 
 	private Time getStartTime() {
-		
+
 		String startTime;
 		double randomNumber = random.nextDouble();
-		if (randomNumber < 0.1){
+		if (randomNumber < 0.1) {
 			startTime = "06:30:00";
-		}else if(randomNumber < 0.25){
+		} else if (randomNumber < 0.25) {
 			startTime = "07:00:00";
-		}else if(randomNumber < 0.5){
+		} else if (randomNumber < 0.5) {
 			startTime = "07:30:00";
-		}else if(randomNumber < 0.75){
+		} else if (randomNumber < 0.75) {
 			startTime = "08:00:00";
-		}else if(randomNumber < 0.9){
+		} else if (randomNumber < 0.9) {
 			startTime = "08:30:00";
-		}else{
+		} else {
 			startTime = "09:00:00";
 		}
-				
+
 		return java.sql.Time.valueOf(startTime);
-		
+
 	}
 
-
 	private java.sql.Date getEndDate(java.sql.Date startDate) {
-		
-		
+
 		int randomDaysToAdd = (int) (1 + MathUtility.round(10 * random.nextDouble(), 0, 0));
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(startDate); // Now use today date.
 		c.add(Calendar.DATE, randomDaysToAdd); // Adding 5 days
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return DateUtility.getSqlDate(dateFormat.format(c.getTime()));
 
 	}
 
-
 	private java.sql.Date getStatDate() {
-		
-		
-		
+
 		int randomDaysToAdd = (int) MathUtility.round(10 * random.nextDouble(), 0, 0);
-		
+
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date()); // Now use today date.
 		c.add(Calendar.DATE, randomDaysToAdd); // Adding 5 days
-		
+
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		return DateUtility.getSqlDate(dateFormat.format(c.getTime()));
-					
-		//Convert strings to sql Time objects
-//		jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
-//		jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
+
+		// Convert strings to sql Time objects
+		// jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
+		// jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
 
 	}
-
 
 	private float getLatOrLng(int cityPopulation, double cityCoord) {
-		
-		
-		//For example if a city has 250,000 people, the the allowed variance is 0.17.
-		//If the city has a latitude of 43.000, then the returned latitude will be
-		//between 42.915 and 43.085.
-		
-		double allowedVariance; 
-		if(cityPopulation > 2000000){
+
+		// For example if a city has 250,000 people, the the allowed variance is
+		// 0.17.
+		// If the city has a latitude of 43.000, then the returned latitude will
+		// be
+		// between 42.915 and 43.085.
+
+		double allowedVariance;
+		if (cityPopulation > 2000000) {
 			allowedVariance = .17;
-		}else if(cityPopulation > 80000){
+		} else if (cityPopulation > 80000) {
 			allowedVariance = .14;
-		}else if(cityPopulation > 40000){
+		} else if (cityPopulation > 40000) {
 			allowedVariance = .12;
-		}else if(cityPopulation > 20000){
+		} else if (cityPopulation > 20000) {
 			allowedVariance = .1;
-		}else {
+		} else {
 			allowedVariance = .08;
 		}
-		
-		//For example, if allowedVariance = 0.17 and the random number = 0.25,
-		//then randomDisplacement = -0.085 + 0.17 * .25 = -0.085 + 0.0425 = -0.0425
+
+		// For example, if allowedVariance = 0.17 and the random number = 0.25,
+		// then randomDisplacement = -0.085 + 0.17 * .25 = -0.085 + 0.0425 =
+		// -0.0425
 		double randomNumber = random.nextDouble();
-		
+
 		double randomDisplacement = -1 * (allowedVariance / 2) + (allowedVariance) * randomNumber;
-		System.out.println("Random number is " + randomNumber + "; Displacement is " + randomDisplacement); 
-		
-		
+		System.out.println("Random number is " + randomNumber + "; Displacement is " + randomDisplacement);
+
 		return (float) (cityCoord + randomDisplacement);
-		
+
 	}
 
-
 	private DummyCity getRandomDummyCity(List<DummyCity> cities) {
-		
+
 		int totalPopulation = cities.stream().mapToInt(o -> o.population).sum();
 		int randomNumber = random.nextInt(totalPopulation);
-		
+
 		int countPopulation = 0;
 		int countCities = -1;
-		
-		while (countPopulation <= randomNumber){
+
+		while (countPopulation <= randomNumber) {
 			countCities += 1;
-			countPopulation += cities.get(countCities).population;			
+			countPopulation += cities.get(countCities).population;
 		}
-		
+
 		return cities.get(countCities);
 	}
 
+	public List<JobSearchUser> getDummyUsers() {
 
-	public List<JobSearchUser> getDummyUsers(){
-	
 		List<DummyCity> cities = getCities();
-		
+
 		setLastNames();
 		setFirstNames();
-		
+
 		GoogleClient maps = new GoogleClient();
-		
+
 		List<JobSearchUser> dummyUsers = new ArrayList<JobSearchUser>();
-		
-		for(DummyCity city : cities){
-			for(int i = 0;i < city.userCount; i++){
+
+		for (DummyCity city : cities) {
+			for (int i = 0; i < city.userCount; i++) {
 				JobSearchUser user = new JobSearchUser();
 				user.setFirstName(getFirstName());
 				user.setLastName(getLastName());
@@ -218,83 +202,76 @@ public class DummyData {
 				user.setRating(getRating());
 				user.setHomeCity(city.name);
 				user.setHomeState(city.state);
-				
+
 				user.setHomeLat((float) city.lat);
 				user.setHomeLng((float) city.lng);
 				user.setMaxWorkRadius(getMaxWorkRadius());
 				dummyUsers.add(user);
-				
-				
-				
+
 			}
 		}
-		
+
 		return dummyUsers;
-	
-	
+
 	}
-	
+
 	private double getRating() {
-		
+
 		double randomNumber = random.nextDouble();
-		
+
 		return randomNumber * 5.0;
 	}
 
-	private int getMaxWorkRadius(){
+	private int getMaxWorkRadius() {
 		double randomNumber = random.nextDouble();
-		
-		if(randomNumber < .1){
+
+		if (randomNumber < .1) {
 			return 15;
-		}else if(randomNumber < .3){
+		} else if (randomNumber < .3) {
 			return 25;
-		}else if(randomNumber < .6){
+		} else if (randomNumber < .6) {
 			return 35;
-		}else if(randomNumber < .9){
-			return 45;	
-		}else {
+		} else if (randomNumber < .9) {
+			return 45;
+		} else {
 			return 55;
 		}
 	}
-	
-	private int getProfileId(){
+
+	private int getProfileId() {
 		double employeeWeight = .7;
-		
+
 		double randomNumber = random.nextDouble();
-		
-		if(randomNumber < employeeWeight){
+
+		if (randomNumber < employeeWeight) {
 			return 2;
-		}else{
+		} else {
 			return 1;
 		}
 	}
-	
-	private String getEmail(String salt){
+
+	private String getEmail(String salt) {
 		return salt + random.nextInt(500);
 	}
-	
-	
-	private String getLastName(){		
+
+	private String getLastName() {
 		return lastNames.get(random.nextInt(lastNames.size()));
 	}
-	
 
-	private String getFirstName(){		
+	private String getFirstName() {
 		return firstNames.get(random.nextInt(firstNames.size()));
 	}
-	
-	
-	private class DummyCity{
+
+	private class DummyCity {
 		String name;
 		int population;
 		int userCount;
 		String state;
 		double lat;
 		double lng;
-		
-		public DummyCity(String name, int population, int userCount, String state,
-							double lat, double lng){
-			
+
+		public DummyCity(String name, int population, int userCount, String state, double lat, double lng) {
+
 			this.name = name;
 			this.population = population;
 			this.userCount = userCount;
@@ -304,9 +281,9 @@ public class DummyData {
 		}
 
 	}
-	
-	private void setFirstNames(){
-		
+
+	private void setFirstNames() {
+
 		firstNames = new ArrayList<String>();
 		firstNames.add("James");
 		firstNames.add("John");
@@ -609,10 +586,9 @@ public class DummyData {
 		firstNames.add("Freddie");
 		firstNames.add("Wade");
 
-
 	}
-	
-	private void setLastNames(){
+
+	private void setLastNames() {
 		lastNames = new ArrayList<String>();
 		lastNames.add("Smith");
 		lastNames.add("Johnson");
@@ -1615,209 +1591,205 @@ public class DummyData {
 		lastNames.add("Key");
 		lastNames.add("Cooke");
 
-
 	}
-	
-	private List<DummyCity> getCities(){
-		
+
+	private List<DummyCity> getCities() {
+
 		List<DummyCity> cities = new ArrayList<DummyCity>();
-		
-		cities.add(new DummyCity("Minneapolis",407207,12,"MN",44.98,-93.2636111));
-		cities.add(new DummyCity("Saint Paul",297640,9,"MN",44.9444444,-93.0930556));
-		cities.add(new DummyCity("Bloomington",86314,3,"MN",44.8408333,-93.2980556));
-		cities.add(new DummyCity("Brooklyn Park",78728,3,"MN",45.0941667,-93.3561111));
-		cities.add(new DummyCity("Plymouth",75057,3,"MN",45.0105556,-93.4552778));
-		cities.add(new DummyCity("Maple Grove",66945,2,"MN",45.0725,-93.4555556));
-		cities.add(new DummyCity("Woodbury",66807,2,"MN",44.9238889,-92.9591667));
-		cities.add(new DummyCity("Eagan",66084,2,"MN",44.8041667,-93.1666667));
-		cities.add(new DummyCity("Eden Prairie",63228,2,"MN",44.8547222,-93.4705556));
-		cities.add(new DummyCity("Coon Rapids",62112,2,"MN",45.12,-93.2875));
-		cities.add(new DummyCity("Burnsville",61630,2,"MN",44.7677778,-93.2775));
-		cities.add(new DummyCity("Blaine",61190,2,"MN",45.1608333,-93.2347222));
-		cities.add(new DummyCity("Lakeville",59866,2,"MN",44.6497222,-93.2425));
-		cities.add(new DummyCity("Minnetonka",51486,2,"MN",44.9133333,-93.5030556));
-		cities.add(new DummyCity("Apple Valley",50487,2,"MN",44.7319444,-93.2175));
-		cities.add(new DummyCity("Edina",49597,2,"MN",44.8897222,-93.3497222));
-		cities.add(new DummyCity("Saint Louis Park",47502,2,"MN",44.9483333,-93.3477778));
-		cities.add(new DummyCity("Maplewood",40199,2,"MN",44.9530556,-92.995));
-		cities.add(new DummyCity("Shakopee",39677,2,"MN",44.7980556,-93.5266667));
-		cities.add(new DummyCity("Richfield",36179,1,"MN",44.8833333,-93.2827778));
-		cities.add(new DummyCity("Cottage Grove",35630,1,"MN",44.8277778,-92.9436111));
-		cities.add(new DummyCity("Roseville",35319,1,"MN",45.0061111,-93.1563889));
-		cities.add(new DummyCity("Inver Grove Heights",34709,1,"MN",44.8480556,-93.0425));
-		cities.add(new DummyCity("Andover",32006,1,"MN",45.2333333,-93.2911111));
-		cities.add(new DummyCity("Brooklyn Center",30729,1,"MN",45.0761111,-93.3325));
-		cities.add(new DummyCity("Savage",29208,1,"MN",44.7791667,-93.3361111));
-		cities.add(new DummyCity("Oakdale",28033,1,"MN",44.9630556,-92.9647222));
-		cities.add(new DummyCity("Fridley",27670,1,"MN",45.0861111,-93.2630556));
-		cities.add(new DummyCity("Shoreview",26194,1,"MN",45.0791667,-93.1469444));
-		cities.add(new DummyCity("Ramsey",25598,1,"MN",45.2461111,-93.4519444));
-		cities.add(new DummyCity("Prior Lake",25039,1,"MN",44.7133333,-93.4225));
-		cities.add(new DummyCity("White Bear Lake",24986,1,"MN",45.0847222,-93.0097222));
-		cities.add(new DummyCity("Chanhassen",24967,1,"MN",44.8622222,-93.5305556));
-		cities.add(new DummyCity("Chaska",24838,1,"MN",44.7894444,-93.6019444));
-		cities.add(new DummyCity("Champlin",23828,1,"MN",45.1888889,-93.3972222));
-		cities.add(new DummyCity("Elk River",23746,1,"MN",45.3038889,-93.5669444));
-		cities.add(new DummyCity("Rosemount",23008,1,"MN",44.7394444,-93.1255556));
-		cities.add(new DummyCity("Crystal",22605,1,"MN",45.0327778,-93.36));
-		cities.add(new DummyCity("Farmington",22571,1,"MN",44.6402778,-93.1433333));
-		cities.add(new DummyCity("Hastings",22566,1,"MN",44.7433333,-92.8522222));
-		cities.add(new DummyCity("New Brighton",22266,1,"MN",45.0655556,-93.2016667));
-		cities.add(new DummyCity("Lino Lakes",20948,1,"MN",45.1602778,-93.0886111));
-		cities.add(new DummyCity("Golden Valley",20866,1,"MN",45.0097222,-93.3488889));
-		cities.add(new DummyCity("New Hope",20792,1,"MN",45.0380556,-93.3863889));
-		cities.add(new DummyCity("South Saint Paul",20487,1,"MN",44.8927778,-93.0347222));
-		cities.add(new DummyCity("West Saint Paul",19802,1,"MN",44.9161111,-93.1013889));
-		cities.add(new DummyCity("Columbia Heights",19775,1,"MN",45.0408333,-93.2627778));
-		cities.add(new DummyCity("Forest Lake",19399,1,"MN",45.2788889,-92.985));
-		cities.add(new DummyCity("Stillwater",18800,1,"MN",45.0563889,-92.8058333));
-		cities.add(new DummyCity("Hopkins",18056,1,"MN",44.925,-93.4625));
-		cities.add(new DummyCity("Anoka",17276,1,"MN",45.1977778,-93.3869444));
-		cities.add(new DummyCity("Saint Michael",17267,1,"MN",45.21,-93.6647222));
-		cities.add(new DummyCity("Buffalo",16312,1,"MN",45.1719444,-93.8744444));
-		cities.add(new DummyCity("Ham Lake",15888,1,"MN",45.2502778,-93.2497222));
-		cities.add(new DummyCity("Otsego",15047,1,"MN",45.2741667,-93.5911111));
-		cities.add(new DummyCity("Robbinsdale",14320,1,"MN",45.0322222,-93.3383333));
-		cities.add(new DummyCity("Hugo",14239,1,"MN",45.16,-92.9930556));
-		cities.add(new DummyCity("Monticello",13236,1,"MN",45.3055556,-93.7938889));
-		cities.add(new DummyCity("Vadnais Heights",13143,1,"MN",45.0575,-93.0736111));
-		cities.add(new DummyCity("Mounds View",12676,1,"MN",45.105,-93.2083333));
-		cities.add(new DummyCity("North Saint Paul",12224,1,"MN",45.0125,-92.9916667));
-		cities.add(new DummyCity("East Bethel",11643,1,"MN",45.3194444,-93.2022222));
-		cities.add(new DummyCity("Rogers",12393,1,"MN",45.1888889,-93.5527778));
-		cities.add(new DummyCity("Waconia",11776,1,"MN",44.8508333,-93.7866667));
-		cities.add(new DummyCity("Mendota Heights",11222,1,"MN",44.8836111,-93.1380556));
-		cities.add(new DummyCity("Big Lake",10660,1,"MN",45.3325,-93.7458333));
-		cities.add(new DummyCity("Little Canada",10329,1,"MN",45.0269444,-93.0875));
-		cities.add(new DummyCity("North Branch",10160,1,"MN",45.5113889,-92.98));
-		cities.add(new DummyCity("Arden Hills",10000,1,"MN",45.0502778,-93.1563889));
-		cities.add(new DummyCity("Mound",10000,1,"MN",44.9366667,-93.6658333));
-		cities.add(new DummyCity("Saint Anthony",10000,1,"MN",45.0205556,-93.2177778));
-		cities.add(new DummyCity("Cambridge",10000,1,"MN",45.5727778,-93.2241667));
-		cities.add(new DummyCity("Oak Grove",10000,1,"MN",45.3408333,-93.3266667));
-		cities.add(new DummyCity("Lake Elmo",10000,1,"MN",44.9958333,-92.8791667));
-		cities.add(new DummyCity("Victoria",10000,1,"MN",44.8586111,-93.6613889));
-		cities.add(new DummyCity("Mahtomedi",10000,1,"MN",45.0697222,-92.9513889));
-		cities.add(new DummyCity("Orono",10000,1,"MN",44.9713889,-93.6041667));
-		cities.add(new DummyCity("Wyoming",10000,1,"MN",45.3363889,-92.9969444));
-		cities.add(new DummyCity("Shorewood",10000,1,"MN",44.9008333,-93.5888889));
-		cities.add(new DummyCity("New Prague",10000,1,"MN",44.5433333,-93.5758333));
-		cities.add(new DummyCity("Saint Francis",10000,1,"MN",45.3869444,-93.3591667));
-		cities.add(new DummyCity("Albertville",10000,1,"MN",45.2377778,-93.6541667));
-		cities.add(new DummyCity("Belle Plaine",10000,1,"MN",44.6227778,-93.7683333));
-		cities.add(new DummyCity("Minnetrista",10000,1,"MN",44.9383333,-93.7175));
-		cities.add(new DummyCity("Spring Lake Park",10000,1,"MN",45.1077778,-93.2377778));
-		cities.add(new DummyCity("Jordan",8000,1,"MN",44.6669444,-93.6266667));
-		cities.add(new DummyCity("Delano",8000,1,"MN",45.0419444,-93.7888889));
-		cities.add(new DummyCity("Corcoran",8000,1,"MN",45.0952778,-93.5472222));
-		cities.add(new DummyCity("Falcon Heights",8000,1,"MN",44.9916667,-93.1661111));
-		cities.add(new DummyCity("Isanti",8000,1,"MN",45.4902778,-93.2475));
-		cities.add(new DummyCity("Saint Paul Park",8000,1,"MN",44.8422222,-92.9911111));
-		cities.add(new DummyCity("Medina",8000,1,"MN",45.0352778,-93.5822222));
-		cities.add(new DummyCity("Circle Pines",8000,1,"MN",45.1486111,-93.1513889));
-		cities.add(new DummyCity("Chisago City",8000,1,"MN",45.3736111,-92.8897222));
-		cities.add(new DummyCity("Dayton",8000,1,"MN",45.2438889,-93.5147222));
-		cities.add(new DummyCity("Oak Park Heights",8000,1,"MN",45.0313889,-92.7927778));
-		cities.add(new DummyCity("Princeton",8000,1,"MN",45.57,-93.5813889));
-		cities.add(new DummyCity("North Oaks",8000,1,"MN",45.1027778,-93.0788889));
-		cities.add(new DummyCity("Becker",8000,1,"MN",45.3933333,-93.8766667));
-		cities.add(new DummyCity("Nowthen",8000,1,"MN",45.3280556,-93.47));
-		cities.add(new DummyCity("Lindstrom",8000,1,"MN",45.3894444,-92.8477778));
-		cities.add(new DummyCity("Rockford",8000,1,"MN",45.0883333,-93.7341667));
-		cities.add(new DummyCity("Watertown",8000,1,"MN",44.9636111,-93.8469444));
-		cities.add(new DummyCity("Wayzata",8000,1,"MN",44.9741667,-93.5063889));
-		cities.add(new DummyCity("Carver",8000,1,"MN",44.7636111,-93.6255556));
-		cities.add(new DummyCity("Grant",8000,1,"MN",45.0844444,-92.9102778));
-		cities.add(new DummyCity("Le Sueur",8000,1,"MN",44.4613889,-93.915));
-		cities.add(new DummyCity("Scandia",8000,1,"MN",45.2536111,-92.8055556));
-		cities.add(new DummyCity("Centerville",8000,1,"MN",45.1630556,-93.0555556));
-		cities.add(new DummyCity("Deephaven",8000,1,"MN",44.9297222,-93.5222222));
-		cities.add(new DummyCity("Bayport",8000,1,"MN",45.0213889,-92.7808333));
-		cities.add(new DummyCity("Independence",8000,1,"MN",45.0252778,-93.7072222));
-		cities.add(new DummyCity("Norwood Young America",8000,1,"MN",44.7736111,-93.9213889));
-		cities.add(new DummyCity("Newport",8000,1,"MN",44.8663889,-93.0002778));
-		cities.add(new DummyCity("Annandale",8000,1,"MN",45.2627778,-94.1241667));
-		cities.add(new DummyCity("Hanover",8000,1,"MN",45.1558333,-93.6661111));
-		cities.add(new DummyCity("Montrose",8000,1,"MN",45.065,-93.9108333));
-		cities.add(new DummyCity("Montgomery",8000,1,"MN",44.4388889,-93.5811111));
-		cities.add(new DummyCity("Afton",8000,1,"MN",44.9027778,-92.7833333));
-		cities.add(new DummyCity("Milaca",8000,1,"MN",45.7558333,-93.6541667));
-		cities.add(new DummyCity("Greenfield",8000,1,"MN",45.1033333,-93.6911111));
-		cities.add(new DummyCity("Cokato",8000,1,"MN",45.0758333,-94.1897222));
-		cities.add(new DummyCity("Le Center",8000,1,"MN",44.3894444,-93.73));
-		cities.add(new DummyCity("Osseo",8000,1,"MN",45.1194444,-93.4022222));
-		cities.add(new DummyCity("Lauderdale",8000,1,"MN",44.9986111,-93.2055556));
-		cities.add(new DummyCity("Saint Bonifacius",8000,1,"MN",44.9055556,-93.7472222));
-		cities.add(new DummyCity("Gaylord",8000,1,"MN",44.5530556,-94.2202778));
-		cities.add(new DummyCity("Excelsior",8000,1,"MN",44.9033333,-93.5661111));
-		cities.add(new DummyCity("Arlington",8000,1,"MN",44.6083333,-94.0802778));
-		cities.add(new DummyCity("Maple Lake",8000,1,"MN",45.2291667,-94.0016667));
-		cities.add(new DummyCity("Lexington",8000,1,"MN",45.1425,-93.1630556));
-		cities.add(new DummyCity("Howard Lake",8000,1,"MN",45.0608333,-94.0730556));
-		cities.add(new DummyCity("Waterville",8000,1,"MN",44.2188889,-93.5677778));
-		cities.add(new DummyCity("Mayer",8000,1,"MN",44.885,-93.8875));
-		cities.add(new DummyCity("Lakeland",8000,1,"MN",44.9563889,-92.7655556));
-		cities.add(new DummyCity("Maple Plain",8000,1,"MN",45.0072222,-93.6555556));
-		cities.add(new DummyCity("Long Lake",8000,1,"MN",44.9866667,-93.5713889));
-		cities.add(new DummyCity("Braham",8000,1,"MN",45.7227778,-93.1705556));
-		cities.add(new DummyCity("Clearwater",8000,1,"MN",45.4194444,-94.0486111));
-		cities.add(new DummyCity("Spring Park",8000,1,"MN",44.9352778,-93.6319444));
-		cities.add(new DummyCity("Cologne",8000,1,"MN",44.7716667,-93.7811111));
-		cities.add(new DummyCity("Tonka Bay",8000,1,"MN",44.9086111,-93.5927778));
-		cities.add(new DummyCity("Stacy",8000,1,"MN",45.3980556,-92.9872222));
-		cities.add(new DummyCity("Winthrop",8000,1,"MN",44.5430556,-94.3661111));
-		cities.add(new DummyCity("Waverly",8000,1,"MN",45.0666667,-93.9661111));
-		cities.add(new DummyCity("Harris",8000,1,"MN",45.5863889,-92.9744444));
-		cities.add(new DummyCity("Dellwood",8000,1,"MN",45.09,-92.9722222));
-		cities.add(new DummyCity("Lake Saint Croix Beach",8000,1,"MN",44.9208333,-92.7666667));
-		cities.add(new DummyCity("Shafer",8000,1,"MN",45.3869444,-92.7475));
-		cities.add(new DummyCity("Taylors Falls",8000,1,"MN",45.4019444,-92.6522222));
-		cities.add(new DummyCity("Martin Lake",8000,1,"MN",45.3811111,-93.0947222));
-		cities.add(new DummyCity("Henderson",8000,1,"MN",44.5283333,-93.9075));
-		cities.add(new DummyCity("Lilydale",6000,1,"MN",44.9161111,-93.1258333));
-		cities.add(new DummyCity("Gibbon",6000,1,"MN",44.5338889,-94.5261111));
-		cities.add(new DummyCity("Landfall",6000,1,"MN",44.9508333,-92.9763889));
-		cities.add(new DummyCity("Hilltop",6000,1,"MN",45.0533333,-93.2472222));
-		cities.add(new DummyCity("Cleveland",6000,1,"MN",44.3255556,-93.8375));
-		cities.add(new DummyCity("Hampton",6000,1,"MN",44.6102778,-93.0019444));
-		cities.add(new DummyCity("Marine on Saint Croix",6000,1,"MN",45.3666667,-92.7708333));
-		cities.add(new DummyCity("Kasota",6000,1,"MN",44.2925,-93.9647222));
-		cities.add(new DummyCity("Loretto",6000,1,"MN",45.0547222,-93.6352778));
-		cities.add(new DummyCity("Elysian",6000,1,"MN",44.1986111,-93.6736111));
-		cities.add(new DummyCity("Clear Lake",6000,1,"MN",45.445,-93.9986111));
-		cities.add(new DummyCity("Center City",6000,1,"MN",45.3938889,-92.8163889));
-		cities.add(new DummyCity("Minnetonka Beach",6000,1,"MN",44.9397222,-93.5763889));
-		cities.add(new DummyCity("Green Isle",6000,1,"MN",44.6791667,-94.0080556));
-		cities.add(new DummyCity("Sunfish Lake",6000,1,"MN",44.8708333,-93.0983333));
-		cities.add(new DummyCity("Foreston",6000,1,"MN",45.7344444,-93.7102778));
-		cities.add(new DummyCity("Hamburg",6000,1,"MN",44.7333333,-93.9669444));
-		cities.add(new DummyCity("Willernie",6000,1,"MN",45.0541667,-92.9563889));
-		cities.add(new DummyCity("Bethel",6000,1,"MN",45.4038889,-93.2675));
-		cities.add(new DummyCity("Big Lake",6000,1,"MN",45.3325,-93.7458333));
-		cities.add(new DummyCity("Woodland",6000,1,"MN",44.9469444,-93.5038889));
-		cities.add(new DummyCity("Randolph",6000,1,"MN",44.5261111,-93.0197222));
-		cities.add(new DummyCity("New Auburn",6000,1,"MN",44.6736111,-94.2294444));
-		cities.add(new DummyCity("Vermillion",6000,1,"MN",44.6736111,-92.9669444));
-		cities.add(new DummyCity("Pine Springs",6000,1,"MN",45.0358333,-92.9541667));
-		cities.add(new DummyCity("Gem Lake",6000,1,"MN",45.0575,-93.0322222));
-		cities.add(new DummyCity("New Germany",6000,1,"MN",44.8841667,-93.9702778));
-		cities.add(new DummyCity("Medicine Lake",6000,1,"MN",44.9952778,-93.4152778));
-		cities.add(new DummyCity("Saint Marys Point",6000,1,"MN",44.9144444,-92.7655556));
-		cities.add(new DummyCity("Lakeland Shores",4000,1,"MN",44.9480556,-92.7638889));
-		cities.add(new DummyCity("Pease",4000,1,"MN",45.6980556,-93.6477778));
-		cities.add(new DummyCity("Wahkon",4000,1,"MN",46.1183333,-93.5208333));
-		cities.add(new DummyCity("Mendota",4000,1,"MN",44.8872222,-93.1641667));
-		cities.add(new DummyCity("South Haven",4000,1,"MN",45.2925,-94.2116667));
-		cities.add(new DummyCity("Kilkenny",4000,1,"MN",44.3133333,-93.5738889));
-		cities.add(new DummyCity("Heidelberg",4000,1,"MN",44.4913889,-93.6261111));
-		cities.add(new DummyCity("Stanchfield",2000,1,"MN",45.6733333,-93.1830556));
-		cities.add(new DummyCity("New Trier",2000,1,"MN",44.6013889,-92.9338889));
-		cities.add(new DummyCity("Bock",2000,1,"MN",45.785,-93.5566667));
+
+		cities.add(new DummyCity("Minneapolis", 407207, 12, "MN", 44.98, -93.2636111));
+		cities.add(new DummyCity("Saint Paul", 297640, 9, "MN", 44.9444444, -93.0930556));
+		cities.add(new DummyCity("Bloomington", 86314, 3, "MN", 44.8408333, -93.2980556));
+		cities.add(new DummyCity("Brooklyn Park", 78728, 3, "MN", 45.0941667, -93.3561111));
+		cities.add(new DummyCity("Plymouth", 75057, 3, "MN", 45.0105556, -93.4552778));
+		cities.add(new DummyCity("Maple Grove", 66945, 2, "MN", 45.0725, -93.4555556));
+		cities.add(new DummyCity("Woodbury", 66807, 2, "MN", 44.9238889, -92.9591667));
+		cities.add(new DummyCity("Eagan", 66084, 2, "MN", 44.8041667, -93.1666667));
+		cities.add(new DummyCity("Eden Prairie", 63228, 2, "MN", 44.8547222, -93.4705556));
+		cities.add(new DummyCity("Coon Rapids", 62112, 2, "MN", 45.12, -93.2875));
+		cities.add(new DummyCity("Burnsville", 61630, 2, "MN", 44.7677778, -93.2775));
+		cities.add(new DummyCity("Blaine", 61190, 2, "MN", 45.1608333, -93.2347222));
+		cities.add(new DummyCity("Lakeville", 59866, 2, "MN", 44.6497222, -93.2425));
+		cities.add(new DummyCity("Minnetonka", 51486, 2, "MN", 44.9133333, -93.5030556));
+		cities.add(new DummyCity("Apple Valley", 50487, 2, "MN", 44.7319444, -93.2175));
+		cities.add(new DummyCity("Edina", 49597, 2, "MN", 44.8897222, -93.3497222));
+		cities.add(new DummyCity("Saint Louis Park", 47502, 2, "MN", 44.9483333, -93.3477778));
+		cities.add(new DummyCity("Maplewood", 40199, 2, "MN", 44.9530556, -92.995));
+		cities.add(new DummyCity("Shakopee", 39677, 2, "MN", 44.7980556, -93.5266667));
+		cities.add(new DummyCity("Richfield", 36179, 1, "MN", 44.8833333, -93.2827778));
+		cities.add(new DummyCity("Cottage Grove", 35630, 1, "MN", 44.8277778, -92.9436111));
+		cities.add(new DummyCity("Roseville", 35319, 1, "MN", 45.0061111, -93.1563889));
+		cities.add(new DummyCity("Inver Grove Heights", 34709, 1, "MN", 44.8480556, -93.0425));
+		cities.add(new DummyCity("Andover", 32006, 1, "MN", 45.2333333, -93.2911111));
+		cities.add(new DummyCity("Brooklyn Center", 30729, 1, "MN", 45.0761111, -93.3325));
+		cities.add(new DummyCity("Savage", 29208, 1, "MN", 44.7791667, -93.3361111));
+		cities.add(new DummyCity("Oakdale", 28033, 1, "MN", 44.9630556, -92.9647222));
+		cities.add(new DummyCity("Fridley", 27670, 1, "MN", 45.0861111, -93.2630556));
+		cities.add(new DummyCity("Shoreview", 26194, 1, "MN", 45.0791667, -93.1469444));
+		cities.add(new DummyCity("Ramsey", 25598, 1, "MN", 45.2461111, -93.4519444));
+		cities.add(new DummyCity("Prior Lake", 25039, 1, "MN", 44.7133333, -93.4225));
+		cities.add(new DummyCity("White Bear Lake", 24986, 1, "MN", 45.0847222, -93.0097222));
+		cities.add(new DummyCity("Chanhassen", 24967, 1, "MN", 44.8622222, -93.5305556));
+		cities.add(new DummyCity("Chaska", 24838, 1, "MN", 44.7894444, -93.6019444));
+		cities.add(new DummyCity("Champlin", 23828, 1, "MN", 45.1888889, -93.3972222));
+		cities.add(new DummyCity("Elk River", 23746, 1, "MN", 45.3038889, -93.5669444));
+		cities.add(new DummyCity("Rosemount", 23008, 1, "MN", 44.7394444, -93.1255556));
+		cities.add(new DummyCity("Crystal", 22605, 1, "MN", 45.0327778, -93.36));
+		cities.add(new DummyCity("Farmington", 22571, 1, "MN", 44.6402778, -93.1433333));
+		cities.add(new DummyCity("Hastings", 22566, 1, "MN", 44.7433333, -92.8522222));
+		cities.add(new DummyCity("New Brighton", 22266, 1, "MN", 45.0655556, -93.2016667));
+		cities.add(new DummyCity("Lino Lakes", 20948, 1, "MN", 45.1602778, -93.0886111));
+		cities.add(new DummyCity("Golden Valley", 20866, 1, "MN", 45.0097222, -93.3488889));
+		cities.add(new DummyCity("New Hope", 20792, 1, "MN", 45.0380556, -93.3863889));
+		cities.add(new DummyCity("South Saint Paul", 20487, 1, "MN", 44.8927778, -93.0347222));
+		cities.add(new DummyCity("West Saint Paul", 19802, 1, "MN", 44.9161111, -93.1013889));
+		cities.add(new DummyCity("Columbia Heights", 19775, 1, "MN", 45.0408333, -93.2627778));
+		cities.add(new DummyCity("Forest Lake", 19399, 1, "MN", 45.2788889, -92.985));
+		cities.add(new DummyCity("Stillwater", 18800, 1, "MN", 45.0563889, -92.8058333));
+		cities.add(new DummyCity("Hopkins", 18056, 1, "MN", 44.925, -93.4625));
+		cities.add(new DummyCity("Anoka", 17276, 1, "MN", 45.1977778, -93.3869444));
+		cities.add(new DummyCity("Saint Michael", 17267, 1, "MN", 45.21, -93.6647222));
+		cities.add(new DummyCity("Buffalo", 16312, 1, "MN", 45.1719444, -93.8744444));
+		cities.add(new DummyCity("Ham Lake", 15888, 1, "MN", 45.2502778, -93.2497222));
+		cities.add(new DummyCity("Otsego", 15047, 1, "MN", 45.2741667, -93.5911111));
+		cities.add(new DummyCity("Robbinsdale", 14320, 1, "MN", 45.0322222, -93.3383333));
+		cities.add(new DummyCity("Hugo", 14239, 1, "MN", 45.16, -92.9930556));
+		cities.add(new DummyCity("Monticello", 13236, 1, "MN", 45.3055556, -93.7938889));
+		cities.add(new DummyCity("Vadnais Heights", 13143, 1, "MN", 45.0575, -93.0736111));
+		cities.add(new DummyCity("Mounds View", 12676, 1, "MN", 45.105, -93.2083333));
+		cities.add(new DummyCity("North Saint Paul", 12224, 1, "MN", 45.0125, -92.9916667));
+		cities.add(new DummyCity("East Bethel", 11643, 1, "MN", 45.3194444, -93.2022222));
+		cities.add(new DummyCity("Rogers", 12393, 1, "MN", 45.1888889, -93.5527778));
+		cities.add(new DummyCity("Waconia", 11776, 1, "MN", 44.8508333, -93.7866667));
+		cities.add(new DummyCity("Mendota Heights", 11222, 1, "MN", 44.8836111, -93.1380556));
+		cities.add(new DummyCity("Big Lake", 10660, 1, "MN", 45.3325, -93.7458333));
+		cities.add(new DummyCity("Little Canada", 10329, 1, "MN", 45.0269444, -93.0875));
+		cities.add(new DummyCity("North Branch", 10160, 1, "MN", 45.5113889, -92.98));
+		cities.add(new DummyCity("Arden Hills", 10000, 1, "MN", 45.0502778, -93.1563889));
+		cities.add(new DummyCity("Mound", 10000, 1, "MN", 44.9366667, -93.6658333));
+		cities.add(new DummyCity("Saint Anthony", 10000, 1, "MN", 45.0205556, -93.2177778));
+		cities.add(new DummyCity("Cambridge", 10000, 1, "MN", 45.5727778, -93.2241667));
+		cities.add(new DummyCity("Oak Grove", 10000, 1, "MN", 45.3408333, -93.3266667));
+		cities.add(new DummyCity("Lake Elmo", 10000, 1, "MN", 44.9958333, -92.8791667));
+		cities.add(new DummyCity("Victoria", 10000, 1, "MN", 44.8586111, -93.6613889));
+		cities.add(new DummyCity("Mahtomedi", 10000, 1, "MN", 45.0697222, -92.9513889));
+		cities.add(new DummyCity("Orono", 10000, 1, "MN", 44.9713889, -93.6041667));
+		cities.add(new DummyCity("Wyoming", 10000, 1, "MN", 45.3363889, -92.9969444));
+		cities.add(new DummyCity("Shorewood", 10000, 1, "MN", 44.9008333, -93.5888889));
+		cities.add(new DummyCity("New Prague", 10000, 1, "MN", 44.5433333, -93.5758333));
+		cities.add(new DummyCity("Saint Francis", 10000, 1, "MN", 45.3869444, -93.3591667));
+		cities.add(new DummyCity("Albertville", 10000, 1, "MN", 45.2377778, -93.6541667));
+		cities.add(new DummyCity("Belle Plaine", 10000, 1, "MN", 44.6227778, -93.7683333));
+		cities.add(new DummyCity("Minnetrista", 10000, 1, "MN", 44.9383333, -93.7175));
+		cities.add(new DummyCity("Spring Lake Park", 10000, 1, "MN", 45.1077778, -93.2377778));
+		cities.add(new DummyCity("Jordan", 8000, 1, "MN", 44.6669444, -93.6266667));
+		cities.add(new DummyCity("Delano", 8000, 1, "MN", 45.0419444, -93.7888889));
+		cities.add(new DummyCity("Corcoran", 8000, 1, "MN", 45.0952778, -93.5472222));
+		cities.add(new DummyCity("Falcon Heights", 8000, 1, "MN", 44.9916667, -93.1661111));
+		cities.add(new DummyCity("Isanti", 8000, 1, "MN", 45.4902778, -93.2475));
+		cities.add(new DummyCity("Saint Paul Park", 8000, 1, "MN", 44.8422222, -92.9911111));
+		cities.add(new DummyCity("Medina", 8000, 1, "MN", 45.0352778, -93.5822222));
+		cities.add(new DummyCity("Circle Pines", 8000, 1, "MN", 45.1486111, -93.1513889));
+		cities.add(new DummyCity("Chisago City", 8000, 1, "MN", 45.3736111, -92.8897222));
+		cities.add(new DummyCity("Dayton", 8000, 1, "MN", 45.2438889, -93.5147222));
+		cities.add(new DummyCity("Oak Park Heights", 8000, 1, "MN", 45.0313889, -92.7927778));
+		cities.add(new DummyCity("Princeton", 8000, 1, "MN", 45.57, -93.5813889));
+		cities.add(new DummyCity("North Oaks", 8000, 1, "MN", 45.1027778, -93.0788889));
+		cities.add(new DummyCity("Becker", 8000, 1, "MN", 45.3933333, -93.8766667));
+		cities.add(new DummyCity("Nowthen", 8000, 1, "MN", 45.3280556, -93.47));
+		cities.add(new DummyCity("Lindstrom", 8000, 1, "MN", 45.3894444, -92.8477778));
+		cities.add(new DummyCity("Rockford", 8000, 1, "MN", 45.0883333, -93.7341667));
+		cities.add(new DummyCity("Watertown", 8000, 1, "MN", 44.9636111, -93.8469444));
+		cities.add(new DummyCity("Wayzata", 8000, 1, "MN", 44.9741667, -93.5063889));
+		cities.add(new DummyCity("Carver", 8000, 1, "MN", 44.7636111, -93.6255556));
+		cities.add(new DummyCity("Grant", 8000, 1, "MN", 45.0844444, -92.9102778));
+		cities.add(new DummyCity("Le Sueur", 8000, 1, "MN", 44.4613889, -93.915));
+		cities.add(new DummyCity("Scandia", 8000, 1, "MN", 45.2536111, -92.8055556));
+		cities.add(new DummyCity("Centerville", 8000, 1, "MN", 45.1630556, -93.0555556));
+		cities.add(new DummyCity("Deephaven", 8000, 1, "MN", 44.9297222, -93.5222222));
+		cities.add(new DummyCity("Bayport", 8000, 1, "MN", 45.0213889, -92.7808333));
+		cities.add(new DummyCity("Independence", 8000, 1, "MN", 45.0252778, -93.7072222));
+		cities.add(new DummyCity("Norwood Young America", 8000, 1, "MN", 44.7736111, -93.9213889));
+		cities.add(new DummyCity("Newport", 8000, 1, "MN", 44.8663889, -93.0002778));
+		cities.add(new DummyCity("Annandale", 8000, 1, "MN", 45.2627778, -94.1241667));
+		cities.add(new DummyCity("Hanover", 8000, 1, "MN", 45.1558333, -93.6661111));
+		cities.add(new DummyCity("Montrose", 8000, 1, "MN", 45.065, -93.9108333));
+		cities.add(new DummyCity("Montgomery", 8000, 1, "MN", 44.4388889, -93.5811111));
+		cities.add(new DummyCity("Afton", 8000, 1, "MN", 44.9027778, -92.7833333));
+		cities.add(new DummyCity("Milaca", 8000, 1, "MN", 45.7558333, -93.6541667));
+		cities.add(new DummyCity("Greenfield", 8000, 1, "MN", 45.1033333, -93.6911111));
+		cities.add(new DummyCity("Cokato", 8000, 1, "MN", 45.0758333, -94.1897222));
+		cities.add(new DummyCity("Le Center", 8000, 1, "MN", 44.3894444, -93.73));
+		cities.add(new DummyCity("Osseo", 8000, 1, "MN", 45.1194444, -93.4022222));
+		cities.add(new DummyCity("Lauderdale", 8000, 1, "MN", 44.9986111, -93.2055556));
+		cities.add(new DummyCity("Saint Bonifacius", 8000, 1, "MN", 44.9055556, -93.7472222));
+		cities.add(new DummyCity("Gaylord", 8000, 1, "MN", 44.5530556, -94.2202778));
+		cities.add(new DummyCity("Excelsior", 8000, 1, "MN", 44.9033333, -93.5661111));
+		cities.add(new DummyCity("Arlington", 8000, 1, "MN", 44.6083333, -94.0802778));
+		cities.add(new DummyCity("Maple Lake", 8000, 1, "MN", 45.2291667, -94.0016667));
+		cities.add(new DummyCity("Lexington", 8000, 1, "MN", 45.1425, -93.1630556));
+		cities.add(new DummyCity("Howard Lake", 8000, 1, "MN", 45.0608333, -94.0730556));
+		cities.add(new DummyCity("Waterville", 8000, 1, "MN", 44.2188889, -93.5677778));
+		cities.add(new DummyCity("Mayer", 8000, 1, "MN", 44.885, -93.8875));
+		cities.add(new DummyCity("Lakeland", 8000, 1, "MN", 44.9563889, -92.7655556));
+		cities.add(new DummyCity("Maple Plain", 8000, 1, "MN", 45.0072222, -93.6555556));
+		cities.add(new DummyCity("Long Lake", 8000, 1, "MN", 44.9866667, -93.5713889));
+		cities.add(new DummyCity("Braham", 8000, 1, "MN", 45.7227778, -93.1705556));
+		cities.add(new DummyCity("Clearwater", 8000, 1, "MN", 45.4194444, -94.0486111));
+		cities.add(new DummyCity("Spring Park", 8000, 1, "MN", 44.9352778, -93.6319444));
+		cities.add(new DummyCity("Cologne", 8000, 1, "MN", 44.7716667, -93.7811111));
+		cities.add(new DummyCity("Tonka Bay", 8000, 1, "MN", 44.9086111, -93.5927778));
+		cities.add(new DummyCity("Stacy", 8000, 1, "MN", 45.3980556, -92.9872222));
+		cities.add(new DummyCity("Winthrop", 8000, 1, "MN", 44.5430556, -94.3661111));
+		cities.add(new DummyCity("Waverly", 8000, 1, "MN", 45.0666667, -93.9661111));
+		cities.add(new DummyCity("Harris", 8000, 1, "MN", 45.5863889, -92.9744444));
+		cities.add(new DummyCity("Dellwood", 8000, 1, "MN", 45.09, -92.9722222));
+		cities.add(new DummyCity("Lake Saint Croix Beach", 8000, 1, "MN", 44.9208333, -92.7666667));
+		cities.add(new DummyCity("Shafer", 8000, 1, "MN", 45.3869444, -92.7475));
+		cities.add(new DummyCity("Taylors Falls", 8000, 1, "MN", 45.4019444, -92.6522222));
+		cities.add(new DummyCity("Martin Lake", 8000, 1, "MN", 45.3811111, -93.0947222));
+		cities.add(new DummyCity("Henderson", 8000, 1, "MN", 44.5283333, -93.9075));
+		cities.add(new DummyCity("Lilydale", 6000, 1, "MN", 44.9161111, -93.1258333));
+		cities.add(new DummyCity("Gibbon", 6000, 1, "MN", 44.5338889, -94.5261111));
+		cities.add(new DummyCity("Landfall", 6000, 1, "MN", 44.9508333, -92.9763889));
+		cities.add(new DummyCity("Hilltop", 6000, 1, "MN", 45.0533333, -93.2472222));
+		cities.add(new DummyCity("Cleveland", 6000, 1, "MN", 44.3255556, -93.8375));
+		cities.add(new DummyCity("Hampton", 6000, 1, "MN", 44.6102778, -93.0019444));
+		cities.add(new DummyCity("Marine on Saint Croix", 6000, 1, "MN", 45.3666667, -92.7708333));
+		cities.add(new DummyCity("Kasota", 6000, 1, "MN", 44.2925, -93.9647222));
+		cities.add(new DummyCity("Loretto", 6000, 1, "MN", 45.0547222, -93.6352778));
+		cities.add(new DummyCity("Elysian", 6000, 1, "MN", 44.1986111, -93.6736111));
+		cities.add(new DummyCity("Clear Lake", 6000, 1, "MN", 45.445, -93.9986111));
+		cities.add(new DummyCity("Center City", 6000, 1, "MN", 45.3938889, -92.8163889));
+		cities.add(new DummyCity("Minnetonka Beach", 6000, 1, "MN", 44.9397222, -93.5763889));
+		cities.add(new DummyCity("Green Isle", 6000, 1, "MN", 44.6791667, -94.0080556));
+		cities.add(new DummyCity("Sunfish Lake", 6000, 1, "MN", 44.8708333, -93.0983333));
+		cities.add(new DummyCity("Foreston", 6000, 1, "MN", 45.7344444, -93.7102778));
+		cities.add(new DummyCity("Hamburg", 6000, 1, "MN", 44.7333333, -93.9669444));
+		cities.add(new DummyCity("Willernie", 6000, 1, "MN", 45.0541667, -92.9563889));
+		cities.add(new DummyCity("Bethel", 6000, 1, "MN", 45.4038889, -93.2675));
+		cities.add(new DummyCity("Big Lake", 6000, 1, "MN", 45.3325, -93.7458333));
+		cities.add(new DummyCity("Woodland", 6000, 1, "MN", 44.9469444, -93.5038889));
+		cities.add(new DummyCity("Randolph", 6000, 1, "MN", 44.5261111, -93.0197222));
+		cities.add(new DummyCity("New Auburn", 6000, 1, "MN", 44.6736111, -94.2294444));
+		cities.add(new DummyCity("Vermillion", 6000, 1, "MN", 44.6736111, -92.9669444));
+		cities.add(new DummyCity("Pine Springs", 6000, 1, "MN", 45.0358333, -92.9541667));
+		cities.add(new DummyCity("Gem Lake", 6000, 1, "MN", 45.0575, -93.0322222));
+		cities.add(new DummyCity("New Germany", 6000, 1, "MN", 44.8841667, -93.9702778));
+		cities.add(new DummyCity("Medicine Lake", 6000, 1, "MN", 44.9952778, -93.4152778));
+		cities.add(new DummyCity("Saint Marys Point", 6000, 1, "MN", 44.9144444, -92.7655556));
+		cities.add(new DummyCity("Lakeland Shores", 4000, 1, "MN", 44.9480556, -92.7638889));
+		cities.add(new DummyCity("Pease", 4000, 1, "MN", 45.6980556, -93.6477778));
+		cities.add(new DummyCity("Wahkon", 4000, 1, "MN", 46.1183333, -93.5208333));
+		cities.add(new DummyCity("Mendota", 4000, 1, "MN", 44.8872222, -93.1641667));
+		cities.add(new DummyCity("South Haven", 4000, 1, "MN", 45.2925, -94.2116667));
+		cities.add(new DummyCity("Kilkenny", 4000, 1, "MN", 44.3133333, -93.5738889));
+		cities.add(new DummyCity("Heidelberg", 4000, 1, "MN", 44.4913889, -93.6261111));
+		cities.add(new DummyCity("Stanchfield", 2000, 1, "MN", 45.6733333, -93.1830556));
+		cities.add(new DummyCity("New Trier", 2000, 1, "MN", 44.6013889, -92.9338889));
+		cities.add(new DummyCity("Bock", 2000, 1, "MN", 45.785, -93.5566667));
 
 		return cities;
 	}
-	
+
 }
-
-
-

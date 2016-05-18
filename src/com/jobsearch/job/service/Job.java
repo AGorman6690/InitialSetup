@@ -1,19 +1,16 @@
 package com.jobsearch.job.service;
 
-
 import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
-import org.codehaus.jackson.annotate.JsonProperty;
-
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
-import com.jobsearch.user.service.JobSearchUser;
 
 public class Job {
-	
+
 	private int id;
 	private int isActive;
 	private int userId;
@@ -40,8 +37,7 @@ public class Job {
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	private List<Question> questions;
-	
-	
+
 	public List<Question> getQuestions() {
 		return questions;
 	}
@@ -209,37 +205,45 @@ public class Job {
 	public List<JobSearchUser> getEmployees() {
 		return employees;
 	}
-	
+
 	public void setEmployees(List<JobSearchUser> employees) {
 		this.employees = employees;
 	}
+
 	public int getIsActive() {
 		return isActive;
 	}
+
 	public void setIsActive(int isActive) {
 		this.isActive = isActive;
 	}
-//	public List<Category> getCategories() {
-//		return categories;
-//	}
-//	public void setCategories(List<Category> list) {
-//		this.categories = list;
-//	}
+
+	// public List<Category> getCategories() {
+	// return categories;
+	// }
+	// public void setCategories(List<Category> list) {
+	// this.categories = list;
+	// }
 	public int getId() {
 		return id;
 	}
+
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getJobName() {
 		return jobName;
 	}
+
 	public void setJobName(String jobName) {
 		this.jobName = jobName;
 	}
+
 	public int getUserId() {
 		return userId;
 	}
+
 	public void setUserId(int userId) {
 		this.userId = userId;
 	}
@@ -252,14 +256,15 @@ public class Job {
 		this.distanceFromFilterLocation = distanceFromFilterLocation;
 	}
 
-//	@Override
-//	public int compareTo(Job another) {
-//		// TODO Auto-generated method stub
-//        if (this.getDistanceFromFilterLocation()<another.getDistanceFromFilterLocation()){
-//            return -1;
-//        }else{
-//            return 1;
-//        }
-//	}
+	// @Override
+	// public int compareTo(Job another) {
+	// // TODO Auto-generated method stub
+	// if
+	// (this.getDistanceFromFilterLocation()<another.getDistanceFromFilterLocation()){
+	// return -1;
+	// }else{
+	// return 1;
+	// }
+	// }
 
 }

@@ -3,11 +3,10 @@ package com.jobsearch.category.service;
 import java.util.List;
 
 import com.jobsearch.job.service.Job;
-import com.jobsearch.model.Endorsement;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.model.JobSearchUser;
 
 public class Category {
-	
+
 	private int id;
 	private String name;
 	private List<JobSearchUser> users;
@@ -15,15 +14,15 @@ public class Category {
 	private List<Category> subCategories;
 	private int subJobCount;
 	private int jobCount;
-//	private List<Endorsement> endorsements;	
+	// private List<Endorsement> endorsements;
 
-//	public List<Endorsement> getEndorsements() {
-//		return endorsements;
-//	}
-//
-//	public void setEndorsements(List<Endorsement> endorsements) {
-//		this.endorsements = endorsements;
-//	}
+	// public List<Endorsement> getEndorsements() {
+	// return endorsements;
+	// }
+	//
+	// public void setEndorsements(List<Endorsement> endorsements) {
+	// this.endorsements = endorsements;
+	// }
 
 	public int getSubJobCount() {
 		return subJobCount;
@@ -57,19 +56,19 @@ public class Category {
 		this.users = users;
 	}
 
-	public void setId(int id){
+	public void setId(int id) {
 		this.id = id;
 	}
-	
-	public int getId(){
+
+	public int getId() {
 		return this.id;
 	}
-	
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.name = name;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return this.name;
 	}
 
@@ -80,6 +79,5 @@ public class Category {
 	public void setSubCategories(List<Category> subCategories) {
 		this.subCategories = subCategories;
 	}
-	
 
 }

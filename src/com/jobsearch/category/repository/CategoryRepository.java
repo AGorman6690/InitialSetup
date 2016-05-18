@@ -10,8 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
-import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.model.Endorsement;
 
 @Repository
 public class CategoryRepository {
@@ -31,8 +29,7 @@ public class CategoryRepository {
 			}
 		});
 	}
-	
-		
+
 	public void addCategoryToUser(int userId, int categoryId) {
 
 		String sql;
@@ -40,7 +37,7 @@ public class CategoryRepository {
 		jdbcTemplate.update(sql, new Object[] { userId, categoryId });
 
 	}
-	
+
 	public void deleteCategoriesFromUser(int userId) {
 
 		String sql;
@@ -56,20 +53,20 @@ public class CategoryRepository {
 
 		return (List<Category>) this.CategoryRowMapper(sql, new Object[] { jobId });
 	}
-	
+
 	public Category getCategoryByJobId(int jobId) {
 
 		String sql = "SELECT *" + " FROM category" + " INNER JOIN job_category"
 				+ " ON category.CategoryID = job_category.CategoryId" + " AND job_category.JobId = ?";
 
 		List<Category> categories = this.CategoryRowMapper(sql, new Object[] { jobId });
-		
-		if (categories.size() > 0){
+
+		if (categories.size() > 0) {
 			return categories.get(0);
-		}else{
+		} else {
 			return null;
 		}
-		
+
 	}
 
 	public List<Category> getCategoriesByUserId(int userId) {
@@ -79,20 +76,17 @@ public class CategoryRepository {
 
 		return this.CategoryRowMapper(sql, new Object[] { userId });
 	}
-	
-
 
 	public List<Category> getSubCategories(int superCat) {
-		
+
 		String sql = "SELECT * FROM category WHERE SuperCategoryId = ?";
 
-		return this.CategoryRowMapper(sql, new Object[]{ superCat });
+		return this.CategoryRowMapper(sql, new Object[] { superCat });
 	}
 
 	public Category getCategory(int categoryId) {
 		String sql = "SELECT * FROM category WHERE CategoryId = ?";
 		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
 	}
-
 
 }

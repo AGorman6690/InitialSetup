@@ -1,19 +1,14 @@
-package com.jobsearch.web;
+package com.jobsearch.user.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,19 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CompletedJobDTO;
-import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.CreateJobRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.DummyData;
-import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
-import com.jobsearch.user.rate.RatingDTO;
-import com.jobsearch.user.service.AvailabilityDTO;
-import com.jobsearch.user.service.EditProfileDTO;
-import com.jobsearch.user.service.FindEmployeesDTO;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -52,33 +40,6 @@ public class UserController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
-	private JobSearchUser user;
-
-	@Value( "${host.url}" )
-	private String hostUrl;
-
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView welcome(ModelAndView model, HttpServletRequest request,
-			@RequestParam(required = false) boolean error) {
-
-		// // Set session objects
-		JobSearchUser user = new JobSearchUser();
-
-		List<Profile> profiles = userService.getProfiles();
-		model.addObject("profiles", profiles);
-		model.addObject("user", user);
-
-		model.addObject("url", hostUrl);
-
-		if (error) {
-			model.addObject("errorMessage", "Username and/or Password is incorrect");
-		}
-
-		model.setViewName("Welcome");
-
-		return model;
-	}
-
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
 	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
@@ -87,9 +48,9 @@ public class UserController {
 
 		model.addObject("user", user);
 
-		if (user.getProfileId() == 1) {
+		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-		} else if (user.getProfileId() == 2) {
+		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
 		}
 
@@ -121,7 +82,7 @@ public class UserController {
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
-		CreateJobDTO job = new CreateJobDTO();
+		CreateJobRequestDTO job = new CreateJobRequestDTO();
 		model.addObject("job", job);
 
 		model.setViewName("PostJob");
@@ -158,9 +119,9 @@ public class UserController {
 			model.addObject("user", user);
 
 			if (user.getCreateNewPassword() == 0) {
-				if (user.getProfileId() == 1) {
+				if (user.getProfile().getName().equals("Employee")) {
 					model.setViewName("EmployeeProfile");
-				} else if (user.getProfileId() == 2) {
+				} else if (user.getProfile().getName().equals("Employer")) {
 					model.setViewName("EmployerProfile");
 				}
 			} else {
@@ -183,9 +144,9 @@ public class UserController {
 
 		userService.updatePassword(newPassword.getPassword(),user.getEmailAddress());
 
-		if (user.getProfileId() == 1) {
+		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-		} else if (user.getProfileId() == 2) {
+		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
 		}
 
@@ -195,16 +156,16 @@ public class UserController {
 
 	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityDTO availabilityDTO) {
+	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityRequestDTO availabityRequest) {
 
-		userService.updateAvailability(availabilityDTO);
+		userService.updateAvailability(availabityRequest);
 	}
 
 	@RequestMapping(value = "/user/profile/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public void editProfile(ModelAndView model, @RequestBody EditProfileDTO editProfileDTO) {
+	public void editProfile(ModelAndView model, @RequestBody EditProfileRequestDTO editProfileRequest) {
 
-		userService.editProfile(editProfileDTO);
+		userService.editProfile(editProfileRequest);
 	}
 
 	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
@@ -213,16 +174,16 @@ public class UserController {
 			@RequestParam int radius, @RequestParam(value = "date") List<String> dates,
 			@RequestParam(value = "categoryId") List<Integer> categoryIds) {
 
-		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(city, state, zipCode, radius, dates, categoryIds);
+		FindEmployeesRequestDTO findEmployeesRequest = new FindEmployeesRequestDTO(city, state, zipCode, radius, dates, categoryIds);
 
-		List<JobSearchUser> employees = userService.findEmployees(findEmployeesDto);
+		List<JobSearchUser> employees = userService.findEmployees(findEmployeesRequest);
 
 		return JSON.stringify(employees);
 	}
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingDTO ratingDTO) {
+	public void rateEmployee(ModelAndView model, @RequestBody RatingRequestDTO ratingDTO) {
 
 		userService.rateEmployee(ratingDTO);
 	}

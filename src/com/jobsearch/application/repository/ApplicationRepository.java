@@ -13,8 +13,8 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
-import com.jobsearch.user.service.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository

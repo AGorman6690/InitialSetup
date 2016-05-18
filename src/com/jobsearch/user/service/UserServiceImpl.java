@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -14,14 +15,18 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.CreateJobDTO;
+import com.jobsearch.job.service.CreateJobRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.user.rate.RatingDTO;
+import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.repository.UserRepository;
+import com.jobsearch.user.web.AvailabilityRequestDTO;
+import com.jobsearch.user.web.EditProfileRequestDTO;
+import com.jobsearch.user.web.FindEmployeesRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 
@@ -49,6 +54,8 @@ public class UserServiceImpl {
 
 	public JobSearchUser createUser(JobSearchUser user) {
 
+		user.setPassword(encryptPassword(user.getPassword()));
+
 		JobSearchUser newUser = repository.createUser(user);
 
 		if (newUser.getEmailAddress() != null) {
@@ -56,6 +63,11 @@ public class UserServiceImpl {
 					+ hostUrl + "/JobSearch/validateEmail?userId=" + newUser.getUserId());
 		}
 		return newUser;
+	}
+
+	private String encryptPassword(String password) {
+		 StrongPasswordEncryptor encryptor = new StrongPasswordEncryptor();
+         return encryptor.encryptPassword(password);
 	}
 
 	public void setUsersId(JobSearchUser user) {
@@ -118,7 +130,7 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingDTO ratingDTO) {
+	public void rateEmployee(RatingRequestDTO ratingDTO) {
 
 		for (RateCriterion rc : ratingDTO.getRateCriteria()) {
 			repository.updateRating(rc);
@@ -271,7 +283,7 @@ public class UserServiceImpl {
 
 	}
 
-	public void updateAvailability(AvailabilityDTO availabilityDTO) {
+	public void updateAvailability(AvailabilityRequestDTO availabilityDTO) {
 		// TODO Auto-generated method stub
 
 		repository.deleteAvailability(availabilityDTO.getUserId());
@@ -282,50 +294,50 @@ public class UserServiceImpl {
 
 	}
 
-	public void editProfile(EditProfileDTO editProfileDTO) {
+	public void editProfile(EditProfileRequestDTO editProfileRequest) {
 
 		// Edit categories
-		categoryService.deleteCategoriesFromUser(editProfileDTO.getUserId());
-		for (int categoryId : editProfileDTO.getCategoryIds()) {
-			categoryService.addCategoryToUser(editProfileDTO.getUserId(), categoryId);
+		categoryService.deleteCategoriesFromUser(editProfileRequest.getUserId());
+		for (int categoryId : editProfileRequest.getCategoryIds()) {
+			categoryService.addCategoryToUser(editProfileRequest.getUserId(), categoryId);
 		}
 
 		// Edit home location
 		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileDTO.getHomeCity() + " " + editProfileDTO.getHomeState()
-				+ " " + editProfileDTO.getHomeZipCode());
+		GeocodingResult[] results = maps.getLatAndLng(editProfileRequest.getHomeCity() + " " + editProfileRequest.getHomeState()
+				+ " " + editProfileRequest.getHomeZipCode());
 		if (results.length == 1) {
-			editProfileDTO.setHomeLat((float) results[0].geometry.location.lat);
-			editProfileDTO.setHomeLng((float) results[0].geometry.location.lng);
-			this.updateHomeLocation(editProfileDTO);
+			editProfileRequest.setHomeLat((float) results[0].geometry.location.lat);
+			editProfileRequest.setHomeLng((float) results[0].geometry.location.lng);
+			this.updateHomeLocation(editProfileRequest);
 
 		}
 
-		if (editProfileDTO.getMaxWorkRadius() > 0) {
-			repository.UpdateMaxWorkRadius(editProfileDTO.getUserId(), editProfileDTO.getMaxWorkRadius());
+		if (editProfileRequest.getMaxWorkRadius() > 0) {
+			repository.UpdateMaxWorkRadius(editProfileRequest.getUserId(), editProfileRequest.getMaxWorkRadius());
 		}
 
 	}
 
-	public void updateHomeLocation(EditProfileDTO editProfileDTO) {
-		repository.updateHomeLocation(editProfileDTO);
+	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
+		repository.updateHomeLocation(editProfileRequest);
 
 	}
 
-	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
+	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
 
 		// A valid location must be supplied
-		if ((Float) findEmployeesDto.getLat() != null && (Float) findEmployeesDto.getLng() != null
-				&& findEmployeesDto.getRadius() > 0) {
+		if ((Float) findEmployeesRequest.getLat() != null && (Float) findEmployeesRequest.getLng() != null
+				&& findEmployeesRequest.getRadius() > 0) {
 
-			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
+			List<JobSearchUser> employees = repository.findEmployees(findEmployeesRequest);
 			for (JobSearchUser employee : employees) {
 				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
 				employee.setEndorsements(
 						this.getUserEndorsementsByCategory(employee.getUserId(), employee.getCategories()));
 				employee.setRating(this.getRating(employee.getUserId()));
-				employee.setDistanceFromJob(MathUtility.round(GoogleClient.getDistance(findEmployeesDto.getLat(),
-						findEmployeesDto.getLng(), employee.getHomeLat(), employee.getHomeLng()), 1, 0));
+				employee.setDistanceFromJob(MathUtility.round(GoogleClient.getDistance(findEmployeesRequest.getLat(),
+						findEmployeesRequest.getLng(), employee.getHomeLat(), employee.getHomeLng()), 1, 0));
 
 			}
 
@@ -351,10 +363,10 @@ public class UserServiceImpl {
 		List<JobSearchUser> dummyEmployers = repository.getEmployers();
 		DummyData dummyData = new DummyData();
 
-		List<CreateJobDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
+		List<CreateJobRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
 		int lastDummyCreationId = repository.getLastDummyCreationId("job");
 
-		for (CreateJobDTO dummyJob : dummyJobs) {
+		for (CreateJobRequestDTO dummyJob : dummyJobs) {
 			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
 		}
 

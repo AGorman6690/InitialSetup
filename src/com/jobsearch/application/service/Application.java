@@ -1,7 +1,7 @@
 package com.jobsearch.application.service;
 
 import com.jobsearch.job.service.Job;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.model.JobSearchUser;
 
 public class Application {
 	private int applicationId;

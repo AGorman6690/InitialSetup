@@ -1,10 +1,10 @@
-package com.jobsearch.user.service;
+package com.jobsearch.user.web;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class EditProfileDTO {
+public class EditProfileRequestDTO {
 	
 	@JsonProperty
 	private int userId;

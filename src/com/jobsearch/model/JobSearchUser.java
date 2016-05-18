@@ -1,16 +1,12 @@
-package com.jobsearch.user.service;
+package com.jobsearch.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.CompletedJobDTO;
+import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.model.Answer;
-import com.jobsearch.model.Endorsement;
-import com.jobsearch.model.Profile;
-import com.jobsearch.model.RateCriterion;
 
 
 public class JobSearchUser {
@@ -29,7 +25,7 @@ public class JobSearchUser {
 	private List<Job> activeJobs;
 	private List<Job> jobsAppliedTo;
 	private List<Job> jobsHiredFor;
-	private List<CompletedJobDTO> completedJobs;
+	private List<CompletedJobResponseDTO> completedJobs;
 	private List<RateCriterion> ratings;
 	private List<Endorsement> endorsements;
 	private Application application;
@@ -125,11 +121,11 @@ public class JobSearchUser {
 		this.answers = answers;
 	}
 
-	public List<CompletedJobDTO> getCompletedJobs() {
+	public List<CompletedJobResponseDTO> getCompletedJobs() {
 		return completedJobs;
 	}
 
-	public void setCompletedJobs(List<CompletedJobDTO> completedJobs) {
+	public void setCompletedJobs(List<CompletedJobResponseDTO> completedJobs) {
 		this.completedJobs = completedJobs;
 	}
 

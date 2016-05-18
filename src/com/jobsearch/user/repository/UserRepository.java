@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,16 +13,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.CreateJobDTO;
+import com.jobsearch.job.service.CreateJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.user.rate.RatingDTO;
-import com.jobsearch.user.service.EditProfileDTO;
-import com.jobsearch.user.service.FindEmployeesDTO;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.user.web.EditProfileRequestDTO;
+import com.jobsearch.user.web.FindEmployeesRequestDTO;
 
 @Repository
 public class UserRepository {
@@ -36,7 +35,7 @@ public class UserRepository {
 
 	public JobSearchUser getUser(int userId) {
 
-		String sql = "select * from user where userid = ?";
+		String sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where userid = ?";
 
 		return JobSearchUserProfileRowMapper(sql, new Object[] { userId }).get(0);
 
@@ -125,7 +124,7 @@ public class UserRepository {
 				e.setFirstName(rs.getString("FirstName"));
 				e.setLastName(rs.getString("LastName"));
 				e.setEmailAddress(rs.getString("Email"));
-				e.setProfileId(rs.getInt("ProfileId"));
+				e.setProfileId(rs.getInt("u.ProfileId"));
 				e.setHomeLat(rs.getFloat("HomeLat"));
 				e.setHomeLng(rs.getFloat("HomeLng"));
 				e.setHomeCity(rs.getString("HomeCity"));
@@ -134,6 +133,10 @@ public class UserRepository {
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
 				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 
+				Profile profile = new Profile();
+				profile.setName(rs.getString("p.ProfileType"));
+
+				e.setProfile(profile);
 				return e;
 			}
 		});
@@ -212,7 +215,7 @@ public class UserRepository {
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
-		sql = "select * from user where Email = ?";
+		sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where Email = ?";
 
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
@@ -316,7 +319,7 @@ public class UserRepository {
 
 	}
 
-	public void addComment(RatingDTO ratingDTO) {
+	public void addComment(RatingRequestDTO ratingDTO) {
 		String sql = "INSERT INTO comment (JobId, UserId," + " Comment) VALUES (?, ?, ?)";
 
 		jdbcTemplate.update(sql,
@@ -400,26 +403,24 @@ public class UserRepository {
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
 	}
 
-	public void setHomeLocation(EditProfileDTO editProfileDTO) {
+	public void setHomeLocation(EditProfileRequestDTO editProfileRequest) {
 		String sql = "INSERT INTO user (HomeLat, HomeLng, HomeCity, HomeState, HomeZipCode) "
 				+ "VALUES (?, ?, ?, ?, ?) WHERE UserId = ?";
-		jdbcTemplate
-				.update(sql,
-						new Object[] { editProfileDTO.getHomeLat(), editProfileDTO.getHomeLng(),
-								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
-								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
+		jdbcTemplate.update(sql,
+				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
+						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
+						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
 
 	}
 
-	public void updateHomeLocation(EditProfileDTO editProfileDTO) {
+	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
 				+ " HomeZipCode = ? WHERE UserId = ?";
 
-		jdbcTemplate
-				.update(sql,
-						new Object[] { editProfileDTO.getHomeLat(), editProfileDTO.getHomeLng(),
-								editProfileDTO.getHomeCity(), editProfileDTO.getHomeState(),
-								editProfileDTO.getHomeZipCode(), editProfileDTO.getUserId() });
+		jdbcTemplate.update(sql,
+				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
+						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
+						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
 
 	}
 
@@ -429,7 +430,7 @@ public class UserRepository {
 
 	}
 
-	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
+	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
 
 		// ******************************************************************************************
 		// NOTE: For optimal performance, we may want to eventually do some
@@ -457,7 +458,7 @@ public class UserRepository {
 		// days.
 		// This sub query is optional.
 		String subQueryDates = null;
-		if (findEmployeesDto.getAvailableDates() != null) {
+		if (findEmployeesRequest.getAvailableDates() != null) {
 
 			subQueryDates = " (SELECT a0.UserId FROM availability a0";
 
@@ -471,15 +472,15 @@ public class UserRepository {
 			// JOIN availability a1 ON a0.UserId = a1.UserId AND a1.Day = X
 			// JOIN availability a2 ON a1.UserId = a2.UserId AND a2.Day = Y
 			// WHERE Day = Z AND a0.UserId IN ([distance sub query])
-			for (int dateCount = 1; dateCount < findEmployeesDto.getAvailableDates().size(); dateCount++) {
+			for (int dateCount = 1; dateCount < findEmployeesRequest.getAvailableDates().size(); dateCount++) {
 				int dateCountMinus1 = dateCount - 1;
 				subQueryDates += " JOIN availability a" + dateCount + " ON a" + dateCountMinus1 + ".UserId" + " = a"
 						+ dateCount + ".UserId AND a" + dateCount + ".Day = ?";
-				argsList.add(findEmployeesDto.getAvailableDates().get(dateCount));
+				argsList.add(findEmployeesRequest.getAvailableDates().get(dateCount));
 			}
 
 			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
-			argsList.add(findEmployeesDto.getAvailableDates().get(0));
+			argsList.add(findEmployeesRequest.getAvailableDates().get(0));
 
 			sql += subQueryDates;
 			subQueryCount += 1;
@@ -490,19 +491,19 @@ public class UserRepository {
 		// This sub query has the same structure as the availability sub query.
 		// This returns all user ids that have ALL the requested categories.
 		String subQueryCategories = null;
-		if (findEmployeesDto.getCategoryIds() != null) {
+		if (findEmployeesRequest.getCategoryIds() != null) {
 
 			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
 
-			for (int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++) {
+			for (int categoryCount = 1; categoryCount < findEmployeesRequest.getCategoryIds().size(); categoryCount++) {
 				int categoryCountMinus1 = categoryCount - 1;
 				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc" + categoryCountMinus1
 						+ ".UserId" + " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?";
-				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
+				argsList.add(findEmployeesRequest.getCategoryIds().get(categoryCount));
 			}
 
 			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
-			argsList.add(findEmployeesDto.getCategoryIds().get(0));
+			argsList.add(findEmployeesRequest.getCategoryIds().get(0));
 
 			sql += subQueryCategories;
 			subQueryCount += 1;
@@ -519,10 +520,10 @@ public class UserRepository {
 
 		sql += subQueryDistance;
 
-		argsList.add(findEmployeesDto.getLat());
-		argsList.add(findEmployeesDto.getLng());
-		argsList.add(findEmployeesDto.getLat());
-		argsList.add(findEmployeesDto.getRadius());
+		argsList.add(findEmployeesRequest.getLat());
+		argsList.add(findEmployeesRequest.getLng());
+		argsList.add(findEmployeesRequest.getLat());
+		argsList.add(findEmployeesRequest.getRadius());
 
 		// Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {
@@ -584,7 +585,7 @@ public class UserRepository {
 		return this.JobSearchUserRowMapper(sql, new Object[] {});
 	}
 
-	public void createJob_DummyData(CreateJobDTO dummyJob, int dummyCreationId) {
+	public void createJob_DummyData(CreateJobRequestDTO dummyJob, int dummyCreationId) {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");

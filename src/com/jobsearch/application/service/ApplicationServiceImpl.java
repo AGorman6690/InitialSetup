@@ -52,7 +52,7 @@ public class ApplicationServiceImpl {
 		return repository.getApplication(applicationId);
 	}
 
-	public void applyForJob(ApplicationDTO applicationDto) {
+	public void applyForJob(ApplicationRequestDTO applicationDto) {
 		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
 
 		//Whether the applicant answered all the questions is handled on the client side.

@@ -1,4 +1,4 @@
-package com.jobsearch.user.service;
+package com.jobsearch.user.web;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import com.google.maps.model.GeocodingResult;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
-public class FindEmployeesDTO {
+public class FindEmployeesRequestDTO {
 	
 	@JsonProperty
 	private List<Date> availableDates;
@@ -96,7 +96,7 @@ public class FindEmployeesDTO {
 		this.zipCode = zipCode;
 	}
 
-	public FindEmployeesDTO(String city, String state, String zipCode, int radius, 
+	public FindEmployeesRequestDTO(String city, String state, String zipCode, int radius, 
 								List<String> dates, List<Integer> categoryIds2) {
 		
 		

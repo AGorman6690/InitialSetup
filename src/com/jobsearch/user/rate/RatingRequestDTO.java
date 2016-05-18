@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.RateCriterion;
 
-public class RatingDTO {
+public class RatingRequestDTO {
 	
 //	@JsonProperty("rateCriterionId")
 //	int rateCriterionId;

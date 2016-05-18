@@ -1,17 +1,14 @@
 package com.jobsearch.job.service;
 
-
-
 import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-import org.joda.time.DateTime;
 
 import com.jobsearch.model.Question;
 
-public class CreateJobDTO {
+public class CreateJobRequestDTO {
 
 	@JsonProperty("jobName")
 	String jobName;
@@ -27,54 +24,52 @@ public class CreateJobDTO {
 
 	@JsonProperty("description")
 	String description;
-	
+
 	@JsonProperty("streetAddress")
 	String streetAddress;
-	
+
 	@JsonProperty("city")
 	String city;
-	
+
 	@JsonProperty("state")
 	String state;
-	
+
 	@JsonProperty("zipCode")
 	String zipCode;
-	
+
 	@JsonProperty("lat")
 	float lat;
-	
+
 	@JsonProperty("lng")
 	float lng;
-	
+
 	@JsonProperty("startDate")
 	Date startDate;
-	
+
 	@JsonProperty("endDate")
 	Date endDate;
-	
+
 	@JsonProperty("stringStartDate")
 	String stringStartDate;
-	
+
 	@JsonProperty("stringEndDate")
 	String stringEndDate;
-	
+
 	@JsonProperty("startTime")
 	Time startTime;
 
 	@JsonProperty("endTime")
 	Time endTime;
-				 
+
 	@JsonProperty("stringStartTime")
 	String stringStartTime;
 
 	@JsonProperty("stringEndTime")
 	String stringEndTime;
-	
+
 	@JsonProperty("questions")
 	List<Question> questions;
-	
-	
-	
+
 	public List<Question> getQuestions() {
 		return questions;
 	}

@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jobsearch.model.Endorsement;
 
-public class CompletedJobDTO {
+public class CompletedJobResponseDTO {
 	
 	private Job job;
 	private String comment;
