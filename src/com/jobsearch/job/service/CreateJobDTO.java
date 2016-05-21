@@ -73,8 +73,30 @@ public class CreateJobDTO {
 	@JsonProperty("questions")
 	List<Question> questions;
 	
+	@JsonProperty("selectedQuestionIds")
+	List<String> selectedQuestionIds;
+	
+	@JsonProperty("id")
+	String id;
 	
 	
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public List<String> getSelectedQuestionIds() {
+		return selectedQuestionIds;
+	}
+
+	public void setSelectedQuestionIds(List<String> selectedQuestionIds) {
+		this.selectedQuestionIds = selectedQuestionIds;
+	}
+
 	public List<Question> getQuestions() {
 		return questions;
 	}

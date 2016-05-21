@@ -402,11 +402,17 @@
 		//Eventually initialize it to a user defualt
 		var myLatLng = {
 			lat : 44.954445,
-			lng : -93.091301
+			lng : -93.091301,
 		};
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom : 8,
-			center : myLatLng
+			center : myLatLng,
+			streetViewControl: false,
+// 			disableDefaultUI: true,
+		    mapTypeControlOptions: {
+		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+		    }
+
 		});
 	}
 </script>

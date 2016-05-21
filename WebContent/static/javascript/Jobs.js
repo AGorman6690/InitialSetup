@@ -21,78 +21,112 @@ function getFilteredJobs(params, callback){
 
 
 //function submitJobs(jobName, userId, categoryId, callback) {
-function submitJobs() {	
-	var headers = {};
-	headers[$("meta[name='_csrf_header']").attr("content")] = $(
-			"meta[name='_csrf']").attr("content");
+//function submitJobs() {	
+//	var headers = {};
+//	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+//			"meta[name='_csrf']").attr("content");
+//
+//	$.ajax({
+//		type : "POST",
+//		url : "http://localhost:8080/JobSearch/jobs/post",
+//		headers : headers,
+//		contentType : "application/json",
+////		dataType : "application/json", // Response
+//		data : JSON.stringify(jobs)
+//	}).done(function() {
+//		$('#home')[0].click();
+//	}).error(function() {
+//		$('#home')[0].click();
+//	});
+//}
 
-	$.ajax({
-		type : "POST",
-		url : "http://localhost:8080/JobSearch/jobs/post",
-		headers : headers,
-		contentType : "application/json",
-//		dataType : "application/json", // Response
-		data : JSON.stringify(jobs)
-	}).done(function() {
-		$('#home')[0].click();
-	}).error(function() {
-		$('#home')[0].click();
-	});
+	
+function getJobById(id, jobs){
+
+	var i;
+	for(i = 0; i < jobs.length; i++){
+		if(jobs[i].id == id){
+			return jobs[i];			
+		}
+	}
+}
+
+function salert(array){
+	alert(JSON.stringify(array))
 }
 
 
-function addJobToCart() {
-	
+
+function clearPostJobInputs(){
+	document.getElementsByName('jobName')[0].value = "";		
+	document.getElementsByName('streetAddress')[0].value = "";
+	document.getElementsByName('city')[0].value = "";
+	document.getElementsByName('state')[0].value = "";
+	document.getElementsByName('zipCode')[0].value = "";
+	document.getElementsByName('jobDescription')[0].value = "";
+	document.getElementsByName('userId')[0].value = "";
+	$("#dateRange").data('daterangepicker').startDate = "";
+	$("#dateRange").data('daterangepicker').endDate = "";
+	$("#dateRange").val("");
+	$("#startTime").val("");
+	$("#endTime").val("");
+}
+
+
+function setJobInfo(job) {
+
 	$("#submitJobsContainer").show();
 
-	var job = {};
-	
 	job.jobName = document.getElementsByName('jobName')[0].value;
 	
 	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
 	job.city = document.getElementsByName('city')[0].value;
 	job.state = document.getElementsByName('state')[0].value;
 	job.zipCode = document.getElementsByName('zipCode')[0].value;
-	job.description = document.getElementsByName('description')[0].value;
+	job.description = document.getElementsByName('jobDescription')[0].value;
 	job.userId = document.getElementsByName('userId')[0].value;
 	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
 	job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
 	job.stringStartTime = formatTime($("#startTime").val());
 	job.stringEndTime = formatTime($("#endTime").val());
 	job.categoryIds = getCategoryIds("selectedCategories");
-	
+
 	job.questions = [];
-	var questionElements = $("#addedQuestions").find(".question");
+	job.selectedQuestionIds = [];
+	var questionElements = $("#addedQuestions").find(".added-question");
 	for(var i = 0; i < questionElements.length; i++){
-		
+	
 		var questionElement = questionElements[i];
-		var question = {};
-		question.question = $(questionElement).find('textarea').val();
-		question.formatId = $(questionElement).find('input').val();
-
+		var question = {};		
 		
-		if(question.formatId == 0 || question.formatId == 2 || question.formatId == 3){
-			question.answerOptions = [];
-			var answerOptions = $(questionElement).find('.answer-option');
+		var $enableQuestion = $($(questionElement).find(".toggle-question-activeness")[0]);
 
-			for(var j = 0; j < answerOptions.length; j++){
-				var answerOption = {};
-				answerOption.answerOption = $(answerOptions[j]).val();
-				if(answerOption != "") {
-					question.answerOptions.push(answerOption);
-				}
-			}			 
+		if($enableQuestion.hasClass("enable-question")){
+			job.selectedQuestionIds.push(questionElement.id);
 		}
+//		question.question = $(questionElement).find('.question-text').val();
+//		question.formatId = $(questionElement).find('select').find(":selected").val();
+//
+//		if(question.formatId == 0 || question.formatId == 2 || question.formatId == 3){
+//			
+//			question.answerOptions = [];
+//			var answerOptions = $(questionElement).find('.answer-option-list');
+//			for(var j = 0; j < answerOptions.length; j++){
+//				var answerOption = {};
+//				answerOption.answerOption = $(answerOptions[j]).val();
+//				if(answerOption != "") {
+//					question.answerOptions.push(answerOption);
+//				}
+//			}			 
+//		}
 		
 		job.questions.push(question);
+//		alert(JSON.stringify(job))
+		
 	}
 	
-	
-	jobs.push(job);
+	return job;
 
-	$("#pendingJobSubmissions").append(
-			"<div id='job_" + jobCount + "'><a>" + job.jobName + "</a></div>")
-	jobCount++;
 }
 
 function formatTime(time){

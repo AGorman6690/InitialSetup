@@ -1,0 +1,15 @@
+.invalid-input-existence{
+	border: 5px solid #b30000;
+}
+
+.invalid-select-input{
+	border: 5px solid #b30000;
+}
+
+#invalidJobName{
+	color: #b30000;
+}
+
+/* .valid-input-existence{ */
+/* 	border: 0px solid #b30000; */
+/* } */

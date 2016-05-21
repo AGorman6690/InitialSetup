@@ -236,14 +236,14 @@ function appendFilteredJobsTable(jobs, userId){
 $(document).ready(
 		function() {
 
-			$("#addJob").click(function() {
-
-				var jobName = $("#jobToAdd").val();
-				var categoryId = $('#selectedCategory').val();
-				var userId = $('#userId').val()
-				addJob(jobName, userId, categoryId, function(response) {
-				});
-			});
+//			$("#addJob").click(function() {
+//
+//				var jobName = $("#jobToAdd").val();
+//				var categoryId = $('#selectedCategory').val();
+//				var userId = $('#userId').val()
+//				addJob(jobName, userId, categoryId, function(response) {
+//				});
+//			});
 
 			$("#saveEditProfileCats").click(function() {
 
