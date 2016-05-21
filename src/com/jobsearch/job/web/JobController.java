@@ -1,17 +1,9 @@
-package com.jobsearch.web;
+package com.jobsearch.job.web;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
-import java.sql.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,24 +13,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
-
-import com.google.maps.GeoApiContext;
-import com.google.maps.GeocodingApi;
-import com.google.maps.model.GeocodingResult;
-
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationDTO;
+import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CompletedJobDTO;
-import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.FilterDTO;
+import com.jobsearch.job.service.CompletedJobResponseDTO;
+import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.GoogleClient;
-import com.jobsearch.user.service.JobSearchUser;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -57,63 +41,54 @@ public class JobController {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-//	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void addJob(@RequestBody List<CreateJobDTO> jobDtos, ModelAndView model) {
+	public void addJob(@RequestBody List<CreateJobRequestDTO> jobDtos, ModelAndView model) {
 
 		jobService.addJob(jobDtos);
-
 	}
-	
-	
+
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress, 
-			@RequestParam(value="categoryId") int[] categoryIds, @RequestParam String startTime,
-			@RequestParam String endTime, @RequestParam boolean beforeStartTime, 
-			@RequestParam boolean beforeEndTime, @RequestParam String startDate,
-			@RequestParam String endDate, @RequestParam boolean beforeStartDate,
-			@RequestParam boolean beforeEndDate, @RequestParam(value="day") List<String> workingDays,
-			@RequestParam double duration, @RequestParam boolean lessThanDuration,
-			@RequestParam int returnJobCount) {
+	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress,
+			@RequestParam(value = "categoryId") int[] categoryIds, @RequestParam String startTime,
+			@RequestParam String endTime, @RequestParam boolean beforeStartTime, @RequestParam boolean beforeEndTime,
+			@RequestParam String startDate, @RequestParam String endDate, @RequestParam boolean beforeStartDate,
+			@RequestParam boolean beforeEndDate, @RequestParam(value = "day") List<String> workingDays,
+			@RequestParam double duration, @RequestParam boolean lessThanDuration, @RequestParam int returnJobCount) {
 
+		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
+				lessThanDuration, returnJobCount);
 
-		
-		FilterDTO filter = new FilterDTO(radius, fromAddress, categoryIds, startTime, endTime,
-				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate,
-				beforeEndDate, workingDays, duration, lessThanDuration, returnJobCount);
+		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
+															// endDate));
 
-		filter.setJobs(jobService.getFilteredJobs(filter)); //, startDate, endDate));
-		
-		//Set the filter criteria specified by user
-
-		
+		// Set the filter criteria specified by user
 
 		return JSON.stringify(filter);
 
 	}
-	
+
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody ApplicationDTO applicationDto, ModelAndView model) {
+	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto, ModelAndView model) {
 
 		applicationService.applyForJob(applicationDto);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public ModelAndView viewFindJobs(ModelAndView model) {
 		model.setViewName("FindJobs");
 		return model;
 	}
 
-	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
 
 		Job selectedJob = jobService.getJob(jobId);
-		
+
 		//
 
 		model.addObject("job", selectedJob);
@@ -133,40 +108,39 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/completed/employee", method = RequestMethod.GET)
 	@ResponseBody
-	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam(required=false) Integer jobId,
-												@RequestParam int c, ModelAndView model) {
-		
-		//***************
-		//Context values:
-		//0 = "viewing employee as a prospective applicant for a particular job"
-		//1 = "viewing employee from searching for employees
-		
-		
+	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam(required = false) Integer jobId,
+			@RequestParam int viewContext, ModelAndView model) {
+
+		// ***************
+		// Context values:
+		// 0 = "viewing employee as a prospective applicant for a particular
+		// job"
+		// 1 = "viewing employee from searching for employees
+
 		JobSearchUser employee = userService.getUser(userId);
 		employee.setEndorsements(userService.getUsersEndorsements(userId));
-		if(jobId != null){
+		if (jobId != null) {
 			employee.setApplication(applicationService.getApplication(jobId, userId));
 		}
 		model.addObject("worker", employee);
-		
-//		Job consideredForJob = jobService.getJob(jobId);
-//		model.addObject("consideredForJob", consideredForJob);
-				
-		List<CompletedJobDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);			
+
+		// Job consideredForJob = jobService.getJob(jobId);
+		// model.addObject("consideredForJob", consideredForJob);
+
+		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);
 		model.addObject("completedJobDtos", completedJobDtos);
-		
-		String context = null; 
-		if(c == 0){
+
+		String context = null;
+		if (viewContext == 0) {
 			context = "viewingApplication";
-		}else if (c == 1){
+		} else if (viewContext == 1) {
 			context = "findEmployeeSearch";
-		}		
+		}
 		model.addObject("context", context);
-		
+
 		model.setViewName("EmployeeWorkHistory");
 		return model;
 	}
-
 
 	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.PUT)
 	@ResponseBody
@@ -178,15 +152,14 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
 	public ModelAndView viewRateEmployees(@PathVariable int jobId, ModelAndView model) {
 
-		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);		
+		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 		model.addObject("employees", employees);
-		
+
 		Job job = jobService.getJob(jobId);
 		model.addObject("job", job);
 
 		model.setViewName("RateEmployees");
 		return model;
 	}
-
 
 }

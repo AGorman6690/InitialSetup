@@ -37,7 +37,7 @@
         <!-- ensure logging flows through the chosen 4 by excluding potential interlopers -->
 
         <!-- Miscellaneous libraries -->
-       
+
 
         <!-- Spring Framework libraries -->
         <dependency org="org.springframework" name="spring-aop"             rev="4.2.2.RELEASE" />
@@ -55,12 +55,12 @@
         <dependency org="org.springframework.security" name="spring-security-core" rev="4.0.3.RELEASE"/>
         <dependency org="org.springframework.security" name="spring-security-config" rev="4.0.1.RELEASE"/>
         <dependency org="org.springframework.security" name="spring-security-web" rev="4.0.3.RELEASE"/>
-        
-        
+
+
 
         <!-- Testing libraries -->
         <dependency org="junit" name="junit" rev="4.12" conf="local" />
-        
+
         <dependency org="org.easytesting" name="fest-assert" rev="1.4" conf="local" />
         <dependency org="org.mockito" name="mockito-all" rev="1.10.19" conf="local" />
         <dependency org="eu.codearte.catch-exception" name="catch-exception" rev="1.4.4" conf="local" />
@@ -70,15 +70,15 @@
         <dependency org="com.puppycrawl.tools" name="checkstyle" rev="6.11.2" conf="build/checkstyle" />
         <dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" conf="build/cobertura" />
         <dependency org="org.slf4j" name="slf4j-nop" rev="1.7.5" conf="build/cobertura" />
-                        
+
         <!-- JSTL -->
         <dependency org="javax.servlet.jsp.jstl" name="javax.servlet.jsp.jstl-api" rev="1.2.1"/>
         <dependency org="javax.servlet.jsp.jstl" name="jstl-api" rev="1.2-rev-1"/>
         <dependency org="javax.servlet" name="jstl" rev="1.2"/>
-              
+
         <!-- mySql -->
         <dependency org="mysql" name="mysql-connector-java" rev="5.1.6"/>
-        
+
         <!-- JSON libraries -->
   		<dependency org="org.codehaus.jackson" name="jackson-core-asl" rev="1.9.13" />
         <dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" />
@@ -88,26 +88,35 @@
         <dependency org="com.fasterxml.jackson" name="jackson-datatype-guava" rev="1.9.2"/>
         <dependency org="com.fasterxml.jackson" name="jackson-datatype-json-org" rev="1.8.0"/>
         <dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-hppc" rev="2.7.2"/>
-        <dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-joda" rev="2.7.2"/>        
+        <dependency org="com.fasterxml.jackson.datatype" name="jackson-datatype-joda" rev="2.7.2"/>
         <dependency org="org.json" name="json" rev="20160212"/>
-        
-        
+
+
         <!-- Apache Libraries -->
         <dependency org="org.apache.commons" name="commons-lang3" rev="3.4"/>
         <dependency org="org.apache.commons" name="commons-io" rev="1.3.2"/>
         <dependency org="commons-dbutils" name="commons-dbutils" rev="1.6"/>
         <dependency org="org.apache.velocity" name="velocity" rev="1.7"/>
         <dependency org="org.apache.velocity" name="velocity-tools" rev="2.0"/>
-        
-        
+        <dependency org="commons-fileupload" name="commons-fileupload" rev="1.3.1"/>
+
+
         <dependency org="javax.servlet" name="servlet-api" rev="2.5"/>
         <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0"/>
         <dependency org="javax.mail" name="javax.mail-api" rev="1.5.5"/>
         <dependency org="com.sun.mail" name="javax.mail" rev="1.5.5"/>
-        
+
         <!-- Google Maps -->
         <dependency org="com.google.maps" name="google-maps-services" rev="0.1.11"/>
-        
+
+        <!-- Hibernate -->
+        <dependency org="org.hibernate" name="hibernate-core" rev="5.1.0.Final"/>
+
+		<!-- Password Encryption -->
+		<dependency org="org.jasypt" name="jasypt" rev="1.9.2"/>
+		<dependency org="org.jasypt" name="jasypt-spring3" rev="1.9.2"/>
+		<dependency org="org.jasypt" name="jasypt-springsecurity3" rev="1.9.2"/>
+
     </dependencies>
 
 </ivy-module>

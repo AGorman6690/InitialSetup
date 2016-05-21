@@ -5,7 +5,7 @@
 	</head>
 
 	<body>
-		
+
 		<div class="container">
 			<h1>Find Employees</h1>
 			<button id="findEmployees" class="btn btn-danger" type="button"
@@ -14,15 +14,15 @@
 				<div class="panel-heading">Available Days to Work</div>
 				<div class="panel-body">
 					<div id='availableDays' data-date-format="MM/DD/YYYY" class="input-group date" style="width: 250px">
-			  		</div>					
+			  		</div>
 				</div>
-			</div>		
+			</div>
 
-			
-			<div style="width: 750px" class="panel panel-warning">		
+
+			<div style="width: 750px" class="panel panel-warning">
 				<div class="panel-heading">Employee Location</div>
 				<div class="panel-body">
-				
+
 					<div class="form-group row">
 						<label for="radius"
 							class="post-job-label col-sm-2 form-control-label">Number of miles:</label>
@@ -31,10 +31,10 @@
 								class="post-job-input form-control" id="radius" value="50000"></input>
 						</div>
 					</div>
-								
+
 					<h4>
 						<span class="label label-primary">From: (at least one field is required)</span>
-					</h4>	
+					</h4>
 					<div class="form-group row">
 						<label for="homeCity"
 							class="post-job-label col-sm-2 form-control-label">City</label>
@@ -57,62 +57,62 @@
 							Code</label>
 						<div class="col-sm-10">
 							<input name="zipCode" type="text"
-								class="post-job-input form-control" id="homeZipCode" 
+								class="post-job-input form-control" id="homeZipCode"
 								value="55119"></input>
 						</div>
 					</div>
 				</div>
 			</div><!-- end home location panel -->
-			
-			<div class="panel panel-info">	
+
+			<div class="panel panel-info">
 				<div class="panel-heading">Categories</div>
 				<div class="panel-body">
-					<div style="display: inline" id="selectedCategories">									
+					<div style="display: inline" id="selectedCategories">
 					</div>
 					<div id="addCategories" style="display: none"></div>
-					<div id="removeCategories" style="display: none"></div>	
+					<div id="removeCategories" style="display: none"></div>
 					<br>
-					<div id="0T"></div>			
+					<div id="0T"></div>
 				</div>
 			</div><!-- end categories panel -->
-						
-						
+
+
 			<div style="width: 750px" class="panel panel-success">
 				<div class="panel-heading">Employees</div>
-				<div class="color-panel panel-body" id="employees">	
+				<div class="color-panel panel-body" id="employees">
 				</div>
-			</div>	<!-- end employees panel -->							
-		
+			</div>	<!-- end employees panel -->
+
 		</div><!-- end container -->
-	
-	
-	
+
+
+
 	</body>
-	
-	
+
+
 	<script>
-	
+
 		var pageContext = "profile";
-		
+
 		getCategoriesBySuperCat('0', function(response, categoryId) {
 			appendCategories(categoryId, "T", response, function() {
 			});
 		})
-		
+
 		$(document).ready(function(){
-			
-		
-			
+
+
+
 			$('#availableDays').datepicker({
 				toggleActive: true,
 				format: "yyyy-MM-dd",
 				clearBtn: true,
 				todayHighlight: true,
 				startDate: new Date(),
-				multidate: true		
-				
+				multidate: true
+
 			});
-			
+
 			$('#findEmployees').click(function(){
 
 				var radius = $("#radius").val();
@@ -121,25 +121,25 @@
 				var zipCode = $("#homeZipCode").val();
 
 				if(radius > 0 && (city != "" || state != "" || zipCode != "")){
-		
+
 					//Location
 					var parameters = "?radius=" + radius;
 					parameters += "&city=" + $("#homeCity").val();
 					parameters += "&state=" + $("#homeState").val();
 					parameters += "&zipCode=" + $("#homeZipCode").val();
-					
+
 					//Dates
 					var dates = [];
 // 					var str = $("#arrayDates").val();
 // 					str = str.substring(1, str.length -1);
-// 					dates = str.split(",");	
+// 					dates = str.split(",");
 					var dates= $("#availableDays").datepicker('getDates');
 					if(dates.length > 0){
 						for(var i = 0; i < dates.length; i++){
 							parameters += "&date=" + dates[i];
 						}
 					} else{parameters += "&date=-1"}
-					
+
 					//Categories
 					var categories = getCategoryIds("selectedCategories");
 					if(categories.length > 0){
@@ -147,20 +147,20 @@
 							parameters += "&categoryId=" + categories[i];
 						}
 					} else{parameters += "&categoryId=-1"}
-					
+
 // 	 				alert(JSON.stringify(parameters))
 					$.ajax({
 						type : "GET",
-						url : "http://localhost:8080/JobSearch/employees/filter" + parameters,
+						url : environmentVariables.LaborVaultHost + "/JobSearch/employees/filter" + parameters,
 						dataType : "json", // Response
 						success: _success,
 				        error: _error
 					    });
-				
+
 					function _success(employees){
-						
+
 						$("#employees").empty();
-						
+
 						var j = -1;
 						var r = [];
 						r[++j] = '<table id="filterEmployeesTable" class="table table-hover table-striped'
@@ -175,12 +175,12 @@
 						r[++j] =		'</tr>';
 						r[++j] =	'</thead>';
 						r[++j] = 	'<tbody>';
-						
+
 						for(var i = 0; i < employees.length; i++){
 							var e = employees[i];
 							r[++j] = '<tr id="user_' + e.userId + '" class="clickToWorkHistory">';
 							r[++j] =	'<td>' + e.firstName + " " + e.lastName + '</td>';
-							
+
 							var categoryNames = "";
 							for (var k = 0; k < e.categories.length; k++){
 								categoryNames += e.categories[k].name;
@@ -194,24 +194,24 @@
 							r[++j] = 	'<td>' + e.distanceFromJob + '</td>';
 							r[++j] = '</tr>';
 						}
-						
+
 						$("#employees").append(r.join(''));
 						$('#filterEmployeesTable').DataTable();
-						
-						$(".clickToWorkHistory").click(function(){	
+
+						$(".clickToWorkHistory").click(function(){
 // 							alert(3)
 			 				elementId = $(this).attr('id');
 							var idBegin = elementId.indexOf("_") + 1;
 							var userId =  elementId.substring(idBegin);
-							
+
 							window.location = "../jobs/completed/employee/?userId=" + userId + "&c=1";
 						})
 
 					}
-			
+
 					function _error(response){
 
-					}				
+					}
 				}
 			})	//end find employees click function
 		}) //end document ready
@@ -219,6 +219,6 @@
 
 	</script>
 
-	
+
 
 <%@ include file="./includes/Footer.jsp" %>

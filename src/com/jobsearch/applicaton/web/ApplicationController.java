@@ -1,6 +1,4 @@
-package com.jobsearch.web;
-
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+package com.jobsearch.applicaton.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -22,28 +18,27 @@ import com.jobsearch.user.service.UserServiceImpl;
 @SessionAttributes({ "user" })
 public class ApplicationController {
 
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
-	
+
 	@Autowired
 	UserServiceImpl userService;
-	
+
 	@Autowired
 	JobServiceImpl jobService;
-	
+
 
 	@RequestMapping(value = "/applications/job/{jobId}", method = RequestMethod.GET)
 	@ResponseBody
 	public String getApplicationsByJob(@PathVariable int jobId){
-		return JSON.stringify(applicationService.getApplicationsByJob(jobId));	
+		return JSON.stringify(applicationService.getApplicationsByJob(jobId));
 	}
 
-	
+
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateStatus(@RequestParam int id, @RequestParam int status) {
 		applicationService.updateStatus(id, status);
 	}
-	
+
 }

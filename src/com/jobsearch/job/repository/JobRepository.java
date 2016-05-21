@@ -13,15 +13,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CreateJobDTO;
-import com.jobsearch.job.service.FilterDTO;
+import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.Answer;
-import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -48,7 +44,7 @@ public class JobRepository {
 		try{
 
 			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
-	
+
 				@Override
 				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Job e = new Job();
@@ -70,20 +66,18 @@ public class JobRepository {
 					return e;
 				}
 			});
-			
+
 		}catch(Exception e){
 			return null;
 		}
-				
-	}
-	
-	public void addJob(List<CreateJobDTO> jobDtos) {
-		List<Job> jobsCreatedByUser = new ArrayList<>();
 
+	}
+
+	public void addJob(List<CreateJobRequestDTO> jobDtos) {
 		try {
 
 			ResultSet result = null;
-			for (CreateJobDTO job : jobDtos) {
+			for (CreateJobRequestDTO job : jobDtos) {
 					CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call create_Job(?, ?, ?, ?, ?)}");
 
@@ -122,9 +116,9 @@ public class JobRepository {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public void addJob(CreateJobDTO jobDto) {
+
+
+	public void addJob(CreateJobRequestDTO jobDto) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
@@ -146,27 +140,27 @@ public class JobRepository {
 			 cStmt.setTime(13,  jobDto.getEndTime());
 
 			 ResultSet result = cStmt.executeQuery();
-			 
+
 			 Job createdJob = new Job();
 			 result.next();
 			 createdJob.setId(result.getInt("JobId"));
-			 
+
 			 for(Integer categoryId: jobDto.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
-				
+
 					cStmt.setInt(1, createdJob.getId());
 					cStmt.setInt(2, categoryId);
-				
+
 					cStmt.executeQuery();
 			}
 
 			for(Question question : jobDto.getQuestions()){
-			
+
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
-			 
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -187,7 +181,7 @@ public class JobRepository {
 
 
 	}
-	
+
 	public List<Job> getCompletedJobsByEmployer(int userId) {
 		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
 		return this.JobRowMapper(sql, new Object[] { userId });
@@ -246,15 +240,15 @@ public class JobRepository {
 		String sql = "SELECT * FROM job WHERE JobId=?";
 
 		List<Job> jobs = this.JobRowMapper(sql, new Object[]{ jobId });
-		
+
 		if(jobs.size() > 0) return jobs.get(0);
 		else return null;
 	}
 
 
-	public List<Job> getFilteredJobs(FilterDTO filter) {
+	public List<Job> getFilteredJobs(FilterJobRequestDTO filter) {
 		// TODO Auto-generated method stub
-		
+
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
 		//This calculates the distance between each job and a given lat/lng.
 		String sql = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
@@ -263,20 +257,20 @@ public class JobRepository {
 
 
 		List<Object> argsList = new ArrayList<Object>();
-	
-		//Arguments for distance filter	
+
+		//Arguments for distance filter
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
-		argsList.add(filter.getLat());	
-			
+		argsList.add(filter.getLat());
+
 		//If there are no categories to filter on
 		if(filter.getCategoryIds() == null){
 
 			sql += " WHERE job.IsActive = 1";
-			
-		//Else build the where condition for the categories 		
+
+		//Else build the where condition for the categories
 		}else{
-	
+
 			sql += " INNER JOIN job_category ON job.JobId = job_category.JobId WHERE job.IsActive = 1 AND (";
 			for(int i = 0; i < filter.getCategoryIds().length; i++){
 				if(i < filter.getCategoryIds().length - 1){
@@ -284,10 +278,10 @@ public class JobRepository {
 				}else{
 					sql += " job_category.CategoryId = ?)";
 				}
-			
+
 				argsList.add(filter.getCategoryIds()[i]);
-			}			
-			
+			}
+
 		}
 
 		//Start time
@@ -298,10 +292,10 @@ public class JobRepository {
 			}else{
 				sql += " >= ?";
 			}
-			
+
 			argsList.add(filter.getStartTime());
 		}
-		
+
 		//End time
 		if(filter.getEndTime() != null){
 			sql += " AND job.EndTime";
@@ -309,11 +303,11 @@ public class JobRepository {
 				sql += " <= ?";
 			}else{
 				sql += " >= ?";
-			}			
+			}
 
 			argsList.add(filter.getEndTime());
-		}	
-		
+		}
+
 		//Start date
 		if(filter.getStartDate() != null){
 			sql += " AND job.StartDate";
@@ -321,11 +315,11 @@ public class JobRepository {
 				sql += " <= ?";
 			}else{
 				sql += " >= ?";
-			}			
+			}
 
 			argsList.add(filter.getStartDate());
 		}
-		
+
 		//End date
 		if(filter.getEndDate() != null){
 			sql += " AND job.EndDate";
@@ -333,11 +327,11 @@ public class JobRepository {
 				sql += " <= ?";
 			}else{
 				sql += " >= ?";
-			}			
-			
+			}
+
 			argsList.add(filter.getEndDate());
-		}		
-		
+		}
+
 		//Duration
 		if(filter.getDuration() > 0){
 			sql += " AND job.EndDate - job.StartDate";
@@ -346,16 +340,16 @@ public class JobRepository {
 			}else{
 				sql += " >= ?";
 			}
-			
+
 			argsList.add(filter.getDuration());
 		}
-		
+
 
 		//Close the sub query and complete the distance filter.
 		argsList.add(filter.getRadius());
 		argsList.add(filter.getReturnJobCount());
 		sql += ") HAVING distance < ? ORDER BY distance LIMIT 0 , ?";
-		
+
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 

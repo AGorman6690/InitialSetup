@@ -18,9 +18,6 @@
 
 
 
-	<import resource="classpath:spring-security.xml" />
-	<import resource="classpath:spring-register.xml" />
-
 	<!-- create controller and controller advice beans by scanning packages -->
 	<context:component-scan base-package="com.jobsearch.*" />
 
@@ -37,23 +34,21 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	
-
 
 	<mvc:resources mapping="/static/javascript/**" location="/static/javascript/" />
 	<mvc:resources mapping="/static/css/**" location="/static/css/" />
 	<mvc:resources mapping="/static/External/**" location="/static/External/" />
 
 
-	<!-- enable resolution of ${...} placeholders within @Value annotations 
+	<!-- enable resolution of ${...} placeholders within @Value annotations
 		and in XML definitions -->
 	<!-- <context:property-placeholder ignore-unresolvable="false" /> -->
 
-	<!-- enable annotation-driven Spring AOP (i.e. @Aspect, @Pointcut, @Before, 
+	<!-- enable annotation-driven Spring AOP (i.e. @Aspect, @Pointcut, @Before,
 		@After, @Around, etc.) -->
 	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
 
-	<!-- enable annotation-driven Spring Web MVC (i.e. @RequestMapping, @RequestParam, 
+	<!-- enable annotation-driven Spring Web MVC (i.e. @RequestMapping, @RequestParam,
 		@PathVariable, @RequestBody, @ResponseBody, etc.) -->
 	<mvc:annotation-driven
 		content-negotiation-manager="contentNegotiationManager">
@@ -74,9 +69,8 @@
 					<bean
 						class="org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean"
 						p:modulesToInstall="com.fasterxml.jackson.datatype.joda.JodaModule,
-											 com.fasterxml.jackson.datatype.hppc.HppcModule" 
-						p:serializationInclusion="NON_EMPTY"
-						p:failOnUnknownProperties="true"
+											 com.fasterxml.jackson.datatype.hppc.HppcModule"
+						p:serializationInclusion="NON_EMPTY" p:failOnUnknownProperties="true"
 						p:autoDetectFields="false" p:autoDetectGettersSetters="false"
 						autowire-candidate="false">
 					</bean>
@@ -90,20 +84,20 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-	<!-- enable negotiation of content type based on factors such as request 
+	<!-- enable negotiation of content type based on factors such as request
 		headers and request mappings metadata -->
 	<bean id="contentNegotiationManager"
-			class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"
-			p:favorPathExtension="false" p:mediaTypes-ref="negotiableMediaTypes">
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"
+		p:favorPathExtension="false" p:mediaTypes-ref="negotiableMediaTypes">
 	</bean>
 	<util:properties id="negotiableMediaTypes">
 		<prop key="json">application/json</prop>
 		<prop key="xml">text/xml</prop>
 	</util:properties>
 
-<!-- //Added this to convert String to DateTime (http://stackoverflow.com/questions/21659393/accepting-datetime-jodatime-as-request-method-argument-in-springmvc) -->
-<!-- //Conversion still not happening -->
-<!-- <mvc:annotation-driven/> -->
+	<import resource="classpath:spring-security.xml" />
+	<import resource="classpath:spring-register.xml" />
+	<import resource="classpath:spring-file-upload.xml" />
 
 
 </beans>

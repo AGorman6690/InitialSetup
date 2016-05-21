@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jobsearch.model.Answer;
 
-public class ApplicationDTO {
+public class ApplicationRequestDTO {
 	private int jobId;
 	private int userId;
 	private List<Answer> answers;
