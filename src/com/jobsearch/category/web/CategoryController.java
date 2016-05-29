@@ -7,11 +7,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.category.service.SubCategoryRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 
@@ -27,12 +29,24 @@ public class CategoryController {
 
 	@RequestMapping(value = "category/{superCategory}/subCategories", method = RequestMethod.GET)
 	@ResponseBody
-	public String getSubCategories(@PathVariable int superCategory) {
+	public String getSubCategories_OLD(@PathVariable int superCategory) {
 
-		List<Category> categories = categoryService.getSubCategories(superCategory);
+		List<Category> categories = categoryService.getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(superCategory);
 
 		return JSON.stringify(categories);
 
 	}
+	
+	@RequestMapping(value = "/categories/subCategories", method = RequestMethod.GET)
+	@ResponseBody
+	public String getSubCategories(@RequestParam(value = "categoryId") List<Integer> categoryIds) {
+		
+		List<SubCategoryRequestDTO> subCategoryRequestDtos = categoryService.getSubCategoryDTOs(categoryIds);
+
+		return JSON.stringify(subCategoryRequestDtos);
+
+	}
+	
+	
 
 }

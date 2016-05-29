@@ -98,6 +98,15 @@
 	height: 30px;
 }
 
+/* #jobInfoContainer{ */
+/* /*     position:absolute; */ */
+/* /*     top: 235px; */ */
+/*     left:0px; */
+/*     right:0px; */
+/*     bottom:0px; */
+/*     overflow-y:scroll;         */
+
+/* } */
 
 .select-codyhouse{
 	font-family: "Open Sans", sans-serif;
@@ -135,7 +144,7 @@
 	width: 500px;
 }
 
-#jobActions button{
+#jobCartContainer button{
 	border: 2px solid #909090;
 }
 
@@ -167,4 +176,9 @@ textarea {
 
 .hide-table-column{
 	display: none;
+}
+
+li.disabled {
+    pointer-events:none; 
+    opacity:0.6;        
 }

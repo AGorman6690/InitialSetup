@@ -561,6 +561,21 @@
 	}
 
 
+	function markJobComplete(jobId) {
+		var headers = {};
+		headers[$("meta[name='_csrf_header']").attr("content")] = $(
+				"meta[name='_csrf']").attr("content");
+		$.ajax({
+			type : "PUT",
+			url : environmentVariables.LaborVaultHost + '/JobSearch/job/' + jobId + '/markComplete',
+			headers : headers
+		}).done(function() {
+			$('#home')[0].click();
+		}).error(function() {
+			$('#home')[0].click();
+
+		});
+	}
 
 
 </script>

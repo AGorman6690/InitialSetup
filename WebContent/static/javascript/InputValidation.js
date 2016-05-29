@@ -32,11 +32,12 @@ function validateInputValueContains($e, value, valueCannotContain){
 }
 
 function validateJobName(requestedJobName, jobs){
+	//Job names must be unique
 
 	var $eJobName = $(document.getElementsByName('jobName')[0]);
 	var i;
-
 	for(i = 0; i < jobs.length; i++){
+
 		if(jobs[i].jobName == requestedJobName){
 			$("#invalidJobName").show();
 			setInvalidCss($eJobName);
@@ -52,6 +53,7 @@ function validateJobName(requestedJobName, jobs){
 }
 
 function setInvalidCss($e){
+
 	if($e.hasClass("invalid-input-existence") == 0){
 		$e.addClass("invalid-input-existence");
 	}	
@@ -79,24 +81,33 @@ function validatePostJobInputs(jobs){
 	var $e;
 	var result = 0;
 	
+	//Validate job name is provided
 	$e = $(document.getElementsByName('jobName')[0]);
 	result += validateInputExistence($e, $e.val());
 	
+	//Verify the job name is unique only if the job name is provided
+	if(result == 0){
+		result += validateJobName(document.getElementsByName('jobName')[0].value, jobs)	
+	}
+		
+	//Validate job description is provided	
 	$e = $(document.getElementsByName('jobDescription')[0]);
 	result += validateInputExistence($e, $e.val());
 
+	//Validate street address is provided
 	$e = $(document.getElementsByName('streetAddress')[0]);
 	result += validateInputExistence($e, $e.val());
 	
+	//Validate city is provided
 	$e = $(document.getElementsByName('city')[0]);
 	result += validateInputExistence($e, $e.val());
-	
+
+	//Validate state is selected
 	$e = $("#state");
 	result += validateSelectInput($e.parent(), $e.find(":selected").val());
 	
+	//Validate date range is selected
 	$e = $("#dateRange");
-//	result += validateInputExistence($e, $e.data('daterangepicker').startDate);
-//	result += validateInputValueContains($e, $e.val(), "Invalid date");
 	result += validateInputExistence($e, $e.val());
 	
 	$e = $($("#startTime"));
@@ -105,14 +116,39 @@ function validatePostJobInputs(jobs){
 	$e = $($("#endTime"));
 	result += validateInputExistence($e, $e.val());
 	
-	result += validateJobName(document.getElementsByName('jobName')[0].value, jobs)
-//	alert(result)
-	if(result > 0){
-		return false;
-	}else{
-		return true;
-	}
+	//Validate categories
+	result += validateMinimumSelectedCategories();
+	return result;
+//	if(result > 0){
+//		return false;
+//	}else{
+//		return true;
+//	}
 	
+}
+
+function validateMinimumSelectedCategories(){
+	
+	if($("#selectedCategories").find("button").length  == 0){
+		$("#invalidCategoryInput-None").show();
+		setInvalidCss($("#categoryTree"));
+		return 1;
+	}else{
+		$("#invalidCategoryInput-None").hide();
+		setValidCss($("#categoryTree"));
+		return 0;
+	}
+		
+}
+
+function validateMaximumSelectedCategories(){
+	if($("#selectedCategories").find("button").length  >= 5){
+		$("#invalidCategoryInput-TooMany").show();
+		return 1;
+	}else{
+		$("#invalidCategoryInput-TooMany").hide();
+		return 0;
+	}
 }
 
 function validateAddQuestionInputs(){

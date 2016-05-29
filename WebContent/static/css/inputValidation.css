@@ -6,8 +6,9 @@
 	border: 5px solid #b30000;
 }
 
-#invalidJobName{
+.invalid-message{
 	color: #b30000;
+	margin-bottom: 5px;
 }
 
 /* .valid-input-existence{ */

@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Random;
 
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 
@@ -22,16 +23,16 @@ public class DummyData {
 	List<String> firstNames;
 	List<String> lastNames;
 
-	public List<CreateJobRequestDTO> getDummyJobs(List<JobSearchUser> dummyEmployers) {
+	public List<JobInfoPostRequestDTO> getDummyJobs(List<JobSearchUser> dummyEmployers) {
 		List<DummyCity> cities = getCities();
 
-		List<CreateJobRequestDTO> dummyJobs = new ArrayList<CreateJobRequestDTO>();
+		List<JobInfoPostRequestDTO> dummyJobs = new ArrayList<JobInfoPostRequestDTO>();
 
 		int jobCount = 0;
 		for (JobSearchUser employer : dummyEmployers) {
 
 			// for(int i = 0;i < dummyEmployers.size(); i++){
-			CreateJobRequestDTO createJobDTO = new CreateJobRequestDTO();
+			JobInfoPostRequestDTO createJobDTO = new JobInfoPostRequestDTO();
 			createJobDTO.setJobName("Job " + jobCount);
 			createJobDTO.setUserId(employer.getUserId());
 

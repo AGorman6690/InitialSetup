@@ -148,7 +148,7 @@
 						}
 					} else{parameters += "&categoryId=-1"}
 
-// 	 				alert(JSON.stringify(parameters))
+	 				alert(environmentVariables.LaborVaultHost + "/JobSearch/employees/filter" + parameters)
 					$.ajax({
 						type : "GET",
 						url : environmentVariables.LaborVaultHost + "/JobSearch/employees/filter" + parameters,

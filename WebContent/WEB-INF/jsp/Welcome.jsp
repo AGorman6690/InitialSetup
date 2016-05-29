@@ -19,6 +19,7 @@
 		<a href="./employees/find" style="display: inline; margin-left: 5px"
 			type="button" class="btn btn-info">Looking To Hire</a>
 	</div>
+	
 
 	<!-- Original code found here -->
 	<!-- https://gist.github.com/bMinaise/7329874#file-bs3-login-form-html -->
@@ -34,7 +35,9 @@
 					<div style="color: red">${errorMessage}</div>
 					<div style="color: red">${ResetPasswordMessage}</div>
 					<form:form class="form-signin" commandName="user"
-						action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST">
+
+						action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
+<!-- 						action="./login.do" method="POST"> -->
 						<form:input type="text" class="form-control" placeholder="Email"
 							path="username" id="userName" />
 						<form:password class="form-control" placeholder="Password"
@@ -118,7 +121,7 @@
 	$(document).ready(function() {
 		$("#debug1").click(function() {
 			$("#password").val('1');
-			$("#userName").val('1');
+			$("#userName").val('gorma080@d.umn.edu');
 			$("button[type=submit]")[0].click();
 
 		})

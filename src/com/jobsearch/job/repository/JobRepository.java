@@ -14,9 +14,10 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -73,11 +74,11 @@ public class JobRepository {
 
 	}
 
-	public void addJob(List<CreateJobRequestDTO> jobDtos) {
+	public void addJob(List<JobInfoPostRequestDTO> jobDtos) {
 		try {
 
 			ResultSet result = null;
-			for (CreateJobRequestDTO job : jobDtos) {
+			for (JobInfoPostRequestDTO job : jobDtos) {
 					CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call create_Job(?, ?, ?, ?, ?)}");
 
@@ -118,7 +119,7 @@ public class JobRepository {
 	}
 
 
-	public void addJob(CreateJobRequestDTO jobDto) {
+	public void addJob(JobInfoPostRequestDTO jobDto) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(

@@ -15,7 +15,8 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
@@ -363,10 +364,10 @@ public class UserServiceImpl {
 		List<JobSearchUser> dummyEmployers = repository.getEmployers();
 		DummyData dummyData = new DummyData();
 
-		List<CreateJobRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
+		List<JobInfoPostRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
 		int lastDummyCreationId = repository.getLastDummyCreationId("job");
 
-		for (CreateJobRequestDTO dummyJob : dummyJobs) {
+		for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
 			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
 		}
 

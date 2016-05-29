@@ -398,6 +398,26 @@
 	
 	}
 	
+	function getFilteredJobs(params, callback){
+
+		$.ajax({
+			type : "GET",
+			url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
+				dataType : "json",
+				success : _success,
+				error : _error
+			});
+
+			function _success(response) {
+				callback(response)
+			}
+
+			function _error(response) {
+				alert('error filter jobs')
+			}
+
+	}
+	
 	function initMap() {
 		//Eventually initialize it to a user defualt
 		var myLatLng = {

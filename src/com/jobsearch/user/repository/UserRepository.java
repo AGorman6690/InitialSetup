@@ -13,8 +13,9 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
@@ -585,7 +586,7 @@ public class UserRepository {
 		return this.JobSearchUserRowMapper(sql, new Object[] {});
 	}
 
-	public void createJob_DummyData(CreateJobRequestDTO dummyJob, int dummyCreationId) {
+	public void createJob_DummyData(JobInfoPostRequestDTO dummyJob, int dummyCreationId) {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");

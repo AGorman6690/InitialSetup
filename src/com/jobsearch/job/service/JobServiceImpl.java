@@ -1,7 +1,9 @@
 package com.jobsearch.job.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 
@@ -31,11 +34,16 @@ public class JobServiceImpl {
 	@Autowired
 	UserServiceImpl userService;
 
-	public void addJob(List<CreateJobRequestDTO> jobDtos) {
+	public void addPosting(SubmitJobPostingRequestDTO postingDto) {
 
-		for (CreateJobRequestDTO jobDto : jobDtos) {
-
-			// Build the job's full address
+		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
+			//***********************************************************************************
+			//Should we verify the address on the client side?  I'm thinking so... 
+			//Why go all the way to the server
+			//when the same logic can be handled in the browser?
+			//***********************************************************************************
+			
+			//Build the job's full address		
 			String address = jobDto.getStreetAddress() + " " + jobDto.getCity() + " " + jobDto.getState() + " "
 					+ jobDto.getZipCode();
 
@@ -52,7 +60,9 @@ public class JobServiceImpl {
 				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
 				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
 
-				// Address this idea later
+				// Address this idea later.
+				// Should we format the user's address and city per the data from Google maps?
+				// This would correct spelling errors, maintain consistent letter casing, etc.
 				// ***************************************************************
 				// jobDto.setZipCode(GoogleClient.getAddressComponent(results[0].addressComponents,
 				// "POSTAL_CODE"));
@@ -60,6 +70,8 @@ public class JobServiceImpl {
 
 				jobDto.setLat((float) results[0].geometry.location.lat);
 				jobDto.setLng((float) results[0].geometry.location.lng);
+				
+				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getQuestions()));
 
 				repository.addJob(jobDto);
 			} else if (results.length == 0) {
@@ -68,6 +80,21 @@ public class JobServiceImpl {
 				// ambiguous address
 			}
 		}
+	}
+
+	private List<Question> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<Question> postingDtoQuestions) {
+
+		List<Question> questions = new ArrayList<Question>();
+		
+		for(int selectedQuestionId : selectedQuestionIds){			
+			//Get question
+			for(Question postingDtoQuestion : postingDtoQuestions){
+				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
+					questions.add(postingDtoQuestion);
+				}
+			}
+		}
+		return questions;
 	}
 
 	public void markJobComplete(int jobId) {
@@ -107,7 +134,7 @@ public class JobServiceImpl {
 		// For the categoryId passed as the paramenter, get the categories 1
 		// level
 		// deep
-		categories = categoryService.getSubCategories(categoryId);
+		categories = categoryService.getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(categoryId);
 
 		// For each category 1 level deep
 		for (Category category : categories) {

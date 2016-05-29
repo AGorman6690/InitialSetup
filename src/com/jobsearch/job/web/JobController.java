@@ -17,7 +17,7 @@ import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
@@ -43,9 +43,9 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void addJob(@RequestBody List<CreateJobRequestDTO> jobDtos, ModelAndView model) {
+	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto, ModelAndView model) {
 
-		jobService.addJob(jobDtos);
+		jobService.addPosting(postingDto);
 	}
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)

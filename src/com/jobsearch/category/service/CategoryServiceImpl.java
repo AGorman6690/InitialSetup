@@ -1,5 +1,6 @@
 package com.jobsearch.category.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,9 @@ public class CategoryServiceImpl {
 		return repository.getCategoriesByUserId(userId);
 	}
 
-	public List<Category> getSubCategories(int superCat) {
+	public List<Category> getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(int categoryId) {
 		
-		List<Category> categories = repository.getSubCategories(superCat);
+		List<Category> categories = repository.getSubCategories(categoryId);
 		
 		for (Category category : categories) {
 			category.setJobCount(jobService.getJobCountByCategory(category.getId()));
@@ -57,10 +58,50 @@ public class CategoryServiceImpl {
 		
 		return categories;
 	}
+	
+	public List<Category> getSubCategories(int categoryId) {
+		
+		return  repository.getSubCategories(categoryId);
+	}
 
 	public Category getCategory(int categoryId) {
 		
 		return repository.getCategory(categoryId);
 	}
+
+	public List<SubCategoryRequestDTO> getSubCategoryDTOs(List<Integer> categoryIds) {
+		
+		if(categoryIds.size() > 0){
+			
+			List<SubCategoryRequestDTO> dtos = new ArrayList<SubCategoryRequestDTO>();
+			
+			//Get sub category DTOs for each category Id
+			for(int categoryId : categoryIds){
+				
+
+				List<Category> subCategories = this.getSubCategories(categoryId);				
+				for(Category subCategory : subCategories){
+					
+					SubCategoryRequestDTO dto = new SubCategoryRequestDTO();
+					dto.setCategoryId(categoryId);					
+					dto.setSubCategoryId(subCategory.getId());
+					dto.setSubCategoryName(subCategory.getName());
+					dto.setSubSubCategoryCount(getSubCategories(subCategory.getId()).size());
+					
+					dtos.add(dto);
+					
+				}
+			}
+			
+			return dtos;
+			
+		}else{
+			return null;	
+		}
+		
+	}
+
+
+
 
 }

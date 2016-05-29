@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CreateJobRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
@@ -82,7 +82,7 @@ public class UserController {
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
-		CreateJobRequestDTO job = new CreateJobRequestDTO();
+		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
 		model.addObject("job", job);
 
 		model.setViewName("PostJob");
@@ -113,9 +113,9 @@ public class UserController {
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
-				user = userService.getProfile(user);
+				
 			}
-
+			user = userService.getProfile(user);
 			model.addObject("user", user);
 
 			if (user.getCreateNewPassword() == 0) {

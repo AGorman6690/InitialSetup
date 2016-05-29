@@ -1,36 +1,27 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <head>
-<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
+<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
-<%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 <link rel="stylesheet" type="text/css"
 	href="./static/css/categories.css" />
+	
+<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/Jobs.js"/></script>
+<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/Questions.js"/></script>
+<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/ChangeForm.js"/></script>
+	
 
 <link rel="stylesheet" type="text/css"
 	href="./static/css/inputValidation.css" />
 <!-- Time picker -->
 <link rel="stylesheet" type="text/css"
 	href="./static/External/jquery.timepicker.css" />
-<script
-	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
-<%-- <script src="<c:url value="/static/External/GruntFile.js" />"></script> --%>
+<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
 
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 
-<!-- 	<link rel="stylesheet" href="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/css/bootstrap-select.css"> -->
-<!-- 	<link rel="stylesheet" href="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/css/bootstrap-select.css"> -->
-<!-- 	<link rel="stylesheet" href="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/css/bootstrap-select.css"> -->
 
-<!-- 	<script src="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/js/bootstrap-select.js"></script> -->
-<!-- <script src="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/js/bootstrap-select.js.map"></script> -->
-<!-- <script src="http://localhost:8080/JobSearch/static/External/bootstrap-select-1.10.0/dist/js/bootstrap-select.min.js"></script> -->
-
-
-
-<!-- Dropdown -->
-<!-- <script src="/path/to/bootstrap-hover-dropdown.min.js"></script> -->
 
 
 	<style>
@@ -61,11 +52,141 @@
 			border-radius: 5px
 		}
 		
-		#jobActions button{
+		.job button{
 /* 			width: 125px; */
 		}
-
+		
+		.added-job, .added-job:focus, .added-job:active, .added-job:hover{
+			color: white;
+		}
 	
+		
+		.active-button{
+			background-color: #336699;
+		}
+		
+		.inactive-button{
+			background-color: #8cb3d9;
+		}	
+		
+		.job-action-container{
+			display: inline;
+		}
+		
+		.job-action-responses-container{
+			display: inline;
+			width: 100%;
+		}
+		
+		.job-action-response{
+			display: block;
+		}
+		
+		.level-zero{
+			margin-left: 10px;
+			
+		}
+		
+		.level-1{
+			margin-left: 40px;
+			
+		}
+		
+		.level-2{
+			margin-left: 70px;
+		}
+		
+		.level-3{
+			margin-left: 100px;
+		}
+		
+		.level-4{
+			margin-left: 130px;
+		}
+		
+		#categoryTree li .glyphicon{
+			cursor: pointer;
+			margin-left: 2.5px;
+			margin-right: 2.5px;
+		}
+		
+		.category-list-item[data-level='0']{
+			background-color: #C8C8C8;
+		}
+		.category-list-item[data-level='1']{
+			background-color: #E0E0E0 ;
+		}
+		.category-list-item[data-level='2']{
+			background-color: #F0F0F0;
+		}
+		.category-list-item[data-level='3']{
+			background-color: #F8F8F8;
+		}
+		
+		.category-list-item[data-level='4']{
+			background-color: #FFFFFF;
+		}			
+		
+		#selectedCategories button{
+			background-color: #8cb3d9;
+			margin-right: 2.5px;
+			margin-bottom: 2.5px;
+			cursor: default;
+		    opacity: 1;
+		}
+		
+
+		
+		.remove-category{
+			cursor: pointer;
+			margin-left: 2.5px;
+		}
+		
+		#categoryTree li .glyphicon-plus{
+ 			color: #009999;
+/* 			color: #00cc99; */
+		}		
+		
+		#categoryTree li{
+			cursor: default;
+		}		
+
+		#jobInfoContainer{
+/* 		  margin-bottom:20px; */
+/* 		   padding:10px; */
+			margin-top: 10px;
+			
+		}
+		
+		.disabled-category{
+			cursor: default !important; 
+		}
+
+		.edit-job-glyphicon{
+			font-size: 25px;
+			margin-right: 5px;
+		}		
+/* 	.menu{  */
+/* 	    back-ground:white; */
+/* 	    height:100px; */
+/* 	/*     padding:.5em; */ */
+/* 	    position:fixed; */
+/* 	    top:75px; */
+/* 	    width:100%; */
+/* 	    z-index: 200000; */
+/* 	    outline-width: 0px; */
+/*  		}  */
+		
+
+		
+
+
+
+/* 	.fixed { */
+/* 	    position:fixed; */
+/* 	    top:0px; */
+/* 	} */
+
 	</style>
 
 </head>
@@ -79,240 +200,299 @@
 
 	<input name="userId" value="${user.userId}" type="hidden"></input>
 	
-	<div class="container">
-	
-		<div class="row">
-			<div class="job-cart-container col-sm-12">	
-				<div id="jobActions" class="btn-group" role="group" style="margin-bottom: 25px">
-				
-
-					<button id="addJob" type="button" class="btn btn-info"
-						onclick="addJobToCart()">Add Job</button>
-<!-- 					<div style="display: none"> -->
-					<button id="deleteJob" type="button" disabled
-						class="btn btn-info">Delete Job</button>
-					<button id="editJob" type="button" disabled
-						class="btn btn-info">Edit Job</button>													
-					<button id="saveChanges" type="button" disabled
-						class="btn btn-info">Save Changes</button>
-					<button id="startNewJob" type="button" class="btn btn-info"
-						disabled>Start New Job</button>
-					<button id="startSimilarJob" type="button" class="btn btn-info"
-						disabled>Start Similar Job</button>						
-<!-- 					</div>										 -->
-				</div>			
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-sm-12">
-				<div id="addedJobsContainer" style="display: none; margin-bottom: 20px">
-					<span style="font-size: 20px; margin-right: 10px">Job Cart</span>
-					<button id="submitJobs" class="btn btn-success">Submit Jobs</button>	
-					<div id="addedJobs" class="btn-group" role="group" aria-label="Basic example">						
-					</div>				
-				</div>
-				
-				<div id="jobsInProcessContainer" style="display: none">
-					<h4>Jobs In Process:</h4>	
-					<div id="jobsInProcess" class="btn-group" role="group" aria-label="Basic example">
-	
-					</div>					
-				</div>
-			</div>
-		</div>
-				
-		<div class="row">
-			<div id="jobInfoContainer" class="col-sm-6">
-				<form>
-	
-	<!-- 				<h2>Job Information</h2> -->
-					<div class="" >
-					
-						<div class="job-sub-info-container">
-							<h3>General</h3>
-							<div class="job-sub-info">
-								<fieldset class="form-group">
-									<label for="jobName" class="form-control-label">Name</label>
-									<input name="jobName" type="text"
-										class="post-job-input form-control" id="jobName"></input>
-									<div id="invalidJobName" style="display: none">Job names must be unique</div>
-								</fieldset>
+	<div id="jobPostContainer">
+		<div id="jobCartContainer" class="menu">
+<!-- 			<div class="navbar navbar-default" role="navigation"> -->
+				<div class="container" style="">		
+<!-- 					<div class="navbar-header"> -->
+						<div class="row" style="">					
+							<div class="col-sm-12" style="">
+								
+								<div id="jobActionContainer" class="" style="">
+									<input id="activeJobId" type="hidden">
+								    <div class="btn-group">
+										<button id="startNewJob" type="button" disabled
+							            	class="btn btn-info dropdown-toggle">New</button>						
+										<button id="addJob" type="button" class="btn btn-info"
+											onclick="addJobToCart()">Add</button>								
+										<button id="deleteJob" data-confirmed="0" type="button" disabled class="btn btn-info"
+											data-toggle="modal" data-target="#confirmJobDelete">Delete</button>								
+										<button id="copyJob" type="button" disabled
+											class="btn btn-info">Copy</button>
+										<button id="editJob" type="button" class="btn btn-info"
+											disabled>Edit</button>									
+			
+								    </div>		
+								    
+								    <span id="editJobResponseContainer" class="" 
+								    		style="margin-left: 5px; display: none">
+								    	<span id="saveChanges" data-content="Save changes" data-placement="bottom"
+								    		 class="popoverInstant edit-job-glyphicon glyphicon glyphicon-floppy-saved"
+								    		 style="vertical-align:middle; color: #00802b"></span>
+								    	<span id="cancelChanges" data-content="Cancel changes" data-placement="bottom"
+								    		 class="popoverInstant edit-job-glyphicon glyphicon glyphicon-floppy-remove"
+								    		 style="vertical-align:middle; color: #b32d00"></span>
+								    </span>
 									
-								<fieldset class="form-group">
-									<label for="jobDescription" class="form-control-label">Description</label>
-									<textarea name="jobDescription" class="form-control"
-										id="jobDescription" rows="5"></textarea>
-								</fieldset>
-							</div>
-						</div>
-					
-						
-						<div class="job-sub-info-container">
-							<h3>Location</h3>
-							
-							<div class="job-sub-info">
-								<fieldset class="form-group">
-									<label for="streetAddress" class="form-control-label">Street Address</label>
-									<input name="streetAddress" type="text"
-										class="post-job-input form-control" id="streetAddress"></input>
-								</fieldset>
-								
-								<fieldset class="form-group">
-									<label for="city" class="form-control-label">City</label>
-									<input name="city" type="text"
-										class="post-job-input form-control" id="city"></input>
-								</fieldset>
-								
-								<fieldset class="form-group">
-									<label for="state" class="form-control-label">State</label>
+									<div id="submitJobsContainer" style="display: none; float: right;">
 										
-									<div class="post-job-input post-job-select-container">
-										<select style="display: block" id="state" name="state"
-										 class="post-job-select post-job-input form-control"></select>	
-	<!-- 									<input name="state" type="text" -->
-	<!-- 										class="post-job-input form-control" id="state"></input> -->
-									</div>
-								</fieldset>
-								
-								<fieldset class="form-group">
-									<label for="zipCode" class="form-control-label">Zip Code</label>
-									<input name="zipCode" type="text"
-										class="post-job-input form-control" id="zipCode"></input>
-								</fieldset>
-							</div>
-						</div>
-						
-						<div class="job-sub-info-container">
-							<h3>Date and Time</h3>					
-							
-							<div class="job-sub-info">
-								<fieldset class="form-group">
-									<label for="dateRange" class="form-control-label">Start and End Dates</label>
-									<input style="width: 250px" class="form-control" type="text"
-										id="dateRange" value=""/>
-<!-- 									<script type="text/javascript"> -->
-<!-- // 										$(function() { -->
-<!-- // 											today = new Date(); -->
-<!-- // 											$('#dateRange').daterangepicker({ -->
-<!-- // 												minDate: today, -->
-<!-- // // 												startDate: "", -->
-<!-- // 												endDate: "", -->
-<!-- // 												locale : { -->
-<!-- // 													format : 'MM/DD/YYYY',		 -->
-													
-<!-- // 												}											 -->
-<!-- // 											}); -->
+										<button id="submitJobs" data-confirmed="0" type="button" class="btn btn-info"
+											 data-toggle="modal" data-target="#confirmJobSubmit">Submit Jobs</button>
+												
+									</div>	
+									
+									<div style="border-bottom-style: outset; margin-top: 10px">
+										<div id="addedJobsContainer" class="" style="border-top-style: inset; 
+											display: none; margin: 10px 0px 10px 0px; outline-width: 0px" >
+											<div class="" style="margin-bottom: 5px; outline-width: 0px">
+												<h3 style="outline-width: 0px; margin-top: 10px" class="">Job Cart</h3></div>
 											
-<!-- // // 											$("#dateRange").val(today + " - "); -->
-<!-- // 										}); -->
-<!-- 									</script> -->
-			
-								</fieldset>								
-								
-								<fieldset class="form-group">
-									<label for="startTime" class="form-control-label">Start Time</label>
-									<input name="startTime" type="text"
-										class="post-job-input form-control time ui-timepicker-input"
-											autocomplete="off" id="startTime"></input>
-								</fieldset>
-			
-								<fieldset class="form-group">
-									<label for="endTime" class="form-control-label">Estimated End Time</label>
-									<input name="endTime" type="text"
-										class="post-job-input form-control time ui-timepicker-input"
-											autocomplete="off" id="endTime"></input>
-								</fieldset>
-								
-							</div>
-						</div>
-	
-						<div class="job-sub-info-container">
-							<h3>Categories</h3>					
-							
-							<div class="job-sub-info">					
-								<fieldset class="form-group">
-			<!-- 						<label for="categories" class="form-control-label">Categories</label> -->
-									<div style="min-height: 50px; display: inline"
-										id="categories"></div>
-									<div class="category-list-container form-group">
-										<div id='0T'></div>
-									</div>							
-								</fieldset>
-							</div>
-						</div>				
-					</div>
+											<div id="addedJobs" style="" 
+												class="btn-group" role="group" aria-label="Basic example">
+											</div>	
 				
-				
-				
-				</form>
-			</div>
-			
-			<div class="col-sm-6">
-			
-				<div style="margin-left: 50px">
-					<div class="job-questions-label"  style="border-top-style: inset"><h3>Questions</h3>						
-					</div>
-						
-					<div id="job-questions-container" class="job-sub-info" style="margin-left: 50px;">
-						
-						<div id="new-question-container-container">
-							<div id="new-question-container">					
-								<div class="question-formats-container post-job-select-container dropdown" style="margin-bottom: 10px">									 
-		
-									<select class="question-formats post-job-select" title="">
-									  <option selected value="-1" style="display: none">Select a Question Format</option>	
-									  <option class="answer-format-item" value="0">Yes or No</option>
-									  <option class="answer-format-item" value="1">Short Answer</option>
-									  <option class="answer-format-item" value="2">Single Answer</option>
-									  <option class="answer-format-item" value="3">Multiple Answer</option>
-									</select>
-		
-								</div>									
+											<div id="jobsInProcessContainer" style="display: none">
+												<h4>Jobs In Process:</h4>	
+												<div id="jobsInProcess" class="btn-group" role="group" aria-label="Basic example">
 								
-								<div class="new-question-text">
-									<textarea id="newQuestionText" style="display: inline; resize: none" name="question"
-										class="form-control" rows="2"></textarea>
-								</div>
-								
-								
-								
-							
-								<div class="answer-option-list" style="display: none">
-									<h4>Answer List</h4>
-									<ul class="list-group" style="width: 225px; margin: 10px 0px 5px 0px">
-										<li class="list-group-item">
-											<span style="font-size: 1.5em" class="delete-answer-item glyphicon glyphicon-remove-circle"></span>
-											<input style="margin-left: 10px; display:inline; width: 150px" class="form-control answer-option">
-										</li>
-										<li class="list-group-item">
-											<span style="font-size: 1.5em" class="delete-answer-item glyphicon glyphicon-remove-circle"></span>
-											<input style="margin-left: 10px; display:inline; width: 150px" class="form-control answer-option">
-										</li>
-										<li style="display:table; text-align:center" class="add-new-answer-item list-group-item">
-											<span style="display:table-cell; vertical-align:middle; height: 5px
-												font-size: 1em" class="glyphicon glyphicon-chevron-right"></span>
-										</li>
-									</ul>		 				
-				 				
-								</div>	
-							
-								<div>
-									<span id="addNewQuestion" style="margin:10px 0px 10px 10px; font-size: small" 
-									data-content="Add question" class="popover1 glyphicon glyphicon-plus"></span>
-								</div>
-							</div><!-- end job-questions-new -->
-						</div>
-					
-						<div id="addedQuestions">													
-						</div>
-					
-					</div> <!-- end job-questions-container -->
-			
+												</div>					
+											</div>
+										</div>	
+									</div>	
+								</div>							
+<!-- 							</div>	 -->
+						</div><!-- end row -->
+<!-- 					</div> -->
 				</div>
-			</div>
-		</div><!-- end row -->
-	</div><!-- end container -->
+			</div> 
+		</div><!-- end job cart container -->	
+		
+<!-- 		<div> kasdjfl;aksdjfl;kasdjfl;kdasjf;klasdjf; k</div> -->
+		<div id="jobInfoContainer">
+			<div class="container" >
+				<div class="row" style="margin-top: 10px;" >
+					<div id="jobGeneralContainer" class="col-sm-6">
+						<form>
+							<div class="" >
+							
+								<div class="job-sub-info-container">
+									<h3>General</h3>
+									<div class="job-sub-info">
+										<fieldset class="form-group">
+											<label for="jobName" class="form-control-label">Name</label>
+											<input name="jobName" type="text"
+												class="post-job-input form-control" id="jobName"></input>
+											<div id="invalidJobName" class="invalid-message" style="display: none">Job names must be unique</div>
+										</fieldset>
+											
+										<fieldset class="form-group">
+											<label for="jobDescription" class="form-control-label">Description</label>
+											<textarea name="jobDescription" class="form-control"
+												id="jobDescription" rows="5"></textarea>
+										</fieldset>
+									</div>
+								</div>
+							
+								
+								<div class="job-sub-info-container">
+									<h3>Location</h3>
+									
+									<div class="job-sub-info">
+										<fieldset class="form-group">
+											<label for="streetAddress" class="form-control-label">Street Address</label>
+											<input name="streetAddress" type="text"
+												class="post-job-input form-control" id="streetAddress"></input>
+										</fieldset>
+										
+										<fieldset class="form-group">
+											<label for="city" class="form-control-label">City</label>
+											<input name="city" type="text"
+												class="post-job-input form-control" id="city"></input>
+										</fieldset>
+										
+										<fieldset class="form-group">
+											<label for="state" class="form-control-label">State</label>
+												
+											<div class="post-job-input post-job-select-container">
+												<select style="display: block" id="state" name="state"
+												 class="post-job-select post-job-input form-control"></select>	
+			<!-- 									<input name="state" type="text" -->
+			<!-- 										class="post-job-input form-control" id="state"></input> -->
+											</div>
+										</fieldset>
+										
+										<fieldset class="form-group">
+											<label for="zipCode" class="form-control-label">Zip Code</label>
+											<input name="zipCode" type="text"
+												class="post-job-input form-control" id="zipCode"></input>
+										</fieldset>
+									</div>
+								</div>
+								
+								<div class="job-sub-info-container">
+									<h3>Date and Time</h3>					
+									
+									<div class="job-sub-info">
+										<fieldset class="form-group">
+											<label for="dateRange" class="form-control-label">Start and End Dates</label>
+											<input style="width: 250px" class="form-control" type="text"
+												id="dateRange" value=""/>
+				
+										</fieldset>								
+										
+										<fieldset class="form-group">
+											<label for="startTime" class="form-control-label">Start Time</label>
+											<input name="startTime" type="text"
+												class="post-job-input form-control time ui-timepicker-input"
+													autocomplete="off" id="startTime"></input>
+										</fieldset>
+					
+										<fieldset class="form-group">
+											<label for="endTime" class="form-control-label">Estimated End Time</label>
+											<input name="endTime" type="text"
+												class="post-job-input form-control time ui-timepicker-input"
+													autocomplete="off" id="endTime"></input>
+										</fieldset>
+										
+									</div>
+								</div>
+								
+								
+								
+								<div id="categoryContainer" class="job-sub-info-container">
+									<h3>Categories</h3>				
+									<div id="invalidCategoryInput-None" class="invalid-message"
+										style="display: none">At least one category must be selected</div>
+									<div id="invalidCategoryInput-TooMany" class="invalid-message" 
+										style="display: none">A maximum of five categories can be selected</div>										
+<!-- 									Eventaully render this with jstl -->
+<!-- 									//********************************************************************************* -->
+<!-- 									//********************************************************************************* -->
+									<div class="job-sub-info">
+										<div id="selectedCategories" style="margin-bottom: 5px">
+										</div>
+									
+									
+										<ul id="categoryTree" class="list-group ">
+											<li class="category-list-item list-group-item"
+												data-cat-id="1" data-super-cat-id="0" data-level="0"
+												data-sub-categories-set="0">
+												<span class="category-name level-zero">Concrete</span>	
+												<span style="font-size: 1em"
+													class="add-category glyphicon glyphicon-plus"></span>																					 
+												<span style="font-size: 1em" 
+													class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+											
+											</li>
+										
+											<li class="category-list-item list-group-item"
+											data-cat-id="3" data-super-cat-id="0" data-level="0"
+											data-sub-categories-set="0">
+												<span class="category-name level-zero">Construction</span>	
+												<span style="font-size: 1em" 
+													class="add-category glyphicon glyphicon-plus"></span>												 
+												<span style="font-size: 1em" 
+													class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+											
+											</li>
+											<li class="category-list-item list-group-item"
+											data-cat-id="2" data-super-cat-id="0" data-level="0"
+											data-sub-categories-set="0">
+												<span class="category-name level-zero">Landscape</span>	
+												<span style="font-size: 1em" 
+													class="add-category glyphicon glyphicon-plus"></span>												 
+												<span style="font-size: 1em" 
+													class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+											
+											</li>
+											
+											<li class="category-list-item list-group-item"
+											data-cat-id="9" data-super-cat-id="0" data-level="0"
+											data-sub-categories-set="0">											 
+												<span class="category-name level-zero">Snow Removal</span>
+												<span style="font-size: 1em" 
+													class="add-category glyphicon glyphicon-plus"></span>													
+												<span style="font-size: 1em" 
+													class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+											
+											</li>										
+										</ul>
+									</div>
+<!-- 									//********************************************************************************* -->
+<!-- 									//********************************************************************************* -->
+
+								</div>				
+							</div>
+						
+						
+						
+						</form>
+					</div> <!-- end job general container -->
+					
+					<div id="jobQuestionsContainer" class="col-sm-6">
+					
+						<div style="margin-left: 50px">
+							<div class="job-questions-label"  style="border-top-style: inset"><h3>Questions</h3>						
+							</div>
+								
+							<div class="job-sub-info" style="margin-left: 50px;">
+								
+								<div id="new-question-container-container">
+									<div id="new-question-container">					
+										<div class="question-formats-container post-job-select-container dropdown" style="margin-bottom: 10px">									 
+				
+											<select class="question-formats form-control" title="">
+											  <option selected value="-1" style="display: none">Select a question format</option>	
+											  <option class="answer-format-item" value="0">Yes or No</option>
+											  <option class="answer-format-item" value="1">Short Answer</option>
+											  <option class="answer-format-item" value="2">Single Answer</option>
+											  <option class="answer-format-item" value="3">Multiple Answer</option>
+											</select>
+				
+										</div>									
+										
+										<div class="new-question-text">
+											<textarea id="newQuestionText" style="display: inline; resize: none" name="question"
+												class="form-control" rows="2"></textarea>
+										</div>
+									
+										<div class="answer-option-list" style="display: none">
+											<h4>Answer List</h4>
+											<ul class="list-group" style="width: 225px; margin: 10px 0px 5px 0px">
+												<li class="list-group-item">
+													<span style="font-size: 1.5em" class="delete-answer-item glyphicon glyphicon-remove"></span>
+													<input style="margin-left: 10px; display:inline; width: 150px" class="form-control answer-option">
+												</li>
+												<li class="list-group-item">
+													<span style="font-size: 1.5em" class="delete-answer-item glyphicon glyphicon-remove"></span>
+													<input style="margin-left: 10px; display:inline; width: 150px" class="form-control answer-option">
+												</li>
+												<li style="display:table; text-align:center" class="add-new-answer-item list-group-item">
+													<span style="display:table-cell; vertical-align:middle; height: 5px
+														font-size: 1em" class="glyphicon glyphicon-chevron-right"></span>
+												</li>
+											</ul>		 				
+						 				
+										</div>	
+									
+										<div>
+											<span id="addNewQuestion" style="margin:10px 0px 10px 10px; font-size: small" 
+											data-content="Add question" class="popover1 glyphicon glyphicon-plus"></span>
+										</div>
+									</div><!-- end job-questions-new -->
+								</div>
+							
+								<div id="addedQuestions">													
+								</div>
+							
+							</div> 
+					
+						</div>
+					</div> <!-- end job questions container -->
+				</div><!-- end row -->
+			</div><!-- end container -->
+		</div><!-- end job info container -->
+	</div><!-- end post job container -->
 	
 <!-- 			This is the template html for added questions -->
 <!-- ********************************************************************************************* -->
@@ -348,29 +528,99 @@
 		</div>						
 	</div>
 </div>	
-
-
 <!-- ********************************************************************************************* -->
+
+
+<div style="display: none">
+	<ul>
+		<li id="categoryListItemTemplate" style="display: none" 
+			class="category-list-item list-group-item" 
+			data-cat-id="1" data-super-cat-id="0" data-level="-1"
+			data-sub-categories-set="0">
+			<span class="category-name indent">Category Name</span>	
+			<span style="font-size: 1em" 
+				class="add-category glyphicon glyphicon-plus"></span>												 
+			<span style="font-size: 1em" 
+				class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+		
+		</li>	
+	</ul>
+</div>
+
+<!-- Modals -->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+	<div id="confirmJobDelete" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-sm">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Confirmation</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>Continue to delete job?</p>
+	        
+	        <div class="checkbox" style="margin: 10px 0px 0px 15px">
+	        	<label>
+	        		<input id="disableJobDeleteAlert" data-confirmed="0" type="checkbox"> Disable alert
+	        	</label>
+	        </div>	        
+	      </div>
+	      <div class="modal-footer">
+	        <button id="confirmJobDelete" type="button" class="btn btn-default" 
+	        	data-dismiss="modal" onclick="deleteJob(1)">Yes</button>
+	        <button id="cancelJobDelete" type="button" class="btn btn-default"
+	        	data-dismiss="modal" onclick="deleteJob(0)">No</button>
+	      </div>
+	    </div>
+	
+	  </div>
+	</div>	
+
+	<div id="confirmJobSubmit" class="modal fade" role="dialog">
+	  <div class="modal-dialog modal-sm">
+	
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Confirmation</h4>
+	      </div>
+	      <div class="modal-body">
+	        <p>Complete job posting and submit jobs?</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button id="confirmJobSubmit" type="button" class="btn btn-default" 
+	        	data-dismiss="modal" onclick="submitJobs(1)">Yes</button>
+	        <button id="cancelJobSubmit" type="button" class="btn btn-default"
+	        	data-dismiss="modal" onclick="submitJobs(0)">No</button>
+	      </div>
+	    </div>
+	
+	  </div>
+	</div>	
+	
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
+
+
 
 
 <script>
 
 	var pageContext = "postJob";
-	var jobs = [];
+	var jobs = [];	
 	var jobCount = 0;
 	var questions = [];
 	var questionCount = 0;
-
-	getCategoriesBySuperCat('0', function(response, categoryId) {
-		appendCategories(categoryId, "T", response, function() {
-		});
-	})
+	var questionContainerIdPrefix = 'question-';
+	
+		
 
 	$(document).ready(function() {
-		
-		var $clonedNewQuestionContainer = $($("#new-question-container").clone(true, true));
-
-
+	
 		$('#startTime').timepicker({
 			'scrollDefault' : '7:00am'
 		});
@@ -378,341 +628,179 @@
 			'scrollDefault' : '5:00pm'
 		});
 		
-		$("#saveChanges").click(function(){			
-			
-			var jobId = $(this).val();
-			var job = getJobById(jobId, jobs);			
-		
-			//Validate job name
-			var requestedName = document.getElementsByName('jobName')[0].value;
-			var result = 0;
-			
-			//If job name changed, verify it is still unique
-			if(requestedName != job.jobName){
-				result = validateJobName(requestedName, jobs);
-			}
-				
-			if(result == 0){
-				job = setJobInfo(job);
-				$("#addedJobs button[value=" + jobId + "]").html(job.jobName);
-				
-				$("#startNewJob").attr("disabled", false)
-				$("#startSimilarJob").attr("disabled", false)
-				$("#addJob").attr("disabled", true);
-				$("#saveChanges").attr("disabled", true);
-				$("#deleteJob").attr("disabled", false);
-				$("#editJob").attr("disabled", false);
-				disableFromControls(true);
-			}
-			
-			
-
-		})
-		
-		$("#editJob").click(function(){
-			//De-activate certain job actions
-			$("#startNewJob").attr("disabled", false)
-			$("#startSimilarJob").attr("disabled", false)
-			$("#addJob").attr("disabled", true);
-			$("#saveChanges").attr("disabled", false);
-			$("#deleteJob").attr("disabled", false);
-			$("#editJob").attr("disabled", true);
-			
-			disableFromControls(false);
-// 			$("#jobInfoContainer").find(".form-control").each(function(){
-// 				$(this).attr("disabled", false);
-// 			})
-		})
-		
-		$("#deleteJob").click(function(){
-			
-			
-			//Get the selected job
-			var jobId = $(this).val();
-			var job = getJobById(jobId, jobs);
-
-			//Display the job's info
-			job = setJobInfo(job);
-
-			//Remove the job
-			$("#addedJobs button[value=" + jobId + "]").remove();			
-			var i;
-			for(i = 0; i < jobs.length; i++){
-				if(jobs[i].id == jobId){
-					jobs.splice(i, 1);
-				}
-			}
-			
-			if(jobs.length == 0){
-				$("#addedJobsContainer").hide();	
-				disableFromControls(false);
-			}
-								
-			//De-activate certain job actions
-			$("#startNewJob").attr("disabled", false)
-			$("#startSimilarJob").attr("disabled", true)
-			$("#addJob").attr("disabled", false);
-			$("#saveChanges").attr("disabled", true);
-			$("#deleteJob").attr("disabled", true);
-			$("#editJob").attr("disabled", true);
-			
-			clearPostJobInputs();
-			
-		})
-		
-		$("#startNewJob, #startSimilarJob").click(function(){
-			
-			if($(this).attr('id') == "startNewJob"){
-				clearPostJobInputs();	
-			}
-			
-			//De-activate certain job actions
-			$("#startNewJob").attr("disabled", false)
-			$("#startSimilarJob").attr("disabled", true)
-			$("#addJob").attr("disabled", false);
-			$("#saveChanges").attr("disabled", true);
-			$("#deleteJob").attr("disabled", true);
-			$("#editJob").attr("disabled", true);
-			
-			disableFromControls(false);
-			deactiveAddedJobButtons();
-			removeInvalidFormControlSyles();
-		})
-
-		$("#addedJobsContainer").on('click', ".added-job", function(){
-			
-			removeInvalidFormControlSyles();
-			disableFromControls(true);
-			
-				var jobId = $(this).val();		
-				var job = {};
-				job = getJobById(jobId, jobs);
-				
-				//Set button to active
-				deactiveAddedJobButtons();		
-				$(this).addClass("active");
-
-				//Store the selected jobs id in case future action is taken
-				$("#saveChanges").val(jobId);
-				$("#deleteJob").val(jobId);
-				
-				//De-activate certain job actions
-				$("#startNewJob").attr("disabled", false);
-				$("#startSimilarJob").attr("disabled", false);
-				$("#addJob").attr("disabled", true);
-				$("#saveChanges").attr("disabled", true);
-				$("#deleteJob").attr("disabled", false);
-				$("#editJob").attr("disabled", false);
-				
-				//Update elements' value
-				document.getElementsByName('jobName')[0].value = job.jobName;			
-				document.getElementsByName('streetAddress')[0].value = job.streetAddress;
-				document.getElementsByName('city')[0].value = job.city;
-				document.getElementsByName('state')[0].value = job.state ;
-				document.getElementsByName('zipCode')[0].value = job.zipCode;
-				document.getElementsByName('jobDescription')[0].value = job.description;
-				document.getElementsByName('userId')[0].value = job.userId;				
-				$("#dateRange").data('daterangepicker').startDate = job.stringStartDate;
-				$("#dateRange").data('daterangepicker').endDate = job.stringEndDate;
-				$("#dateRange").val(job.stringStartDate.format('MM/DD/YYYY') + ' - ' + job.stringEndDate.format('MM/DD/YYYY'));
-				$("#startTime").val(job.stringStartTime);
-				$("#endTime").val(job.stringEndTime);
-				
-				//Reset all question check marks to disabled
-				var i;
-				var $check;
-				var questionElements = $("#addedQuestions").find(".added-question");
-				for(i = 0; i < questionElements.length; i++){
-					 $check = $($(questionElements[i]).find(".toggle-question-activeness")[0]);
-					if ($check.hasClass('enable-question') == 1){
-						$check.removeClass('enable-question');
-						$check.addClass('disable-question');
-					}
-				}
-				
-				//Enable the selected questions for the active job
-				for(i = 0; i < job.selectedQuestionIds.length; i++){
-					$check = $($("#" + job.selectedQuestionIds[i]).find(".toggle-question-activeness")[0]);
-					$check.removeClass("disable-question");
-					$check.addClass("enable-question");
-				}
-			
-		
-			
-			
-		})
-		
-		$(".job-questions-added-apply").click(function(){
-			if($(this).hasClass("btn-default")){				
-				$(this).addClass("btn-primary")
-				$(this).removeClass("btn-default")
-			}else{
-				$(this).removeClass("btn-primary")
-				$(this).addClass("btn-default")
-			}
-		})
-		
-		$("#new-question-container-container").on("click", "#addNewQuestion", function(e){
-			
-			
-			if(validateAddQuestionInputs() == 1){
-
-				var selectedAnswerFormatValue = $($("#new-question-container").find("select")[0]).find(":selected").val();
-				var questionText = $("#newQuestionText").val();
-				
-	
-				
-				if (selectedAnswerFormatValue > -1 && questionText != "" ){
-				
-		// 			event.stopPropagation();
-					e.preventDefault();
-					
-					var newId = 'question-' + questionCount;
-					
-					$("#added-question-template-container .added-question-template").clone().appendTo($("#addedQuestions"));			
-					var $addedQuestion = $($("#addedQuestions").find(".added-question-template")[0]);
-					$addedQuestion.attr('id', newId);
-						
-					$addedQuestion.removeClass("added-question-template");
-					$addedQuestion.addClass("added-question");
-					$addedQuestion.find('.question-text').val(questionText);
-					
-					var $addedQuestionInfoContainer = $($addedQuestion.find(".question-info-container")[0]);
-					$("#new-question-container .question-formats-container").clone().appendTo($addedQuestionInfoContainer);
-					$("#new-question-container .answer-option-list").clone(true, true).appendTo($addedQuestionInfoContainer);
-					
-					$($addedQuestion.find("select")[0]).val(selectedAnswerFormatValue).change();
-																		 
-					$("#new-question-container").remove();
-		
-					$clonedNewQuestionContainer.clone(true, true).appendTo($("#new-question-container-container"));
-				
-					questionCount += 1;
-		
-					setPopovers();
-
-				}
-			
-			}
-
-		})
-		
-		//This must come AFTER the "$("#addNewQuestion").on(...)" event has been bound to the
-		//add new question element.
-// 		var $cloned = $("#questionFormats").clone(true, true);
-
-		$("body").on("click", ".add-new-answer-item", function(e){
-// 			e.stopPropagation();
-			var $clonedClone = $clonedAnswerListItem.clone(true, true);
-			$clonedClone.insertBefore($(this));
-		})		
-		var $clonedAnswerListItem = $($($("#new-question-container").find(".list-group-item")[0]).clone(true, true));
-	
-		$("body").on("click", ".delete-question", function(){
-			$(this).closest(".added-question").remove();	
-		})
-		
-		$("body").on("click", ".delete-answer-item", function(){
-			$(this).parent().remove();
-		})
-		
-		$("#addedQuestions").on("click", ".toggle-question-info-container", function(){
-		
-			var infoContainer = $(this).siblings(".question-info-container")[0];
-		
-			if( $(infoContainer).is(":visible") == true){
-				$(this).removeClass("glyphicon-menu-down");
-				$(this).addClass("glyphicon-menu-right");
-			}else{			
-				$(this).removeClass("glyphicon-menu-right");
-				$(this).addClass("glyphicon-menu-down");
-			}
-				
-			$(infoContainer).toggle();
-
-		})
-	
-// 		setPopovers();
-		
-// 		$('.popover1').popover({
-// 			trigger: "hover",
-// // 			selector: '.popover1',
-// 			delay: {
-// 				show: "500",
-				
-// 			}
-// 		});
-		
-		$('#addedQuestions').on('click', '.toggle-question-activeness', function(){
-			if($(this).hasClass("enable-question") == 1){
-				$(this).removeClass("enable-question");
-				$(this).addClass("disable-question");
-				this.setAttribute("data-content", "Enable question for current job posting");
-				
-			}else{
-				$(this).removeClass("disable-question");
-				$(this).addClass("enable-question");
-				this.setAttribute("data-content", "Disable question for current job posting");
-			}
-			
-			$(".popover1").popover('hide');
-		})
-		
-		$("#job-questions-container").on("change", "select", function(event) {
-			
-			event.stopPropagation();
-			
-			var selectedAnswerFormatValue = $($(this).find(":selected")).val();
-			var $answerList = $($(this).parent().siblings(".answer-option-list")[0]);
- 			
-			if (selectedAnswerFormatValue == 2
- 					|| selectedAnswerFormatValue == 3) {
-				
-				$answerList.show();
- 			} else {
- 				$answerList.hide();
- 			}
-
-			//If necessary, remove "invalid" css
-			validateSelectInput($(this).parent(), $(this).find(":selected").val());
-
- 		})
- 		
- 		$("body").on("change", ".post-job-select-container.invalid-select-input", function(){
- 			validateSelectInput($(this), $(this).find('.post-job-select').val());
- 		}) 	
- 		
- 		$("body").on("change", ".invalid-input-existence", function(){
- 			validateInputExistence($(this), $(this).val());
- 		}) 	 		
- 		
- 		
- 		$("#submitJobs").click(function(){
- 			var headers = {};
- 			headers[$("meta[name='_csrf_header']").attr("content")] = $(
- 					"meta[name='_csrf']").attr("content");
-
- 			$.ajax({
- 				type : "POST",
- 				url : "http://localhost:8080/JobSearch/jobs/post",
- 				headers : headers,
- 				contentType : "application/json",
-// 				dataType : "application/json", // Response
- 				data : JSON.stringify(jobs)
- 			}).done(function() {
- 				
- 				$('#home')[0].click();
- 			}).error(function() {
- 				alert("error submit jobs")
- 				$('#home')[0].click();
- 			});
- 		})
-
-
- 		
+ 		setPopovers();
  		setDateRange();
 		setStates();
+		
+		//Load the seed category's sub categories
+		var i;
+		var seedCategoryIds = [];
+		$("#categoryTree li").each(function(){
+			seedCategoryIds.push($(this).attr("data-cat-id"));
+		})		
+		getSubCategories(seedCategoryIds);
+		
+		$("#categoryTree").on("click", ".add-category", function(){
+			
+			if($(this).hasClass("disabled-category") == 0){
+
+				if(validateMaximumSelectedCategories() == 0){
+					var clickedCatId = $($(this).parent()).attr("data-cat-id");
+					
+					//Check if category has already been added
+					if($("#selectedCategories").find("[data-cat-id=" + clickedCatId + "]").length == 0){
+						var clickedCatName = $($(this).siblings(".category-name")[0]).text();
+						showCategory(clickedCatId, clickedCatName);
+					}		
+					
+					validateMinimumSelectedCategories();
+				}
+			}
+
+		})
+		
+		$("#selectedCategories").on("click", ".remove-category", function(){
+			
+			if($(this).hasClass("disabled-category") == 0){
+				var clickedCatId = $($(this).parent()).attr("data-cat-id");
+				$($("#selectedCategories").find("[data-cat-id=" + clickedCatId + "]")[0]).remove();
+				validateMaximumSelectedCategories();
+			}
+		})
+		
+		$("#categoryTree").on("click", ".show-sub-categories", function(){
+		
+			if($(this).hasClass("disabled-category") == 0){
+
+				var i;
+				var li = $(this).parent()
+				
+				//Expand the sub categories
+				if($(li).hasClass("expanded") == 0){
+					
+					var subCategories = $("#categoryTree").find("[data-super-cat-id='" + $(li).attr("data-cat-id") + "']");
+					var subCategoryIds = [];
+					for(i = 0; i < subCategories.length; i++){
+						var subCategory = $(subCategories[i]); 
+						$(subCategory).show();
+						
+						//Build a list of sub categories whose sub categories need to be set.
+						//Only add the sub category if it's sub categories have NOT yet been set.
+						//When a category is expanded, then closed, then expanded, the sub categories
+						//must not be set again. 
+						if($(subCategory).attr("data-sub-categories-set") == "0"){
+							subCategoryIds.push($(subCategories[i]).attr("data-cat-id"));
+						}
+					}	
+					
+					//Get the clicked category's sub category's sub categories
+					getSubCategories(subCategoryIds)	
+	
+					$(li).addClass("expanded");
+					$(this).removeClass("glyphicon-menu-down");
+					$(this).addClass("glyphicon-menu-up");
+					
+				//Hide **ALL** the sub categories
+				}else{
+					var clickedLevel = $(li).attr("data-level");
+					var allBelowListItems = $(li).nextAll(".category-list-item");
+					
+					//While the list items' level is greater than the clicked level,
+					//hide the list items.
+					//As soon as a list item's level is less than or equal to the clicked level,
+					//then exit - all the sub categories have been found.
+					for(i = 0; i < allBelowListItems.length; i++){
+						if($(allBelowListItems[i]).attr("data-level") > clickedLevel){
+							var $subItem = $(allBelowListItems[i]);						
+	
+							if($subItem.hasClass("expanded") == 1){
+								$subItem.removeClass("expanded");
+								
+								var $showSubItem = $($subItem.find(".show-sub-categories")[0]);
+								$showSubItem.addClass("glyphicon-menu-down");
+								$showSubItem.removeClass("glyphicon-menu-up");							
+							}
+							$subItem.hide();
+						}else{
+							//Exit for loop
+							i = allBelowListItems.length;
+						}
+						
+					}
+					$(li).removeClass("expanded");
+					$(this).addClass("glyphicon-menu-down");
+					$(this).removeClass("glyphicon-menu-up");
+				}
+			}
+		})
 	})
+	
+	function showCategory(id, name){		
+		$("#selectedCategories").append("<button disabled type='button' class='btn' data-cat-id="	
+										+  id + ">" + name + "<span class='remove-category glyphicon"
+										+ " glyphicon-remove'></span></button>");
+	}
+
+
+	function getSubCategories(categoryIds) {
+
+		if(categoryIds.length > 0){			
+		
+			var parameter = "?";
+			for(var i = 0; i < categoryIds.length; i++){
+				
+				if(i > 0){
+					parameter += "&";
+				}
+				parameter += "categoryId=" + categoryIds[i];	
+			}
+
+			$.ajax({
+				type : "GET",
+				url : environmentVariables.LaborVaultHost + '/JobSearch/categories/subCategories' + parameter,
+				dataType : "json",
+				success : _success,
+				error : _error
+			});
+	
+			function _success(subCategoryDTOs) {
+// 				salert(subCategoryDTOs)
+				for(i = 0; i < subCategoryDTOs.length; i++){
+					
+					var dto = subCategoryDTOs[i];
+					var categorySelector = "[data-cat-id='" + dto.categoryId + "']"
+					var $category = $($("#categoryTree").find(categorySelector)[0]);
+					$category.attr("data-sub-categories-set", "1");
+
+					//Clone
+					var $eSubCategory = $($("#categoryListItemTemplate").clone(true, true));
+
+					//Set the sub category's html				
+					var $eSpan = $($eSubCategory.find(".indent")[0]); 	
+					var subCategoryLevel = parseInt($category.attr("data-level")) + 1;
+					$eSpan.text(dto.subCategoryName);		
+					$eSubCategory.attr('id', "");	
+					$eSubCategory.attr("data-cat-id", dto.subCategoryId);
+					$eSubCategory.attr("data-super-cat-id", dto.categoryId);					
+					$eSubCategory.attr("data-level", subCategoryLevel);
+					$eSpan.addClass("level-" + subCategoryLevel);
+					
+					if(dto.subSubCategoryCount == 0){
+						$($eSubCategory.find(".glyphicon-menu-down")[0]).remove();
+					}
+
+					//Insert
+					$eSubCategory.insertAfter(categorySelector);					
+				}
+			}
+	
+			function _error() {
+				alert("error getCategoriesBySuperCat 999");
+			}
+		
+		}
+		
+	}
 	
 	function setDateRange(){
 		
@@ -732,84 +820,34 @@
 		      $(this).val(picker.startDate.format('MM/DD/YYYY') + ' - ' + picker.endDate.format('MM/DD/YYYY'));
 		      
 		      //This event handles all changes for the date range picker.
-		      //Therefore, the validation is also here.
+		      //Therefore, the validation is also here so, if necessary, invalid css sytling
+		      //can be removed when the user selects a valid date range.
 		      validateInputExistence($(this), $(this).val());
 		  });
 
-// 		  $('#dateRange').on('cancel.daterangepicker', function(ev, picker) {
-// 		      $(this).val('');
-// 		  });		
-// 		alert($e.data('daterangepicker').startdate)
-
 	}
 	
-	function disableFromControls(trueFalse){
-		
-		$("#jobInfoContainer").find(".form-control").each(function(){
-			$(this).attr("disabled", trueFalse);
-		})		
-	}
 	
-	function removeInvalidFormControlSyles(){
 		
-		$("#jobInfoContainer").find(".invalid-input-existence").each(function(){		
-			$(this).removeClass("invalid-input-existence");
-		})
-		
-		$("#jobInfoContainer").find(".invalid-select-input").each(function(){		
-			$(this).removeClass("invalid-select-input");
-		})
-	}
-	
 	function setPopovers(){
 
 		$('.popover1').popover({
 			trigger: "hover",
 			delay: {
-				show: "500",		
+				show: "250",		
 			}
 		});
 		
-		
-	}
-	
-	function deactiveAddedJobButtons(){
-		$("#addedJobs").find('button').each(function(){
-			if($(this).hasClass("active") == 1){
-				$(this).removeClass("active");
+		$('.popoverInstant').popover({
+			trigger: "hover",
+			delay: {
+				show: "0",		
 			}
-		})	
-	}
-
-	function addJobToCart(){
+		});		
 		
-		//Validate job name
-// 		var $e = $(document.getElementsByName('jobName')[0]);
-// 		var result = 0;
-// 		result = validateInputExistence($e, $e.val());
-		//If job name changed, verify it is still unique
-// 		if(result == 0){
-			
 		
-			
-// 		if(validatePostJobInputs(jobs) == 1){
-
-			var job = {};
-			job = setJobInfo(job);
-			job.id = jobCount;
-			
-			jobs.push(job);
-			$("#addedJobsContainer").show();
-			$("#addedJobs").append(
-					'<button value=' + jobCount + ' type="button" class="added-job btn btn-info">' + job.jobName + '</button>')
-			
-			clearPostJobInputs();		
-			jobCount++
-			
-			setDateRange();
-// 		}
 	}
-	
+		
 	function setStates(){
 		var $e = $("#state"); 
 		$e.append('<option value="" selected style="display: none"></option>');
