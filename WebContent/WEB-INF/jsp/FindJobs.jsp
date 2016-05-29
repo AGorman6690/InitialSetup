@@ -18,6 +18,39 @@
 
 <body>
 	<input type="hidden" id="userId" value="${user.userId}" />
+	
+	<div class="container" style="height: 1000px">
+		<div class="row">
+			<div class="col-sm-3">
+				
+			</div>
+			
+			<div class="col-sm-6">
+						
+			</div>
+						
+			<div class="col-sm-3">
+			
+			</div>
+		
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	<div class="container">
 		<h1>Find Job</h1>
