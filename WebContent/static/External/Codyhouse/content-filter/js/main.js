@@ -47,7 +47,7 @@ jQuery(document).ready(function($){
 	
 	//close filter dropdown inside lateral .cd-filter 
 	$('.cd-filter-block h4').on('click', function(){
-		$(this).toggleClass('closed').siblings('.cd-filter-content').slideToggle(300);
+		$(this).toggleClass('closed').siblings('.cd-filter-content-container').slideToggle(300);
 	})
 
 	//fix lateral filter and gallery on scrolling
@@ -97,10 +97,10 @@ jQuery(document).ready(function($){
 		};
 	})();
 
-	$(".cd-filter-content input[type='search']").keyup(function(){
+	$(".cd-filter-content-container input[type='search']").keyup(function(){
 	  	// Delay function invoked to make sure user stopped typing
 	  	delay(function(){
-	    	inputText = $(".cd-filter-content input[type='search']").val().toLowerCase();
+	    	inputText = $(".cd-filter-content-container input[type='search']").val().toLowerCase();
 	   		// Check to see if input field is empty
 	    	if ((inputText.length) > 0) {            
 	      		$('.mix').each(function() {
