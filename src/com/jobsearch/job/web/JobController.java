@@ -50,16 +50,27 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress,
-			@RequestParam(value = "categoryId") int[] categoryIds, @RequestParam String startTime,
-			@RequestParam String endTime, @RequestParam boolean beforeStartTime, @RequestParam boolean beforeEndTime,
-			@RequestParam String startDate, @RequestParam String endDate, @RequestParam boolean beforeStartDate,
-			@RequestParam boolean beforeEndDate, @RequestParam(value = "day") List<String> workingDays,
-			@RequestParam double duration, @RequestParam boolean lessThanDuration, @RequestParam int returnJobCount) {
-
+	public String getFilteredJobs(@RequestParam(required = true) int radius,
+			@RequestParam(required = true) String fromAddress,
+			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
+			@RequestParam(required = false) String startTime,
+			@RequestParam(required = false) String endTime,
+			@RequestParam(required = false) boolean beforeStartTime,
+			@RequestParam(required = false) boolean beforeEndTime,
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate,
+			@RequestParam(required = false) boolean beforeStartDate,
+			@RequestParam(required = false) boolean beforeEndDate,
+			@RequestParam(value = "day", required = false) List<String> workingDays,
+			@RequestParam(required = false, defaultValue= "-1") Double duration,
+			@RequestParam(required = false) boolean lessThanDuration,
+			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
+			{
+//
 		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
 				lessThanDuration, returnJobCount);
+
 
 		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
 															// endDate));

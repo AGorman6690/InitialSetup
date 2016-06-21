@@ -207,6 +207,10 @@ public class FilterJobRequestDTO {
 
 	}
 
+	public FilterJobRequestDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public Date getStartDate() {
 		return startDate;
 	}
