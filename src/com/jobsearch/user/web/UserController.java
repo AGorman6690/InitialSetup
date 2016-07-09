@@ -70,8 +70,24 @@ public class UserController {
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public ModelAndView viewFindEmployees(ModelAndView model) {
 		model.setViewName("FindEmployees");
+//		model.setViewName("Test");
 		return model;
 	}
+	
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public ModelAndView test(ModelAndView model) {
+		model.addObject("message", "This is the message yo");
+		model.setViewName("test");
+//		model.setViewName("Test");
+		return model;
+	}
+	
+	@RequestMapping(value = "/test2", method = RequestMethod.GET)
+	public ModelAndView test2(ModelAndView model) {
+		model.setViewName("test");
+//		model.setViewName("Test");
+		return model;
+	}	
 
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {

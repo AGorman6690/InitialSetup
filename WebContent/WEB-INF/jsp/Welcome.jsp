@@ -7,6 +7,9 @@
 
 <div class="container">
 
+	<button id="loadTest">test</button>
+	<div id="loadTestContent"></div>
+
 
 	<button id="debug1">Sign in as employer (UserId = 1)</button>
 	<button id="debug2">Sign in a employee (UserId = 2)</button>
@@ -18,6 +21,10 @@
 		<h1 style="display: inline; margin: auto">Labor Vault</h1>
 		<a href="./employees/find" style="display: inline; margin-left: 5px"
 			type="button" class="btn btn-info">Looking To Hire</a>
+		<a href="/JobSearch/WebContent/WEB-INF/jsp/FindEmployees.jsp" style="display: inline; margin-left: 5px"
+			type="button" class="btn btn-info">Looking To Hire gg</a>
+		<a href="./test" style="display: inline; margin-left: 5px"
+			type="button" class="btn btn-info">Test</a>
 	</div>
 	
 
@@ -131,6 +138,13 @@
 			$("#userName").val('2');
 			$("button[type=submit]")[0].click();
 
+		})
+		
+		$("#loadTest").click(function(){
+		   var actionName;
+		   actionName = environmentVariables.LaborVaultHost + '/JobSearch/test';
+		   $("#loadTestContent").load(actionName);  
+	
 		})
 
 	})
