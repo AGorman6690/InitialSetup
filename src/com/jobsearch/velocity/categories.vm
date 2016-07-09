@@ -1,0 +1,3 @@
+ #foreach($category in $categories)
+ 	<div>$category.name</div>
+ #end
