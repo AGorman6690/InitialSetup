@@ -1,9 +1,13 @@
 package com.jobsearch.category.service;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.category.repository.CategoryRepository;
@@ -19,13 +23,16 @@ public class CategoryServiceImpl {
 
 	@Autowired
 	JobServiceImpl jobService;
-	
+
 	@Autowired
 	UserServiceImpl userService;
 
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	@Qualifier("CategoriesVM")
+	Template categoryTemplate;
 
 	public void addCategoryToUser(int userId, int categoryId) {
 		repository.addCategoryToUser(userId, categoryId);
@@ -39,6 +46,18 @@ public class CategoryServiceImpl {
 		return repository.getCategoriesByJobId(jobId);
 	}
 
+	public String categoryTemplate(List<Category> categories) {
+		StringWriter writer = new StringWriter();
+
+		final VelocityContext context = new VelocityContext();
+
+		context.put("categories", categories);
+
+		categoryTemplate.merge(context, writer);
+
+		return writer.toString();
+	}
+
 	public Category getCategoryByJobId(int jobId) {
 		return repository.getCategoryByJobId(jobId);
 	}
@@ -48,60 +67,61 @@ public class CategoryServiceImpl {
 	}
 
 	public List<Category> getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(int categoryId) {
-		
+
 		List<Category> categories = repository.getSubCategories(categoryId);
-		
+
 		for (Category category : categories) {
 			category.setJobCount(jobService.getJobCountByCategory(category.getId()));
 			category.setSubJobCount(jobService.getSubJobCount(category.getId(), 0));
 		}
-		
+
 		return categories;
 	}
-	
+
 	public List<Category> getSubCategories(int categoryId) {
-		
-		return  repository.getSubCategories(categoryId);
+
+		return repository.getSubCategories(categoryId);
 	}
 
 	public Category getCategory(int categoryId) {
-		
+
 		return repository.getCategory(categoryId);
 	}
 
 	public List<SubCategoryRequestDTO> getSubCategoryDTOs(List<Integer> categoryIds) {
-		
-		if(categoryIds.size() > 0){
-			
-			List<SubCategoryRequestDTO> dtos = new ArrayList<SubCategoryRequestDTO>();
-			
-			//Get sub category DTOs for each category Id
-			for(int categoryId : categoryIds){
-				
 
-				List<Category> subCategories = this.getSubCategories(categoryId);				
-				for(Category subCategory : subCategories){
-					
+		if (categoryIds.size() > 0) {
+
+			List<SubCategoryRequestDTO> dtos = new ArrayList<SubCategoryRequestDTO>();
+
+			// Get sub category DTOs for each category Id
+			for (int categoryId : categoryIds) {
+
+				List<Category> subCategories = this.getSubCategories(categoryId);
+
+
+				String categoryHTML = categoryTemplate(subCategories);
+
+
+				for (Category subCategory : subCategories) {
+
 					SubCategoryRequestDTO dto = new SubCategoryRequestDTO();
-					dto.setCategoryId(categoryId);					
+					dto.setCategoryId(categoryId);
 					dto.setSubCategoryId(subCategory.getId());
 					dto.setSubCategoryName(subCategory.getName());
 					dto.setSubSubCategoryCount(getSubCategories(subCategory.getId()).size());
-					
+
 					dtos.add(dto);
-					
+
 				}
 			}
-			
+
 			return dtos;
-			
-		}else{
-			return null;	
+
+		} else {
+			return null;
 		}
-		
+
 	}
-
-
-
 
 }

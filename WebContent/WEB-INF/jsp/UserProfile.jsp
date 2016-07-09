@@ -110,12 +110,21 @@
 		<!-- end categories panel -->
 
 
-		<form:form enctype="multipart/form-data" action="./upload/resume"
+		<form:form enctype="multipart/form-data" action="/JobSearch/upload/resume"
 			method="POST">
-			<input id="file" type="file" />
-			<input type="hidden" name="${_csrf.parameterName}"
-				value="${_csrf.token}" />
-			<input id="" type="submit" value="Upload" />
+			<table>
+				<tr>
+					<td><input type="file" name="file"/></td>
+				</tr>
+				<tr>
+					<td><input id="" type="submit" value="Upload" /></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" /></td>
+
+				</tr>
+			</table>
 		</form:form>
 
 	</div>

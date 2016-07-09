@@ -1,9 +1,12 @@
 package com.jobsearch.user.web;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,8 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
@@ -129,7 +132,7 @@ public class UserController {
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
-				
+
 			}
 			user = userService.getProfile(user);
 			model.addObject("user", user);
@@ -156,9 +159,9 @@ public class UserController {
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
-			 @ModelAttribute("newPassword") JobSearchUser newPassword) {
+			@ModelAttribute("newPassword") JobSearchUser newPassword) {
 
-		userService.updatePassword(newPassword.getPassword(),user.getEmailAddress());
+		userService.updatePassword(newPassword.getPassword(), user.getEmailAddress());
 
 		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
@@ -190,7 +193,8 @@ public class UserController {
 			@RequestParam int radius, @RequestParam(value = "date") List<String> dates,
 			@RequestParam(value = "categoryId") List<Integer> categoryIds) {
 
-		FindEmployeesRequestDTO findEmployeesRequest = new FindEmployeesRequestDTO(city, state, zipCode, radius, dates, categoryIds);
+		FindEmployeesRequestDTO findEmployeesRequest = new FindEmployeesRequestDTO(city, state, zipCode, radius, dates,
+				categoryIds);
 
 		List<JobSearchUser> employees = userService.findEmployees(findEmployeesRequest);
 
@@ -225,10 +229,12 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
-	public void uploadResume(@RequestParam("file") MultipartFile file) {
+	public void uploadResume(@RequestParam(value = "file") MultipartFile file) throws IOException {
 
 		if (file != null) {
-			System.out.println(file.getName());
+			ByteArrayInputStream stream = new   ByteArrayInputStream(file.getBytes());
+			String myString = IOUtils.toString(stream, "UTF-8");
+			System.out.println(myString);
 		}
 	}
 
