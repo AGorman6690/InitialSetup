@@ -1,11 +1,15 @@
 package com.jobsearch.job.service;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.model.GeocodingResult;
@@ -18,6 +22,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class JobServiceImpl {
@@ -33,6 +38,10 @@ public class JobServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	@Qualifier("FilterJobsVM")
+	Template filterJobsTemplate;
 
 	public void addPosting(SubmitJobPostingRequestDTO postingDto) {
 
@@ -239,10 +248,24 @@ public class JobServiceImpl {
 
 		return job;
 	}
+	
+	public String getFilterdJobsResponseHtml(List<Job> filteredJobs, FilterJobRequestDTO request){
+		
+		return getFilterJobsTemplate(filteredJobs, request);
+	}
 
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter) {
 		// TODO Auto-generated method stub
-
+		
+		//************************************************************
+		//************************************************************
+		//The user's requested locations should be cached somewhere with 
+		//either cookies or a global array on the client side.
+		//This would put less load on the Google API quota.
+		//Or a table can be created that stores the lat/lng for all requested
+		//city/states/zip code
+		//************************************************************
+		//************************************************************
 		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
 
@@ -276,7 +299,9 @@ public class JobServiceImpl {
 		if (filteredJobs != null) {
 			for (Job job : filteredJobs) {
 				job.setDistanceFromFilterLocation(
-						GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()));
+						MathUtility.round(
+								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
+								1, 0));
 				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 			}
@@ -289,6 +314,21 @@ public class JobServiceImpl {
 		// //the address is ambiguous
 		// return null;
 		// }
+	}
+	
+	public String getFilterJobsTemplate(List<Job> filteredJobs, FilterJobRequestDTO request){
+		
+		StringWriter writer = new StringWriter();
+		
+		final VelocityContext context = new VelocityContext();
+		
+		context.put("request", request);
+		context.put("jobs", filteredJobs);
+		
+		filterJobsTemplate.merge(context, writer);
+		
+		return writer.toString();
+		
 	}
 
 }

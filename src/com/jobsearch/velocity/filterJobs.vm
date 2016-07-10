@@ -1,0 +1,41 @@
+ 
+ 
+ <div id="requestOrigin" data-lat="$request.lat" data-lng="$request.lng" data-radius="$request.radius"></div>
+ #foreach($job in $jobs)
+ 	<div id="job-$job.id" class="job" data-lat="$job.lat" data-lng="$job.lng">
+		<div class="job-header">
+			<span class="job-name">$job.jobName</span>
+			<span> - </span>
+			<div class="job-category-container">
+			#foreach($category in $job.categories)
+				<span class="job-category">$category.name</span>
+				#if($foreach.hasNext )
+				<span class="spacer">.</span>
+				#end
+			#end
+			</div>
+		</div>
+		<div class="job-body">
+			<div class="job-description less-description">
+				Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+				Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+			</div>
+			<div class="show-more-less"><span class="plus-minus glyphicon glyphicon-plus"></span>
+				<span class="show-more-less-text"> Show more</span></div>
+			<div class="job-dates-times">
+				<div class="start-date-time">
+					##<span class="bold">Start</span> - $date.format("E, M-d, h:m a", $job.startDate) $job.startTime
+					<span class="bold">Start</span> - $job.startDate $job.startTime						 
+				</div>
+				<div class="end-date-time">
+					<span class="bold">End</span> - $job.endDate $job.endTime
+				</div>
+			</div>	
+			<div class="job-location">$job.city, $job.state - $job.distanceFromFilterLocation miles</div>
+		</div>
+		
+		<div class="job-footer">
+		
+		</div>
+	</div>
+ #end

@@ -1,5 +1,6 @@
 package com.jobsearch.job.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
+import com.jobsearch.job.service.FilterJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -48,6 +50,39 @@ public class JobController {
 		jobService.addPosting(postingDto);
 	}
 
+//	@RequestMapping(value = "/jobs/filter_OLD", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getFilteredJobs_OLD(@RequestParam(required = true) int radius,
+//			@RequestParam(required = true) String fromAddress,
+//			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
+//			@RequestParam(required = false) String startTime,
+//			@RequestParam(required = false) String endTime,
+//			@RequestParam(required = false) boolean beforeStartTime,
+//			@RequestParam(required = false) boolean beforeEndTime,
+//			@RequestParam(required = false) String startDate,
+//			@RequestParam(required = false) String endDate,
+//			@RequestParam(required = false) boolean beforeStartDate,
+//			@RequestParam(required = false) boolean beforeEndDate,
+//			@RequestParam(value = "day", required = false) List<String> workingDays,
+//			@RequestParam(required = false, defaultValue= "-1") Double duration,
+//			@RequestParam(required = false) boolean lessThanDuration,
+//			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
+//			{
+////
+//		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+//				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
+//				lessThanDuration, returnJobCount);
+//
+//
+//		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
+//															// endDate));
+//
+//		// Set the filter criteria specified by user
+//
+//		return JSON.stringify(filter);
+//
+//	}
+	
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
 	public String getFilteredJobs(@RequestParam(required = true) int radius,
@@ -66,20 +101,36 @@ public class JobController {
 			@RequestParam(required = false) boolean lessThanDuration,
 			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
 			{
-//
-		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+
+		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
 				lessThanDuration, returnJobCount);
 
+		
+		//*******************************************************************
+		//For each job, imbed the lat/lnt its div.
+		//Then set the map marders from these values
+		//Remove the FilterJobResponseDTO if this works
+		//*******************************************************************
+		
+		FilterJobResponseDTO response = new FilterJobResponseDTO();
+		
+		//From the request, set the jobs	
+		//response.setJobs(jobService.getFilteredJobs(request));
+		List<Job> filteredJobs = new ArrayList<Job>();
+		filteredJobs = jobService.getFilteredJobs(request);
+		
+		//Set the html to render
+		response.setHtml(jobService.getFilterdJobsResponseHtml(filteredJobs, request));
+		
+		//Send back some of the request info in order to set the map
+//		response.setRequestedLat(request.getLat());
+//		response.setRequestedLng(request.getLng());
+//		response.setRequestedRadius(request.getRadius());
+//		
+		return response.getHtml();
 
-		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
-															// endDate));
-
-		// Set the filter criteria specified by user
-
-		return JSON.stringify(filter);
-
-	}
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)

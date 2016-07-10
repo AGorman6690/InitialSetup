@@ -17,6 +17,7 @@
 	margin:0px 0px 5px 0px;
 	
 }
+
 .job-body{
 	margin:0px 10px 5px 10px;
 	
@@ -33,4 +34,28 @@
 
 #jobContainerTemplate{
 /* 	display:none;	 */
+}
+
+.less-description{
+	height:60px;
+	overflow: hidden;
+}
+
+.more-description{
+	overflow:auto;
+/* 	overflow-x:hidden; */
+}
+
+.exceeds-max-description{
+	height:180px;
+}
+
+.show-more-less{
+	margin:5px 0px 5px 10px;
+	font-size:12px;
+	cursor:pointer;
+}
+
+#requestOrigin{
+	display:none;
 }

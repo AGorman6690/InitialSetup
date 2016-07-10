@@ -7,8 +7,8 @@
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-<!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
-<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Gitman_Bros.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Jobs.css" />
 
 <!-- Time picker -->
 <!-- <link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/External/jquery.timepicker.css" /> -->
@@ -23,7 +23,7 @@
 
 	<input type="hidden" id="userId" value="${user.userId}" />
 	
-	<div class="" style="height: 1000px; width: 90%; margin: auto">
+	<div class="container" style="height: 1000px; width: 90%; margin: auto">
 
 	
 
@@ -32,109 +32,27 @@
 			
 				<div id="radiusErrorMessage" class="error-message"></div>
 				<div id="locationErrorMessage" class="error-message"></div>
-				<div id="distanceFilter" class="input-container-group form-group">	
-					<div class="input-container">									
-						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
-					</div>			
-					<div class="input-container">					
-						<label id="milesFrom" for="radius">Miles From</label>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="city" placeholder="City"></input>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="state" placeholder="State"></input>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
-					</div>																			
-				</div>
-				
-				<div class="input-container-group">
-					<div class="input-container">
-						<button id="getJobs" class="btn">Get Jobs</button>
-					</div>
-				</div>
+				<span id="distanceFilter" class="form-group">										
+					<input name="radius" type="text"
+						class="form-control" id="radius" placeholder="Number Of" value="50"></input>					
+					<label id="milesFrom" for="radius">Miles From</label>
+					<input name="radius" type="text"
+						class="form-control" id="city" placeholder="City"></input>
+					<input name="radius" type="text"
+						class="form-control" id="state" placeholder="State"></input>
+					<input name="radius" type="text"
+						class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
+																							
+				</span>
 				
 
 			
-				<div class="input-container-group">
-					<div class="row row-margin-override">
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container">
-								<div class="dropdown-input-label selected">
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="">Start Before 7:00 AM</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>																	
-								</div>
-								<div class="dropdown-input-selection">
-									<div class="checkbox-container">
-										<div class="checkbox">
-										  <label><input type="checkbox" value="0">Before</label>
-										</div>
-										<div class="checkbox">
-										  <label><input type="checkbox" value="1">After</label>
-										</div>										
-									</div>
-									<div class="other-filter-content">								
-										<select oninput="verifyFilterInput(this)" data-default-scroll-value="7:00am"
-											id="startTimeOptions" name="startTime" class="filter-input form-control size">
-										 </select>	
-							  		</div>	
-								</div>
-							</div>
-						</div>	
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container">
-								<div class="dropdown-input-label">
-									<span class="">End Time</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container">
-								<div class="dropdown-input-label">
-									<span class="">Duration</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row row-margin-override">
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container">
-								<div class="dropdown-input-label">
-									<span class="">Start Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-							</div>
-						</div>
-						
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container">
-								<div class="dropdown-input-label">
-									<span class="">End Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-							</div>	
-						</div>
-					</div>
-				</div>			
-				
-				<br>
-				<br>
-				<br>
-				<br>
-				<br>
-				
-				<br>
-				<br>
-				<br>																
+				<div id="otherFiltersContainer" class="">
+					
+					<span id="toggleOtherFilters" class="">
+						<span class="header">Filters</span>
+						<span id="toggleOtherFiltersIcon" class="glyphicon glyphicon-menu-down"></span>
+					</span>
 										
 					<span id="selectedFilters">					
 					</span>
@@ -317,7 +235,7 @@
 				</div>				
 			</div>		
 		</div>
-
+	</div>
 </body>
 
 
@@ -328,15 +246,6 @@
 	var filteredLng = -1;
 	
 	$(document).ready(function() {
-		
-		
-		
-		
-		$(".")
-		
-		
-// 		**********************************************************************************
-// 		**********************************************************************************
 		
 		$("#jobsContainer").on("click", ".show-more-less", function(){
 			var description = $(this).siblings(".job-description")[0];			

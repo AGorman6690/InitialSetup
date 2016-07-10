@@ -13,8 +13,8 @@ import com.jobsearch.utilities.DateUtility;
 
 public class FilterJobRequestDTO {
 
-	@JsonProperty("jobs")
-	List<Job> jobs;
+//	@JsonProperty("jobs")
+//	List<Job> jobs;
 
 	@JsonProperty("fromAddress")
 	String fromAddress;
@@ -299,13 +299,13 @@ public class FilterJobRequestDTO {
 		this.lng = lng;
 	}
 
-	public List<Job> getJobs() {
-		return jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
+//	public List<Job> getJobs() {
+//		return jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = jobs;
+//	}
 
 	public float getLat() {
 		return lat;

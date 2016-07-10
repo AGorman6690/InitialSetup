@@ -1,0 +1,89 @@
+.input-container{	
+	display:inline-block;
+	vertical-align: middle;
+}
+
+.input-container-group{	
+	display:inline-block;
+	padding:0px 10px 0px 10px;
+	vertical-align: top;
+}
+
+.input-container-group-test{	
+	float:left;
+	display:inline-block;
+}
+
+.dropdown-input-container{
+	position:relative;
+	width:200px;	
+	border: 1px solid rgb(192,192,192);	 
+}
+
+.dropdown-input-label{
+	padding: 10px 10px 10px 10px;
+}
+
+/* Override Bootstrap */
+.col-padding{
+	padding:0px 2px 4px 2px;
+}
+
+/* Override Bootstrap */
+.row-margin-override{
+	margin:0px
+}
+
+.dropdown-input-icon{
+	display:inline;
+	float:right;
+}
+
+
+
+.selected{
+	background-color:#F6C627
+}
+
+.remove-additional-filter{
+	padding-right:5px;
+}
+
+#distanceFilter input{
+	display:inline;
+/* 	max-width: 120px; */
+	overflow: hidden;
+	border-radius: 0 !important;
+	padding: 10px 10px 10px 10px;
+	height:auto;
+/* 	width:auto; */
+/* 	vertical-align:top; */
+}
+
+#getJobs{
+	background-color:#163B3D;
+	color: #ffffff;
+	border-radius: 0 !important;
+	height:42px;
+	width:auto;
+	padding:5px 15px;
+}
+
+#radius, #state, #zipCode{
+	width:95px;
+}
+
+#city{
+	width:150px;
+}
+
+/* .label{ */
+/* 	 display: inline; */
+/*     white-space: nowrap; */
+/*     overflow: hidden; */
+/*     text-overflow: ellipsis; */
+/* /*     padding: .9em 2.4em .9em .85em; */ */
+/*     font-size: 13px; */
+/*     line-height: 1.3; */
+/*     color: #444; */
+/* } */
