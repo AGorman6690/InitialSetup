@@ -1,3 +1,5 @@
  #foreach($category in $categories)
  	<div>$category.name</div>
+ 	$date.format('medium',$myDate)
  #end
+ 

@@ -2,10 +2,12 @@ package com.jobsearch.category.service;
 
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,8 @@ public class CategoryServiceImpl {
 		final VelocityContext context = new VelocityContext();
 
 		context.put("categories", categories);
+		context.put("date", new DateTool());
+		context.put("myDate", new Date());
 
 		categoryTemplate.merge(context, writer);
 

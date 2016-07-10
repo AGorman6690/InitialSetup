@@ -40,15 +40,15 @@
 	<mvc:resources mapping="/static/External/**" location="/static/External/" />
 
 
-	<!-- enable resolution of ${...} placeholders within @Value annotations
+	<!-- enable resolution of ${...} placeholders within @Value annotations 
 		and in XML definitions -->
 	<!-- <context:property-placeholder ignore-unresolvable="false" /> -->
 
-	<!-- enable annotation-driven Spring AOP (i.e. @Aspect, @Pointcut, @Before,
+	<!-- enable annotation-driven Spring AOP (i.e. @Aspect, @Pointcut, @Before, 
 		@After, @Around, etc.) -->
 	<!-- <aop:aspectj-autoproxy proxy-target-class="true" /> -->
 
-	<!-- enable annotation-driven Spring Web MVC (i.e. @RequestMapping, @RequestParam,
+	<!-- enable annotation-driven Spring Web MVC (i.e. @RequestMapping, @RequestParam, 
 		@PathVariable, @RequestBody, @ResponseBody, etc.) -->
 	<mvc:annotation-driven
 		content-negotiation-manager="contentNegotiationManager">
@@ -84,7 +84,7 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
-	<!-- enable negotiation of content type based on factors such as request
+	<!-- enable negotiation of content type based on factors such as request 
 		headers and request mappings metadata -->
 	<bean id="contentNegotiationManager"
 		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean"
@@ -94,14 +94,6 @@
 		<prop key="json">application/json</prop>
 		<prop key="xml">text/xml</prop>
 	</util:properties>
-
-<!-- 	<bean id="multipartResolver" -->
-<!-- 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
-
-<!-- 		 setting maximum upload size -->
-<!-- 		<property name="maxUploadSize" value="100000000" /> -->
-
-<!-- 	</bean> -->
 
 	<import resource="classpath:spring-security.xml" />
 	<import resource="classpath:spring-register.xml" />
