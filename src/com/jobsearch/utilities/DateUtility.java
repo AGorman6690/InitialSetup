@@ -25,15 +25,21 @@ public final class DateUtility {
 		
 		SimpleDateFormat sdf = new SimpleDateFormat(inputFormat);
 		java.util.Date date = null;
-		try {
-			date = sdf.parse(input);
-			return new java.sql.Date(date.getTime());
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(input != null){
+			try {
+				date = sdf.parse(input);
+				return new java.sql.Date(date.getTime());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}else{
+			return null;
 		}
+
 		
-		return null;
+		
 		
 	}
 	

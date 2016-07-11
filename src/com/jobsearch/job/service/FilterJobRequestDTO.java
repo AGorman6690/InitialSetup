@@ -183,7 +183,7 @@ public class FilterJobRequestDTO {
 		this.setCategoryIds(categoryIds);
 
 		this.setStringStartTime(startTime);
-		;
+		
 		this.setStringEndTime(endTime);
 
 		this.setStringStartDate(startDate);
@@ -195,10 +195,20 @@ public class FilterJobRequestDTO {
 		this.setBeforeStartDate(beforeStartDate2);
 		this.setBeforeEndDate(beforeEndDate2);
 
-		// Convert strings to sql Time objects
-		this.setStartTime(java.sql.Time.valueOf(startTime));
-		this.setEndTime(java.sql.Time.valueOf(endTime));
-
+		
+		// Convert strings to sql Time objects.
+		try {
+			this.setStartTime(java.sql.Time.valueOf(startTime));
+		} catch (Exception e) {
+			//filter values were not sent from client
+		}
+		
+		try {
+			this.setEndTime(java.sql.Time.valueOf(endTime));
+		} catch (Exception e) {
+			//filter values were not sent from client
+		}
+		
 		// Convert strings to sql Date objects
 		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
 		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));

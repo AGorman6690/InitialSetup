@@ -284,9 +284,9 @@ public class JobServiceImpl {
 		// If parameter is not filtered, set to null
 		if (filter.categoryIds[0] == -1)
 			filter.categoryIds = null;
-		if (filter.getStringEndTime().equals(FilterJobRequestDTO.ZERO_TIME))
+		if (filter.getStringEndTime() == null)
 			filter.endTime = null;
-		if (filter.getStringStartTime().equals(FilterJobRequestDTO.ZERO_TIME))
+		if (filter.getStringStartTime() == null)
 			filter.startTime = null;
 		if (filter.getWorkingDays().get(0).matches("-1"))
 			filter.setWorkingDays(null);

@@ -122,12 +122,8 @@ public class JobController {
 		
 		//Set the html to render
 		response.setHtml(jobService.getFilterdJobsResponseHtml(filteredJobs, request));
-		
-		//Send back some of the request info in order to set the map
-//		response.setRequestedLat(request.getLat());
-//		response.setRequestedLng(request.getLng());
-//		response.setRequestedRadius(request.getRadius());
-//		
+
+	
 		return response.getHtml();
 
 	}	
