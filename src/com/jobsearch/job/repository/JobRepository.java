@@ -252,9 +252,11 @@ public class JobRepository {
 
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
 		//This calculates the distance between each job and a given lat/lng.
-		String sql = "SELECT *, ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) )"
-					+ " AS distance FROM job WHERE job.JobId IN (SELECT job.JobId FROM job";
+		String sql = "SELECT *, "
+					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance,"
+					+ " (EndDate - StartDate + 1) AS duration"
+					+ " FROM job WHERE job.JobId IN (SELECT job.JobId FROM job";
 
 
 		List<Object> argsList = new ArrayList<Object>();
@@ -344,12 +346,40 @@ public class JobRepository {
 
 			argsList.add(filter.getDuration());
 		}
+		
+		//Skip already-loaded jobs
+		if(filter.getLoadedJobIds() != null){
+			
+			for(Integer id : filter.getLoadedJobIds()){
+				sql += " AND job.jobId <> ?";
+				argsList.add(id);
+			}
+		}
 
 
 		//Close the sub query and complete the distance filter.
-		argsList.add(filter.getRadius());
-		argsList.add(filter.getReturnJobCount());
-		sql += ") HAVING distance < ? ORDER BY distance LIMIT 0 , ?";
+		argsList.add(filter.getRadius());		
+		sql += ") HAVING distance < ?";
+		
+		//Order by
+		sql += " ORDER BY ";
+		if(filter.getSortBy() != null){
+			sql += filter.getSortBy() + " ";
+			if(filter.getIsAscending()){
+				sql += "ASC";
+			}else{
+				sql += "DESC";
+			}
+		}else{
+			//If user did not sort, the sort by ascending distance as a default
+			sql += " distance ASC";
+		}
+		
+		
+		
+		//Number of jobs to return
+		//argsList.add(filter.getReturnJobCount());
+		sql += " LIMIT 0 , 25";
 
 		return this.JobRowMapper(sql, argsList.toArray());
 	}

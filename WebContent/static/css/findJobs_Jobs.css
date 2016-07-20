@@ -28,7 +28,7 @@
 }
 
 .job-footer{
-	margin:0px 10px 10px 0px;
+/* 	margin:0px 10px 10px 0px; */
 	border-bottom: 2px outset rgb(238, 238, 238);
 }
 
@@ -58,4 +58,19 @@
 
 #requestOrigin{
 	display:none;
+}
+
+.job{
+	padding:10px;
+	
+}
+
+.sort-width{
+	width:150px;
+}
+
+
+#filteredJobs{
+	overflow-y:scroll;
+	max-height:1000px;
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,21 +45,23 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+	public String validate(@RequestParam int userId, Model model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
 
-		model.addObject("user", user);
-
+//		model.addObject("user", user);
+		String view = null;
 		if (user.getProfile().getName().equals("Employee")) {
-			model.setViewName("EmployeeProfile");
+			//model.setViewName("EmployeeProfile");
+			view = "EmployeeProfile";
 		} else if (user.getProfile().getName().equals("Employer")) {
-			model.setViewName("EmployerProfile");
+			//model.setViewName("EmployerProfile");
+			view = "EmployerProfile";
 		}
 
-		model.addObject("user", user);
-		return model;
+		model.addAttribute("user", user);
+		return view;
 	}
 
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
@@ -246,12 +249,12 @@ public class UserController {
 		// if you wish to create dummy data
 		int number = 0;
 
-		if (number == 0) {
+		if (number == 1) {
 			userService.createUsers_DummyData();
 
 		}
 
-		if (number == 0) {
+		if (number == 1) {
 			userService.createJobs_DummyData();
 		}
 

@@ -82,7 +82,42 @@ public class FilterJobRequestDTO {
 	boolean lessThanDuration;
 
 	@JsonProperty("returnJobCount")
-	int returnJobCount;
+	int returnJobCount;	
+
+	@JsonProperty("sortBy")
+	String sortBy;
+	
+	@JsonProperty("isAscending")
+	boolean isAscending;
+	
+	@JsonProperty("loadedJobIds")
+	int[] loadedJobIds;
+	
+	
+	
+	public int[] getLoadedJobIds() {
+		return loadedJobIds;
+	}
+
+	public void setLoadedJobIds(int[] loadedJobIds) {
+		this.loadedJobIds = loadedJobIds;
+	}
+
+	public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+
+	public boolean getIsAscending() {
+		return isAscending;
+	}
+
+	public void setIsAscending(boolean isAscending) {
+		this.isAscending = isAscending;
+	}	
 
 	public int getReturnJobCount() {
 		return returnJobCount;
@@ -169,7 +204,7 @@ public class FilterJobRequestDTO {
 	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
-			int returnJobCount) {
+			int returnJobCount, String sortBy, boolean isAscending, int[] loadedJobIds2) {
 		// TODO Auto-generated constructor stub
 
 		this.setRadius(radius);
@@ -194,6 +229,11 @@ public class FilterJobRequestDTO {
 
 		this.setBeforeStartDate(beforeStartDate2);
 		this.setBeforeEndDate(beforeEndDate2);
+		
+		this.setSortBy(sortBy);
+		this.setIsAscending(isAscending);
+		
+		this.setLoadedJobIds(loadedJobIds2);
 
 		
 		// Convert strings to sql Time objects.

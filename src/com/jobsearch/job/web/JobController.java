@@ -99,12 +99,15 @@ public class JobController {
 			@RequestParam(value = "day", required = false) List<String> workingDays,
 			@RequestParam(required = false, defaultValue= "-1") Double duration,
 			@RequestParam(required = false) boolean lessThanDuration,
-			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
+			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount, 
+			@RequestParam(required = false) String sortBy,
+			@RequestParam(required = false) boolean isAscending,
+			@RequestParam(value = "id", required = false) int[] loadedJobIds) 
 			{
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				lessThanDuration, returnJobCount);
+				lessThanDuration, returnJobCount, sortBy, isAscending, loadedJobIds);
 
 		
 		//*******************************************************************
@@ -138,6 +141,9 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public ModelAndView viewFindJobs(ModelAndView model) {
+		
+		
+		
 		model.setViewName("FindJobs");
 		return model;
 	}

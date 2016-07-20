@@ -1,24 +1,138 @@
  
-<div class="sort-jobs-by-container">
-	<div class="dropdown-input-container">
-		<div class="dropdown-input-label">
-			<span class="">Sort By</span>
-			<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
+ ##Sort by dropdown
+ #if( $skipSortByDropDown == 0)
+	<div class="sort-jobs-by-container">
+		<div class="dropdown-input-container sort-width">
+			<div class="dropdown-input-label">
+				<span class="">Sort By</span>
+				<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>			
+			</div>
 			
+			<div id="sortOptions" class="dropdown-input-selection-container">
+				<ul class="sort-width">
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								Start Date
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="StartDate" data-is-ascending="1"
+								  			type="radio" name="sort">Earliest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="StartDate" data-is-ascending="0"
+								  			 type="radio" name="sort">Lastest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								End Date
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="EndDate" data-is-ascending="1"
+								   type="radio" name="sort">Earliest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="EndDate" data-is-ascending="0"
+								   type="radio" name="sort">Latest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>		
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								Start Time
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="StartTime" data-is-ascending="1"
+								   type="radio" name="sort">Earliest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="StartTime" data-is-ascending="0"
+								   type="radio" name="sort">Latest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>		
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								End Time
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="EndTime" data-is-ascending="1"
+								   type="radio" name="sort">Earliest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="EndTime" data-is-ascending="0"
+								   type="radio" name="sort">Latest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>	
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								Duration
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="Duration" data-is-ascending="1"
+								   type="radio" name="sort">Shortest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="Duration" data-is-ascending="0"
+								   type="radio" name="sort">Longest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>
+					<li>
+						<div class="sort">
+							<div class="sort-filter-name">
+								Distance
+							</div>
+							<div class="sort-direction radio-container">
+								<div class="radio">
+								  <label><input data-col="Distance" data-is-ascending="1"
+								   type="radio" name="sort">Closest First</label>
+								</div>
+								<div class="radio">
+								  <label><input data-col="Distance" data-is-ascending="0"
+								   type="radio" name="sort">Furthest First</label>
+								</div>										
+							</div>
+						</div>
+					</li>																			
+				</ul>
+	
+			</div>
+	
 		</div>
 	</div>
-</div>
+	 <div id="requestOrigin" data-lat="$request.lat" data-lng="$request.lng" data-radius="$request.radius"></div>
+#end	 
+
+
  <div id="requestOrigin" data-lat="$request.lat" data-lng="$request.lng" data-radius="$request.radius"></div>
- 
+ ## Filtered Jobs
  #if ($jobs.size() == 0)
- 	<div>Sorry, no jobs match your search
+ 	<div id="noJobs" >Sorry, no jobs match your search
  	</div>
  #else
 	 
 	 #foreach($job in $jobs)
-	 	<div id="job-$job.id" class="job" data-lat="$job.lat" data-lng="$job.lng">
+	 	<div id="$job.id" class="job" data-lat="$job.lat" data-lng="$job.lng">
 			<div class="job-header">
-				<span class="job-name">$job.jobName</span>
+				<a href="/JobSearch/job/${job.id}" class="job-name">$job.jobName</a>
 				<span> - </span>
 				<div class="job-category-container">
 				#foreach($category in $job.categories)
@@ -43,6 +157,11 @@
 					</div>
 					<div class="end-date-time">
 						<span class="bold">End</span> - $job.endDate $job.endTime
+					</div>
+					<div class="duration">
+						#set( $difference = $dateCompare.difference($job.startDate, $job.endDate) )
+						#set( $duration = $difference.getDays() + 1 )
+						<span class="bold">Duration</span> - $duration days
 					</div>
 				</div>	
 				<div class="job-location">$job.city, $job.state - $job.distanceFromFilterLocation miles</div>

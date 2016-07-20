@@ -1,7 +1,6 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <head>
-<script src="<c:url value="/static/javascript/Jobs.js" />"></script>
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
@@ -71,7 +70,7 @@
 									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
 								</div>
 							
-								<div class="dropdown-input-selection-container input-width">
+								<div class="additional-filter dropdown-input-selection-container input-width">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="startTime"
@@ -106,7 +105,7 @@
 									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
 								</div>
 							
-								<div class="dropdown-input-selection-container input-width">
+								<div class="additional-filter dropdown-input-selection-container input-width">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="endTime"
@@ -121,7 +120,7 @@
 									</div>
 									<div class="select-container">								
 										<select id="endTimeOptions" data-default-scroll-value="5:00pm"
-											data-filter-name="endTime" name="startTime"
+											data-filter-name="endTime" name="endTime"
 											class="filter-input form-control size">
 										 </select>	
 							  		</div>	
@@ -141,11 +140,41 @@
 					</div>
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container input-width">
-								<div class="dropdown-input-label">
-									<span class="">Start Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
+							<div data-display-text="Start"								
+								class="input-container dropdown-input-container input-width">
+
+								<div class="dropdown-input-label">									
+									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
+									<span class="display-text"
+										data-reset-text="Start Date">Start Date</span>
+									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
 								</div>
+								
+								
+								<div class="additional-filter dropdown-input-selection-container input-width">
+									<div class="radio-container">
+										<div class="radio">
+										  <label><input type="radio" name="startDate"
+										  	data-display-text="Before" data-filter-name="beforeStartDate"
+										  	data-filter-value="1">Before</label>
+										</div>
+										<div class="radio">
+										  <label><input type="radio" name="startDate"
+										  	data-display-text="After" data-filter-name="beforeStartDate"
+										  	data-filter-value="0">After</label>
+										</div>										
+									</div>
+<!-- 									<div class="select-container">								 -->
+									<div class="input-container form-group">
+								  		<input type="text" class="filter-input form-control date" data-filter-name="startDate" >
+							  		</div>		
+<!-- 							  		</div>	 -->
+							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+								</div>
+								
+
+								
+								
 							</div>
 						</div>
 						
@@ -183,12 +212,128 @@
 		</div> <!-- end filters row -->	
 		
 		<div class="row" id="mainBottom">
-			<div id="jobsContainer" class="col-sm-4" >
+			<div id="jobsContainer" class="col-sm-4 right-border" >
 <!-- 				<h3 class="header">Jobs</h3>							 -->
-				<div id="filteredJobs" class="right-border" style="height: 1000px">
-					
-
 				
+				<div class="sort-jobs-by-container">
+					<div class="dropdown-input-container sort-width ">
+						<div class="dropdown-input-label">
+							<span class="">Sort By</span>
+							<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>			
+						</div>
+						
+						<div id="sortOptions" class="dropdown-input-selection-container">
+							<ul class="sort-width">
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											Start Date
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="StartDate" data-is-ascending="1"
+											  			type="radio" name="sort">Earliest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="StartDate" data-is-ascending="0"
+											  			 type="radio" name="sort">Lastest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											End Date
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="EndDate" data-is-ascending="1"
+											   type="radio" name="sort">Earliest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="EndDate" data-is-ascending="0"
+											   type="radio" name="sort">Latest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>		
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											Start Time
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="StartTime" data-is-ascending="1"
+											   type="radio" name="sort">Earliest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="StartTime" data-is-ascending="0"
+											   type="radio" name="sort">Latest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>		
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											End Time
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="EndTime" data-is-ascending="1"
+											   type="radio" name="sort">Earliest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="EndTime" data-is-ascending="0"
+											   type="radio" name="sort">Latest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>	
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											Duration
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="Duration" data-is-ascending="1"
+											   type="radio" name="sort">Shortest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="Duration" data-is-ascending="0"
+											   type="radio" name="sort">Longest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>
+								<li>
+									<div class="sort">
+										<div class="sort-filter-name">
+											Distance
+										</div>
+										<div class="sort-direction radio-container">
+											<div class="radio">
+											  <label><input data-col="Distance" data-is-ascending="1"
+											   type="radio" name="sort">Closest First</label>
+											</div>
+											<div class="radio">
+											  <label><input data-col="Distance" data-is-ascending="0"
+											   type="radio" name="sort">Furthest First</label>
+											</div>										
+										</div>
+									</div>
+								</li>																			
+							</ul>
+				
+						</div>
+				
+					</div>
+				</div>
+
+				<div id="filteredJobs" class="">
 				</div>			
 			</div>
 						
@@ -201,30 +346,64 @@
 		</div>
 		
 	</div>
+	
+	
+<!-- 	<form> -->
+<!-- 		<div class="additional-filter dropdown-input-selection-container input-width"> -->
+<!-- 			<div class="radio-container"> -->
+<!-- 				<div class="radio"> -->
+<!-- 				  <label><input type="radio" name="startTime" -->
+<!-- 				  	data-display-text="Before" data-filter-name="beforeStartTime" -->
+<!-- 				  	data-filter-value="1">Before</label> -->
+<!-- 				</div> -->
+<!-- 				<div class="radio"> -->
+<!-- 				  <label><input type="radio" name="startTime" -->
+<!-- 				  	data-display-text="After" data-filter-name="beforeStartTime" -->
+<!-- 				  	data-filter-value="0">After</label> -->
+<!-- 				</div>										 -->
+<!-- 			</div> -->
+<!-- 			<div class="select-container">								 -->
+<!-- 				<select id="startTimeOptions" data-default-scroll-value="7:00am" -->
+<!-- 					data-filter-name="startTime" name="startTime" -->
+<!-- 					class="filter-input form-control size"> -->
+<!-- 				 </select>	 -->
+<!-- 	  		</div>	 -->
+<!-- 	  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span> -->
+<!-- 		</div> -->
+<!-- 	</form> -->
 </body>
 
 
 <script>
 
 $(document).ready(function() {
+	
+		$("#jobsContainer").on("click", ".sort-direction input[type='radio']", function(){
+			setFilteredJobs(0);
+		})
 		
 	
-		$(".dropdown-input-label").click(function(){
-			
-			//This IF condition is hackish.
-			//If need be, we can screw around with proper CSS later
-// 			if($(this).hasClass(".remove-additional-filter") == 0){
-				var $container = $($(this).parents(".dropdown-input-container")[0]);
-				$($container.find(".dropdown-input-selection-container")[0]).toggle();	
-// 			}
+		$("body").on("click", ".dropdown-input-label", function(){
+			//Toggle the filter dropdown
+			var $container = $($(this).parents(".dropdown-input-container")[0]);
+			$($container.find(".dropdown-input-selection-container")[0]).toggle();	
 		})
 		
 		$(".approve-additional-filter").click(function(){
+			
+			//************************************************************************
+			//************************************************************************
+			//Note: When the input is invalid, outline the missing input in red
+			//************************************************************************
+			//************************************************************************
+			
+			
 			var dropdownContainer = $(this).parents(".dropdown-input-container")[0];
 			var displayText = $(dropdownContainer).data("display-text");
 			var arr = [];
 			var checkedRadio;
 			var select;
+			var input;
 			var isValidInput = 0;
 			var $inputLabel;
 			
@@ -254,6 +433,19 @@ $(document).ready(function() {
 				}				
 			}
 			
+			//If filter has text input
+			arr = $(dropdownContainer).find(".input-container");
+			if(arr.length > 0){
+				input = $(arr[0]).find("input[type=text]")[0]; 
+				
+				//If input is blank
+				if($(input).val() == ""){
+					isValidInput = -1;
+				}else{
+					displayText += " " + $(input).val();
+				}				
+			}			
+			
 			//If input is valid, then format the dropdown
 			$inputLabel = $($(dropdownContainer).find(".dropdown-input-label")[0]);
 			if(isValidInput > -1){ 
@@ -278,38 +470,37 @@ $(document).ready(function() {
 			$(this).parent().removeClass("selected");
 			$(this).hide();
 			
+			//Reset the display text
 			$displayText = $($(this).parent().find(".display-text")[0]);
 			$displayText.html($displayText.data("reset-text"));
-				
+			
+			//Reset the dropdown div that the used to set the filter
 			container = $(this).parents(".dropdown-input-container")[0];
 			selectionDiv = $(container).find(".dropdown-input-selection-container")[0];
-			clearDropdownSelectionDiv($(selectionDiv))
+			
+			//Clear select
+			$(selectionDiv).find(".select-container select").each(function(){
+				$(this).val("");
+			})
+			
+			//Clear radios
+			$(selectionDiv).find("input[type=radio]").each(function(){
+				$(this).removeAttr("checked");
+			})
+			
+			//Clear text inputs
+			$(selectionDiv).find("input[type=text]").each(function(){
+				$(this).html("");
+			})
 			
 		})
 		
 	
 		
-		function clearDropdownSelectionDiv($e){
-			
-			//Clear select
-			$e.find(".select-container select").each(function(){
-				$(this).val("");
-			})
-			
-			//Clear radios
-			$e.find("input[type=radio]").each(function(){
-				$(this).removeAttr("checked");
-			})
-			
-			//Clear text inputs
-			$e.find("input[type=text]").each(function(){
-				$(this).html("");
-			})
-			
-		}
-		
 		
 		$("#jobsContainer").on("click", ".show-more-less", function(){
+			//Toggle the filter job's description to show more or less
+			
 			var description = $(this).siblings(".job-description")[0];			
 			var isShowingMore;
 			var exceedsMaxHeight;
@@ -358,7 +549,7 @@ $(document).ready(function() {
 			
 			//Validate location input
 			if(validateLocation() == 1 && validateRadius() == 1){
-				filterJobs();
+				setFilteredJobs(1);
 			}
 		})
 		
@@ -366,6 +557,13 @@ $(document).ready(function() {
 // 		**********************************************************************************
 // 		**********************************************************************************
 		
+		$("#filteredJobs").scroll(function(){
+
+			//Load more jobs when they scroll to the bottom
+			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+				appendFilteredJobs();
+			}
+		})
 
 		
 		$("body").click(function(e){
@@ -381,6 +579,10 @@ $(document).ready(function() {
 
 		
 		$(".show-time-options-container").click(function(){
+			
+			
+			
+			
 			$($(this).siblings(".time-options")[0]).toggle();	
 		})
 
@@ -444,10 +646,10 @@ $(document).ready(function() {
 			
 // 		});
 		
-		$('#filterEndTime').timepicker({
-			'scrollDefault': '5:00pm'
+// 		$('#filterEndTime').timepicker({
+// 			'scrollDefault': '5:00pm'
 			
-		});
+// 		});
 	
 	})
 		
@@ -630,31 +832,23 @@ $(document).ready(function() {
 		
 	}
 	
-	
-	function filterJobs() {
-		
-		var radius = $("#radius").val();			
-		var address = $.trim($("#city").val() + " "
-								+ $("#state").val() + " " + $("#zipCode").val());
-		
-		//******************************************************************
-		//Pretty this up.
-		//A global variable seems hackish.
-		filteredRadius = radius;
-		//******************************************************************
-		
-		
+	function getFilterParameters(){
 		
 		var params = "";
-		params += "?radius=" + radius;
-		params += "&fromAddress=" + address;
+		var filterValue;
+		var sortByRadio;
 		
+		
+		//Distance filter			
+		var address = $.trim($("#city").val() + " "
+								+ $("#state").val() + " " + $("#zipCode").val());	
+		
+		params += "?radius=" + $("#radius").val();;
+		params += "&fromAddress=" + address;
+
 		
 		//Loop through each additional filter
-		$(".dropdown-input-selection-container").each(function(){
-			
-			var filterValue;
-			
+		$(".additional-filter").each(function(){
 			
 			//Check select filters
 			$(this).find(".select-container select").each(function(){
@@ -677,14 +871,23 @@ $(document).ready(function() {
 			//Check text inputs
 			$(this).find("input[type=text]").each(function(){
 				filterValue = $(this).val();
-				if(filterValue != null){
+				if(filterValue != ""){
 					params += "&" + $(this).data("filter-name");
 					params += "=" + filterValue;
 				}
 			})		
 			
 		})
-
+		
+			//Check if data should be sorted
+		sortByRadio = $("input[name=sort]").filter(":checked")[0];
+		if(sortByRadio != null){
+			params += "&sortBy=" + $(sortByRadio).data("col");
+			params += "&isAscending=" + $(sortByRadio).data("is-ascending");
+		}
+		
+		
+		
 			//Category ids
 // 			var categoryIds = getCategoryIds("selectedCategories");
 // 			if (categoryIds.length > 0){		
@@ -703,24 +906,111 @@ $(document).ready(function() {
 // 				}
 // 			}else params += "&day=-1";
 		params += "&day=-1";
-			
+		
+		return params;
+	}
 	
+	function getLoadedJobIdsParameter(){
+		
+		var param = "";
+		var loadedJobs;
+		
+		//Check if some jobs have already been loaded
+		loadedJobs = $("#filteredJobs").find(".job");
+		if(loadedJobs.length > 0){
+			
+			//Build an array of job ids to exlude (i.e that have alread been loaded)
+			for(i = 0; i < loadedJobs.length; i++){
+				param += "&id=" + $(loadedJobs[i]).attr("id");
+			}
+		}	
+		
+		return param;
+	}
+	
+	
+	function appendFilteredJobs() {
+		
+		//When appending jobs, get the standard filters,
+		//but also get the already-loaded job ids.
+		//Each job should only be loaded once.
+		var params = getFilterParameters();
+		params += getLoadedJobIdsParameter();
+		
 		$.ajax({
 			type : "GET",
 				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
-// 				dataType : "json",
 				success : _success,
 				error : _error
 			});
 
 			function _success(response) {
+				//This will return a velocity template
 				
-				$("#filteredJobs").html(response);
-				setMap();	
-			}
+				var doAppend = 0;
+				
+				//If the returned html is the "No Jobs" message 
+				if(response.indexOf('id="noJobs"') > -1){
+					
+					
+					//AND some jobs have already been posted, then do not show
+					//the "No Jobs" message again.
+					if($("#filteredJobs").find(".job").length > 0){
+						doAppend = 0;
+					}else{
+						doAppend = 1;
+					}
+					
+				//Else new jobs were returned
+				}else{
+					doAppend = 1;
+				}
+	
+				if(doAppend){
+					$("#filteredJobs").append(response);
+					setMap();	
+				}
+					
+			}	
 
 			function _error(response) {
-				alert('error filter jobs')
+				alert('DEBUG: error append filter jobs')
+			}
+	}
+	
+	function setFilteredJobs(doSetMap) {
+		
+		var params = getFilterParameters();
+		
+		$.ajax({
+			type : "GET",
+				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
+				success : _success,
+				error : _error
+			});
+
+			function _success(response) {
+				//This will return a velocity template
+				
+				$("#filteredJobs").html(response);		
+				
+				//Show the jobs and map container if this is the first job request
+				if(!$("#mainBottom").is("visible")){
+					$("#mainBottom").show();
+				}
+				
+				//The map should not be set when sorting jobs because the same jobs will be returned,
+				//they will only be displayed in a different order.
+				//Because the same jobs will be returned, the map markers will remain the same.
+				//Reloading the map is a bit akward when sorting. 
+				if(doSetMap ==1){
+					setMap();	
+				}
+					
+			}	
+
+			function _error(response) {
+				alert('DEBUG: error set filter jobs')
 			}
 	}
 	

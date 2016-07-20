@@ -8,6 +8,8 @@ import java.util.Optional;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.ComparisonDateTool;
+import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -324,6 +326,9 @@ public class JobServiceImpl {
 		
 		context.put("request", request);
 		context.put("jobs", filteredJobs);
+		context.put("date", new DateTool());
+		context.put("dateCompare", new ComparisonDateTool());
+//		context.put("maxDistance", filteredJobs.get(0).d)
 		
 		filterJobsTemplate.merge(context, writer);
 		
