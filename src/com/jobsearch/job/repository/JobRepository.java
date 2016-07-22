@@ -247,7 +247,7 @@ public class JobRepository {
 	}
 
 
-	public List<Job> getFilteredJobs(FilterJobRequestDTO filter) {
+	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
 
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
@@ -348,9 +348,9 @@ public class JobRepository {
 		}
 		
 		//Skip already-loaded jobs
-		if(filter.getLoadedJobIds() != null){
+		if(alreadyLoadedFilteredJobIds != null){
 			
-			for(Integer id : filter.getLoadedJobIds()){
+			for(Integer id : alreadyLoadedFilteredJobIds){
 				sql += " AND job.jobId <> ?";
 				argsList.add(id);
 			}

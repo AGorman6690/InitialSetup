@@ -384,9 +384,31 @@ $(document).ready(function() {
 		
 	
 		$("body").on("click", ".dropdown-input-label", function(){
-			//Toggle the filter dropdown
+			
+			//Get the filter dropdown div to toggle
 			var $container = $($(this).parents(".dropdown-input-container")[0]);
-			$($container.find(".dropdown-input-selection-container")[0]).toggle();	
+			var $dropdown = $($container.find(".dropdown-input-selection-container")[0]); 
+			
+			//Save the current state of the clicked filter.
+			//If it is currently hidden, it needs to be shown.
+			//However, the code below attempts to hide any filter that is shown.
+			var willHide;			
+			if($dropdown.is(":visible")){
+				willHide = true; 
+			}else{
+				willHide = false;
+			}
+			
+			//If another filter's dropdown is shown, then hide it. 
+			$($("#filtersContainer").find(".dropdown-input-selection-container:visible")[0]).hide();
+			
+			//Toggle the clicked filter's dropdown
+			if(willHide){
+				$dropdown.hide();
+			}else{
+				$dropdown.show();
+			}
+
 		})
 		
 		$(".approve-additional-filter").click(function(){
@@ -910,33 +932,12 @@ $(document).ready(function() {
 		return params;
 	}
 	
-	function getLoadedJobIdsParameter(){
-		
-		var param = "";
-		var loadedJobs;
-		
-		//Check if some jobs have already been loaded
-		loadedJobs = $("#filteredJobs").find(".job");
-		if(loadedJobs.length > 0){
-			
-			//Build an array of job ids to exlude (i.e that have alread been loaded)
-			for(i = 0; i < loadedJobs.length; i++){
-				param += "&id=" + $(loadedJobs[i]).attr("id");
-			}
-		}	
-		
-		return param;
-	}
-	
 	
 	function appendFilteredJobs() {
 		
-		//When appending jobs, get the standard filters,
-		//but also get the already-loaded job ids.
-		//Each job should only be loaded once.
 		var params = getFilterParameters();
-		params += getLoadedJobIdsParameter();
-		
+		params += "&isAppendingJobs=1";
+	
 		$.ajax({
 			type : "GET",
 				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
@@ -981,6 +982,7 @@ $(document).ready(function() {
 	function setFilteredJobs(doSetMap) {
 		
 		var params = getFilterParameters();
+		params += "&isAppendingJobs=0";
 		
 		$.ajax({
 			type : "GET",

@@ -19,7 +19,8 @@
 
 
 <body>
-	<input type="hidden" id="userId" value="${user.userId}">
+
+	<input type="text" id="userId" value="This is a security risk: ${user.userId}">
 	<div class="container">
 		<div style="width: 750px" class="panel panel-success">
 			<div class="panel-heading">Active Jobs</div>

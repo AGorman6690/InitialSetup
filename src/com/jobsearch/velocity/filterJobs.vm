@@ -153,10 +153,10 @@
 				<div class="job-dates-times">
 					<div class="start-date-time">
 						##<span class="bold">Start</span> - $date.format("E, M-d, h:m a", $job.startDate) $job.startTime
-						<span class="bold">Start</span> - $job.startDate $job.startTime						 
+						<span class="bold">Start</span> - $date.format("full_date", $job.startDate), $date.format("h:mm a", $job.startTime)						 
 					</div>
 					<div class="end-date-time">
-						<span class="bold">End</span> - $job.endDate $job.endTime
+						<span class="bold">End</span> - $date.format("full_date", $job.endDate), $date.format("h:mm a", $job.endTime)						 
 					</div>
 					<div class="duration">
 						#set( $difference = $dateCompare.difference($job.startDate, $job.endDate) )
@@ -164,7 +164,12 @@
 						<span class="bold">Duration</span> - $duration days
 					</div>
 				</div>	
-				<div class="job-location">$job.city, $job.state - $job.distanceFromFilterLocation miles</div>
+				<div class="job-location">
+					<span class="bold">Location</span> - $job.city, $job.state
+				</div>
+				<div class="job-distance">
+					<span class="bold">Distance</span> - $job.distanceFromFilterLocation miles
+				</div>				
 			</div>
 			
 			<div class="job-footer">

@@ -204,7 +204,7 @@ public class FilterJobRequestDTO {
 	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
-			int returnJobCount, String sortBy, boolean isAscending, int[] loadedJobIds2) {
+			int returnJobCount, String sortBy, boolean isAscending) {
 		// TODO Auto-generated constructor stub
 
 		this.setRadius(radius);
@@ -233,7 +233,7 @@ public class FilterJobRequestDTO {
 		this.setSortBy(sortBy);
 		this.setIsAscending(isAscending);
 		
-		this.setLoadedJobIds(loadedJobIds2);
+//		this.setLoadedJobIds(loadedJobIds2);
 
 		
 		// Convert strings to sql Time objects.

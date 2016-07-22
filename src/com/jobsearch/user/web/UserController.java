@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" })
+//@SessionAttributes({ "user" })
 public class UserController {
 
 	@Autowired
@@ -44,6 +45,9 @@ public class UserController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
+	//This does not appear to used
+	//*********************************************************************************************
+	//*********************************************************************************************	
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
 	public String validate(@RequestParam int userId, Model model,
 			@ModelAttribute("user") JobSearchUser user) {
@@ -63,7 +67,49 @@ public class UserController {
 		model.addAttribute("user", user);
 		return view;
 	}
+	//*********************************************************************************************
+	//*********************************************************************************************		
 
+	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
+	public String getProfile(Model model, HttpServletRequest request,
+			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
+
+		try {
+
+			if (user.getUserId() == 0) {
+				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+				user = userService.getUserByEmail(auth.getName());
+
+			}
+			user = userService.getProfile(user);
+			model.addAttribute("user", user);
+			session.setAttribute("user", user);
+
+			String viewName = null;
+			if (user.getCreateNewPassword() == 0) {
+				if (user.getProfile().getName().equals("Employee")) {
+//					model.setViewName("EmployeeProfile");
+					viewName = "EmployeeProfile";
+				} else if (user.getProfile().getName().equals("Employer")) {
+//					model.setViewName("EmployerProfile");
+					viewName = "EmployerProfile";
+				}
+			} else {
+//				model.setViewName("NewPassword");
+				viewName = "NewPassword";
+				model.addAttribute("newPassword", new JobSearchUser());
+			}
+
+			return viewName;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		return null;
+
+	}	
+	
+	
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
@@ -80,20 +126,6 @@ public class UserController {
 		return model;
 	}
 	
-	@RequestMapping(value = "/test", method = RequestMethod.GET)
-	public ModelAndView test(ModelAndView model) {
-		model.addObject("message", "This is the message yo");
-		model.setViewName("test");
-//		model.setViewName("Test");
-		return model;
-	}
-	
-	@RequestMapping(value = "/test2", method = RequestMethod.GET)
-	public ModelAndView test2(ModelAndView model) {
-		model.setViewName("test");
-//		model.setViewName("Test");
-		return model;
-	}	
 
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {
@@ -126,39 +158,7 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public ModelAndView getProfile(ModelAndView model, HttpServletRequest request,
-			@ModelAttribute("user") JobSearchUser user) {
 
-		try {
-
-			if (user.getUserId() == 0) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				user = userService.getUserByEmail(auth.getName());
-
-			}
-			user = userService.getProfile(user);
-			model.addObject("user", user);
-
-			if (user.getCreateNewPassword() == 0) {
-				if (user.getProfile().getName().equals("Employee")) {
-					model.setViewName("EmployeeProfile");
-				} else if (user.getProfile().getName().equals("Employer")) {
-					model.setViewName("EmployerProfile");
-				}
-			} else {
-				model.setViewName("NewPassword");
-				model.addObject("newPassword", new JobSearchUser());
-			}
-
-			return model;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		return null;
-
-	}
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,

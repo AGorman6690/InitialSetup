@@ -15,7 +15,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" })
+//@SessionAttributes({ "user" })
 public class ApplicationController {
 
 	@Autowired

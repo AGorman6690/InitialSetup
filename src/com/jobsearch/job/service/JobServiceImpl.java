@@ -256,7 +256,7 @@ public class JobServiceImpl {
 		return getFilterJobsTemplate(filteredJobs, request);
 	}
 
-	public List<Job> getFilteredJobs(FilterJobRequestDTO filter) {
+	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
 		
 		//************************************************************
@@ -294,7 +294,7 @@ public class JobServiceImpl {
 			filter.setWorkingDays(null);
 
 		// Get the filtered jobs
-		List<Job> filteredJobs = repository.getFilteredJobs(filter);
+		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
 
 		// For each filtered job, calculate the distance between the user's
 		// specified filter lat/lng

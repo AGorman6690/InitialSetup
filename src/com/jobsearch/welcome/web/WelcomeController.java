@@ -1,5 +1,6 @@
 package com.jobsearch.welcome.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,7 +21,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" })
+@SessionAttributes({ "user", "loadedFilteredJobIds" })
 public class WelcomeController {
 
 	@Autowired
@@ -26,26 +29,38 @@ public class WelcomeController {
 
 	@Value("${host.url}")
 	private String hostUrl;
+	
+	@ModelAttribute("user")
+	public JobSearchUser getSessionUser(){
+		JobSearchUser sessionUser = new JobSearchUser();
+		return sessionUser;
+	}
+	
+	@ModelAttribute("loadedFilteredJobIds")
+	public List<Integer> getSessionLoadedFilteredJobIds(){
+		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
+		return loadedFilteredJobIds;
+	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ModelAndView welcome(ModelAndView model, HttpServletRequest request,
+	public String welcome(Model model, HttpServletRequest request,
 			@RequestParam(required = false) boolean error) {
 
 		// // Set session objects
-		JobSearchUser user = new JobSearchUser();
+//		JobSearchUser user = new JobSearchUser();
 
 		List<Profile> profiles = userService.getProfiles();
-		model.addObject("profiles", profiles);
-		model.addObject("user", user);
+		model.addAttribute("profiles", profiles);
+//		model.addAttribute("user", user);
 
-		model.addObject("url", hostUrl);
+		model.addAttribute("url", hostUrl);
 
 		if (error) {
-			model.addObject("errorMessage", "Username and/or Password is incorrect");
+			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
 		}
 
-		model.setViewName("Welcome");
+//		model.setViewName("Welcome");
 
-		return model;
+		return "Welcome";
 	}
 }

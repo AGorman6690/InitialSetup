@@ -2,9 +2,15 @@ package com.jobsearch.job.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +34,8 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "job" })
+//@SessionAttributes({ "user", "job" })
+//@SessionAttributes( "loadedFilteredJobIds" )
 public class JobController {
 
 	@Autowired
@@ -83,6 +90,7 @@ public class JobController {
 //
 //	}
 	
+	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
 	public String getFilteredJobs(@RequestParam(required = true) int radius,
@@ -102,13 +110,16 @@ public class JobController {
 			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount, 
 			@RequestParam(required = false) String sortBy,
 			@RequestParam(required = false) boolean isAscending,
-			@RequestParam(value = "id", required = false) int[] loadedJobIds) 
-			{
+			@RequestParam(required = true) boolean isAppendingJobs,
+//			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
+			HttpSession session, Model model
+			){
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				lessThanDuration, returnJobCount, sortBy, isAscending, loadedJobIds);
+				lessThanDuration, returnJobCount, sortBy, isAscending);
 
+		
 		
 		//*******************************************************************
 		//For each job, imbed the lat/lnt its div.
@@ -118,10 +129,36 @@ public class JobController {
 		
 		FilterJobResponseDTO response = new FilterJobResponseDTO();
 		
+		//If appending jobs, get the job ids that have already been rendered to the user
+		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+		if(isAppendingJobs){				
+			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		}else{
+			alreadyLoadedFilteredJobIds = null;
+		}
+		
 		//From the request, set the jobs	
-		//response.setJobs(jobService.getFilteredJobs(request));
 		List<Job> filteredJobs = new ArrayList<Job>();
-		filteredJobs = jobService.getFilteredJobs(request);
+		filteredJobs = jobService.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
+		
+		
+		//Get the job ids that were just queried
+		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
+												.map(j -> j.getId()).collect(Collectors.toList());
+		
+		
+		if(isAppendingJobs){			
+			if(alreadyLoadedFilteredJobIds != null){
+				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+			}			
+		}
+		
+
+		//Update the session variable
+		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
+		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
 		
 		//Set the html to render
 		response.setHtml(jobService.getFilterdJobsResponseHtml(filteredJobs, request));
@@ -140,24 +177,24 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
-	public ModelAndView viewFindJobs(ModelAndView model) {
+	public String viewFindJobs(Model model, HttpSession session) {
 		
 		
-		
-		model.setViewName("FindJobs");
-		return model;
+		model.addAttribute("user", session.getAttribute("user"));
+//		model.setViewName("FindJobs");
+		return "FindJobs";
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
+	public String getJob(@PathVariable int jobId, Model model) {
 
 		Job selectedJob = jobService.getJob(jobId);
 
 		//
 
-		model.addObject("job", selectedJob);
-		model.setViewName("Job");
-		return model;
+		model.addAttribute("job", selectedJob);
+//		model.setViewName("Job");
+		return "PostJob";
 	}
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)

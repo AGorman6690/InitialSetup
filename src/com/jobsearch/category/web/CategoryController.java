@@ -18,7 +18,7 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 
 @Controller
-@SessionAttributes({ "user" })
+//@SessionAttributes({ "user" })
 public class CategoryController {
 
 	@Autowired
