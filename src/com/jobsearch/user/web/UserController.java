@@ -1,6 +1,9 @@
 package com.jobsearch.user.web;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -216,9 +219,22 @@ public class UserController {
 	public void uploadResume(@RequestParam(value = "file") MultipartFile file) throws IOException {
 
 		if (file != null) {
-			ByteArrayInputStream stream = new   ByteArrayInputStream(file.getBytes());
-			String myString = IOUtils.toString(stream, "UTF-8");
-			System.out.println(myString);
+
+			byte[] bytes = file.getBytes();
+
+			// Creating the directory to store file
+			String rootPath = System.getProperty("user.dir");
+			File dir = new File(rootPath + File.separator + "tmpFiles");
+			if (!dir.exists())
+				dir.mkdirs();
+
+			// Create the file on server
+			File serverFile = new File(dir.getAbsolutePath()
+					+ File.separator + file.getName());
+			BufferedOutputStream stream = new BufferedOutputStream(
+					new FileOutputStream(serverFile));
+			stream.write(bytes);
+			stream.close();
 		}
 	}
 
