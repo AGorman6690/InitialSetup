@@ -79,7 +79,10 @@
 
 		<mkdir dir="${dir.binaries}" />
 		<javac srcdir="${dir.source}" destdir="${dir.binaries}" classpathref="classpath.compile" />
-		<javac srcdir="${dir.config}" destdir="${dir.binaries}" classpathref="classpath.compile" />
+
+		<copy todir="${dir.binaries}">
+			<fileset dir="${dir.config}" />
+		</copy>
 	</target>
 
 	<!-- Packages the compiled code and its dependencies into a war file. -->
