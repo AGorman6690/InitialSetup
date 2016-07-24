@@ -10,7 +10,7 @@
 <input type="hidden" id="userId" value="${user.userId}" />
 
 <body>
-<div>The Push worked!!!! try again</div>
+<div>The Push worked!!!!</div>
 	<input type="hidden" id="userId" value="${user.userId}">
 	<div class="container">
 		<div style="width: 750px" class="panel panel-success">
