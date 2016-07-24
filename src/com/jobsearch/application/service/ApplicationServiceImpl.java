@@ -73,6 +73,7 @@ public class ApplicationServiceImpl {
 		}
 	}
 
+
 	public List<Answer> getAnswers(List<Question> questions, int userId) {
 
 		List<Answer> answers = new ArrayList<Answer>();
