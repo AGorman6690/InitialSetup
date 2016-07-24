@@ -71,12 +71,10 @@
 				<identitymapper />
 			</firstmatchmapper>
 		</ivy:retrieve>
-		<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.compile">
-		</taskdef>
 		<presetdef name="compile">
-			<groovyc fork="true" indy="true" includeantruntime="false">
+			<javac fork="true" indy="true" includeantruntime="false">
 				<javac debug="true" source="1.8" target="1.8" />
-			</groovyc>
+			</javac>
 		</presetdef>
 
 		<mkdir dir="${dir.binaries}" />
