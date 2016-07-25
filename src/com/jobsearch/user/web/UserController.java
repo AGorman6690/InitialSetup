@@ -45,15 +45,8 @@ public class UserController {
 	@Autowired
 	CategoryServiceImpl categoryService;
 
-	//This does not appear to used
-	//*********************************************************************************************
-	//*********************************************************************************************	
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-<<<<<<< HEAD
-	public String validate(@RequestParam int userId, Model model,
-=======
 	public ModelAndView validate(@RequestParam (name = "userId") int userId, ModelAndView model,
->>>>>>> 7f106e60c9eba9611b5f45b6f04ab771c727b47a
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
@@ -61,18 +54,17 @@ public class UserController {
 //		model.addObject("user", user);
 		String view = null;
 		if (user.getProfile().getName().equals("Employee")) {
-			//model.setViewName("EmployeeProfile");
-			view = "EmployeeProfile";
+			model.setViewName("EmployeeProfile");
+//			view = "EmployeeProfile";
 		} else if (user.getProfile().getName().equals("Employer")) {
-			//model.setViewName("EmployerProfile");
-			view = "EmployerProfile";
+			model.setViewName("EmployerProfile");
+//			view = "EmployerProfile";
 		}
 
-		model.addAttribute("user", user);
-		return view;
+//		model.addAttribute("user", user);
+		model.addObject("user", user);
+		return model;
 	}
-	//*********************************************************************************************
-	//*********************************************************************************************		
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String getProfile(Model model, HttpServletRequest request,
@@ -162,8 +154,6 @@ public class UserController {
 		return model;
 	}
 
-<<<<<<< HEAD
-=======
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public ModelAndView getProfile(ModelAndView model, HttpServletRequest request,
 			@ModelAttribute("user") JobSearchUser user) {
@@ -193,9 +183,9 @@ public class UserController {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
->>>>>>> 7f106e60c9eba9611b5f45b6f04ab771c727b47a
-
-
+		return null;
+	}
+	
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
 			@ModelAttribute("newPassword") JobSearchUser newPassword) {
