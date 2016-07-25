@@ -56,7 +56,7 @@ public class UserController {
 			model.setViewName("EmployerProfile");
 		}
 
-		model.addObject("user", user);
+	//	model.addObject("user", user);
 		return model;
 	}
 
