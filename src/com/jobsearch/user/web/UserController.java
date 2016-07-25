@@ -41,7 +41,7 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+	public ModelAndView validate(@RequestParam (name = "userId") int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
@@ -113,7 +113,7 @@ public class UserController {
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
-				
+
 			}
 			user = userService.getProfile(user);
 			model.addObject("user", user);
