@@ -28,7 +28,7 @@ import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-//@SessionAttributes({ "user" })
+@SessionAttributes({ "user" })
 public class UserController {
 
 	@Autowired
@@ -41,22 +41,20 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam(name = "userId", required = true) int userId, ModelAndView model) {
+	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+			@ModelAttribute("user") JobSearchUser user) {
 
-		//	@ModelAttribute("user") JobSearchUser user
-		// // Set session objects
-	//	JobSearchUser user = new JobSearchUser();
-	//	user = userService.validateUser(userId);
+		user = userService.validateUser(userId);
 
-	//	model.addObject("user", user);
+		model.addObject("user", user);
 
-	//	if (user.getProfile().getName().equals("Employee")) {
+		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-	//	} else if (user.getProfile().getName().equals("Employer")) {
-		//	model.setViewName("EmployerProfile");
-	//	}
+		} else if (user.getProfile().getName().equals("Employer")) {
+			model.setViewName("EmployerProfile");
+		}
 
-	//	model.addObject("user", user);
+		model.addObject("user", user);
 		return model;
 	}
 
