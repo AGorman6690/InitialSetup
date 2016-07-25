@@ -13,8 +13,8 @@ import com.jobsearch.utilities.DateUtility;
 
 public class FilterJobRequestDTO {
 
-	@JsonProperty("jobs")
-	List<Job> jobs;
+//	@JsonProperty("jobs")
+//	List<Job> jobs;
 
 	@JsonProperty("fromAddress")
 	String fromAddress;
@@ -82,7 +82,42 @@ public class FilterJobRequestDTO {
 	boolean lessThanDuration;
 
 	@JsonProperty("returnJobCount")
-	int returnJobCount;
+	int returnJobCount;	
+
+	@JsonProperty("sortBy")
+	String sortBy;
+	
+	@JsonProperty("isAscending")
+	boolean isAscending;
+	
+	@JsonProperty("loadedJobIds")
+	int[] loadedJobIds;
+	
+	
+	
+	public int[] getLoadedJobIds() {
+		return loadedJobIds;
+	}
+
+	public void setLoadedJobIds(int[] loadedJobIds) {
+		this.loadedJobIds = loadedJobIds;
+	}
+
+	public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		this.sortBy = sortBy;
+	}
+
+	public boolean getIsAscending() {
+		return isAscending;
+	}
+
+	public void setIsAscending(boolean isAscending) {
+		this.isAscending = isAscending;
+	}	
 
 	public int getReturnJobCount() {
 		return returnJobCount;
@@ -169,7 +204,7 @@ public class FilterJobRequestDTO {
 	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
-			int returnJobCount) {
+			int returnJobCount, String sortBy, boolean isAscending) {
 		// TODO Auto-generated constructor stub
 
 		this.setRadius(radius);
@@ -183,7 +218,7 @@ public class FilterJobRequestDTO {
 		this.setCategoryIds(categoryIds);
 
 		this.setStringStartTime(startTime);
-		;
+		
 		this.setStringEndTime(endTime);
 
 		this.setStringStartDate(startDate);
@@ -194,11 +229,26 @@ public class FilterJobRequestDTO {
 
 		this.setBeforeStartDate(beforeStartDate2);
 		this.setBeforeEndDate(beforeEndDate2);
+		
+		this.setSortBy(sortBy);
+		this.setIsAscending(isAscending);
+		
+//		this.setLoadedJobIds(loadedJobIds2);
 
-		// Convert strings to sql Time objects
-		this.setStartTime(java.sql.Time.valueOf(startTime));
-		this.setEndTime(java.sql.Time.valueOf(endTime));
-
+		
+		// Convert strings to sql Time objects.
+		try {
+			this.setStartTime(java.sql.Time.valueOf(startTime));
+		} catch (Exception e) {
+			//filter values were not sent from client
+		}
+		
+		try {
+			this.setEndTime(java.sql.Time.valueOf(endTime));
+		} catch (Exception e) {
+			//filter values were not sent from client
+		}
+		
 		// Convert strings to sql Date objects
 		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
 		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));
@@ -299,13 +349,13 @@ public class FilterJobRequestDTO {
 		this.lng = lng;
 	}
 
-	public List<Job> getJobs() {
-		return jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = jobs;
-	}
+//	public List<Job> getJobs() {
+//		return jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = jobs;
+//	}
 
 	public float getLat() {
 		return lat;

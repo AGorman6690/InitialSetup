@@ -1,6 +1,10 @@
 		body{
 			font-family: "Open Sans", open-sans, Arial, "Helvetica Neue", sans-serif;
 		}
+
+		#mapContainer{
+			height: 1000px;			
+		}
 		
 				
 		#toggleOtherFilters{
@@ -17,7 +21,7 @@
 		
 		#otherFiltersContainer{
 			display:inline;
-			width:300px;
+/* 			width:300px; */
 			height:auto;
 			position:relative;
 /* 			margin-left:20px;	 */
@@ -35,14 +39,17 @@
 		#getJobsContainer button{
 			background-color:#163B3D;
 			color: #ffffff;
+			
 		}
 		
 		#selectedFilters button{
 			background-color:#163B3D;
 			color: #ffffff;
 			cursor: default;
-			margin:10px 5px 0px 0px;
-			display:inline;
+/* 			margin:10px 5px 0px 0px; */
+			display:inline-block;
+			vertical-align:top;
+			margin-left:5px;
 		}
 		
 		#selectedFilters .remove-filter{
@@ -52,12 +59,14 @@
 		}
 				
 		#selectedFilters{
-/* 			margin-left:10px; */
-			display:block;
+			margin-left:10px;
+			display:inline;
 /* 			display:inline-block; */
 			min-width:750px;
+			min-height:50px;
 /* 			position:relative; */
 /* 			left:125px; */
+			vertical-align: top;
 		}
 		
 		#otherFilters{
@@ -96,7 +105,7 @@
 		
 		.other-filter-content{
 			display:inline;
-			width:100%;
+/* 			width:100%; */
 			margin-left:10px;
 			height:50px;
 			position:absolute;
@@ -205,9 +214,17 @@
  			text-shadow:0px 0px 3px #eee;
 		}
 
+
+
 		#map{
 			width: 100%;
-			height: 100%;
+			height: 100%;	
+			border-right-style:outset;
+			height: 1000px;
+/* 		****************************************************** */
+/* 		Map is not respecting the padding-right... */
+/* 		****************************************************** */			
+			padding-right:10px;		
 		}
 		
 		.error-message{

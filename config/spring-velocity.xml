@@ -22,5 +22,9 @@
     <bean id="CategoriesVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/categories.vm" />
     </bean>
+    
+    <bean id="FilterJobsVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/filterJobs.vm" />
+    </bean>    
 
 </beans>

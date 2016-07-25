@@ -120,7 +120,7 @@
 		</div>
 	</div>
 
-	<!-- <a href="./dummyData">Set Dummy Data</a> -->
+	<a href="./dummyData">Set Dummy Data</a>
 
 </div>
 
