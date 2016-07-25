@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.file.upload.FileUpload;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.json.JSON;
@@ -47,7 +48,7 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+	public ModelAndView validate(HttpServletRequest request, @RequestParam int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
@@ -59,6 +60,8 @@ public class UserController {
 		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
 		}
+
+		request.getSession().setAttribute("user", user);
 
 		model.addObject("user", user);
 		return model;
@@ -216,25 +219,11 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
-	public void uploadResume(@RequestParam(value = "file") MultipartFile file) throws IOException {
+	public void uploadResume(HttpServletRequest request, @RequestParam(value = "file") MultipartFile file) throws IOException {
 
-		if (file != null) {
+		if (FileUpload.validateFile(file)) {
 
-			byte[] bytes = file.getBytes();
-
-			// Creating the directory to store file
-			String rootPath = System.getProperty("user.dir");
-			File dir = new File(rootPath + File.separator + "tmpFiles");
-			if (!dir.exists())
-				dir.mkdirs();
-
-			// Create the file on server
-			File serverFile = new File(dir.getAbsolutePath()
-					+ File.separator + file.getName());
-			BufferedOutputStream stream = new BufferedOutputStream(
-					new FileOutputStream(serverFile));
-			stream.write(bytes);
-			stream.close();
+			FileUpload.saveFile(file, ((JobSearchUser)request.getSession().getAttribute("user")).getUserId());
 		}
 	}
 
