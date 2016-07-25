@@ -28,7 +28,7 @@ import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" })
+//@SessionAttributes({ "user" })
 public class UserController {
 
 	@Autowired
@@ -48,7 +48,7 @@ public class UserController {
 		JobSearchUser user = new JobSearchUser();
 		user = userService.validateUser(userId);
 
-		model.addObject("user", user);
+	//	model.addObject("user", user);
 
 		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
