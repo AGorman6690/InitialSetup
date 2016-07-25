@@ -1,4 +1,4 @@
-package com.jobsearch.applicaton.web;
+package com.jobsearch.application.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

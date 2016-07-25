@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project basedir=".." default="normal_build">
+
+	<property file="ant/ant.properties" />
+
+	<path id="classpath.compile">
+		<fileset dir="${dir.libraries}/master" includes="*.jar" />
+		<fileset file="${dir.libraries}/local/servlet-api*.jar" />
+	</path>
+
+	<path id="classpath.compile.javacc">
+		<fileset file="${dir.libraries}/build/javacc*.jar" />
+		<path refid="classpath.compile" />
+	</path>
+
+	<macrodef name="javacc">
+		<attribute name="def" />
+		<attribute name="dir" />
+		<attribute name="src" default="${dir.source}" />
+		<sequential>
+			<java classname="javacc" classpathref="classpath.compile.javacc" dir="@{src}" failonerror="true" fork="true" taskname="javacc">
+				<arg value="-OUTPUT_DIRECTORY=${dir.javacc}/@{dir}" />
+				<arg value="@{dir}/@{def}.jj" />
+			</java>
+		</sequential>
+	</macrodef>
+
+	<!-- Cleans up temporary files and folders that are created during the execution of the Ant scripts. -->
+	<target name="clean">
+		<presetdef name="remove">
+			<delete deleteonexit="true" quiet="true" />
+		</presetdef>
+
+		<remove dir="bin" />
+		<remove dir="logs" />
+		<remove dir="${dir.dist}" />
+		<remove dir="${dir.testResults}" />
+		<remove dir="${dir.tmpBuildDir}" />
+
+		<remove>
+			<fileset dir="${basedir}">
+				<include name="**/*.log*" />
+				<include name="**/junit*.properties" />
+			</fileset>
+		</remove>
+	</target>
+
+
+	<target name="normal_build" description="Normal build for the project" depends="clean">
+
+
+		<antcall target="-compile" />
+		<antcall target="-createWar" />
+
+		<copy todir="${dir.dist}" file="${dir.config}/properties/application.properties" />
+	</target>
+
+	<!-- Compiles the source code. -->
+	<target name="-compile" xmlns:ivy="antlib:org.apache.ivy.ant">
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant">
+			<classpath>
+				<fileset file="ant/lib/ivy-*.jar" />
+			</classpath>
+		</taskdef>
+		<ivy:settings file="ivysettings.xml" />
+		<ivy:retrieve file="ivy.xml" pattern="${dir.libraries}/[conf]/[artifact]-[revision].[ext]" taskname="ivy">
+			<firstmatchmapper>
+				<!-- remove the revision number from the retrieved junit-frames XSL file -->
+				<regexpmapper from="(.*)\bjunit-frames-.+\.xsl" to="\1junit-frames.xsl" />
+				<identitymapper />
+			</firstmatchmapper>
+		</ivy:retrieve>
+		<presetdef name="compile">
+			<javac fork="true" indy="true" includeantruntime="false">
+				<javac debug="true" source="1.8" target="1.8" />
+			</javac>
+		</presetdef>
+
+		<mkdir dir="${dir.binaries}" />
+		<javac srcdir="${dir.source}" destdir="${dir.binaries}" classpathref="classpath.compile" />
+
+		<copy todir="${dir.binaries}">
+			<fileset dir="${dir.config}" />
+		</copy>
+	</target>
+
+	<!-- Packages the compiled code and its dependencies into a war file. -->
+	<target name="-createWar">
+		<mkdir dir="${dir.dist}" />
+		<war destfile="${dir.dist}/${warFileName}" manifest="${dir.webContent}/META-INF/MANIFEST.MF">
+			<classes dir="${dir.binaries}" />
+			<classes dir="${dir.source}">
+				<exclude name="**/*.java" />
+				<exclude name="*.properties" />
+			</classes>
+			<lib dir="${dir.libraries}/master" includes="*.jar" />
+			<fileset dir="${dir.webContent}" />
+		</war>
+	</target>
+
+</project>
