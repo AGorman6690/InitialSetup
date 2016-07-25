@@ -29,7 +29,7 @@ public class WelcomeController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public ModelAndView welcome(ModelAndView model, HttpServletRequest request,
-			@RequestParam(required = false) boolean error) {
+			@RequestParam(name = "error", required = false) boolean error) {
 
 		// // Set session objects
 		JobSearchUser user = new JobSearchUser();

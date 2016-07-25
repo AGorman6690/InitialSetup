@@ -44,7 +44,7 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam int userId, ModelAndView model,
+	public ModelAndView validate(@RequestParam (name = "userId") int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);

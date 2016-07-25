@@ -350,26 +350,26 @@ public class UserServiceImpl {
 	}
 
 	public void createUsers_DummyData() {
-
-		DummyData dummyData = new DummyData();
-		List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
-
-		int lastDummyCreationId = repository.getLastDummyCreationId("user");
-		repository.createUsers_DummyData(dummyUsers, lastDummyCreationId + 1);
+//
+//		DummyData dummyData = new DummyData();
+//		List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
+//
+//		int lastDummyCreationId = repository.getLastDummyCreationId("user");
+//		repository.createUsers_DummyData(dummyUsers, lastDummyCreationId + 1);
 
 	}
 
 	public void createJobs_DummyData() {
 
-		List<JobSearchUser> dummyEmployers = repository.getEmployers();
-		DummyData dummyData = new DummyData();
-
-		List<JobInfoPostRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
-		int lastDummyCreationId = repository.getLastDummyCreationId("job");
-
-		for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
-			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
-		}
+//		List<JobSearchUser> dummyEmployers = repository.getEmployers();
+//		DummyData dummyData = new DummyData();
+//
+//		List<JobInfoPostRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
+//		int lastDummyCreationId = repository.getLastDummyCreationId("job");
+//
+//		for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
+//			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
+//		}
 
 	}
 
