@@ -45,8 +45,8 @@ public class UserController {
 
 		//	@ModelAttribute("user") JobSearchUser user
 		// // Set session objects
-		JobSearchUser user = new JobSearchUser();
-		user = userService.validateUser(userId);
+	//	JobSearchUser user = new JobSearchUser();
+	//	user = userService.validateUser(userId);
 
 	//	model.addObject("user", user);
 
