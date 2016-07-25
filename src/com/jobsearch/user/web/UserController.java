@@ -50,11 +50,11 @@ public class UserController {
 
 	//	model.addObject("user", user);
 
-		if (user.getProfile().getName().equals("Employee")) {
+	//	if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-		} else if (user.getProfile().getName().equals("Employer")) {
-			model.setViewName("EmployerProfile");
-		}
+	//	} else if (user.getProfile().getName().equals("Employer")) {
+		//	model.setViewName("EmployerProfile");
+	//	}
 
 	//	model.addObject("user", user);
 		return model;
