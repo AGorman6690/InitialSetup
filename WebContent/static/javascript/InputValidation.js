@@ -1,3 +1,4 @@
+
 function validateInputExistence($e, value){
 	if(value == ""){
 		setInvalidCss($e);

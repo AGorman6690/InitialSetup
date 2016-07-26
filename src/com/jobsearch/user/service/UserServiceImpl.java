@@ -350,12 +350,21 @@ public class UserServiceImpl {
 	}
 
 	public void createUsers_DummyData() {
+
 //
 //		DummyData dummyData = new DummyData();
 //		List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
 //
-//		int lastDummyCreationId = repository.getLastDummyCreationId("user");
+//		int lastDummyCreationId = 0;
+//		try {
+//			lastDummyCreationId = repository.getLastDummyCreationId("user");	
+//		} catch (Exception e) {
+//			// TODO: handle exception
+//		}
+//		
+//		
 //		repository.createUsers_DummyData(dummyUsers, lastDummyCreationId + 1);
+
 
 	}
 

@@ -9,6 +9,7 @@
 .invalid-message{
 	color: #b30000;
 	margin-bottom: 5px;
+	display: none;
 }
 
 /* .valid-input-existence{ */

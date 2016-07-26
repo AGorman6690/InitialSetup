@@ -1,11 +1,17 @@
 package com.jobsearch.job.service;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.ComparisonDateTool;
+import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.model.GeocodingResult;
@@ -18,6 +24,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class JobServiceImpl {
@@ -33,6 +40,10 @@ public class JobServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	@Qualifier("FilterJobsVM")
+	Template filterJobsTemplate;
 
 	public void addPosting(SubmitJobPostingRequestDTO postingDto) {
 
@@ -239,10 +250,24 @@ public class JobServiceImpl {
 
 		return job;
 	}
+	
+	public String getFilterdJobsResponseHtml(List<Job> filteredJobs, FilterJobRequestDTO request){
+		
+		return getFilterJobsTemplate(filteredJobs, request);
+	}
 
-	public List<Job> getFilteredJobs(FilterJobRequestDTO filter) {
+	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
-
+		
+		//************************************************************
+		//************************************************************
+		//The user's requested locations should be cached somewhere with 
+		//either cookies or a global array on the client side.
+		//This would put less load on the Google API quota.
+		//Or a table can be created that stores the lat/lng for all requested
+		//city/states/zip code
+		//************************************************************
+		//************************************************************
 		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(filter.fromAddress);
 
@@ -261,22 +286,24 @@ public class JobServiceImpl {
 		// If parameter is not filtered, set to null
 		if (filter.categoryIds[0] == -1)
 			filter.categoryIds = null;
-		if (filter.getStringEndTime().equals(FilterJobRequestDTO.ZERO_TIME))
+		if (filter.getStringEndTime() == null)
 			filter.endTime = null;
-		if (filter.getStringStartTime().equals(FilterJobRequestDTO.ZERO_TIME))
+		if (filter.getStringStartTime() == null)
 			filter.startTime = null;
 		if (filter.getWorkingDays().get(0).matches("-1"))
 			filter.setWorkingDays(null);
 
 		// Get the filtered jobs
-		List<Job> filteredJobs = repository.getFilteredJobs(filter);
+		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
 
 		// For each filtered job, calculate the distance between the user's
 		// specified filter lat/lng
 		if (filteredJobs != null) {
 			for (Job job : filteredJobs) {
 				job.setDistanceFromFilterLocation(
-						GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()));
+						MathUtility.round(
+								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
+								1, 0));
 				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 			}
@@ -289,6 +316,24 @@ public class JobServiceImpl {
 		// //the address is ambiguous
 		// return null;
 		// }
+	}
+	
+	public String getFilterJobsTemplate(List<Job> filteredJobs, FilterJobRequestDTO request){
+		
+		StringWriter writer = new StringWriter();
+		
+		final VelocityContext context = new VelocityContext();
+		
+		context.put("request", request);
+		context.put("jobs", filteredJobs);
+		context.put("date", new DateTool());
+		context.put("dateCompare", new ComparisonDateTool());
+//		context.put("maxDistance", filteredJobs.get(0).d)
+		
+		filterJobsTemplate.merge(context, writer);
+		
+		return writer.toString();
+		
 	}
 
 }

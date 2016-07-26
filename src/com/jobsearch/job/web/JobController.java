@@ -1,9 +1,16 @@
 package com.jobsearch.job.web;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +26,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
+import com.jobsearch.job.service.FilterJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -26,7 +34,8 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "job" })
+//@SessionAttributes({ "user", "job" })
+//@SessionAttributes( "loadedFilteredJobIds" )
 public class JobController {
 
 	@Autowired
@@ -48,27 +57,116 @@ public class JobController {
 		jobService.addPosting(postingDto);
 	}
 
+//	@RequestMapping(value = "/jobs/filter_OLD", method = RequestMethod.GET)
+//	@ResponseBody
+//	public String getFilteredJobs_OLD(@RequestParam(required = true) int radius,
+//			@RequestParam(required = true) String fromAddress,
+//			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
+//			@RequestParam(required = false) String startTime,
+//			@RequestParam(required = false) String endTime,
+//			@RequestParam(required = false) boolean beforeStartTime,
+//			@RequestParam(required = false) boolean beforeEndTime,
+//			@RequestParam(required = false) String startDate,
+//			@RequestParam(required = false) String endDate,
+//			@RequestParam(required = false) boolean beforeStartDate,
+//			@RequestParam(required = false) boolean beforeEndDate,
+//			@RequestParam(value = "day", required = false) List<String> workingDays,
+//			@RequestParam(required = false, defaultValue= "-1") Double duration,
+//			@RequestParam(required = false) boolean lessThanDuration,
+//			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
+//			{
+////
+//		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+//				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
+//				lessThanDuration, returnJobCount);
+//
+//
+//		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
+//															// endDate));
+//
+//		// Set the filter criteria specified by user
+//
+//		return JSON.stringify(filter);
+//
+//	}
+	
+	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String getFilteredJobs(@RequestParam int radius, @RequestParam String fromAddress,
-			@RequestParam(value = "categoryId") int[] categoryIds, @RequestParam String startTime,
-			@RequestParam String endTime, @RequestParam boolean beforeStartTime, @RequestParam boolean beforeEndTime,
-			@RequestParam String startDate, @RequestParam String endDate, @RequestParam boolean beforeStartDate,
-			@RequestParam boolean beforeEndDate, @RequestParam(value = "day") List<String> workingDays,
-			@RequestParam double duration, @RequestParam boolean lessThanDuration, @RequestParam int returnJobCount) {
+	public String getFilteredJobs(@RequestParam(required = true) int radius,
+			@RequestParam(required = true) String fromAddress,
+			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
+			@RequestParam(required = false) String startTime,
+			@RequestParam(required = false) String endTime,
+			@RequestParam(required = false) boolean beforeStartTime,
+			@RequestParam(required = false) boolean beforeEndTime,
+			@RequestParam(required = false) String startDate,
+			@RequestParam(required = false) String endDate,
+			@RequestParam(required = false) boolean beforeStartDate,
+			@RequestParam(required = false) boolean beforeEndDate,
+			@RequestParam(value = "day", required = false) List<String> workingDays,
+			@RequestParam(required = false, defaultValue= "-1") Double duration,
+			@RequestParam(required = false) boolean lessThanDuration,
+			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount, 
+			@RequestParam(required = false) String sortBy,
+			@RequestParam(required = false) boolean isAscending,
+			@RequestParam(required = true) boolean isAppendingJobs,
+//			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
+			HttpSession session, Model model
+			){
 
-		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				lessThanDuration, returnJobCount);
+				lessThanDuration, returnJobCount, sortBy, isAscending);
 
-		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
-															// endDate));
+		
+		
+		//*******************************************************************
+		//For each job, imbed the lat/lnt its div.
+		//Then set the map marders from these values
+		//Remove the FilterJobResponseDTO if this works
+		//*******************************************************************
+		
+		FilterJobResponseDTO response = new FilterJobResponseDTO();
+		
+		//If appending jobs, get the job ids that have already been rendered to the user
+		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+		if(isAppendingJobs){				
+			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		}else{
+			alreadyLoadedFilteredJobIds = null;
+		}
+		
+		//From the request, set the jobs	
+		List<Job> filteredJobs = new ArrayList<Job>();
+		filteredJobs = jobService.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
+		
+		
+		//Get the job ids that were just queried
+		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
+												.map(j -> j.getId()).collect(Collectors.toList());
+		
+		
+		if(isAppendingJobs){			
+			if(alreadyLoadedFilteredJobIds != null){
+				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+			}			
+		}
+		
 
-		// Set the filter criteria specified by user
+		//Update the session variable
+		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
+		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
+		
+		//Set the html to render
+		response.setHtml(jobService.getFilterdJobsResponseHtml(filteredJobs, request));
 
-		return JSON.stringify(filter);
+	
+		return response.getHtml();
 
-	}
+	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
@@ -79,21 +177,24 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
-	public ModelAndView viewFindJobs(ModelAndView model) {
-		model.setViewName("FindJobs");
-		return model;
+	public String viewFindJobs(Model model, HttpSession session) {
+		
+		
+		model.addAttribute("user", session.getAttribute("user"));
+//		model.setViewName("FindJobs");
+		return "FindJobs";
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public ModelAndView getJob(@PathVariable int jobId, ModelAndView model) {
+	public String getJob(@PathVariable int jobId, Model model) {
 
 		Job selectedJob = jobService.getJob(jobId);
 
 		//
 
-		model.addObject("job", selectedJob);
-		model.setViewName("Job");
-		return model;
+		model.addAttribute("job", selectedJob);
+//		model.setViewName("Job");
+		return "PostJob";
 	}
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)

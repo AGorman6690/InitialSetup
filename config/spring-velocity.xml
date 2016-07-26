@@ -18,9 +18,19 @@
 		<prop key="class.resource.loader.cache">true</prop>
 	</util:properties>
 
+<<<<<<< HEAD
 	<bean id="CategoriesVM" factory-bean="VelocityEngine"
 		factory-method="getTemplate">
 		<constructor-arg value="com/jobsearch/velocity/categories.vm" />
 	</bean>
+=======
+    <bean id="CategoriesVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/categories.vm" />
+    </bean>
+    
+    <bean id="FilterJobsVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/filterJobs.vm" />
+    </bean>    
+>>>>>>> master
 
 </beans>

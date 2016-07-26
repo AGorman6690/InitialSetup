@@ -4,12 +4,12 @@
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-	<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/Jobs.js"/></script>
-	<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/Questions.js"/></script>
-	<script src="http://localhost:8080/JobSearch/static/javascript/PostJob/ChangeForm.js"/></script>
+	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script>
+	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script>
+	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script>
 
 	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" />
-	<link rel="stylesheet" type="text/css" href="./static/css/PostJob.css" />
+	<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
 	<link rel="stylesheet" type="text/css"	href="./static/css/inputValidation.css" />		
 	
 	<!-- Time picker -->
@@ -170,7 +170,7 @@
 										</fieldset>
 					
 										<fieldset class="form-group">
-											<label for="endTime" class="form-control-label">Estimated End Time</label>
+											<label for="endTime" class="form-control-label">End Time</label>
 											<input name="endTime" type="text"
 												class="post-job-input form-control time ui-timepicker-input"
 													autocomplete="off" id="endTime"></input>
@@ -199,10 +199,10 @@
 											<li class="category-list-item list-group-item"
 												data-cat-id="1" data-super-cat-id="0" data-level="0"
 												data-sub-categories-set="0">
-												<span class="category-name level-zero">Concrete</span>	
-												<span style="font-size: 1em"
+												<span style="float:left" class="category-name level-zero">Concrete</span>	
+												<span style="font-size: 1em; float:left"
 													class="add-category glyphicon glyphicon-plus"></span>																					 
-												<span style="font-size: 1em" 
+												<span style="font-size: 1em; display: inline-block" 
 													class="show-sub-categories glyphicon glyphicon-menu-down"></span>
 											
 											</li>
