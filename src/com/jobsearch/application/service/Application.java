@@ -7,7 +7,7 @@ public class Application {
 	private int applicationId;
 	private int userId;
 	private int jobId;
-	private int beenViewed;
+	private int hasBeenViewed;
 	private String jobName;
 	private Job job;
 	private JobSearchUser applicant;
@@ -55,11 +55,11 @@ public class Application {
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
 	}
-	public int getBeenViewed() {
-		return beenViewed;
+	public int getHasBeenViewed() {
+		return hasBeenViewed;
 	}
-	public void setBeenViewed(int beenView) {
-		this.beenViewed = beenView;
+	public void setHasBeenViewed(int hasBeenView) {
+		this.hasBeenViewed = hasBeenView;
 	}
 	public int getStatus() {
 		return status;

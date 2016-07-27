@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -15,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -40,7 +44,7 @@ public class JobServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
-	
+		
 	@Autowired
 	@Qualifier("FilterJobsVM")
 	Template filterJobsTemplate;
@@ -125,12 +129,19 @@ public class JobServiceImpl {
 		List<Job> activeJobs = repository.getActiveJobsByUser(userId);
 
 		for (Job job : activeJobs) {
+	
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
 			job.setEmployees(userService.getEmployeesByJob(job.getId()));
+			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
 		}
 
 		return activeJobs;
+
+	}
+
+	public int getNewApplicationCount(List<Application> applications) {
+		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
 
 	}
 

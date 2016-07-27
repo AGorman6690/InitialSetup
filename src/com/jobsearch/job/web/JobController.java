@@ -189,12 +189,13 @@ public class JobController {
 	public String getJob(@PathVariable int jobId, Model model) {
 
 		Job selectedJob = jobService.getJob(jobId);
+		selectedJob.setApplications(applicationService.getApplicationsByJob(jobId));
 
 		//
 
 		model.addAttribute("job", selectedJob);
 //		model.setViewName("Job");
-		return "PostJob";
+		return "EmployerViewJob";
 	}
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)

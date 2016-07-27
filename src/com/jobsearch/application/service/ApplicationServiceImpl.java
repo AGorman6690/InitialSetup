@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.application.repository.ApplicationRepository;
+import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
+import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -16,7 +21,9 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	ApplicationRepository repository;
-
+	
+	@Autowired
+	CategoryServiceImpl categoryService;
 
 	@Autowired
 	UserServiceImpl userService;
@@ -25,7 +32,35 @@ public class ApplicationServiceImpl {
 
 	public List<Application> getApplicationsByJob(int jobId) {
 
+		//Query the application table
 		List<Application> applications = repository.getApplicationsByJob(jobId);
+		
+		//Get the job's categories
+		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+		
+		//Set each applicant's endorsements
+		for (Application application : applications) {
+		
+			JobSearchUser applicant = application.getApplicant();
+			applicant.setEndorsements(new ArrayList<Endorsement>());
+			
+			//Get the applicant's endorsement for ONLY the particular job's
+			//categories, not ALL categories.
+			for(Category category : categories){
+								
+				//Set the endorsement.
+				//Currently only the employer profile jsp is using this.
+				//As such, only the category name and endorsement count are needed.
+				Endorsement endorsement = new Endorsement();
+				endorsement.setCategoryName(category.getName());
+				endorsement.setCount(userService.
+								getEndorsementCountByCategory(applicant.getUserId(), category.getId()));
+				
+				//Add the endorsement to the applicant
+				applicant.getEndorsements().add(endorsement);
+			}
+
+		}
 
 		return applications;
 	}
@@ -111,6 +146,21 @@ public class ApplicationServiceImpl {
 	public void addQuestion(Question question) {
 		repository.addQuestion(question);
 
+	}
+
+
+	public void setHasBeenViewed(List<Job> jobs, int value) {
+		
+		
+		for (Job job : jobs){
+			
+			//If there are applications, set all jobs' applications' HasBeenViewed property
+			if(job.getApplications().size() > 0){
+				repository.setHasBeenViewed(job.getId(), value);
+			}	
+		}
+		
+		
 	}
 
 }

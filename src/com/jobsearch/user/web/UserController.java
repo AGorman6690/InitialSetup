@@ -77,8 +77,12 @@ public class UserController {
 				user = userService.getUserByEmail(auth.getName());
 
 			}
+			
+			//Get the user's profile
 			user = userService.getProfile(user);
 			model.addAttribute("user", user);
+			
+			//Update session user after they have logged in
 			session.setAttribute("user", user);
 
 			String viewName = null;
@@ -154,37 +158,6 @@ public class UserController {
 		return model;
 	}
 
-//	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-//	public ModelAndView getProfile(ModelAndView model, HttpServletRequest request,
-//			@ModelAttribute("user") JobSearchUser user) {
-//
-//		try {
-//
-//			if (user.getUserId() == 0) {
-//				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//				user = userService.getUserByEmail(auth.getName());
-//
-//			}
-//			user = userService.getProfile(user);
-//			model.addObject("user", user);
-//
-//			if (user.getCreateNewPassword() == 0) {
-//				if (user.getProfile().getName().equals("Employee")) {
-//					model.setViewName("EmployeeProfile");
-//				} else if (user.getProfile().getName().equals("Employer")) {
-//					model.setViewName("EmployerProfile");
-//				}
-//			} else {
-//				model.setViewName("NewPassword");
-//				model.addObject("newPassword", new JobSearchUser());
-//			}
-//
-//			return model;
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		return null;
-//	}
 	
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,

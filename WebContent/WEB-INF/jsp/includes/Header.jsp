@@ -83,6 +83,10 @@
 
 <link href="http://localhost:8080/JobSearch/static/css/global.css"
 	rel="stylesheet" />
+	
+<link href="http://localhost:8080/JobSearch/static/css/navBar.css"
+	rel="stylesheet" />
+	
 
 </head>
 
@@ -91,34 +95,76 @@
 
 <c:set var="LaborVaultHost" scope="session" value="${url}"/>
 
-	<nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a id="home" class="navbar-brand" href="/JobSearch/user/profile">Labor
-				Vault</a>
+<!-- 	<nav class=""> -->
+<!-- 		<div class="container-fluid"> -->
+<!-- 			<div class="navbar-header"> -->
+<!-- 				<a id="home" class="navbar-brand" href="/JobSearch/user/profile">Labor -->
+<!-- 					Vault</a> -->
+<!-- 			</div> -->
+<!-- 			<ul class="nav navbar-nav"> -->
+<!-- 				      <li><a href="./viewApplicationsE">View Applications</a></li> -->
+<%-- 				<c:choose> --%>
+<%-- 					<c:when test="${user.getProfileId() == 1}"> --%>
+
+<!-- 							<li><a href="/JobSearch/jobs/find">Find Jobs</a></li> -->
+			
+<%-- 					</c:when> --%>
+<%-- 					<c:when test="${user.getProfileId() == 2}"> --%>
+<!-- 						<li><a href="/JobSearch/employees/find">Find Employees</a></li> -->
+<!-- 						<li><a href="/JobSearch/viewPostJob">Post Job</a></li> -->
+<%-- 					</c:when> --%>
+<%-- 				</c:choose> --%>
+	
+<%-- 				<c:choose> --%>
+<%-- 					<c:when test="${user.getFirstName() != null}"> --%>
+<!-- 						<li><a href="/JobSearch/viewProfile">Profile</a></li> -->
+<!-- 						<li><a href="/JobSearch/logout">Log out</a></li> -->
+<%-- 					</c:when> --%>
+<%-- 				</c:choose> --%>
+<!-- 			</ul> -->
+<!-- 		</div> -->
+<!-- 	</nav> -->
+
+	<nav id="navBar" class="">
+		<div class="nav-container">
+			<div class=nav-border>
+				<div class="logo">
+					<a id="home" class="" href="/JobSearch/user/profile">Labor
+						Vault</a>
+				</div>
+				<ul class="nav-items">
+					<div class="link nav-item">
+						<li><a href="/JobSearch/logout">Log out</a></li>
+					</div>
+					<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
+					<c:choose>
+						<c:when test="${user.getProfileId() == 1}">
+							<div class="link nav-item">
+								<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
+							</div>
+						</c:when>
+						<c:when test="${user.getProfileId() == 2}">
+							<div class="link nav-item">
+								<li><a href="/JobSearch/employees/find">Find Employees</a></li>
+							</div>
+							<div class="link nav-item">
+								<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
+							</div>
+						</c:when>
+					</c:choose>
+		
+					<c:choose>
+						<c:when test="${user.getFirstName() != null}">
+							<div class="link nav-item">
+							<li><a href="/JobSearch/viewProfile">Profile</a></li>
+							</div>
+
+						</c:when>
+					</c:choose>
+				</ul>
+			</div>
 		</div>
-		<ul class="nav navbar-nav">
-			<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
-			<c:choose>
-				<c:when test="${user.getProfileId() == 1}">
-					<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
-				</c:when>
-				<c:when test="${user.getProfileId() == 2}">
-					<li><a href="/JobSearch/employees/find">Find Employees</a></li>
-					<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
-				</c:when>
-			</c:choose>
-
-			<c:choose>
-				<c:when test="${user.getFirstName() != null}">
-					<li><a href="/JobSearch/viewProfile">Profile</a></li>
-					<li><a href="/JobSearch/logout">Log out</a></li>
-				</c:when>
-			</c:choose>
-		</ul>
-	</div>
 	</nav>
-
 
 <script type="text/javascript">
 	var environmentVariables ={

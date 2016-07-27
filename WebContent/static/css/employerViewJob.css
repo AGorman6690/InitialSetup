@@ -1,0 +1,122 @@
+table{
+	table-layout:fixed;
+	width:100%;
+}
+
+.table-container{
+    width: 1000px;
+}
+
+#applicantName{
+	width:15%;
+}
+
+#rating{
+	width:5%;
+}
+
+#endorsements{
+	width:15%;
+}
+
+#questions{
+	width:40;
+}
+
+#status{
+	width:25%;
+}
+
+
+.header{
+	border-bottom: 2px outset #F0F0F0;
+}
+
+.jobs-table-container{
+	padding-top:25px;
+}
+
+.endorsement{
+	padding:5px;
+}
+
+.has-applicants{
+	cursor:pointer;
+}
+
+.has-new-applicants{
+	color: #e24c9a;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.no-applicants{
+	cursor:default;
+}
+
+
+
+
+#applicantsTable .applicant-name{
+	width:20%;
+}
+
+#applicantsTable .applicant-rating{
+	width:20%;
+}
+
+#applicantsTable .applicant-endorsements{
+	width:40%;
+}
+
+.job-row {
+    border-top: 3px solid #ddd;    
+}
+
+.job-row:first-of-type {
+    border-top: 0;    
+}
+
+#applicantsTable thead tr{
+	 border-bottom: 2px solid #ddd;   
+}
+
+#applicantsTable tbody tr{
+	 border-bottom: 1px solid #ddd;   
+}
+
+.applicants-container h4{
+	background-color:#163B3D;
+	color:#ffffff;
+	padding:5px;
+}
+
+td{
+	padding: 8px;
+}
+
+td.has-new-applicants{
+	padding: 6px;
+}
+
+
+.applicants-row tbody tr{
+	font-size:12.5px;
+}
+
+.applicants-row{
+	display:none;
+}
+
+.applicants-container{
+	padding:5px 150px;
+}
+
+.applicants{
+	padding:10px;
+}
+
+.count{
+	margin-left:5px;
+}
+

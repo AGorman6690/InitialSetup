@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
@@ -29,14 +30,16 @@ public class ApplicationRepository {
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
 			@Override
-			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {
+			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {				
+				
 				Application application = new Application();
 				application.setApplicationId(rs.getInt("ApplicationId"));
 				application.setUserId(rs.getInt("UserId"));
 				application.setJobId(rs.getInt("JobId"));
-				application.setBeenViewed(rs.getInt("BeenViewed"));
+				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setStatus(rs.getInt("Status"));
 
+				//Set the applicant
 				JobSearchUser user = new JobSearchUser();
 				user.setUserId(rs.getInt("UserId"));
 				user.setFirstName(rs.getString("FirstName"));
@@ -265,6 +268,12 @@ public class ApplicationRepository {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setHasBeenViewed(int jobId, int value) {
+		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, jobId });
+		
 	}
 
 }

@@ -37,6 +37,15 @@ public class Job {
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
 	private List<Question> questions;
+	private int newApplicationCount;
+
+	public int getNewApplicationCount() {
+		return newApplicationCount;
+	}
+
+	public void setNewApplicationCount(int newApplicationCount) {
+		this.newApplicationCount = newApplicationCount;
+	}
 
 	public List<Question> getQuestions() {
 		return questions;
