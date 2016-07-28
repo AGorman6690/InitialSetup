@@ -30,7 +30,6 @@ public class JobSearchUser {
 	private List<Endorsement> endorsements;
 	private Application application;
 	private double rating;
-	private List<Answer> answers;
 	private List<String> availableDates;
 	private float homeLat;
 	private float homeLng;
@@ -40,6 +39,7 @@ public class JobSearchUser {
 	private int maxWorkRadius; //Units = miles
 	private double distanceFromJob;
 	private int createNewPassword;
+//	private List<Answer> answers;
 
 	public double getDistanceFromJob() {
 		return distanceFromJob;
@@ -113,13 +113,13 @@ public class JobSearchUser {
 		this.availableDates = availableDates;
 	}
 
-	public List<Answer> getAnswers() {
-		return answers;
-	}
-
-	public void setAnswers(List<Answer> answers) {
-		this.answers = answers;
-	}
+//	public List<Answer> getAnswers() {
+//		return answers;
+//	}
+//
+//	public void setAnswers(List<Answer> answers) {
+//		this.answers = answers;
+//	}
 
 	public List<CompletedJobResponseDTO> getCompletedJobs() {
 		return completedJobs;

@@ -11,6 +11,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
+import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
@@ -21,7 +22,7 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	ApplicationRepository repository;
-	
+
 	@Autowired
 	CategoryServiceImpl categoryService;
 
@@ -40,9 +41,15 @@ public class ApplicationServiceImpl {
 		
 		//Set each applicant's endorsements
 		for (Application application : applications) {
+			
+
 		
 			JobSearchUser applicant = application.getApplicant();
 			applicant.setEndorsements(new ArrayList<Endorsement>());
+//			applicant.setAnswers(this.getAnswers(application.ge, userId));
+			
+			//Set the application's questions and answers
+			application.setQuestions(this.getQuestions(jobId, applicant.getUserId()));
 			
 			//Get the applicant's endorsement for ONLY the particular job's
 			//categories, not ALL categories.
@@ -58,6 +65,8 @@ public class ApplicationServiceImpl {
 				
 				//Add the endorsement to the applicant
 				applicant.getEndorsements().add(endorsement);
+				
+				
 			}
 
 		}
@@ -93,7 +102,7 @@ public class ApplicationServiceImpl {
 		//Whether the applicant answered all the questions is handled on the client side.
 		//At this point, all questions have a valid answer.
 		for(Answer answer : applicationDto.getAnswers()){
-
+			answer.setUserId(applicationDto.getUserId());
 			if (answer.getAnswerText() != ""){
 				repository.addTextAnswer(answer);
 			}else if(answer.getAnswerBoolean() != -1){
@@ -134,12 +143,41 @@ public class ApplicationServiceImpl {
 
 
 	public List<Question> getQuestions(int jobId) {
+		//This will not set an answer
 
 		List<Question> questions = repository.getQuestions(jobId);
 		for(Question q : questions){
 			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
 		}
 		return questions;
+	}
+	
+	public List<Question> getQuestions(int jobId, int userId) {
+		//This will set the user's answers 
+
+		List<Question> questions = repository.getQuestions(jobId);
+		for(Question q : questions){
+			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
+			q.setAnswer(this.getAnswer(q.getQuestionId(), userId));
+		}
+		return questions;
+	}
+
+
+	public  List<AnswerOption> getAnswerOptions(int questionId) {
+		repository.getAnswerOptions(questionId);
+		return null;
+	}
+
+
+	public Answer getAnswer(int questionId, int userId) {
+
+		Answer answer = repository.getAnswer(questionId, userId);
+		for (Answe)
+//		
+//		//Set the answer's answer.
+//		//Because a question can be in one of several formats, the answer this will 
+		return repository.getAnswer(questionId, userId);
 	}
 
 

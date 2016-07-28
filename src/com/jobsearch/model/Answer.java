@@ -10,9 +10,21 @@ public class Answer {
 	private String answerText;
 	private int answerBoolean;	
 	private List<String> answers;
+	private String answer;
+	
+	//0: Yes/N0
+	//1: Short answer
+	//2: Single answer
+	//3: Multi answer
 	private int questionFormatId;
+
 	
-	
+	public String getAnswer() {
+		return answer;
+	}
+	public void setAnswer(String answer) {
+		this.answer = answer;
+	}
 	public int getQuestionFormatId() {
 		return questionFormatId;
 	}

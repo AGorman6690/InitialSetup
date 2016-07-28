@@ -56,39 +56,6 @@ public class JobController {
 
 		jobService.addPosting(postingDto);
 	}
-
-//	@RequestMapping(value = "/jobs/filter_OLD", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getFilteredJobs_OLD(@RequestParam(required = true) int radius,
-//			@RequestParam(required = true) String fromAddress,
-//			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
-//			@RequestParam(required = false) String startTime,
-//			@RequestParam(required = false) String endTime,
-//			@RequestParam(required = false) boolean beforeStartTime,
-//			@RequestParam(required = false) boolean beforeEndTime,
-//			@RequestParam(required = false) String startDate,
-//			@RequestParam(required = false) String endDate,
-//			@RequestParam(required = false) boolean beforeStartDate,
-//			@RequestParam(required = false) boolean beforeEndDate,
-//			@RequestParam(value = "day", required = false) List<String> workingDays,
-//			@RequestParam(required = false, defaultValue= "-1") Double duration,
-//			@RequestParam(required = false) boolean lessThanDuration,
-//			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
-//			{
-////
-//		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
-//				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-//				lessThanDuration, returnJobCount);
-//
-//
-//		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
-//															// endDate));
-//
-//		// Set the filter criteria specified by user
-//
-//		return JSON.stringify(filter);
-//
-//	}
 	
 	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
@@ -170,11 +137,15 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto, ModelAndView model) {
+	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
+								ModelAndView model, HttpSession session) {
 
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		applicationDto.setUserId(user.getUserId());
 		applicationService.applyForJob(applicationDto);
 
 	}
+	
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
@@ -184,12 +155,38 @@ public class JobController {
 //		model.setViewName("FindJobs");
 		return "FindJobs";
 	}
+	
+	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
+	public String employeeViewJob(Model model, HttpSession session, @PathVariable int jobId) {
+		
+		Job job = jobService.getJobPostingInfo(jobId);
+		model.addAttribute("job", job);
+		model.addAttribute("user", session.getAttribute("user"));
+//		model.setViewName("FindJobs");
+		return "EmployeeViewJob";
+	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable int jobId, Model model) {
 
 		Job selectedJob = jobService.getJob(jobId);
+
+		//****************************************************************************************
+		//****************************************************************************************
+		//Why does the job have both applications and applicants???????
+		//Shouldn't applicants be enough?????
+		//Each application object has an applicant property.
+		//This is redundant.
+		//I will address this.
+		//UPDATE:
+		//This is done this way because the "Status" is a property of the application, not the applicant.
+		//I think removing the applicants from the job is the way to go.
+		//Check back later.
 		selectedJob.setApplications(applicationService.getApplicationsByJob(jobId));
+		//****************************************************************************************
+		//****************************************************************************************
+		
+		
 
 		//
 

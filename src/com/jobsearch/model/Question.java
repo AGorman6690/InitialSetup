@@ -3,13 +3,20 @@ package com.jobsearch.model;
 import java.util.List;
 
 public class Question {
+	
 	private int questionId;
 	private String question;
 	private int formatId;
 	private int jobId;
 	private List<AnswerOption> answerOptions;
+	private Answer answer;	
 	
-	
+	public Answer getAnswer() {
+		return answer;
+	}
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
+	}
 	public List<AnswerOption> getAnswerOptions() {
 		return answerOptions;
 	}

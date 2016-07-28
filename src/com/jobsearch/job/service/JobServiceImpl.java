@@ -217,18 +217,37 @@ public class JobServiceImpl {
 
 		return completedJobDtos;
 	}
+	
+	public Job getJobPostingInfo(int jobId) {
+		// This only sets the job properties that relate to the job posting
+		// i.e. no applicants, no employees, etc. 
+		
+		Job job = repository.getJob(jobId);
+		
+		// Set job categories
+		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+
+		// Set job questions
+		job.setQuestions(applicationService.getQuestions(job.getId()));		
+		
+		return job;
+	}
+
+	
 
 	public Job getJob(int jobId) {
-		// TODO Auto-generated method stub
+		//This sets almost(?) all of the job's properties
+
+		
 		Job job = repository.getJob(jobId);
 
-		// Get job categories
+		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 		// Set job questions
 		job.setQuestions(applicationService.getQuestions(job.getId()));
 
-		// Get job applicants
+		// Set job applicants
 		job.setApplicants(userService.getApplicants(jobId));
 
 		// Set each applicant's rating, application, and endorsements only for
@@ -239,7 +258,7 @@ public class JobServiceImpl {
 			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
 			applicant.setEndorsements(
 					userService.getUserEndorsementsByCategory(applicant.getUserId(), job.getCategories()));
-			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
+//			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
 		}
 
 		// Get job employees
@@ -346,5 +365,6 @@ public class JobServiceImpl {
 		return writer.toString();
 		
 	}
+
 
 }

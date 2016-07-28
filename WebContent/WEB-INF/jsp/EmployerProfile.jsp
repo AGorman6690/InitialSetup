@@ -71,7 +71,7 @@
 													</tr>
 												</thead>
 												<tbody>
-													<c:forEach items="${activeJob.applications) }" var="application">
+													<c:forEach items="${activeJob.applications }" var="application">
 													<tr class="applicant-row">
 														<td><a>${application.applicant.firstName }</a></td>
 														<td>${application.applicant.rating }</td>

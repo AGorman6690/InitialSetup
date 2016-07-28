@@ -30,6 +30,7 @@
 								<th id="rating">Rating</th>
 								<th id="endorsements">Endorsements</th>
 								<th id="questions">Questions</th>
+<!-- 								<th id="answers">Answers</th> -->
 								<th id="status">Status</th>
 							</tr>
 						</thead>
@@ -39,7 +40,7 @@
 									<td> ${application.applicant.firstName }</td>
 									<td> ${application.applicant.rating}</td>
 									<td>
-<!-- 													Set endorsements -->
+<!-- 									Set endorsements -->
 										<c:forEach items="${application.applicant.endorsements }" var="endorsement">
 										
 											<div class="endorsement">													
@@ -47,7 +48,40 @@
 											</div>
 										</c:forEach>
 
-									</td>									
+									</td>	
+									<td>
+<!-- 								Questions and answers -->
+									<c:forEach items="${application.questions }" var="question">
+										<div>										
+											${question.question }
+										</div>
+										<div>
+											<c:choose>
+												<c:when test="${question.formatId == 0 }">
+													<c:choose>
+														<c:when test="${question.answer.answerBoolean == 1}">
+														 Yes
+														</c:when>
+														<c:otherwise>
+														No
+														</c:otherwise>	
+													</c:choose>
+													
+												</c:when>
+												<c:when test="${question.formatId == 1 }">
+													${question.answer.answerText }
+												</c:when>
+												<c:when test="${question.formatId == 2 }">
+													
+												</c:when>
+												<c:when test="${question.formatId == 3 }">
+												
+												</c:when>
+											</c:choose>
+											
+										</div>
+									</c:forEach>
+									</td>						
 								</tr>
 							</c:forEach>
 							

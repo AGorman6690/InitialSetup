@@ -127,7 +127,7 @@
 <script>
 	$(document).ready(function() {
 		$("#debug1").click(function() {
-			$("#password").val('1');
+			$("#password").val('jg');
 			$("#userName").val('gorma080@d.umn.edu');
 			$("button[type=submit]")[0].click();
 

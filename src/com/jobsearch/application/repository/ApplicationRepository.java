@@ -67,8 +67,8 @@ public class ApplicationRepository {
 
 	public List<Application> getApplicationsByJob(int jobId) {
 
-		//Get all applications for job.
-		//Less than 3 is anything but accepted
+		//Get all non-accepted applications for job.
+		//Status less than 3 is anything but accepted
 		String sql = "SELECT a.*, u.* "
 				+ "FROM application a "
 				+ "inner join user u "
@@ -138,7 +138,7 @@ public class ApplicationRepository {
 	}
 
 	public List<Question> getQuestions(int id) {
-		String sql = "SELECT * FROM question WHERE JobId = ?";
+		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
 		return this.QuestionRowMapper(sql, new Object[]{ id });
 	}
 

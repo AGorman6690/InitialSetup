@@ -132,7 +132,7 @@
 	 #foreach($job in $jobs)
 	 	<div id="$job.id" class="job" data-lat="$job.lat" data-lng="$job.lng">
 			<div class="job-header">
-				<a href="/JobSearch/job/${job.id}" class="job-name">$job.jobName</a>
+				<a href="/JobSearch/jobs/find/job/${job.id}" class="job-name">$job.jobName</a>
 				<span> - </span>
 				<div class="job-category-container">
 				#foreach($category in $job.categories)
