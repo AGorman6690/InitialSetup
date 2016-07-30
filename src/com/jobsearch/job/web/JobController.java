@@ -169,22 +169,9 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable int jobId, Model model) {
 
-		Job selectedJob = jobService.getJob(jobId);
+		Job selectedJob = jobService.getEmployersJobProfile(jobId);
 
-		//****************************************************************************************
-		//****************************************************************************************
-		//Why does the job have both applications and applicants???????
-		//Shouldn't applicants be enough?????
-		//Each application object has an applicant property.
-		//This is redundant.
-		//I will address this.
-		//UPDATE:
-		//This is done this way because the "Status" is a property of the application, not the applicant.
-		//I think removing the applicants from the job is the way to go.
-		//Check back later.
-		selectedJob.setApplications(applicationService.getApplicationsByJob(jobId));
-		//****************************************************************************************
-		//****************************************************************************************
+
 		
 		
 
@@ -254,7 +241,7 @@ public class JobController {
 		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 		model.addObject("employees", employees);
 
-		Job job = jobService.getJob(jobId);
+		Job job = jobService.getEmployersJobProfile(jobId);
 		model.addObject("job", job);
 
 		model.setViewName("RateEmployees");

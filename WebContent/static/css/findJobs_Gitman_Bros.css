@@ -120,6 +120,14 @@ body{
 /* 	top:220px; */
 	display:none;
 	height:1000px;
+	padding-top:20px;
+}
+
+#additionalFiltersContainer{
+	margin:auto;
+	width:725px;
+	display:block;
+	padding-top:20px;
 }
 
 #getJobs{
@@ -127,8 +135,15 @@ body{
 	color: #ffffff;
 	border-radius: 0 !important;
 	height:42px;
-	width:auto;
 	padding:5px 15px;
+}
+
+#getJobsContainer{
+	margin: auto;
+    width: 100px;
+    display: block;
+    padding-top:20px;
+	
 }
 
 #radius, #state, #zipCode{
@@ -139,11 +154,18 @@ body{
 	width:150px;
 }
 
-#filtersContainer{
-	padding-bottom:20px;
+#distanceFilter{
+	margin: auto;
+    width: 600px;
+    display:block;
+}
+
+#distanceFilterContainer{
+	padding-top:20px;
 /* 	position:fixed; */
 /* 	z-index:1000; */
 /* 	background-color:#ffffff; */
+
 }
 
 #map{

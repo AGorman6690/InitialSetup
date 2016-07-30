@@ -27,7 +27,7 @@
 	
 	<div id="viewJobContainer">
 		<div class="container" >
-			<div class="row" style="">					
+			<div class="row row-padding" style="">					
 				<div class="col-sm-12" style="">
 					
 					<div id="jobActionContainer" class="" style="">
@@ -41,9 +41,9 @@
 				</div><!-- end row -->
 			</div><!-- end job cart container -->	
 	
-			<div id="jobInfoContainer">
+			<div id="">
 	
-					<div class="row" style="margin-top: 10px;" >
+					<div class="row" >
 						<div id="jobGeneralContainer" class="col-sm-6">
 							<form>						
 									<div class="job-sub-info-container">
@@ -66,14 +66,15 @@
 									
 									<div class="job-sub-info-container">
 										<h3>Location</h3>
-										
+									
 										<div class="job-sub-info">
+									
 											<fieldset class="form-group">
 												<label for="streetAddress" class="form-control-label">Street Address</label>
 												<input disabled name="streetAddress" type="text"
 													class="post-job-input form-control" value="${job.streetAddress }"></input>
 											</fieldset>
-											
+
 											<fieldset class="form-group">
 												<label for="city" class="form-control-label">City</label>
 												<input disabled name="city" type="text"
@@ -84,8 +85,7 @@
 												<label for="state" class="form-control-label">State</label>
 												<input disabled name="state" type="text"
 													class="post-job-input form-control" value="${job.state }"></input>
-											</fieldset>
-	
+											</fieldset>	
 											
 											<fieldset class="form-group">
 												<label for="zipCode" class="form-control-label">Zip Code</label>
@@ -153,7 +153,7 @@
 									<c:forEach items="${job.questions }" var="question">
 										<div class="question" data-id="${question.questionId }" data-format-id="${question.formatId }">
 											<div class="text">
-												${question.question }
+												${question.text }
 											</div>
 											<div class="answer">
 											<c:choose>
@@ -194,7 +194,7 @@
 									<br>
 									----------------- put a map here -----------------				
 							</div>
-						</div> <!-- end job questions container -->
+						</div> end job questions container
 					</div><!-- end row -->
 				</div><!-- end job info container -->
 		</div><!-- end container -->
@@ -283,6 +283,7 @@
 				
 	})
 	
+	
 	function apply(){
 		
 		//*******************************************************		
@@ -290,6 +291,12 @@
 		//Still need to include verification css 
 		//*******************************************************		
 		//*******************************************************
+		
+		var answerText;
+		var answerTexts = [];
+		var questionId;
+		var j;
+		var answer = {};
 
 		//Initialize application DTO
 		var applicationDTO = {};
@@ -303,32 +310,81 @@
 		for(var i = 0; i < questions.length; i++){
 			
 			//Initialize answer object
-			var answer = {};
-			answer.answerText = "";
-			answer.answerBoolean = -1;
-			answer.answerOptionId = -1;
-			answer.answerOptionIds = [];
+// 			var answer = {};
+// // 			answer.answerText = "";
+// // 			answer.answerBoolean = -1;
+// // 			answer.answerOptionId = -1;
+// // 			answer.answerOptionIds = [];
+// 			answer.text = "";
+// 			answer.texts = [];
 			
 			var questionElement = questions[i];
 			var questionFormatId = $(questionElement).data("formatId"); //$(questionElement).find(".question-format-id").val();
-
-			//Get answer value and validate answer value
-			if(questionFormatId == 0){
-				answer.answerBoolean = $(questionElement).find('input[type=radio]:checked').val();
-				if(answer.answerBoolean == "") invalidAnswer = 1;
+			var questionId = $(questionElement).data('id');
+			//Get answer value and validate answer value.
+			//questionFormatIds:
+			//0: Yes/No
+			//1: Short answer
+			//2: Single answer
+			//3: Multi answer
+			answerTexts = [];
+			if(questionFormatId == 0 || questionFormatId == 2){
+				answerTexts[0] = $(questionElement).find('input[type=radio]:checked').parents('label').text();;
+// 				if(value == 1){
+// 					answer.text = "Yes";
+// 				}else if(value == 0){
+// 					answer.text = "No";
+// 				}else{
+// 					invalidAnswer = 1;
+// 				}
+				
 			}else if(questionFormatId == 1){
-				answer.answerText = $(questionElement).find('textarea').val()
-				if(answer.answerText == "") invalidAnswer = 1;
-			}else if(questionFormatId == 2){
-				answer.answerOptionId = $(questionElement).find('input[type=radio]:checked').val();
-				if(answer.answerOptionId == "") invalidAnswer = 1;
+				
+				answerTexts[0] = $(questionElement).find('textarea').val()
+// 				if(value == ""){
+// 					invalidAnswer = 1;
+// 				}else{
+// 					answer.text = value;
+// 				}
+// 			}else if(questionFormatId == 2){
+				
+// 				answerTexts = $(questionElement).find('input[type=radio]:checked').val();
+// 				if(value == ""){
+// 					invalidAnswer = 1;
+// 				}else{
+// 					answer.text = answerText;
+// 				}
 			}else if(questionFormatId == 3){
-				answer.answerOptionIds = $(questionElement).find('input[type=checkbox]:checked').map(function(){ return this.value }).get();
-				if(answer.answerOptionIds == "") invalidAnswer = 1;
+				
+				//Get the checked checkbox's parent's text
+				answerTexts = $(questionElement).find('input[type=checkbox]:checked').map(function(){ return $(this).parents('label').text() }).get();
+// 				if(answerTexts.length == 0){
+// 					invalidAnswer = 1;
+// 				}else{
+// 					answer.texts = answerTexts;
+// 				}
+			}
+			
+			if(answerTexts.length == 0 || answerTexts[0] == ""){
+				invalidAnswer = 1;
+			}else{
+				for(j = 0; j < answerTexts.length; j++){
+					
+					//Initialize answer object
+					answer = {};
+					answer.text = answerTexts[j];
+					answer.questionId = questionId;
+// 					answer.texts = [];
+					applicationDTO.answers.push(answer);
+				}
+
+				
+				
+				
 			}
 
-			answer.questionId = $(questionElement).data('id');
-			applicationDTO.answers.push(answer);
+// 			answer.questionId = $(questionElement).data('id');
+// 			applicationDTO.answers.push(answer);
 		}
 
 

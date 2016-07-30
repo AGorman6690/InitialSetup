@@ -235,7 +235,7 @@ public class JobServiceImpl {
 
 	
 
-	public Job getJob(int jobId) {
+	public Job getEmployersJobProfile(int jobId) {
 		//This sets almost(?) all of the job's properties
 
 		
@@ -243,23 +243,41 @@ public class JobServiceImpl {
 
 		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+		
+		
+		//****************************************************************************************
+		//****************************************************************************************
+		//Why does the job have both applications and applicants???????
+		//Shouldn't applicants be enough?????
+		//Each application object has an applicant property.
+		//This is redundant.
+		//I will address this.
+		//UPDATE:
+		//This is done this way because the "Status" is a property of the application, not the applicant.
+		//I think removing the applicants from the job is the way to go.
+		//Check back later.
+		job.setApplications(applicationService.getApplicationsByJob(jobId));
+		//****************************************************************************************
+		//****************************************************************************************
+		
+		
 
-		// Set job questions
+//		// Set job questions
 		job.setQuestions(applicationService.getQuestions(job.getId()));
 
-		// Set job applicants
-		job.setApplicants(userService.getApplicants(jobId));
+//		// Set job applicants
+//		job.setApplicants(userService.getApplicants(jobId));
 
 		// Set each applicant's rating, application, and endorsements only for
 		// the job's categories
-		for (JobSearchUser applicant : job.getApplicants()) {
-			// applicant.setRatings(userService.getRatings(applicant.getUserId()));
-			applicant.setRating(userService.getRating(applicant.getUserId()));
-			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
-			applicant.setEndorsements(
-					userService.getUserEndorsementsByCategory(applicant.getUserId(), job.getCategories()));
-//			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
-		}
+//		for (JobSearchUser applicant : job.getApplicants()) {
+//			// applicant.setRatings(userService.getRatings(applicant.getUserId()));
+//			applicant.setRating(userService.getRating(applicant.getUserId()));
+//			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
+//			applicant.setEndorsements(
+//					userService.getUserEndorsementsByCategory(applicant.getUserId(), job.getCategories()));
+//			//			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
+//		}
 
 		// Get job employees
 		job.setEmployees(userService.getEmployeesByJob(jobId));

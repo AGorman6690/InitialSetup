@@ -2,13 +2,14 @@
 	margin-left:50px;
 }
 
+.row-padding{
+	padding:10px 0px;
+}
+
 .questions-header{
 	border-top-style: inset;
 }
 
-.block{
-	display:block;
-}
 
 .answer{
 	padding-left:10px;

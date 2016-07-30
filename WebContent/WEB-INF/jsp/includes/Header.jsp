@@ -126,8 +126,8 @@
 <!-- 	</nav> -->
 
 	<nav id="navBar" class="">
-		<div class="nav-container">
-			<div class=nav-border>
+		<div class="nav-container nav-border">
+			<div class=>
 				<div class="logo">
 					<a id="home" class="" href="/JobSearch/user/profile">Labor
 						Vault</a>

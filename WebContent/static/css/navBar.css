@@ -55,6 +55,8 @@ a{
 /* 	position:fixed; */
 /* 	top:0px; */
 	overflow:overlay;
+    max-width: 1200px;
+    margin: auto;	
 
 }
 

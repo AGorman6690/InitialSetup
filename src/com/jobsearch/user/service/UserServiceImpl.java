@@ -111,8 +111,17 @@ public class UserServiceImpl {
 			
 			//When the profile is requested and presented to the user,
 			//all the applications' "HasBeenViewed" property, for the user's active jobs,
-			//will be set to true
+			//will be set to true.
+			
+			//*********************************************************************			
+			//*********************************************************************
+			//On second thought, this should be set to zero when the user clicks and views
+			//the new applicants
 			applicationService.setHasBeenViewed(user.getActiveJobs(), 1);
+			//*********************************************************************			
+			//*********************************************************************
+
+			
 		} else if (user.getProfileId() == 1) {
 
 			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));

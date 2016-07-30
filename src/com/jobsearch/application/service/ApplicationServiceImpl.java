@@ -49,7 +49,7 @@ public class ApplicationServiceImpl {
 //			applicant.setAnswers(this.getAnswers(application.ge, userId));
 			
 			//Set the application's questions and answers
-			application.setQuestions(this.getQuestions(jobId, applicant.getUserId()));
+			application.setQuestions(this.getQuestionsWithAnswers(jobId, applicant.getUserId()));
 			
 			//Get the applicant's endorsement for ONLY the particular job's
 			//categories, not ALL categories.
@@ -83,7 +83,7 @@ public class ApplicationServiceImpl {
 	public void updateStatus(int applicationId, int status) {
 		repository.updateStatus(applicationId, status);
 
-		//If hired
+//		//If hired
 		if (status == 3){
 			Application application = getApplication(applicationId);
 			userService.hireApplicant(application.getUserId(), application.getJobId());
@@ -101,45 +101,30 @@ public class ApplicationServiceImpl {
 
 		//Whether the applicant answered all the questions is handled on the client side.
 		//At this point, all questions have a valid answer.
+		
 		for(Answer answer : applicationDto.getAnswers()){
 			answer.setUserId(applicationDto.getUserId());
-			if (answer.getAnswerText() != ""){
-				repository.addTextAnswer(answer);
-			}else if(answer.getAnswerBoolean() != -1){
-				repository.addBooleanAnswer(answer);
-			}else if(answer.getAnswerOptionId() != -1){
-				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
-			}else if(answer.getAnswerOptionIds().size() > 0){
-				for(int answerOptionId : answer.getAnswerOptionIds()){
-					repository.addOptionAnswer(answer, answerOptionId);
-				}
-			}
+			repository.addAnswer(answer);
+//			if (answer.getText() != ""){
+//				repository.addTextAnswer(answer);
+//			}else if(answer.getAnswerBoolean() != -1){
+//				repository.addBooleanAnswer(answer);
+//			}else if(answer.getAnswerOptionId() != -1){
+//				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
+//			}else if(answer.getAnswerOptionIds().size() > 0){
+//				for(int answerOptionId : answer.getAnswerOptionIds()){
+//					repository.addOptionAnswer(answer, answerOptionId);
+//				}
+//			}
 		}
 	}
 
 
-	public List<Answer> getAnswers(List<Question> questions, int userId) {
-
-		List<Answer> answers = new ArrayList<Answer>();
-
-		for(Question question : questions){
-			Answer answer;
-
-			if(question.getFormatId() == 2 || question.getFormatId() == 3){
-				answer = new Answer();
-				answer.setAnswers(repository.getAnswers(question.getQuestionId(), userId));
-//			}else if(question.getFormatId() == 2){
-//				answer = repository.getAnswer(question.getQuestionId(), userId);
-//
-			}else{
-				answer = repository.getAnswer(question.getQuestionId(), userId);
-			}
-
-			answer.setQuestionFormatId(question.getFormatId());
-			answers.add(answer);
-		}
-		return answers;
+	public List<Answer> getAnswers(int questionId, int userId) {
+		return repository.getAnswers(questionId, userId);
 	}
+
+
 
 
 	public List<Question> getQuestions(int jobId) {
@@ -152,13 +137,13 @@ public class ApplicationServiceImpl {
 		return questions;
 	}
 	
-	public List<Question> getQuestions(int jobId, int userId) {
+	public List<Question> getQuestionsWithAnswers(int jobId, int userId) {
 		//This will set the user's answers 
 
 		List<Question> questions = repository.getQuestions(jobId);
 		for(Question q : questions){
 			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
-			q.setAnswer(this.getAnswer(q.getQuestionId(), userId));
+			q.setAnswers(this.getAnswers(q.getQuestionId(), userId));
 		}
 		return questions;
 	}
@@ -173,7 +158,7 @@ public class ApplicationServiceImpl {
 	public Answer getAnswer(int questionId, int userId) {
 
 		Answer answer = repository.getAnswer(questionId, userId);
-		for (Answe)
+		//for (Answe)
 //		
 //		//Set the answer's answer.
 //		//Because a question can be in one of several formats, the answer this will 

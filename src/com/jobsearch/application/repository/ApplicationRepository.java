@@ -109,26 +109,26 @@ public class ApplicationRepository {
 
 	}
 
-	public void addTextAnswer(Answer answer) {
+	public void addAnswer(Answer answer) {
 
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerText) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerText() });
-
-	}
-
-	public void addBooleanAnswer(Answer answer) {
-
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerBoolean) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerBoolean() });
+		String sql = "INSERT INTO answer (QuestionId, UserId, Text) VALUES(?, ?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getText() });
 
 	}
 
-	public void addOptionAnswer(Answer answer, int optionId) {
+//	public void addBooleanAnswer(Answer answer) {
+//
+//		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerBoolean) VALUES(?, ?, ?)";
+//		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerBoolean() });
+//
+//	}
 
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerOptionId) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), optionId });
-
-	}
+//	public void addOptionAnswer(Answer answer, int optionId) {
+//
+//		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerOptionId) VALUES(?, ?, ?)";
+//		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), optionId });
+//
+//	}
 
 	public void addApplication(int jobId, int userId) {
 		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
@@ -151,18 +151,17 @@ public class ApplicationRepository {
 	}
 
 	public Answer getAnswer(int questionId, int userId) {
+
 		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
-		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId }).get(0);
+		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId }).get(0);	
+
+		
 	}
 
-	public List<String> getAnswers(int questionId, int userId) {
+	public List<Answer> getAnswers(int questionId, int userId) {
 
-		String sql = "SELECT answer_option.AnswerOption FROM answer_option "
-				+ "	WHERE answer_option.AnswerOptionId IN"
-				+ " (SELECT AnswerOptionId FROM answer WHERE QuestionId = ?"
-				+ " AND UserId = ?)";
-
-		return jdbcTemplate.queryForList(sql, new Object[]{ questionId, userId }, String.class);
+		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
+		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId });
 	}
 
 	public List<AnswerOption> AnswerOptionRowMapper(String sql, Object[] args) {
@@ -202,7 +201,7 @@ public class ApplicationRepository {
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setJobId(rs.getInt("JobId"));
 					e.setFormatId(rs.getInt("FormatId"));
-					e.setQuestion(rs.getString("Question"));
+					e.setText(rs.getString("Question"));
 
 					return e;
 				}
@@ -223,10 +222,10 @@ public class ApplicationRepository {
 				@Override
 				public Answer mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Answer e = new Answer();
-					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
+//					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
 					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setAnswerText(rs.getString("AnswerText"));
-					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
+					e.setText(rs.getString("Text"));
+//					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
 					e.setUserId(rs.getInt("UserId"));
 
 					return e;
@@ -247,7 +246,7 @@ public class ApplicationRepository {
 			cStmt = jdbcTemplate.getDataSource().getConnection().
 					prepareCall("{call insert_question(?, ?, ?)}");
 
-			cStmt.setString(1, question.getQuestion());
+			cStmt.setString(1, question.getText());
 			cStmt.setInt(2, question.getFormatId());
 			cStmt.setInt(3, question.getJobId());
 

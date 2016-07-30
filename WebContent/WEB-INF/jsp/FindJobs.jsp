@@ -23,9 +23,9 @@
 
 	<input type="hidden" id="userId" value="${user.userId}" />
 	
-	<div class="page-container">
+	<div class="container">
 		<div class="row">
-			<div id="filtersContainer" class="col-sm-12">
+			<div id="distanceFilterContainer" class="col-sm-12">
 			
 				<div id="radiusErrorMessage" class="error-message"></div>
 				<div id="locationErrorMessage" class="error-message"></div>
@@ -50,14 +50,12 @@
 							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
 					</div>																			
 				</div>
+			</div>
+		</div>
 				
-				<div class="input-container-group">
-					<div class="input-container">
-						<button id="getJobs" class="btn">Get Jobs</button>
-					</div>
-				</div>
-				
-				<div class="input-container-group">
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="additionalFiltersContainer" class="input-container-group">
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
 							<div data-display-text="Start"								
@@ -207,10 +205,20 @@
 									
 					</div>					
 				</div>			
-								
 			</div> <!--  end filters container -->
 		</div> <!-- end filters row -->	
 		
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="getJobsContainer" class="input-container-group">
+					<div class="input-container">
+						<button id="getJobs" class="btn">Get Jobs</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		</div>
 		<div class="row" id="mainBottom">
 			<div id="jobsContainer" class="col-sm-4 right-border" >
 <!-- 				<h3 class="header">Jobs</h3>							 -->
@@ -345,7 +353,7 @@
 			</div>		
 		</div>
 		
-	</div>
+
 	
 	
 <!-- 	<form> -->

@@ -29,59 +29,108 @@
 								<th id="applicantName">Applicant Name</th>
 								<th id="rating">Rating</th>
 								<th id="endorsements">Endorsements</th>
-								<th id="questions">Questions</th>
+								<th id="questions"><span class="toggle-select-options"> Questions <span class="glyphicon glyphicon-menu-down"></span></span>
+									<div class="select-options-container">
+										<div class="select-options full-border-thick">
+											<span id="selectQuestionsOK" class="select-OK glyphicon glyphicon-ok"></span>			
+											<div class="radio">
+												<label class="block select-option"><input id="showAll" class="show-all" type="radio" name="mass-select" value="all">All</label>
+												<label class="block select-option"><input id="showNone" class="show-none" type="radio" name="mass-select" value="none">None</label>
+											</div>
+											<div class="checkbox">
+											<c:forEach items="${job.questions }" var="question">
+												<label class="block select-option"><input type="checkbox" name="individual-select" value="${question.questionId }">${question.text }</label>
+											</c:forEach>
+												
+											</div>
+											
+										</div>		
+																	
+									</div>							
+								</th>
 <!-- 								<th id="answers">Answers</th> -->
-								<th id="status">Status</th>
+								<th id="status"><span class="toggle-select-options"> Status <span class="glyphicon glyphicon-menu-down"></span></span>
+									<div class="select-options-container">
+										<div class="select-options full-border-thick">
+											<span id="selectStatusesOK" class="select-OK glyphicon glyphicon-ok"></span>			
+											<div class="radio">
+												<label class="block select-option"><input class="show-all" id="showAllStatus" type="radio" name="mass-select" value="all">All</label>
+						
+											</div>
+											<div class="checkbox">
+											<label class="block select-option"><input type="checkbox" name="individual-select-status" value="0">Submitted</label>
+												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="1">Decline</label>
+												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="2">Considering</label>
+												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="3">Hire</label>
+											</div>
+											
+										</div>	
+								
+									</div>	
+								</th>
 							</tr>
 						</thead>
 						<tbody>
 							<c:forEach items="${job.getApplications() }" var="application">
-								<tr>
+								<tr id="${application.applicationId }" class="applicant bottom-border-thin" data-select-option-value="${application.status }"
+									data-application-id="${application.applicationId }">
 									<td> ${application.applicant.firstName }</td>
 									<td> ${application.applicant.rating}</td>
-									<td>
-<!-- 									Set endorsements -->
+<!-- 								Set endorsements -->
+									<td>										
 										<c:forEach items="${application.applicant.endorsements }" var="endorsement">
 										
 											<div class="endorsement">													
-												${endorsement.getCategoryName() } <span class="badge count">  ${endorsement.getCount() }</span>
+												${endorsement.categoryName } <span class="badge count">  ${endorsement.count }</span>
 											</div>
 										</c:forEach>
 
 									</td>	
-									<td>
 <!-- 								Questions and answers -->
+									<td>
 									<c:forEach items="${application.questions }" var="question">
-										<div>										
-											${question.question }
-										</div>
-										<div>
-											<c:choose>
-												<c:when test="${question.formatId == 0 }">
-													<c:choose>
-														<c:when test="${question.answer.answerBoolean == 1}">
-														 Yes
-														</c:when>
-														<c:otherwise>
-														No
-														</c:otherwise>	
-													</c:choose>
-													
-												</c:when>
-												<c:when test="${question.formatId == 1 }">
-													${question.answer.answerText }
-												</c:when>
-												<c:when test="${question.formatId == 2 }">
-													
-												</c:when>
-												<c:when test="${question.formatId == 3 }">
+										<div data-select-option-value="${question.questionId }" class="question bottom-border-thin">										
+											${question.text }
+										
+											<div class="answer">
+												<c:forEach items="${question.answers }" var="answer">
+													${answer.text }
+												</c:forEach>
 												
-												</c:when>
-											</c:choose>
-											
+											</div>
 										</div>
 									</c:forEach>
-									</td>						
+									</td>
+<!-- 								Application Status						 -->
+									<td>
+										<div class="application-status-container">
+											<c:choose>
+												<c:when test="${application.status == 1 }">
+												<button id="declineApplicant" value="1" class="active">Decline</button>
+												</c:when>
+												<c:otherwise>
+												<button id="declineApplicant" value="1" class="">Decline</button>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when test="${application.status == 2 }">
+												<button id="declineApplicant" value="2" class="active">Consider</button>
+												</c:when>
+												<c:otherwise>
+												<button id="declineApplicant" value="2" class="">Consider</button>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when test="${application.status == 3 }">
+												<button id="declineApplicant" value="3" class="active">Hire</button>
+												</c:when>
+												<c:otherwise>
+												<button id="declineApplicant" value="3" class="">Hire</button>
+												</c:otherwise>
+											</c:choose>																						
+											
+										</div>
+									</td>
 								</tr>
 							</c:forEach>
 							
@@ -107,6 +156,128 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		$(".toggle-select-options").click(function(){
+		
+			$($(this).parent().find(".select-options-container")[0]).toggle();
+		
+		})
+		
+		$(".application-status-container button").click(function(){
+			var applicationId;
+			var statusValue;
+			var clickedButton = $(this);
+			var clickedRow = $(this).parents(".applicant");
+			//Get applicant's id
+			applicationId = clickedRow.data("application-id");
+
+			//Get the status value
+			statusValue = $(this).val();
+			
+			var headers = {};
+			headers[$("meta[name='_csrf_header']").attr("content")] = $(
+					"meta[name='_csrf']").attr("content");
+			
+			$.ajax({
+				type : "POST",
+				url : '/JobSearch/application/status/update?applicationId=' + applicationId + "&status=" + statusValue,
+				headers : headers,
+				contentType : "application/json",
+				success: _success,
+			})
+			
+			function _success(){
+				$(".application-status-container button").each(function(){
+					$(this).removeClass("active");
+				})
+				
+				$(clickedRow).attr("data-select-option-value", statusValue);
+				$(clickedButton).addClass("active");
+			}
+
+			
+		})
+		
+		
+		$(".select-OK").click(function(){
+			
+			var clickedId = $(this).attr("id");
+			var elementsToToggle = [];
+			var userSelectedOptionsValues = [];
+			var elementData;
+			var selectOptionsContainer = $(this).parents(".select-options-container")[0];
+			
+			//Determine which header is being filtered.
+			//Set the elements to toggle accordingly.
+			if(clickedId == "selectQuestionsOK"){
+				elementsToToggle = $("tbody").find(".question");
+			}else if(clickedId == "selectStatusesOK"){
+				elementsToToggle = $("tbody").find(".applicant");
+			}			
+			
+			//Hide the dropdown
+			$(selectOptionsContainer).hide();
+					
+			//If show all
+			if($(selectOptionsContainer).find(".show-all").is(":checked")){
+				elementsToToggle.each(function(){
+					$(this).show();
+				})
+				
+			//If show none
+			}else if($(selectOptionsContainer).find(".show-none").is(":checked")){
+				elementsToToggle.each(function(){
+					$(this).hide();
+				})
+				
+			//Else selectively show
+			}else{		
+				
+				//Get the values selected by the user
+				userSelectedOptionsValues = $(".select-options .checkbox").find("input:checked")
+															.map(function(){return $(this).val()}).get();	
+				
+				//Hide and show accordingly
+				elementsToToggle.each(function(){
+					
+					elementData = $(this).data("select-option-value"); 
+					if(jQuery.inArray(elementData.toString(), userSelectedOptionsValues) !== -1){
+						$(this).show();
+					}else{
+						$(this).hide();
+					}
+				})
+			}
+		})
+
+		
+		$(".select-option input[type=checkbox]").click(function(){
+			$(".select-option input[type=radio]").attr("checked", false);
+		})
+		
+		$(".select-option input[type=radio]").click(function(){
+
+			var doCheck;
+			
+			//If "All" was clicked
+			if($(this).val() == "all"){
+				doCheck = true;
+			}else{
+				doCheck = false;
+			}
+			
+			$(".select-option input[type=checkbox]").prop("checked", doCheck);
+		})
+		
+		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		//Old stuff
+		
+		
+		
+		
+		
+		
+		
 		$('#applicantsTable').DataTable();
 		$('#employeesTable').DataTable();
 

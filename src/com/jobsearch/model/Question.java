@@ -4,19 +4,32 @@ import java.util.List;
 
 public class Question {
 	
+	//0: Yes/N0
+	//1: Short answer
+	//2: Single answer
+	//3: Multi answer
+	//Use an enum???????
 	private int questionId;
-	private String question;
+	
+	private String text;
 	private int formatId;
 	private int jobId;
 	private List<AnswerOption> answerOptions;
-	private Answer answer;	
+//	private Answer answer;
+	private List<Answer> answers;
 	
-	public Answer getAnswer() {
-		return answer;
+	public List<Answer> getAnswers() {
+		return answers;
 	}
-	public void setAnswer(Answer answer) {
-		this.answer = answer;
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
 	}
+//	public Answer getAnswer() {
+//		return answer;
+//	}
+//	public void setAnswer(Answer answer) {
+//		this.answer = answer;
+//	}
 	public List<AnswerOption> getAnswerOptions() {
 		return answerOptions;
 	}
@@ -29,11 +42,11 @@ public class Question {
 	public void setQuestionId(int questionId) {
 		this.questionId = questionId;
 	}
-	public String getQuestion() {
-		return question;
+	public String getText() {
+		return text;
 	}
-	public void setQuestion(String question) {
-		this.question = question;
+	public void setText(String text) {
+		this.text = text;
 	}
 	public int getFormatId() {
 		return formatId;

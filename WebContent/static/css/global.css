@@ -1,3 +1,33 @@
+.bottom-border-thin{
+	border-bottom: 2px outset #F0F0F0;
+}
+
+.full-border-thick{
+	border: 5px groove #F0F0F0;
+}
+
+.block{
+	display:block;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .border{
 	border: 5px solid red;
 }
