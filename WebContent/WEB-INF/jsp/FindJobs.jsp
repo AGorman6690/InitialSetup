@@ -7,8 +7,8 @@
 
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
-<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Gitman_Bros.css" />
-<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Jobs.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Gitman_Bros.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Jobs.css" />
 
 <!-- Time picker -->
 <!-- <link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/External/jquery.timepicker.css" /> -->
@@ -845,7 +845,13 @@ $(document).ready(function() {
 		//Set map
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom : zoom,
-			center : myLatLng
+			center : myLatLng,
+			scrollwheel: false,
+			streetViewControl: false,
+// 			disableDefaultUI: true,
+		    mapTypeControlOptions: {
+		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+		    }
 		});
 		
 		//Show job markers
@@ -996,7 +1002,8 @@ $(document).ready(function() {
 			type : "GET",
 				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
 				success : _success,
-				error : _error
+				error : _error,
+				cache: true
 			});
 
 			function _success(response) {
@@ -1024,27 +1031,28 @@ $(document).ready(function() {
 			}
 	}
 	
-	function initMap() {
-		//Eventually initialize it to a user defualt
-		var myLatLng = {
-			lat : 44.954445,
-			lng : -93.091301,
-		};
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom : 8,
-			center : myLatLng,
-			streetViewControl: false,
-// 			disableDefaultUI: true,
-		    mapTypeControlOptions: {
-		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-		    }
+// 	function initMap2() {
+// 		//Eventually initialize it to a user defualt
+// 		var myLatLng = {
+// 			lat : 44.954445,
+// 			lng : -93.091301,
+// 		};
+// 		var map = new google.maps.Map(document.getElementById('map'), {
+// 			zoom : 8,
+// 			center : myLatLng,
+// 			scrollwheel: false,
+// 			streetViewControl: false,
+// // 			disableDefaultUI: true,
+// 		    mapTypeControlOptions: {
+// 		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+// 		    }
 
-		});
-	}
+// 		});
+// 	}
 </script>
 
 <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap_NO_CALLBACK_FOR_NOW">
 	
 </script>
 

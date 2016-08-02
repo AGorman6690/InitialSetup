@@ -1,0 +1,51 @@
+.input-container{
+/* 	display:none; */
+/*     max-width: 330px; */
+    padding: 15px;
+    margin: 0 auto;	
+}
+
+
+
+
+.input-container input, .input-container select{
+	margin:5px 0px;
+	border-radius:0px;
+}
+
+.forgot-password{
+	display:none;
+}
+
+div.sign-up td{
+	padding:2px 0px;
+}
+
+#createAccount{
+	padding-top:15px;
+}
+
+.main-item{
+	display:inline-block;
+	padding:0px 25px;
+}
+
+.main{
+	padding-top:40px;
+    margin: auto;
+    width: 800px;
+    text-align: center;
+}
+
+.main-item a{
+	font-size: 20px;
+	
+}
+
+.main-item a:hover{
+	text-decoration: none;	
+}
+
+.main-item h1{
+	font-size:50px;
+}

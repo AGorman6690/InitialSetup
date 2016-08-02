@@ -86,6 +86,7 @@
 	
 <link href="http://localhost:8080/JobSearch/static/css/navBar.css"
 	rel="stylesheet" />
+
 	
 
 </head>
@@ -95,76 +96,103 @@
 
 <c:set var="LaborVaultHost" scope="session" value="${url}"/>
 
-<!-- 	<nav class=""> -->
-<!-- 		<div class="container-fluid"> -->
-<!-- 			<div class="navbar-header"> -->
-<!-- 				<a id="home" class="navbar-brand" href="/JobSearch/user/profile">Labor -->
-<!-- 					Vault</a> -->
-<!-- 			</div> -->
-<!-- 			<ul class="nav navbar-nav"> -->
-<!-- 				      <li><a href="./viewApplicationsE">View Applications</a></li> -->
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${user.getProfileId() == 1}"> --%>
-
-<!-- 							<li><a href="/JobSearch/jobs/find">Find Jobs</a></li> -->
-			
-<%-- 					</c:when> --%>
-<%-- 					<c:when test="${user.getProfileId() == 2}"> --%>
-<!-- 						<li><a href="/JobSearch/employees/find">Find Employees</a></li> -->
-<!-- 						<li><a href="/JobSearch/viewPostJob">Post Job</a></li> -->
-<%-- 					</c:when> --%>
-<%-- 				</c:choose> --%>
-	
-<%-- 				<c:choose> --%>
-<%-- 					<c:when test="${user.getFirstName() != null}"> --%>
-<!-- 						<li><a href="/JobSearch/viewProfile">Profile</a></li> -->
-<!-- 						<li><a href="/JobSearch/logout">Log out</a></li> -->
-<%-- 					</c:when> --%>
-<%-- 				</c:choose> --%>
-<!-- 			</ul> -->
-<!-- 		</div> -->
-<!-- 	</nav> -->
 
 	<nav id="navBar" class="">
 		<div class="nav-container nav-border">
 			<div class=>
 				<div class="logo">
-					<a id="home" class="" href="/JobSearch/user/profile">Labor
-						Vault</a>
+				<c:choose>
+					<c:when test="${user.profileId > 0 }">
+						<a id="home" class="" href="/JobSearch/user/profile">Labor
+							Vault</a>
+					</c:when>
+					<c:otherwise>
+						<a id="home" class="" href="/JobSearch/">Labor
+						
+							Vault</a>	
+					</c:otherwise>
+					</c:choose>
 				</div>
 				<ul class="nav-items">
-					<div class="link nav-item">
-						<li><a href="/JobSearch/logout">Log out</a></li>
-					</div>
-					<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
+					
 					<c:choose>
-						<c:when test="${user.getProfileId() == 1}">
+						<c:when test="${user.profileId > 0 }">
 							<div class="link nav-item">
-								<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
+								<li><a href="/JobSearch/logout">Log out</a></li>
 							</div>
-						</c:when>
-						<c:when test="${user.getProfileId() == 2}">
-							<div class="link nav-item">
-								<li><a href="/JobSearch/employees/find">Find Employees</a></li>
-							</div>
-							<div class="link nav-item">
-								<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
-							</div>
-						</c:when>
-					</c:choose>
+							<c:choose>
+								<c:when test="${user.profileId == 1}">
+									<div class="link nav-item">
+										<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
+									</div>
+								</c:when>
+								<c:when test="${user.profileId == 2}">
+									<div class="link nav-item">
+										<li><a href="/JobSearch/employees/find">Find Employees</a></li>
+									</div>
+									<div class="link nav-item">
+										<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
+									</div>
+								</c:when>
+							</c:choose>
+				
+							<c:choose>
+								<c:when test="${user.getFirstName() != null}">
+									<div class="link nav-item">
+									<li><a href="/JobSearch/viewProfile">Profile</a></li>
+									</div>
 		
-					<c:choose>
-						<c:when test="${user.getFirstName() != null}">
-							<div class="link nav-item">
-							<li><a href="/JobSearch/viewProfile">Profile</a></li>
-							</div>
-
+								</c:when>
+							</c:choose>
 						</c:when>
+						<c:otherwise>
+							<div id="login" class="click link nav-item">
+								<li><a data-toggle="modal" data-target="#loginContainer">Login</a></li>
+							</div>
+							<div id="signUp" class="click link nav-item">
+								<li>Sign up</li>
+							</div>												
+						</c:otherwise>
 					</c:choose>
 				</ul>
 			</div>
 		</div>
 	</nav>
+	
+	<div id="loginContainer" class="modal fade input-container login bottom-border-thin" role="dialog">
+		
+		<div class="modal-dialog">
+		
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal">&times;</button>
+		        <h4 class="modal-title">Login</h4>
+		      </div>
+		      <div class="modal-body">
+				<form:form class="form-signin" commandName="user"
+					action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
+		
+					<form:input type="text" class="form-control" placeholder="Email"
+						path="username" id="userName" />
+					<form:password class="form-control" placeholder="Password"
+						path="password" id="password" />
+					<div class="forgot-password">
+						<a href="./user/password/reset">Forgot Password?</a>
+					</div>
+					<input class="square-button" type="submit" value="Login"/>
+				</form:form>
+		      </div>
+<!-- 		      <div class="modal-footer"> -->
+<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+<!-- 		      </div> -->
+		    </div>		
+		
+		
+		
+		
+
+		</div>	
+	</div>
 
 <script type="text/javascript">
 	var environmentVariables ={

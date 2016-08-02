@@ -24,6 +24,8 @@
 <body>
 
 	<input id="jobId" value="${job.id }" type="hidden"></input>
+	<input id="jobLat" value="${job.lat }" type="hidden"></input>
+	<input id="jobLng" value="${job.lng }" type="hidden"></input>
 	
 	<div id="viewJobContainer">
 		<div class="container" >
@@ -44,99 +46,32 @@
 			<div id="">
 	
 					<div class="row" >
-						<div id="jobGeneralContainer" class="col-sm-6">
-							<form>						
-									<div class="job-sub-info-container">
-										<h3>General</h3>
-										<div class="job-sub-info">
-											<fieldset class="form-group">
-												<label for="jobName" class="form-control-label">Name</label>
-												<input disabled name="jobName" type="text"
-													class="post-job-input form-control" value="${job.jobName }"></input>
-											</fieldset>
-												
-											<fieldset class="form-group">
-												<label for="jobDescription" class="form-control-label">Description</label>
-												<textarea disabled name="jobDescription" class="form-control" 
-												rows="5" >${job.description }</textarea>
-											</fieldset>
-										</div>
-									</div>
-								
-									
-									<div class="job-sub-info-container">
-										<h3>Location</h3>
-									
-										<div class="job-sub-info">
-									
-											<fieldset class="form-group">
-												<label for="streetAddress" class="form-control-label">Street Address</label>
-												<input disabled name="streetAddress" type="text"
-													class="post-job-input form-control" value="${job.streetAddress }"></input>
-											</fieldset>
-
-											<fieldset class="form-group">
-												<label for="city" class="form-control-label">City</label>
-												<input disabled name="city" type="text"
-													class="post-job-input form-control" value="${job.city }"></input>
-											</fieldset>
-											
-											<fieldset class="form-group">
-												<label for="state" class="form-control-label">State</label>
-												<input disabled name="state" type="text"
-													class="post-job-input form-control" value="${job.state }"></input>
-											</fieldset>	
-											
-											<fieldset class="form-group">
-												<label for="zipCode" class="form-control-label">Zip Code</label>
-												<input disabled name="zipCode" type="text"
-													class="post-job-input form-control" value="${job.zipCode }"></input>
-											</fieldset>
-										</div>
-									</div>
-									
-									<div class="job-sub-info-container">
-										<h3>Date and Time</h3>					
-										
-										<div class="job-sub-info">
-											<fieldset class="form-group">
-												<label for="dateRange" class="form-control-label">Start and End Dates</label>
-												<input disabled style="width: 250px" class="form-control" type="text"
-													value="<fmt:formatDate value="${job.startDate }" pattern="EE, MMM d"/> - <fmt:formatDate value="${job.endDate }" pattern="EE, MMM d"/>"/>
-					
-											</fieldset>								
-											
-											<fieldset class="form-group">
-												<label for="startTime" class="form-control-label">Start Time</label>
-												<input disabled name="startTime" type="text"
-													class="post-job-input form-control time ui-timepicker-input"
-													value="<fmt:formatDate value="${job.startTime }" pattern="K:mm a"/>"></input>
-											</fieldset>
-						
-											<fieldset class="form-group">
-												<label for="endTime" class="form-control-label">End Time</label>
-												<input disabled name="endTime" type="text"
-													class="post-job-input form-control time ui-timepicker-input"
-													value="<fmt:formatDate value="${job.endTime }" pattern="K:mm a"/>"></input>
-											</fieldset>
-											
-										</div>
-									</div>
-									
-									
-									
-									<div id="categoryContainer" class="job-sub-info-container">
-										<h3>Categories</h3>
-										<div class="categories job-sub-info">				
-											<c:forEach items="${job.categories }" var="category">
-												<button class="btn">${category.name }</button>
-											</c:forEach>
-										</div>									
-									</div>				
+						<div class="job-info-container col-sm-6">
+							<div class="header">
+								${job.jobName }
 							
-							
-							
-							</form>
+								<span class="categories job-sub-info">				
+									<c:forEach items="${job.categories }" var="category">
+									<button class="btn">${category.name }</button>
+									</c:forEach>
+								</span>
+							</div>
+							<div class="body">
+								<div class="start">
+									<span class="bold">Start: </span><fmt:formatDate value="${job.startDate }" pattern="EE, MMM d"/>, <fmt:formatDate value="${job.startTime }" pattern="K:mm a" />
+								</div>
+								<div>									
+									<span class="bold">End: </span><fmt:formatDate value="${job.endDate }" pattern="EE, MMM d"/>, <fmt:formatDate value="${job.endTime }" pattern="K:mm a" />
+								</div>
+								<div class="description">
+									${job.description }
+								</div>
+								<div class="location">
+									<div>${job.streetAddress }</div>
+									<div>${job.city }, ${job.state } ${job.zipCode }</div>
+									<div id="map"></div>											
+								</div>
+							</div>										
 						</div> <!-- end job general container -->
 						
 						
@@ -188,13 +123,9 @@
 											</div>						
 										</div>
 									</c:forEach>						
-								</div>
-									
-									<br>
-									<br>
-									----------------- put a map here -----------------				
+								</div>		
 							</div>
-						</div> end job questions container
+						</div>
 					</div><!-- end row -->
 				</div><!-- end job info container -->
 		</div><!-- end container -->
@@ -406,7 +337,15 @@
 			});
 		}
 	}
-	
+
+
+	function initMap(){
+		var lat = $("#jobLat").val();
+		var lng = $("#jobLng").val();
+		var map =  initializeMap("map", lat, lng);
+		showMapMarker(map, lat, lng);
+
+	}
 
 		
 // 	function setPopovers(){
@@ -428,6 +367,11 @@
 // 	}
 		
 
+</script>
+
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+	
 </script>
 
 

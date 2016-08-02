@@ -33,21 +33,21 @@
 								
 								<c:choose>
 									<c:when test="${activeJob.applications.size() > 0 }">
-										<td class="job-name has-applicants"><a href="../job/${activeJob.getId()}" >${activeJob.getJobName()}</a></td>
+										<td class="job-name"><a href="../job/${activeJob.getId()}" >${activeJob.getJobName()}</a></td>
 										
 																				
-										<c:choose>
-											<c:when test="${activeJob.newApplicationCount > 0}">
-												<td class="job-data has-applicants has-new-applicants">${activeJob.newApplicationCount }</td>
-											</c:when>
-											<c:otherwise>
-												<td class="job-data has-applicants">${activeJob.newApplicationCount }</td>
-											</c:otherwise>
-										</c:choose>
+									<c:choose>
+										<c:when test="${activeJob.newApplicationCount > 0}">
+										<td class="job-data has-applicants has-new-applicants">${activeJob.newApplicationCount }</td>
+										</c:when>
+										<c:otherwise>
+										<td class="job-data"><span class="has-applicants">${activeJob.newApplicationCount }</span></td>
+										</c:otherwise>
+									</c:choose>
 										
 										
-										<td class="job-data has-applicants">${activeJob.getApplications().size()}</td>
-										<td class="job-data has-applicants">${activeJob.getEmployees().size()}</td>
+										<td class="job-data"><span class="has-applicants">${activeJob.getApplications().size()}</span></td>
+										<td class="job-data"><span class="has-applicants">${activeJob.getEmployees().size()}</span></td>
 									</c:when>
 									<c:otherwise>
 										<td class="job-name no-applicants"><a href="../job/${activeJob.getId()}" >${activeJob.getJobName()}</a></td>
@@ -112,10 +112,13 @@ $(document).ready(function(){
 	
 	$(".has-applicants").click(function(e){
 		
-		//Do not toggle is the job name hyperlink is clicked
-		if(e.target == e.currentTarget){
-			$($(this).parent().next(".applicants-row")[0]).toggle();	
-		}
+		//Only toggle if the element WITH "has-applicants" class (i.e. e.currentTaget)
+		//gets clicked.
+		//Do not toggle if any pathe job name hyperlink is clicked
+// 		if(e.target == e.currentTarget){
+			var parentRow = $(this).parents('tr')[0];
+			$(parentRow).next(".applicants-row").toggle();	
+// 		}
 		
 	})
 	

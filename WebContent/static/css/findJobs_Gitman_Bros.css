@@ -5,6 +5,10 @@ body{
     line-height:19.5px;
 }
 
+#jobsContainer{
+	height:1000px;
+}
+
 .input-container{	
 	display:inline-block;
 	vertical-align: middle;
@@ -58,6 +62,12 @@ body{
 .dropdown-input-label{
 	padding:10px;
 	cursor:pointer;
+}
+
+
+#filteredJobs{
+	overflow-y:scroll;
+	max-height:915px;
 }
 
 /* Override Bootstrap */
@@ -121,6 +131,7 @@ body{
 	display:none;
 	height:1000px;
 	padding-top:20px;
+	margin-bottom:60px;
 }
 
 #additionalFiltersContainer{

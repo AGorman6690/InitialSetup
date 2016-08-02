@@ -234,13 +234,13 @@
 			}else{		
 				
 				//Get the values selected by the user
-				userSelectedOptionsValues = $(".select-options .checkbox").find("input:checked")
+				userSelectedOptionsValues = $(selectOptionsContainer).find(".select-options .checkbox input:checked")
 															.map(function(){return $(this).val()}).get();	
 				
-				//Hide and show accordingly
+				//Hide and show the applicants accordingly
 				elementsToToggle.each(function(){
 					
-					elementData = $(this).data("select-option-value"); 
+					elementData = $(this).attr("data-select-option-value"); 
 					if(jQuery.inArray(elementData.toString(), userSelectedOptionsValues) !== -1){
 						$(this).show();
 					}else{
