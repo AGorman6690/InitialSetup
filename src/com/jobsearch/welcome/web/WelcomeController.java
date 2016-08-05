@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionAttributeStore;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.model.JobSearchUser;
@@ -64,5 +67,32 @@ public class WelcomeController {
 //		model.setViewName("Welcome");
 
 		return "Welcome";
+	}
+	
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public ModelAndView logout(ModelAndView model, SessionStatus status,
+						@ModelAttribute("user") JobSearchUser user) {
+		//*******************************************
+		//*******************************************
+		//Need to figure this out
+		//*******************************************
+		//*******************************************
+		
+		//Set the session complete
+//		status.setComplete();
+		
+
+		
+		//Return to welcome page
+		model.setViewName("Welcome");
+
+		user = new JobSearchUser();
+
+		model.addObject("user", user);
+
+		List<Profile> profiles = userService.getProfiles();
+		model.addObject("profiles", profiles);
+
+		return model;
 	}
 }

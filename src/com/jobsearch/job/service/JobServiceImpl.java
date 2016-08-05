@@ -3,11 +3,15 @@ package com.jobsearch.job.service;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -16,6 +20,7 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
@@ -298,11 +303,8 @@ public class JobServiceImpl {
 
 		return job;
 	}
+
 	
-	public String getFilterdJobsResponseHtml(List<Job> filteredJobs, FilterJobRequestDTO request){
-		
-		return getFilterJobsTemplate(filteredJobs, request);
-	}
 
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
@@ -376,12 +378,76 @@ public class JobServiceImpl {
 		context.put("jobs", filteredJobs);
 		context.put("date", new DateTool());
 		context.put("dateCompare", new ComparisonDateTool());
-//		context.put("maxDistance", filteredJobs.get(0).d)
 		
+		//If there are filtered jobs
+		if(filteredJobs != null){
+			if(filteredJobs.size() > 0){
+				//Get the farthest job from the users requested located.
+				//This will be used to set the map zoom level.
+				Job maxDistanceJob = filteredJobs.stream().max(Comparator.comparing(Job::getDistanceFromFilterLocation)).get();	
+				double maxDistance = maxDistanceJob.getDistanceFromFilterLocation();
+				context.put("maxDistance", maxDistance);					
+			}
+		}
+		
+				
 		filterJobsTemplate.merge(context, writer);
 		
 		return writer.toString();
 		
+	}
+
+	@SuppressWarnings("unchecked")
+	public String getFilterdJobsResponseHtml(FilterJobRequestDTO request, HttpSession session, Model model) {
+
+		//If appending jobs, get the job ids that have already been rendered to the user.
+		//The already-rendered-jobs are held in the session.
+		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+		if(request.getIsAppendingJobs()){				
+			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		}else{
+			alreadyLoadedFilteredJobIds = null;
+		}
+		
+		//From the request, set the jobs.
+		//The already-loaded-jobs (if there are any) will not be queried.
+		List<Job> filteredJobs = new ArrayList<Job>();
+		filteredJobs = this.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
+		
+		//Get the job ids that were just queried
+		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
+												.map(j -> j.getId()).collect(Collectors.toList());
+		
+		//If appending jobs, then add the already-loaded-job-ids to the
+		//just-loaded-job-ids
+		if(request.getIsAppendingJobs()){			
+			if(alreadyLoadedFilteredJobIds != null){
+				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+			}			
+		}
+		
+		//Update the session variable
+		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+				
+		//Add jobs ids to the model
+		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
+		//Run the velocity template and return the HTML
+		return this.getFilterJobsTemplate(filteredJobs, request);
+		
+	}
+
+	public String getSortedJobsHTML(String sortBy, boolean isAscending, HttpSession session) {
+		
+		//Get the filtered job ids
+		@SuppressWarnings("unchecked")
+		List<Integer> filteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		
+		//From the jobs already rendered to the user, sort them
+		List<Job> sortedJobs = repository.sortJobs(filteredJobIds, sortBy, isAscending);
+		
+		
+		return "";//this.getFilterJobsTemplate(filteredJobs, request)(request, session, model);
 	}
 
 

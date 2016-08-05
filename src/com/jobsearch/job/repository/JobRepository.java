@@ -383,5 +383,29 @@ public class JobRepository {
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 
+	public List<Job> sortJobs(List<Integer> jobIds, String sortBy, boolean isAscending) {
+		
+		List<Object> argsList = new ArrayList<Object>();		
+		String sql = "SELECT * FROM job WHERE ";		
+		
+		//Append job ids
+		for(Integer id : jobIds){
+			sql += "JobId = ?";
+			argsList.add(id);
+		}
+		
+		//Order by
+		sql += " ORDER BY ?";
+		argsList.add(sortBy);
+		
+		if(isAscending){
+			sql += " ASC";
+		}else{
+			sql += " DESC";
+		}
+				
+		return JobRowMapper(sql, argsList.toArray());
+	}
+
 
 }

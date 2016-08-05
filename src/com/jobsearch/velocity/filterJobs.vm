@@ -1,5 +1,6 @@
  
  ##Sort by dropdown
+ ##Is this condition being used?????
  #if( $skipSortByDropDown == 0)
 	<div class="sort-jobs-by-container">
 		<div class="dropdown-input-container sort-width">
