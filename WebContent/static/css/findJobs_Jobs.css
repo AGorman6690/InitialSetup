@@ -69,8 +69,3 @@
 	width:150px;
 }
 
-
-#filteredJobs{
-	overflow-y:scroll;
-	max-height:1000px;
-}

@@ -26,7 +26,6 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
-import com.jobsearch.job.service.FilterJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -52,129 +51,66 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto, ModelAndView model) {
-
-		jobService.addPosting(postingDto);
+	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto,
+						HttpSession session, ModelAndView model) {
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		jobService.addPosting(postingDto, user);
 	}
-
-//	@RequestMapping(value = "/jobs/filter_OLD", method = RequestMethod.GET)
-//	@ResponseBody
-//	public String getFilteredJobs_OLD(@RequestParam(required = true) int radius,
-//			@RequestParam(required = true) String fromAddress,
-//			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
-//			@RequestParam(required = false) String startTime,
-//			@RequestParam(required = false) String endTime,
-//			@RequestParam(required = false) boolean beforeStartTime,
-//			@RequestParam(required = false) boolean beforeEndTime,
-//			@RequestParam(required = false) String startDate,
-//			@RequestParam(required = false) String endDate,
-//			@RequestParam(required = false) boolean beforeStartDate,
-//			@RequestParam(required = false) boolean beforeEndDate,
-//			@RequestParam(value = "day", required = false) List<String> workingDays,
-//			@RequestParam(required = false, defaultValue= "-1") Double duration,
-//			@RequestParam(required = false) boolean lessThanDuration,
-//			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount) 
-//			{
-////
-//		FilterJobRequestDTO filter = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
-//				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-//				lessThanDuration, returnJobCount);
-//
-//
-//		filter.setJobs(jobService.getFilteredJobs(filter)); // , startDate,
-//															// endDate));
-//
-//		// Set the filter criteria specified by user
-//
-//		return JSON.stringify(filter);
-//
-//	}
+	
+	@RequestMapping(value ="/jobs/sort", method = RequestMethod.GET)
+	@ResponseBody
+	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,
+						@RequestParam(name = "isAscending") boolean isAscending,
+						HttpSession session){
+		
+		return jobService.getSortedJobsHTML(sortBy, isAscending, session);
+	}
 	
 	@SuppressWarnings({ "unchecked", "null" })
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String getFilteredJobs(@RequestParam(required = true) int radius,
-			@RequestParam(required = true) String fromAddress,
-			@RequestParam(value = "categoryId", required = false) int[] categoryIds,
-			@RequestParam(required = false) String startTime,
-			@RequestParam(required = false) String endTime,
-			@RequestParam(required = false) boolean beforeStartTime,
-			@RequestParam(required = false) boolean beforeEndTime,
-			@RequestParam(required = false) String startDate,
-			@RequestParam(required = false) String endDate,
-			@RequestParam(required = false) boolean beforeStartDate,
-			@RequestParam(required = false) boolean beforeEndDate,
-			@RequestParam(value = "day", required = false) List<String> workingDays,
-			@RequestParam(required = false, defaultValue= "-1") Double duration,
-			@RequestParam(required = false) boolean lessThanDuration,
-			@RequestParam(required = false, defaultValue = "25") Integer returnJobCount, 
-			@RequestParam(required = false) String sortBy,
-			@RequestParam(required = false) boolean isAscending,
-			@RequestParam(required = true) boolean isAppendingJobs,
+	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
+			@RequestParam(name = "fromAddress", required = true) String fromAddress,
+			@RequestParam(name = "categoryId", value = "categoryId", required = false) int[] categoryIds,
+			@RequestParam(name = "startTime", required = false) String startTime,
+			@RequestParam(name = "endTime", required = false) String endTime,
+			@RequestParam(name = "beforeStartTime", required = false) boolean beforeStartTime,
+			@RequestParam(name = "beforeEndTime", required = false) boolean beforeEndTime,
+			@RequestParam(name = "startDate", required = false) String startDate,
+			@RequestParam(name = "endDate", required = false) String endDate,
+			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
+			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
+			@RequestParam(name = "day", value = "day", required = false) List<String> workingDays,
+			@RequestParam(name = "duration", required = false, defaultValue= "-1") Double duration,
+			@RequestParam(name = "lessThanDuration", required = false) boolean lessThanDuration,
+			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount, 
+			@RequestParam(name = "sortBy", required = false) String sortBy,
+			@RequestParam(name = "isAscending", required = false) boolean isAscending,
+			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
 			HttpSession session, Model model
 			){
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				lessThanDuration, returnJobCount, sortBy, isAscending);
+				lessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
 
 		
-		
-		//*******************************************************************
-		//For each job, imbed the lat/lnt its div.
-		//Then set the map marders from these values
-		//Remove the FilterJobResponseDTO if this works
-		//*******************************************************************
-		
-		FilterJobResponseDTO response = new FilterJobResponseDTO();
-		
-		//If appending jobs, get the job ids that have already been rendered to the user
-		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
-		if(isAppendingJobs){				
-			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
-		}else{
-			alreadyLoadedFilteredJobIds = null;
-		}
-		
-		//From the request, set the jobs	
-		List<Job> filteredJobs = new ArrayList<Job>();
-		filteredJobs = jobService.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
-		
-		
-		//Get the job ids that were just queried
-		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
-												.map(j -> j.getId()).collect(Collectors.toList());
-		
-		
-		if(isAppendingJobs){			
-			if(alreadyLoadedFilteredJobIds != null){
-				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
-			}			
-		}
-		
-
-		//Update the session variable
-		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
-		
-		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
-		
-		
-		//Set the html to render
-		response.setHtml(jobService.getFilterdJobsResponseHtml(filteredJobs, request));
-
-	
-		return response.getHtml();
+		return jobService.getFilterdJobsResponseHtml(request, session, model);
 
 	}	
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto, ModelAndView model) {
+	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
+								ModelAndView model, HttpSession session) {
 
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		applicationDto.setUserId(user.getUserId());
 		applicationService.applyForJob(applicationDto);
 
 	}
+	
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
@@ -184,17 +120,31 @@ public class JobController {
 //		model.setViewName("FindJobs");
 		return "FindJobs";
 	}
+	
+	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
+	public String employeeViewJob(Model model, HttpSession session, @PathVariable int jobId) {
+		
+		Job job = jobService.getJobPostingInfo(jobId);
+		model.addAttribute("job", job);
+		model.addAttribute("user", session.getAttribute("user"));
+//		model.setViewName("FindJobs");
+		return "EmployeeViewJob";
+	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable int jobId, Model model) {
 
-		Job selectedJob = jobService.getJob(jobId);
+		Job selectedJob = jobService.getEmployersJobProfile(jobId);
+
+
+		
+		
 
 		//
 
 		model.addAttribute("job", selectedJob);
 //		model.setViewName("Job");
-		return "PostJob";
+		return "EmployerViewJob";
 	}
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
@@ -209,8 +159,9 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/completed/employee", method = RequestMethod.GET)
 	@ResponseBody
-	public ModelAndView getEmployeeWorkHistory(@RequestParam int userId, @RequestParam(required = false) Integer jobId,
-			@RequestParam int viewContext, ModelAndView model) {
+	public ModelAndView getEmployeeWorkHistory(@RequestParam(name = "userId") int userId,
+			@RequestParam(name = "jobId", required = false) Integer jobId,
+			@RequestParam(name = "viewContext") int viewContext, ModelAndView model) {
 
 		// ***************
 		// Context values:
@@ -256,7 +207,7 @@ public class JobController {
 		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 		model.addObject("employees", employees);
 
-		Job job = jobService.getJob(jobId);
+		Job job = jobService.getEmployersJobProfile(jobId);
 		model.addObject("job", job);
 
 		model.setViewName("RateEmployees");

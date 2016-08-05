@@ -1,3 +1,45 @@
+	
+function initializeMap(mapDivId, lat, lng) {
+	//Eventually initialize it to a user defualt
+	var myLatLng = {
+		lat : parseFloat(lat),
+		lng : parseFloat(lng),
+	};
+	var map = new google.maps.Map(document.getElementById(mapDivId), {
+		zoom : 8,
+		center : myLatLng,
+		streetViewControl: false,
+// 			disableDefaultUI: true,
+	    mapTypeControlOptions: {
+	      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+	    }
+
+	});
+	
+	return map;
+}
+	
+	
+	//Show job markers
+function showMapMarker(map, lat, lng){
+
+	//Set map
+//	var map = new google.maps.Map(document.getElementById(mapDivId), {
+//	});
+		
+	//Set the coordinate
+	var latLng = {
+			lat : parseFloat(lat),
+			lng : parseFloat(lng)
+		};
+	
+	//Place the marder
+	var marker = new google.maps.Marker({
+		position : latLng,
+		map : map,
+	})	
+}
+
 
 function formatTime(time){
 	//When converting from string to java.sqlTime on the server,

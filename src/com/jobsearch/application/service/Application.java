@@ -1,16 +1,20 @@
 package com.jobsearch.application.service;
 
+import java.util.List;
+
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Question;
 
 public class Application {
 	private int applicationId;
 	private int userId;
 	private int jobId;
-	private int beenViewed;
+	private int hasBeenViewed;
 	private String jobName;
 	private Job job;
 	private JobSearchUser applicant;
+	private List<Question> questions;
 	
 	//Status values:
 	//0: submitted
@@ -18,6 +22,13 @@ public class Application {
 	//2: considered
 	//3: accepted
 	private int status;
+	
+	public List<Question> getQuestions() {
+		return questions;
+	}
+	public void setQuestions(List<Question> questions) {
+		this.questions = questions;
+	}
 
 	public Job getJob() {
 		return job;
@@ -55,11 +66,11 @@ public class Application {
 	public void setJobId(int jobId) {
 		this.jobId = jobId;
 	}
-	public int getBeenViewed() {
-		return beenViewed;
+	public int getHasBeenViewed() {
+		return hasBeenViewed;
 	}
-	public void setBeenViewed(int beenView) {
-		this.beenViewed = beenView;
+	public void setHasBeenViewed(int hasBeenView) {
+		this.hasBeenViewed = hasBeenView;
 	}
 	public int getStatus() {
 		return status;

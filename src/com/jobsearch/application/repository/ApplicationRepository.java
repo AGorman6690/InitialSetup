@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
@@ -29,14 +30,16 @@ public class ApplicationRepository {
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
 			@Override
-			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {
+			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {				
+				
 				Application application = new Application();
 				application.setApplicationId(rs.getInt("ApplicationId"));
 				application.setUserId(rs.getInt("UserId"));
 				application.setJobId(rs.getInt("JobId"));
-				application.setBeenViewed(rs.getInt("BeenViewed"));
+				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setStatus(rs.getInt("Status"));
 
+				//Set the applicant
 				JobSearchUser user = new JobSearchUser();
 				user.setUserId(rs.getInt("UserId"));
 				user.setFirstName(rs.getString("FirstName"));
@@ -64,8 +67,8 @@ public class ApplicationRepository {
 
 	public List<Application> getApplicationsByJob(int jobId) {
 
-		//Get all applications for job.
-		//Less than 3 is anything but accepted
+		//Get all non-accepted applications for job.
+		//Status less than 3 is anything but accepted
 		String sql = "SELECT a.*, u.* "
 				+ "FROM application a "
 				+ "inner join user u "
@@ -106,26 +109,26 @@ public class ApplicationRepository {
 
 	}
 
-	public void addTextAnswer(Answer answer) {
+	public void addAnswer(Answer answer) {
 
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerText) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerText() });
-
-	}
-
-	public void addBooleanAnswer(Answer answer) {
-
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerBoolean) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerBoolean() });
+		String sql = "INSERT INTO answer (QuestionId, UserId, Text) VALUES(?, ?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getText() });
 
 	}
 
-	public void addOptionAnswer(Answer answer, int optionId) {
+//	public void addBooleanAnswer(Answer answer) {
+//
+//		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerBoolean) VALUES(?, ?, ?)";
+//		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getAnswerBoolean() });
+//
+//	}
 
-		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerOptionId) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), optionId });
-
-	}
+//	public void addOptionAnswer(Answer answer, int optionId) {
+//
+//		String sql = "INSERT INTO answer (QuestionId, UserId, AnswerOptionId) VALUES(?, ?, ?)";
+//		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), optionId });
+//
+//	}
 
 	public void addApplication(int jobId, int userId) {
 		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
@@ -135,7 +138,7 @@ public class ApplicationRepository {
 	}
 
 	public List<Question> getQuestions(int id) {
-		String sql = "SELECT * FROM question WHERE JobId = ?";
+		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
 		return this.QuestionRowMapper(sql, new Object[]{ id });
 	}
 
@@ -148,18 +151,17 @@ public class ApplicationRepository {
 	}
 
 	public Answer getAnswer(int questionId, int userId) {
+
 		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
-		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId }).get(0);
+		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId }).get(0);	
+
+		
 	}
 
-	public List<String> getAnswers(int questionId, int userId) {
+	public List<Answer> getAnswers(int questionId, int userId) {
 
-		String sql = "SELECT answer_option.AnswerOption FROM answer_option "
-				+ "	WHERE answer_option.AnswerOptionId IN"
-				+ " (SELECT AnswerOptionId FROM answer WHERE QuestionId = ?"
-				+ " AND UserId = ?)";
-
-		return jdbcTemplate.queryForList(sql, new Object[]{ questionId, userId }, String.class);
+		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
+		return this.AnswerRowMapper(sql, new Object[]{ questionId, userId });
 	}
 
 	public List<AnswerOption> AnswerOptionRowMapper(String sql, Object[] args) {
@@ -199,7 +201,7 @@ public class ApplicationRepository {
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setJobId(rs.getInt("JobId"));
 					e.setFormatId(rs.getInt("FormatId"));
-					e.setQuestion(rs.getString("Question"));
+					e.setText(rs.getString("Question"));
 
 					return e;
 				}
@@ -220,10 +222,10 @@ public class ApplicationRepository {
 				@Override
 				public Answer mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Answer e = new Answer();
-					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
+//					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
 					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setAnswerText(rs.getString("AnswerText"));
-					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
+					e.setText(rs.getString("Text"));
+//					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
 					e.setUserId(rs.getInt("UserId"));
 
 					return e;
@@ -244,7 +246,7 @@ public class ApplicationRepository {
 			cStmt = jdbcTemplate.getDataSource().getConnection().
 					prepareCall("{call insert_question(?, ?, ?)}");
 
-			cStmt.setString(1, question.getQuestion());
+			cStmt.setString(1, question.getText());
 			cStmt.setInt(2, question.getFormatId());
 			cStmt.setInt(3, question.getJobId());
 
@@ -265,6 +267,12 @@ public class ApplicationRepository {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setHasBeenViewed(int jobId, int value) {
+		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, jobId });
+		
 	}
 
 }

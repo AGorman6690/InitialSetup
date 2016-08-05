@@ -7,8 +7,8 @@
 
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
-<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Gitman_Bros.css" />
-<link rel="stylesheet" type="text/css"	href="../static/css/findJobs_Jobs.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Gitman_Bros.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Jobs.css" />
 
 <!-- Time picker -->
 <!-- <link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/External/jquery.timepicker.css" /> -->
@@ -23,9 +23,9 @@
 
 	<input type="hidden" id="userId" value="${user.userId}" />
 	
-	<div class="page-container">
+	<div class="container">
 		<div class="row">
-			<div id="filtersContainer" class="col-sm-12">
+			<div id="distanceFilterContainer" class="col-sm-12">
 			
 				<div id="radiusErrorMessage" class="error-message"></div>
 				<div id="locationErrorMessage" class="error-message"></div>
@@ -50,14 +50,12 @@
 							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
 					</div>																			
 				</div>
+			</div>
+		</div>
 				
-				<div class="input-container-group">
-					<div class="input-container">
-						<button id="getJobs" class="btn">Get Jobs</button>
-					</div>
-				</div>
-				
-				<div class="input-container-group">
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="additionalFiltersContainer" class="input-container-group">
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
 							<div data-display-text="Start"								
@@ -74,18 +72,18 @@
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="startTime"
-										  	data-display-text="Before" data-filter-name="beforeStartTime"
+										  	data-display-text="Before" data-filter-dto-prop="beforeStartTime"
 										  	data-filter-value="1">Before</label>
 										</div>
 										<div class="radio">
 										  <label><input type="radio" name="startTime"
-										  	data-display-text="After" data-filter-name="beforeStartTime"
+										  	data-display-text="After" data-filter-dto-prop="beforeStartTime"
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
 									<div class="select-container">								
 										<select id="startTimeOptions" data-default-scroll-value="7:00am"
-											data-filter-name="startTime" name="startTime"
+											data-filter-dto-prop="startTime" name="startTime"
 											class="filter-input form-control size">
 										 </select>	
 							  		</div>	
@@ -109,18 +107,18 @@
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="endTime"
-										  	data-display-text="Before" data-filter-name="beforeEndTime"
+										  	data-display-text="Before" data-filter-dto-prop="beforeEndTime"
 										  	data-filter-value="1">Before</label>
 										</div>
 										<div class="radio">
 										  <label><input type="radio" name="endTime"
-										  	data-display-text="After" data-filter-name="beforeEndTime"
+										  	data-display-text="After" data-filter-dto-prop="beforeEndTime"
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
 									<div class="select-container">								
 										<select id="endTimeOptions" data-default-scroll-value="5:00pm"
-											data-filter-name="endTime" name="endTime"
+											data-filter-dto-prop="endTime" name="endTime"
 											class="filter-input form-control size">
 										 </select>	
 							  		</div>	
@@ -130,13 +128,39 @@
 							</div>
 						</div>
 						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container input-width">
-								<div class="dropdown-input-label">
-									<span class="">Duration</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
+							<div data-display-text="" data-display-text-suffix="Days"
+								 class="input-container dropdown-input-container input-width">
+
+								<div class="dropdown-input-label">									
+									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
+									<span class="display-text"
+										data-reset-text="Duration">Duration</span>
+									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+								</div>
+								
+								
+								<div class="additional-filter dropdown-input-selection-container input-width">
+									<div class="radio-container">
+										<div class="radio">
+										  <label><input type="radio" name="duration"
+										  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration"
+										  	data-filter-value="1">Less Than</label>
+										</div>
+										<div class="radio">
+										  <label><input type="radio" name="duration"
+										  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration"
+										  	data-filter-value="0">Greater Than</label>
+										</div>										
+									</div>
+<!-- 									<div class="select-container">								 -->
+									<div class="input-container form-group">
+								  		<input type="text" class="filter-input form-control" data-filter-dto-prop="duration" >
+							  		</div>		
+<!-- 							  		</div>	 -->
+							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
 								</div>
 							</div>
-						</div>
+
 					</div>
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
@@ -155,18 +179,18 @@
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="startDate"
-										  	data-display-text="Before" data-filter-name="beforeStartDate"
+										  	data-display-text="Before" data-filter-dto-prop="beforeStartDate"
 										  	data-filter-value="1">Before</label>
 										</div>
 										<div class="radio">
 										  <label><input type="radio" name="startDate"
-										  	data-display-text="After" data-filter-name="beforeStartDate"
+										  	data-display-text="After" data-filter-dto-prop="beforeStartDate"
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
 <!-- 									<div class="select-container">								 -->
 									<div class="input-container form-group">
-								  		<input type="text" class="filter-input form-control date" data-filter-name="startDate" >
+								  		<input type="text" class="filter-input form-control date" data-filter-dto-prop="startDate" >
 							  		</div>		
 <!-- 							  		</div>	 -->
 							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
@@ -179,17 +203,47 @@
 						</div>
 						
 						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container input-width">
-								<div class="dropdown-input-label">
-									<span class="">End Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
+							<div data-display-text="End"								
+								class="input-container dropdown-input-container input-width">
+
+								<div class="dropdown-input-label">									
+									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
+									<span class="display-text"
+										data-reset-text="End Date">End Date</span>
+									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
 								</div>
-							</div>	
+								
+								
+								<div class="additional-filter dropdown-input-selection-container input-width">
+									<div class="radio-container">
+										<div class="radio">
+										  <label><input type="radio" name="endDate"
+										  	data-display-text="Before" data-filter-dto-prop="beforeEndDate"
+										  	data-filter-value="1">Before</label>
+										</div>
+										<div class="radio">
+										  <label><input type="radio" name="endDate"
+										  	data-display-text="After" data-filter-dto-prop="beforeEndDate"
+										  	data-filter-value="0">After</label>
+										</div>										
+									</div>
+<!-- 									<div class="select-container">								 -->
+									<div class="input-container form-group">
+								  		<input type="text" class="filter-input form-control date" data-filter-dto-prop="endDate" >
+							  		</div>		
+<!-- 							  		</div>	 -->
+							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+								</div>
+								
+
+								
+								
+							</div>
 						</div>
 						<div class="col-sm-4 col-padding">
 							<div class="input-container dropdown-input-container input-width">
 								<div class="dropdown-input-label">
-									<span class="">Categories</span>
+									<span class="">Categories (not built)</span>
 									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
 								</div>
 							</div>	
@@ -199,7 +253,7 @@
 						<div class="col-sm-4 col-padding">
 							<div class="input-container dropdown-input-container input-width">
 								<div class="dropdown-input-label">
-									<span class="">Working Days</span>
+									<span class="">Working Days (not built)</span>
 									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
 								</div>
 							</div>
@@ -207,10 +261,20 @@
 									
 					</div>					
 				</div>			
-								
 			</div> <!--  end filters container -->
 		</div> <!-- end filters row -->	
 		
+		<div class="row">
+			<div class="col-sm-12">
+				<div id="getJobsContainer" class="input-container-group">
+					<div class="input-container">
+						<button id="getJobs" class="btn">Get Jobs</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		</div>
 		<div class="row" id="mainBottom">
 			<div id="jobsContainer" class="col-sm-4 right-border" >
 <!-- 				<h3 class="header">Jobs</h3>							 -->
@@ -317,11 +381,11 @@
 										<div class="sort-direction radio-container">
 											<div class="radio">
 											  <label><input data-col="Distance" data-is-ascending="1"
-											   type="radio" name="sort">Closest First</label>
+											   type="radio" name="sort" data-display-text="Closest Distance">Closest First</label>
 											</div>
 											<div class="radio">
 											  <label><input data-col="Distance" data-is-ascending="0"
-											   type="radio" name="sort">Furthest First</label>
+											   type="radio" name="sort" data-display-text="Farthest Distance">Farthest First</label>
 											</div>										
 										</div>
 									</div>
@@ -344,8 +408,8 @@
 				</div>				
 			</div>		
 		</div>
-		
 	</div>
+
 	
 	
 <!-- 	<form> -->
@@ -353,18 +417,18 @@
 <!-- 			<div class="radio-container"> -->
 <!-- 				<div class="radio"> -->
 <!-- 				  <label><input type="radio" name="startTime" -->
-<!-- 				  	data-display-text="Before" data-filter-name="beforeStartTime" -->
+<!-- 				  	data-display-text="Before" data-filter-dto-prop="beforeStartTime" -->
 <!-- 				  	data-filter-value="1">Before</label> -->
 <!-- 				</div> -->
 <!-- 				<div class="radio"> -->
 <!-- 				  <label><input type="radio" name="startTime" -->
-<!-- 				  	data-display-text="After" data-filter-name="beforeStartTime" -->
+<!-- 				  	data-display-text="After" data-filter-dto-prop="beforeStartTime" -->
 <!-- 				  	data-filter-value="0">After</label> -->
 <!-- 				</div>										 -->
 <!-- 			</div> -->
 <!-- 			<div class="select-container">								 -->
 <!-- 				<select id="startTimeOptions" data-default-scroll-value="7:00am" -->
-<!-- 					data-filter-name="startTime" name="startTime" -->
+<!-- 					data-filter-dto-prop="startTime" name="startTime" -->
 <!-- 					class="filter-input form-control size"> -->
 <!-- 				 </select>	 -->
 <!-- 	  		</div>	 -->
@@ -379,7 +443,19 @@
 $(document).ready(function() {
 	
 		$("#jobsContainer").on("click", ".sort-direction input[type='radio']", function(){
+			
 			setFilteredJobs(0);
+			
+			//*********************************************			
+			//*********************************************
+			//Finish this
+			
+			//sortLoadedJobs();
+			//*********************************************
+			//*********************************************			
+			
+			//Hide the sort dropdown
+			$("#sortOptions").hide();
 		})
 		
 	
@@ -400,7 +476,7 @@ $(document).ready(function() {
 			}
 			
 			//If another filter's dropdown is shown, then hide it. 
-			$($("#filtersContainer").find(".dropdown-input-selection-container:visible")[0]).hide();
+			$($("#additionalFiltersContainer").find(".dropdown-input-selection-container:visible")[0]).hide();
 			
 			//Toggle the clicked filter's dropdown
 			if(willHide){
@@ -422,6 +498,7 @@ $(document).ready(function() {
 			
 			var dropdownContainer = $(this).parents(".dropdown-input-container")[0];
 			var displayText = $(dropdownContainer).data("display-text");
+			var displayTextSuffix = $(dropdownContainer).data("display-text-suffix");
 			var arr = [];
 			var checkedRadio;
 			var select;
@@ -468,12 +545,25 @@ $(document).ready(function() {
 				}				
 			}			
 			
-			//If input is valid, then format the dropdown
+			//Add the suffix to display after the filter value
+			if(displayTextSuffix != null){
+				displayText += " " + displayTextSuffix;
+			}
+			
+			//If input is valid, then format the dropdown.
 			$inputLabel = $($(dropdownContainer).find(".dropdown-input-label")[0]);
 			if(isValidInput > -1){ 
+				
+				//Change the visible text
 				$($(dropdownContainer).find(".display-text")[0]).html(displayText);
+				
+				//Add color
 				$inputLabel.addClass("selected");
+				
+				//Hide filter dropdown
 				$($(dropdownContainer).find(".dropdown-input-selection-container")[0]).hide();
+				
+				//Add "X"
 				$($(dropdownContainer).find(".remove-additional-filter")[0]).show();
 			}else{
 				$inputLabel.removeClass("selected");
@@ -600,13 +690,7 @@ $(document).ready(function() {
 		})
 
 		
-		$(".show-time-options-container").click(function(){
-			
-			
-			
-			
-			$($(this).siblings(".time-options")[0]).toggle();	
-		})
+
 
 		
 		$(".select-time").click(function(){
@@ -637,14 +721,24 @@ $(document).ready(function() {
 // 			$(this).hide();
 // 		})
 		
+		//******************************************************************************
+		//******************************************************************************
+		//Currently not being used.
+		//This is used so the user can view time by 15 or 30 minute intervals, not just 60.
+		//Incorporate this later
+		$(".show-time-options-container").click(function(){
+
+			$($(this).siblings(".time-options")[0]).toggle();	
+		})	
 		
 		$(".change-time-options").click(function(){
 			setTimeOptions($("#" + $(this).data("for-select")), $(this).data("increment"));
-		})
-		
+		})		
 
 		setTimeOptions($("#startTimeOptions"), 60);
 		setTimeOptions($("#endTimeOptions"), 60);
+		//******************************************************************************
+		//******************************************************************************		
 
 
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -837,7 +931,13 @@ $(document).ready(function() {
 		//Set map
 		var map = new google.maps.Map(document.getElementById('map'), {
 			zoom : zoom,
-			center : myLatLng
+			center : myLatLng,
+			scrollwheel: false,
+			streetViewControl: false,
+// 			disableDefaultUI: true,
+		    mapTypeControlOptions: {
+		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+		    }
 		});
 		
 		//Show job markers
@@ -877,7 +977,7 @@ $(document).ready(function() {
 				//Get the value of the selected option
 				filterValue = $($(this).find("option:selected")[0]).data("filter-value");
 				if(filterValue != null){
-					params += "&" + $(this).data("filter-name");
+					params += "&" + $(this).data("filter-dto-prop");
 					params += "=" + filterValue;
 				}
 			})
@@ -885,7 +985,7 @@ $(document).ready(function() {
 			//Check radio
 			$(this).find("input[type=radio]").each(function(){
 				if($(this).is(":checked")){
-					params += "&" + $(this).data("filter-name");
+					params += "&" + $(this).data("filter-dto-prop");
 					params += "=" + $(this).data("filter-value");
 				}
 			})
@@ -894,18 +994,17 @@ $(document).ready(function() {
 			$(this).find("input[type=text]").each(function(){
 				filterValue = $(this).val();
 				if(filterValue != ""){
-					params += "&" + $(this).data("filter-name");
+					params += "&" + $(this).data("filter-dto-prop");
 					params += "=" + filterValue;
 				}
 			})		
 			
 		})
 		
-			//Check if data should be sorted
+		//Check if data should be sorted
 		sortByRadio = $("input[name=sort]").filter(":checked")[0];
 		if(sortByRadio != null){
-			params += "&sortBy=" + $(sortByRadio).data("col");
-			params += "&isAscending=" + $(sortByRadio).data("is-ascending");
+			params += "&" + getSortByParam();
 		}
 		
 		
@@ -930,6 +1029,14 @@ $(document).ready(function() {
 		params += "&day=-1";
 		
 		return params;
+	}
+	
+	function getSortByParam(){
+		var sortByParam;
+		sortByParam += "sortBy=" + $(sortByRadio).data("col");
+		sortByParam += "&isAscending=" + $(sortByRadio).data("is-ascending");
+		
+		return sortByParam;
 	}
 	
 	
@@ -979,6 +1086,30 @@ $(document).ready(function() {
 			}
 	}
 	
+	function sortLoadedJobs(){
+		
+		var params = "?" + getSortByParam();
+		
+		$.ajax({
+			type : "GET",
+				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/sort' + params,
+				success : _success,
+				error : _error,
+				cache: true
+			});
+
+			function _success(response) {
+				//This will return a velocity template
+				
+				$("#filteredJobs").html(response);		
+									
+			}	
+
+			function _error(response) {
+				alert('DEBUG: error set filter jobs')
+			}
+	}
+	
 	function setFilteredJobs(doSetMap) {
 		
 		var params = getFilterParameters();
@@ -988,7 +1119,8 @@ $(document).ready(function() {
 			type : "GET",
 				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
 				success : _success,
-				error : _error
+				error : _error,
+				cache: true
 			});
 
 			function _success(response) {
@@ -1016,27 +1148,28 @@ $(document).ready(function() {
 			}
 	}
 	
-	function initMap() {
-		//Eventually initialize it to a user defualt
-		var myLatLng = {
-			lat : 44.954445,
-			lng : -93.091301,
-		};
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom : 8,
-			center : myLatLng,
-			streetViewControl: false,
-// 			disableDefaultUI: true,
-		    mapTypeControlOptions: {
-		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-		    }
+// 	function initMap2() {
+// 		//Eventually initialize it to a user defualt
+// 		var myLatLng = {
+// 			lat : 44.954445,
+// 			lng : -93.091301,
+// 		};
+// 		var map = new google.maps.Map(document.getElementById('map'), {
+// 			zoom : 8,
+// 			center : myLatLng,
+// 			scrollwheel: false,
+// 			streetViewControl: false,
+// // 			disableDefaultUI: true,
+// 		    mapTypeControlOptions: {
+// 		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+// 		    }
 
-		});
-	}
+// 		});
+// 	}
 </script>
 
 <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap_NO_CALLBACK_FOR_NOW">
 	
 </script>
 

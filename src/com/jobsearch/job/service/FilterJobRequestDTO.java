@@ -93,8 +93,18 @@ public class FilterJobRequestDTO {
 	@JsonProperty("loadedJobIds")
 	int[] loadedJobIds;
 	
+	@JsonProperty("isAppendingJobs")
+	boolean isAppendingJobs;
 	
 	
+	public boolean getIsAppendingJobs() {
+		return isAppendingJobs;
+	}
+
+	public void setIsAppendingJobs(boolean isAppendingJobs) {
+		this.isAppendingJobs = isAppendingJobs;
+	}
+
 	public int[] getLoadedJobIds() {
 		return loadedJobIds;
 	}
@@ -204,7 +214,7 @@ public class FilterJobRequestDTO {
 	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
-			int returnJobCount, String sortBy, boolean isAscending) {
+			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2) {
 		// TODO Auto-generated constructor stub
 
 		this.setRadius(radius);
@@ -232,6 +242,8 @@ public class FilterJobRequestDTO {
 		
 		this.setSortBy(sortBy);
 		this.setIsAscending(isAscending);
+		
+		this.setIsAppendingJobs(isAppendingJobs2);
 		
 //		this.setLoadedJobIds(loadedJobIds2);
 

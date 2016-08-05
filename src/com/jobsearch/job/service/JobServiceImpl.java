@@ -3,8 +3,15 @@ package com.jobsearch.job.service;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.servlet.http.HttpSession;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
@@ -13,8 +20,10 @@ import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -40,12 +49,12 @@ public class JobServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
-	
+		
 	@Autowired
 	@Qualifier("FilterJobsVM")
 	Template filterJobsTemplate;
 
-	public void addPosting(SubmitJobPostingRequestDTO postingDto) {
+	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
 		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
 			//***********************************************************************************
@@ -84,7 +93,7 @@ public class JobServiceImpl {
 				
 				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getQuestions()));
 
-				repository.addJob(jobDto);
+				repository.addJob(jobDto, user);
 			} else if (results.length == 0) {
 				// invalid address
 			} else if (results.length > 1) {
@@ -125,12 +134,19 @@ public class JobServiceImpl {
 		List<Job> activeJobs = repository.getActiveJobsByUser(userId);
 
 		for (Job job : activeJobs) {
+	
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
 			job.setEmployees(userService.getEmployeesByJob(job.getId()));
+			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
 		}
 
 		return activeJobs;
+
+	}
+
+	public int getNewApplicationCount(List<Application> applications) {
+		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
 
 	}
 
@@ -206,30 +222,67 @@ public class JobServiceImpl {
 
 		return completedJobDtos;
 	}
-
-	public Job getJob(int jobId) {
-		// TODO Auto-generated method stub
+	
+	public Job getJobPostingInfo(int jobId) {
+		// This only sets the job properties that relate to the job posting
+		// i.e. no applicants, no employees, etc. 
+		
 		Job job = repository.getJob(jobId);
-
-		// Get job categories
+		
+		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 		// Set job questions
+		job.setQuestions(applicationService.getQuestions(job.getId()));		
+		
+		return job;
+	}
+
+	
+
+	public Job getEmployersJobProfile(int jobId) {
+		//This sets almost(?) all of the job's properties
+
+		
+		Job job = repository.getJob(jobId);
+
+		// Set job categories
+		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+		
+		
+		//****************************************************************************************
+		//****************************************************************************************
+		//Why does the job have both applications and applicants???????
+		//Shouldn't applicants be enough?????
+		//Each application object has an applicant property.
+		//This is redundant.
+		//I will address this.
+		//UPDATE:
+		//This is done this way because the "Status" is a property of the application, not the applicant.
+		//I think removing the applicants from the job is the way to go.
+		//Check back later.
+		job.setApplications(applicationService.getApplicationsByJob(jobId));
+		//****************************************************************************************
+		//****************************************************************************************
+		
+		
+
+//		// Set job questions
 		job.setQuestions(applicationService.getQuestions(job.getId()));
 
-		// Get job applicants
-		job.setApplicants(userService.getApplicants(jobId));
+//		// Set job applicants
+//		job.setApplicants(userService.getApplicants(jobId));
 
 		// Set each applicant's rating, application, and endorsements only for
 		// the job's categories
-		for (JobSearchUser applicant : job.getApplicants()) {
-			// applicant.setRatings(userService.getRatings(applicant.getUserId()));
-			applicant.setRating(userService.getRating(applicant.getUserId()));
-			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
-			applicant.setEndorsements(
-					userService.getUserEndorsementsByCategory(applicant.getUserId(), job.getCategories()));
-			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
-		}
+//		for (JobSearchUser applicant : job.getApplicants()) {
+//			// applicant.setRatings(userService.getRatings(applicant.getUserId()));
+//			applicant.setRating(userService.getRating(applicant.getUserId()));
+//			applicant.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
+//			applicant.setEndorsements(
+//					userService.getUserEndorsementsByCategory(applicant.getUserId(), job.getCategories()));
+//			//			applicant.setAnswers(applicationService.getAnswers(job.getQuestions(), applicant.getUserId()));
+//		}
 
 		// Get job employees
 		job.setEmployees(userService.getEmployeesByJob(jobId));
@@ -250,11 +303,8 @@ public class JobServiceImpl {
 
 		return job;
 	}
+
 	
-	public String getFilterdJobsResponseHtml(List<Job> filteredJobs, FilterJobRequestDTO request){
-		
-		return getFilterJobsTemplate(filteredJobs, request);
-	}
 
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
@@ -328,12 +378,77 @@ public class JobServiceImpl {
 		context.put("jobs", filteredJobs);
 		context.put("date", new DateTool());
 		context.put("dateCompare", new ComparisonDateTool());
-//		context.put("maxDistance", filteredJobs.get(0).d)
 		
+		//If there are filtered jobs
+		if(filteredJobs != null){
+			if(filteredJobs.size() > 0){
+				//Get the farthest job from the users requested located.
+				//This will be used to set the map zoom level.
+				Job maxDistanceJob = filteredJobs.stream().max(Comparator.comparing(Job::getDistanceFromFilterLocation)).get();	
+				double maxDistance = maxDistanceJob.getDistanceFromFilterLocation();
+				context.put("maxDistance", maxDistance);					
+			}
+		}
+		
+				
 		filterJobsTemplate.merge(context, writer);
 		
 		return writer.toString();
 		
 	}
+
+	@SuppressWarnings("unchecked")
+	public String getFilterdJobsResponseHtml(FilterJobRequestDTO request, HttpSession session, Model model) {
+
+		//If appending jobs, get the job ids that have already been rendered to the user.
+		//The already-rendered-jobs are held in the session.
+		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+		if(request.getIsAppendingJobs()){				
+			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		}else{
+			alreadyLoadedFilteredJobIds = null;
+		}
+		
+		//From the request, set the jobs.
+		//The already-loaded-jobs (if there are any) will not be queried.
+		List<Job> filteredJobs = new ArrayList<Job>();
+		filteredJobs = this.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
+		
+		//Get the job ids that were just queried
+		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
+												.map(j -> j.getId()).collect(Collectors.toList());
+		
+		//If appending jobs, then add the already-loaded-job-ids to the
+		//just-loaded-job-ids
+		if(request.getIsAppendingJobs()){			
+			if(alreadyLoadedFilteredJobIds != null){
+				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+			}			
+		}
+		
+		//Update the session variable
+		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+				
+		//Add jobs ids to the model
+		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		
+		//Run the velocity template and return the HTML
+		return this.getFilterJobsTemplate(filteredJobs, request);
+		
+	}
+
+	public String getSortedJobsHTML(String sortBy, boolean isAscending, HttpSession session) {
+		
+		//Get the filtered job ids
+		@SuppressWarnings("unchecked")
+		List<Integer> filteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		
+		//From the jobs already rendered to the user, sort them
+		List<Job> sortedJobs = repository.sortJobs(filteredJobIds, sortBy, isAscending);
+		
+		
+		return "";//this.getFilterJobsTemplate(filteredJobs, request)(request, session, model);
+	}
+
 
 }

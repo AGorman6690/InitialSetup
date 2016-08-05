@@ -37,8 +37,10 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateStatus(@RequestParam int id, @RequestParam int status) {
-		applicationService.updateStatus(id, status);
+	public void updateStatus(@RequestParam(name = "applicationId") int applicationId,
+							@RequestParam(name = "status") int status) {
+		
+		applicationService.updateStatus(applicationId, status);
 	}
 
 }

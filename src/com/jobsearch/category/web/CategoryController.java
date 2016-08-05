@@ -39,7 +39,7 @@ public class CategoryController {
 	
 	@RequestMapping(value = "/categories/subCategories", method = RequestMethod.GET)
 	@ResponseBody
-	public String getSubCategories(@RequestParam(value = "categoryId") List<Integer> categoryIds) {
+	public String getSubCategories(@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
 		
 		List<SubCategoryRequestDTO> subCategoryRequestDtos = categoryService.getSubCategoryDTOs(categoryIds);
 

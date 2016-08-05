@@ -15,7 +15,7 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 <script
-	src="http://localhost:8080/JobSearch/static/External/underscore-min.js"></script>
+	src="/JobSearch/static/External/underscore-min.js"></script>
 
 <!-- 	   Bootstrap -->
 <!-- 	   	********************************************************* -->
@@ -59,10 +59,10 @@
 <!-- <script type="text/javascript" src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> -->
 <!-- <link rel="stylesheet" type="text/css" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css" /> -->
 <link
-	href="http://localhost:8080/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
+	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
 	rel="stylesheet" />
 <script
-	src="http://localhost:8080/JobSearch/static/External/bootstrap-datepicker.js"></script>
+	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
 
 <!-- Bootstrap Drop down -->
 <link rel="stylesheet"
@@ -81,8 +81,13 @@
 <meta name="_csrf_header" content="${_csrf.headerName}" />
 
 
-<link href="http://localhost:8080/JobSearch/static/css/global.css"
+<link href="/JobSearch/static/css/global.css"
 	rel="stylesheet" />
+	
+<link href="/JobSearch/static/css/navBar.css"
+	rel="stylesheet" />
+
+	
 
 </head>
 
@@ -91,33 +96,178 @@
 
 <c:set var="LaborVaultHost" scope="session" value="${url}"/>
 
-	<nav class="navbar navbar-default">
-	<div class="container-fluid">
-		<div class="navbar-header">
-			<a id="home" class="navbar-brand" href="/JobSearch/user/profile">Labor
-				Vault</a>
-		</div>
-		<ul class="nav navbar-nav">
-			<!--       <li><a href="./viewApplicationsE">View Applications</a></li> -->
-			<c:choose>
-				<c:when test="${user.getProfileId() == 1}">
-					<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
-				</c:when>
-				<c:when test="${user.getProfileId() == 2}">
-					<li><a href="/JobSearch/employees/find">Find Employees</a></li>
-					<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
-				</c:when>
-			</c:choose>
 
-			<c:choose>
-				<c:when test="${user.getFirstName() != null}">
-					<li><a href="/JobSearch/viewProfile">Profile</a></li>
-					<li><a href="/JobSearch/logout">Log out</a></li>
-				</c:when>
-			</c:choose>
-		</ul>
-	</div>
+	<nav id="navBar" class="">
+		<div class="nav-container nav-border">
+			<div class=>
+				<div class="logo">
+				<c:choose>
+					<c:when test="${user.profileId > 0 }">
+						<a id="home" class="" href="/JobSearch/user/profile">Labor
+							Vault</a>
+					</c:when>
+					<c:otherwise>
+						<a id="home" class="" href="/JobSearch/">Labor
+						
+							Vault</a>	
+					</c:otherwise>
+					</c:choose>
+				</div>
+				<ul class="nav-items">
+					
+					<c:choose>
+						<c:when test="${user.profileId > 0 }">
+							<div class="link nav-item">
+								<li><a href="/JobSearch/logout">Log out</a></li>
+							</div>
+							<c:choose>
+								<c:when test="${user.profileId == 1}">
+									<div class="link nav-item">
+										<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
+									</div>
+								</c:when>
+								<c:when test="${user.profileId == 2}">
+									<div class="link nav-item">
+										<li><a href="/JobSearch/employees/find">Find Employees</a></li>
+									</div>
+									<div class="link nav-item">
+										<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
+									</div>
+								</c:when>
+							</c:choose>
+				
+							<c:choose>
+								<c:when test="${user.getFirstName() != null}">
+									<div class="link nav-item">
+									<li><a href="/JobSearch/viewProfile">Profile</a></li>
+									</div>
+		
+								</c:when>
+							</c:choose>
+						</c:when>
+						<c:otherwise>
+							<div id="login" class="click link nav-item">
+								<li><a data-toggle="modal" data-target="#loginContainer">Login</a></li>
+							</div>
+							<div id="signUp" class="click link nav-item">
+								<li><a data-toggle="modal" data-target="#signupContainer">Sign Up</a></li>
+							</div>												
+						</c:otherwise>
+					</c:choose>
+				</ul>
+			</div>
+		</div>
 	</nav>
+	
+	<c:choose>
+	
+	
+	
+		<c:when test="${user.profileId == 0 }">
+			<div id="loginContainer" class="modal fade login-signup bottom-border-thin" role="dialog">
+				
+				<div class="modal-dialog">
+				
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Login</h4>
+				      </div>
+				      <div class="modal-body">
+						<form:form class="form-signin" commandName="user"
+							action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
+				
+							<form:input type="text" class="form-control" placeholder="Email"
+								path="username" id="userName" />
+							<form:password class="form-control" placeholder="Password"
+								path="password" id="password" />
+							<div class="forgot-password">
+								<a href="./user/password/reset">Forgot Password?</a>
+							</div>
+							<input class="square-button" type="submit" value="Login"/>
+						</form:form>
+				      </div>
+		<!-- 		      <div class="modal-footer"> -->
+		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+		<!-- 		      </div> -->
+				    </div>		
+		
+		
+				</div>	
+			</div>
+			
+			
+			<div id="signupContainer" class="modal fade login-signup" role="dialog">
+				
+				<div class="modal-dialog">
+				
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Sign Up</h4>
+				      </div>
+				      <div class="modal-body">
+						<!-- Original code found here -->
+						<!-- https://gist.github.com/bMinaise/7329874#file-bs3-login-form-html -->	
+						<div class="input-container sign-up">
+							<form:form action="/JobSearch/registerUser" method="POST" commandName="user">
+								<table>
+									<tr>
+										<td class="">First Name:</td>
+										<td><form:input id='co_firstName' path="firstName"
+												class="form-control" /></td>
+									</tr>
+									<tr>
+										<td>Last Name:</td>
+										<td><form:input id='co_lastName' path="lastName"
+												class="form-control" /></td>
+									</tr>
+									<tr>
+										<td>Email:</td>
+										<td><form:input id='co_emailAddress' path="emailAddress"
+												class="form-control" /></td>
+									</tr>
+									<tr>
+										<td>Password:</td>
+										<td><form:password id='co_password' path="password"
+												class="form-control" /></td>
+									</tr>
+									<tr>
+										<td>Confirm Password:</td>
+										<td><form:password id='co_matchingPassword'
+												path="matchingPassword" class="form-control" /></td>
+									</tr>
+									<tr>
+										<td>Profile Type:</td>
+										<td><form:select path="profileId" class="form-control">
+												<form:option value="-1" label="Select a profile type" />
+												<form:options items="${profiles}" itemValue="id"
+													itemLabel="name" ></form:options>
+											</form:select></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td id="createAccount"><input id='co_registerUser' type="submit"
+											value="Create Account" class="square-button" /></td>
+									</tr>
+									<tr>
+										<td><input type="hidden" name="${_csrf.parameterName}"
+											value="${_csrf.token}" /></td>
+									</tr>
+								</table>
+							</form:form>	
+						</div>	
+				      </div>
+		<!-- 		      <div class="modal-footer"> -->
+		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+		<!-- 		      </div> -->
+				    </div>		
+		
+		
+				</div>	
+			</div>
+		</c:when>	
+	</c:choose>
 
 
 <script type="text/javascript">

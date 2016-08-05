@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionAttributeStore;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -46,7 +49,7 @@ public class UserController {
 	CategoryServiceImpl categoryService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam (name = "userId") int userId, ModelAndView model,
+	public ModelAndView validate(@RequestParam(name = "userId") int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
@@ -77,8 +80,12 @@ public class UserController {
 				user = userService.getUserByEmail(auth.getName());
 
 			}
+			
+			//Get the user's profile
 			user = userService.getProfile(user);
 			model.addAttribute("user", user);
+			
+			//Update session user after they have logged in
 			session.setAttribute("user", user);
 
 			String viewName = null;
@@ -116,8 +123,9 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
-	public ModelAndView viewFindEmployees(ModelAndView model) {
+	public ModelAndView viewFindEmployees(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 		model.setViewName("FindEmployees");
+		model.addObject("user", user);
 //		model.setViewName("Test");
 		return model;
 	}
@@ -139,52 +147,8 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ModelAndView logout(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
-		model.setViewName("Welcome");
 
-		user = new JobSearchUser();
-
-		model.addObject("user", user);
-
-		List<Profile> profiles = userService.getProfiles();
-		model.addObject("profiles", profiles);
-
-		return model;
-	}
-
-//	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-//	public ModelAndView getProfile(ModelAndView model, HttpServletRequest request,
-//			@ModelAttribute("user") JobSearchUser user) {
-//
-//		try {
-//
-//			if (user.getUserId() == 0) {
-//				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//				user = userService.getUserByEmail(auth.getName());
-//
-//			}
-//			user = userService.getProfile(user);
-//			model.addObject("user", user);
-//
-//			if (user.getCreateNewPassword() == 0) {
-//				if (user.getProfile().getName().equals("Employee")) {
-//					model.setViewName("EmployeeProfile");
-//				} else if (user.getProfile().getName().equals("Employer")) {
-//					model.setViewName("EmployerProfile");
-//				}
-//			} else {
-//				model.setViewName("NewPassword");
-//				model.addObject("newPassword", new JobSearchUser());
-//			}
-//
-//			return model;
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		return null;
-//	}
 	
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
@@ -218,9 +182,10 @@ public class UserController {
 
 	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String filterEmployees(@RequestParam String city, @RequestParam String state, @RequestParam String zipCode,
-			@RequestParam int radius, @RequestParam(value = "date") List<String> dates,
-			@RequestParam(value = "categoryId") List<Integer> categoryIds) {
+	public String filterEmployees(@RequestParam(name = "city") String city, @RequestParam(name = "state") String state, 
+			@RequestParam(name = "zipCode")  String zipCode, @RequestParam(name="radius") int radius, 
+			@RequestParam(name = "date", value = "date") List<String> dates,
+			@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
 
 		FindEmployeesRequestDTO findEmployeesRequest = new FindEmployeesRequestDTO(city, state, zipCode, radius, dates,
 				categoryIds);
@@ -248,7 +213,7 @@ public class UserController {
 	@RequestMapping(value = "/user/password/reset", method = RequestMethod.POST)
 	@ResponseBody
 	public ModelAndView resetPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
-			@RequestParam String redirectUrl) {
+			@RequestParam(name = "redirectUrl") String redirectUrl) {
 		userService.resetPassword(user);
 
 		model.setViewName("Welcome");
@@ -258,7 +223,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
-	public void uploadResume(@RequestParam(value = "file") MultipartFile file) throws IOException {
+	public void uploadResume(@RequestParam(name="file", value = "file") MultipartFile file) throws IOException {
 
 		if (file != null) {
 			ByteArrayInputStream stream = new   ByteArrayInputStream(file.getBytes());

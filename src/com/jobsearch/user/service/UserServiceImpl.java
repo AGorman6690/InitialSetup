@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
@@ -46,6 +47,9 @@ public class UserServiceImpl {
 
 	@Autowired
 	JobServiceImpl jobService;
+	
+	@Autowired
+	ApplicationServiceImpl applicationService;
 
 	@Autowired
 	Mailer mailer;
@@ -104,6 +108,20 @@ public class UserServiceImpl {
 		if (user.getProfileId() == 2) {
 			user.setActiveJobs(jobService.getActiveJobsByUser(user.getUserId()));
 			user.setCompletedJobs(jobService.getCompletedJobsByEmployer(user.getUserId()));
+			
+			//When the profile is requested and presented to the user,
+			//all the applications' "HasBeenViewed" property, for the user's active jobs,
+			//will be set to true.
+			
+			//*********************************************************************			
+			//*********************************************************************
+			//On second thought, this should be set to zero when the user clicks and views
+			//the new applicants
+			applicationService.setHasBeenViewed(user.getActiveJobs(), 1);
+			//*********************************************************************			
+			//*********************************************************************
+
+			
 		} else if (user.getProfileId() == 1) {
 
 			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
@@ -219,7 +237,7 @@ public class UserServiceImpl {
 			endorsement.setCategoryId(category.getId());
 
 			// Get how many endorsements the user has in the particular category
-			int endorsementCount = repository.getEndorsementCountByCategory(userId, category.getId());
+			int endorsementCount = this.getEndorsementCountByCategory(userId, category.getId());
 			endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
@@ -228,8 +246,14 @@ public class UserServiceImpl {
 		return endorsements;
 
 	}
+	
+
+	public int getEndorsementCountByCategory(int userId, int categoryId) {
+		return repository.getEndorsementCountByCategory(userId, categoryId);
+	}
 
 	public List<Endorsement> getUsersEndorsementsByJob(int userId, int jobId) {
+		
 
 		// NOTE: this does not return ALL endorsements.
 		// This consolidates ALL endorsements into each endorsement's category.
@@ -252,7 +276,7 @@ public class UserServiceImpl {
 
 			// Get how many endorsements the user has in the particular category
 			// and job
-			int endorsementCount = repository.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
+			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
 			endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
@@ -260,6 +284,13 @@ public class UserServiceImpl {
 
 		return endorsements;
 
+	}
+	
+	
+
+	public int getEndorsementCountByCategoryAndJob(int userId, int categoryId, int jobId) {
+		
+		return repository.getEndorsementCountByCategoryAndJob(userId, categoryId, jobId);
 	}
 
 	public String getComment(int jobId, int userId) {
@@ -416,4 +447,6 @@ public class UserServiceImpl {
 
 		repository.updatePassword(encryptedPassword, email);
 	}
+
+
 }

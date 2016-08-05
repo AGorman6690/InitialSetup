@@ -5,6 +5,10 @@ body{
     line-height:19.5px;
 }
 
+#jobsContainer{
+	height:1000px;
+}
+
 .input-container{	
 	display:inline-block;
 	vertical-align: middle;
@@ -60,6 +64,12 @@ body{
 	cursor:pointer;
 }
 
+
+#filteredJobs{
+	overflow-y:scroll;
+	max-height:915px;
+}
+
 /* Override Bootstrap */
 .col-padding{
 	padding:0px 2px 4px 2px;
@@ -87,7 +97,7 @@ body{
 
 
 .dropdown-input-selection-container{
-	padding:0px 10px 10px 10px;
+	padding:10px;
 	z-index:1000;
 	position:absolute;
 	left:-1px;
@@ -120,6 +130,15 @@ body{
 /* 	top:220px; */
 	display:none;
 	height:1000px;
+	padding-top:20px;
+	margin-bottom:60px;
+}
+
+#additionalFiltersContainer{
+	margin:auto;
+	width:725px;
+	display:block;
+	padding-top:20px;
 }
 
 #getJobs{
@@ -127,8 +146,15 @@ body{
 	color: #ffffff;
 	border-radius: 0 !important;
 	height:42px;
-	width:auto;
 	padding:5px 15px;
+}
+
+#getJobsContainer{
+	margin: auto;
+    width: 100px;
+    display: block;
+    padding-top:20px;
+	
 }
 
 #radius, #state, #zipCode{
@@ -139,11 +165,18 @@ body{
 	width:150px;
 }
 
-#filtersContainer{
-	padding-bottom:20px;
+#distanceFilter{
+	margin: auto;
+    width: 600px;
+    display:block;
+}
+
+#distanceFilterContainer{
+	padding-top:20px;
 /* 	position:fixed; */
 /* 	z-index:1000; */
 /* 	background-color:#ffffff; */
+
 }
 
 #map{

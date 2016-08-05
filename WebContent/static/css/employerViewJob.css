@@ -1,0 +1,188 @@
+table{
+	table-layout:fixed;
+	width:100%;
+}
+
+.table-container{
+    width: 1000px;
+}
+
+.select-options-container{
+	position:relative;
+	display:none;
+}
+
+.toggle-select-options{
+	cursor:pointer;
+}
+
+.select-question{
+	padding:2px 0px;
+}
+
+.application-status-container button{
+	display:block;
+	margin:5px 0px;
+	width:80px;
+	border-radius:0;
+	background-color:#ffffff;
+	border:1px solid rgb(192,192,192)
+}
+
+/* .application-status-container button:hover{ */
+/* 	background-color: #163B3D; */
+/* 	color: #FFFFFF; */
+/* } */
+
+.select-options{
+	position:absolute;
+	z-index:1000;
+	background-color:#ffffff;
+	width:400px;
+	height:auto;
+	padding:0px 5px;
+}
+
+.select-OK{
+	padding:5px 0px 0px 5px;
+	font-size:20px;
+	cursor:pointer;
+}
+
+#applicantName{
+	width:15%;
+}
+
+#rating{
+	width:10%;
+}
+
+.question{
+	padding-top:7px;
+}
+
+.answer{
+	padding:4px 0px 4px 20px;
+}
+
+#endorsements{
+	width:15%;
+}
+
+button.active{
+	background-color: #163B3D;
+	color: #FFFFFF;	
+}
+
+button.inactive{
+	background-color:#ffffff;
+	bolor:#000000;
+}
+
+#questions{
+	width:35%;
+	
+}
+
+#answers{
+	width:15%;
+}
+
+#status{
+	width:25%;
+}
+
+
+.header{
+	border-bottom: 2px outset #F0F0F0;
+}
+
+.jobs-table-container{
+	padding-top:25px;
+}
+
+.endorsement{
+	padding:5px;
+}
+
+.has-applicants{
+	cursor:pointer;
+}
+
+.has-new-applicants{
+	color: #e24c9a;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.no-applicants{
+	cursor:default;
+}
+
+
+
+
+#applicantsTable .applicant-name{
+	width:20%;
+}
+
+#applicantsTable .applicant-rating{
+	width:20%;
+}
+
+#applicantsTable .applicant-endorsements{
+	width:40%;
+}
+
+.job-row {
+    border-top: 3px solid #ddd;    
+}
+
+.job-row:first-of-type {
+    border-top: 0;    
+}
+
+#applicantsTable thead tr{
+	 border-bottom: 2px solid #ddd;   
+}
+
+#applicantsTable tbody tr{
+	 border-bottom: 1px solid #ddd;   
+}
+
+.applicants-container h4{
+	background-color:#163B3D;
+	color:#ffffff;
+	padding:5px;
+}
+
+td{
+	padding: 8px;
+	vertical-align: top;
+}
+
+td.has-new-applicants{
+	padding: 6px;
+}
+
+
+.applicants-row tbody tr{
+	font-size:12.5px;
+}
+
+.applicants-row{
+	display:none;
+}
+
+.applicants-container{
+	padding:5px 150px;
+}
+
+.applicants{
+	padding:10px;
+}
+
+.count{
+	margin-left:5px;
+}
+
