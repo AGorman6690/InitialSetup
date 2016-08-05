@@ -54,7 +54,7 @@ public class JobServiceImpl {
 	@Qualifier("FilterJobsVM")
 	Template filterJobsTemplate;
 
-	public void addPosting(SubmitJobPostingRequestDTO postingDto) {
+	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
 		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
 			//***********************************************************************************
@@ -93,7 +93,7 @@ public class JobServiceImpl {
 				
 				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getQuestions()));
 
-				repository.addJob(jobDto);
+				repository.addJob(jobDto, user);
 			} else if (results.length == 0) {
 				// invalid address
 			} else if (results.length > 1) {

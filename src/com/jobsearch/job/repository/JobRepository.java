@@ -18,6 +18,7 @@ import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -118,14 +119,14 @@ public class JobRepository {
 	}
 
 
-	public void addJob(JobInfoPostRequestDTO jobDto) {
+	public void addJob(JobInfoPostRequestDTO jobDto, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
 					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJobName());
-			 cStmt.setInt(2, jobDto.getUserId());
+			 cStmt.setInt(2, user.getUserId());
 			 cStmt.setString(3, jobDto.getDescription());
 			 //cStmt.setInt(6, jobDto.getOpenings());
 			 cStmt.setString(4, jobDto.getStreetAddress());

@@ -208,7 +208,7 @@ function submitJobs(confirmation){
 		var posting ={};
 		posting.jobs = jobs;
 		posting.questions = questions;
-		salert(posting)
+//		salert(posting)
 
 		$.ajax({
 			type : "POST",

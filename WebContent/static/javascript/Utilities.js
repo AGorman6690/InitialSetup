@@ -2,8 +2,8 @@
 function initializeMap(mapDivId, lat, lng) {
 	//Eventually initialize it to a user defualt
 	var myLatLng = {
-		lat : parseInt(lat),
-		lng : parseInt(lng),
+		lat : parseFloat(lat),
+		lng : parseFloat(lng),
 	};
 	var map = new google.maps.Map(document.getElementById(mapDivId), {
 		zoom : 8,
@@ -29,8 +29,8 @@ function showMapMarker(map, lat, lng){
 		
 	//Set the coordinate
 	var latLng = {
-			lat : parseInt(lat),
-			lng : parseInt(lng)
+			lat : parseFloat(lat),
+			lng : parseFloat(lng)
 		};
 	
 	//Place the marder

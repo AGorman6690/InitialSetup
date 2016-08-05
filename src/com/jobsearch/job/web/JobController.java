@@ -51,9 +51,10 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto, ModelAndView model) {
-
-		jobService.addPosting(postingDto);
+	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto,
+						HttpSession session, ModelAndView model) {
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		jobService.addPosting(postingDto, user);
 	}
 	
 	@RequestMapping(value ="/jobs/sort", method = RequestMethod.GET)
