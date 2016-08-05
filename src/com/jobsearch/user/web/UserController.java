@@ -123,9 +123,13 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
-	public ModelAndView viewFindEmployees(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
-		model.setViewName("FindEmployees");
+	public ModelAndView viewFindEmployees(ModelAndView model, HttpSession session) {
+
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");		
 		model.addObject("user", user);
+		
+		model.setViewName("FindEmployees");
+
 //		model.setViewName("Test");
 		return model;
 	}
@@ -138,8 +142,12 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
-	public ModelAndView viewPostJob(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
 
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		model.addObject("user", user);
+		
 		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
 		model.addObject("job", job);
 
