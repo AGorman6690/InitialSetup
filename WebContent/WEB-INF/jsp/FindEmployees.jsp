@@ -94,10 +94,10 @@
 
 		var pageContext = "profile";
 
-		getCategoriesBySuperCat('0', function(response, categoryId) {
-			appendCategories(categoryId, "T", response, function() {
-			});
-		})
+// 		getCategoriesBySuperCat('0', function(response, categoryId) {
+// 			appendCategories(categoryId, "T", response, function() {
+// 			});
+// 		})
 
 		$(document).ready(function(){
 
