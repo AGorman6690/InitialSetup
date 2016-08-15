@@ -27,7 +27,7 @@ public class ApplicationRepository {
 	@Autowired
 	UserServiceImpl userService;
 
-	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
+	public List<Application> ApplicationWithUserRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
 			@Override
 			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {				
@@ -58,11 +58,28 @@ public class ApplicationRepository {
 			}
 		});
 	}
+	
+	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
+			@Override
+			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {				
+				
+				Application application = new Application();
+				application.setApplicationId(rs.getInt("ApplicationId"));
+				application.setUserId(rs.getInt("UserId"));
+				application.setJobId(rs.getInt("JobId"));
+				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
+				application.setStatus(rs.getInt("Status"));
+
+				return application;
+			}
+		});
+	}	
 
 	public List<Application> getApplicationsByEmployer(int userId) {
 		String sql = "SELECT * FROM application WHERE UserId = ?";
 
-		return this.ApplicationRowMapper(sql, new Object[]{ userId });
+		return this.ApplicationWithUserRowMapper(sql, new Object[]{ userId });
 	}
 
 	public List<Application> getApplicationsByJob(int jobId) {
@@ -74,7 +91,7 @@ public class ApplicationRepository {
 				+ "inner join user u "
 				+ "on u.userid = a.userid "
 				+ "WHERE JobId = ? AND Status < 3";
-		return ApplicationRowMapper(sql, new Object[]{ jobId });
+		return ApplicationWithUserRowMapper(sql, new Object[]{ jobId });
 
 	}
 
@@ -88,7 +105,7 @@ public class ApplicationRepository {
 				+ "on u.userid = a.userid "
 				+ "WHERE JobId = ? and a.UserId = ?";
 
-		List<Application> applications = this.ApplicationRowMapper(sql, new Object[]{ jobId, userId });
+		List<Application> applications = this.ApplicationWithUserRowMapper(sql, new Object[]{ jobId, userId });
 
 		if(applications.size() > 0) return applications.get(0);
 		else return null;

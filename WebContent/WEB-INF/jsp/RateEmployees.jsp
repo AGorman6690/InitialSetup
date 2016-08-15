@@ -1,8 +1,9 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <head>
-	<script src="<c:url value="/static/javascript/User.js" />"></script>
-	<link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/css/ratings.css" />
+<%-- 	<script src="<c:url value="/static/javascript/User.js" />"></script> --%>
+<!-- 	<link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/css/ratings.css" /> -->
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rateEmployees.css" />
 </head>
 
 <body>
@@ -14,107 +15,34 @@
 	<input type="hidden" id="hireAgainRating" />
 
 	<div class="container">
-		<div style="width: 750px" class="panel panel-success">
-			<div class="panel-heading">Rate Employees
+		<div class="row">
+			<div class="col col-sm-4">
+				<div id="employees" class="column">	
+					<div class="header">Employees</div>
+					<div>
+						<ul>
+						<c:forEach items="${job.employees }" var="employee">
+							<li>${employee.firstName }</li>
+						</c:forEach>
+						</ul>
+					</div>
+				</div>			
 			</div>
-			
-			<div class="color-panel panel-body"
-				style="position: relative; min-height: 135px">
-				
-				<div class="row">
-				
-					<div id="employeeContainer" class="col-sm-3">	
-						<div id="employees" class="rate-employees list-group">
-							<div class="list-group" id="employeesToRate">
-								<c:forEach items="${job.employees }" var="employee">
-									<a href="#" id="${employee.getUserId() }"
-										class="list-group-item margin-hori"	>
-										${employee.getFirstName()} ${ employee.getLastName()}</a>
-								</c:forEach>
-							</div>
-						</div>	
+			<div class="col col-sm-4">
+				<div id="ratings" class="column">	
+					<div class="header">Ratings</div>
+					<div>
 						
-						<div class="rate-submit">
-							<button id="submitRating" type="button" class="btn btn-primary" 
-								onclick="submitRatings()">Submit
-								Rating</button>
-						</div>					
-					</div> <!-- end employee column -->
-						
-					<div id="ratingContainer" class="col-sm-6" style="">
-						
-						<div class="" style="display:relative">
-							
-							<div class="rate-group">
-								<span class="rate-label label label-success">On Time</span>
-								<div id="onTime" class="btn-group" role="group" aria-label="...">
-									<button id="onTime-value0" type="button" value="0"
-										class="rate-values btn btn-default">Never</button>
-									<button id="onTime-value1" type="button" value="2.5"
-										class="rate-values btn btn-default">Occasionally</button>
-									<button id="onTime-value2" type="button" value="5"
-										class="rate-values btn btn-default">Always</button>
-								</div>
-							</div>
-			
-							<div class="rate-group">
-								<span class="rate-label label label-success">Work Ethic</span>
-								<div id="workEthic" class="btn-group" role="group"
-									aria-label="...">
-									<button id="workEthic-value0" type="button" value="0"
-										class="rate-values btn btn-default">Poor</button>
-									<button id="workEthic-value1" type="button" value="2.5"
-										class="rate-values btn btn-default">Average</button>
-									<button id="workEthic-value2" type="button" value="5"
-										class="rate-values btn btn-default">Excellent</button>
-								</div>
-							</div>
-			
-							<div class="rate-group">
-								<span class="rate-label label label-success">Hire Again</span>
-								<div id="hireAgain" class="btn-group" role="group"
-									aria-label="...">
-									<button id="hireAgain-value0" value="0" type="button"
-										class="rate-values btn btn-default">No</button>
-									<button id="hireAgain-value1" value="2.5" type="button"
-										class="rate-values btn btn-default">Maybe</button>
-									<button id="hireAgain-value2" value="5" type="button"
-										class="rate-values btn btn-default">Yes</button>
-								</div>
-							</div>		
-																		
-						</div> <!-- end rate criteria -->	
-											
-						<div style="margin-top: 25px; display:block" class="">
-							<span class="rate-label label label-success">Comments</span>
-							<div style="margin-top:15px">
-								<textarea name="comments" class="form-control"
-									id="comments" rows="3" placeholder="Comments"></textarea>
-							</div>
-						</div>
-						
-					</div> <!-- end rating column -->
-					
-					<div class="col-sm-3">
-					
-						<div id="categories" class="pull-right">
-							<h3 style="margin: 0px 0px 0px 0px; display:block">
-								<span style="margin: 0px 0px 5px 0px; display:block" class="label label-primary">
-								Endorsements</span></h3>
-							<c:forEach items="${job.categories}" var="category">
-									<button style="margin-bottom:5px; display:block" type="button" 
-										id="${category.getId()}"	class="btn btn-secondary"
-										onClick="toggleEndorsement(this)">
-										${category.getName()}</button>
-							
-							</c:forEach>				
-						</div> <!-- end categories -->
-						
-					</div> <!-- end category column -->
-					
-				</div> <!-- end row -->
-			</div> <!-- end panel body -->
-		</div> <!-- end entire panel -->
+					</div>
+				</div>			
+			</div>
+			<div class="col col-sm-4">
+				<div id="endorsements" class="column">	
+					<div class="header">Endorsements</div>
+				</div>			
+			</div>			
+		</div>
+		
 	</div> <!-- end container -->
 </body>
 

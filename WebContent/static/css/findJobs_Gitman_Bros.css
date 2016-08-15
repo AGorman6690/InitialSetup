@@ -5,6 +5,12 @@ body{
     line-height:19.5px;
 }
 
+.error-message{
+	color: #b30000;
+	margin-bottom: 5px;
+	display: none;
+}
+		
 #jobsContainer{
 	height:1000px;
 }

@@ -96,7 +96,18 @@ public class FilterJobRequestDTO {
 	@JsonProperty("isAppendingJobs")
 	boolean isAppendingJobs;
 	
+	@JsonProperty("isSortingJobs")
+	boolean isSortingJobs;	
 	
+	
+	public boolean getIsSortingJobs() {
+		return isSortingJobs;
+	}
+
+	public void setIsSortingJobs(boolean isSortingJobs) {
+		this.isSortingJobs = isSortingJobs;
+	}
+
 	public boolean getIsAppendingJobs() {
 		return isAppendingJobs;
 	}

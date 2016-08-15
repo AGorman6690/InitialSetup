@@ -11,7 +11,8 @@
 
 
 
-	<span>toggle job info. hide on load</span>
+	<span>(note: job info will be shown here. Allow user to hide/show the job info. hide on load)</span>
+	<br>
 	<br>
 
 
@@ -74,7 +75,7 @@
 							<c:forEach items="${job.getApplications() }" var="application">
 								<tr id="${application.applicationId }" class="applicant bottom-border-thin" data-select-option-value="${application.status }"
 									data-application-id="${application.applicationId }">
-									<td> ${application.applicant.firstName }</td>
+									<td><a href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
 									<td> ${application.applicant.rating}</td>
 <!-- 								Set endorsements -->
 									<td>										
@@ -184,6 +185,7 @@
 				headers : headers,
 				contentType : "application/json",
 				success: _success,
+				error: _error
 			})
 			
 			function _success(){
@@ -193,6 +195,10 @@
 				
 				$(clickedRow).attr("data-select-option-value", statusValue);
 				$(clickedButton).addClass("active");
+			}
+			
+			function _error(){
+				alert("status error")
 			}
 
 			
@@ -465,21 +471,7 @@
 	}
 
 
-	function markJobComplete(jobId) {
-		var headers = {};
-		headers[$("meta[name='_csrf_header']").attr("content")] = $(
-				"meta[name='_csrf']").attr("content");
-		$.ajax({
-			type : "PUT",
-			url : environmentVariables.LaborVaultHost + '/JobSearch/job/' + jobId + '/markComplete',
-			headers : headers
-		}).done(function() {
-			$('#home')[0].click();
-		}).error(function() {
-			$('#home')[0].click();
 
-		});
-	}
 
 
 </script>

@@ -53,6 +53,7 @@ public class JobController {
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
 	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto,
 						HttpSession session, ModelAndView model) {
+		
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		jobService.addPosting(postingDto, user);
 	}
@@ -61,9 +62,20 @@ public class JobController {
 	@ResponseBody
 	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,
 						@RequestParam(name = "isAscending") boolean isAscending,
+						@RequestParam(name = "lat") float lat,
+						@RequestParam(name = "lng") float lng,
 						HttpSession session){
 		
-		return jobService.getSortedJobsHTML(sortBy, isAscending, session);
+		//Set the request object
+		FilterJobRequestDTO request = new FilterJobRequestDTO();
+		request.setIsSortingJobs(true);		
+		request.setSortBy(sortBy);
+		request.setIsAscending(isAscending);
+		request.setLat(lat);
+		request.setLng(lng);
+		
+		//Get the html to display the already-rendered jobs in the requested order
+		return jobService.getSortedJobsHTML(request, session);
 	}
 	
 	@SuppressWarnings({ "unchecked", "null" })
@@ -94,7 +106,7 @@ public class JobController {
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
 				lessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
-
+	
 		
 		return jobService.getFilterdJobsResponseHtml(request, session, model);
 
@@ -157,49 +169,28 @@ public class JobController {
 		return model;
 	}
 
-	@RequestMapping(value = "/jobs/completed/employee", method = RequestMethod.GET)
-	@ResponseBody
-	public ModelAndView getEmployeeWorkHistory(@RequestParam(name = "userId") int userId,
-			@RequestParam(name = "jobId", required = false) Integer jobId,
-			@RequestParam(name = "viewContext") int viewContext, ModelAndView model) {
 
-		// ***************
-		// Context values:
-		// 0 = "viewing employee as a prospective applicant for a particular
-		// job"
-		// 1 = "viewing employee from searching for employees
 
-		JobSearchUser employee = userService.getUser(userId);
-		employee.setEndorsements(userService.getUsersEndorsements(userId));
-		if (jobId != null) {
-			employee.setApplication(applicationService.getApplication(jobId, userId));
+//	@RequestMapping(value = "/job/{jobId}/mark-complete", method = RequestMethod.GET)
+//	public String markJobComplete(@PathVariable("jobId") int jobId, Model model) {
+//		
+//		return "RateEmployees";
+//	}
+	
+	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
+	public String rateEmployees(@PathVariable("jobId") int jobId,
+								@RequestParam(name = "markComplete", required = false) boolean markComplete,
+								Model model) {
+		
+		if(markComplete){
+			jobService.markJobComplete(jobId);
 		}
-		model.addObject("worker", employee);
-
-		// Job consideredForJob = jobService.getJob(jobId);
-		// model.addObject("consideredForJob", consideredForJob);
-
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);
-		model.addObject("completedJobDtos", completedJobDtos);
-
-		String context = null;
-		if (viewContext == 0) {
-			context = "viewingApplication";
-		} else if (viewContext == 1) {
-			context = "findEmployeeSearch";
-		}
-		model.addObject("context", context);
-
-		model.setViewName("EmployeeWorkHistory");
-		return model;
-	}
-
-	@RequestMapping(value = "/job/{jobId}/markComplete", method = RequestMethod.PUT)
-	@ResponseBody
-	public void markJobComplete(@PathVariable("jobId") int jobId) {
-		// Update database
-		jobService.markJobComplete(jobId);
-	}
+		
+		String viewName;
+		viewName = jobService.getRateEmployeesView(model, jobId);
+		
+		return viewName;
+	}	
 
 	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
 	public ModelAndView viewRateEmployees(@PathVariable int jobId, ModelAndView model) {

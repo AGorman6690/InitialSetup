@@ -121,7 +121,8 @@ public class UserServiceImpl {
 			//*********************************************************************			
 			//*********************************************************************
 
-			
+		
+		//If employee
 		} else if (user.getProfileId() == 1) {
 
 			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
@@ -263,21 +264,24 @@ public class UserServiceImpl {
 
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
-		// Get the category Ids that the user has endorsements for
+		//Per the job, get the category Ids that the user has endorsements for
 		List<Integer> endorsementCategoryIds = repository.getEndorsementCategoryIdsByJob(userId, jobId);
 
+		//Create endorsement objects
 		for (Integer endorsementCategoryId : endorsementCategoryIds) {
 
+			//Create a category object
 			Category category = categoryService.getCategory(endorsementCategoryId);
 
+			//Set the endorsement object's properties
 			Endorsement endorsement = new Endorsement();
 			endorsement.setCategoryName(category.getName());
 			endorsement.setCategoryId(category.getId());
 
-			// Get how many endorsements the user has in the particular category
-			// and job
-			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
-			endorsement.setCount(endorsementCount);
+//			// Get how many endorsements the user has in the particular category
+//			// and job
+//			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
+//			endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
 		}

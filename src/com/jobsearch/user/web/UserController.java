@@ -14,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +27,9 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.json.JSON;
@@ -47,6 +50,9 @@ public class UserController {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
+	
+	@Autowired
+	ApplicationServiceImpl applicationService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
 	public ModelAndView validate(@RequestParam(name = "userId") int userId, ModelAndView model,
@@ -154,7 +160,36 @@ public class UserController {
 		model.setViewName("PostJob");
 		return model;
 	}
+	
+	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
+//	@ResponseBody
+	public String getUserWorkHistory(@PathVariable int userId, Model model) {
+			
 
+//		JobSearchUser employee = userService.getUser(userId);
+//		employee.setEndorsements(userService.getUsersEndorsements(userId));
+//		if (jobId != null) {
+//			employee.setApplication(applicationService.getApplication(jobId, userId));
+//		}
+//		model.addObject("worker", employee);
+
+		// Job consideredForJob = jobService.getJob(jobId);
+		// model.addObject("consideredForJob", consideredForJob);
+
+		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);
+		model.addAttribute("completedJobDtos", completedJobDtos);
+
+//		String context = null;
+//		if (viewContext == 0) {
+//			context = "viewingApplication";
+//		} else if (viewContext == 1) {
+//			context = "findEmployeeSearch";
+//		}
+//		model.addObject("context", context);
+
+//		model.setViewName("EmployeeWorkHistory");
+		return "EmployeeWorkHistory";
+	}
 
 
 	

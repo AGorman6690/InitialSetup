@@ -39,6 +39,16 @@ public class Job{
 	private List<Application> applications;
 	private List<Question> questions;
 	private int newApplicationCount;
+	private Integer Duration;
+	
+
+	public Integer getDuration() {
+		return Duration;
+	}
+
+	public void setDuration(Integer duration) {
+		Duration = duration;
+	}
 
 	public int getNewApplicationCount() {
 		return newApplicationCount;

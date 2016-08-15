@@ -138,6 +138,7 @@
 				
 							<c:choose>
 								<c:when test="${user.getFirstName() != null}">
+								
 									<div class="link nav-item">
 									<li><a href="/JobSearch/viewProfile">Profile</a></li>
 									</div>
@@ -186,6 +187,8 @@
 							</div>
 							<input class="square-button" type="submit" value="Login"/>
 						</form:form>
+						
+						
 				      </div>
 		<!-- 		      <div class="modal-footer"> -->
 		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
