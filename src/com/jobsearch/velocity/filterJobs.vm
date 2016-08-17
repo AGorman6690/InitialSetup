@@ -1,7 +1,10 @@
  
- ##Sort by dropdown
- ##Is this condition being used?????
- #if( $skipSortByDropDown == 0)
+ ##Sort-by dropdown
+ ##****** ADDRESS LATER ********* 
+ ##The code in this condition is currently NEVER used.
+ ##The sort by drop down is hardcoded in the FindJobs.jsp.
+ ##Address this later and delete if necessary.
+ #if( $request.isSortingJobs == 0)
 	<div class="sort-jobs-by-container">
 		<div class="dropdown-input-container sort-width">
 			<div class="dropdown-input-label">
@@ -123,10 +126,11 @@
 #end	 
 
 
- <div id="requestOrigin" data-lat="$request.lat" data-lng="$request.lng" data-radius="$request.radius"></div>
- ## Filtered Jobs
+ <div id="requestOrigin" data-lat="$request.lat" data-lng="$request.lng" data-max-dist="$maxDistance"></div>
+ 
+ ## Filtered/Sorted Jobs
  #if ($jobs.size() == 0)
- 	<div id="noJobs" >Sorry, no jobs match your search
+ 	<div id="noJobs">Sorry, no jobs match your search.
  	</div>
  #else
 	 
@@ -169,7 +173,7 @@
 					<span class="bold">Location</span> - $job.city, $job.state
 				</div>
 				<div class="job-distance">
-					<span class="bold">Distance</span> - $job.distanceFromFilterLocation miles
+					<span class="bold">Distance</span> - $mathUtility.round($job.distanceFromFilterLocation, 1, 0) miles
 				</div>				
 			</div>
 			

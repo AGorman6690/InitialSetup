@@ -81,13 +81,16 @@ public class ApplicationServiceImpl {
 
 
 	public void updateStatus(int applicationId, int status) {
-		repository.updateStatus(applicationId, status);
-
+		
 //		//If hired
 		if (status == 3){
 			Application application = getApplication(applicationId);
 			userService.hireApplicant(application.getUserId(), application.getJobId());
 		}
+		
+		repository.updateStatus(applicationId, status);
+
+
 
 	}
 

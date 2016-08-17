@@ -25,6 +25,9 @@
 	border-radius: 5px
 }
 
+#jobActionContainer{
+	padding-top:10px;
+}
 
 .added-job, .added-job:focus, .added-job:active, .added-job:hover{
 	color: white;

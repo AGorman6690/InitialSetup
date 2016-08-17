@@ -99,62 +99,38 @@
 
 	<nav id="navBar" class="">
 		<div class="nav-container nav-border">
-			<div class=>
-				<div class="logo">
+			<c:choose>
+				<c:when test="${user.profileId > 0 }">
+					<a id="home" class="logo" href="/JobSearch/user/profile">Labor Vault</a>
+				</c:when>
+				<c:otherwise>
+					<a id="home" class="logo" href="/JobSearch/">Labor Vault</a>	
+				</c:otherwise>
+			</c:choose>
+			<div class="nav-items">					
 				<c:choose>
 					<c:when test="${user.profileId > 0 }">
-						<a id="home" class="" href="/JobSearch/user/profile">Labor
-							Vault</a>
+							<a href="/JobSearch/logout">Log out</a>
+						<c:choose>
+							<c:when test="${user.profileId == 1}">
+								<a href="/JobSearch/jobs/find">Find Jobs</a>
+							</c:when>
+							<c:when test="${user.profileId == 2}">
+								<a href="/JobSearch/employees/find">Find Employees</a>
+								<a href="/JobSearch/viewPostJob">Post Job</a>
+							</c:when>
+						</c:choose>				
+						<c:choose>
+							<c:when test="${user.getFirstName() != null}">
+								<a href="/JobSearch/viewProfile">Profile</a>
+							</c:when>
+						</c:choose>
 					</c:when>
 					<c:otherwise>
-						<a id="home" class="" href="/JobSearch/">Labor
-						
-							Vault</a>	
+						<a data-toggle="modal" data-target="#loginContainer">Login</a>
+						<a data-toggle="modal" data-target="#signupContainer">Sign Up</a>
 					</c:otherwise>
-					</c:choose>
-				</div>
-				<ul class="nav-items">
-					
-					<c:choose>
-						<c:when test="${user.profileId > 0 }">
-							<div class="link nav-item">
-								<li><a href="/JobSearch/logout">Log out</a></li>
-							</div>
-							<c:choose>
-								<c:when test="${user.profileId == 1}">
-									<div class="link nav-item">
-										<li><a href="/JobSearch/jobs/find">Find Jobs</a></li>
-									</div>
-								</c:when>
-								<c:when test="${user.profileId == 2}">
-									<div class="link nav-item">
-										<li><a href="/JobSearch/employees/find">Find Employees</a></li>
-									</div>
-									<div class="link nav-item">
-										<li><a href="/JobSearch/viewPostJob">Post Job</a></li>
-									</div>
-								</c:when>
-							</c:choose>
-				
-							<c:choose>
-								<c:when test="${user.getFirstName() != null}">
-									<div class="link nav-item">
-									<li><a href="/JobSearch/viewProfile">Profile</a></li>
-									</div>
-		
-								</c:when>
-							</c:choose>
-						</c:when>
-						<c:otherwise>
-							<div id="login" class="click link nav-item">
-								<li><a data-toggle="modal" data-target="#loginContainer">Login</a></li>
-							</div>
-							<div id="signUp" class="click link nav-item">
-								<li><a data-toggle="modal" data-target="#signupContainer">Sign Up</a></li>
-							</div>												
-						</c:otherwise>
-					</c:choose>
-				</ul>
+				</c:choose>
 			</div>
 		</div>
 	</nav>
@@ -186,6 +162,8 @@
 							</div>
 							<input class="square-button" type="submit" value="Login"/>
 						</form:form>
+						
+						
 				      </div>
 		<!-- 		      <div class="modal-footer"> -->
 		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->

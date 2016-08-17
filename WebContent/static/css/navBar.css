@@ -3,9 +3,9 @@
     margin: 10px auto;	
 }
 
-.click{
-	cursor:pointer;
-}
+/* .click{ */
+/* 	cursor:pointer; */
+/* } */
 
 
 .nav-items{
@@ -19,7 +19,7 @@
 	font-size:20px;	
 }
 
-.nav-item{
+.nav-items a{
 	border: 1px solid rgb(192,192,192);
 	display:inline-block;
 	list-style: none;
@@ -27,6 +27,11 @@
 	border-left-width: 0;
 	font-size:16px;	
 	float:right;
+	cursor:pointer;
+}
+
+.nav-items a:last-child{
+	border-left: 1px solid rgb(192,192,192);
 }
 
 .modal-dialog input[type=submit]{
@@ -48,22 +53,24 @@
     border-right-width: 0;
 }
 
-.link:last-child {
-    border-left-width: 1px;
+/* .link:last-child { */
+/*     border-left-width: 1px; */
+/* } */
+
+
+
+.logo:hover, .nav-items a:hover{
+
 }
 
+/* .nav-item:hover, .nav-item:hover *, .logo:hover, .logo:hover *  {	 */
+/*     color: #ffffff;} */
 
 
-.logo:hover, .nav-item:hover{
-	background-color: #163B3D;
-}
-
-.nav-item:hover, .nav-item:hover *, .logo:hover, .logo:hover *  {	
-    color: #ffffff;}
-
-
-#navBar a:hover{
+.nav-container a:hover{
 	text-decoration: none;
+	background-color: #163B3D;
+	color:#ffffff;
 }
 
 a{
@@ -71,20 +78,18 @@ a{
 }
 
 .nav-container{
-	padding:45px 45px 35px 45px;
+	padding:45px 45px 10px 45px;
 /* 	background-color:#F6C627; */
 /* 	position:fixed; */
 /* 	top:0px; */
 	overflow:overlay;
     max-width: 1200px;
     margin: auto;	
-
-}
-
-.nav-border{
-	border-bottom: 2px outset #F0F0F0;
+   	border-bottom: 2px outset #F0F0F0;
 	overflow:overlay;
-	padding-bottom:10px;
-	
+/* 	padding-bottom:10px; */
+
 }
+
+
 

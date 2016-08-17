@@ -3,6 +3,7 @@ package com.jobsearch.user.rate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jobsearch.model.CommentDTO;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.RateCriterion;
 
@@ -33,14 +34,14 @@ public class RatingRequestDTO {
 	List<Endorsement> endorsements;
 	
 	@JsonProperty("comment")
-	String comment;
+	CommentDTO comment;
 	
 	
-	public String getComment() {
+	public CommentDTO getComment() {
 		return comment;
 	}
 
-	public void setComment(String comment) {
+	public void setComment(CommentDTO comment) {
 		this.comment = comment;
 	}
 

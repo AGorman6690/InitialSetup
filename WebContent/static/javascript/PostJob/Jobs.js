@@ -218,7 +218,7 @@ function submitJobs(confirmation){
 //	 				dataType : "application/json", // Response
 			data : JSON.stringify(posting)
 		}).done(function() { 				
-			window.location = "./user/profile";
+			window.location = "/JobSearch/user/profile";
 		}).error(function() {
 			alert("error submit jobs")
 			$('#home')[0].click();

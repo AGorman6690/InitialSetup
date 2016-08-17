@@ -11,7 +11,8 @@
 
 
 
-	<span>toggle job info. hide on load</span>
+	<span>(note: job info will be shown here. Allow user to hide/show the job info. hide on load)</span>
+	<br>
 	<br>
 
 
@@ -74,7 +75,7 @@
 							<c:forEach items="${job.getApplications() }" var="application">
 								<tr id="${application.applicationId }" class="applicant bottom-border-thin" data-select-option-value="${application.status }"
 									data-application-id="${application.applicationId }">
-									<td> ${application.applicant.firstName }</td>
+									<td><a href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
 									<td> ${application.applicant.rating}</td>
 <!-- 								Set endorsements -->
 									<td>										
@@ -184,6 +185,7 @@
 				headers : headers,
 				contentType : "application/json",
 				success: _success,
+				error: _error
 			})
 			
 			function _success(){
@@ -193,6 +195,10 @@
 				
 				$(clickedRow).attr("data-select-option-value", statusValue);
 				$(clickedButton).addClass("active");
+			}
+			
+			function _error(){
+				alert("status error")
 			}
 
 			
@@ -289,48 +295,48 @@
 								'&jobId=' + $("#jobId").val() + '&c=0';
 		})
 
-		$("#applicationStatus").change(function(){
+// 		$("#applicationStatus").change(function(){
 
-			var i = 0;
-			var j = 0;
-			var statusesToShow = $(this).find(":selected")
-									.map(function(){ return $(this).val() }).get();
+// 			var i = 0;
+// 			var j = 0;
+// 			var statusesToShow = $(this).find(":selected")
+// 									.map(function(){ return $(this).val() }).get();
 
 
-			var statuses = $("#applicantsTable").find("tbody input.applicant-status")
+// 			var statuses = $("#applicantsTable").find("tbody input.applicant-status")
 
-			if(statusesToShow.length == 0){
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
-					$(row).hide();
-				}
-			}else if(statusesToShow.length == 2){
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
-					$(row).show();
-				}
-			}else{
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
+// 			if(statusesToShow.length == 0){
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
+// 					$(row).hide();
+// 				}
+// 			}else if(statusesToShow.length == 2){
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
+// 					$(row).show();
+// 				}
+// 			}else{
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
 
-					for(j = 0; j < statusesToShow.length; j++){
+// 					for(j = 0; j < statusesToShow.length; j++){
 
-						if($(status).val() == statusesToShow[j]){
-							$(row).show();
-							j = statusesToShow.length;
-						}else if(j == statusesToShow.length - 1){
-							$(row).hide();
-						}
-					}
-				}
-			}
-		})
+// 						if($(status).val() == statusesToShow[j]){
+// 							$(row).show();
+// 							j = statusesToShow.length;
+// 						}else if(j == statusesToShow.length - 1){
+// 							$(row).hide();
+// 						}
+// 					}
+// 				}
+// 			}
+// 		})
 
 		$(".hide-show-columns").change(function(){
 			filterApplicants();
@@ -465,21 +471,7 @@
 	}
 
 
-	function markJobComplete(jobId) {
-		var headers = {};
-		headers[$("meta[name='_csrf_header']").attr("content")] = $(
-				"meta[name='_csrf']").attr("content");
-		$.ajax({
-			type : "PUT",
-			url : environmentVariables.LaborVaultHost + '/JobSearch/job/' + jobId + '/markComplete',
-			headers : headers
-		}).done(function() {
-			$('#home')[0].click();
-		}).error(function() {
-			$('#home')[0].click();
 
-		});
-	}
 
 
 </script>

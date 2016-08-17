@@ -19,12 +19,13 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "loadedFilteredJobIds" })
+@SessionAttributes({ "user", "loadedFilteredJobIds", "loadedFilteredJobs"})
 public class WelcomeController {
 
 	@Autowired
@@ -44,9 +45,14 @@ public class WelcomeController {
 		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
 		return loadedFilteredJobIds;
 	}
+	
+	@ModelAttribute("loadedFilteredJobs")
+	public List<Job> getSessionLoadedFilteredJobs(){
+		List<Job> loadedFilteredJobs = new ArrayList<Job>();
+		return loadedFilteredJobs;
+	}	
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-
 	public String welcome(Model model, HttpServletRequest request,
 			@RequestParam(name = "error", required = false) boolean error) {
 

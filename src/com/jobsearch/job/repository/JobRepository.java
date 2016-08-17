@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -49,6 +51,9 @@ public class JobRepository {
 				@Override
 				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Job e = new Job();
+					
+				
+					
 					e.setId(rs.getInt("JobId"));
 					e.setJobName(rs.getString("JobName"));
 					e.setUserId(rs.getInt("UserId"));
@@ -63,7 +68,13 @@ public class JobRepository {
 					e.setStartDate(rs.getDate("StartDate"));
 					e.setEndDate(rs.getDate("EndDate"));
 					e.setStartTime(rs.getTime("StartTime"));
-					e.setEndTime(rs.getTime("EndTime"));
+					e.setEndTime(rs.getTime("EndTime"));					
+					
+					//Set duration
+					DateTime dtStart = new DateTime(e.getStartDate());
+					DateTime dtEnd = new DateTime(e.getEndDate());
+					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
+					
 					return e;
 				}
 			});
@@ -384,14 +395,34 @@ public class JobRepository {
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 
+	
+	//*******************************************************************
+	//*******************************************************************
+	//This method can be deleted if the job objects that are filtered are stored in session,
+	//not the job ids
+	//*******************************************************************
+	//*******************************************************************
 	public List<Job> sortJobs(List<Integer> jobIds, String sortBy, boolean isAscending) {
 		
 		List<Object> argsList = new ArrayList<Object>();		
 		String sql = "SELECT * FROM job WHERE ";		
 		
+		
+//		if(sortBy.matches("Distance")){
+//			
+//		}
+		
+		
 		//Append job ids
+		boolean first = true;
 		for(Integer id : jobIds){
-			sql += "JobId = ?";
+			if(first) {
+				sql += "JobId = ?";
+				first = false;
+			}else{
+				sql += " OR JobId = ?";
+			}
+			
 			argsList.add(id);
 		}
 		
@@ -407,6 +438,7 @@ public class JobRepository {
 				
 		return JobRowMapper(sql, argsList.toArray());
 	}
+
 
 
 }

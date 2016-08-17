@@ -28,11 +28,11 @@
 			<div id="distanceFilterContainer" class="col-sm-12">
 			
 				<div id="radiusErrorMessage" class="error-message"></div>
-				<div id="locationErrorMessage" class="error-message"></div>
+				<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
 				<div id="distanceFilter" class="input-container-group form-group">	
 					<div class="input-container">									
 						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
+							class="form-control" id="radius" placeholder="Number Of" value=""></input>
 					</div>			
 					<div class="input-container">					
 						<label id="milesFrom" for="radius">Miles From</label>
@@ -47,7 +47,7 @@
 					</div>			
 					<div class="input-container">			
 						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
+							class="form-control" id="zipCode" placeholder="Zip Code" value=""></input>
 					</div>																			
 				</div>
 			</div>
@@ -154,7 +154,7 @@
 									</div>
 <!-- 									<div class="select-container">								 -->
 									<div class="input-container form-group">
-								  		<input type="text" class="filter-input form-control" data-filter-dto-prop="duration" >
+								  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
 							  		</div>		
 <!-- 							  		</div>	 -->
 							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
@@ -444,13 +444,13 @@ $(document).ready(function() {
 	
 		$("#jobsContainer").on("click", ".sort-direction input[type='radio']", function(){
 			
-			setFilteredJobs(0);
+// 			setFilteredJobs(0);
 			
 			//*********************************************			
 			//*********************************************
 			//Finish this
 			
-			//sortLoadedJobs();
+			sortLoadedJobs();
 			//*********************************************
 			//*********************************************			
 			
@@ -586,23 +586,23 @@ $(document).ready(function() {
 			$displayText = $($(this).parent().find(".display-text")[0]);
 			$displayText.html($displayText.data("reset-text"));
 			
-			//Reset the dropdown div that the used to set the filter
+			//Get the dropdown div that was used to set the filter
 			container = $(this).parents(".dropdown-input-container")[0];
 			selectionDiv = $(container).find(".dropdown-input-selection-container")[0];
 			
-			//Clear select
+			//If applicable, clear select
 			$(selectionDiv).find(".select-container select").each(function(){
 				$(this).val("");
 			})
 			
-			//Clear radios
+			//If applicable, clear radios
 			$(selectionDiv).find("input[type=radio]").each(function(){
 				$(this).removeAttr("checked");
 			})
 			
-			//Clear text inputs
+			//If applicable, clear text inputs
 			$(selectionDiv).find("input[type=text]").each(function(){
-				$(this).html("");
+				$(this).val("");
 			})
 			
 		})
@@ -659,8 +659,20 @@ $(document).ready(function() {
 		
 		$("#getJobs").click(function(){
 			
-			//Validate location input
-			if(validateLocation() == 1 && validateRadius() == 1){
+			var invalidInputs = 0;
+			
+			//If invalid location input
+			if(validateLocation() == 0){
+				invalidInputs += 1;
+			};			
+				
+			//If invalid radius input
+			if(validateRadius() == 0){
+				invalidInputs += 1;	
+			}
+			
+			//If there are no invalid inputs
+			if(invalidInputs == 0){
 				setFilteredJobs(1);
 			}
 		})
@@ -779,7 +791,7 @@ $(document).ready(function() {
 		
 		//Validate
 		if(radius == ""){
-			radiusErrorMessage = "Number of miles is required."
+			errorMessageText = "Number of miles is required."
 			validRadius = 0;		
 		}else if(!$.isNumeric(radius)){
 			errorMessageText = "Number of miles must be numeric."
@@ -843,7 +855,7 @@ $(document).ready(function() {
 		//Set error message
 		errorMessage = $("#locationErrorMessage");
 		if(validCity == 0 && validState == 0 && validZipCode == 0){			
-			$(errorMessage).html("City, state or zip code required.")
+			//$(errorMessage).html("City, state or zip code required.")
 			$(errorMessage).show();
 			validLocation = 0;
 
@@ -914,8 +926,12 @@ $(document).ready(function() {
 
 		//Set map zoom
 		var zoom;
-		var requestedRadius = $("#requestOrigin").data("radius");
-		if (requestedRadius < 5)
+		var requestedRadius = $("#requestOrigin").data("max-dist");
+		
+		if (requestedRadius < 0)
+			//This will occur if no jobs match the user's fiter(s)
+			zoom = 11;
+		else if (requestedRadius < 5)
 			zoom = 12
 		else if (requestedRadius < 25)
 			zoom = 11
@@ -1001,11 +1017,11 @@ $(document).ready(function() {
 			
 		})
 		
-		//Check if data should be sorted
-		sortByRadio = $("input[name=sort]").filter(":checked")[0];
-		if(sortByRadio != null){
-			params += "&" + getSortByParam();
-		}
+// 		//Check if data should be sorted
+// 		sortByRadio = $("input[name=sort]").filter(":checked")[0];
+// 		if(sortByRadio != null){
+// 			params += "&" + getSortByParam();
+// 		}
 		
 		
 		
@@ -1031,10 +1047,10 @@ $(document).ready(function() {
 		return params;
 	}
 	
-	function getSortByParam(){
+	function getSortByParam($sortByRadio){
 		var sortByParam;
-		sortByParam += "sortBy=" + $(sortByRadio).data("col");
-		sortByParam += "&isAscending=" + $(sortByRadio).data("is-ascending");
+		sortByParam = "sortBy=" + $sortByRadio.data("col");
+		sortByParam += "&isAscending=" + $sortByRadio.data("is-ascending");
 		
 		return sortByParam;
 	}
@@ -1082,13 +1098,15 @@ $(document).ready(function() {
 			}	
 
 			function _error(response) {
-				alert('DEBUG: error append filter jobs')
+// 				alert('DEBUG: error append filter jobs')
 			}
 	}
 	
 	function sortLoadedJobs(){
 		
-		var params = "?" + getSortByParam();
+		var $sortByRadio = $($("input[name=sort]").filter(":checked")[0]);
+		var params = "?" + getSortByParam($sortByRadio);
+		params += "&" + getRequestedLatAndLngParams();
 		
 		$.ajax({
 			type : "GET",
@@ -1106,8 +1124,15 @@ $(document).ready(function() {
 			}	
 
 			function _error(response) {
-				alert('DEBUG: error set filter jobs')
+// 				alert('DEBUG: error set filter jobs')
 			}
+	}
+	
+	function getRequestedLatAndLngParams(){
+		var params;
+		params = "lat=" + $("#requestOrigin").data("lat");
+		params += "&lng=" + $("#requestOrigin").data("lng");
+		return params;
 	}
 	
 	function setFilteredJobs(doSetMap) {
@@ -1124,7 +1149,7 @@ $(document).ready(function() {
 			});
 
 			function _success(response) {
-				//This will return a velocity template
+				//This function receives a velocity template
 				
 				$("#filteredJobs").html(response);		
 				

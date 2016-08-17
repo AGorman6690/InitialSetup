@@ -25,6 +25,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingRequestDTO;
+import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityRequestDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
@@ -121,7 +122,8 @@ public class UserServiceImpl {
 			//*********************************************************************			
 			//*********************************************************************
 
-			
+		
+		//If employee
 		} else if (user.getProfileId() == 1) {
 
 			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
@@ -149,21 +151,21 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingRequestDTO ratingDTO) {
+	public void rateEmployee(RatingRequestDTOs ratingRequestDTOs) {
 
-		for (RateCriterion rc : ratingDTO.getRateCriteria()) {
-			repository.updateRating(rc);
-		}
-
-		deleteEndorsements(ratingDTO.getEmployeeId(), ratingDTO.getJobId());
-		for (Endorsement endorsement : ratingDTO.getEndorsements()) {
-			repository.addEndorsement(endorsement);
-		}
-
-		deleteComment(ratingDTO.getJobId(), ratingDTO.getEmployeeId());
-		if (ratingDTO.getComment() != "") {
-			repository.addComment(ratingDTO);
-		}
+//		for (RateCriterion rc : ratingRequestDTOs.getRateCriteria()) {
+//			repository.updateRating(rc);
+//		}
+//
+//		deleteEndorsements(ratingRequestDTOs.getEmployeeId(), ratingRequestDTOs.getJobId());
+//		for (Endorsement endorsement : ratingRequestDTOs.getEndorsements()) {
+//			repository.addEndorsement(endorsement);
+//		}
+//
+//		deleteComment(ratingRequestDTOs.getJobId(), ratingRequestDTOs.getEmployeeId());
+//		if (ratingRequestDTOs.getComment() != "") {
+//			repository.addComment(ratingRequestDTOs);
+//		}
 
 	}
 
@@ -263,21 +265,24 @@ public class UserServiceImpl {
 
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
-		// Get the category Ids that the user has endorsements for
+		//Per the job, get the category Ids that the user has endorsements for
 		List<Integer> endorsementCategoryIds = repository.getEndorsementCategoryIdsByJob(userId, jobId);
 
+		//Create endorsement objects
 		for (Integer endorsementCategoryId : endorsementCategoryIds) {
 
+			//Create a category object
 			Category category = categoryService.getCategory(endorsementCategoryId);
 
+			//Set the endorsement object's properties
 			Endorsement endorsement = new Endorsement();
 			endorsement.setCategoryName(category.getName());
 			endorsement.setCategoryId(category.getId());
 
-			// Get how many endorsements the user has in the particular category
-			// and job
-			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
-			endorsement.setCount(endorsementCount);
+//			// Get how many endorsements the user has in the particular category
+//			// and job
+//			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
+//			endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
 		}

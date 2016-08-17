@@ -3,6 +3,7 @@ package com.jobsearch.job.service;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.IntSummaryStatistics;
 import java.util.List;
@@ -205,18 +206,24 @@ public class JobServiceImpl {
 
 	public List<CompletedJobResponseDTO> getCompletedJobsByEmployee(int userId) {
 
+		//Get completed jobs
 		List<Job> completedJobs = repository.getCompletedJobsByEmployee(userId);
 
+		//For each completed job, create a completed job response DTO
 		List<CompletedJobResponseDTO> completedJobDtos = new ArrayList<CompletedJobResponseDTO>();
 		for (Job job : completedJobs) {
 			CompletedJobResponseDTO completedJobDto = new CompletedJobResponseDTO();
+			
+			//Set the job's categories
 			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+			
+			//Set the DTO's properties
 			completedJobDto.setJob(job);
 			completedJobDto.setComment(userService.getComment(job.getId(), userId));
-			completedJobDto.setRating(userService.getRatingForJob(userId, job.getId()));
-			;
+			completedJobDto.setRating(userService.getRatingForJob(userId, job.getId()));			
 			completedJobDto.setEndorsements(userService.getUsersEndorsementsByJob(userId, job.getId()));
 
+			//Add the DTO
 			completedJobDtos.add(completedJobDto);
 		}
 
@@ -349,14 +356,16 @@ public class JobServiceImpl {
 		// For each filtered job, calculate the distance between the user's
 		// specified filter lat/lng
 		if (filteredJobs != null) {
-			for (Job job : filteredJobs) {
-				job.setDistanceFromFilterLocation(
-						MathUtility.round(
-								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
-								1, 0));
-				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-
-			}
+			this.setJobsCategories(filteredJobs);
+			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
+//			for (Job job : filteredJobs) {
+//				job.setDistanceFromFilterLocation(
+//						MathUtility.round(
+//								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
+//								1, 0));
+//				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+//
+//			}
 			return filteredJobs;
 		} else {
 			return null;
@@ -368,28 +377,51 @@ public class JobServiceImpl {
 		// }
 	}
 	
+	public void setJobsCategories(List<Job> jobs){
+		for (Job job : jobs) {
+			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+		}		
+	}
+	
+	public void setJobsDistanceFromRequest(List<Job> jobs, float fromLat, float fromLng){
+		for (Job job : jobs) {
+			
+			double distance = GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
+			job.setDistanceFromFilterLocation(distance);
+		}
+	}
+	
 	public String getFilterJobsTemplate(List<Job> filteredJobs, FilterJobRequestDTO request){
 		
 		StringWriter writer = new StringWriter();
 		
-		final VelocityContext context = new VelocityContext();
-		
+		//Set the context
+		final VelocityContext context = new VelocityContext();		
 		context.put("request", request);
 		context.put("jobs", filteredJobs);
 		context.put("date", new DateTool());
 		context.put("dateCompare", new ComparisonDateTool());
+		context.put("mathUtility", MathUtility.class);		
 		
-		//If there are filtered jobs
-		if(filteredJobs != null){
+		//If the request is to GET filtered jobs, not SORT already-filtered jobs.
+		//The max-distance job is used to set the map zoom level.
+		//Since the map is not reloaded on sort, this is skipped if the user is sorting.
+		if(!request.getIsSortingJobs()){
+			double maxDistance;
+			
+			//If any jobs matched the user's filter(s)
 			if(filteredJobs.size() > 0){
-				//Get the farthest job from the users requested located.
-				//This will be used to set the map zoom level.
+				
+				//Get the farthest job from the users requested located.				
 				Job maxDistanceJob = filteredJobs.stream().max(Comparator.comparing(Job::getDistanceFromFilterLocation)).get();	
-				double maxDistance = maxDistanceJob.getDistanceFromFilterLocation();
-				context.put("maxDistance", maxDistance);					
+				maxDistance = maxDistanceJob.getDistanceFromFilterLocation();
+												
+			}else{
+				maxDistance = -1;
 			}
-		}
-		
+			
+			context.put("maxDistance", maxDistance);
+		}		
 				
 		filterJobsTemplate.merge(context, writer);
 		
@@ -400,13 +432,37 @@ public class JobServiceImpl {
 	@SuppressWarnings("unchecked")
 	public String getFilterdJobsResponseHtml(FilterJobRequestDTO request, HttpSession session, Model model) {
 
+		request.setIsSortingJobs(false);
+		
+		//***************************************************************		
+		//***************************************************************
+		//The session attributes loadedFilteredJobIds and loadedFilteredJobs are redundant.
+		//The loadedFilteredJobIds was created first and is for loading additional filtered jobs, but
+		//excluding the already-rendered jobs. The database queries the job table excluding the job
+		//ids contained in this session list of job ids. HTML for these jobs is then appended to the
+		//existing filtered jobs HTML.
+		//The loadedFilteredJobs was created so that when sorting already-rendered jobs, the
+		//data base would not have to be queried again. Rather the session list of jobs would be sorted
+		//by the requested job attribute and then rendered to the user. 
+		//It amounts to: have a session list of job ids and re-query the database when the user wants to sort,
+		//or have a session list of jobs and sort the session list when the user wants to sort.
+		//Essentially: is it cheaper to re-query or to store JOBS, not job ids, in session?
+		//It may not even matter, just an FYI.
+		//For now both session variables will be used, but I think only one should be kept.
+		//***************************************************************
+		//***************************************************************		
+		
 		//If appending jobs, get the job ids that have already been rendered to the user.
 		//The already-rendered-jobs are held in the session.
 		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+		List<Job> alreadyLoadedFilteredJobs = new ArrayList<Job>();
+		
 		if(request.getIsAppendingJobs()){				
 			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+			alreadyLoadedFilteredJobs = (List<Job>) session.getAttribute("loadedFilteredJobs");
 		}else{
 			alreadyLoadedFilteredJobIds = null;
+			alreadyLoadedFilteredJobs = null;
 		}
 		
 		//From the request, set the jobs.
@@ -423,11 +479,13 @@ public class JobServiceImpl {
 		if(request.getIsAppendingJobs()){			
 			if(alreadyLoadedFilteredJobIds != null){
 				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+				filteredJobs.addAll(alreadyLoadedFilteredJobs);
 			}			
 		}
 		
-		//Update the session variable
+		//Update the session variables
 		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+		session.setAttribute("loadedFilteredJobs", filteredJobs);
 				
 		//Add jobs ids to the model
 		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
@@ -437,17 +495,94 @@ public class JobServiceImpl {
 		
 	}
 
-	public String getSortedJobsHTML(String sortBy, boolean isAscending, HttpSession session) {
+	public String getSortedJobsHTML(FilterJobRequestDTO request, HttpSession session) {
 		
-		//Get the filtered job ids
+		//Get the filtered job objects that have already been rendered to the user
 		@SuppressWarnings("unchecked")
-		List<Integer> filteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+//		List<Integer> filteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+		List<Job> filteredJobs = (List<Job>) session.getAttribute("loadedFilteredJobs");
 		
-		//From the jobs already rendered to the user, sort them
-		List<Job> sortedJobs = repository.sortJobs(filteredJobIds, sortBy, isAscending);
+		//**************************************************
+		//For usage of Comparator<T>, refer to: https://www.mkyong.com/java8/java-8-lambda-comparator-example/
+		//**************************************************
+		Comparator<Job> c = null;
+
+		//The sortBy String is the data-col attribute in the div.sort-jobs-by-container on the FindJobs.jsp
+		switch(request.getSortBy()){
+			case "Distance":
+				c = (Job j1, Job j2)->j1.getDistanceFromFilterLocation()
+						.compareTo(j2.getDistanceFromFilterLocation());	
+				break;
+				
+			case "StartDate":
+				c = (Job j1, Job j2)->j1.getStartDate()
+					.compareTo(j2.getStartDate());
+				break;
+				
+			case "EndDate":
+				c = (Job j1, Job j2)->j1.getEndDate()
+					.compareTo(j2.getEndDate());
+				break;	
+				
+			case "StartTime":
+				c = (Job j1, Job j2)->j1.getStartTime()
+					.compareTo(j2.getStartTime());
+				break;
+				
+			case "EndTime":
+				c = (Job j1, Job j2)->j1.getEndTime()
+					.compareTo(j2.getEndTime());
+				break;
+				
+			case "Duration":
+				c = (Job j1, Job j2)->j1.getDuration()
+				.compareTo(j2.getDuration());
+				break;				
+		}
+
+		//If not sorting in ascending order, then reverse the sort.
+		if(request.getIsAscending()){
+			filteredJobs.sort(c);			
+		}else{
+			filteredJobs.sort(c.reversed());
+		}
+		
+			 
+		 
+//		//From the jobs already rendered to the user, sort them
+//		List<Job> sortedJobs = repository.sortJobs(filteredJobIds, request.getSortBy(), 
+//				request.getIsAscending());
+//		
+//		//Set jobs' attributes
+//		this.setJobsDistanceFromRequest(sortedJobs, request.getLat(), request.getLng());
+//		this.setJobsCategories(sortedJobs);
 		
 		
-		return "";//this.getFilterJobsTemplate(filteredJobs, request)(request, session, model);
+		return this.getFilterJobsTemplate(filteredJobs, request);
+	}
+
+	public String getRateEmployeesView(Model model, int jobId) {
+		
+		//Get the job
+		Job completedJob = repository.getJob(jobId);
+	
+		//Verify the job is complete.
+		//This is here because the user can edit the hyperlink's "markComplete" value.
+		if(completedJob.getIsActive() == 1){
+			return null;
+		}else{
+			
+			//Set the employees
+			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
+			
+			//Set the categories
+			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
+			
+			//Add to model
+			model.addAttribute("job", completedJob);
+			
+			return "RateEmployees";
+		}
 	}
 
 

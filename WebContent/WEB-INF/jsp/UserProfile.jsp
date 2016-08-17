@@ -15,12 +15,18 @@
 
 <body>
 
+
+
+
 	<c:choose>
 		<c:when test="${redirectUrl != null}">
 			<c:redirect url="${redirectUrl}" />
 		</c:when>
 	</c:choose>
-
+	
+	
+	<h1>This page is old and still needs to be updated</h1>
+	
 	<input type="hidden" id="userId" value="${user.userId}" />
 	<div class="container">
 		<h1>Edit Profile</h1>
