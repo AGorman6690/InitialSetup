@@ -164,7 +164,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 //	@ResponseBody
-	public String getUserWorkHistory(@PathVariable int userId, Model model) {
+	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model) {
 			
 
 //		JobSearchUser employee = userService.getUser(userId);

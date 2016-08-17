@@ -30,7 +30,7 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/applications/job/{jobId}", method = RequestMethod.GET)
 	@ResponseBody
-	public String getApplicationsByJob(@PathVariable int jobId){
+	public String getApplicationsByJob(@PathVariable(value = "jobId") int jobId){
 		return JSON.stringify(applicationService.getApplicationsByJob(jobId));
 	}
 

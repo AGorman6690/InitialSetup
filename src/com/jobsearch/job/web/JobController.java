@@ -134,7 +134,7 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
-	public String employeeViewJob(Model model, HttpSession session, @PathVariable int jobId) {
+	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 		
 		Job job = jobService.getJobPostingInfo(jobId);
 		model.addAttribute("job", job);
@@ -144,7 +144,7 @@ public class JobController {
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public String getJob(@PathVariable int jobId, Model model) {
+	public String getJob(@PathVariable(value = "jobId") int jobId, Model model) {
 
 		Job selectedJob = jobService.getEmployersJobProfile(jobId);
 
@@ -178,7 +178,7 @@ public class JobController {
 //	}
 	
 	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
-	public String getRateEmployeesView(@PathVariable("jobId") int jobId,
+	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId,
 								@RequestParam(name = "markComplete", required = false) boolean markComplete,
 								Model model) {
 		
@@ -193,7 +193,7 @@ public class JobController {
 	}	
 
 	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
-	public ModelAndView viewRateEmployees(@PathVariable int jobId, ModelAndView model) {
+	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
 
 		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 		model.addObject("employees", employees);

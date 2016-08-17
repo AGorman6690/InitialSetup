@@ -29,7 +29,7 @@ public class CategoryController {
 
 	@RequestMapping(value = "category/{superCategory}/subCategories", method = RequestMethod.GET)
 	@ResponseBody
-	public String getSubCategories_OLD(@PathVariable int superCategory) {
+	public String getSubCategories_OLD(@PathVariable(value = "superCategory") int superCategory) {
 
 		List<Category> categories = categoryService.getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(superCategory);
 
