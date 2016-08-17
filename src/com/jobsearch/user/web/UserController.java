@@ -36,6 +36,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingRequestDTO;
+import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -240,9 +241,9 @@ public class UserController {
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingRequestDTO ratingDTO) {
+	public void rateEmployee(ModelAndView model, @RequestBody RatingRequestDTOs ratingRequestDTOs) {
 
-		userService.rateEmployee(ratingDTO);
+		userService.rateEmployee(ratingRequestDTOs);
 	}
 
 	@RequestMapping(value = "/user/password/reset", method = RequestMethod.GET)

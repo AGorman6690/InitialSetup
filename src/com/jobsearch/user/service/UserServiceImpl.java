@@ -25,6 +25,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingRequestDTO;
+import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityRequestDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
@@ -150,21 +151,21 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingRequestDTO ratingDTO) {
+	public void rateEmployee(RatingRequestDTOs ratingRequestDTOs) {
 
-		for (RateCriterion rc : ratingDTO.getRateCriteria()) {
-			repository.updateRating(rc);
-		}
-
-		deleteEndorsements(ratingDTO.getEmployeeId(), ratingDTO.getJobId());
-		for (Endorsement endorsement : ratingDTO.getEndorsements()) {
-			repository.addEndorsement(endorsement);
-		}
-
-		deleteComment(ratingDTO.getJobId(), ratingDTO.getEmployeeId());
-		if (ratingDTO.getComment() != "") {
-			repository.addComment(ratingDTO);
-		}
+//		for (RateCriterion rc : ratingRequestDTOs.getRateCriteria()) {
+//			repository.updateRating(rc);
+//		}
+//
+//		deleteEndorsements(ratingRequestDTOs.getEmployeeId(), ratingRequestDTOs.getJobId());
+//		for (Endorsement endorsement : ratingRequestDTOs.getEndorsements()) {
+//			repository.addEndorsement(endorsement);
+//		}
+//
+//		deleteComment(ratingRequestDTOs.getJobId(), ratingRequestDTOs.getEmployeeId());
+//		if (ratingRequestDTOs.getComment() != "") {
+//			repository.addComment(ratingRequestDTOs);
+//		}
 
 	}
 

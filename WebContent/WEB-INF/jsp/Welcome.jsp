@@ -66,7 +66,7 @@
 		$("#debug2").click(function() {
 			$("#password").val('2');
 			$("#userName").val('2');
-			$("button[type=submit]")[0].click();
+			$("#loginContainer input[type=submit]")[0].click();
 
 		})
 		

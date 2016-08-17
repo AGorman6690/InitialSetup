@@ -295,48 +295,48 @@
 								'&jobId=' + $("#jobId").val() + '&c=0';
 		})
 
-		$("#applicationStatus").change(function(){
+// 		$("#applicationStatus").change(function(){
 
-			var i = 0;
-			var j = 0;
-			var statusesToShow = $(this).find(":selected")
-									.map(function(){ return $(this).val() }).get();
+// 			var i = 0;
+// 			var j = 0;
+// 			var statusesToShow = $(this).find(":selected")
+// 									.map(function(){ return $(this).val() }).get();
 
 
-			var statuses = $("#applicantsTable").find("tbody input.applicant-status")
+// 			var statuses = $("#applicantsTable").find("tbody input.applicant-status")
 
-			if(statusesToShow.length == 0){
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
-					$(row).hide();
-				}
-			}else if(statusesToShow.length == 2){
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
-					$(row).show();
-				}
-			}else{
-				for(i = 0; i < statuses.length; i++){
-					var status = statuses[i];
-					var rows = $(status).parents('tr');
-					var row = rows[0];
+// 			if(statusesToShow.length == 0){
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
+// 					$(row).hide();
+// 				}
+// 			}else if(statusesToShow.length == 2){
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
+// 					$(row).show();
+// 				}
+// 			}else{
+// 				for(i = 0; i < statuses.length; i++){
+// 					var status = statuses[i];
+// 					var rows = $(status).parents('tr');
+// 					var row = rows[0];
 
-					for(j = 0; j < statusesToShow.length; j++){
+// 					for(j = 0; j < statusesToShow.length; j++){
 
-						if($(status).val() == statusesToShow[j]){
-							$(row).show();
-							j = statusesToShow.length;
-						}else if(j == statusesToShow.length - 1){
-							$(row).hide();
-						}
-					}
-				}
-			}
-		})
+// 						if($(status).val() == statusesToShow[j]){
+// 							$(row).show();
+// 							j = statusesToShow.length;
+// 						}else if(j == statusesToShow.length - 1){
+// 							$(row).hide();
+// 						}
+// 					}
+// 				}
+// 			}
+// 		})
 
 		$(".hide-show-columns").change(function(){
 			filterApplicants();

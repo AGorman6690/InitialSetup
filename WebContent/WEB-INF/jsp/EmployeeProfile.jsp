@@ -7,6 +7,9 @@
 <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
 </head>
 
+	<h1>This page is old and still needs to be updated</h1>
+	
+	
 <input type="hidden" id="userId" value="${user.userId}" />
 
 <body>

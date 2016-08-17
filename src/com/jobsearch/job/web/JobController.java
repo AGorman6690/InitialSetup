@@ -178,7 +178,7 @@ public class JobController {
 //	}
 	
 	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
-	public String rateEmployees(@PathVariable("jobId") int jobId,
+	public String getRateEmployeesView(@PathVariable("jobId") int jobId,
 								@RequestParam(name = "markComplete", required = false) boolean markComplete,
 								Model model) {
 		

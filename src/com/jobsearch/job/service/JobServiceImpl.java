@@ -562,15 +562,25 @@ public class JobServiceImpl {
 	}
 
 	public String getRateEmployeesView(Model model, int jobId) {
+		
+		//Get the job
 		Job completedJob = repository.getJob(jobId);
 	
 		//Verify the job is complete.
-		//This is here because the user can edit the hyperlink's "markComplete" value
+		//This is here because the user can edit the hyperlink's "markComplete" value.
 		if(completedJob.getIsActive() == 1){
 			return null;
 		}else{
+			
+			//Set the employees
 			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
+			
+			//Set the categories
+			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
+			
+			//Add to model
 			model.addAttribute("job", completedJob);
+			
 			return "RateEmployees";
 		}
 	}

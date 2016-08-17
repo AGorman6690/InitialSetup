@@ -32,7 +32,7 @@
 				<div id="distanceFilter" class="input-container-group form-group">	
 					<div class="input-container">									
 						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
+							class="form-control" id="radius" placeholder="Number Of" value=""></input>
 					</div>			
 					<div class="input-container">					
 						<label id="milesFrom" for="radius">Miles From</label>
@@ -47,7 +47,7 @@
 					</div>			
 					<div class="input-container">			
 						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
+							class="form-control" id="zipCode" placeholder="Zip Code" value=""></input>
 					</div>																			
 				</div>
 			</div>
@@ -154,7 +154,7 @@
 									</div>
 <!-- 									<div class="select-container">								 -->
 									<div class="input-container form-group">
-								  		<input type="text" class="filter-input form-control" data-filter-dto-prop="duration" >
+								  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
 							  		</div>		
 <!-- 							  		</div>	 -->
 							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
