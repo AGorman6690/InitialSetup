@@ -32,7 +32,7 @@
 				<div id="distanceFilter" class="input-container-group form-group">	
 					<div class="input-container">									
 						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value=""></input>
+							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
 					</div>			
 					<div class="input-container">					
 						<label id="milesFrom" for="radius">Miles From</label>
@@ -47,7 +47,7 @@
 					</div>			
 					<div class="input-container">			
 						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value=""></input>
+							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
 					</div>																			
 				</div>
 			</div>

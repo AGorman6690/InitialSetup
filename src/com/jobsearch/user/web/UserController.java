@@ -79,9 +79,17 @@ public class UserController {
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String getProfile(Model model, HttpServletRequest request,
 			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
-
+		
+		//***************************************
+		//***************************************
+		//This needs to be cleanded
+		//***************************************
+		//***************************************
+		
+		//Remove try/catch
 		try {
 
+			//Change to: Check if session user is null
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
@@ -98,14 +106,11 @@ public class UserController {
 			String viewName = null;
 			if (user.getCreateNewPassword() == 0) {
 				if (user.getProfile().getName().equals("Employee")) {
-//					model.setViewName("EmployeeProfile");
 					viewName = "EmployeeProfile";
 				} else if (user.getProfile().getName().equals("Employer")) {
-//					model.setViewName("EmployerProfile");
 					viewName = "EmployerProfile";
 				}
 			} else {
-//				model.setViewName("NewPassword");
 				viewName = "NewPassword";
 				model.addAttribute("newPassword", new JobSearchUser());
 			}

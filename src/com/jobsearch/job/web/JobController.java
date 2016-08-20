@@ -115,11 +115,10 @@ public class JobController {
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
 	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
-								ModelAndView model, HttpSession session) {
+								HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		applicationDto.setUserId(user.getUserId());
-		applicationService.applyForJob(applicationDto);
+
+		applicationService.applyForJob(applicationDto, session);
 
 	}
 	

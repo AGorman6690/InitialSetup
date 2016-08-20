@@ -10,7 +10,8 @@
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />		
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />	
 	
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
@@ -22,6 +23,9 @@
 
 
 <body>
+<!-- ***************************************************************** -->
+<!-- NOTE: Allow user to add job to favorites -->
+<!-- ***************************************************************** -->
 
 	<input id="jobId" value="${job.id }" type="hidden"></input>
 	<input id="jobLat" value="${job.lat }" type="hidden"></input>
@@ -35,9 +39,11 @@
 					<div id="jobActionContainer" class="" style="">
 						<input id="activeJobId" type="hidden">
 					    <div class="btn-group">
-							<button onclick="apply()">Apply</button>						
-							<button>Add to favorites (not built)</button>																
-			
+					    	<div id="applyContainer">
+					    		<div id="invalidAmount" class="invalid-message"></div>
+					    		<span>Desired Pay</span><input class="form-control" placeholder="$ per hour" id="amount"></input>
+								<button onclick="apply()">Apply</button>																						
+				    		</div>
 					    </div>			
 					</div>							
 				</div><!-- end row -->
@@ -214,113 +220,139 @@
 				
 	})
 	
+	function showInvalidAmountMessage(message){
+		var $e = $("#invalidAmount");
+		$e.html(message);
+		$e.show();
+		return 0;
+	}
 	
-	function apply(){
+	function isInputValid(){
 		
 		//*******************************************************		
 		//*******************************************************
-		//Still need to include verification css 
+		//Still need to verify aswers
 		//*******************************************************		
 		//*******************************************************
+		
+		var isValid = 1;
+		var amount = $("#amount").val();
+		
+		//Verify pay proposal		
+		if(amount == ""){
+			isValid = showInvalidAmountMessage("Desired pay is required.");
+		}else if($.isNumeric(amount) == 0){
+			isValid = showInvalidAmountMessage("Desired pay must be numeric.");
+		}else if(amount <= 0){
+			isValid = showInvalidAmountMessage("Desired pay must be greater than 0.");
+		}
+		
+		//Hide error message if input is valid
+		if(isValid == 1){
+			$("#invalidAmount").hide();		}
+		
+		return isValid;
+	}
+	
+	
+	function getApplicationRequestDTO(){
+		
+		var jobId = $("#jobId").val();
+		var dto = {};
+		
+		dto.jobId = jobId;
+		
+		//Set wage proposal
+		dto.wageProposal = {}
+		dto.wageProposal.amount = $("#amount").val();
+// 		dto.wageProposal.jobId = jobId;
+		dto.wageProposal.status = -1;
+		
+		return dto;
+		
+
+	};
+	
+	function getAnswers(){
 		
 		var answerText;
 		var answerTexts = [];
 		var questionId;
 		var j;
 		var answer = {};
-
-		//Initialize application DTO
-		var applicationDTO = {};
-		applicationDTO.jobId = $("#jobId").val();
-		applicationDTO.answers = [];
-
+		var answers = [];
 		var questions = $(".questions-container").find(".question");
 		var invalidAnswer = 0;
 
 		//Loop through each question
 		for(var i = 0; i < questions.length; i++){
 			
-			//Initialize answer object
-// 			var answer = {};
-// // 			answer.answerText = "";
-// // 			answer.answerBoolean = -1;
-// // 			answer.answerOptionId = -1;
-// // 			answer.answerOptionIds = [];
-// 			answer.text = "";
-// 			answer.texts = [];
 			
 			var questionElement = questions[i];
 			var questionFormatId = $(questionElement).data("formatId"); //$(questionElement).find(".question-format-id").val();
 			var questionId = $(questionElement).data('id');
-			//Get answer value and validate answer value.
-			//questionFormatIds:
-			//0: Yes/No
-			//1: Short answer
-			//2: Single answer
-			//3: Multi answer
+			
+
 			answerTexts = [];
+			
+			//Get answer value and validate answer value.
+			
+			//Yes/no or single answer
 			if(questionFormatId == 0 || questionFormatId == 2){
-				answerTexts[0] = $(questionElement).find('input[type=radio]:checked').parents('label').text();;
-// 				if(value == 1){
-// 					answer.text = "Yes";
-// 				}else if(value == 0){
-// 					answer.text = "No";
-// 				}else{
-// 					invalidAnswer = 1;
-// 				}
+				answerTexts[0] = $(questionElement).find('input[type=radio]:checked').parents('label').text();
 				
+			//Short answer
 			}else if(questionFormatId == 1){
 				
 				answerTexts[0] = $(questionElement).find('textarea').val()
-// 				if(value == ""){
-// 					invalidAnswer = 1;
-// 				}else{
-// 					answer.text = value;
-// 				}
-// 			}else if(questionFormatId == 2){
-				
-// 				answerTexts = $(questionElement).find('input[type=radio]:checked').val();
-// 				if(value == ""){
-// 					invalidAnswer = 1;
-// 				}else{
-// 					answer.text = answerText;
-// 				}
+			
+			//Multi answer
 			}else if(questionFormatId == 3){
 				
 				//Get the checked checkbox's parent's text
 				answerTexts = $(questionElement).find('input[type=checkbox]:checked').map(function(){ return $(this).parents('label').text() }).get();
-// 				if(answerTexts.length == 0){
-// 					invalidAnswer = 1;
-// 				}else{
-// 					answer.texts = answerTexts;
-// 				}
+
 			}
 			
+			//Validate answer
 			if(answerTexts.length == 0 || answerTexts[0] == ""){
 				invalidAnswer = 1;
 			}else{
+				
+				//Loop through all answers.
+				//Only multi answer will have more than 1.
 				for(j = 0; j < answerTexts.length; j++){
 					
 					//Initialize answer object
 					answer = {};
 					answer.text = answerTexts[j];
 					answer.questionId = questionId;
-// 					answer.texts = [];
-					applicationDTO.answers.push(answer);
+					answers.push(answer);
 				}
 
-				
-				
-				
 			}
-
-// 			answer.questionId = $(questionElement).data('id');
-// 			applicationDTO.answers.push(answer);
 		}
+		
+		return answers;
+	}
+	
+	
+	function apply(){
+		
+		var applicationRequestDTO = {};
 
+		//Verify input
+		if(isInputValid()){
+			
+			//Initialize application DTO
+			applicationRequestDTO = getApplicationRequestDTO();
+			
+			//Get the applicant's answers
+			applicationRequestDTO.answers = [];
+			applicationRequestDTO.answers = getAnswers();
 
-		//If all answers are valid, then submit the application
-		if(invalidAnswer == 0){
+	
+			//Submit the apppliation
 			var headers = {};
 			headers[$("meta[name='_csrf_header']").attr("content")] = $(
 					"meta[name='_csrf']").attr("content");
@@ -329,7 +361,7 @@
 				url : environmentVariables.LaborVaultHost + '/JobSearch/job/apply',
 				headers : headers,
 				contentType : "application/json",
-				data : JSON.stringify(applicationDTO),
+				data : JSON.stringify(applicationRequestDTO),
 			}).done(function() {
 				$('#home')[0].click();
 			}).error(function() {

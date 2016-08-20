@@ -23,9 +23,9 @@ public class JobSearchUser {
 	private List<Category> categories;
 	private List<Job> jobs;
 	private List<Job> activeJobs;
+	private List<CompletedJobResponseDTO> completedJobs;
 	private List<Job> jobsAppliedTo;
 	private List<Job> jobsHiredFor;
-	private List<CompletedJobResponseDTO> completedJobs;
 	private List<RateCriterion> ratings;
 	private List<Endorsement> endorsements;
 	private Application application;

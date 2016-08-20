@@ -48,8 +48,8 @@
 	<br>
 	<br>
 
-<!-- 						<button id="debug1">Sign in as employer (UserId = 1)</button> -->
-<!-- 						<button id="debug2">Sign in a employee (UserId = 2)</button> -->
+						<button id="debug1">Sign in as employer (UserId = 1)</button>
+						<button id="debug2">Sign in a employee (UserId = 2)</button>
 	
 
 </div>

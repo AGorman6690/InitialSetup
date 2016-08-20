@@ -6,6 +6,10 @@
 	padding-top:25px;
 }
 
+.counter-offer-container{
+	display:none;
+}
+
 .endorsement{
 	padding:5px;
 }

@@ -6,7 +6,10 @@
 <%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
 
+<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <link rel="stylesheet" type="text/css" href="../static/css/profile.css" />
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 
 
@@ -64,6 +67,7 @@
 										</td>
 									</tr>
 									
+<!-- 									Expandable row that shows applicant info -->
 									<tr class="applicants-row">
 										<td colspan="4">
 											<div class="applicants-container">
@@ -74,7 +78,8 @@
 															<tr>
 																<th class="applicant-name">Name</th>
 																<th class="applicant-rating">Rating</th>
-																<th class="applicant-endorsements">Endorsements</th>										
+																<th class="applicant-endorsements">Endorsements</th>	
+																<th class="applicant-desired-pay">Desired Pay ($/hr)</th>									
 															</tr>
 														</thead>
 														<tbody>
@@ -91,6 +96,16 @@
 																		</div>
 																	</c:forEach>
 				
+																</td>
+																<td id="${application.currentWageProposal.id }">
+																	<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount }"/>
+																	
+																		<button class="counter-offer">Counter</button>
+																	<div class="counter-offer-container">
+																		<input class="counter-offer-amount"></input>
+																		<button class="send-counter-offer">Send</button>
+																		<button class="cancel-counter-offer">Cancel</button>
+																	</div>
 																</td>
 															</tr>
 															</c:forEach>
@@ -181,6 +196,43 @@ $(document).ready(function(){
 		
 	})
 	
+	$(".counter-offer").click(function(){
+		var container = $(this).siblings(".counter-offer-container")[0];
+		$(container).show();
+	})
+	
+	$(".cancel-counter-offer").click(function(){
+		$(this).parent().hide();
+		$($(this).siblings("input")[0]).val("");
+	})
+	
+	$(".send-counter-offer").click(function(){
+		var wagePropoalId = $($(this).parents("td")[0]).attr("id");
+		var counterAmount = $($(this).siblings("input")[0]).val();
+		
+		var wageProposalCounterDTO = {};
+		wageProposalCounterDTO.wageProposalIdToCounter = wagePropoalId;
+		wageProposalCounterDTO.counterAmount = counterAmount;
+
+
+		
+		$.ajax({
+			type : "POST",
+			url :"/JobSearch/desired-pay/counter",
+			headers : getAjaxHeaders(),
+			contentType : "application/json",
+			data : JSON.stringify(wageProposalCounterDTO)			
+		}).done(function() {
+// 			$('#home')[0].click();
+		}).error(function() {
+			$('#home')[0].click();
+
+		});
+		
+	})
+	
+
+
 })
 
 

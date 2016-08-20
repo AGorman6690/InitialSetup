@@ -18,6 +18,15 @@ function initializeMap(mapDivId, lat, lng) {
 	
 	return map;
 }
+
+function getAjaxHeaders(){
+	
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
+	
+	return headers;
+}
 	
 	
 	//Show job markers

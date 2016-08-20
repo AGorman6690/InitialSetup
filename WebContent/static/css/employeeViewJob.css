@@ -18,10 +18,26 @@
 	border-top-style: inset;
 }
 
+/* #amountContainer{ */
+/* 	padding-bottom:10px; */
+/* } */
+
+#applyContainer span{
+	padding-right:5px;
+}
+
+#applyContainer input{
+	margin-right:5px;
+	
+/* 	override bootstrap */
+	display:inline;
+	width:100px;
+}
 
 .questions-container{
 	margin-left:50px;
 }
+
 
 .row-padding{
 	padding:10px 0px;

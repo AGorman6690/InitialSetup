@@ -3,6 +3,8 @@ package com.jobsearch.application.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,11 +12,14 @@ import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.WageProposal;
+import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Service
@@ -28,6 +33,9 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	JobServiceImpl jobService;
 
 
 
@@ -39,12 +47,23 @@ public class ApplicationServiceImpl {
 		//Get the job's categories
 		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
 		
-		//Set each applicant's endorsements
-		for (Application application : applications) {
+		//Set each application's wage proposals.
+		//Set each applicant's endorsements.
+		for (Application application : applications) {	
 			
-
-		
 			JobSearchUser applicant = application.getApplicant();
+			
+			//Set the application's wage proposals
+			application.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			
+			//Set the applicant's current desired pay.
+			//Since the desired pay can be countered several times,
+			//This holds the applican't most recent pay request.
+			application.setCurrentWageProposal(this.getCurrentWageProposal(
+										application.getApplicationId(), applicant.getUserId()));
+			
+			
+			
 			applicant.setEndorsements(new ArrayList<Endorsement>());
 //			applicant.setAnswers(this.getAnswers(application.ge, userId));
 			
@@ -63,15 +82,27 @@ public class ApplicationServiceImpl {
 				endorsement.setCount(userService.
 								getEndorsementCountByCategory(applicant.getUserId(), category.getId()));
 				
-				//Add the endorsement to the applicant
-				applicant.getEndorsements().add(endorsement);
 				
+				//Add the endorsement to the applicant
+				applicant.getEndorsements().add(endorsement);				
 				
 			}
 
 		}
 
 		return applications;
+	}
+
+
+	public WageProposal getCurrentWageProposal(int applicationId, int applicantId) {
+		
+		return repository.getApplicantsLastDesiredPayRequest(applicationId, applicantId);
+	}
+
+
+	public  List<WageProposal> getWageProposals(int applicationId) {
+		
+		return repository.getWageProposals(applicationId);
 	}
 
 
@@ -99,12 +130,30 @@ public class ApplicationServiceImpl {
 		return repository.getApplication(applicationId);
 	}
 
-	public void applyForJob(ApplicationRequestDTO applicationDto) {
-		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
+	public void applyForJob(ApplicationRequestDTO applicationDto, HttpSession session) {
+		
+		//Set the application's user (i.e. the applicant)
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		applicationDto.setUserId(user.getUserId());
+		
+		//Set the wage proposed BY the applicant
+		applicationDto.getWageProposal().setProposedByUserId(user.getUserId());
+		
+		//Set the wage proposed TO the employer
+		//Get the employer's id from the job object.
+		Job appliedToJob = jobService.getJob(applicationDto.getJobId());
+		applicationDto.getWageProposal().setProposedToUserId(appliedToJob.getUserId());
+		
+		
+		//Add the application to the database
+//		repository.addApplication(applicationDto.getJobId(), applicationDto.getUserId());
+		this.insertApplication(applicationDto);
+		
+//		//Add the wage proposal to the database
+//		this.addWageProposal(applicationDto.getWageProposal());
 
 		//Whether the applicant answered all the questions is handled on the client side.
-		//At this point, all questions have a valid answer.
-		
+		//At this point, all questions have a valid answer.		
 		for(Answer answer : applicationDto.getAnswers()){
 			answer.setUserId(applicationDto.getUserId());
 			repository.addAnswer(answer);
@@ -120,6 +169,18 @@ public class ApplicationServiceImpl {
 //				}
 //			}
 		}
+	}
+
+
+	public void addWageProposal(WageProposal wageProposal) {
+		repository.addWageProposal(wageProposal);
+		
+	}
+
+
+	public void insertApplication(ApplicationRequestDTO applicationDto) {
+		repository.insertApplication(applicationDto);
+		
 	}
 
 
@@ -186,6 +247,30 @@ public class ApplicationServiceImpl {
 			}	
 		}
 		
+		
+	}
+
+
+	public void insertCounterOffer(WageProposalCounterDTO dto) {
+		
+		//Get the wage proposal to counter
+		WageProposal wagePropasalToCounter = repository.getWageProposal(dto.getWageProposalIdToCounter());
+	
+		//Set the proposal to counter to rejected
+		repository.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
+		
+		//Create a new wage proposal for the counter
+		WageProposal counter = new WageProposal();
+		counter.setAmount(dto.getCounterAmount());
+		
+		//The counter is being proposed BY the user whom the wage-proposal-to-counter was proposed TO,
+		//and vice versa.
+		counter.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
+		counter.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
+		counter.setApplicationId(wagePropasalToCounter.getApplicationId());
+		counter.setStatus(-1);
+		
+		repository.addWageProposal(counter);
 		
 	}
 

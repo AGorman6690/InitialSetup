@@ -230,6 +230,10 @@ public class JobServiceImpl {
 		return completedJobDtos;
 	}
 	
+	public Job getJob(int jobId){
+		return repository.getJob(jobId);
+	}
+	
 	public Job getJobPostingInfo(int jobId) {
 		// This only sets the job properties that relate to the job posting
 		// i.e. no applicants, no employees, etc. 

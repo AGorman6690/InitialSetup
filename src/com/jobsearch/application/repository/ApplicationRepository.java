@@ -11,12 +11,17 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationRequestDTO;
+import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.MathUtility;
 
 @Repository
 public class ApplicationRepository {
@@ -26,6 +31,9 @@ public class ApplicationRepository {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	ApplicationServiceImpl applicationService;
 
 	public List<Application> ApplicationWithUserRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -76,6 +84,24 @@ public class ApplicationRepository {
 		});
 	}	
 
+	public List<WageProposal> WageProposalRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<WageProposal>() {
+			@Override
+			public WageProposal mapRow(ResultSet rs, int rownumber) throws SQLException {				
+				
+				WageProposal wageProposal = new WageProposal();
+				wageProposal.setAmount(rs.getFloat("Amount"));
+				wageProposal.setApplicationId(rs.getInt("ApplicationId"));
+				wageProposal.setId(rs.getInt("WageProposalId"));
+				wageProposal.setStatus(rs.getInt("Status"));
+				wageProposal.setProposedByUserId(rs.getInt("ProposedByUserId"));
+				wageProposal.setProposedToUserId(rs.getInt("ProposedToUserId"));
+
+				return wageProposal;
+			}
+		});
+	}	
+	
 	public List<Application> getApplicationsByEmployer(int userId) {
 		String sql = "SELECT * FROM application WHERE UserId = ?";
 
@@ -147,12 +173,7 @@ public class ApplicationRepository {
 //
 //	}
 
-	public void addApplication(int jobId, int userId) {
-		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
 
-		jdbcTemplate.update(sql, new Object[] { userId, jobId });
-
-	}
 
 	public List<Question> getQuestions(int id) {
 		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
@@ -289,6 +310,80 @@ public class ApplicationRepository {
 	public void setHasBeenViewed(int jobId, int value) {
 		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, jobId });
+		
+	}
+
+	public void addWageProposal(WageProposal wageProposal) {
+		String sql = "INSERT INTO wage_proposal (ApplicationId, ProposedByUserId, ProposedToUserId, Amount, Status)"
+					+ " VALUES (?, ?, ?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{ wageProposal.getApplicationId(), wageProposal.getProposedByUserId(),
+								wageProposal.getProposedToUserId(), wageProposal.getAmount(), wageProposal.getStatus() });
+	
+		
+	}
+	
+	public void addApplication(int jobId, int userId) {
+		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
+
+		jdbcTemplate.update(sql, new Object[] { userId, jobId });
+
+	}
+	
+	public void insertApplication(ApplicationRequestDTO applicationDto) {
+
+		try {
+			
+			//Insert the application
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call insert_application(?, ?)}");
+
+			cStmt.setInt(1, applicationDto.getUserId());
+			cStmt.setInt(2, applicationDto.getJobId());
+
+			ResultSet result = cStmt.executeQuery();
+			
+			//Get the new application id from the result
+			result.next();
+			int newApplicationId = result.getInt("ApplicationId");
+			
+			//Update the application DTO's wage proposal's application id
+			applicationDto.getWageProposal().setApplicationId(newApplicationId);
+			
+			//Add the wage proposal
+			applicationService.addWageProposal(applicationDto.getWageProposal());
+			
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public List<WageProposal> getWageProposals(int applicationId) {
+		String sql = "SELECT * FROM wage_proposal WHERE ApplicationId = ? ORDER BY WageProposalId ASC";
+		return WageProposalRowMapper(sql, new Object[]{ applicationId });
+	}
+
+	public WageProposal getWageProposal(int wageProposalId) {
+		String sql = "SELECT * FROM wage_proposal WHERE WageProposalId = ?";
+		return WageProposalRowMapper(sql, new Object[]{ wageProposalId }).get(0);
+	}
+	
+	public WageProposal getApplicantsLastDesiredPayRequest(int applicationId, int applicantId) {
+		
+		
+		String sql = "SELECT * FROM wage_proposal" 
+				+ " WHERE WageProposalId = " 
+				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ? AND ProposedByUserId = ?)";
+
+		return WageProposalRowMapper(sql, new Object[]{ applicationId, applicantId }).get(0);
+	}
+
+	public void updateWageProposalStatus(int wageProposalId, int status) {
+		String sql = "UPDATE wage_proposal SET Status = ? WHERE WageProposalId = ?";
+		jdbcTemplate.update(sql, new Object[]{ status, wageProposalId });
 		
 	}
 

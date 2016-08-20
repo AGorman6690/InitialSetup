@@ -5,6 +5,7 @@ import java.util.List;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.WageProposal;
 
 public class Application {
 	private int applicationId;
@@ -15,7 +16,8 @@ public class Application {
 	private Job job;
 	private JobSearchUser applicant;
 	private List<Question> questions;
-	
+	private List<WageProposal> wageProposals;
+	private WageProposal currentWageProposal;
 	//Status values:
 	//0: submitted
 	//1: declined
@@ -23,6 +25,19 @@ public class Application {
 	//3: accepted
 	private int status;
 	
+
+	public WageProposal getCurrentWageProposal() {
+		return currentWageProposal;
+	}
+	public void setCurrentWageProposal(WageProposal currentWageProposal) {
+		this.currentWageProposal = currentWageProposal;
+	}
+	public List<WageProposal> getWageProposals() {
+		return wageProposals;
+	}
+	public void setWageProposals(List<WageProposal> wageProposals) {
+		this.wageProposals = wageProposals;
+	}
 	public List<Question> getQuestions() {
 		return questions;
 	}
