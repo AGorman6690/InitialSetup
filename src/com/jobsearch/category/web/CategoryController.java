@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -18,7 +17,6 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 
 @Controller
-//@SessionAttributes({ "user" })
 public class CategoryController {
 
 	@Autowired
@@ -36,17 +34,14 @@ public class CategoryController {
 		return JSON.stringify(categories);
 
 	}
-	
+
 	@RequestMapping(value = "/categories/subCategories", method = RequestMethod.GET)
 	@ResponseBody
 	public String getSubCategories(@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
-		
+
 		List<SubCategoryRequestDTO> subCategoryRequestDtos = categoryService.getSubCategoryDTOs(categoryIds);
 
 		return JSON.stringify(subCategoryRequestDtos);
 
 	}
-	
-	
-
 }

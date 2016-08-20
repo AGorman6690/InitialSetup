@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
@@ -15,7 +14,6 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-//@SessionAttributes({ "user" })
 public class ApplicationController {
 
 	@Autowired
@@ -39,7 +37,7 @@ public class ApplicationController {
 	@ResponseBody
 	public void updateStatus(@RequestParam(name = "applicationId") int applicationId,
 							@RequestParam(name = "status") int status) {
-		
+
 		applicationService.updateStatus(applicationId, status);
 	}
 

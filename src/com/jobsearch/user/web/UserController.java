@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionAttributeStore;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -34,13 +30,10 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingRequestDTO;
-import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-//@SessionAttributes({ "user" })
 public class UserController {
 
 	@Autowired
@@ -51,7 +44,7 @@ public class UserController {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
-	
+
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
@@ -61,24 +54,23 @@ public class UserController {
 
 		user = userService.validateUser(userId);
 
-//		model.addObject("user", user);
-		String view = null;
+		// model.addObject("user", user);
 		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-//			view = "EmployeeProfile";
+			// view = "EmployeeProfile";
 		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
-//			view = "EmployerProfile";
+			// view = "EmployerProfile";
 		}
 
-//		model.addAttribute("user", user);
+		// model.addAttribute("user", user);
 		model.addObject("user", user);
 		return model;
 	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpServletRequest request,
-			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
+	public String getProfile(Model model, HttpServletRequest request, @ModelAttribute("user") JobSearchUser user,
+			HttpSession session) {
 
 		try {
 
@@ -87,25 +79,25 @@ public class UserController {
 				user = userService.getUserByEmail(auth.getName());
 
 			}
-			
-			//Get the user's profile
+
+			// Get the user's profile
 			user = userService.getProfile(user);
 			model.addAttribute("user", user);
-			
-			//Update session user after they have logged in
+
+			// Update session user after they have logged in
 			session.setAttribute("user", user);
 
 			String viewName = null;
 			if (user.getCreateNewPassword() == 0) {
 				if (user.getProfile().getName().equals("Employee")) {
-//					model.setViewName("EmployeeProfile");
+					// model.setViewName("EmployeeProfile");
 					viewName = "EmployeeProfile";
 				} else if (user.getProfile().getName().equals("Employer")) {
-//					model.setViewName("EmployerProfile");
+					// model.setViewName("EmployerProfile");
 					viewName = "EmployerProfile";
 				}
 			} else {
-//				model.setViewName("NewPassword");
+				// model.setViewName("NewPassword");
 				viewName = "NewPassword";
 				model.addAttribute("newPassword", new JobSearchUser());
 			}
@@ -117,9 +109,8 @@ public class UserController {
 
 		return null;
 
-	}	
-	
-	
+	}
+
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
@@ -132,15 +123,14 @@ public class UserController {
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public ModelAndView viewFindEmployees(ModelAndView model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");		
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		model.addObject("user", user);
-		
+
 		model.setViewName("FindEmployees");
 
-//		model.setViewName("Test");
+		// model.setViewName("Test");
 		return model;
 	}
-	
 
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {
@@ -152,27 +142,27 @@ public class UserController {
 	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		
+
 		model.addObject("user", user);
-		
+
 		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
 		model.addObject("job", job);
 
 		model.setViewName("PostJob");
 		return model;
 	}
-	
-	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
-//	@ResponseBody
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model) {
-			
 
-//		JobSearchUser employee = userService.getUser(userId);
-//		employee.setEndorsements(userService.getUsersEndorsements(userId));
-//		if (jobId != null) {
-//			employee.setApplication(applicationService.getApplication(jobId, userId));
-//		}
-//		model.addObject("worker", employee);
+	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
+	// @ResponseBody
+	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model) {
+
+		// JobSearchUser employee = userService.getUser(userId);
+		// employee.setEndorsements(userService.getUsersEndorsements(userId));
+		// if (jobId != null) {
+		// employee.setApplication(applicationService.getApplication(jobId,
+		// userId));
+		// }
+		// model.addObject("worker", employee);
 
 		// Job consideredForJob = jobService.getJob(jobId);
 		// model.addObject("consideredForJob", consideredForJob);
@@ -180,20 +170,18 @@ public class UserController {
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);
 		model.addAttribute("completedJobDtos", completedJobDtos);
 
-//		String context = null;
-//		if (viewContext == 0) {
-//			context = "viewingApplication";
-//		} else if (viewContext == 1) {
-//			context = "findEmployeeSearch";
-//		}
-//		model.addObject("context", context);
+		// String context = null;
+		// if (viewContext == 0) {
+		// context = "viewingApplication";
+		// } else if (viewContext == 1) {
+		// context = "findEmployeeSearch";
+		// }
+		// model.addObject("context", context);
 
-//		model.setViewName("EmployeeWorkHistory");
+		// model.setViewName("EmployeeWorkHistory");
 		return "EmployeeWorkHistory";
 	}
 
-
-	
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
 			@ModelAttribute("newPassword") JobSearchUser newPassword) {
@@ -226,8 +214,8 @@ public class UserController {
 
 	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
 	@ResponseBody
-	public String filterEmployees(@RequestParam(name = "city") String city, @RequestParam(name = "state") String state, 
-			@RequestParam(name = "zipCode")  String zipCode, @RequestParam(name="radius") int radius, 
+	public String filterEmployees(@RequestParam(name = "city") String city, @RequestParam(name = "state") String state,
+			@RequestParam(name = "zipCode") String zipCode, @RequestParam(name = "radius") int radius,
 			@RequestParam(name = "date", value = "date") List<String> dates,
 			@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
 
@@ -241,7 +229,7 @@ public class UserController {
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingRequestDTOs ratingRequestDTOs) {
+	public void rateEmployee(ModelAndView model, @RequestBody List<RatingRequestDTO> ratingRequestDTOs) {
 
 		userService.rateEmployee(ratingRequestDTOs);
 	}
@@ -267,10 +255,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
-	public void uploadResume(@RequestParam(name="file", value = "file") MultipartFile file) throws IOException {
+	public void uploadResume(@RequestParam(name = "file", value = "file") MultipartFile file) throws IOException {
 
 		if (file != null) {
-			ByteArrayInputStream stream = new   ByteArrayInputStream(file.getBytes());
+			ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
 			String myString = IOUtils.toString(stream, "UTF-8");
 			System.out.println(myString);
 		}

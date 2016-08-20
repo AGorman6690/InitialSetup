@@ -1,20 +1,5 @@
 package com.jobsearch.model;
 
-import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-
-import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
-import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
-
 public class DummyData {
 
 //	Random random = new Random();

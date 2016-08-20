@@ -11,6 +11,11 @@
 		location="classpath:properties/application.properties,file:./localresources/local.properties"
 		ignore-resource-not-found="true" />
 
+
+	<beans:bean id="GeoApiContext" class="com.google.maps.GeoApiContext">
+		<beans:property name="apiKey" value="${google.api.key}" />
+	</beans:bean>
+
 	<beans:bean name="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<beans:property name="driverClassName" value="${mysql.driver}" />

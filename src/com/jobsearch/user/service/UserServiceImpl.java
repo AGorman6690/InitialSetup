@@ -16,16 +16,12 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingRequestDTO;
-import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityRequestDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
@@ -48,7 +44,7 @@ public class UserServiceImpl {
 
 	@Autowired
 	JobServiceImpl jobService;
-	
+
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
@@ -72,8 +68,8 @@ public class UserServiceImpl {
 	}
 
 	private String encryptPassword(String password) {
-		 StrongPasswordEncryptor encryptor = new StrongPasswordEncryptor();
-         return encryptor.encryptPassword(password);
+		StrongPasswordEncryptor encryptor = new StrongPasswordEncryptor();
+		return encryptor.encryptPassword(password);
 	}
 
 	public void setUsersId(JobSearchUser user) {
@@ -109,21 +105,22 @@ public class UserServiceImpl {
 		if (user.getProfileId() == 2) {
 			user.setActiveJobs(jobService.getActiveJobsByUser(user.getUserId()));
 			user.setCompletedJobs(jobService.getCompletedJobsByEmployer(user.getUserId()));
-			
-			//When the profile is requested and presented to the user,
-			//all the applications' "HasBeenViewed" property, for the user's active jobs,
-			//will be set to true.
-			
-			//*********************************************************************			
-			//*********************************************************************
-			//On second thought, this should be set to zero when the user clicks and views
-			//the new applicants
-			applicationService.setHasBeenViewed(user.getActiveJobs(), 1);
-			//*********************************************************************			
-			//*********************************************************************
 
-		
-		//If employee
+			// When the profile is requested and presented to the user,
+			// all the applications' "HasBeenViewed" property, for the user's
+			// active jobs,
+			// will be set to true.
+
+			// *********************************************************************
+			// *********************************************************************
+			// On second thought, this should be set to zero when the user
+			// clicks and views
+			// the new applicants
+			applicationService.setHasBeenViewed(user.getActiveJobs(), 1);
+			// *********************************************************************
+			// *********************************************************************
+
+			// If employee
 		} else if (user.getProfileId() == 1) {
 
 			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
@@ -151,21 +148,23 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingRequestDTOs ratingRequestDTOs) {
+	public void rateEmployee(List<RatingRequestDTO> ratingRequestDTOs) {
 
-//		for (RateCriterion rc : ratingRequestDTOs.getRateCriteria()) {
-//			repository.updateRating(rc);
-//		}
-//
-//		deleteEndorsements(ratingRequestDTOs.getEmployeeId(), ratingRequestDTOs.getJobId());
-//		for (Endorsement endorsement : ratingRequestDTOs.getEndorsements()) {
-//			repository.addEndorsement(endorsement);
-//		}
-//
-//		deleteComment(ratingRequestDTOs.getJobId(), ratingRequestDTOs.getEmployeeId());
-//		if (ratingRequestDTOs.getComment() != "") {
-//			repository.addComment(ratingRequestDTOs);
-//		}
+		// for (RateCriterion rc : ratingRequestDTOs.getRateCriteria()) {
+		// repository.updateRating(rc);
+		// }
+		//
+		// deleteEndorsements(ratingRequestDTOs.getEmployeeId(),
+		// ratingRequestDTOs.getJobId());
+		// for (Endorsement endorsement : ratingRequestDTOs.getEndorsements()) {
+		// repository.addEndorsement(endorsement);
+		// }
+		//
+		// deleteComment(ratingRequestDTOs.getJobId(),
+		// ratingRequestDTOs.getEmployeeId());
+		// if (ratingRequestDTOs.getComment() != "") {
+		// repository.addComment(ratingRequestDTOs);
+		// }
 
 	}
 
@@ -248,14 +247,12 @@ public class UserServiceImpl {
 		return endorsements;
 
 	}
-	
 
 	public int getEndorsementCountByCategory(int userId, int categoryId) {
 		return repository.getEndorsementCountByCategory(userId, categoryId);
 	}
 
 	public List<Endorsement> getUsersEndorsementsByJob(int userId, int jobId) {
-		
 
 		// NOTE: this does not return ALL endorsements.
 		// This consolidates ALL endorsements into each endorsement's category.
@@ -265,24 +262,27 @@ public class UserServiceImpl {
 
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
-		//Per the job, get the category Ids that the user has endorsements for
+		// Per the job, get the category Ids that the user has endorsements for
 		List<Integer> endorsementCategoryIds = repository.getEndorsementCategoryIdsByJob(userId, jobId);
 
-		//Create endorsement objects
+		// Create endorsement objects
 		for (Integer endorsementCategoryId : endorsementCategoryIds) {
 
-			//Create a category object
+			// Create a category object
 			Category category = categoryService.getCategory(endorsementCategoryId);
 
-			//Set the endorsement object's properties
+			// Set the endorsement object's properties
 			Endorsement endorsement = new Endorsement();
 			endorsement.setCategoryName(category.getName());
 			endorsement.setCategoryId(category.getId());
 
-//			// Get how many endorsements the user has in the particular category
-//			// and job
-//			int endorsementCount = this.getEndorsementCountByCategoryAndJob(userId, category.getId(), jobId);
-//			endorsement.setCount(endorsementCount);
+			// // Get how many endorsements the user has in the particular
+			// category
+			// // and job
+			// int endorsementCount =
+			// this.getEndorsementCountByCategoryAndJob(userId,
+			// category.getId(), jobId);
+			// endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
 		}
@@ -290,11 +290,9 @@ public class UserServiceImpl {
 		return endorsements;
 
 	}
-	
-	
 
 	public int getEndorsementCountByCategoryAndJob(int userId, int categoryId, int jobId) {
-		
+
 		return repository.getEndorsementCountByCategoryAndJob(userId, categoryId, jobId);
 	}
 
@@ -341,8 +339,8 @@ public class UserServiceImpl {
 
 		// Edit home location
 		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileRequest.getHomeCity() + " " + editProfileRequest.getHomeState()
-				+ " " + editProfileRequest.getHomeZipCode());
+		GeocodingResult[] results = maps.getLatAndLng(editProfileRequest.getHomeCity() + " "
+				+ editProfileRequest.getHomeState() + " " + editProfileRequest.getHomeZipCode());
 		if (results.length == 1) {
 			editProfileRequest.setHomeLat((float) results[0].geometry.location.lat);
 			editProfileRequest.setHomeLng((float) results[0].geometry.location.lng);
@@ -387,34 +385,35 @@ public class UserServiceImpl {
 
 	public void createUsers_DummyData() {
 
-//
-//		DummyData dummyData = new DummyData();
-//		List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
-//
-//		int lastDummyCreationId = 0;
-//		try {
-//			lastDummyCreationId = repository.getLastDummyCreationId("user");	
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//		}
-//		
-//		
-//		repository.createUsers_DummyData(dummyUsers, lastDummyCreationId + 1);
-
+		//
+		// DummyData dummyData = new DummyData();
+		// List<JobSearchUser> dummyUsers = dummyData.getDummyUsers();
+		//
+		// int lastDummyCreationId = 0;
+		// try {
+		// lastDummyCreationId = repository.getLastDummyCreationId("user");
+		// } catch (Exception e) {
+		// // TODO: handle exception
+		// }
+		//
+		//
+		// repository.createUsers_DummyData(dummyUsers, lastDummyCreationId +
+		// 1);
 
 	}
 
 	public void createJobs_DummyData() {
 
-//		List<JobSearchUser> dummyEmployers = repository.getEmployers();
-//		DummyData dummyData = new DummyData();
-//
-//		List<JobInfoPostRequestDTO> dummyJobs = dummyData.getDummyJobs(dummyEmployers);
-//		int lastDummyCreationId = repository.getLastDummyCreationId("job");
-//
-//		for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
-//			repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
-//		}
+		// List<JobSearchUser> dummyEmployers = repository.getEmployers();
+		// DummyData dummyData = new DummyData();
+		//
+		// List<JobInfoPostRequestDTO> dummyJobs =
+		// dummyData.getDummyJobs(dummyEmployers);
+		// int lastDummyCreationId = repository.getLastDummyCreationId("job");
+		//
+		// for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
+		// repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
+		// }
 
 	}
 
@@ -448,10 +447,9 @@ public class UserServiceImpl {
 
 	public void updatePassword(String password, String email) {
 
-		String encryptedPassword  = encryptPassword(password);
+		String encryptedPassword = encryptPassword(password);
 
 		repository.updatePassword(encryptedPassword, email);
 	}
-
 
 }

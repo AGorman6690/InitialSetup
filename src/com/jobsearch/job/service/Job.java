@@ -1,7 +1,6 @@
 package com.jobsearch.job.service;
 
 import java.sql.Time;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class Job{
 	private List<Question> questions;
 	private int newApplicationCount;
 	private Integer Duration;
-	
+
 
 	public Integer getDuration() {
 		return Duration;
@@ -276,7 +275,7 @@ public class Job{
 		this.distanceFromFilterLocation = distanceFromFilterLocation;
 	}
 
-	
+
 
 	// @Override
 	// public int compareTo(Job another) {

@@ -95,13 +95,13 @@
 		<prop key="xml">text/xml</prop>
 	</util:properties>
 
-<!-- 	<bean id="multipartResolver" -->
-<!-- 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
+	<!-- <bean id="multipartResolver" -->
+	<!-- class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> -->
 
-<!-- 		 setting maximum upload size -->
-<!-- 		<property name="maxUploadSize" value="100000000" /> -->
+	<!-- setting maximum upload size -->
+	<!-- <property name="maxUploadSize" value="100000000" /> -->
 
-<!-- 	</bean> -->
+	<!-- </bean> -->
 
 	<import resource="classpath:spring-security.xml" />
 	<import resource="classpath:spring-register.xml" />

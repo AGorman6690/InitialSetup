@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.model.Endorsement;
