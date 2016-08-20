@@ -27,6 +27,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
@@ -82,7 +83,7 @@ public class UserController {
 		
 		//***************************************
 		//***************************************
-		//This needs to be cleanded
+		//This needs to be cleaned
 		//***************************************
 		//***************************************
 		
@@ -106,6 +107,11 @@ public class UserController {
 			String viewName = null;
 			if (user.getCreateNewPassword() == 0) {
 				if (user.getProfile().getName().equals("Employee")) {
+					
+					//Get the employee's open job applications
+					List<ApplicationResponseDTO> applicationResponseDtos = applicationService.getApplicationResponseDtosByApplicant(user.getUserId());
+					model.addAttribute("applicationResponseDtos", applicationResponseDtos);
+					
 					viewName = "EmployeeProfile";
 				} else if (user.getProfile().getName().equals("Employer")) {
 					viewName = "EmployerProfile";
@@ -117,10 +123,11 @@ public class UserController {
 
 			return viewName;
 		} catch (Exception e) {
+			return null;
 			// TODO: handle exception
 		}
 
-		return null;
+//		return null;
 
 	}	
 	

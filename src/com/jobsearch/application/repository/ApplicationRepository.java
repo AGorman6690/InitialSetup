@@ -102,10 +102,10 @@ public class ApplicationRepository {
 		});
 	}	
 	
-	public List<Application> getApplicationsByEmployer(int userId) {
+	public List<Application> getApplicationsByUser(int userId) {
 		String sql = "SELECT * FROM application WHERE UserId = ?";
 
-		return this.ApplicationWithUserRowMapper(sql, new Object[]{ userId });
+		return this.ApplicationRowMapper(sql, new Object[]{ userId });
 	}
 
 	public List<Application> getApplicationsByJob(int jobId) {
@@ -371,20 +371,41 @@ public class ApplicationRepository {
 		return WageProposalRowMapper(sql, new Object[]{ wageProposalId }).get(0);
 	}
 	
-	public WageProposal getApplicantsLastDesiredPayRequest(int applicationId, int applicantId) {
+	public WageProposal getCurrentWageProposal(int applicationId) {
 		
 		
 		String sql = "SELECT * FROM wage_proposal" 
 				+ " WHERE WageProposalId = " 
-				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ? AND ProposedByUserId = ?)";
+				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ?)";
 
-		return WageProposalRowMapper(sql, new Object[]{ applicationId, applicantId }).get(0);
+		return WageProposalRowMapper(sql, new Object[]{ applicationId }).get(0);
 	}
 
+	public float getCurrentWageProposedBy(int applicationId, int proposedById) {
+		
+		
+		String sql = "SELECT amount FROM wage_proposal" 
+				+ " WHERE WageProposalId = " 
+				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ? AND ProposedByUserId = ?)";
+
+		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId, proposedById }, float.class);
+	}
+	
 	public void updateWageProposalStatus(int wageProposalId, int status) {
 		String sql = "UPDATE wage_proposal SET Status = ? WHERE WageProposalId = ?";
 		jdbcTemplate.update(sql, new Object[]{ status, wageProposalId });
 		
+	}
+
+	public float getCurrentWageProposedTo(int applicationId, int proposedToUserId) {
+	
+		String sql = "SELECT amount FROM wage_proposal" 
+				+ " WHERE WageProposalId = " 
+				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ? AND ProposedToUserId = ?)";
+		
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId, proposedToUserId }, float.class);
+
 	}
 
 }

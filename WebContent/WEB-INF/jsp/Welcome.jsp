@@ -50,6 +50,7 @@
 
 						<button id="debug1">Sign in as employer (UserId = 1)</button>
 						<button id="debug2">Sign in a employee (UserId = 2)</button>
+						<button id="debug3">Sign in a employee (AWS) (UserId = 5746) </button>
 	
 
 </div>
@@ -60,6 +61,8 @@
 			$("#password").val('jg');
 			$("#userName").val('gorma080@d.umn.edu');
 			$("#loginContainer input[type=submit]")[0].click();
+			
+			
 
 		})
 
@@ -69,6 +72,13 @@
 			$("#loginContainer input[type=submit]")[0].click();
 
 		})
+		
+		$("#debug3").click(function() {
+			$("#password").val('jg');
+			$("#userName").val('justin.gorman@wilsontool.com');
+			$("#loginContainer input[type=submit]")[0].click();
+
+		})		
 		
 		$("#login").click(function(){
 			$("div.login").show();

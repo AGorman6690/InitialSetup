@@ -40,7 +40,21 @@ public class Job{
 	private List<Question> questions;
 	private int newApplicationCount;
 	private Integer Duration;
+
+	//I think this is better than "isActive". It gives more transparency.
+	//Do away with "isActive".
+	//0 = not yet started;
+	//1 = started;
+	//2 = finished; 	
+	private int status;
 	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
 
 	public Integer getDuration() {
 		return Duration;

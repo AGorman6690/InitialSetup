@@ -35,6 +35,7 @@ import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 @Service
 public class JobServiceImpl {
@@ -122,9 +123,22 @@ public class JobServiceImpl {
 		repository.markJobComplete(jobId);
 	}
 
-	public List<Job> getJobsAppliedTo(int userId) {
-		return repository.getJobsAppliedTo(userId);
-	}
+//	public List<Job> getJobsAppliedTo(int userId) {
+//		
+//		//Query the database
+//		List<Job> jobsAppliedTo = repository.getActiveJobsByUser(userId);
+//
+//		//
+//		for (Job job : jobsAppliedTo) {
+//	
+//			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
+//			job.setApplications(applicationService.getApplicationsByApplicant(userId, job.getId()));
+//			job.setEmployees(userService.getEmployeesByJob(job.getId()));
+//			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
+//		}
+//
+//		return jobsAppliedTo;
+//	}
 
 	public List<Job> getJobsHiredFor(int userId) {
 		return repository.getJobsHiredFor(userId);
@@ -587,6 +601,12 @@ public class JobServiceImpl {
 			
 			return "RateEmployees";
 		}
+	}
+
+	public int getJobStatus(int jobId) {
+
+		Job job = repository.getJob(jobId);		
+		return job.getStatus();
 	}
 
 

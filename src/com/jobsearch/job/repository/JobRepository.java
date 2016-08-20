@@ -68,7 +68,8 @@ public class JobRepository {
 					e.setStartDate(rs.getDate("StartDate"));
 					e.setEndDate(rs.getDate("EndDate"));
 					e.setStartTime(rs.getTime("StartTime"));
-					e.setEndTime(rs.getTime("EndTime"));					
+					e.setEndTime(rs.getTime("EndTime"));	
+					e.setStatus(rs.getInt("Status"));
 					
 					//Set duration
 					DateTime dtStart = new DateTime(e.getStartDate());

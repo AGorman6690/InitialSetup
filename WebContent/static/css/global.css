@@ -21,8 +21,15 @@
 	color:#ffffff;
 }
 
+/* Cannot use "hide". Bootstrap has hide class which is marked !important...*/
 
+.hide-element{
+	display:none;
+}
 
+.show-block{
+	display:block;
+}
 
 
 

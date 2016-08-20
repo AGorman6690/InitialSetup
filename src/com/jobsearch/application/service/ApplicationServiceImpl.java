@@ -56,14 +56,18 @@ public class ApplicationServiceImpl {
 			//Set the application's wage proposals
 			application.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
-			//Set the applicant's current desired pay.
+			//Get the application's current wage proposal, whether proposed by the employer or applicant
+			application.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			
+			//Set the current wage proposed BY the applicant.
 			//Since the desired pay can be countered several times,
 			//This holds the applican't most recent pay request.
-			application.setCurrentWageProposal(this.getCurrentWageProposal(
-										application.getApplicationId(), applicant.getUserId()));
+			application.setApplicantsCurrentDesiredWage(
+					this.getCurrentWageProposedBy(application.getApplicationId(), applicant.getUserId()));
 			
-			
-			
+//			//Set the current wage proposed TO the applicant.
+//			application.setEmployersCurrentOfferedWage(this.getCurrentWageProposedTo(application.getApplicationId(), applicant.getUserId()));
+				
 			applicant.setEndorsements(new ArrayList<Endorsement>());
 //			applicant.setAnswers(this.getAnswers(application.ge, userId));
 			
@@ -94,10 +98,28 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public WageProposal getCurrentWageProposal(int applicationId, int applicantId) {
-		
-		return repository.getApplicantsLastDesiredPayRequest(applicationId, applicantId);
+	public  float getCurrentWageProposedTo(int applicationId, int proposedToUserId) {
+		repository.getCurrentWageProposedTo(applicationId, proposedToUserId);
+		return 0;
 	}
+
+
+	public WageProposal getCurrentWageProposal(Application application) {
+		
+//		//Verify the application has at least 1 wage proposal
+//		if(application.getWageProposals().size() > 0){
+			return repository.getCurrentWageProposal(application.getApplicationId());
+//		}else{
+//			return null;
+//		}
+		
+	}
+	
+	public float getCurrentWageProposedBy(int applicationId, int proposedByUserId) {
+		
+		return repository.getCurrentWageProposedBy(applicationId, proposedByUserId);
+		
+	}	
 
 
 	public  List<WageProposal> getWageProposals(int applicationId) {
@@ -273,5 +295,36 @@ public class ApplicationServiceImpl {
 		repository.addWageProposal(counter);
 		
 	}
+
+
+	public List<ApplicationResponseDTO> getApplicationResponseDtosByApplicant(int userId) {
+		
+		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
+		
+		//Query the database
+		List<Application> applications = this.getApplicationsByUser(userId);
+		
+		//Create application response dtos
+		for(Application application : applications){
+			ApplicationResponseDTO dto = new ApplicationResponseDTO();
+			dto.setApplication(application);
+			dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(), userId));
+			dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+//			dto.setJobStatus(jobService.getJobStatus(application.getJobId()));
+			dto.setJob(jobService.getJob(application.getJobId()));
+			
+			//Add the dto
+			result.add(dto);
+		}
+		
+		return result;
+	}
+
+
+	public List<Application> getApplicationsByUser(int userId) {		
+		return repository.getApplicationsByUser(userId);
+	}
+	
+	
 
 }

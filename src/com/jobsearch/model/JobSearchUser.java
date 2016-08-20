@@ -24,7 +24,7 @@ public class JobSearchUser {
 	private List<Job> jobs;
 	private List<Job> activeJobs;
 	private List<CompletedJobResponseDTO> completedJobs;
-	private List<Job> jobsAppliedTo;
+//	private List<Job> jobsAppliedTo;
 	private List<Job> jobsHiredFor;
 	private List<RateCriterion> ratings;
 	private List<Endorsement> endorsements;
@@ -161,13 +161,13 @@ public class JobSearchUser {
 		this.ratings = ratings;
 	}
 
-	public List<Job> getJobsAppliedTo() {
-		return jobsAppliedTo;
-	}
-
-	public void setJobsAppliedTo(List<Job> jobsAppliedTo) {
-		this.jobsAppliedTo = jobsAppliedTo;
-	}
+//	public List<Job> getJobsAppliedTo() {
+//		return jobsAppliedTo;
+//	}
+//
+//	public void setJobsAppliedTo(List<Job> jobsAppliedTo) {
+//		this.jobsAppliedTo = jobsAppliedTo;
+//	}
 
 	public List<Job> getActiveJobs() {
 		return activeJobs;

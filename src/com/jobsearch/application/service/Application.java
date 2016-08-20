@@ -18,6 +18,8 @@ public class Application {
 	private List<Question> questions;
 	private List<WageProposal> wageProposals;
 	private WageProposal currentWageProposal;
+	private float applicantsCurrentDesiredWage;
+//	private float employersCurrentOfferedWage;
 	//Status values:
 	//0: submitted
 	//1: declined
@@ -26,6 +28,18 @@ public class Application {
 	private int status;
 	
 
+//	public float getEmployersCurrentOfferedWage() {
+//		return employersCurrentOfferedWage;
+//	}
+//	public void setEmployersCurrentOfferedWage(float employersCurrentOfferedWage) {
+//		this.employersCurrentOfferedWage = employersCurrentOfferedWage;
+//	}
+	public float getApplicantsCurrentDesiredWage() {
+		return applicantsCurrentDesiredWage;
+	}
+	public void setApplicantsCurrentDesiredWage(float applicantsCurrentDesiredWage) {
+		this.applicantsCurrentDesiredWage = applicantsCurrentDesiredWage;
+	}
 	public WageProposal getCurrentWageProposal() {
 		return currentWageProposal;
 	}

@@ -10,16 +10,20 @@
 	display:none;
 }
 
+.sent-counter-notification{
+	padding-top:7px;
+}
+
 .endorsement{
 	padding:5px;
 }
 
 .completed-jobs-container{
-	padding-top:40px
+	padding-top:40px;
 }
 
 .active-jobs-container{
-	padding-top:20px
+	padding-top:20px;
 }
 
 .has-applicants{
@@ -52,6 +56,10 @@ table{
 
 #applicantsTable .applicant-endorsements{
 	width:40%;
+}
+
+#applicantsTable applicant-wage-negotiation{
+	width:20%;
 }
 
 .job-row {
@@ -94,7 +102,7 @@ td.has-new-applicants{
 }
 
 .applicants-container{
-	padding:5px 150px;
+	padding:5px 90px;
 }
 
 .applicants{

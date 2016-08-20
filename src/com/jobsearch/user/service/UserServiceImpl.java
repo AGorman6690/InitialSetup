@@ -126,7 +126,7 @@ public class UserServiceImpl {
 		//If employee
 		} else if (user.getProfileId() == 1) {
 
-			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
+//			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
 			user.setJobsHiredFor(jobService.getJobsHiredFor(user.getUserId()));
 			user.setCompletedJobs(jobService.getCompletedJobsByEmployee(user.getUserId()));
 			user.setAvailableDates(this.getAvailableDates(user.getUserId()));

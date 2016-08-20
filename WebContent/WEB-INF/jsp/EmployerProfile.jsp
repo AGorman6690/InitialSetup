@@ -79,7 +79,8 @@
 																<th class="applicant-name">Name</th>
 																<th class="applicant-rating">Rating</th>
 																<th class="applicant-endorsements">Endorsements</th>	
-																<th class="applicant-desired-pay">Desired Pay ($/hr)</th>									
+																<th class="applicant-wage-negotiation">Wage Negotiation</th>
+<!-- 																<th class="applicant-desired-pay">Offered Pay ($/hr)</th>									 -->
 															</tr>
 														</thead>
 														<tbody>
@@ -97,14 +98,63 @@
 																	</c:forEach>
 				
 																</td>
-																<td id="${application.currentWageProposal.id }">
-																	<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount }"/>
+																
+<!-- 																Set the wage status -->
+																<td id="${application.currentWageProposal.id }">																	
+																	<div class="wage-status">
 																	
-																		<button class="counter-offer">Counter</button>
-																	<div class="counter-offer-container">
-																		<input class="counter-offer-amount"></input>
-																		<button class="send-counter-offer">Send</button>
-																		<button class="cancel-counter-offer">Cancel</button>
+																	
+																		<c:choose>
+																			<c:when test="${user.userId == application.currentWageProposal.proposedByUserId}">
+<!-- 																			****** If the current wage proposal was proposed TO the employer -->
+																																							
+																				<div class="desired-pay">
+																					Applicant asking for 
+																					<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																				
+																				
+																				</div>
+																				<div class="offered-pay hide-element">
+																					Offered applicant  
+																					<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																				</div>		
+
+																				<div class="counter-container">															
+																					<button class="counter">Counter</button>
+																					<div class="counter-offer-container">
+																						<input class="counter-offer-amount"></input>
+																						<button class="send-counter-offer">Send</button>
+																						<button class="cancel-counter-offer">Cancel</button>
+																					</div>
+																				</div>
+																				<div class="sent-counter-notification hide-element">Counter offer sent</div>																				
+																												
+																			</c:when>
+																			<c:otherwise>
+<!-- 																			****** Otherise the current wage proposal was proposed BY the employer -->
+																																							
+																				<div class="desired-pay hide-element">
+																					Applicant asking for 
+																					<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																				</div>
+																				<div class="offered-pay">
+																					Offered applicant  
+																					<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																				</div>		
+
+																				<div class="counter-container hide-element">															
+																					<button class="counter">Counter</button>
+																					<div class="counter-offer-container">
+																						<input class="counter-offer-amount"></input>
+																						<button class="send-counter-offer">Send</button>
+																						<button class="cancel-counter-offer">Cancel</button>
+																					</div>
+																				</div>
+																				<div class="sent-counter-notification hide-element">Counter offer sent</div>																				
+																																											
+																			</c:otherwise>
+
+																		</c:choose>
 																	</div>
 																</td>
 															</tr>
@@ -158,7 +208,11 @@
 
 <script>
 
+
+
 $(document).ready(function(){
+
+	
 	$("#activeJobsTable tr td").click(function(){
 		window.location = '../job/' + $(this).parent().attr('id');
 	})	
@@ -196,7 +250,7 @@ $(document).ready(function(){
 		
 	})
 	
-	$(".counter-offer").click(function(){
+	$(".counter").click(function(){
 		var container = $(this).siblings(".counter-offer-container")[0];
 		$(container).show();
 	})
@@ -207,27 +261,36 @@ $(document).ready(function(){
 	})
 	
 	$(".send-counter-offer").click(function(){
+		
+		//Read the DOM
+		var wageStatusContainer = $(this).parents(".wage-status")[0];
+		var desiredPayContainer = $(wageStatusContainer).find(".desired-pay")[0];
+		var offeredPayContainer = $(wageStatusContainer).find(".offered-pay")[0];
+		var counterContainer = $(wageStatusContainer).find(".counter-container")[0];
 		var wagePropoalId = $($(this).parents("td")[0]).attr("id");
 		var counterAmount = $($(this).siblings("input")[0]).val();
-		
+
+		//Create the dto
 		var wageProposalCounterDTO = {};
 		wageProposalCounterDTO.wageProposalIdToCounter = wagePropoalId;
 		wageProposalCounterDTO.counterAmount = counterAmount;
 
+		//Make the ajax coll
+		sendCounterOffer(wageProposalCounterDTO, function(){
+			
+			//After the counter has been made, hide the counter controls.			
+			$(counterContainer).hide();
+			
+			//Hide the desired pay container
+			$(desiredPayContainer).hide();
+			
+			//Show the offered pay container
+			$(offeredPayContainer).html("Offered applicant " + twoDecimalPlaces(counterAmount));
+			$(offeredPayContainer).show();
 
+		})
 		
-		$.ajax({
-			type : "POST",
-			url :"/JobSearch/desired-pay/counter",
-			headers : getAjaxHeaders(),
-			contentType : "application/json",
-			data : JSON.stringify(wageProposalCounterDTO)			
-		}).done(function() {
-// 			$('#home')[0].click();
-		}).error(function() {
-			$('#home')[0].click();
 
-		});
 		
 	})
 	
