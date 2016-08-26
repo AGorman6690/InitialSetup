@@ -141,7 +141,7 @@ public class JobServiceImpl {
 //	}
 
 	public List<Job> getJobsHiredFor(int userId) {
-		return repository.getJobsHiredFor(userId);
+		return repository.getActiveJobsByEmployee(userId);
 	}
 
 	public List<Job> getActiveJobsByUser(int userId) {
@@ -218,10 +218,10 @@ public class JobServiceImpl {
 		return completedJobDtos;
 	}
 
-	public List<CompletedJobResponseDTO> getCompletedJobsByEmployee(int userId) {
+	public List<CompletedJobResponseDTO> getCompletedJobResponseDtosByEmployee(int userId) {
 
 		//Get completed jobs
-		List<Job> completedJobs = repository.getCompletedJobsByEmployee(userId);
+		List<Job> completedJobs = this.getCompletedJobsByEmployee(userId);
 
 		//For each completed job, create a completed job response DTO
 		List<CompletedJobResponseDTO> completedJobDtos = new ArrayList<CompletedJobResponseDTO>();
@@ -244,6 +244,11 @@ public class JobServiceImpl {
 		return completedJobDtos;
 	}
 	
+	public List<Job> getCompletedJobsByEmployee(int userId) {
+		
+		return repository.getCompletedJobsByEmployee(userId);
+	}
+
 	public Job getJob(int jobId){
 		return repository.getJob(jobId);
 	}
@@ -607,6 +612,11 @@ public class JobServiceImpl {
 
 		Job job = repository.getJob(jobId);		
 		return job.getStatus();
+	}
+
+	public List<Job> getActiveJobsByEmployee(int userId) {
+		
+		return repository.getActiveJobsByEmployee(userId);
 	}
 
 

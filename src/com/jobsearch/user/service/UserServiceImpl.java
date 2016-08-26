@@ -9,14 +9,19 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.job.service.CompletedJobResponseDTO;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
@@ -24,6 +29,7 @@ import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
+import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.repository.UserRepository;
@@ -103,40 +109,8 @@ public class UserServiceImpl {
 
 	}
 
-	public JobSearchUser getProfile(JobSearchUser user) {
 
-		// If employer
-		if (user.getProfileId() == 2) {
-			user.setActiveJobs(jobService.getActiveJobsByUser(user.getUserId()));
-			user.setCompletedJobs(jobService.getCompletedJobsByEmployer(user.getUserId()));
-			
-			//When the profile is requested and presented to the user,
-			//all the applications' "HasBeenViewed" property, for the user's active jobs,
-			//will be set to true.
-			
-			//*********************************************************************			
-			//*********************************************************************
-			//On second thought, this should be set to zero when the user clicks and views
-			//the new applicants
-			applicationService.setHasBeenViewed(user.getActiveJobs(), 1);
-			//*********************************************************************			
-			//*********************************************************************
-
-		
-		//If employee
-		} else if (user.getProfileId() == 1) {
-
-//			user.setJobsAppliedTo(jobService.getJobsAppliedTo(user.getUserId()));
-			user.setJobsHiredFor(jobService.getJobsHiredFor(user.getUserId()));
-			user.setCompletedJobs(jobService.getCompletedJobsByEmployee(user.getUserId()));
-			user.setAvailableDates(this.getAvailableDates(user.getUserId()));
-		}
-
-		user.setCategories(categoryService.getCategoriesByUserId(user.getUserId()));
-
-		return user;
-
-	}
+	
 
 	public List<String> getAvailableDates(int userId) {
 		return repository.getAvailableDates(userId);
@@ -451,6 +425,72 @@ public class UserServiceImpl {
 		String encryptedPassword  = encryptPassword(password);
 
 		repository.updatePassword(encryptedPassword, email);
+	}
+
+	public void hireApplicant(int wageProposalId) {
+		
+		//Get the wage proposal
+		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
+		
+		//Get the application
+		Application application = applicationService.getApplication(wageProposal.getApplicationId());
+				
+		//Update the application's status to hired
+		applicationService.updateApplicationStatus(application.getApplicationId(), 3);
+		
+		//Hire the applicant 
+		this.hireApplicant(application.getUserId(), application.getJobId());
+		
+	}
+
+	public void setEmployeesProfileModel(JobSearchUser employee, Model model) {
+		
+
+		//Get the employee's open job applications
+		List<ApplicationResponseDTO> openApplicationResponseDtos = 
+							applicationService.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
+		
+		//Get the employee's completed jobs
+		List<Job> completedJobs = jobService.getCompletedJobsByEmployee(employee.getUserId());
+		
+		//Get the employee's active jobs
+		List<Job> activeJobs = jobService.getActiveJobsByEmployee(employee.getUserId());
+		
+		//Get the failed wage negotiations that the employee has been involved in 
+		List<ApplicationResponseDTO> failedWageNegotiations =
+							applicationService.getFailedWageNegotiations(employee.getUserId());
+		
+		model.addAttribute("failedWageNegotiations", failedWageNegotiations);
+		model.addAttribute("activeJobs", activeJobs);
+		model.addAttribute("completedJobs", completedJobs);
+		model.addAttribute("openApplicationResponseDtos", openApplicationResponseDtos);
+		
+	}
+
+	public void setEmployersProfileModel(JobSearchUser employer, Model model) {
+		
+		//Get the employer's active jobs
+		List<Job> activeJobs = jobService.getActiveJobsByUser(employer.getUserId());
+		
+		//Get the employer's completed jobs
+		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
+		
+		
+		model.addAttribute("activeJobs", activeJobs);
+		model.addAttribute("completedJobs", completedJobs);
+		
+		//When the profile is requested and presented to the user,
+		//all the applications' "HasBeenViewed" property, for the user's active jobs,
+		//will be set to true.
+		
+		//*********************************************************************			
+		//*********************************************************************
+		//On second thought, this should be set to zero when the user clicks and views
+		//the new applicants
+		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
+		//*********************************************************************			
+		//*********************************************************************
+		
 	}
 
 

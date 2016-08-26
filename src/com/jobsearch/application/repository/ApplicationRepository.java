@@ -3,6 +3,7 @@ package com.jobsearch.application.repository;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,6 +108,34 @@ public class ApplicationRepository {
 
 		return this.ApplicationRowMapper(sql, new Object[]{ userId });
 	}
+	
+
+	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
+		
+		List<Object> argsList = new ArrayList<Object>();
+		
+		String sql = "SELECT * FROM application WHERE UserId = ?";
+		
+		argsList.add(userId);
+		
+		
+		//Build or string for statuses
+		boolean isFirst = true;
+		for(int status : statuses){
+			if(isFirst){
+				sql += " AND (Status = ?";
+				isFirst = false;
+			}else{
+				sql+= " OR Status = ?";
+			}
+			
+			argsList.add(status);
+		}
+		
+		sql += ")";
+		
+		return this.ApplicationRowMapper(sql, argsList.toArray());
+	}	
 
 	public List<Application> getApplicationsByJob(int jobId) {
 
@@ -139,7 +168,7 @@ public class ApplicationRepository {
 	}
 
 
-	public void updateStatus(int applicationId, int status) {
+	public void updateApplicationStatus(int applicationId, int status) {
 		String sql = "UPDATE application SET Status = ? WHERE ApplicationId = ?";
 		jdbcTemplate.update(sql, new Object[]{ status, applicationId });
 
@@ -377,8 +406,14 @@ public class ApplicationRepository {
 		String sql = "SELECT * FROM wage_proposal" 
 				+ " WHERE WageProposalId = " 
 				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ?)";
-
-		return WageProposalRowMapper(sql, new Object[]{ applicationId }).get(0);
+		
+		List<WageProposal> result = this.WageProposalRowMapper(sql, new Object[]{ applicationId }); 
+		if (result.size() > 0){
+			return result.get(0);
+		}
+		else{
+			return null;
+		}
 	}
 
 	public float getCurrentWageProposedBy(int applicationId, int proposedById) {
@@ -407,5 +442,7 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId, proposedToUserId }, float.class);
 
 	}
+
+
 
 }

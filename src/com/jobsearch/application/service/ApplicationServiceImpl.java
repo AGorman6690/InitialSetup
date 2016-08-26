@@ -1,6 +1,7 @@
 package com.jobsearch.application.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -56,14 +57,16 @@ public class ApplicationServiceImpl {
 			//Set the application's wage proposals
 			application.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
-			//Get the application's current wage proposal, whether proposed by the employer or applicant
+			//If applicable, get the application's current wage proposal, whether proposed by the employer or applicant
 			application.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			
-			//Set the current wage proposed BY the applicant.
+			//If Set the current wage proposed BY the applicant.
 			//Since the desired pay can be countered several times,
 			//This holds the applican't most recent pay request.
 			application.setApplicantsCurrentDesiredWage(
 					this.getCurrentWageProposedBy(application.getApplicationId(), applicant.getUserId()));
+			
+			
 			
 //			//Set the current wage proposed TO the applicant.
 //			application.setEmployersCurrentOfferedWage(this.getCurrentWageProposedTo(application.getApplicationId(), applicant.getUserId()));
@@ -133,7 +136,7 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public void updateStatus(int applicationId, int status) {
+	public void updateApplicationStatus(int applicationId, int status) {
 		
 //		//If hired
 		if (status == 3){
@@ -141,7 +144,7 @@ public class ApplicationServiceImpl {
 			userService.hireApplicant(application.getUserId(), application.getJobId());
 		}
 		
-		repository.updateStatus(applicationId, status);
+		repository.updateApplicationStatus(applicationId, status);
 
 
 
@@ -258,7 +261,7 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public void setHasBeenViewed(List<Job> jobs, int value) {
+	public void setJobsApplicationsHasBeenViewed(List<Job> jobs, int value) {
 		
 		
 		for (Job job : jobs){
@@ -271,21 +274,31 @@ public class ApplicationServiceImpl {
 		
 		
 	}
-
+	
+	public WageProposal getWageProposal(int wageProposalId){
+		return  repository.getWageProposal(wageProposalId);
+	}
 
 	public void insertCounterOffer(WageProposalCounterDTO dto) {
 		
 		//Get the wage proposal to counter
-		WageProposal wagePropasalToCounter = repository.getWageProposal(dto.getWageProposalIdToCounter());
+		WageProposal wagePropasalToCounter = this.getWageProposal(dto.getWageProposalIdToCounter());
 	
-		//Set the proposal to counter to rejected
-		repository.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
+		//Set the proposal-to-counter's status to countered
+		this.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
 		
-		//Create a new wage proposal for the counter
+		//Update the application's status to considering.
+		//The employer's action of making a counter offer implies the employer is considering the applicant.		
+		//Because the employer does not need to explicitly set the applicant's status to "considering" 
+		//before making a counter offer, this ensures the application is set to the correct status.
+		Application application = this.getApplication(wagePropasalToCounter.getApplicationId());
+		this.updateApplicationStatus(application.getApplicationId(), 2);
+		
+		//Create a new wage proposal for the counter offer
 		WageProposal counter = new WageProposal();
 		counter.setAmount(dto.getCounterAmount());
 		
-		//The counter is being proposed BY the user whom the wage-proposal-to-counter was proposed TO,
+		//This counter offer is being proposed BY the user whom the wage-proposal-to-counter was proposed TO,
 		//and vice versa.
 		counter.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
 		counter.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
@@ -295,35 +308,179 @@ public class ApplicationServiceImpl {
 		repository.addWageProposal(counter);
 		
 	}
+	
 
 
-	public List<ApplicationResponseDTO> getApplicationResponseDtosByApplicant(int userId) {
+	public List<ApplicationResponseDTO> getFailedWageNegotiations(int userId) {		
+
+		//Query the database.
+		//Return only applications with a status of "wage negotiations ended" (4)
+		List<Application> failedWageNegotiations = this.getApplicationsByUserAndStatuses(userId, 
+													new ArrayList<Integer>(Arrays.asList(4)));
+		
+		//Get application response DTOs
+		if(failedWageNegotiations.size() >0){			
+			return getApplicationResponseDTOsByApplicant(failedWageNegotiations, userId);	
+		}else{
+			return null;
+		}
+		
+				
+	}
+	
+	
+	
+
+
+	private List<ApplicationResponseDTO> getApplicationResponseDTOsByApplicant(
+						List<Application> applications, int applicantId) {
 		
 		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
 		
-		//Query the database
-		List<Application> applications = this.getApplicationsByUser(userId);
-		
-		//Create application response dtos
+		//Set application response dtos
 		for(Application application : applications){
-			ApplicationResponseDTO dto = new ApplicationResponseDTO();
-			dto.setApplication(application);
-			dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(), userId));
-			dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
-//			dto.setJobStatus(jobService.getJobStatus(application.getJobId()));
-			dto.setJob(jobService.getJob(application.getJobId()));
+
+				ApplicationResponseDTO dto = new ApplicationResponseDTO();
+				dto.setApplication(application);
+				dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(), applicantId));
+				dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+				dto.setJob(jobService.getJob(application.getJobId()));
+				
+				//*****************************************************
+				//*****************************************************
+				//This shouldn't need to be here.
+				//In reality, all open applications at the time a job is ended should be 
+				//closed by default.
+				//Thus, as long as an application's status is 0 or 2, then the job by definition is still open.
+				//Leave this here for now. 
+				//*****************************************************
+				//*****************************************************
+				//Add the dto if the job is still active
+				if(dto.getJob().getStatus() < 2){
+					result.add(dto);	
+				}
+//			}
 			
-			//Add the dto
-			result.add(dto);
 		}
 		
 		return result;
+		
+	}
+
+
+	public List<ApplicationResponseDTO> getOpenApplicationResponseDtosByApplicant(int userId) {
+		
+//		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
+		
+		//Query the database.
+		//Return only applications with a status of "submitted" (0) or "considered" (2)
+		List<Application> openApplications = this.getApplicationsByUserAndStatuses(userId, 
+													new ArrayList<Integer>(Arrays.asList(0, 2)));
+		
+		//Get application response DTOs
+		if(openApplications.size() >0){			
+			return getApplicationResponseDTOsByApplicant(openApplications, userId);	
+		}else{
+			return null;
+		}		
+		
+//		//Create application response dtos
+//		for(Application application : openApplications){
+//			
+//			
+//			//Only consider the application if it is still open.
+//			//I.e. the employer has not declinded it nor has the wage negotiation ended
+////			if (this.isApplicationOpen(application.getStatus())){
+//
+//				ApplicationResponseDTO dto = new ApplicationResponseDTO();
+//				dto.setApplication(application);
+//				dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(), userId));
+//				dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+//	//			dto.setJobStatus(jobService.getJobStatus(application.getJobId()));
+//				dto.setJob(jobService.getJob(application.getJobId()));
+//				
+//				//*****************************************************
+//				//*****************************************************
+//				//This shouldn't need to be here.
+//				//In reality, all open applications at the time a job is ended should be 
+//				//closed by default.
+//				//Thus, as long as an application's status is 0 or 2, then the job by definition is still open.
+//				//Leave this here for now. 
+//				//*****************************************************
+//				//*****************************************************
+//				//Add the dto if the job is still active
+//				if(dto.getJob().getStatus() < 2){
+//					result.add(dto);	
+//				}
+////			}
+//			
+//		}
+//		
+//		return result;
+	}
+
+
+	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
+		
+		if(statuses.size() > 0){
+			return repository.getApplicationsByUserAndStatuses(userId, statuses);	
+		}else{
+			return null;
+		}
+		
+	}
+
+
+	private boolean isApplicationOpen(int status) {
+
+		//If submitted or considered
+		if (status == 0 || status == 2){
+			return true;
+		}else{
+			return false;
+		}
+			
+		
 	}
 
 
 	public List<Application> getApplicationsByUser(int userId) {		
 		return repository.getApplicationsByUser(userId);
 	}
+
+
+	public void acceptWageProposal(int wageProposalId) {
+		
+		//Update the wage proposal's status to accepted
+		this.updateWageProposalStatus(wageProposalId, 1);
+		
+		//Hire the applicant
+		userService.hireApplicant(wageProposalId);
+		
+	}
+
+
+	public void updateWageProposalStatus(int wageProposalId, int status) {
+		repository.updateWageProposalStatus(wageProposalId, status);
+		
+	}
+
+
+	public void declineWageProposalStatus(int wageProposalId) {
+		
+		
+		//Update wage proposal's status to declined
+		this.updateWageProposalStatus(wageProposalId, 2);
+		
+		//This status will allow the employer to see
+		//whom he declined outright and those with whom he could not reach a negotiation.
+		WageProposal wp = this.getWageProposal(wageProposalId);
+		Application application = this.getApplication(wp.getApplicationId());
+		this.updateApplicationStatus(application.getApplicationId(), 4);
+		
+	}
+
+	
 	
 	
 

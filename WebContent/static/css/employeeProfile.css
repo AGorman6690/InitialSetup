@@ -1,7 +1,16 @@
 table td{
-	padding:0px 5px;
+	padding:10px 5px;
 }
 
 table th{
 	padding:0px 10px;
+}
+
+
+.table-container{
+	padding-top:25px;
+}
+
+a{
+	cursor:pointer;
 }

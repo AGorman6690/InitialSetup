@@ -1,3 +1,14 @@
+.expand-job{
+	font-size:14px;
+	margin-right:10px;
+	cursor:pointer;
+}
+
+
+
+#expandJob{
+	width:30px;
+}
 .header{
 	border-bottom: 2px outset #F0F0F0;
 }
@@ -7,7 +18,7 @@
 }
 
 .counter-offer-container{
-	display:none;
+/* 	display:none; */
 }
 
 .sent-counter-notification{
@@ -27,7 +38,7 @@
 }
 
 .has-applicants{
-	cursor:pointer;
+/* 	cursor:pointer; */
 }
 
 .has-new-applicants{

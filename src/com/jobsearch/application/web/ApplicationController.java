@@ -42,7 +42,7 @@ public class ApplicationController {
 	public void updateStatus(@RequestParam(name = "applicationId") int applicationId,
 							@RequestParam(name = "status") int status) {
 		
-		applicationService.updateStatus(applicationId, status);
+		applicationService.updateApplicationStatus(applicationId, status);
 	}
 	
 	@RequestMapping(value = "/desired-pay/counter", method = RequestMethod.POST)
@@ -51,5 +51,22 @@ public class ApplicationController {
 		
 		applicationService.insertCounterOffer(dto);
 	}
+	
+	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
+	@ResponseBody
+	public void acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+		
+		applicationService.acceptWageProposal(wageProposalId);
+	}	
+	
+	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
+	@ResponseBody
+	public void declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+		
+		
+		applicationService.declineWageProposalStatus(wageProposalId);
+		
+		
+	}		
 
 }

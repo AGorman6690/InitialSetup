@@ -1,35 +1,3 @@
-//Not real utilities.
-//These are simply used across multiple pages.
-//Eventually put these somewhere else.
-//******************************************************************************
-//******************************************************************************
-function sendCounterOffer(wageProposalCounterDTO, callback){
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/desired-pay/counter",
-		headers : getAjaxHeaders(),
-		contentType : "application/json",
-		data : JSON.stringify(wageProposalCounterDTO)			
-	}).done(function() {
-		
-		callback();
-		
-		
-	}).error(function() {
-		$('#home')[0].click();
-
-	});
-}
-//******************************************************************************
-//******************************************************************************
-
-
-
-
-
-
-
-
 
 function initializeMap(mapDivId, lat, lng) {
 	//Eventually initialize it to a user defualt

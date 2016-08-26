@@ -20,11 +20,14 @@ public class Application {
 	private WageProposal currentWageProposal;
 	private float applicantsCurrentDesiredWage;
 //	private float employersCurrentOfferedWage;
+
+	
 	//Status values:
 	//0: submitted
 	//1: declined
 	//2: considered
 	//3: accepted
+	//4: wage negotiations have ended 
 	private int status;
 	
 

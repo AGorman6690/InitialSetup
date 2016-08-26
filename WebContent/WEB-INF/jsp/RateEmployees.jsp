@@ -14,7 +14,7 @@
 	<div class="container">
 		<div id="buttonsContainer" class="row">
 			<div class="col col-sm-12">
-				<button id="submitRatings" class="square-button">Submit Ratings</button>
+				<button id="submitRatings" class="square-button">Submit Ratings (not built yet)</button>
 			</div>
 		</div>
 		<div id="main" class="row">

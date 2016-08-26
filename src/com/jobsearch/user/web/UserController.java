@@ -31,6 +31,7 @@ import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.json.JSON;
@@ -81,16 +82,12 @@ public class UserController {
 	public String getProfile(Model model, HttpServletRequest request,
 			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
 		
-		//***************************************
-		//***************************************
-		//This needs to be cleaned
-		//***************************************
-		//***************************************
 		
-		//Remove try/catch
+		//Why is there a try/catch here????
+		//Can the user session object checked whether it's null???
+		//Or is there something special about the authentication process?
 		try {
 
-			//Change to: Check if session user is null
 			if (user.getUserId() == 0) {
 				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 				user = userService.getUserByEmail(auth.getName());
@@ -98,23 +95,33 @@ public class UserController {
 			}
 			
 			//Get the user's profile
-			user = userService.getProfile(user);
+//			user = userService.getProfile(user);
 			model.addAttribute("user", user);
 			
 			//Update session user after they have logged in
 			session.setAttribute("user", user);
 
+			
+			//If not creating new password
 			String viewName = null;
 			if (user.getCreateNewPassword() == 0) {
+				
+				//Per the profile type, set the model attributes and view name
+				
 				if (user.getProfile().getName().equals("Employee")) {
 					
-					//Get the employee's open job applications
-					List<ApplicationResponseDTO> applicationResponseDtos = applicationService.getApplicationResponseDtosByApplicant(user.getUserId());
-					model.addAttribute("applicationResponseDtos", applicationResponseDtos);
+					//Set model attributes
+					userService.setEmployeesProfileModel(user, model);
 					
 					viewName = "EmployeeProfile";
+					
 				} else if (user.getProfile().getName().equals("Employer")) {
+					
+					//Set model attributes
+					userService.setEmployersProfileModel(user, model);
+					
 					viewName = "EmployerProfile";
+					
 				}
 			} else {
 				viewName = "NewPassword";
@@ -189,7 +196,7 @@ public class UserController {
 		// Job consideredForJob = jobService.getJob(jobId);
 		// model.addObject("consideredForJob", consideredForJob);
 
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobsByEmployee(userId);
+		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
 		model.addAttribute("completedJobDtos", completedJobDtos);
 
 //		String context = null;

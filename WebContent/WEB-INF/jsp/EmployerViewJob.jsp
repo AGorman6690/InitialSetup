@@ -107,26 +107,26 @@
 										<div class="application-status-container">
 											<c:choose>
 												<c:when test="${application.status == 1 }">
-												<button id="declineApplicant" value="1" class="active">Decline</button>
+												<button id="" value="1" class="active">Decline</button>
 												</c:when>
 												<c:otherwise>
-												<button id="declineApplicant" value="1" class="">Decline</button>
+												<button id="" value="1" class="">Decline</button>
 												</c:otherwise>
 											</c:choose>
 											<c:choose>
 												<c:when test="${application.status == 2 }">
-												<button id="declineApplicant" value="2" class="active">Consider</button>
+												<button id="" value="2" class="active">Consider</button>
 												</c:when>
 												<c:otherwise>
-												<button id="declineApplicant" value="2" class="">Consider</button>
+												<button id="" value="2" class="">Consider</button>
 												</c:otherwise>
 											</c:choose>
 											<c:choose>
 												<c:when test="${application.status == 3 }">
-												<button id="declineApplicant" value="3" class="active">Hire</button>
+												<button id="" value="3" class="active">Hire</button>
 												</c:when>
 												<c:otherwise>
-												<button id="declineApplicant" value="3" class="">Hire</button>
+												<button id="" value="3" class="">Hire</button>
 												</c:otherwise>
 											</c:choose>																						
 											

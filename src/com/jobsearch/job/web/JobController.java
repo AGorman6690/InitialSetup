@@ -145,13 +145,9 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable(value = "jobId") int jobId, Model model) {
 
+		//Get the job
 		Job selectedJob = jobService.getEmployersJobProfile(jobId);
 
-
-		
-		
-
-		//
 
 		model.addAttribute("job", selectedJob);
 //		model.setViewName("Job");

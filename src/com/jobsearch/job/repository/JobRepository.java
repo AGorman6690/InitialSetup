@@ -202,7 +202,7 @@ public class JobRepository {
 
 	public List<Job> getCompletedJobsByEmployee(int userId) {
 		String sql = "SELECT * FROM job INNER JOIN employment ON job.JobId = employment.JobId"
-						+ " AND job.IsActive = 0 AND employment.UserId = ?";
+						+ " AND job.Status = 2 AND employment.UserId = ?";
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
 
@@ -232,9 +232,9 @@ public class JobRepository {
 	}
 
 
-	public List<Job> getJobsHiredFor(int userId) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment" + "	ON job.JobId = employment.JobId"
-				+ "	AND employment.UserId = ?";
+	public List<Job> getActiveJobsByEmployee(int userId) {
+		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
+				+ "	AND employment.UserId = ? and job.Status = 1";
 
 		return this.JobRowMapper(sql, new Object[] { userId });
 	}
