@@ -1,9 +1,9 @@
 package com.jobsearch.user.web
 
-import java.sql.Date;
-import java.util.List;
+import java.sql.Date
+import java.util.List
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty
 
 class FindEmployeesRequestDTOf {
 	@JsonProperty

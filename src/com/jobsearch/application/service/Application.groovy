@@ -1,10 +1,10 @@
 package com.jobsearch.application.service
 
-import java.util.List;
+import java.util.List
 
-import com.jobsearch.job.service.Job;
-import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Question;
+import com.jobsearch.job.service.Job
+import com.jobsearch.model.JobSearchUser
+import com.jobsearch.model.Question
 
 class Application {
 	int applicationId

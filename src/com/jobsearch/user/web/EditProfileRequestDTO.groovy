@@ -1,8 +1,8 @@
 package com.jobsearch.user.web
 
-import java.util.List;
+import java.util.List
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty
 
 class EditProfileRequestDTO {
 	@JsonProperty

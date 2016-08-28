@@ -1,8 +1,8 @@
 package com.jobsearch.application.service
 
-import java.util.List;
+import java.util.List
 
-import com.jobsearch.model.Answer;
+import com.jobsearch.model.Answer
 
 class ApplicationRequestDTO {
 	int jobId

@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-import java.util.List;
+import java.util.List
 
 class Question {
 	//0: Yes/N0

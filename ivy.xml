@@ -122,6 +122,8 @@
 
 		<!-- Groovy -->
 		<dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.3"/>
+		<dependency org="org.codehaus.groovy" name="groovy" rev="2.4.3"/>
+		<dependency org="org.codehaus.groovy" name="groovy-ant" rev="2.4.3"/>
 
     </dependencies>
 

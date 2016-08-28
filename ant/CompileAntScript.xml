@@ -71,14 +71,18 @@
 				<identitymapper />
 			</firstmatchmapper>
 		</ivy:retrieve>
-		<presetdef name="compile">
-			<javac fork="true" indy="true" includeantruntime="false">
-				<javac debug="true" source="1.8" target="1.8" />
-			</javac>
-		</presetdef>
 
 		<mkdir dir="${dir.binaries}" />
-		<javac srcdir="${dir.source}" destdir="${dir.binaries}" classpathref="classpath.compile" />
+
+
+		<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.compile" />
+		<presetdef name="compile">
+			<groovyc indy="true" fork="true" includeantruntime="false">
+				<javac debug="true" source="1.8" target="1.8" />
+			</groovyc>
+		</presetdef>
+
+		<groovyc srcdir="${dir.source}" destdir="${dir.binaries}" classpathref="classpath.compile" />
 
 		<copy todir="${dir.binaries}">
 			<fileset dir="${dir.config}" />
@@ -92,6 +96,7 @@
 			<classes dir="${dir.binaries}" />
 			<classes dir="${dir.source}">
 				<exclude name="**/*.java" />
+				<exclude name="**/*.groovy" />
 				<exclude name="*.properties" />
 			</classes>
 			<lib dir="${dir.libraries}/master" includes="*.jar" />
