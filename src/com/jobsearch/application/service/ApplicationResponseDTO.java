@@ -5,19 +5,20 @@ import com.jobsearch.model.WageProposal;
 
 public class ApplicationResponseDTO {
 	
+	//**********************************************
+	//**********************************************
+	//It now appears that this DTO can be done away with.
+	//It has basically became the Application.java class with one or two properties missing.
+	//There is no reason the Application class cannot have those properties.
+	//Consider removing this DTO class entirely
+	//**********************************************
+	//**********************************************
+	
 	private Application application;
 	private float currentDesiredWage;
 	private float currentOfferedWage;
 	private WageProposal currentWageProposal;
 	private Job job;
-	
-	//***** NOTE ***** Currently a job is not being differentiated between not yet stated and started.
-	//But I have a feeling this might be useful.
-	//The "IsActive" column in the Job table should be "Status" and use the below values.
-	//0 = not yet started;
-	//1 = started;
-	//2 = finished; 	
-//	private int jobStatus;
 	
 	
 	
@@ -39,12 +40,6 @@ public class ApplicationResponseDTO {
 	public void setCurrentWageProposal(WageProposal currentWageProposal) {
 		this.currentWageProposal = currentWageProposal;
 	}
-//	public int getJobStatus() {
-//		return jobStatus;
-//	}
-//	public void setJobStatus(int jobStatus) {
-//		this.jobStatus = jobStatus;
-//	}
 	public Application getApplication() {
 		return application;
 	}

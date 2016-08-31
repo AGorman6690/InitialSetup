@@ -138,7 +138,37 @@
 
 
 		</div> <!-- close open applications -->
-
+		
+		<div id="notYetStartedJobsContainer" class="table-container">
+			<h4>Jobs Set To Begin</h4>
+			<c:choose>
+				<c:when test="${yetToStartJobs.size() > 0 }">
+					<table id="yetToStartJobs">
+						<thead>
+							<tr>
+								<th>Job Name</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+							</tr>
+						</thead>
+						<tbody>
+		
+							<c:forEach items="${yetToStartJobs }" var="yetToStartJob">
+								<tr>
+									<td><a>${yetToStartJob.jobName }</a></td>
+									<td>${yetToStartJob.startDate }</td>
+									<td>${yetToStartJob.endDate }</td>
+								</tr>							
+							</c:forEach>
+						</tbody>
+					</table>				
+				</c:when>
+				<c:otherwise>
+					<div>You no jobs waiting to begin at this time.</div>
+				</c:otherwise>				
+			</c:choose>	
+		</div><!-- close active jobs container -->	
+		
 		<div id="activeJobsContainer" class="table-container">
 			<h4>Active Jobs</h4>
 			<c:choose>
@@ -167,9 +197,9 @@
 					<div>You have no active jobs at this time.</div>
 				</c:otherwise>				
 			</c:choose>	
-		</div><!-- close completed jobs container -->		
+		</div><!-- close active jobs container -->		
 		
-		<div id="acceptedApplicationsContainer" class="table-container">
+		<div id="completedJobsContainer" class="table-container">
 			<h4>Completed Jobs</h4>
 			<c:choose>
 				<c:when test="${completedJobs.size() > 0 }">

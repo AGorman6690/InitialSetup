@@ -13,7 +13,7 @@ import com.jobsearch.model.Question;
 public class Job{
 
 	private int id;
-	private int isActive;
+//	private int isActive;
 	private int userId;
 	private int openings;
 	private String jobName;
@@ -244,13 +244,13 @@ public class Job{
 		this.employees = employees;
 	}
 
-	public int getIsActive() {
-		return isActive;
-	}
+//	public int getIsActive() {
+//		return isActive;
+//	}
 
-	public void setIsActive(int isActive) {
-		this.isActive = isActive;
-	}
+//	public void setIsActive(int isActive) {
+//		this.isActive = isActive;
+//	}
 
 	// public List<Category> getCategories() {
 	// return categories;

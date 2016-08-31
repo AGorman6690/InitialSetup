@@ -187,17 +187,17 @@ public class JobController {
 		return viewName;
 	}	
 
-	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
-	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
-
-		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
-		model.addObject("employees", employees);
-
-		Job job = jobService.getEmployersJobProfile(jobId);
-		model.addObject("job", job);
-
-		model.setViewName("RateEmployees");
-		return model;
-	}
+//	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
+//	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
+//
+//		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+//		model.addObject("employees", employees);
+//
+//		Job job = jobService.getEmployersJobProfile(jobId);
+//		model.addObject("job", job);
+//
+//		model.setViewName("RateEmployees");
+//		return model;
+//	}
 
 }

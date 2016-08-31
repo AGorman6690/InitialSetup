@@ -106,8 +106,7 @@ public class UserController {
 			String viewName = null;
 			if (user.getCreateNewPassword() == 0) {
 				
-				//Per the profile type, set the model attributes and view name
-				
+				//Per the profile type, set the model attributes and view name				
 				if (user.getProfile().getName().equals("Employee")) {
 					
 					//Set model attributes

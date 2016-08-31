@@ -21,11 +21,11 @@ public class JobSearchUser {
 	private String matchingPassword;
 	private Profile profile;
 	private List<Category> categories;
-	private List<Job> jobs;
-	private List<Job> activeJobs;
-	private List<CompletedJobResponseDTO> completedJobs;
+//	private List<Job> jobs;
+//	private List<Job> activeJobs;
+//	private List<CompletedJobResponseDTO> completedJobs;
 //	private List<Job> jobsAppliedTo;
-	private List<Job> jobsHiredFor;
+//	private List<Job> jobsHiredFor;
 	private List<RateCriterion> ratings;
 	private List<Endorsement> endorsements;
 	private Application application;
@@ -97,13 +97,13 @@ public class JobSearchUser {
 		this.maxWorkRadius = maxWorkRadius;
 	}
 
-	public List<Job> getJobsHiredFor() {
-		return jobsHiredFor;
-	}
-
-	public void setJobsHiredFor(List<Job> jobsHiredFor) {
-		this.jobsHiredFor = jobsHiredFor;
-	}
+//	public List<Job> getJobsHiredFor() {
+//		return jobsHiredFor;
+//	}
+//
+//	public void setJobsHiredFor(List<Job> jobsHiredFor) {
+//		this.jobsHiredFor = jobsHiredFor;
+//	}
 
 	public List<String> getAvailableDates() {
 		return availableDates;
@@ -121,13 +121,13 @@ public class JobSearchUser {
 //		this.answers = answers;
 //	}
 
-	public List<CompletedJobResponseDTO> getCompletedJobs() {
-		return completedJobs;
-	}
-
-	public void setCompletedJobs(List<CompletedJobResponseDTO> completedJobs) {
-		this.completedJobs = completedJobs;
-	}
+//	public List<CompletedJobResponseDTO> getCompletedJobs() {
+//		return completedJobs;
+//	}
+//
+//	public void setCompletedJobs(List<CompletedJobResponseDTO> completedJobs) {
+//		this.completedJobs = completedJobs;
+//	}
 
 	public double getRating() {
 		return rating;
@@ -169,21 +169,21 @@ public class JobSearchUser {
 //		this.jobsAppliedTo = jobsAppliedTo;
 //	}
 
-	public List<Job> getActiveJobs() {
-		return activeJobs;
-	}
+//	public List<Job> getActiveJobs() {
+//		return activeJobs;
+//	}
+//
+//	public void setActiveJobs(List<Job> activeJobs) {
+//		this.activeJobs = activeJobs;
+//	}
 
-	public void setActiveJobs(List<Job> activeJobs) {
-		this.activeJobs = activeJobs;
-	}
-
-	public List<Job> getJobs() {
-		return jobs;
-	}
-
-	public void setJobs(List<Job> jobs) {
-		this.jobs = (ArrayList<Job>) jobs;
-	}
+//	public List<Job> getJobs() {
+//		return jobs;
+//	}
+//
+//	public void setJobs(List<Job> jobs) {
+//		this.jobs = (ArrayList<Job>) jobs;
+//	}
 
 	public Profile getProfile() {
 		return profile;

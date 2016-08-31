@@ -450,6 +450,9 @@ public class UserServiceImpl {
 		List<ApplicationResponseDTO> openApplicationResponseDtos = 
 							applicationService.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
 		
+		//Get the employee's hired-for, but not-yet-started jobs
+		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployee(employee.getUserId());
+		
 		//Get the employee's completed jobs
 		List<Job> completedJobs = jobService.getCompletedJobsByEmployee(employee.getUserId());
 		
@@ -460,7 +463,9 @@ public class UserServiceImpl {
 		List<ApplicationResponseDTO> failedWageNegotiations =
 							applicationService.getFailedWageNegotiations(employee.getUserId());
 		
+		//Set the model attributes
 		model.addAttribute("failedWageNegotiations", failedWageNegotiations);
+		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 		model.addAttribute("openApplicationResponseDtos", openApplicationResponseDtos);
@@ -469,13 +474,17 @@ public class UserServiceImpl {
 
 	public void setEmployersProfileModel(JobSearchUser employer, Model model) {
 		
+		//Get the employer's yet-to-start jobs
+		List<Job>  yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
+		
 		//Get the employer's active jobs
-		List<Job> activeJobs = jobService.getActiveJobsByUser(employer.getUserId());
+		List<Job> activeJobs = jobService.getActiveJobsByEmployer(employer.getUserId());
 		
 		//Get the employer's completed jobs
 		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
 		
 		
+		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 		

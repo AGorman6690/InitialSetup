@@ -57,7 +57,7 @@ public class JobRepository {
 					e.setId(rs.getInt("JobId"));
 					e.setJobName(rs.getString("JobName"));
 					e.setUserId(rs.getInt("UserId"));
-					e.setIsActive(rs.getInt("IsActive"));
+//					e.setIsActive(rs.getInt("IsActive"));
 					e.setDescription(rs.getString("Description"));
 					e.setStreetAddress(rs.getString("StreetAddress"));
 					e.setCity(rs.getString("City"));
@@ -106,7 +106,7 @@ public class JobRepository {
 					while (result.next()) {
 						createdJob.setId(result.getInt("JobId"));
 						createdJob.setJobName(result.getString("JobName"));
-						createdJob.setIsActive(result.getInt("isActive"));
+//						createdJob.setIsActive(result.getInt("isActive"));
 						createdJob.setUserId(result.getInt("UserId"));
 						createdJob.setDescription(result.getString("Description"));
 //						createdJob.setLocation(result.getString("Location"));
@@ -186,25 +186,30 @@ public class JobRepository {
 //
 //	}
 
-	public List<Job> getActiveJobsByUser(int userId) {
-
-		// Get active jobs
-		String sql = "SELECT * FROM job WHERE IsActive = 1 AND UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { userId });
-
-
+	public List<Job> getJobsByStatusAndByEmployer(int userId, int jobStatus) {
+		String sql = "SELECT * FROM job WHERE Status = ? AND UserId = ?";
+		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
 	}
+	
+//	public List<Job> getActiveJobsByEmployer(int userId) {
+//
+//		// Get active jobs
+//		String sql = "SELECT * FROM job WHERE Status 1 AND UserId = ?";
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//
+//
+//	}
 
-	public List<Job> getCompletedJobsByEmployer(int userId) {
-		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { userId });
-	}
+//	public List<Job> getCompletedJobsByEmployer(int userId) {
+//		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//	}
 
-	public List<Job> getCompletedJobsByEmployee(int userId) {
-		String sql = "SELECT * FROM job INNER JOIN employment ON job.JobId = employment.JobId"
-						+ " AND job.Status = 2 AND employment.UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { userId });
-	}
+//	public List<Job> getCompletedJobsByEmployee(int userId) {
+//		String sql = "SELECT * FROM job INNER JOIN employment ON job.JobId = employment.JobId"
+//						+ " AND job.Status = 2 AND employment.UserId = ?";
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//	}
 
 	public void markJobComplete(int jobId) {
 		String sql = "UPDATE job" + " SET IsActive = 0 WHERE JobId = ?";
@@ -224,30 +229,44 @@ public class JobRepository {
 		return result;
 	}
 
-	public List<Job> getJobsAppliedTo(int userId) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
-				+ "	AND application.UserId = ?";
-
-		return this.JobRowMapper(sql, new Object[] { userId });
-	}
-
-
-	public List<Job> getActiveJobsByEmployee(int userId) {
+//	public List<Job> getJobsAppliedTo(int userId) {
+//		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
+//				+ "	AND application.UserId = ?";
+//
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//	}
+	
+	public List<Job> getJobsByStatusByEmployee(int userId, int jobStatus) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
-				+ "	AND employment.UserId = ? and job.Status = 1";
+				+ "	AND employment.UserId = ? and job.Status = ?";
 
-		return this.JobRowMapper(sql, new Object[] { userId });
+		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
 	}
 
-	public boolean hasAppliedForJob(int jobId, int userId) {
-		String sql = "SELECT COUNT(*) FROM application WHERE jobId = ? AND userID = ?";
-		int count = jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, int.class);
 
-		if (count > 0)
-			return true;
-		else
-			return false;
-	}
+//	public List<Job> getYetToStartJobsByEmployee(int userId) {
+//		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
+//				+ "	AND employment.UserId = ? and job.Status = 0";
+//
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//	}
+//
+//	public List<Job> getActiveJobsByEmployee(int userId) {
+//		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
+//				+ "	AND employment.UserId = ? and job.Status = 1";
+//
+//		return this.JobRowMapper(sql, new Object[] { userId });
+//	}
+
+//	public boolean hasAppliedForJob(int jobId, int userId) {
+//		String sql = "SELECT COUNT(*) FROM application WHERE jobId = ? AND userID = ?";
+//		int count = jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, int.class);
+//
+//		if (count > 0)
+//			return true;
+//		else
+//			return false;
+//	}
 
 	public Job getJob(int jobId) {
 		String sql = "SELECT * FROM job WHERE JobId=?";
@@ -439,6 +458,7 @@ public class JobRepository {
 				
 		return JobRowMapper(sql, argsList.toArray());
 	}
+
 
 
 

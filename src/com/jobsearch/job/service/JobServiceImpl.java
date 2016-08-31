@@ -140,25 +140,47 @@ public class JobServiceImpl {
 //		return jobsAppliedTo;
 //	}
 
-	public List<Job> getJobsHiredFor(int userId) {
-		return repository.getActiveJobsByEmployee(userId);
-	}
-
-	public List<Job> getActiveJobsByUser(int userId) {
-
-		List<Job> activeJobs = repository.getActiveJobsByUser(userId);
-
-		for (Job job : activeJobs) {
+//	public List<Job> getJobsHiredFor(int userId) {
+//		return repository.getActiveJobsByEmployee(userId);
+//	}
 	
+	public List<Job> getYetToStartJobsByEmployer(int userId) {
+
+		//Query the database
+		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
+		
+		//Set the jobs application summary (i.e. applicants and employees)
+		this.setJobsApplicationSummary(yetToStartJobs);
+
+		return yetToStartJobs;
+
+	}	
+
+
+	public List<Job> getActiveJobsByEmployer(int userId) {
+
+		//Query the database
+		List<Job> activeJobs = repository.getJobsByStatusAndByEmployer(userId, 1);
+
+		//Set the jobs application summary (i.e. applicants and employees)
+		this.setJobsApplicationSummary(activeJobs);
+
+		return activeJobs;
+
+	}
+	
+
+	private void setJobsApplicationSummary(List<Job> jobs) {
+	
+		for (Job job : jobs) {
+			
 			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
 			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
 			job.setEmployees(userService.getEmployeesByJob(job.getId()));
 			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
 		}
-
-		return activeJobs;
-
-	}
+		
+	}	
 
 	public int getNewApplicationCount(List<Application> applications) {
 		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
@@ -205,7 +227,7 @@ public class JobServiceImpl {
 		// (i.e. past employees, comments, ratings) would also be nice to
 		// display on the employer page.
 
-		List<Job> completedJobs = repository.getCompletedJobsByEmployer(userId);
+		List<Job> completedJobs = repository.getJobsByStatusAndByEmployer(userId, 2);
 
 		List<CompletedJobResponseDTO> completedJobDtos = new ArrayList<CompletedJobResponseDTO>();
 		for (Job job : completedJobs) {
@@ -246,7 +268,7 @@ public class JobServiceImpl {
 	
 	public List<Job> getCompletedJobsByEmployee(int userId) {
 		
-		return repository.getCompletedJobsByEmployee(userId);
+		return repository.getJobsByStatusByEmployee(userId, 2);
 	}
 
 	public Job getJob(int jobId){
@@ -591,7 +613,7 @@ public class JobServiceImpl {
 	
 		//Verify the job is complete.
 		//This is here because the user can edit the hyperlink's "markComplete" value.
-		if(completedJob.getIsActive() == 1){
+		if(completedJob.getStatus() < 2){
 			return null;
 		}else{
 			
@@ -616,7 +638,12 @@ public class JobServiceImpl {
 
 	public List<Job> getActiveJobsByEmployee(int userId) {
 		
-		return repository.getActiveJobsByEmployee(userId);
+		return repository.getJobsByStatusByEmployee(userId, 1);
+	}
+
+	public List<Job> getYetToStartJobsByEmployee(int userId) {
+		
+		return repository.getJobsByStatusByEmployee(userId, 0);
 	}
 
 
