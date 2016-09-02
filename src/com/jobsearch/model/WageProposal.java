@@ -13,8 +13,7 @@ public class WageProposal {
 	//-1: No action taken;
 	//0: Countered;
 	//1: Accepted;
-	//2: Declined;
-	
+	//2: Declined;	
 	private int status;
 
 

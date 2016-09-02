@@ -110,7 +110,7 @@
 			<div class="nav-items">					
 				<c:choose>
 					<c:when test="${user.profileId > 0 }">
-							<a href="/JobSearch/logout">Log out</a>
+							<a id="logOut" href="/JobSearch/logout">Log out</a>
 						<c:choose>
 							<c:when test="${user.profileId == 1}">
 								<a href="/JobSearch/jobs/find">Find Jobs</a>

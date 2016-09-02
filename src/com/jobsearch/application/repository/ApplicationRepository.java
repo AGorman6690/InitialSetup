@@ -443,6 +443,19 @@ public class ApplicationRepository {
 
 	}
 
+	public List<WageProposal> getFailedWageProposalsByJob(int jobId) {
+		
+		//Find all the application ids for the job id.
+		//With these application ids, find the wage proposals that have been declined (i.e. status = 2)
+		String sql = "select * from wage_proposal w where w.ApplicationId in("
+							+ " select ApplicationId from application a"
+							+ " inner join job j on a.JobId = j.JobId where j.JobId = ?"
+					+ ") and w.Status = 2";
+		
+		
+		return WageProposalRowMapper(sql, new Object[]{ jobId });
+	}
+
 
 
 }

@@ -646,5 +646,27 @@ public class JobServiceImpl {
 		return repository.getJobsByStatusByEmployee(userId, 0);
 	}
 
+	public List<JobDTO> getJobsWithFailedWageNegotiations(int userId, List<Job> jobs) {
+		
+		List<JobDTO> result = new ArrayList<JobDTO>();
+		
+		for(Job job : jobs){
+			
+			//Create a job dto
+			JobDTO jobDto = new JobDTO();
+			
+			jobDto.setJob(job);
+			
+			//Get the failed wage proposals for the job
+			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));;
+			
+			//Add the dto to the result
+			result.add(jobDto);
+		}
+		
+
+		return result;
+	}
+
 
 }

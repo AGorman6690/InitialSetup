@@ -58,6 +58,8 @@
 <script>
 	$(document).ready(function() {
 		$("#debug1").click(function() {
+			
+			$("#logOut").click();
 			$("#password").val('jg');
 			$("#userName").val('gorma080@d.umn.edu');
 			$("#loginContainer input[type=submit]")[0].click();
@@ -67,6 +69,8 @@
 		})
 
 		$("#debug2").click(function() {
+			
+			$("#logOut").click();
 			$("#password").val('2');
 			$("#userName").val('2');
 			$("#loginContainer input[type=submit]")[0].click();
@@ -74,6 +78,8 @@
 		})
 		
 		$("#debug3").click(function() {
+			
+			$("#logOut").click();
 			$("#password").val('jg');
 			$("#userName").val('justin.gorman@wilsontool.com');
 			$("#loginContainer input[type=submit]")[0].click();

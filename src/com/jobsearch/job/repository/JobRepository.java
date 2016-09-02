@@ -188,7 +188,7 @@ public class JobRepository {
 
 	public List<Job> getJobsByStatusAndByEmployer(int userId, int jobStatus) {
 		String sql = "SELECT * FROM job WHERE Status = ? AND UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
+		return this.JobRowMapper(sql, new Object[] { jobStatus , userId});
 	}
 	
 //	public List<Job> getActiveJobsByEmployer(int userId) {
@@ -458,7 +458,6 @@ public class JobRepository {
 				
 		return JobRowMapper(sql, argsList.toArray());
 	}
-
 
 
 

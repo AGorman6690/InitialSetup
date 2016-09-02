@@ -2,13 +2,20 @@ package com.jobsearch.user.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.ComparisonDateTool;
+import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -40,10 +47,12 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.MathUtility;
 
 @Controller
 //@SessionAttributes({ "user" })
 public class UserController {
+
 
 	@Autowired
 	UserServiceImpl userService;
@@ -77,10 +86,13 @@ public class UserController {
 		model.addObject("user", user);
 		return model;
 	}
+	
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String getProfile(Model model, HttpServletRequest request,
 			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
+		
+
 		
 		
 		//Why is there a try/catch here????
@@ -120,6 +132,7 @@ public class UserController {
 					userService.setEmployersProfileModel(user, model);
 					
 					viewName = "EmployerProfile";
+	
 					
 				}
 			} else {

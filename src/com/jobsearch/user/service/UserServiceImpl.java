@@ -22,6 +22,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
@@ -463,6 +464,8 @@ public class UserServiceImpl {
 		List<ApplicationResponseDTO> failedWageNegotiations =
 							applicationService.getFailedWageNegotiations(employee.getUserId());
 		
+
+		
 		//Set the model attributes
 		model.addAttribute("failedWageNegotiations", failedWageNegotiations);
 		model.addAttribute("yetToStartJobs", yetToStartJobs);
@@ -483,7 +486,15 @@ public class UserServiceImpl {
 		//Get the employer's completed jobs
 		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
 		
+		//Get the failed wage negotiations that the employer has been involved in 
+		List<JobDTO> activeJobsFailedWageNegotiations =
+							jobService.getJobsWithFailedWageNegotiations(employer.getUserId(), yetToStartJobs);
 		
+//		//Run the failed wage negotiations velocity template
+//		String vtFailedWageNegotiations = applicationService.getFailedWageNegotiationsVelocityTemplate(
+//												failedWageNegotiations);		
+		
+//		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
 		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);

@@ -26,5 +26,9 @@
     <bean id="FilterJobsVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/filterJobs.vm" />
     </bean>    
+    
+    <bean id="FailedWageNegotiationsVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/failedWageNegotiations.vm" />
+    </bean>      
 
 </beans>

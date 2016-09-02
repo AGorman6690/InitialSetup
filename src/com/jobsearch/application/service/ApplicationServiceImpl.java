@@ -1,12 +1,19 @@
 package com.jobsearch.application.service;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.ComparisonDateTool;
+import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.application.repository.ApplicationRepository;
@@ -17,11 +24,13 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class ApplicationServiceImpl {
@@ -38,6 +47,11 @@ public class ApplicationServiceImpl {
 	@Autowired
 	JobServiceImpl jobService;
 
+	
+	
+	@Autowired
+	@Qualifier("FailedWageNegotiationsVM")
+	Template vmTemplate_failedWageNegotiations;	
 
 
 	public List<Application> getApplicationsByJob(int jobId) {
@@ -368,6 +382,7 @@ public class ApplicationServiceImpl {
 	}
 
 
+
 	public List<ApplicationResponseDTO> getOpenApplicationResponseDtosByApplicant(int userId) {
 		
 //		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
@@ -478,6 +493,66 @@ public class ApplicationServiceImpl {
 		Application application = this.getApplication(wp.getApplicationId());
 		this.updateApplicationStatus(application.getApplicationId(), 4);
 		
+	}
+
+
+	public String getFailedWageNegotiationsVelocityTemplate(List<ApplicationResponseDTO> failedWageNegotiations) {
+		
+		StringWriter writer = new StringWriter();
+		
+		//Set the context
+		final VelocityContext context = new VelocityContext();		
+		context.put("failedWageNegotiations", failedWageNegotiations);
+		context.put("mathUtility", MathUtility.class);		
+		
+		//Run the template
+		vmTemplate_failedWageNegotiations.merge(context, writer);
+		
+		//Return the html
+		return writer.toString();
+	}
+
+
+	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDTOsByJob(Job job) {
+		
+		List<FailedWageNegotiationDTO> result = new ArrayList<FailedWageNegotiationDTO>();
+		
+		//Query the database for all the job's failed wage proposals
+		List<WageProposal> failedWageProposals = repository.getFailedWageProposalsByJob(job.getId());
+		
+		//Create the failed wage negotiation DTOs		
+		for(WageProposal failedWageProposal : failedWageProposals){
+			
+			//Create the dto
+			FailedWageNegotiationDTO dto = new FailedWageNegotiationDTO();
+			
+			//Set the failed wage proposal
+			dto.setFailedWageProposal(failedWageProposal);
+			
+			//Set the "other user" involved in the failed wage proposal
+			dto.setOtherUser(this.getOtherUserInvolvedInWageProposal(
+								failedWageProposal, job.getUserId()));
+			
+			//Add the dto to the results
+			result.add(dto);
+			
+		}
+		
+		return result;
+	}
+
+
+	public JobSearchUser getOtherUserInvolvedInWageProposal(WageProposal failedWageProposal, int dontReturnThisUserId) {
+		
+		int otherUserId;
+		
+		//If the proposed-by-user is not the prohibited user,
+		if(failedWageProposal.getProposedByUserId() != dontReturnThisUserId){
+			otherUserId =  failedWageProposal.getProposedByUserId();
+		}else{
+			otherUserId = failedWageProposal.getProposedToUserId();
+		}
+		return userService.getUser(otherUserId);
 	}
 
 	

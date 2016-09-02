@@ -16,7 +16,8 @@
 
 <body>
 
-
+	<div>${vtFailedWageNegotiations }</div>
+	
 	<div class="container">
 		<c:choose>
 			<c:when test="${activeJobs.size() >0 }">
@@ -216,6 +217,8 @@
 			</c:when>
 		</c:choose>
 	</div>
+	
+	<div>${test }</div>
 </body>
 
 <script>
