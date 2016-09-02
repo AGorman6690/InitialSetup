@@ -1,0 +1,30 @@
+
+#if($failedWageNegotiations.size() > 0)>
+	<div id="failedWageNegotiationsContainer" class="table-container">
+		<h4>Failed Wage Negotiations</h4>
+	
+		<table id="failedWageNegotiations">
+			<thead>
+				<tr>
+					<th>Job Name</th>
+					<th>Desired Wage</th>
+				</tr>
+			</thead>
+			<tbody>
+			
+				#foreach($dto in $failedWageNegotiations)
+				<tr>
+					<td><a>$dto.job.jobName </a></td>
+	
+					<td>
+						<div>$mathUtility.round($dto.currentWageProposal.amount, 2, 0)</div>	
+					</td>					
+				</tr>
+				#end
+										
+			</tbody>
+		</table>						
+	
+	
+	</div> <!-- close failed wage negotiations -->				
+#end
