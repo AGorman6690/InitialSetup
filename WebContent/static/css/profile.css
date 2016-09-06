@@ -4,11 +4,53 @@
 	cursor:pointer;
 }
 
+.expandable-table-container h4{
+	background-color:#163B3D;
+	color:#ffffff;
+	padding:5px;
+}
+
+.expandable-table-container{
+	padding:10px 60px;
+}
 
 
-#expandJob{
+.expandable-row{
+	display:none;
+}
+
+.expandable-row thead tr{
+	 border-bottom: 2px solid #ddd;   
+}
+
+.expandable-row tbody tr{
+	 border-bottom: 1px solid #ddd;   
+}
+
+.expandable-row tbody tr:last-child{
+	 border-bottom: 0;   
+}
+
+
+.static-row{
+	 border-top: 1px solid #ddd;
+}
+
+.static-row:first-child{
+	 border-top: 2px solid #ddd;
+}
+
+
+.expand-job-header{
 	width:30px;
 }
+
+
+
+
+
+
+
 .header{
 	border-bottom: 2px outset #F0F0F0;
 }

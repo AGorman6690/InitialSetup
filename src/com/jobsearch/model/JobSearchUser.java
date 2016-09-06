@@ -40,6 +40,16 @@ public class JobSearchUser {
 	private double distanceFromJob;
 	private int createNewPassword;
 //	private List<Answer> answers;
+	private double minimumDesiredPay;
+	
+
+	public double getMinimumDesiredPay() {
+		return minimumDesiredPay;
+	}
+
+	public void setMinimumDesiredPay(double minimumDesiredPay) {
+		this.minimumDesiredPay = minimumDesiredPay;
+	}
 
 	public double getDistanceFromJob() {
 		return distanceFromJob;

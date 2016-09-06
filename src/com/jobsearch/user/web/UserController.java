@@ -175,7 +175,7 @@ public class UserController {
 
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile(ModelAndView model) {
-		model.setViewName("UserProfile");
+		model.setViewName("UserSettings");
 		return model;
 	}
 

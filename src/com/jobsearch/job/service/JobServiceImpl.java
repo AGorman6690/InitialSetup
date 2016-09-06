@@ -655,6 +655,7 @@ public class JobServiceImpl {
 			//Create a job dto
 			JobDTO jobDto = new JobDTO();
 			
+			//Set the dto's job object
 			jobDto.setJob(job);
 			
 			//Get the failed wage proposals for the job

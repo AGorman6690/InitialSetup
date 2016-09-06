@@ -122,7 +122,7 @@
 						</c:choose>				
 						<c:choose>
 							<c:when test="${user.getFirstName() != null}">
-								<a href="/JobSearch/viewProfile">Profile</a>
+								<a href="/JobSearch/viewProfile">Settings</a>
 							</c:when>
 						</c:choose>
 					</c:when>

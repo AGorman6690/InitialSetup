@@ -18,9 +18,17 @@ public class JobDTO {
 	//**********************************************
 	
 	Job job;
-	List<FailedWageNegotiationDTO> failedWageNegotiationsDtos;
+	List<FailedWageNegotiationDTO> failedWageNegotiationDtos;
 
 	
+	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDtos() {
+		return failedWageNegotiationDtos;
+	}
+
+	public void setFailedWageNegotiationDtos(List<FailedWageNegotiationDTO> failedWageNegotiationDtos) {
+		this.failedWageNegotiationDtos = failedWageNegotiationDtos;
+	}
+
 	public Job getJob() {
 		return job;
 	}
@@ -29,14 +37,6 @@ public class JobDTO {
 		this.job = job;
 	}
 
-	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDtos() {
-		return failedWageNegotiationsDtos;
-	}
-
-	public void setFailedWageNegotiationDtos(List<FailedWageNegotiationDTO> failedWageNegotiationsDtos) {
-		this.failedWageNegotiationsDtos = failedWageNegotiationsDtos;
-	}
-	
 	
 
 }

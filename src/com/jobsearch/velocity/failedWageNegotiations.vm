@@ -1,30 +1,71 @@
 
-#if($failedWageNegotiations.size() > 0)>
+#if($activeJobsWithFailedWageNegotiations.size() > 0)
 	<div id="failedWageNegotiationsContainer" class="table-container">
-		<h4>Failed Wage Negotiations</h4>
+		
+		<div class="header"><h3>Failed Wage Negotiations</h3></div>
 	
-		<table id="failedWageNegotiations">
-			<thead>
-				<tr>
-					<th>Job Name</th>
-					<th>Desired Wage</th>
-				</tr>
-			</thead>
-			<tbody>
-			
-				#foreach($dto in $failedWageNegotiations)
-				<tr>
-					<td><a>$dto.job.jobName </a></td>
+		<div class="jobs-table-container">
+			##Table
+			<table id="failedWageNegotiations">
+				<thead>
+					<tr>
+						<th class="expand-job-header"></th>
+						<th>Job Name</th>
+						<th>Failed Wage Negotiations</th>
+					</tr>
+				</thead>
+				
+				##All active jobs with at least one failed wage negotiation
+				<tbody>
+					
+					##Only jobs WITH failed wage negotiations are in this array.
+					##Therefore, there is no need to test for the existence of failed wage negotiations.
+					#foreach($jobDto in $activeJobsWithFailedWageNegotiations)
+					<tr class="static-row">
+						<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
+						<td><a>$jobDto.job.jobName</a></td>
+						<td>$jobDto.failedWageNegotiationDtos.size()</td>	
+						
+						
+						##Each job's expandable row that contains the applicant names and failed negotiation info
+						<tr class="expandable-row">
+							<td colspan="3">
+								<div class="expandable-table-container">
+									#if($jobDto.failedWageNegotiationDtos.size() == 1)
+										<h4>Applicant</h4>
+									#else
+										<h4>Applicants</h4>
+									#end
+									<table class="expandable-table">
+										<thead>
+											<th>Name</th>
+											<th>Negotiation Result</th>
+										</thead>
+										<tbody>
+											#foreach($failedWageNegotiationDto in $jobDto.failedWageNegotiationDtos)
+												<tr>
+													<td><a>$failedWageNegotiationDto.otherUser.firstName</a></td>
+													<td>
+														#if($failedWageNegotiationDto.failedWageProposal.proposedToUserId ==
+																$failedWageNegotiationDto.otherUser.userId)
+															They rejected your 															
+														#else
+															You rejected their
+														#end
+													$mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) offer</td>
+												</tr>
+											#end 
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
 	
-					<td>
-						<div>$mathUtility.round($dto.currentWageProposal.amount, 2, 0)</div>	
-					</td>					
-				</tr>
-				#end
-										
-			</tbody>
-		</table>						
-	
+					</tr>
+					#end											
+				</tbody>
+			</table>						
+		</div>
 	
 	</div> <!-- close failed wage negotiations -->				
 #end

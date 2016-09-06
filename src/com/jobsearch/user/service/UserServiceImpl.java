@@ -487,14 +487,14 @@ public class UserServiceImpl {
 		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
 		
 		//Get the failed wage negotiations that the employer has been involved in 
-		List<JobDTO> activeJobsFailedWageNegotiations =
+		List<JobDTO> activeJobsWithFailedWageNegotiations =
 							jobService.getJobsWithFailedWageNegotiations(employer.getUserId(), yetToStartJobs);
 		
 //		//Run the failed wage negotiations velocity template
-//		String vtFailedWageNegotiations = applicationService.getFailedWageNegotiationsVelocityTemplate(
-//												failedWageNegotiations);		
+		String vtFailedWageNegotiations = applicationService.getFailedWageNegotiationsVelocityTemplate(
+				activeJobsWithFailedWageNegotiations);		
 		
-//		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
+		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
 		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);

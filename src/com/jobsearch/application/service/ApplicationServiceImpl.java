@@ -20,6 +20,7 @@ import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
@@ -496,13 +497,13 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public String getFailedWageNegotiationsVelocityTemplate(List<ApplicationResponseDTO> failedWageNegotiations) {
+	public String getFailedWageNegotiationsVelocityTemplate(List<JobDTO> activeJobsWithFailedWageNegotiations) {
 		
 		StringWriter writer = new StringWriter();
 		
 		//Set the context
 		final VelocityContext context = new VelocityContext();		
-		context.put("failedWageNegotiations", failedWageNegotiations);
+		context.put("activeJobsWithFailedWageNegotiations", activeJobsWithFailedWageNegotiations);
 		context.put("mathUtility", MathUtility.class);		
 		
 		//Run the template

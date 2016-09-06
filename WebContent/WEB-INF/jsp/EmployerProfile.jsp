@@ -16,18 +16,24 @@
 
 <body>
 
-	<div>${vtFailedWageNegotiations }</div>
+	
 	
 	<div class="container">
+	
+<!-- 		Velocity template -->
+		<div>${vtFailedWageNegotiations }</div>
+		
 		<c:choose>
 			<c:when test="${activeJobs.size() >0 }">
 				<div class="active-jobs-container">
 					<div class="header"><h3>Active Jobs</h3></div>
+					(NOTE: In reality, jobs will automatically be marked complete once the end date is reached.
+					The "Mark Complete" button is only here for debugging purposes.)
 					<div class="jobs-table-container">
 						<table id="jobTable">
 							<thead>
 								<tr>
-									<th id="expandJob"></th>
+									<th class="expand-job-header"></th>
 									<th id="name">Job Name</th>
 									<th id="newApplicantions">New Applications</th>
 									<th id="totalApplications">Total Applications</th>
@@ -83,7 +89,7 @@
 <!-- 								****** Expandable row that shows applicant info -->		
 									<c:choose>
 										<c:when test="${activeJob.applications.size() > 0 }">												
-											<tr class="applicants-row">
+											<tr class="expandable-row">
 												<td colspan="5">
 													<div class="applicants-container">
 														<h4>Applicants</h4>
@@ -239,7 +245,7 @@ $(document).ready(function(){
 		//Do not toggle if any pathe job name hyperlink is clicked
 // 		if(e.target == e.currentTarget){
 			var parentRow = $(this).parents('tr')[0];
-			$(parentRow).next(".applicants-row").toggle();	
+			$(parentRow).next(".expandable-row").toggle();	
 			toggleClasses($(this), "glyphicon-menu-down", "glyphicon-menu-up");
 // 		}
 		
