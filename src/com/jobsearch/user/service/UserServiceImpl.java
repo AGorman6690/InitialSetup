@@ -451,9 +451,12 @@ public class UserServiceImpl {
 		List<ApplicationResponseDTO> openApplicationResponseDtos = 
 							applicationService.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
 		
+//		//Verify the start date for the not-yet-started-jobs is still in the future.
+//		jobService.verifyJobStatusForUsersYetToStartJobs(employee.getUserId());
+		
 		//Get the employee's hired-for, but not-yet-started jobs
 		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployee(employee.getUserId());
-		
+			
 		//Get the employee's completed jobs
 		List<Job> completedJobs = jobService.getCompletedJobsByEmployee(employee.getUserId());
 		
@@ -494,8 +497,16 @@ public class UserServiceImpl {
 		String vtFailedWageNegotiations = applicationService.getFailedWageNegotiationsVelocityTemplate(
 				activeJobsWithFailedWageNegotiations);		
 		
+		//Run a velocity template to render the yet-to-start-jobs table
+		String vtYetToStartJobs = jobService.getEmployerProfileJobTableTemplate(employer, yetToStartJobs, false);
+
+		//Run a velocity template to render the active-jobs table
+		String vtActiveJobs = jobService.getEmployerProfileJobTableTemplate(employer, activeJobs, true);
+
+		
 		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
-		model.addAttribute("yetToStartJobs", yetToStartJobs);
+		model.addAttribute("vtYetToStartJobs", vtYetToStartJobs);
+		model.addAttribute("vtActiveJobs", vtActiveJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 		

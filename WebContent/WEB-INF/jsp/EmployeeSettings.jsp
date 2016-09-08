@@ -2,7 +2,7 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <head>
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/userSettings.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeSettings.css" />
 	
 	
 			
@@ -25,7 +25,11 @@
 
 	<div class="container">
 		<div id="header" class="bottom-border-thin">
-			<h3>Settings</h3>
+			<h3>Settings</h3>			
+			<span id="updateAvailabilityContainer">
+				<button class="square-button">Save</button>
+				<button class="square-button">Cancel</button>
+			</span>
 			<p>These settings will be used by employers to find you easier.</p>
 		</div>
 		<div class="content-container" id="homeLocation">
@@ -58,8 +62,18 @@
 				<div class="input-container">
 					<label for="maxDistance"
 						class="form-control-label">Distance</label>
+						
+					<c:choose>
+						<c:when test="${user.maxWorkRadius == -1 }">
+							<c:set var="maxWorkRadius" value="" />	
+						</c:when>
+						<c:otherwise>
+							<c:set var="maxWorkRadius" value="${user.maxWorkRadius}" />	
+						</c:otherwise>
+					</c:choose>
+						
 					<input name="maxDistance" type="text" class="form-control" placeholder="miles"
-						id="maxDistance" value="${user.maxWorkRadius }"></input>
+						id="maxDistance" value="${maxWorkRadius }"></input>
 				</div>	
 			</div>	
 		</div>
@@ -69,19 +83,25 @@
 				<div class="input">
 					<label for="minPay"
 						class="form-control-label">Amount</label>
+					<c:choose>
+						<c:when test="${user.minimumDesiredPay == 0 }">
+							<c:set var="minDesiredPay" value="" />	
+						</c:when>
+						<c:otherwise>
+							<c:set var="minDesiredPay" value="${user.minimumDesiredPay}" />	
+						</c:otherwise>
+					</c:choose>
+											
 					<input name="minPay" type="text" class="form-control" placeholder="$ per hour"
-						id="minPay" value="${user.minimumDesiredPay }"></input>
-					<div class="checkbox" id="allowLessThanMinimumContainer">
-						<label><input id="allowLessThanMinimum" type="checkbox" value="">Allow employers to offer you less</label>
-					</div>				
+						id="minPay" value="${minDesiredPay }"></input>
+<!-- 					<div class="checkbox" id="allowLessThanMinimumContainer"> -->
+<!-- 						<label><input id="allowLessThanMinimum" type="checkbox" value="">Allow employers to offer you less</label> -->
+<!-- 					</div>				 -->
 				</div>	
 			</div>	
 		</div>		
 		<div class="content-container" id="availabilityContainer">
-			<h4>Availability</h4>	
-			<div id="updateAvailabilityContainer">
-				<button class="square-button">Update</button>
-			</div>			
+			<h4>Availability</h4>				
 			<div class="input-container">
 				<div class="container" id="daysContainer">
 					<h5>Days</h5>
@@ -147,10 +167,23 @@
 									autocomplete="off" id="startTime"></input>
 						</div>
 					</div>
-				</div>						
+				</div>		
+				<div class="container" id="endTimeContainer">
+					<h5>End Time</h5>
+					<div class="checkbox date-time-container">
+						<div><label><input id="january" type="checkbox" value="">All day</label></div>
+						<div class="specify-time radio">
+							<div><label><input id="january" type="radio" name="endTime">Before</label></div>
+							<div><label><input id="february" type="radio" name="endTime">After</label></div>	
+							<input name="endTime" type="text"
+								class="form-control time ui-timepicker-input"
+									autocomplete="off" id="endTime"></input>
+						</div>
+					</div>
+				</div>										
 
-				<div class="input-container">				
-				    <div id="availability" class="input-group date"></div>
+				<div class="input-container" id="calendarContainer">				
+				    <div id="calendar" class="input-group date"></div>
 					</div>
 				</div>
 			</div><!-- close availability container -->
@@ -170,7 +203,7 @@
 						});					
 						  
 				       
-		        	$("#availability").datepicker({
+		        	$("#calendar").datepicker({
 		        	      numberOfMonths: 3,
 		        	      showButtonPanel: true,
 		        	      multidate: true,
@@ -182,7 +215,7 @@
 				    })
 				        
 				        
-			     	$("#availability").datepicker().on("changeDate", function(e){
+			     	$("#calendar").datepicker().on("changeDate", function(e){
 			     		
 			     		})
 						

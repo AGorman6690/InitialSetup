@@ -19,10 +19,11 @@
 	
 	
 	<div class="container">
-	
-<!-- 		Velocity template -->
+
 		<div>${vtFailedWageNegotiations }</div>
-		
+		<div>${vtYetToStartJobs }</div>
+		<div>${vtActiveJobs }</div>
+
 		<c:choose>
 			<c:when test="${activeJobs.size() >0 }">
 				<div class="active-jobs-container">
@@ -30,7 +31,7 @@
 					(NOTE: In reality, jobs will automatically be marked complete once the end date is reached.
 					The "Mark Complete" button is only here for debugging purposes.)
 					<div class="jobs-table-container">
-						<table id="jobTable">
+						<table id="">
 							<thead>
 								<tr>
 									<th class="expand-job-header"></th>
@@ -80,8 +81,7 @@
 											</c:otherwise>
 										</c:choose>
 										
-										<td>	
-														
+										<td>														
 											<a href="/JobSearch/job/${activeJob.id }/rate-employees?markComplete=1"><button class="square-button">Mark Complete</button></a>
 										</td>
 									</tr>
@@ -198,7 +198,7 @@
 				<div class="completed-jobs-container">
 					<div class="header"><h3>Completed Jobs</h3></div>
 					<div class="jobs-table-container">
-						<table id="jobTable">
+						<table id="">
 							<thead>
 								<tr>
 									<th>Job Name</th>

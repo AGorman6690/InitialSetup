@@ -1,6 +1,7 @@
 package com.jobsearch.job.service;
 
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -55,6 +56,10 @@ public class JobServiceImpl {
 	@Autowired
 	@Qualifier("FilterJobsVM")
 	Template filterJobsTemplate;
+	
+	@Autowired
+	@Qualifier("EmployerProfileJobTableVM")
+	Template vmTemplate_employerProfileJobTable;		
 
 	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
@@ -661,13 +666,51 @@ public class JobServiceImpl {
 			//Get the failed wage proposals for the job
 			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));;
 			
-			//Add the dto to the result
-			result.add(jobDto);
+			//If there are failed negotiations, add the dto to the result
+			if(jobDto.getFailedWageNegotiationDtos().size() > 0){
+				result.add(jobDto);	
+			}
+			
 		}
 		
 
 		return result;
 	}
+
+	public String getEmployerProfileJobTableTemplate(JobSearchUser employer, List<Job> yetToStartJobs,
+														boolean isActiveJobs) {
+		
+		
+		StringWriter writer = new StringWriter();
+		
+		//Set the context
+		final VelocityContext context = new VelocityContext();	
+		context.put("employer", employer);
+		context.put("jobs", yetToStartJobs);
+		context.put("isActiveJobs", isActiveJobs);
+		context.put("mathUtility", MathUtility.class);		
+		
+		//Run the template
+		vmTemplate_employerProfileJobTable.merge(context, writer);
+		
+		//Return the html
+		return writer.toString();
+	}
+
+//	public void verifyJobStatusForUsersYetToStartJobs(int userId) {
+//		
+//		//Query the database for the user's yet-to-start jobs
+//		List<Job> yetToStartJobs = repository.getJobsByStatusByEmployee(userId, 0);
+//		
+//		//Verify start date and time is still in the future
+//		for(Job job : yetToStartJobs){
+//			if(job.getStartDate().before(LocalDateTime.now())
+//		}
+//		
+//		
+//		
+//		
+//	}
 
 
 }

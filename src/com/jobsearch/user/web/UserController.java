@@ -174,8 +174,14 @@ public class UserController {
 	
 
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
-	public ModelAndView viewProfile(ModelAndView model) {
-		model.setViewName("UserSettings");
+	public ModelAndView viewProfile(ModelAndView model, HttpSession session) {
+		
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		if(user.getProfileId() == 1){
+			model.setViewName("EmployeeSettings");	
+		}
+		
 		return model;
 	}
 

@@ -20,32 +20,32 @@
 		<!-- ****** Failed Wage Negotiations -->
 		<c:choose>
 			<c:when test="${failedWageNegotiations.size() > 0 }">
-				<div id="failedWageNegotiationsContainer" class="table-container">
+				<div id="failedWageNegotiationsContainer" class="section bottom-border-thinner">
 					<h4>Failed Wage Negotiations</h4>
+					<div class="table-container">
+						<table id="openApplications">
+							<thead>
+								<tr>
+									<th>Job Name</th>
+									<th>Desired Wage</th>
+								</tr>
+							</thead>
+							<tbody>
+							
+								<c:forEach items="${failedWageNegotiations }" var="dto">
+								<tr>
+									<td><a>${dto.job.jobName }</a></td>
+	
+									<td>
+										<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> was rejected</div>	
+									</td>					
+								</tr>
+							</c:forEach>
+														
+							</tbody>
+						</table>						
 
-					<table id="openApplications">
-						<thead>
-							<tr>
-								<th>Job Name</th>
-								<th>Desired Wage</th>
-							</tr>
-						</thead>
-						<tbody>
-						
-							<c:forEach items="${failedWageNegotiations }" var="dto">
-							<tr>
-								<td><a>${dto.job.jobName }</a></td>
-
-								<td>
-									<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> was rejected</div>	
-								</td>					
-							</tr>
-						</c:forEach>
-													
-						</tbody>
-					</table>						
-
-		
+					</div>
 				</div> <!-- close failed wage negotiations -->				
 			</c:when>		
 		</c:choose>
@@ -53,11 +53,11 @@
 		
 	
 	
-		<div id="openApplicationsContainer" class="table-container">
+		<div id="openApplicationsContainer" class="section bottom-border-thinner">
 			<h4>Open Applications</h4>
-	
+				<div class="table-container">
 				<c:choose>
-					<c:when test="${openApplicationResponseDtos.size() > 0 }">
+					<c:when test="${openApplicationResponseDtos.size() > 0 }">						
 						<table id="openApplications">
 							<thead>
 								<tr>
@@ -128,21 +128,23 @@
 							</c:forEach>
 														
 							</tbody>
-						</table>						
+						</table>
+										
 					</c:when>
 					<c:otherwise>
 						You have no open applications at this time.
 					</c:otherwise>
-				
+					
 				</c:choose>
-
+				</div>	
 
 		</div> <!-- close open applications -->
 		
-		<div id="notYetStartedJobsContainer" class="table-container">
-			<h4>Jobs Set To Begin</h4>
+		<div id="notYetStartedJobsContainer" class="section bottom-border-thinner">
+			<h4>Jobs Waiting To Begin</h4>
+			<div class="table-container">
 			<c:choose>
-				<c:when test="${yetToStartJobs.size() > 0 }">
+				<c:when test="${yetToStartJobs.size() > 0 }">					
 					<table id="yetToStartJobs">
 						<thead>
 							<tr>
@@ -161,18 +163,20 @@
 								</tr>							
 							</c:forEach>
 						</tbody>
-					</table>				
+					</table>							
 				</c:when>
 				<c:otherwise>
-					<div>You no jobs waiting to begin at this time.</div>
+					<div>You have no jobs waiting to begin at this time.</div>
 				</c:otherwise>				
 			</c:choose>	
+			</div>		
 		</div><!-- close active jobs container -->	
 		
-		<div id="activeJobsContainer" class="table-container">
+		<div id="activeJobsContainer" class="section bottom-border-thinner">
 			<h4>Active Jobs</h4>
+			<div class="table-container">
 			<c:choose>
-				<c:when test="${activeJobs.size() > 0 }">
+				<c:when test="${activeJobs.size() > 0 }">					
 					<table id="activeJobs">
 						<thead>
 							<tr>
@@ -191,18 +195,20 @@
 								</tr>							
 							</c:forEach>
 						</tbody>
-					</table>				
+					</table>							
 				</c:when>
 				<c:otherwise>
 					<div>You have no active jobs at this time.</div>
-				</c:otherwise>				
+				</c:otherwise>							
 			</c:choose>	
+			</div>	
 		</div><!-- close active jobs container -->		
 		
-		<div id="completedJobsContainer" class="table-container">
+		<div id="completedJobsContainer" class="section bottom-border-thinner">
 			<h4>Completed Jobs</h4>
+			<div class="table-container">
 			<c:choose>
-				<c:when test="${completedJobs.size() > 0 }">
+				<c:when test="${completedJobs.size() > 0 }">					
 					<table id="completedJobs">
 						<thead>
 							<tr>
@@ -218,12 +224,13 @@
 								</tr>							
 							</c:forEach>
 						</tbody>
-					</table>				
+					</table>							
 				</c:when>
 				<c:otherwise>
 					<div>You have no completed jobs at this time.</div>
 				</c:otherwise>
 			</c:choose>	
+			</div>		
 		</div><!-- close completed jobs container -->
 	</div>
 </body>

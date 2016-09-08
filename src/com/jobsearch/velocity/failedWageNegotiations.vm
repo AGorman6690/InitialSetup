@@ -1,6 +1,6 @@
 
 #if($activeJobsWithFailedWageNegotiations.size() > 0)
-	<div id="failedWageNegotiationsContainer" class="table-container">
+	<div id="failedWageNegotiationsContainer" class="section">
 		
 		<div class="header"><h3>Failed Wage Negotiations</h3></div>
 	
@@ -46,13 +46,14 @@
 												<tr>
 													<td><a>$failedWageNegotiationDto.otherUser.firstName</a></td>
 													<td>
+														#set( $offerAmount = $mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) )
 														#if($failedWageNegotiationDto.failedWageProposal.proposedToUserId ==
 																$failedWageNegotiationDto.otherUser.userId)
-															They rejected your 															
+															Your $offerAmount was rejected  															
 														#else
-															You rejected their
+															You rejected the applicant's $offerAmount proposal
 														#end
-													$mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) offer</td>
+													
 												</tr>
 											#end 
 										</tbody>

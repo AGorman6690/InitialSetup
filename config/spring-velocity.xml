@@ -29,6 +29,10 @@
     
     <bean id="FailedWageNegotiationsVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/failedWageNegotiations.vm" />
-    </bean>      
+    </bean> 
+    
+    <bean id="EmployerProfileJobTableVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/employerProfileJobTable.vm" />
+    </bean>          
 
 </beans>

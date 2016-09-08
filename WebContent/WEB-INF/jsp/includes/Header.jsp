@@ -114,17 +114,18 @@
 						<c:choose>
 							<c:when test="${user.profileId == 1}">
 								<a href="/JobSearch/jobs/find">Find Jobs</a>
+								<a href="/JobSearch/viewProfile">Settings</a>
 							</c:when>
 							<c:when test="${user.profileId == 2}">
 								<a href="/JobSearch/employees/find">Find Employees</a>
 								<a href="/JobSearch/viewPostJob">Post Job</a>
 							</c:when>
 						</c:choose>				
-						<c:choose>
-							<c:when test="${user.getFirstName() != null}">
-								<a href="/JobSearch/viewProfile">Settings</a>
-							</c:when>
-						</c:choose>
+<%-- 						<c:choose> --%>
+<%-- 							<c:when test="${user.getFirstName() != null}"> --%>
+<!-- 								<a href="/JobSearch/viewProfile">Settings</a> -->
+<%-- 							</c:when> --%>
+<%-- 						</c:choose> --%>
 					</c:when>
 					<c:otherwise>
 						<a data-toggle="modal" data-target="#loginContainer">Login</a>

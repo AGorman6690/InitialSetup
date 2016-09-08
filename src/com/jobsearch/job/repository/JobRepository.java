@@ -287,7 +287,7 @@ public class JobRepository {
 					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
 					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance,"
 					+ " (EndDate - StartDate + 1) AS duration"
-					+ " FROM job WHERE job.JobId IN (SELECT job.JobId FROM job";
+					+ " FROM job WHERE job.JobId IN (SELECT job.JobId FROM job WHERE job.IsAcceptingApplications = 1 ";
 
 
 		List<Object> argsList = new ArrayList<Object>();
@@ -300,7 +300,7 @@ public class JobRepository {
 		//If there are no categories to filter on
 		if(filter.getCategoryIds() == null){
 
-			sql += " WHERE job.IsActive = 1";
+//			sql += " WHERE job.IsActive = 1";
 
 		//Else build the where condition for the categories
 		}else{

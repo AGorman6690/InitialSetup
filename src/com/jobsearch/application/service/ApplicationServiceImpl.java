@@ -48,8 +48,6 @@ public class ApplicationServiceImpl {
 	@Autowired
 	JobServiceImpl jobService;
 
-	
-	
 	@Autowired
 	@Qualifier("FailedWageNegotiationsVM")
 	Template vmTemplate_failedWageNegotiations;	
