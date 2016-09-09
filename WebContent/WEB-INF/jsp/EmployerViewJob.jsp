@@ -5,142 +5,199 @@
 <%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
 <link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
-
+<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 </head>
-
-
-
-
-	<span>(note: job info will be shown here. Allow user to hide/show the job info. hide on load)</span>
-	<br>
-	<br>
-
-
 	<div class="container">
-		<div class="table-container">
-			<c:choose>
-				<c:when test="${empty job.applications}">
-					<div>There are currently no applicants for this job</div>
-				</c:when>
-				
-				<c:otherwise>
-					<table>
-						<thead>
-							<tr>
-								<th id="applicantName">Applicant Name</th>
-								<th id="rating">Rating</th>
-								<th id="endorsements">Endorsements</th>
-								<th id="questions"><span class="toggle-select-options"> Questions <span class="glyphicon glyphicon-menu-down"></span></span>
-									<div class="select-options-container">
-										<div class="select-options full-border-thick">
-											<span id="selectQuestionsOK" class="select-OK glyphicon glyphicon-ok"></span>			
-											<div class="radio">
-												<label class="block select-option"><input id="showAll" class="show-all" type="radio" name="mass-select" value="all">All</label>
-												<label class="block select-option"><input id="showNone" class="show-none" type="radio" name="mass-select" value="none">None</label>
-											</div>
-											<div class="checkbox">
-											<c:forEach items="${job.questions }" var="question">
-												<label class="block select-option"><input type="checkbox" name="individual-select" value="${question.questionId }">${question.text }</label>
-											</c:forEach>
-												
-											</div>
-											
-										</div>		
-																	
-									</div>							
-								</th>
-<!-- 								<th id="answers">Answers</th> -->
-								<th id="status"><span class="toggle-select-options"> Status <span class="glyphicon glyphicon-menu-down"></span></span>
-									<div class="select-options-container">
-										<div class="select-options full-border-thick">
-											<span id="selectStatusesOK" class="select-OK glyphicon glyphicon-ok"></span>			
-											<div class="radio">
-												<label class="block select-option"><input class="show-all" id="showAllStatus" type="radio" name="mass-select" value="all">All</label>
-						
-											</div>
-											<div class="checkbox">
-											<label class="block select-option"><input type="checkbox" name="individual-select-status" value="0">Submitted</label>
-												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="1">Decline</label>
-												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="2">Considering</label>
-												<label class="block select-option"><input type="checkbox" name="individual-select-status" value="3">Hire</label>
-											</div>
-											
-										</div>	
-								
-									</div>	
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							<c:forEach items="${job.getApplications() }" var="application">
-								<tr id="${application.applicationId }" class="applicant bottom-border-thin" data-select-option-value="${application.status }"
-									data-application-id="${application.applicationId }">
-									<td><a href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
-									<td> ${application.applicant.rating}</td>
-<!-- 								Set endorsements -->
-									<td>										
-										<c:forEach items="${application.applicant.endorsements }" var="endorsement">
-										
-											<div class="endorsement">													
-												${endorsement.categoryName } <span class="badge count">  ${endorsement.count }</span>
-											</div>
-										</c:forEach>
+		<div class="section">
+			<div class="header2">
+				<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-up"></span>
+				<span class="header-text">Job Information</span>
+			</div>
+			<div id="jobInfoContainer" class="section-body">
+				<div>
+					<div class="body-element">${job.jobName }</div>
+					<div class="body-element">
+						<div>Start: ${job.startTime } ${job.startDate }</div>
+						<div>End: ${job.endTime } ${job.endDate }</div>
+					</div>					
+					<div class="body-element">
+						<div>${job.streetAddress }</div>
+						<div>${job.city }, ${job.state } </div>
+						<div>${job.zipCode }</div>
+					</div>					
+					<div class="body-element">
+						<c:forEach items="${job.categories }" var="category">
+							<div>${category.name }</div>
+						</c:forEach>
+					</div>					
+					<div class="body-element">${job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+					</div>
 
-									</td>	
-<!-- 								Questions and answers -->
-									<td>
-									<c:forEach items="${application.questions }" var="question">
-										<div data-select-option-value="${question.questionId }" class="question bottom-border-thin">										
-											${question.text }
-										
-											<div class="answer">
-												<c:forEach items="${question.answers }" var="answer">
-													${answer.text }
-												</c:forEach>
-												
-											</div>
-										</div>
-									</c:forEach>
-									</td>
-<!-- 								Application Status						 -->
-									<td>
-										<div class="application-status-container">
-											<c:choose>
-												<c:when test="${application.status == 1 }">
-												<button id="" value="1" class="active">Decline</button>
-												</c:when>
-												<c:otherwise>
-												<button id="" value="1" class="">Decline</button>
-												</c:otherwise>
-											</c:choose>
-											<c:choose>
-												<c:when test="${application.status == 2 }">
-												<button id="" value="2" class="active">Consider</button>
-												</c:when>
-												<c:otherwise>
-												<button id="" value="2" class="">Consider</button>
-												</c:otherwise>
-											</c:choose>
-											<c:choose>
-												<c:when test="${application.status == 3 }">
-												<button id="" value="3" class="active">Hire</button>
-												</c:when>
-												<c:otherwise>
-												<button id="" value="3" class="">Hire</button>
-												</c:otherwise>
-											</c:choose>																						
-											
-										</div>
-									</td>
-								</tr>
-							</c:forEach>
-							
-						</tbody>
-					
-					</table>				
-				</c:otherwise>
-			</c:choose>
+
+				</div>
+			</div>
+			
 		</div>
+		
+		<div class="section">
+			<div class="header">
+				<h3>Applicants</h3>
+			</div>
+			<div class="section-body">
+				<div class="table-container">
+					<c:choose>
+						<c:when test="${empty job.applications}">
+							<div>There are currently no applicants for this job</div>
+						</c:when>
+						
+						<c:otherwise>
+							<table>
+								<thead>
+									<tr>
+										<th id="applicantName">Applicant Name</th>
+										<th id="rating">Rating</th>
+										<th id="endorsements">Endorsements</th>
+										<th id="questions"><span class="toggle-select-options"> Questions <span class="glyphicon glyphicon-menu-down"></span></span>
+											<div class="select-options-container">
+												<div class="select-options full-border-thick">
+													<span id="selectQuestionsOK" class="select-OK glyphicon glyphicon-ok"></span>			
+													<div class="radio">
+														<label class="block select-option"><input id="showAll" class="show-all" type="radio" name="mass-select" value="all">All</label>
+														<label class="block select-option"><input id="showNone" class="show-none" type="radio" name="mass-select" value="none">None</label>
+													</div>
+													<div class="checkbox">
+													<c:forEach items="${job.questions }" var="question">
+														<label class="block select-option"><input type="checkbox" name="individual-select" value="${question.questionId }">${question.text }</label>
+													</c:forEach>
+														
+													</div>
+													
+												</div>		
+																			
+											</div>							
+										</th>
+		<!-- 								<th id="answers">Answers</th> -->
+										<th id="status"><span class="toggle-select-options"> Status <span class="glyphicon glyphicon-menu-down"></span></span>
+											<div class="select-options-container">
+												<div class="select-options full-border-thick">
+													<span id="selectStatusesOK" class="select-OK glyphicon glyphicon-ok"></span>			
+													<div class="radio">
+														<label class="block select-option"><input class="show-all" id="showAllStatus" type="radio" name="mass-select" value="all">All</label>
+								
+													</div>
+													<div class="checkbox">
+													<label class="block select-option"><input type="checkbox" name="individual-select-status" value="0">Submitted</label>
+														<label class="block select-option"><input type="checkbox" name="individual-select-status" value="1">Decline</label>
+														<label class="block select-option"><input type="checkbox" name="individual-select-status" value="2">Considering</label>
+														<label class="block select-option"><input type="checkbox" name="individual-select-status" value="3">Hire</label>
+													</div>
+													
+												</div>	
+										
+											</div>	
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${job.getApplications() }" var="application">
+										<tr id="${application.applicationId }" class="applicant static-row" data-select-option-value="${application.status }"
+											data-application-id="${application.applicationId }">
+											<td><a href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+											<td> ${application.applicant.rating}</td>
+		<!-- 								Set endorsements -->
+											<td>										
+												<c:forEach items="${application.applicant.endorsements }" var="endorsement">
+												
+													<div class="endorsement">													
+														${endorsement.categoryName } <span class="badge count">  ${endorsement.count }</span>
+													</div>
+												</c:forEach>
+		
+											</td>	
+		<!-- 								Questions and answers -->
+											<td>
+											<c:forEach items="${application.questions }" var="question">
+												<div data-select-option-value="${question.questionId }" class="question bottom-border-thinner">										
+													${question.text }
+												
+													<div class="answer">
+														<c:forEach items="${question.answers }" var="answer">
+															${answer.text }
+														</c:forEach>
+														
+													</div>
+												</div>
+											</c:forEach>
+											</td>
+		<!-- 								Application Status						 -->
+											<td>
+												<div class="application-status-container">
+													<c:choose>
+														<c:when test="${application.status == 1 }">
+														<button id="" value="1" class="active">Decline</button>
+														</c:when>
+														<c:otherwise>
+														<button id="" value="1" class="">Decline</button>
+														</c:otherwise>
+													</c:choose>
+													<c:choose>
+														<c:when test="${application.status == 2 }">
+														<button id="" value="2" class="active">Consider</button>
+														</c:when>
+														<c:otherwise>
+														<button id="" value="2" class="">Consider</button>
+														</c:otherwise>
+													</c:choose>
+													<c:choose>
+														<c:when test="${application.status == 3 }">
+														<button id="" value="3" class="active">Hire</button>
+														</c:when>
+														<c:otherwise>
+														<button id="" value="3" class="">Hire</button>
+														</c:otherwise>
+													</c:choose>																						
+													
+												</div>
+											</td>
+										</tr>
+									</c:forEach>
+									
+								</tbody>
+							
+							</table>				
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>			
+		</div>		
+		
+		<div class="section">
+			<div class="header2">
+				<span class="header-text">Employees</span>
+			</div>
+			<div class="section-body">
+				<table>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Wage</th>
+						</tr>
+					</thead>
+					<tbody>
+						<c:forEach items="${job.employees }" var="employee">
+							<tr>
+								<td>${employee.firstName }</td>
+								<td></td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+		
+		</div>
+		
+				
 	</div>
 
 
@@ -157,6 +214,11 @@
 <script type="text/javascript">
 
 	$(document).ready(function(){
+		
+		$("#toggleJobInfoContainer").click(function(){
+			toggleClasses($(this), "glyphicon-menu-down", "glyphicon-menu-up");
+			$($("body").find("#jobInfoContainer")[0]).toggle(250);
+		})
 		
 		$(".toggle-select-options").click(function(){
 		

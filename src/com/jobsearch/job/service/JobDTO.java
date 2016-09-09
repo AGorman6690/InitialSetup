@@ -2,7 +2,11 @@ package com.jobsearch.job.service;
 
 import java.util.List;
 
+import com.jobsearch.application.service.Application;
+import com.jobsearch.category.service.Category;
 import com.jobsearch.model.FailedWageNegotiationDTO;
+import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Question;
 
 public class JobDTO {
 	
@@ -19,7 +23,42 @@ public class JobDTO {
 	
 	Job job;
 	List<FailedWageNegotiationDTO> failedWageNegotiationDtos;
-
+//	List<JobSearchUser> employees;
+//	List<Category> categories;
+//	List<Question> questions;
+//	List<Application> applications;	
+	
+//	public List<JobSearchUser> getEmployees() {
+//		return employees;
+//	}
+//
+//	public void setEmployees(List<JobSearchUser> employees) {
+//		this.employees = employees;
+//	}
+//
+//	public List<Category> getCategories() {
+//		return categories;
+//	}
+//
+//	public void setCategories(List<Category> categories) {
+//		this.categories = categories;
+//	}
+//
+//	public List<Question> getQuestions() {
+//		return questions;
+//	}
+//
+//	public void setQuestions(List<Question> questions) {
+//		this.questions = questions;
+//	}
+//
+//	public List<Application> getApplications() {
+//		return applications;
+//	}
+//
+//	public void setApplications(List<Application> applications) {
+//		this.applications = applications;
+//	}
 	
 	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDtos() {
 		return failedWageNegotiationDtos;

@@ -32,31 +32,18 @@
 }
 
 
-.static-row{
-	 border-top: 1px solid #ddd;
-}
-
-.static-row:first-child{
-	 border-top: 2px solid #ddd;
-}
-
 
 .expand-job-header{
 	width:30px;
 }
 
-.section{
-    padding-top: 25px;
-}
 
 
 
 
 
 
-.header{
-	border-bottom: 2px outset #F0F0F0;
-}
+
 
 .jobs-table-container{
 	padding-top:25px;
@@ -118,13 +105,6 @@ table{
 	width:20%;
 }
 
-.job-row {
-    border-top: 3px solid #ddd;    
-}
-
-.job-row:first-of-type {
-    border-top: 0;    
-}
 
 #applicantsTable thead tr{
 	 border-bottom: 2px solid #ddd;   

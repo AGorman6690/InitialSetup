@@ -27,6 +27,7 @@ import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;

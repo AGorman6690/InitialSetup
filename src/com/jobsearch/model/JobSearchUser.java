@@ -41,7 +41,16 @@ public class JobSearchUser {
 	private int createNewPassword;
 //	private List<Answer> answers;
 	private double minimumDesiredPay;
+	private double wage;
+
 	
+	public double getWage() {
+		return wage;
+	}
+
+	public void setWage(double wage) {
+		this.wage = wage;
+	}
 
 	public double getMinimumDesiredPay() {
 		return minimumDesiredPay;

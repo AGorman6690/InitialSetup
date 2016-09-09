@@ -3,7 +3,7 @@
 		<h3>
 		
 		#if($isActiveJobs)
-			Active Jobs
+			Jobs In Process
 			#set($noJobsMessage = "You have no active jobs at this time.")
 		#else
 			Jobs Waiting To Start
@@ -30,7 +30,7 @@
 
 				## for each job
 				#foreach($job in $jobs)
-				<tr class="job-row" id="$job.id">
+				<tr class="static-row" id="$job.id">
 				
 				## If the job has applications
 				#if($job.applications.size() > 0)
@@ -100,12 +100,13 @@
 												<td id="$application.currentWageProposal.id">																	
 													<div class="wage-status">																				
 													#set($wageProposalAmount = $mathUtility.round($application.currentWageProposal.amount, 2, 0))							
+													#set($wageProposalAmount = $numberTool.format("#0.00", $wageProposalAmount))
 													## If the current wage proposal has been accepted	
 													#if($application.currentWageProposal.status == 1)																	
 														<div>$wageProposalAmount has been accepted</div>															
 													## If the current wage proposal has been denied									
 													#elseif($application.currentWageProposal.status == 2)																	
-														<div>$wageProposal has been denied. Negotiations have ended.</div>															
+														<div>$wageProposalAmount has been denied. Negotiations have ended.</div>															
 													## Else the current wage proposal is a counter offer
 													#else
 														## If the counter offer was proposed TO the employer

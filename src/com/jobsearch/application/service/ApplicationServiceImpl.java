@@ -12,6 +12,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -502,7 +503,9 @@ public class ApplicationServiceImpl {
 		//Set the context
 		final VelocityContext context = new VelocityContext();		
 		context.put("activeJobsWithFailedWageNegotiations", activeJobsWithFailedWageNegotiations);
-		context.put("mathUtility", MathUtility.class);		
+		context.put("mathUtility", MathUtility.class);	
+		context.put("numberTool", new NumberTool());
+		
 		
 		//Run the template
 		vmTemplate_failedWageNegotiations.merge(context, writer);

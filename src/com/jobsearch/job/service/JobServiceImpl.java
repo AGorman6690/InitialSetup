@@ -19,6 +19,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -347,10 +348,10 @@ public class JobServiceImpl {
 		// Set each employee's rating, application and endorsements
 		for (JobSearchUser employee : job.getEmployees()) {
 			// employee.setRatings(userService.getRatings(employee.getUserId()));
-			employee.setRating(userService.getRating(employee.getUserId()));
-			employee.setApplication(applicationService.getApplication(jobId, employee.getUserId()));
-			employee.setEndorsements(
-					userService.getUserEndorsementsByCategory(employee.getUserId(), job.getCategories()));
+//			employee.setRating(userService.getRating(employee.getUserId()));
+//			employee.setApplication(applicationService.getApplication(jobId, employee.getUserId()));
+//			employee.setEndorsements(
+//					userService.getUserEndorsementsByCategory(employee.getUserId(), job.getCategories()));
 		}
 
 		// // Set each employee's rating
@@ -689,6 +690,7 @@ public class JobServiceImpl {
 		context.put("jobs", yetToStartJobs);
 		context.put("isActiveJobs", isActiveJobs);
 		context.put("mathUtility", MathUtility.class);		
+		context.put("numberTool", new NumberTool());
 		
 		//Run the template
 		vmTemplate_employerProfileJobTable.merge(context, writer);

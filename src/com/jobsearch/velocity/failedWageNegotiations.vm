@@ -23,7 +23,7 @@
 					#foreach($jobDto in $activeJobsWithFailedWageNegotiations)
 					<tr class="static-row">
 						<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
-						<td><a>$jobDto.job.jobName</a></td>
+						<td><a href="/JobSearch/job/$jobDto.job.id">$jobDto.job.jobName</a></td>
 						<td>$jobDto.failedWageNegotiationDtos.size()</td>	
 						
 						
@@ -47,6 +47,7 @@
 													<td><a>$failedWageNegotiationDto.otherUser.firstName</a></td>
 													<td>
 														#set( $offerAmount = $mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) )
+														#set( $offerAmount = $numberTool.format("#0.00", $offerAmount))
 														#if($failedWageNegotiationDto.failedWageProposal.proposedToUserId ==
 																$failedWageNegotiationDto.otherUser.userId)
 															Your $offerAmount was rejected  															

@@ -101,7 +101,8 @@
 			</div>	
 		</div>		
 		<div class="content-container" id="availabilityContainer">
-			<h4>Availability</h4>				
+			<h4>Availability</h4>	
+			(Not built yet)			
 			<div class="input-container">
 				<div class="container" id="daysContainer">
 					<h5>Days</h5>
