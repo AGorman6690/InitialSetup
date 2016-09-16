@@ -136,23 +136,36 @@ public class JobController {
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 		
-		Job job = jobService.getJobPostingInfo(jobId);
+		//Get the job
+		Job job = jobService.getJob(jobId);
+		
+		//Set the job's posting info
+		jobService.setPostingInfoForJob(job);
+		
 		model.addAttribute("job", job);
 		model.addAttribute("user", session.getAttribute("user"));
 //		model.setViewName("FindJobs");
-		return "EmployeeViewJob";
+		return "EmployeeViewJobWhenFinding";
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public String getJob(@PathVariable(value = "jobId") int jobId, Model model) {
-
-		//Get the job
-		Job selectedJob = jobService.getEmployersJobProfile(jobId);
-
-
-		model.addAttribute("job", selectedJob);
-//		model.setViewName("Job");
-		return "EmployerViewJob";
+	public String getJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
+		
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		//If employee
+		if(user.getProfileId() == 1){
+			
+			jobService.setModelForEmployeeViewJobFromProfileJsp(model, jobId);
+			return "EmployeeViewJobFromProfile";
+		//Else if employer
+		}else if(user.getProfileId() == 2){
+			jobService.setEmployerViewJobModel(model, jobId);
+			return "EmployerViewJob";	
+		}
+		
+		return null;
+		
 	}
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)

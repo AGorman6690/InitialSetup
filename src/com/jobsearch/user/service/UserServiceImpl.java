@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.HttpSession;
+
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +29,7 @@ import com.jobsearch.job.service.JobInfoPostRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
@@ -306,35 +309,46 @@ public class UserServiceImpl {
 
 	}
 
-	public void editProfile(EditProfileRequestDTO editProfileRequest) {
+	public void editEmployeeSettings(EditProfileRequestDTO editProfileRequestDto, HttpSession session) {
 
+		//Get the user from the session
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		//Set the dto's user id
+		editProfileRequestDto.setUserId(user.getUserId());
+		
 		// Edit categories
-		categoryService.deleteCategoriesFromUser(editProfileRequest.getUserId());
-		for (int categoryId : editProfileRequest.getCategoryIds()) {
-			categoryService.addCategoryToUser(editProfileRequest.getUserId(), categoryId);
-		}
+//		categoryService.deleteCategoriesFromUser(user.getUserId());
+//		for (int categoryId : editProfileRequest.getCategoryIds()) {
+//			categoryService.addCategoryToUser(user.getUserId(), categoryId);
+//		}
 
 		// Edit home location
 		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileRequest.getHomeCity() + " " + editProfileRequest.getHomeState()
-				+ " " + editProfileRequest.getHomeZipCode());
+		GeocodingResult[] results = maps.getLatAndLng(editProfileRequestDto.getHomeCity() + " " + editProfileRequestDto.getHomeState()
+				+ " " + editProfileRequestDto.getHomeZipCode());
+		
 		if (results.length == 1) {
-			editProfileRequest.setHomeLat((float) results[0].geometry.location.lat);
-			editProfileRequest.setHomeLng((float) results[0].geometry.location.lng);
-			this.updateHomeLocation(editProfileRequest);
+			editProfileRequestDto.setHomeLat((float) results[0].geometry.location.lat);
+			editProfileRequestDto.setHomeLng((float) results[0].geometry.location.lng);
+//			this.updateHomeLocation(editProfileRequest);
+			repository.updateEmployeeSettings(editProfileRequestDto);
 
 		}
 
-		if (editProfileRequest.getMaxWorkRadius() > 0) {
-			repository.UpdateMaxWorkRadius(editProfileRequest.getUserId(), editProfileRequest.getMaxWorkRadius());
-		}
+//		if (editProfileRequest.getMaxWorkRadius() > 0) {
+//			repository.UpdateMaxWorkRadius(user.getUserId(), editProfileRequest.getMaxWorkRadius());
+//		}
+		
+		
+		
 
 	}
 
-	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
-		repository.updateHomeLocation(editProfileRequest);
-
-	}
+//	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
+//		repository.updateHomeLocation(editProfileRequest);
+//
+//	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
 
@@ -464,13 +478,12 @@ public class UserServiceImpl {
 		List<Job> activeJobs = jobService.getActiveJobsByEmployee(employee.getUserId());
 		
 		//Get the failed wage negotiations that the employee has been involved in 
-		List<ApplicationResponseDTO> failedWageNegotiations =
-							applicationService.getFailedWageNegotiations(employee.getUserId());
-		
-
+		List<FailedWageNegotiationDTO> failedWageNegotiationDtos =
+							applicationService.getFailedWageNegotiationsDTOsByUser(employee.getUserId());
 		
 		//Set the model attributes
-		model.addAttribute("failedWageNegotiations", failedWageNegotiations);
+		model.addAttribute("user", employee);
+		model.addAttribute("failedWageNegotiationDtos", failedWageNegotiationDtos);
 		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
@@ -518,6 +531,7 @@ public class UserServiceImpl {
 		//*********************************************************************
 		//On second thought, this should be set to zero when the user clicks and views
 		//the new applicants
+		applicationService.setJobsApplicationsHasBeenViewed(yetToStartJobs, 1);
 		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
 		//*********************************************************************			
 		//*********************************************************************

@@ -10,6 +10,18 @@ function validateInputExistence($e, value){
 
 }
 
+function isValidNumberGreaterThan0(value){
+	
+	var result = 1;
+	if($.isNumeric(value) == 0){
+		result = 0;
+	}else if(value <= 0){
+		result = 0
+	}
+	
+	return result;
+}
+
 function validateSelectInput($e, value){
 	
 	if(value < 0 || value == ""){

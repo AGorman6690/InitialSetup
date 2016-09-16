@@ -49,8 +49,8 @@
 	<br>
 
 						<button id="debug1">Sign in as employer (UserId = 1)</button>
-						<button id="debug2">Sign in a employee 1</button>
-						<button id="debug3">Sign in a employee 2</button>
+						<button id="debug2">Sign in as employee 1</button>
+						<button id="debug3">Sign in as employee 2</button>
 	
 
 </div>
@@ -59,7 +59,7 @@
 	$(document).ready(function() {
 		$("#debug1").click(function() {
 			
-			$("#logOut").click();
+			$("#logOut").trigger("click");
 			$("#password").val('jg');
 			$("#userName").val('gorma080@d.umn.edu');
 			$("#loginContainer input[type=submit]")[0].click();
@@ -70,7 +70,7 @@
 
 		$("#debug2").click(function() {
 			
-			$("#logOut").click();
+			$("#logOut").trigger("click");
 			$("#password").val('2');
 			$("#userName").val('2');
 			$("#loginContainer input[type=submit]")[0].click();
@@ -79,7 +79,7 @@
 		
 		$("#debug3").click(function() {
 			
-			$("#logOut").click();
+			$("#logOut").trigger("click");
 			$("#password").val('jg');
 			$("#userName").val('justin.gorman@wilsontool.com');
 			$("#loginContainer input[type=submit]")[0].click();

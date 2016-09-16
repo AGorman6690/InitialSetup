@@ -173,8 +173,8 @@ public class UserController {
 	}
 	
 
-	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
-	public ModelAndView viewProfile(ModelAndView model, HttpSession session) {
+	@RequestMapping(value = "/settings", method = RequestMethod.GET)
+	public ModelAndView viewSettings(ModelAndView model, HttpSession session) {
 		
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		
@@ -254,11 +254,11 @@ public class UserController {
 		userService.updateAvailability(availabityRequest);
 	}
 
-	@RequestMapping(value = "/user/profile/edit", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public void editProfile(ModelAndView model, @RequestBody EditProfileRequestDTO editProfileRequest) {
+	public void editEmployeeSettings(HttpSession session, @RequestBody EditProfileRequestDTO editProfileRequest) {
 
-		userService.editProfile(editProfileRequest);
+		userService.editEmployeeSettings(editProfileRequest, session);
 	}
 
 	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)

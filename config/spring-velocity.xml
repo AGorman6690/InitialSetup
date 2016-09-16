@@ -18,6 +18,16 @@
         <prop key="class.resource.loader.class">org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader</prop>
         <prop key="class.resource.loader.cache">true</prop>
     </util:properties>
+    
+<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+  <property name="resourceLoaderPath" value="/WEB-INF/velocity/"/>
+</bean>    
+
+<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+  <property name="cache" value="true"/>
+  <property name="prefix" value=""/>
+  <property name="suffix" value=".vm"/>
+</bean>
 
     <bean id="CategoriesVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/categories.vm" />
@@ -31,8 +41,16 @@
     	<constructor-arg value="com/jobsearch/velocity/failedWageNegotiations.vm" />
     </bean> 
     
+    <bean id="FailedWageNegotiationsByJobVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/failedWageNegotiationsByJob.vm" />
+    </bean>     
+    
     <bean id="EmployerProfileJobTableVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/employerProfileJobTable.vm" />
-    </bean>          
+    </bean>     
+    
+    <bean id="JobInformationVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/jobInformation.vm" />
+    </bean>       
 
 </beans>

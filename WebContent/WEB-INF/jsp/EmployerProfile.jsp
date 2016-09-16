@@ -40,7 +40,7 @@
 		<!-- 						For each active job -->
 								<c:forEach items="${completedJobs }" var="completedJobDTO">
 									<tr class="static-row" id="${completedJobDTO.job.id}">
-											<td class="job-name"><a href="#" >${completedJobDTO.job.jobName}</a></td>
+											<td class="job-name"><a href="#" class="accent">${completedJobDTO.job.jobName}</a></td>
 		
 										<td><a href="/JobSearch/job/${completedJobDTO.job.id }/rate-employees?markComplete=1"><button class="square-button">Rate Employees</button></a>
 										</td>

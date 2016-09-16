@@ -445,15 +445,30 @@ public class ApplicationRepository {
 
 	public List<WageProposal> getFailedWageProposalsByJob(int jobId) {
 		
-		//Find all the application ids for the job id.
-		//With these application ids, find the wage proposals that have been declined (i.e. status = 2)
-		String sql = "select * from wage_proposal w where w.ApplicationId in("
-							+ " select ApplicationId from application a"
-							+ " inner join job j on a.JobId = j.JobId where j.JobId = ?"
-					+ ") and w.Status = 2";
-		
+		//Inner query: find all the application ids for the job id.
+		//Outer query: with these application ids, find the wage proposals that have been declined (i.e. status = 2)
+		String sql = "SELECT * FROM wage_proposal w WHERE w.ApplicationId IN("
+							+ " SELECT ApplicationId FROM application a"
+							+ " INNER JOIN job j ON a.JobId = j.JobId WHERE j.JobId = ?"
+					+ ") AND w.Status = 2";
 		
 		return WageProposalRowMapper(sql, new Object[]{ jobId });
+	}
+
+	public double getWage(int applicationId) {
+		String sql = "SELECT Amount FROM Wage_Proposal WHERE ApplicationId = ? AND Status = 1";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId }, Double.class);
+	}
+
+	public List<WageProposal> getFailedWageProposalsByUser(int userId) {
+		
+		//Inner query: find all application ids for the user where the job is still accepting applications
+		String sql = "SELECT * FROM wage_proposal w WHERE w.ApplicationId IN("
+				+ " SELECT ApplicationId FROM application a"
+				+ " INNER JOIN Job j ON a.JobId = j.JobId WHERE a.UserId = ? AND j.IsAcceptingApplications = 1"
+				+ ") AND w.Status = 2";
+		
+		return WageProposalRowMapper(sql, new Object[]{ userId });
 	}
 
 

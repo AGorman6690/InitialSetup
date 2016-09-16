@@ -1,3 +1,7 @@
+.test111 a{
+	color: red;
+}
+
 .bottom-border-thin{
 	border-bottom: 2px outset #F0F0F0;
 }
@@ -57,8 +61,18 @@
 	padding-top:15px;
 }
 
+.body-element-container{
+	padding-left:25px;	
+}
+
 .body-element{
 	padding-bottom:10px;
+}
+
+a.accent{
+    font-size: 15px;
+    font-weight: bold;
+    color: #5B7BA3;
 }
 
 

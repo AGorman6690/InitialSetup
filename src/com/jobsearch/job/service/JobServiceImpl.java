@@ -32,6 +32,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -62,6 +63,10 @@ public class JobServiceImpl {
 	@Qualifier("EmployerProfileJobTableVM")
 	Template vmTemplate_employerProfileJobTable;		
 
+	@Autowired
+	@Qualifier("JobInformationVM")
+	Template vmTemplate_jobInformationVM;	
+	
 	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
 		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
@@ -281,11 +286,10 @@ public class JobServiceImpl {
 		return repository.getJob(jobId);
 	}
 	
-	public Job getJobPostingInfo(int jobId) {
+	public void setPostingInfoForJob(Job job) {
 		// This only sets the job properties that relate to the job posting
 		// i.e. no applicants, no employees, etc. 
 		
-		Job job = repository.getJob(jobId);
 		
 		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
@@ -293,7 +297,6 @@ public class JobServiceImpl {
 		// Set job questions
 		job.setQuestions(applicationService.getQuestions(job.getId()));		
 		
-		return job;
 	}
 
 	
@@ -319,7 +322,7 @@ public class JobServiceImpl {
 		//This is done this way because the "Status" is a property of the application, not the applicant.
 		//I think removing the applicants from the job is the way to go.
 		//Check back later.
-		job.setApplications(applicationService.getApplicationsByJob(jobId));
+//		job.setApplications(applicationService.getApplicationsByJob(jobId));
 		//****************************************************************************************
 		//****************************************************************************************
 		
@@ -698,6 +701,78 @@ public class JobServiceImpl {
 		//Return the html
 		return writer.toString();
 	}
+
+	public void setEmployerViewJobModel(Model model, int jobId) {
+
+		//Get the job
+		Job selectedJob = this.getEmployersJobProfile(jobId);
+		
+		//Get the employees
+		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+		for(JobSearchUser employee : employees){
+			
+			//Set their wage
+			employee.setWage(applicationService.getWage(employee.getUserId(), jobId));
+		}
+		
+		//Get the applications
+		List<Application> applications = applicationService.getApplicationsByJob(jobId);
+		
+		//Get the failed wage negotiations
+		String vtFailedWageNegotiationsByJob = applicationService.
+				getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
+		
+		
+		
+		//Set the model attributes
+		model.addAttribute("job", selectedJob);
+		model.addAttribute("applications", applications);
+		model.addAttribute("employees", employees);
+		model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
+
+		
+		
+	}
+
+	public Job getJobByApplicationId(int applicationId) {
+		
+		return repository.getJobByApplicationId(applicationId);
+	}
+
+	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId) {
+		
+		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_EmployeeViewJobFromProfile(jobId);
+
+		model.addAttribute("vtJobInformation", vtJobInformation_EmployeeViewJobFromProfile);
+	
+	}
+
+	private String getVelocityTemplate_EmployeeViewJobFromProfile(int jobId) {
+		
+		//Get job
+		Job job = this.getJob(jobId);
+		
+		//Set the job's posting info
+		this.setPostingInfoForJob(job);
+		
+		
+		StringWriter writer = new StringWriter();
+		
+		//Set the context
+		final VelocityContext context = new VelocityContext();		
+		context.put("job", job);
+//		context.put("mathUtility", MathUtility.class);	
+//		context.put("numberTool", new NumberTool());
+		
+		
+		//Run the template
+		vmTemplate_jobInformationVM.merge(context, writer);
+
+		//Return the html
+		return writer.toString();	
+
+	}
+
 
 //	public void verifyJobStatusForUsersYetToStartJobs(int userId) {
 //		

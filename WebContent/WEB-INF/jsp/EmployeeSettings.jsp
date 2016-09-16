@@ -3,7 +3,9 @@
 
 <head>
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeSettings.css" />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	
+	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	
 			
 		
@@ -27,8 +29,8 @@
 		<div id="header" class="bottom-border-thin">
 			<h3>Settings</h3>			
 			<span id="updateAvailabilityContainer">
-				<button class="square-button">Save</button>
-				<button class="square-button">Cancel</button>
+				<button id="saveChanges" class="square-button">Save</button>
+<!-- 				<button class="square-button">Cancel</button> -->
 			</span>
 			<p>These settings will be used by employers to find you easier.</p>
 		</div>
@@ -195,110 +197,120 @@
 
 
 <script>
-	$(document)
-			.ready(
-					function() {
+$(document).ready(function() {
 						
-						$('#startTime').timepicker({
-							'scrollDefault' : '7:00am'
-						});					
-						  
-				       
-		        	$("#calendar").datepicker({
-		        	      numberOfMonths: 3,
-		        	      showButtonPanel: true,
-		        	      multidate: true,
-		        	      
-		        	    });
-				        	
-				    $("#toggleWeekends").click(function(){				    	
-				    	$("#availability").datepicker("setDates", ["09-09-2016", "09-10-2016"])
-				    })
-				        
-				        
-			     	$("#calendar").datepicker().on("changeDate", function(e){
-			     		
-			     		})
-						
-						$("#save")
-								.click(
-										function() {
-
-											var editProfileDTO = {};
-											editProfileDTO.userId = $("#userId")
-													.val();
-											editProfileDTO.homeCity = $(
-													"#homeCity").val();
-											editProfileDTO.homeState = $(
-													"#homeState").val();
-											editProfileDTO.homeZipCode = $(
-													"#homeZipCode").val();
-											editProfileDTO.maxWorkRadius = $(
-													"#maxWorkRadius").val();
-
-											editProfileDTO.categoryIds = [];
-											var categories = $(
-													'#selectedCategories')
-													.find("button");
-											for (var i = 0; i < categories.length; i++) {
-												var id = categories[i].id;
-												editProfileDTO.categoryIds
-														.push(id
-																.substring(
-																		0,
-																		id
-																				.indexOf("-")));
-											}
-
-											var headers = {};
-											headers[$(
-													"meta[name='_csrf_header']")
-													.attr("content")] = $(
-													"meta[name='_csrf']").attr(
-													"content");
-
-											$
-													.ajax(
-															{
-																type : "POST",
-																url : environmentVariables.LaborVaultHost + "/JobSearch/user/profile/edit",
-																headers : headers,
-																contentType : "application/json",
-																dataType : "application/json", // Response
-																data : JSON
-																		.stringify(editProfileDTO)
-															}).done(function() {
-
-													}).error(function() {
-
-													});
-
-										})
-
-				   
-					
-					
-					
-					
-
+	$('#startTime').timepicker({
+		'scrollDefault' : '7:00am'
+	});					
+		  
+       
+      	$("#calendar").datepicker({
+      	      numberOfMonths: 3,
+      	      showButtonPanel: true,
+      	      multidate: true,
+      	      
+      	    });
+        	
+    $("#toggleWeekends").click(function(){				    	
+    	$("#availability").datepicker("setDates", ["09-09-2016", "09-10-2016"])
+    })
+        
+       
+   	$("#calendar").datepicker().on("changeDate", function(e){
+   		
+   		})
+	
+	$("#saveChanges").click(function() {
 			
-					})
+			var editProfileDTO = {};
+			editProfileDTO.homeCity = $("#homeCity").val();
+			editProfileDTO.homeState = $("#homeState").val();
+			editProfileDTO.homeZipCode = $("#homeZipCode").val();
+			editProfileDTO.maxWorkRadius = $("#maxDistance").val();
+			editProfileDTO.minPay = $("#minPay").val();
+			
+			//Verify
+			if(areValidSettings(editProfileDTO) == 1){
+				
+			
 
-	var pageContext = "profile";
+// 			editProfileDTO.categoryIds = [];
+// 			var categories = $('#selectedCategories').find("button");
+// 			for (var i = 0; i < categories.length; i++) {
+// 				var id = categories[i].id;
+// 				editProfileDTO.categoryIds
+// 						.push(id
+// 								.substring(
+// 										0,
+// 										id
+// 												.indexOf("-")));
+// 			}
+	
+				var headers = {};
+				headers[$(
+						"meta[name='_csrf_header']")
+						.attr("content")] = $(
+						"meta[name='_csrf']").attr(
+						"content");
+	
+				$.ajax(
+						{
+							type : "POST",
+							url : environmentVariables.LaborVaultHost + "/JobSearch/user/settings/edit",
+							headers : headers,
+							contentType : "application/json",
+							dataType : "application/json", // Response
+							data : JSON
+									.stringify(editProfileDTO)
+						}).done(function() {
+	
+						}).error(function() {
+	
+						});
 
-// 	getCategoriesBySuperCat('0', function(response, categoryId) {
-// 		appendCategories(categoryId, "T", response, function() {
-// 		});
-// 	})
+			}
+		})
+		
+		
+		
+		
+	
+	})
+	
+	function areValidSettings(editProfileDTO){
+	
+		var $e;
+		var result = 1;
+		
+		//Verify max radius
+		$e = $("#maxDistance");
+		if($.isNumeric(editProfileDTO.maxWorkRadius) == 0 ){
+			result = 0;
+			setInvalidCss($e);
+		}else if (editProfileDTO.maxWorkRadius <= 0){
+			result = 0;
+			setInvalidCss($e);
+		}else{
+			setValidCss($e);
+		}
+		
+		//Verify min pay
+		$e = $("#minPay");
+		if($.isNumeric(editProfileDTO.minPay) == 0 ){
+			result = 0;
+			setInvalidCss($e);
+		}else if (editProfileDTO.minPay < 0){
+			result = 0;
+			setInvalidCss($e);
+		}else{
+			setValidCss($e);
+		}
+		
+		return result;
+	
+	}
 
-	// 	getCategoriesByUser($("#userId").val(), function(usersCategories){
 
-	// 		getCategoriesBySuperCat('0', function(response, categoryId){
-
-	// 			//Append seed categories
-	// 			appendCategories(categoryId, "T", response);
-	// 		})
-	// 	})
 </script>
 
 

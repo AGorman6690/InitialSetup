@@ -117,6 +117,7 @@ public class UserRepository {
 	}
 
 	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
+		
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -133,6 +134,7 @@ public class UserRepository {
 				e.setHomeZipCode(rs.getString("HomeZipCode"));
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
 				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
+				e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
 
 				Profile profile = new Profile();
 				profile.setName(rs.getString("p.ProfileType"));
@@ -414,22 +416,22 @@ public class UserRepository {
 
 	}
 
-	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
-		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
-				+ " HomeZipCode = ? WHERE UserId = ?";
+//	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
+//		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+//				+ " HomeZipCode = ? WHERE UserId = ?";
+//
+//		jdbcTemplate.update(sql,
+//				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
+//						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
+//						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
+//
+//	}
 
-		jdbcTemplate.update(sql,
-				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
-						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
-						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
-
-	}
-
-	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
-		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
-		jdbcTemplate.update(sql, new Object[] { maxWorkRadius, userId });
-
-	}
+//	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
+//		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
+//		jdbcTemplate.update(sql, new Object[] { maxWorkRadius, userId });
+//
+//	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
 
@@ -656,5 +658,17 @@ public class UserRepository {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 0 WHERE email = ?";
 
 		jdbcTemplate.update(sql, new Object[] { password, email });
+	}
+
+	public void updateEmployeeSettings(EditProfileRequestDTO editProfileRequestDto) {
+		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+				+ " HomeZipCode = ?, MaxWorkRadius = ?, MinimumPay = ? WHERE UserId = ?";
+		
+	jdbcTemplate.update(sql,
+				new Object[] { editProfileRequestDto.getHomeLat(), editProfileRequestDto.getHomeLng(),
+						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
+						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
+						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
+		
 	}
 }

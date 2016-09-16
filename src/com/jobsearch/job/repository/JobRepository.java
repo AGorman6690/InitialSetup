@@ -459,6 +459,13 @@ public class JobRepository {
 		return JobRowMapper(sql, argsList.toArray());
 	}
 
+	public Job getJobByApplicationId(int applicationId) {
+		String sql = "SELECT * FROM job j INNER JOIN application a"
+						+ " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
+		
+		return this.JobRowMapper(sql, new Object[]{ applicationId }).get(0);
+	}
+
 
 
 }

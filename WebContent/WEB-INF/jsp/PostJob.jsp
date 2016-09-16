@@ -12,9 +12,14 @@
 	<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" />
 	<link rel="stylesheet" type="text/css"	href="./static/css/inputValidation.css" />		
 	
+		<link rel="stylesheet" type="text/css"	href="./static/css/calendar.css" />		
+	
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="./static/External/jquery.timepicker.css" />
 	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
+	
+	<script   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"   integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
+	
 	
 </head>
 
@@ -155,26 +160,29 @@
 									<h3>Date and Time</h3>					
 									
 									<div class="job-sub-info">
-										<fieldset class="form-group">
-											<label for="dateRange" class="form-control-label">Start and End Dates</label>
-											<input style="width: 250px" class="form-control" type="text"
-												id="dateRange" value=""/>
+										<div id="calendar">
+										</div>
+										<button class="btn" id="clearCalendar">Clear</button>
+<!-- 										<fieldset class="form-group"> -->
+<!-- 											<label for="dateRange" class="form-control-label">Start and End Dates</label> -->
+<!-- 											<input style="width: 250px" class="form-control" type="text" -->
+<!-- 												id="dateRange" value=""/> -->
 				
-										</fieldset>								
+<!-- 										</fieldset>								 -->
 										
-										<fieldset class="form-group">
-											<label for="startTime" class="form-control-label">Start Time</label>
-											<input name="startTime" type="text"
-												class="post-job-input form-control time ui-timepicker-input"
-													autocomplete="off" id="startTime"></input>
-										</fieldset>
+<!-- 										<fieldset class="form-group"> -->
+<!-- 											<label for="startTime" class="form-control-label">Start Time</label> -->
+<!-- 											<input name="startTime" type="text" -->
+<!-- 												class="post-job-input form-control time ui-timepicker-input" -->
+<!-- 													autocomplete="off" id="startTime"></input> -->
+<!-- 										</fieldset> -->
 					
-										<fieldset class="form-group">
-											<label for="endTime" class="form-control-label">End Time</label>
-											<input name="endTime" type="text"
-												class="post-job-input form-control time ui-timepicker-input"
-													autocomplete="off" id="endTime"></input>
-										</fieldset>
+<!-- 										<fieldset class="form-group"> -->
+<!-- 											<label for="endTime" class="form-control-label">End Time</label> -->
+<!-- 											<input name="endTime" type="text" -->
+<!-- 												class="post-job-input form-control time ui-timepicker-input" -->
+<!-- 													autocomplete="off" id="endTime"></input> -->
+<!-- 										</fieldset> -->
 										
 									</div>
 								</div>
@@ -442,6 +450,167 @@
 		
 
 	$(document).ready(function() {
+		
+		function resetVars(){
+			selectedDays = [];
+			firstSelectedDay = "";
+			secondSelectedDay = "";
+			isSecondDaySelected = 0;
+			isMoreThanTwoDaysSelected = 0;	
+			rangeIsSet = 0;
+			rangeIsBeingSet = 0;
+		}
+		
+		$("#clearCalendar").click(function(e){
+			
+			e.preventDefault();
+				
+			resetVars();
+			
+			var activeDays = $("#calendar").find(".active111");
+			
+			$(activeDays).each(function(){
+				$(this).removeClass("active111");
+			})
+			
+		})
+		
+		var firstSelectedDay;
+		var secondSelectedDay;
+		var isSecondDaySelected = 0;
+		var isMoreThanTwoDaysSelected = 0;
+		var rangeIsSet = 0;
+		var rangeIsBeingSet = 0;
+		var selectedDays = [];
+		$("#calendar").datepicker({
+			numberOfMonths: 1,
+			 onSelect: function(dateText, inst) {
+		            
+				 	//Set the selected day
+				 	var selectedDay = new Date(dateText);
+		            selectedDay = selectedDay.getTime();
+		            
+		            if(selectedDays.length == 3){
+		            	rangeIsSet = 1;
+		            }
+		            
+		            //If the day was already selected, remove the date
+		            if($.inArray(selectedDay, selectedDays) > -1){
+		            	selectedDays = $.grep(selectedDays, function(value){
+		            		return value != selectedDay;
+		            	})
+		            }
+		            else{
+		            	selectedDays.push(selectedDay);
+		            }
+		            
+		            if(selectedDays.length == 0){
+		            	resetVars();
+		            }
+	            	else if(selectedDays.length == 1){
+	            		firstSelectedDay = selectedDays[0];
+	            		rangeIsSet = 0
+	            		isSecondDaySelected = 0;
+	            		
+	            	}
+	            	else if(selectedDays.length == 2){
+
+	            		secondSelectedDay = selectedDays[1];
+	            		
+	            		isSecondDaySelected = 1;
+	            		rangeIsBeingSet = 1;
+	            		
+	            		if(secondSelectedDay < firstSelectedDay){
+	            			resetVars();
+	            		}
+	            		
+	            	}
+		            else{
+		            	rangeIsSet = 1;
+		            }
+		            
+// 		            }else if(rangeIsSet == 0){
+// 			            if(selectedDays.length == 1 ){
+// 			            	firstSelectedDay = selectedDay;
+// 			            }
+// 			            else if(selectedDays.length == 2){
+// 			            	isSecondDaySelected = 1;
+// 			            	secondSelectedDay = selectedDay;
+// 			            	rangeIsSet = 1;
+// 			            }
+// // 			            else{
+// // 			            	isMoreThanTwoDaysSelected = 1;
+// // 			            	isSecondDaySelected = 0;
+// // 			            }	            	
+// 		            }
+
+		        },
+		        // This is run for every day visible in the datepicker.
+		        beforeShowDay: function (date) {
+
+		        	if(rangeIsSet == 1){
+		        		
+			        	if($.inArray(date.getTime(), selectedDays) > -1){
+			        		return [true, "active111"]; 
+			        	}
+			        	else{
+			        		return [true, ""];
+			        	}
+
+		        	}
+		        	else if(isSecondDaySelected && !rangeIsSet){
+		        		
+		        		
+		        		if(date.getTime() >= firstSelectedDay && date.getTime() <= secondSelectedDay){
+		        			
+		        			if($.inArray(date.getTime(), selectedDays) == -1){
+		        				selectedDays.push(date.getTime());
+		        			}
+		        			
+		        			if(selectedDays.length == 2){
+// 		        				rangeIsSet = 1;
+		        			}
+		        			return [true, "active111"];
+		        		}
+		        		else{
+		        			return [true, ""];
+		        		}	  
+		        		
+		        		
+		        		
+		        	}else{
+			        	if($.inArray(date.getTime(), selectedDays) > -1){
+			        		return [true, "active111"]; 
+			        	}
+			        	else{
+			        		return [true, ""];
+			        	}
+			        		
+		        	}
+
+
+// 		        	else if($.inArray(date.getTime(), selectedDays) > -1){
+// 		        		return [true, "active111"]; 
+// // 		        	}
+// 		        	else{
+// 		        		return [true, ""]; 
+// 		        	}
+		        		
+// 			        	$(selectedDays).each(function(){
+			        		
+// 	 		        		if(this.getTime() != date.getTime()){
+	 			                
+// 	 			            } else {
+// 	 			                return [true, "active111", ""];
+// 	 			            }
+			        		
+// 			        	})	
+// 		        	}
+
+		      
+
+		        }
+		    });
 	
 		$('#startTime').timepicker({
 			'scrollDefault' : '7:00am'
@@ -464,9 +633,19 @@
 		
 		
 	})
-	
-	
-	
+
+	function select(date, obj){
+		
+		var days = $("#" + obj.id ).find("td[data-month=" + obj.currentMonth + "] a");
+		
+		days.each(function(){
+			if($(this).text() == obj.currentDay){
+				var par = $(this).parents()[0];
+				$(par).addClass("active111");
+			}
+		})
+		
+	}
 	function setDateRange(){
 		
 		today = new Date();

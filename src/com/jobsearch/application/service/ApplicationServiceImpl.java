@@ -52,6 +52,10 @@ public class ApplicationServiceImpl {
 	@Autowired
 	@Qualifier("FailedWageNegotiationsVM")
 	Template vmTemplate_failedWageNegotiations;	
+	
+	@Autowired
+	@Qualifier("FailedWageNegotiationsByJobVM")
+	Template vmTemplate_failedWageNegotiationsByJob;	
 
 
 	public List<Application> getApplicationsByJob(int jobId) {
@@ -324,24 +328,6 @@ public class ApplicationServiceImpl {
 	}
 	
 
-
-	public List<ApplicationResponseDTO> getFailedWageNegotiations(int userId) {		
-
-		//Query the database.
-		//Return only applications with a status of "wage negotiations ended" (4)
-		List<Application> failedWageNegotiations = this.getApplicationsByUserAndStatuses(userId, 
-													new ArrayList<Integer>(Arrays.asList(4)));
-		
-		//Get application response DTOs
-		if(failedWageNegotiations.size() >0){			
-			return getApplicationResponseDTOsByApplicant(failedWageNegotiations, userId);	
-		}else{
-			return null;
-		}
-		
-				
-	}
-	
 	
 	
 
@@ -498,6 +484,7 @@ public class ApplicationServiceImpl {
 
 	public String getFailedWageNegotiationsVelocityTemplate(List<JobDTO> activeJobsWithFailedWageNegotiations) {
 		
+		
 		StringWriter writer = new StringWriter();
 		
 		//Set the context
@@ -509,9 +496,10 @@ public class ApplicationServiceImpl {
 		
 		//Run the template
 		vmTemplate_failedWageNegotiations.merge(context, writer);
-		
+
 		//Return the html
-		return writer.toString();
+		return writer.toString();			
+
 	}
 
 
@@ -521,6 +509,8 @@ public class ApplicationServiceImpl {
 		
 		//Query the database for all the job's failed wage proposals
 		List<WageProposal> failedWageProposals = repository.getFailedWageProposalsByJob(job.getId());
+		
+		
 		
 		//Create the failed wage negotiation DTOs		
 		for(WageProposal failedWageProposal : failedWageProposals){
@@ -542,6 +532,38 @@ public class ApplicationServiceImpl {
 		
 		return result;
 	}
+	
+	
+	
+
+
+	public List<FailedWageNegotiationDTO> getFailedWageNegotiationsDTOsByUser(int userId) {		
+
+		List<FailedWageNegotiationDTO> result = new ArrayList<FailedWageNegotiationDTO>();
+		
+		//Query the database failed wage proposals.
+		//Only failed proposal pertaining to jobs still accepting applications is returned
+		List<WageProposal> failedWageProposals = repository.getFailedWageProposalsByUser(userId);
+		
+		//Set the dtos
+		for(WageProposal failedWageProposal : failedWageProposals){
+			
+			//Create the dto
+			FailedWageNegotiationDTO dto = new FailedWageNegotiationDTO();
+			
+			//Set the dto
+			dto.setFailedWageProposal(failedWageProposal);
+			dto.setJob(jobService.getJobByApplicationId(failedWageProposal.getApplicationId()));
+			
+			//Add the dto to the result
+			result.add(dto);
+			
+		}
+		return result;
+
+				
+	}
+	
 
 
 	public JobSearchUser getOtherUserInvolvedInWageProposal(WageProposal failedWageProposal, int dontReturnThisUserId) {
@@ -557,6 +579,44 @@ public class ApplicationServiceImpl {
 		return userService.getUser(otherUserId);
 	}
 
+
+
+	public double getWage(int userId, int jobId) {
+		
+		Application application = repository.getApplication(jobId, userId);
+		
+		return repository.getWage(application.getApplicationId());
+	}
+
+
+	public String getFailedWageNegotiationsByJobVelocityTemplate(Job job) {
+		
+		//Get the failed wage negotiation dtos
+		List<FailedWageNegotiationDTO> failedWageNegotiationDtos = 
+							this.getFailedWageNegotiationDTOsByJob(job);
+		
+		if(failedWageNegotiationDtos.size() == 0){
+			return null;
+		}else{
+			StringWriter writer = new StringWriter();
+			
+			//Set the context
+			final VelocityContext context = new VelocityContext();		
+			context.put("failedWageNegotiationDtos", failedWageNegotiationDtos);
+			context.put("mathUtility", MathUtility.class);	
+			context.put("numberTool", new NumberTool());
+
+			
+			//Run the template
+			vmTemplate_failedWageNegotiationsByJob.merge(context, writer);
+			
+			//Return the html
+			return writer.toString();		
+		}
+
+
+
+	}
 	
 	
 	

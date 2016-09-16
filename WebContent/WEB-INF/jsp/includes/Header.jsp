@@ -61,8 +61,8 @@
 <link
 	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
 	rel="stylesheet" />
-<script
-	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
+<!-- <script -->
+<!-- 	src="/JobSearch/static/External/bootstrap-datepicker.js"></script> -->
 
 <!-- Bootstrap Drop down -->
 <link rel="stylesheet"
@@ -113,8 +113,8 @@
 							<a id="logOut" href="/JobSearch/logout">Log out</a>
 						<c:choose>
 							<c:when test="${user.profileId == 1}">
-								<a href="/JobSearch/jobs/find">Find Jobs</a>
-								<a href="/JobSearch/viewProfile">Settings</a>
+								<a href="/JobSearch/settings">Settings</a>
+								<a href="/JobSearch/jobs/find">Find Jobs</a>								
 							</c:when>
 							<c:when test="${user.profileId == 2}">
 								<a href="/JobSearch/employees/find">Find Employees</a>

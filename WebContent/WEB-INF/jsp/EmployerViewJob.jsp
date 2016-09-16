@@ -10,8 +10,9 @@
 	<div class="container">
 		<div class="section">
 			<div class="header2">
-				<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-up"></span>
+				<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
 				<span class="header-text">Job Information</span>
+				<span id="editJobContainer"><a href="#" id="editJob square-button">Edit (not built)</a></span>
 			</div>
 			<div id="jobInfoContainer" class="section-body">
 				<div>
@@ -40,6 +41,20 @@
 			
 		</div>
 		
+		
+		<c:if test="${not empty vtFailedWageNegotiationsByJob}">
+			<div class="section">
+				<div class="header2">
+					<span class="header-text">Failed Wage Negotiations</span>
+				</div>
+				<div class="section-body">
+					<div>${vtFailedWageNegotiationsByJob }</div>
+				</div>
+			
+			</div>		
+		</c:if>
+	
+		
 		<div class="section">
 			<div class="header">
 				<h3>Applicants</h3>
@@ -47,7 +62,7 @@
 			<div class="section-body">
 				<div class="table-container">
 					<c:choose>
-						<c:when test="${empty job.applications}">
+						<c:when test="${empty applications}">
 							<div>There are currently no applicants for this job</div>
 						</c:when>
 						
@@ -55,7 +70,7 @@
 							<table>
 								<thead>
 									<tr>
-										<th id="applicantName">Applicant Name</th>
+										<th id="applicantName">Name</th>
 										<th id="rating">Rating</th>
 										<th id="endorsements">Endorsements</th>
 										<th id="questions"><span class="toggle-select-options"> Questions <span class="glyphicon glyphicon-menu-down"></span></span>
@@ -100,7 +115,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${job.getApplications() }" var="application">
+									<c:forEach items="${applications }" var="application">
 										<tr id="${application.applicationId }" class="applicant static-row" data-select-option-value="${application.status }"
 											data-application-id="${application.applicationId }">
 											<td><a href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
@@ -177,23 +192,32 @@
 				<span class="header-text">Employees</span>
 			</div>
 			<div class="section-body">
-				<table>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Wage</th>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach items="${job.employees }" var="employee">
-							<tr>
-								<td>${employee.firstName }</td>
-								<td></td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</div>
+				<c:choose>
+					<c:when test="${employees.size() > 0 }">
+						
+							<table>
+								<thead>
+									<tr>
+										<th>Name</th>
+										<th>Wage</th>
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${employees }" var="employee">
+										<tr>
+											<td>${employee.firstName }</td>
+											<td>${employee.wage }</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
+									
+					</c:when>
+					<c:otherwise>
+						There are currently no employees for this job.
+					</c:otherwise>
+				</c:choose>
+			</div>	
 		
 		</div>
 		

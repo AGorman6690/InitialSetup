@@ -11,33 +11,52 @@
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+<%-- <script	src="<c:url value="/static/External/jquery-ui.min.js" />"></script>    --%>
 </head>
+
+<!-- <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
+
+<script   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"   integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 	
 <body>
 
 	<div class="container">
 	
+		<div class="section">
+			<div id="calendar"></div>
+		</div>
 		<!-- ****** Failed Wage Negotiations -->
 		<c:choose>
-			<c:when test="${failedWageNegotiations.size() > 0 }">
-				<div id="failedWageNegotiationsContainer" class="section bottom-border-thinner">
-					<h4>Failed Wage Negotiations</h4>
-					<div class="table-container">
+			<c:when test="${failedWageNegotiationDtos.size() > 0 }">
+				<div id="failedWageNegotiationsContainer" class="section">
+					<div class="header">
+						<span class="header-text">Failed Wage Negotiations</span>
+					</div>
+					
+					<div class="section-body">
 						<table id="openApplications">
 							<thead>
 								<tr>
 									<th>Job Name</th>
-									<th>Desired Wage</th>
+									<th>Result</th>
 								</tr>
 							</thead>
 							<tbody>
 							
-								<c:forEach items="${failedWageNegotiations }" var="dto">
-								<tr>
-									<td><a>${dto.job.jobName }</a></td>
+								<c:forEach items="${failedWageNegotiationDtos }" var="dto">
+								<tr class="static-row">
+									<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
 	
 									<td>
-										<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> was rejected</div>	
+										<fmt:formatNumber var="amount" type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.failedWageProposal.amount}"/>
+										<c:choose>
+											<c:when test="${user.userId == dto.failedWageProposal.proposedByUserId }">
+												<div>Your ${amount } proposal was rejected</div>
+											</c:when>
+											<c:otherwise>
+												<div>You rejected a ${amount } offer</div>
+											</c:otherwise>
+										</c:choose>										
 									</td>					
 								</tr>
 							</c:forEach>
@@ -53,98 +72,103 @@
 		
 	
 	
-		<div id="openApplicationsContainer" class="section bottom-border-thinner">
-			<h4>Open Applications</h4>
-				<div class="table-container">
-				<c:choose>
-					<c:when test="${openApplicationResponseDtos.size() > 0 }">						
-						<table id="openApplications">
-							<thead>
-								<tr>
-									<th>Job Name</th>
-									<th>Application Status</th>
-			<!-- 						<th>Desired Wage</th> -->
-									<th>Wage Status</th>
-								</tr>
-							</thead>
-							<tbody>
-							
-								<c:forEach items="${openApplicationResponseDtos }" var="dto">
-								<tr>
-									<td>${dto.job.jobName }</td>
-									<td>
-										<c:choose>
-											<c:when test="${dto.application.status == 0  }">Waiting for response</c:when>
-											<c:when test="${dto.application.status == 1  }">Declined</c:when>
-											<c:when test="${dto.application.status == 2  }">Being considered</c:when>
-											<c:when test="${dto.application.status == 3  }">Accepted</c:when>
-										</c:choose>							
-									</td>
-									
-			<!-- 						<td> -->
-			<%-- 							<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentDesiredWage}"/> --%>
-			<!-- 						</td> -->
-									
-									<!-- set the wage status -->
-									<td>
-										<c:choose>
-											<c:when test="${dto.currentWageProposal.status == 1 }">
-											<!-- ****** If the current wage proposal has been accepted-->
-												<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
-											</c:when>						
-											<c:when test="${dto.currentWageProposal.proposedByUserId != user.userId }">
-				<!-- 						******* If employer has made the last wage proposal -->
-												<div id="${dto.currentWageProposal.id}" class="counter-offer-container">
-													
-													<div class="offer-context">
-														Employer offered   
-														<span id="amount">
-															<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
-														</span>
-													</div>									
-													<div class="counter-offer-response">
-														<button class="accept-counter">Accept</button>
-														<button class="re-counter">Counter</button>		
-														<button class="decline-counter">Decline</button>							
-														<div class="re-counter-amount-container hide-element">
-															<input class="re-counter-amount"></input>
-															<button class="send-counter-offer">Send</button>
-															<button class="cancel-counter-offer">Cancel</button>
-														</div>										
-													</div>	
-												</div>
-												<div class="sent-response-notification"></div>	
-											</c:when>
-											<c:otherwise>
-				<!-- 						******* Otherwise the applicant has made the last wage proposal -->							
-													<div class="offer-context">
-														Requested   
+		<div id="openApplicationsContainer" class="section">
+			<div class="header">
+				<span class="header-text">Open Applications</span>
+			</div>
+			
+			<div class="section-body">
+			<c:choose>
+				<c:when test="${openApplicationResponseDtos.size() > 0 }">						
+					<table id="openApplications">
+						<thead>
+							<tr>
+								<th>Job Name</th>
+								<th>Application Status</th>
+		<!-- 						<th>Desired Wage</th> -->
+								<th>Wage Status</th>
+							</tr>
+						</thead>
+						<tbody>
+						
+							<c:forEach items="${openApplicationResponseDtos }" var="dto">
+							<tr class="static-row">
+								<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
+								<td>
+									<c:choose>
+										<c:when test="${dto.application.status == 0  }">Waiting for response</c:when>
+										<c:when test="${dto.application.status == 1  }">Declined</c:when>
+										<c:when test="${dto.application.status == 2  }">Being considered</c:when>
+										<c:when test="${dto.application.status == 3  }">Accepted</c:when>
+									</c:choose>							
+								</td>
+								
+		<!-- 						<td> -->
+		<%-- 							<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentDesiredWage}"/> --%>
+		<!-- 						</td> -->
+								
+								<!-- set the wage status -->
+								<td>
+									<c:choose>
+										<c:when test="${dto.currentWageProposal.status == 1 }">
+										<!-- ****** If the current wage proposal has been accepted-->
+											<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
+										</c:when>						
+										<c:when test="${dto.currentWageProposal.proposedByUserId != user.userId }">
+			<!-- 						******* If employer has made the last wage proposal -->
+											<div id="${dto.currentWageProposal.id}" class="counter-offer-container">
+												
+												<div class="offer-context">
+													Employer offered   
+													<span id="amount">
 														<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
-													</div>									
-											</c:otherwise>
-										</c:choose>
-									</td>					
-								</tr>
-							</c:forEach>
-														
-							</tbody>
-						</table>
-										
-					</c:when>
-					<c:otherwise>
-						You have no open applications at this time.
-					</c:otherwise>
-					
-				</c:choose>
-				</div>	
+													</span>
+												</div>									
+												<div class="counter-offer-response">
+													<button class="accept-counter">Accept</button>
+													<button class="re-counter">Counter</button>		
+													<button class="decline-counter">Decline</button>							
+													<div class="re-counter-amount-container hide-element">
+														<input class="re-counter-amount"></input>
+														<button class="send-counter-offer">Send</button>
+														<button class="cancel-counter-offer">Cancel</button>
+													</div>										
+												</div>	
+											</div>
+											<div class="sent-response-notification"></div>	
+										</c:when>
+										<c:otherwise>
+			<!-- 						******* Otherwise the applicant has made the last wage proposal -->							
+												<div class="offer-context">
+													Requested   
+													<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
+												</div>									
+										</c:otherwise>
+									</c:choose>
+								</td>					
+							</tr>
+						</c:forEach>
+													
+						</tbody>
+					</table>
+									
+				</c:when>
+				<c:otherwise>
+					You have no open applications at this time.
+				</c:otherwise>
+				
+			</c:choose>
+			</div>	
 
 		</div> <!-- close open applications -->
 		
-		<div id="notYetStartedJobsContainer" class="section bottom-border-thinner">
-			<h4>Jobs Waiting To Begin</h4>
-			<div class="table-container">
-			<c:choose>
-				<c:when test="${yetToStartJobs.size() > 0 }">					
+		<c:if test="${yetToStartJobs.size() > 0 }">	
+			<div id="notYetStartedJobsContainer" class="section">
+				<div class="header">
+					<span class="header-text">Jobs Hired For - Waiting To Begin</span>
+				</div>
+				
+				<div class="section-body">				
 					<table id="yetToStartJobs">
 						<thead>
 							<tr>
@@ -153,28 +177,26 @@
 								<th>End Date</th>
 							</tr>
 						</thead>
-						<tbody>
-		
+						<tbody>		
 							<c:forEach items="${yetToStartJobs }" var="yetToStartJob">
-								<tr>
-									<td><a>${yetToStartJob.jobName }</a></td>
+								<tr class="static-row">
+									<td><a class="accent">${yetToStartJob.jobName }</a></td>
 									<td>${yetToStartJob.startDate }</td>
 									<td>${yetToStartJob.endDate }</td>
 								</tr>							
 							</c:forEach>
 						</tbody>
-					</table>							
-				</c:when>
-				<c:otherwise>
-					<div>You have no jobs waiting to begin at this time.</div>
-				</c:otherwise>				
-			</c:choose>	
-			</div>		
-		</div><!-- close active jobs container -->	
-		
-		<div id="activeJobsContainer" class="section bottom-border-thinner">
-			<h4>Active Jobs</h4>
-			<div class="table-container">
+					</table>		
+				</div>		
+			</div><!-- close active jobs container -->						
+		</c:if>
+
+		<div id="activeJobsContainer" class="section">
+			<div class="header">
+				<span class="header-text">Jobs In Process</span>
+			</div>
+			
+			<div class="section-body">
 			<c:choose>
 				<c:when test="${activeJobs.size() > 0 }">					
 					<table id="activeJobs">
@@ -188,8 +210,8 @@
 						<tbody>
 		
 							<c:forEach items="${activeJobs }" var="activeJob">
-								<tr>
-									<td><a>${activeJob.jobName }</a></td>
+								<tr class="static-row">
+									<td><a class="accent">${activeJob.jobName }</a></td>
 									<td>${activeJob.startDate }</td>
 									<td>${activeJob.endDate }</td>
 								</tr>							
@@ -204,9 +226,12 @@
 			</div>	
 		</div><!-- close active jobs container -->		
 		
-		<div id="completedJobsContainer" class="section bottom-border-thinner">
-			<h4>Completed Jobs</h4>
-			<div class="table-container">
+		<div id="completedJobsContainer" class="section">
+			<div class="header">
+				<span class="header-text">Completed Jobs</span>
+			</div>
+			
+			<div class="section-body">
 			<c:choose>
 				<c:when test="${completedJobs.size() > 0 }">					
 					<table id="completedJobs">
@@ -218,8 +243,8 @@
 						</thead>
 						<tbody>		
 							<c:forEach items="${completedJobs }" var="completedJob">
-								<tr>
-									<td>${completedJob.jobName }</td>
+								<tr class="static-row">
+									<td><a class="accent">${completedJob.jobName }</a></td>
 									<td>${completedJob.endDate }</td>
 								</tr>							
 							</c:forEach>
@@ -237,10 +262,31 @@
 
 <script>
 	$(document).ready(function(){
+		
+		var dates = [];
+		dates.push(new Date(2016, 8 , 30))
 
 		
+      	$("#calendar").datepicker({
+    	      numberOfMonths: 3,
+//     	      showButtonPanel: true,
+//     	      multidate: true,
+    	      beforeShowDay:function(date){
+    	    	  
+    	    	var aDate =   new Date(2016, 8 ,12);
+    	    	  if(date.getTime() == aDate.getTime()){
+    	    		 return [true, "test111"];
+
+    	    	  }else{
+    	    		  return [true, ""];
+    	    	  }
+    	      }
+    	      
+    	    });
 		
-		
+
+
+
 		
 		
 		$('#availableDays').datepicker({

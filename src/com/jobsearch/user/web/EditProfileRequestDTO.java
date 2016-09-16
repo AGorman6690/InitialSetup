@@ -30,6 +30,17 @@ public class EditProfileRequestDTO {
 	@JsonProperty
 	private int maxWorkRadius;
 	
+	@JsonProperty
+	private int minPay;
+
+	
+	public int getMinPay() {
+		return minPay;
+	}
+
+	public void setMinPay(int minPay) {
+		this.minPay = minPay;
+	}
 
 	public int getMaxWorkRadius() {
 		return maxWorkRadius;

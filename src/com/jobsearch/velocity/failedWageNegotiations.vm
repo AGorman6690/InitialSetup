@@ -23,7 +23,7 @@
 					#foreach($jobDto in $activeJobsWithFailedWageNegotiations)
 					<tr class="static-row">
 						<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
-						<td><a href="/JobSearch/job/$jobDto.job.id">$jobDto.job.jobName</a></td>
+						<td><a class="accent" href="/JobSearch/job/$jobDto.job.id">$jobDto.job.jobName</a></td>
 						<td>$jobDto.failedWageNegotiationDtos.size()</td>	
 						
 						
@@ -36,7 +36,20 @@
 									#else
 										<h4>Applicants</h4>
 									#end
-									<table class="expandable-table">
+									
+									#set($failedWageNegotiationDtos = $jobDto.failedWageNegotiationDtos)
+									###include( "failedWageNegotiationsByJob.vm" )
+									         
+									## The failedWageNegotiationsByJob.vm template should be parsed
+									## and replace the code block below...
+									## However, I cannot load the failedWageNegotiationsByJob.vm template. I could not find
+									## a solution. Is velocity confitured correctly? Should the templates
+									## be stored in the /WEB-INF?
+									## http://docs.spring.io/spring/docs/2.5.x/reference/view.html#view-velocity
+									## ********************************************************
+									 ###*
+									 
+									 <table class="">
 										<thead>
 											<th>Name</th>
 											<th>Negotiation Result</th>
@@ -44,7 +57,7 @@
 										<tbody>
 											#foreach($failedWageNegotiationDto in $jobDto.failedWageNegotiationDtos)
 												<tr>
-													<td><a>$failedWageNegotiationDto.otherUser.firstName</a></td>
+													<td><a class="accent" href="#">$failedWageNegotiationDto.otherUser.firstName</a></td>
 													<td>
 														#set( $offerAmount = $mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) )
 														#set( $offerAmount = $numberTool.format("#0.00", $offerAmount))
@@ -57,8 +70,11 @@
 													
 												</tr>
 											#end 
-										</tbody>
-									</table>
+										</tbody> 
+									</table> 
+									##*#
+									
+									## ********************************************************
 								</div>
 							</td>
 						</tr>

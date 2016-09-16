@@ -39,7 +39,7 @@
 					<td></td>
 				#end
 				
-					<td class="job-name"><a href="../job/$job.Id" >$job.jobName</a></td>
+					<td class="job-name"><a class="accent" href="../job/$job.Id" >$job.jobName</a></td>
 					
 				## if the job has NEW applications
 				#if($job.newApplicationCount > 0)

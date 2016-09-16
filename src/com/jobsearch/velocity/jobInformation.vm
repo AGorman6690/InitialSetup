@@ -1,0 +1,35 @@
+<div class="section">
+	<div class="header2">
+		<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
+		<span class="header-text">Job Information</span>
+		
+		#if($context == "employer")
+			<span id="editJobContainer"><a href="#" id="editJob square-button">Edit (not built)</a></span>
+		#end
+	</div>
+	<div id="jobInfoContainer" class="section-body">
+		<div>
+			<div class="body-element">$job.jobName </div>
+			<div class="body-element">
+				<div>Start: $job.startTime  $job.startDate </div>
+				<div>End: $job.endTime  $job.endDate </div>
+			</div>					
+			<div class="body-element">
+				<div>$job.streetAddress</div>
+				<div>$job.city, $job.state</div>
+				<div>$job.zipCode</div>
+			</div>					
+			<div class="body-element">
+				#foreach($category in $job.categories)
+					<div>$category.name</div>
+				#end
+			</div>					
+			<div class="body-element">$job.description Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+			Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+			</div>
+
+
+		</div>
+	</div>
+	
+</div>
