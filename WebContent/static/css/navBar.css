@@ -10,17 +10,18 @@
 
 .nav-items{
 	float:right;
+	margin-top:12px;
 }
 
 .logo{
 	float:left;
-	border: 1px solid rgb(192,192,192);
-	padding:10px;
+/* 	border: 1px solid rgb(192,192,192); */
+	padding:10px 10px 10px 10px;
 	font-size:20px;	
 }
 
 .nav-items a{
-	border: 1px solid rgb(192,192,192);
+/* 	border: 1px solid rgb(192,192,192); */
 	display:inline-block;
 	list-style: none;
 	padding:7px 10px;
@@ -28,10 +29,11 @@
 	font-size:16px;	
 	float:right;
 	cursor:pointer;
+	
 }
 
 .nav-items a:last-child{
-	border-left: 1px solid rgb(192,192,192);
+/* 	border-left: 1px solid rgb(192,192,192); */
 }
 
 .modal-dialog input[type=submit]{
@@ -78,7 +80,7 @@ a{
 }
 
 .nav-container{
-	padding:45px 45px 10px 45px;
+	padding:45px 45px 0px 45px;
 /* 	background-color:#F6C627; */
 /* 	position:fixed; */
 /* 	top:0px; */

@@ -1,3 +1,41 @@
+#timesContainer{
+	padding:20px 0px;;
+}
+
+#timesContainer .glyphicon-menu-down{
+	margin-right:10px;
+}
+
+.time{
+	cursor:pointer;
+	padding:2.5px 0px;
+}
+
+#selectAllContainer .form-group{
+	display: inline-block;
+}
+
+.time span{
+	width:100px;
+	display:inline-block;
+}
+
+.time input[type=text], #selectAllContainer input[type=text]{
+	width: 75px;
+	margin-right: 3.5px;
+}
+
+
+#selectAll{
+	display:inline;
+}
+
+#selectAll label{
+	width:95px;
+}
+
+
+
 .enable-question{
 		color: green
 	}
@@ -6,6 +44,7 @@
 	color: 	#C0C0C0;
 	
 }
+
 	
 
 .post-job-select{

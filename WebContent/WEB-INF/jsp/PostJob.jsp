@@ -163,6 +163,28 @@
 										<div id="calendar">
 										</div>
 										<button class="btn" id="clearCalendar">Clear</button>
+										
+										<div id="timesContainer">
+											<div id="selectAllContainer">
+												<div id="selectAll" class="checkbox">
+												  <label><input type="checkbox" value="">Select All</label>
+												</div>
+												<div class="form-group">
+												  <label for="usr">Name:</label>
+												  <input type="text" class="form-control" id="usr">
+												</div>
+												<div class="form-group">
+												  <label for="usr">Name:</label>
+												  <input type="text" class="form-control" id="usr">
+												</div>												
+		     								</div>							
+											<span class="glyphicon glyphicon-menu-down"></span>
+
+											<div id="times">
+												
+											</div>
+											
+										</div>
 <!-- 										<fieldset class="form-group"> -->
 <!-- 											<label for="dateRange" class="form-control-label">Start and End Dates</label> -->
 <!-- 											<input style="width: 250px" class="form-control" type="text" -->
@@ -452,9 +474,9 @@
 	$(document).ready(function() {
 		
 		function resetVars(){
-			selectedDays = [];
-			firstSelectedDay = "";
-			secondSelectedDay = "";
+			workDays = [];
+			firstworkDay = {};
+			secondworkDay = {};
 			isSecondDaySelected = 0;
 			isMoreThanTwoDaysSelected = 0;	
 			rangeIsSet = 0;
@@ -475,52 +497,64 @@
 			
 		})
 		
-		var firstSelectedDay;
-		var secondSelectedDay;
+		var firstworkDay = {};
+		var secondworkDay = {};
 		var isSecondDaySelected = 0;
 		var isMoreThanTwoDaysSelected = 0;
 		var rangeIsSet = 0;
 		var rangeIsBeingSet = 0;
-		var selectedDays = [];
+		
+		var workDays = [];
 		$("#calendar").datepicker({
 			numberOfMonths: 1,
 			 onSelect: function(dateText, inst) {
+				 
+				 	//**********************************************
+				 	//**********************************************
+				 	//Clean this up and make comments
+				 	//**********************************************
+				 	//**********************************************
 		            
 				 	//Set the selected day
-				 	var selectedDay = new Date(dateText);
-		            selectedDay = selectedDay.getTime();
+				 	var workDay = {}
+				 	workDay.date = new Date(dateText);
+		            workDay.date = workDay.date.getTime();
 		            
-		            if(selectedDays.length == 3){
+		            if(workDays.length == 3){
 		            	rangeIsSet = 1;
 		            }
 		            
 		            //If the day was already selected, remove the date
-		            if($.inArray(selectedDay, selectedDays) > -1){
-		            	selectedDays = $.grep(selectedDays, function(value){
-		            		return value != selectedDay;
-		            	})
+// 		            if($.inArray(workDay.date, workDays) > -1){
+					if(isWorkDayAlreadyAdded(workDay.date, workDays)){
+		            	
+		            	workDays = removeWorkDay(workDay.date, workDays);
+// 		            	workDays = $.grep(workDays, function(value){
+// 		            		return value != workDay;
+// 		            	})
 		            }
 		            else{
-		            	selectedDays.push(selectedDay);
+// 		            	workDays.push(workDay);
+						addWorkDay(workDay, workDays);
 		            }
 		            
-		            if(selectedDays.length == 0){
+		            if(workDays.length == 0){
 		            	resetVars();
 		            }
-	            	else if(selectedDays.length == 1){
-	            		firstSelectedDay = selectedDays[0];
+	            	else if(workDays.length == 1){
+	            		firstworkDay = workDays[0];
 	            		rangeIsSet = 0
 	            		isSecondDaySelected = 0;
 	            		
 	            	}
-	            	else if(selectedDays.length == 2){
+	            	else if(workDays.length == 2){
 
-	            		secondSelectedDay = selectedDays[1];
+	            		secondworkDay = workDays[1];
 	            		
 	            		isSecondDaySelected = 1;
 	            		rangeIsBeingSet = 1;
 	            		
-	            		if(secondSelectedDay < firstSelectedDay){
+	            		if(secondworkDay.date < firstworkDay.date){
 	            			resetVars();
 	            		}
 	            		
@@ -530,12 +564,12 @@
 		            }
 		            
 // 		            }else if(rangeIsSet == 0){
-// 			            if(selectedDays.length == 1 ){
-// 			            	firstSelectedDay = selectedDay;
+// 			            if(workDays.length == 1 ){
+// 			            	firstworkDay = workDay;
 // 			            }
-// 			            else if(selectedDays.length == 2){
+// 			            else if(workDays.length == 2){
 // 			            	isSecondDaySelected = 1;
-// 			            	secondSelectedDay = selectedDay;
+// 			            	secondworkDay = workDay;
 // 			            	rangeIsSet = 1;
 // 			            }
 // // 			            else{
@@ -543,14 +577,15 @@
 // // 			            	isSecondDaySelected = 0;
 // // 			            }	            	
 // 		            }
-
 		        },
+		        
 		        // This is run for every day visible in the datepicker.
 		        beforeShowDay: function (date) {
 
 		        	if(rangeIsSet == 1){
 		        		
-			        	if($.inArray(date.getTime(), selectedDays) > -1){
+// 			        	if($.inArray(date.getTime(), workDays) > -1){
+						if(isWorkDayAlreadyAdded(date.getTime(), workDays)){
 			        		return [true, "active111"]; 
 			        	}
 			        	else{
@@ -561,13 +596,17 @@
 		        	else if(isSecondDaySelected && !rangeIsSet){
 		        		
 		        		
-		        		if(date.getTime() >= firstSelectedDay && date.getTime() <= secondSelectedDay){
+		        		if(date.getTime() >= firstworkDay.date && date.getTime() <= secondworkDay.date){
 		        			
-		        			if($.inArray(date.getTime(), selectedDays) == -1){
-		        				selectedDays.push(date.getTime());
+// 		        			if($.inArray(date.getTime(), workDays) == -1){
+							if(!isWorkDayAlreadyAdded(date.getTime(), workDays)){
+		        				var workDay = {};
+		        				workDay.date = date.getTime()
+// 								workDays.push(workDay);
+		        				addWorkDay(workDay, workDays);
 		        			}
 		        			
-		        			if(selectedDays.length == 2){
+		        			if(workDays.length == 2){
 // 		        				rangeIsSet = 1;
 		        			}
 		        			return [true, "active111"];
@@ -579,7 +618,8 @@
 		        		
 		        		
 		        	}else{
-			        	if($.inArray(date.getTime(), selectedDays) > -1){
+// 			        	if($.inArray(date.getTime(), workDays) > -1){
+						if(isWorkDayAlreadyAdded(date.getTime(), workDays)){
 			        		return [true, "active111"]; 
 			        	}
 			        	else{
@@ -589,14 +629,14 @@
 		        	}
 
 
-// 		        	else if($.inArray(date.getTime(), selectedDays) > -1){
+// 		        	else if($.inArray(date.getTime(), workDays) > -1){
 // 		        		return [true, "active111"]; 
 // // 		        	}
 // 		        	else{
 // 		        		return [true, ""]; 
 // 		        	}
 		        		
-// 			        	$(selectedDays).each(function(){
+// 			        	$(workDays).each(function(){
 			        		
 // 	 		        		if(this.getTime() != date.getTime()){
 	 			                
@@ -633,6 +673,105 @@
 		
 		
 	})
+	
+	function addWorkDay(workDay, workDays){
+		
+		var $insertBeforeE;
+		
+		workDays.push(workDay);
+		
+		
+		
+		var date = new Date();
+		date.setTime(workDay.date);
+		date = $.datepicker.formatDate("D M d", date);
+		var html = "<div class='time' data-date='" + workDay.date + "'>"
+					+ "<span>" + date + "</span>"
+					+ "<input type='text'><input type='text'>"
+		     		+ "</div>";
+		
+		//By definition, the second date must follow the first date.
+		//Therefore, the correct placement does not need to be determined for the first two dates.
+		if(workDays.length < 2){
+			$("#times").append(html);	
+		}
+		else{
+			$insertBeforeE = getInsertBeforeElement(workDay.date);
+			
+			if($insertBeforeE != null){
+				$(html).insertBefore($insertBeforeE);
+			}
+			else{
+				$("#times").append(html);	
+			}
+			
+		}
+		
+		
+		
+		
+		
+	}
+	
+	function getInsertBeforeElement(newDate){
+		
+		var $e = null;
+		
+		//loop through all days added
+		$("#times").find(".time").each(function(){
+			
+			var thisDate = parseInt($(this).attr("data-date"));
+			
+			//If the date is larger
+			if(thisDate > newDate){
+				
+				//Insert before this time
+				$e = $(this);
+				
+				//break from .each loop
+				return false;
+			}
+		})
+	
+		if($e != null){
+			return $e;
+		}else{
+			//The new date is greater than all dates already added
+			return null;	
+		}
+		
+		
+	
+	}
+	
+	
+	function isWorkDayAlreadyAdded(date, workDays){
+		
+		var arr = [];
+		
+		arr = $.grep(workDays, function(workDay){
+			return workDay.date == date;
+		})
+		
+		if(arr.length > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+		
+	}
+	
+	function removeWorkDay(dateToRemove, workDays){
+		
+		
+		return workDays = $.grep(workDays, function(workDay){
+			
+			//Return the work day if its date does NOT equal the date to remove
+    		return workDay.date != dateToRemove;
+    	})		
+	}
 
 	function select(date, obj){
 		
