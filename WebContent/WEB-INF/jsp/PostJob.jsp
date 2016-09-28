@@ -26,6 +26,7 @@
 
 <body>
 
+	<a href="./create/job/post">new post job</a>
 	<input name="userId" value="${user.userId}" type="hidden"></input>
 	
 	<div id="jobPostContainer">
@@ -157,7 +158,7 @@
 								</div>
 								
 								<div class="job-sub-info-container">
-									<h3>Date and Time</h3>					
+									<h3>Dates and Times</h3>					
 									
 									<div class="job-sub-info">
 										<div id="calendar">
@@ -165,23 +166,25 @@
 										<button class="btn" id="clearCalendar">Clear</button>
 										
 										<div id="timesContainer">
-											<div id="selectAllContainer">
-												<div id="selectAll" class="checkbox">
-												  <label><input type="checkbox" value="">Select All</label>
+											<div id="selectAllContainer" class="">
+												<span id="expandSelectedDates" class="glyphicon glyphicon-menu-up"></span>
+<!-- 												<div id="selectAll" class="checkbox"> -->
+<!-- 												  <label><input type="checkbox" value="">Select All Dates</label> -->
+<!-- 												</div> -->
+												<span id="setAllLabel">Set All Dates</span>
+												<div class="form-group">
+												  <label for="allStartTimes">Start Time</label>
+												  <input type="text" class="form-control" id="allStartTimes">
 												</div>
 												<div class="form-group">
-												  <label for="usr">Name:</label>
-												  <input type="text" class="form-control" id="usr">
-												</div>
-												<div class="form-group">
-												  <label for="usr">Name:</label>
-												  <input type="text" class="form-control" id="usr">
-												</div>												
+												  <label for="allEndTimes">End Time</label>
+												  <input type="text" class="form-control" id="allEndTimes">
+												</div>		
+												<span id="applyTimesToAllDates" class="glyphicon glyphicon-ok"></span>								
 		     								</div>							
-											<span class="glyphicon glyphicon-menu-down"></span>
+											
 
-											<div id="times">
-												
+											<div id="times">												
 											</div>
 											
 										</div>
@@ -473,6 +476,52 @@
 
 	$(document).ready(function() {
 		
+		
+		$("#expandSelectedDates").click(function(){
+			$("#times").toggle(200);
+			toggleClasses($(this), "glyphicon-menu-up", "glyphicon-menu-down");
+		})
+		
+		$("#applyTimesToAllDates").click(function(){
+			setEndTimes($("#allEndTimes").val(), workDays);
+			setStartTimes($("#allStartTimes").val(), workDays);
+			showTimes();
+		})	
+		
+		function setEndTimes(endTime, workDays){
+			
+			$(workDays).each(function(){				
+				this.endTime = endTime;
+			})
+			
+		}
+		
+		function setStartTimes(startTime, workDays){
+			
+			$(workDays).each(function(){				
+				this.startTime = startTime;
+			})
+			
+		}
+		
+		function showTimes(){
+			
+			var containerDiv;
+			var startTimeInput;
+			var endTimeInput;
+			
+			$(workDays).each(function(){				
+				
+				containerDiv = $("#times").find("div[data-date='" + this.date + "']")[0];
+				startTimeInput = $(containerDiv).find("input.start-time")[0];
+				endTimeInput = $(containerDiv).find("input.end-time")[0];
+				
+				$(startTimeInput).val(this.startTime);
+				$(endTimeInput).val(this.endTime);
+			})			
+			
+		}
+		
 		function resetVars(){
 			workDays = [];
 			firstworkDay = {};
@@ -489,11 +538,11 @@
 				
 			resetVars();
 			
-			var activeDays = $("#calendar").find(".active111");
+			removeActiveDaysFormatting();
+			$("#times").empty();
 			
-			$(activeDays).each(function(){
-				$(this).removeClass("active111");
-			})
+			$("#timesContainer").hide(200);
+			
 			
 		})
 		
@@ -529,6 +578,7 @@
 					if(isWorkDayAlreadyAdded(workDay.date, workDays)){
 		            	
 		            	workDays = removeWorkDay(workDay.date, workDays);
+		            	
 // 		            	workDays = $.grep(workDays, function(value){
 // 		            		return value != workDay;
 // 		            	})
@@ -628,34 +678,13 @@
 			        		
 		        	}
 
-
-// 		        	else if($.inArray(date.getTime(), workDays) > -1){
-// 		        		return [true, "active111"]; 
-// // 		        	}
-// 		        	else{
-// 		        		return [true, ""]; 
-// 		        	}
-		        		
-// 			        	$(workDays).each(function(){
-			        		
-// 	 		        		if(this.getTime() != date.getTime()){
-	 			                
-// 	 			            } else {
-// 	 			                return [true, "active111", ""];
-// 	 			            }
-			        		
-// 			        	})	
-// 		        	}
-
-		      
-
 		        }
 		    });
 	
-		$('#startTime').timepicker({
+		$('#allStartTimes').timepicker({
 			'scrollDefault' : '7:00am'
 		});
-		$('#endTime').timepicker({
+		$('#allEndTimes').timepicker({
 			'scrollDefault' : '5:00pm'
 		});
 		
@@ -672,43 +701,72 @@
 		getSubCategories(seedCategoryIds);
 		
 		
+		
+		
+		
 	})
+	
+	function removeActiveDaysFormatting(){
+		var activeDays = $("#calendar").find(".active111");			
+		$(activeDays).each(function(){
+			$(this).removeClass("active111");
+		})
+	}
 	
 	function addWorkDay(workDay, workDays){
 		
+		var newTimeDiv = null;
 		var $insertBeforeE;
+		var formattedDate = new Date();
 		
+		//Show the times container
+// 		$("#selectAllContainer").show();
+		$("#timesContainer").show(200);
+		
+		//Add the work day JSON object to the array
 		workDays.push(workDay);
 		
+		//Format the date
 		
+		formattedDate.setTime(workDay.date);
+		formattedDate = $.datepicker.formatDate("D M d", formattedDate);
 		
-		var date = new Date();
-		date.setTime(workDay.date);
-		date = $.datepicker.formatDate("D M d", date);
+		//Build the html
 		var html = "<div class='time' data-date='" + workDay.date + "'>"
-					+ "<span>" + date + "</span>"
-					+ "<input type='text'><input type='text'>"
+					+ "<span>" + formattedDate + "</span>"
+					+ "<input class='form-control start-time' type='text'><input class='form-control end-time' type='text'>"
 		     		+ "</div>";
 		
-		//By definition, the second date must follow the first date.
+		//By the logic established for calendar date selection,
+		//the second date must be later than the first date.
 		//Therefore, the correct placement does not need to be determined for the first two dates.
 		if(workDays.length < 2){
 			$("#times").append(html);	
 		}
 		else{
+			
+			//Determine which time div element this new date will be place before
 			$insertBeforeE = getInsertBeforeElement(workDay.date);
 			
+			//If the new date is in the middle of the already-added days
 			if($insertBeforeE != null){
 				$(html).insertBefore($insertBeforeE);
 			}
+			//Else the new day is the latest thus far
 			else{
 				$("#times").append(html);	
 			}
 			
 		}
-		
-		
-		
+				
+		//Set the time picker
+		newTimeDiv = $("#times").find("div[data-date='" + workDay.date + "']");
+		$($(newTimeDiv).find("input.start-time")[0]).timepicker({
+			'scrollDefault' : '7:00am'
+		});
+		$($(newTimeDiv).find("input.end-time")[0]).timepicker({
+			'scrollDefault' : '5:00pm'
+		});
 		
 		
 	}
@@ -765,13 +823,20 @@
 	
 	function removeWorkDay(dateToRemove, workDays){
 		
-		
+    	
+    	//Delete the html for the date's set-time-functionality
+    	var e = $("#times").find("div[data-date='" + dateToRemove + "']")[0];
+    	$(e).remove();
+				
+		//Remove JSON object form array
 		return workDays = $.grep(workDays, function(workDay){
 			
 			//Return the work day if its date does NOT equal the date to remove
     		return workDay.date != dateToRemove;
     	})		
+
 	}
+
 
 	function select(date, obj){
 		

@@ -198,6 +198,7 @@ public class UserController {
 		model.setViewName("PostJob");
 		return model;
 	}
+
 	
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 //	@ResponseBody

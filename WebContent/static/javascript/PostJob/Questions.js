@@ -110,7 +110,8 @@ function addNewQuestion(e, event, $clonedNewQuestionContainer){
 	// 			event.stopPropagation();
 				event.preventDefault();
 				
-				var newId = questionContainerIdPrefix + questionCount;
+				var newId = questionContainerIdPrefix + 
+;
 				
 				//Clone added-question html template for new question
 				$("#added-question-template-container .added-question-template").clone().appendTo($("#addedQuestions"));			

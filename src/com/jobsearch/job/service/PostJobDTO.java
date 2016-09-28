@@ -8,7 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 import com.jobsearch.model.Question;
 
-public class JobInfoPostRequestDTO {
+public class PostJobDTO {
 
 	@JsonProperty("jobName")
 	String jobName;
@@ -43,35 +43,48 @@ public class JobInfoPostRequestDTO {
 	@JsonProperty("lng")
 	float lng;
 
-	@JsonProperty("startDate")
-	Date startDate;
-
-	@JsonProperty("endDate")
-	Date endDate;
-
-	@JsonProperty("stringStartDate")
-	String stringStartDate;
-
-	@JsonProperty("stringEndDate")
-	String stringEndDate;
-
-	@JsonProperty("startTime")
-	Time startTime;
-
-	@JsonProperty("endTime")
-	Time endTime;
-
-	@JsonProperty("stringStartTime")
-	String stringStartTime;
-
-	@JsonProperty("stringEndTime")
-	String stringEndTime;
+//	@JsonProperty("startDate")
+//	Date startDate;
+//
+//	@JsonProperty("endDate")
+//	Date endDate;
+//
+//	@JsonProperty("stringStartDate")
+//	String stringStartDate;
+//
+//	@JsonProperty("stringEndDate")
+//	String stringEndDate;
+//
+//	@JsonProperty("startTime")
+//	Time startTime;
+//
+//	@JsonProperty("endTime")
+//	Time endTime;
+//
+//	@JsonProperty("stringStartTime")
+//	String stringStartTime;
+//
+//	@JsonProperty("stringEndTime")
+//	String stringEndTime;
 
 	@JsonProperty("selectedQuestionIds")
 	List<Integer> selectedQuestionIds;
 	
 	@JsonProperty("questions")
 	List<Question> questions;
+	
+	@JsonProperty("workDays")
+	List<WorkDay> workDays;
+	
+	
+
+	public List<WorkDay> getWorkDays() {
+		return workDays;
+	}
+
+	public void setWorkDays(List<WorkDay> workDays) {
+		this.workDays = workDays;
+	}
 
 	public List<Question> getQuestions() {
 		return questions;
@@ -172,69 +185,69 @@ public class JobInfoPostRequestDTO {
 		this.lng = lng;
 	}
 
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public String getStringStartDate() {
-		return stringStartDate;
-	}
-
-	public void setStringStartDate(String stringStartDate) {
-		this.stringStartDate = stringStartDate;
-	}
-
-	public String getStringEndDate() {
-		return stringEndDate;
-	}
-
-	public void setStringEndDate(String stringEndDate) {
-		this.stringEndDate = stringEndDate;
-	}
-
-	public Time getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(Time startTime) {
-		this.startTime = startTime;
-	}
-
-	public Time getEndTime() {
-		return endTime;
-	}
-
-	public void setEndTime(Time endTime) {
-		this.endTime = endTime;
-	}
-
-	public String getStringStartTime() {
-		return stringStartTime;
-	}
-
-	public void setStringStartTime(String stringStartTime) {
-		this.stringStartTime = stringStartTime;
-	}
-
-	public String getStringEndTime() {
-		return stringEndTime;
-	}
-
-	public void setStringEndTime(String stringEndTime) {
-		this.stringEndTime = stringEndTime;
-	}
+//	public Date getStartDate() {
+//		return startDate;
+//	}
+//
+//	public void setStartDate(Date startDate) {
+//		this.startDate = startDate;
+//	}
+//
+//	public Date getEndDate() {
+//		return endDate;
+//	}
+//
+//	public void setEndDate(Date endDate) {
+//		this.endDate = endDate;
+//	}
+//
+//	public String getStringStartDate() {
+//		return stringStartDate;
+//	}
+//
+//	public void setStringStartDate(String stringStartDate) {
+//		this.stringStartDate = stringStartDate;
+//	}
+//
+//	public String getStringEndDate() {
+//		return stringEndDate;
+//	}
+//
+//	public void setStringEndDate(String stringEndDate) {
+//		this.stringEndDate = stringEndDate;
+//	}
+//
+//	public Time getStartTime() {
+//		return startTime;
+//	}
+//
+//	public void setStartTime(Time startTime) {
+//		this.startTime = startTime;
+//	}
+//
+//	public Time getEndTime() {
+//		return endTime;
+//	}
+//
+//	public void setEndTime(Time endTime) {
+//		this.endTime = endTime;
+//	}
+//
+//	public String getStringStartTime() {
+//		return stringStartTime;
+//	}
+//
+//	public void setStringStartTime(String stringStartTime) {
+//		this.stringStartTime = stringStartTime;
+//	}
+//
+//	public String getStringEndTime() {
+//		return stringEndTime;
+//	}
+//
+//	public void setStringEndTime(String stringEndTime) {
+//		this.stringEndTime = stringEndTime;
+//	}
 
 	public List<Integer> getSelectedQuestionIds() {
 		return selectedQuestionIds;

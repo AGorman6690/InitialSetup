@@ -59,6 +59,25 @@ public class JobController {
 		jobService.addPosting(postingDto, user);
 	}
 	
+	
+	@RequestMapping(value = "/create/job/post", method = RequestMethod.GET)
+	public ModelAndView createJobPost(ModelAndView model, HttpSession session) {
+
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		model.addObject("user", user);
+		
+		
+		
+//		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
+//		model.addObject("job", job);
+
+		model.setViewName("PostJob_new");
+		return model;
+	}
+	
+
+	
 	@RequestMapping(value ="/jobs/sort", method = RequestMethod.GET)
 	@ResponseBody
 	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,

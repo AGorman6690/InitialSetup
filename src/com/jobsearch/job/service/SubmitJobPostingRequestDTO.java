@@ -11,7 +11,7 @@ import com.jobsearch.model.Question;
 public class SubmitJobPostingRequestDTO {
 
 	@JsonProperty("jobs")
-	List<JobInfoPostRequestDTO> jobs;	
+	List<PostJobDTO> jobs;	
 
 	@JsonProperty("questions")
 	List<Question> questions;
@@ -28,11 +28,11 @@ public class SubmitJobPostingRequestDTO {
 //	@JsonProperty("jobQuestionPosts")
 //	List<JobQuestionPostRequestDTO> jobQuestionPosts;
 
-	public List<JobInfoPostRequestDTO> getJobs() {
+	public List<PostJobDTO> getJobs() {
 		return jobs;
 	}
 
-	public void setJobInfoPosts(List<JobInfoPostRequestDTO> jobs) {
+	public void setJobInfoPosts(List<PostJobDTO> jobs) {
 		this.jobs = jobs;
 	}
 

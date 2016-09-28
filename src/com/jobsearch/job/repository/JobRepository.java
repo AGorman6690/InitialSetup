@@ -18,7 +18,8 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.PostJobDTO;
+import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
@@ -86,11 +87,11 @@ public class JobRepository {
 
 	}
 
-	public void addJob(List<JobInfoPostRequestDTO> jobDtos) {
+	public void addJob(List<PostJobDTO> jobDtos) {
 		try {
 
 			ResultSet result = null;
-			for (JobInfoPostRequestDTO job : jobDtos) {
+			for (PostJobDTO job : jobDtos) {
 					CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call create_Job(?, ?, ?, ?, ?)}");
 
@@ -131,11 +132,11 @@ public class JobRepository {
 	}
 
 
-	public void addJob(JobInfoPostRequestDTO jobDto, JobSearchUser user) {
+	public void addJob(PostJobDTO jobDto, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJobName());
 			 cStmt.setInt(2, user.getUserId());
@@ -147,17 +148,19 @@ public class JobRepository {
 			 cStmt.setString(7, jobDto.getZipCode());
 			 cStmt.setFloat(8,  jobDto.getLat());
 			 cStmt.setFloat(9,  jobDto.getLng());
-			 cStmt.setDate(10, (Date) jobDto.getStartDate());
-			 cStmt.setDate(11, (Date) jobDto.getEndDate());
-			 cStmt.setTime(12,  jobDto.getStartTime());
-			 cStmt.setTime(13,  jobDto.getEndTime());
+//			 cStmt.setDate(10, (Date) jobDto.getStartDate());
+//			 cStmt.setDate(11, (Date) jobDto.getEndDate());
+//			 cStmt.setTime(12,  jobDto.getStartTime());
+//			 cStmt.setTime(13,  jobDto.getEndTime());
 
 			 ResultSet result = cStmt.executeQuery();
 
+			 //Set the newly created job
 			 Job createdJob = new Job();
 			 result.next();
 			 createdJob.setId(result.getInt("JobId"));
 
+			 //Add the job's categories to the database
 			 for(Integer categoryId: jobDto.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
@@ -173,6 +176,9 @@ public class JobRepository {
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
+			
+			//Set the work days
+			jobService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -464,6 +470,14 @@ public class JobRepository {
 						+ " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
 		
 		return this.JobRowMapper(sql, new Object[]{ applicationId }).get(0);
+	}
+
+	public void addWorkDay(int jobId, WorkDay workDay) {
+		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date)"
+						+ "  VALUES (?, ?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{ jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDate() });
+		
 	}
 
 

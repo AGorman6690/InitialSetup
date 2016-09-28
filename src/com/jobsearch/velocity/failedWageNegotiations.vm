@@ -4,7 +4,7 @@
 		
 		<div class="header"><h3>Failed Wage Negotiations</h3></div>
 	
-		<div class="jobs-table-container">
+		<div class="section-body">
 			##Table
 			<table id="failedWageNegotiations">
 				<thead>

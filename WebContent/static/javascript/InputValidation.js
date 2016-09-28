@@ -1,4 +1,38 @@
 
+$(document).ready(function(){
+	
+	$("body").on("change", ".invalid", function(){
+		
+		var value = "";
+		if($(this).id == "times"){
+			validateTimes();	
+		}else if($(this).is("input") || $(this).is("textarea")){
+			value = $(this).val()
+		}else if($(this).is("select")){
+			value = $(this).find(":selected").val();
+		}
+		
+		validateInput($(this), value);
+
+	})
+
+})
+
+
+function validateInput($e, value){
+	if(value == ""){
+		setInvalidCss($e);
+		return 1;
+	}else{
+		setValidCss($e);
+		return 0;
+	}
+
+}
+
+
+
+
 function validateInputExistence($e, value){
 	if(value == ""){
 		setInvalidCss($e);
@@ -25,10 +59,10 @@ function isValidNumberGreaterThan0(value){
 function validateSelectInput($e, value){
 	
 	if(value < 0 || value == ""){
-		setInvalidSelectCss($e);
+		setInvalidCss($e);
 		return 1;
 	}else{
-		setValidSelectCss($e);
+		setValidCss($e);
 		return 0;
 	}
 
@@ -67,27 +101,51 @@ function validateJobName(requestedJobName, jobs){
 
 function setInvalidCss($e){
 
-	if($e.hasClass("invalid-input-existence") == 0){
-		$e.addClass("invalid-input-existence");
+	if($e.hasClass("invalid") == 0){
+		$e.addClass("invalid");
 	}	
 }
 
-function setInvalidSelectCss($e){
-	if($e.hasClass("invalid-select-input") == 0){
-		$e.addClass("invalid-select-input");
-	}	
+function validateDates(){
+	var selectedDates = $("#times").find(".time");
+	var $e = $("#calendar");
+	if(selectedDates.length == 0){
+		setInvalidCss($e);
+		return 1;
+		
+	}else{
+		setValidCss($e);
+		return 0;
+	}
 }
+
+function validateTimes(){
+	var times = $("#times").find(".time-container input");
+	var result = 0;
+	if(times.length > 0){
+		$(times).each(function(){
+			result += validateInput($(this), $(this).val())
+		})
+		return result;
+	}
+}
+
+//function setInvalidSelectCss($e){
+//	if($e.hasClass("invalid-select-input") == 0){
+//		$e.addClass("invalid-select-input");
+//	}	
+//}
 function setValidCss($e){
-	if($e.hasClass("invalid-input-existence") == 1){
-		$e.removeClass("invalid-input-existence");
+	if($e.hasClass("invalid") == 1){
+		$e.removeClass("invalid");
 	}	
 }
 
-function setValidSelectCss($e){
-	if($e.hasClass("invalid-select-input") == 1){
-		$e.removeClass("invalid-select-input");
-	}	
-}
+//function setValidSelectCss($e){
+//	if($e.hasClass("invalid") == 1){
+//		$e.removeClass("invalid");
+//	}	
+//}
 
 function validatePostJobInputs(jobs){
 
@@ -95,39 +153,45 @@ function validatePostJobInputs(jobs){
 	var result = 0;
 	
 	//Validate job name is provided
-	$e = $(document.getElementsByName('jobName')[0]);
+	$e = $(document.getElementsByName('name')[0]);
 	result += validateInputExistence($e, $e.val());
 	
 	//Verify the job name is unique only if the job name is provided
 	if(result == 0){
-		result += validateJobName(document.getElementsByName('jobName')[0].value, jobs)	
+		result += validateJobName(document.getElementsByName('name')[0].value, jobs)	
 	}
 		
 	//Validate job description is provided	
-	$e = $(document.getElementsByName('jobDescription')[0]);
-	result += validateInputExistence($e, $e.val());
+	$e = $(document.getElementsByName('description')[0]);
+	result += validateInput($e, $e.val());
 
 	//Validate street address is provided
 	$e = $(document.getElementsByName('streetAddress')[0]);
-	result += validateInputExistence($e, $e.val());
+	result += validateInput($e, $e.val());
 	
 	//Validate city is provided
 	$e = $(document.getElementsByName('city')[0]);
-	result += validateInputExistence($e, $e.val());
+	result += validateInput($e, $e.val());
 
 	//Validate state is selected
 	$e = $("#state");
-	result += validateSelectInput($e.parent(), $e.find(":selected").val());
+	result += validateInput($e, $e.find(":selected").val());
 	
-	//Validate date range is selected
-	$e = $("#dateRange");
-	result += validateInputExistence($e, $e.val());
+	//Validate at least one date is selected
+	result += validateDates();
 	
-	$e = $($("#startTime"));
-	result += validateInputExistence($e, $e.val());
+	//Validate times are set
+	result += validateTimes();
 	
-	$e = $($("#endTime"));
-	result += validateInputExistence($e, $e.val());
+//	//Validate date range is selected
+//	$e = $("#dateRange");
+//	result += validateInputExistence($e, $e.val());
+//	
+//	$e = $($("#startTime"));
+//	result += validateInputExistence($e, $e.val());
+//	
+//	$e = $($("#endTime"));
+//	result += validateInputExistence($e, $e.val());
 	
 	//Validate categories
 	result += validateMinimumSelectedCategories();
@@ -167,28 +231,29 @@ function validateMaximumSelectedCategories(){
 function validateAddQuestionInputs(){
 	
 	var $e;
+	var $selectedOption;
 	var result = 0;
-	var questionFormatValue = -1;
 	var answerItems = [];
 	var i;
 	
 	
-	$e = $($("#new-question-container").find(".question-formats")[0]);
-	questionFormatValue = $e.find(":selected").val();
-	result += validateSelectInput($e.parent(), $e.find(":selected").val());
+	//Verify question format
+	$e = $("#questionFormat");
+	$selectedOption = $($e.find("option:selected")[0]);
+	result += validateInput($e, $selectedOption.html());
 	
-	$e = $($("#newQuestionText"));
-	result += validateInputExistence($e, $e.val());
-	
-	
-	//Potentially validate answer items.
-	//I.e. there must be at least 2 answer options if select single or select multiple.
-	//Consider this later if deemed necessary.
-	//*********************************************************
-//	if(questionFormatValue == 2 || questionFormatValue == 3){
-//		answerItems = $("#new-question-container").find(".answer-option");
-//		for(i = 0; i = 1; i++)
-//	}
+	//If multiple choice question, verify answers have been given
+	if($selectedOption.val() == 2 || $selectedOption.val() ==3){
+		answerItems = $("#answerList").find(".answer-container input");
+		$(answerItems).each(function(){
+			result += validateInput($(this), $(this).val());
+		})
+	}
+		
+	//Verify question
+	$e = $("#question");
+	result += validateInput($e, $e.val());
+
 	
 
 	if(result > 0){

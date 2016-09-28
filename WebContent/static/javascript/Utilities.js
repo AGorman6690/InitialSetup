@@ -1,3 +1,22 @@
+function addClassToArrayItems(array, className){
+	$(array).each(function(){
+		$(this).addClass(className);
+	})
+}
+
+
+function highlightGroupItemById(item, group, className, attribute){
+	
+	$(group).each(function(){
+		if($(this).attr(attribute) == $(item).attr(attribute)){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+
 
 function initializeMap(mapDivId, lat, lng) {
 	//Eventually initialize it to a user defualt

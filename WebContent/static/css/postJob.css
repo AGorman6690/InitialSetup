@@ -1,3 +1,29 @@
+
+#setAllLabel{
+	width: 100px;
+    display: inline-block;
+    padding-left: 6px;
+}
+
+#timesContainer{
+	display:none;
+}
+
+#applyTimesToAllDates{
+	font-size: 17px;
+	cursor:pointer;
+}
+
+/* Override Bootstrap */
+#timesContainer .form-control{
+	height:26px;
+}
+
+#expandSelectedDates{
+/* 	display: none; */
+}
+
+
 #timesContainer{
 	padding:20px 0px;;
 }
@@ -7,8 +33,8 @@
 }
 
 .time{
-	cursor:pointer;
-	padding:2.5px 0px;
+/* 	cursor:pointer; */
+	padding:2.5px 25px;
 }
 
 #selectAllContainer .form-group{
@@ -23,11 +49,21 @@
 .time input[type=text], #selectAllContainer input[type=text]{
 	width: 75px;
 	margin-right: 3.5px;
+	
+}
+
+.time input[type=text]{
+	display: inline-block;
 }
 
 
 #selectAll{
-	display:inline;
+	display:inline;	
+    padding-left: 5px;
+}
+
+#selectAllContainer{
+	padding-bottom:10px;
 }
 
 #selectAll label{

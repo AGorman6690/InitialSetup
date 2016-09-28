@@ -69,7 +69,7 @@ public class JobServiceImpl {
 	
 	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
-		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
+		for (PostJobDTO jobDto : postingDto.getJobs()) {
 			//***********************************************************************************
 			//Should we verify the address on the client side?  I'm thinking so... 
 			//Why go all the way to the server
@@ -84,14 +84,16 @@ public class JobServiceImpl {
 			GeocodingResult[] results = maps.getLatAndLng(address);
 
 			if (results.length == 1) {
+				
 
-				// Convert strings to sql Date objects
-				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
-				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
 
-				// Convert strings to sql Time objects
-				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
-				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
+//				// Convert strings to sql Date objects
+//				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
+//				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
+//
+//				// Convert strings to sql Time objects
+//				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
+//				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
 
 				// Address this idea later.
 				// Should we format the user's address and city per the data from Google maps?
@@ -107,12 +109,22 @@ public class JobServiceImpl {
 				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getQuestions()));
 
 				repository.addJob(jobDto, user);
+
 			} else if (results.length == 0) {
 				// invalid address
 			} else if (results.length > 1) {
 				// ambiguous address
 			}
 		}
+	}
+
+	public void addWorkDays(int jobId, List<WorkDay> workDays) {
+		
+		for(WorkDay workDay : workDays){
+			workDay.setDate(DateUtility.getSqlDate(workDay.getStringDate()));
+			repository.addWorkDay(jobId, workDay);
+		}
+		
 	}
 
 	private List<Question> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<Question> postingDtoQuestions) {

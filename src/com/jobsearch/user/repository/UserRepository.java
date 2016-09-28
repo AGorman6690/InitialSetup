@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
@@ -588,7 +588,7 @@ public class UserRepository {
 		return this.JobSearchUserRowMapper(sql, new Object[] {});
 	}
 
-	public void createJob_DummyData(JobInfoPostRequestDTO dummyJob, int dummyCreationId) {
+	public void createJob_DummyData(PostJobDTO dummyJob, int dummyCreationId) {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -600,10 +600,10 @@ public class UserRepository {
 			cStmt.setString(4, dummyJob.getState());
 			cStmt.setFloat(5, dummyJob.getLat());
 			cStmt.setFloat(6, dummyJob.getLng());
-			cStmt.setDate(7, dummyJob.getStartDate());
-			cStmt.setDate(8, dummyJob.getEndDate());
-			cStmt.setTime(9, dummyJob.getStartTime());
-			cStmt.setTime(10, dummyJob.getEndTime());
+//			cStmt.setDate(7, dummyJob.getStartDate());
+//			cStmt.setDate(8, dummyJob.getEndDate());
+//			cStmt.setTime(9, dummyJob.getStartTime());
+//			cStmt.setTime(10, dummyJob.getEndTime());
 			cStmt.setInt(11, dummyCreationId);
 
 			// cStmt.addBatch();

@@ -1,0 +1,317 @@
+#cartContainer .section-body button{
+	margin:0px 3px;
+}
+
+#cartContainer h4{
+	display:inline;
+}
+
+#questionCart button{
+	cursor:default;
+}
+
+.header-container span.mock-anchor{
+	margin-left:10px;	
+}
+
+.header-container span.glyphicon-ok{
+	display:none;
+	font-size:25px;
+	cursor:pointer;
+}
+
+.header-container{
+    margin-bottom: 10px;
+    height:40px;
+    vertical-align: bottom;
+}
+
+
+.question-edit{
+	cursor:pointer !important;
+    background-color: #32858D;
+    color: #ffffff;
+}
+
+.question-selected{
+    background-color: #F6C627;
+}
+
+.job-selected{
+    background-color: #F6C627;
+}
+
+.button-container{
+    padding-left: 15px;
+}
+
+.toggle-section{
+    margin-right: 5px;
+}
+
+.button-container button{
+	padding:5px 8px;
+	margin:4px 3px;
+	background-color: #163B3D;
+	color:#ffffff;
+}
+
+#answerListContainer{
+	display:none;
+}
+#answerListContainer span{
+	font-size:15px;
+}
+
+.answer-container input{
+	display:inline;
+	width:150px;
+	margin-left:10px;
+}
+
+.answer-container{
+	padding-bottom:8px;
+}
+
+
+#cartContainer{
+/* 	display:none; */
+	padding-bottom:25px;
+}
+
+#cartContainer .section-body{
+	padding-bottom:13px;
+}
+
+.form-group input .form-group label{
+	display:inline-block
+}
+
+/* Override Bootstrap */
+.form-group input{
+	width:250px;
+	display:inline-block;
+	font-weight: 100;
+}
+
+.form-group textarea{
+	width:500px;
+	display:inline-block;
+	font-weight: 100;
+}
+
+.form-group select{
+	width:250px;
+	display:inline-block;
+}
+
+.form-group label{
+	width:90px;
+	display:inline-block;
+	font-weight:100;
+	font-size:15px;
+    vertical-align: top;
+}
+
+.container{
+	padding-bottom:50px;
+}
+
+.input-container{
+	padding-bottom:10px;
+}
+
+.invalid-message{
+	display:none;
+}
+
+
+#jobInfo{
+	padding-bottom: 30px;	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#setAllLabel{
+	width: 100px;
+    display: inline-block;
+    padding-left: 6px;
+}
+
+#timesContainer{
+	display:none;
+}
+
+#applyTimesToAllDates{
+	font-size: 17px;
+	cursor:pointer;
+}
+
+/* Override Bootstrap */
+#timesContainer .form-control{
+	height:26px;
+}
+
+#expandSelectedDates{
+/* 	display: none; */
+}
+
+.time-container{
+	width:85px;
+    display: inline-block;
+}
+
+#timesContainer{
+	padding:20px 0px;
+}
+
+#timesContainer label{
+	display:block;
+}
+
+#timesContainer .glyphicon-menu-down{
+	margin-right:10px;
+}
+
+.time{
+/* 	cursor:pointer; */
+	padding:2.5px 25px;
+}
+
+/* #selectAllContainer .form-group{ */
+/* 	display: inline-block; */
+/* } */
+
+.time span{
+	width:100px;
+	display:inline-block;
+}
+
+.time input[type=text], #selectAllContainer input[type=text]{
+	width: 75px;
+	margin-right: 3.5px;
+	
+}
+
+.time input[type=text]{
+	display: inline-block;
+}
+
+
+/* #selectAll{ */
+/* 	display:inline;	 */
+/*     padding-left: 5px; */
+/* } */
+
+#selectAllContainer{
+	padding-bottom:10px;
+}
+
+/* #selectAll label{ */
+/* 	width:95px; */
+/* } */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.level-zero{
+	margin-left: 10px;
+	
+}
+
+.level-1{
+	margin-left: 40px;
+	
+}
+
+.level-2{
+	margin-left: 70px;
+}
+
+.level-3{
+	margin-left: 100px;
+}
+
+.level-4{
+	margin-left: 130px;
+}
+
+#categoryTree li .glyphicon{
+	cursor: pointer;
+	margin-left: 2.5px;
+	margin-right: 2.5px;
+}
+
+.category-list-item[data-level='0']{
+	background-color: #C8C8C8;
+}
+.category-list-item[data-level='1']{
+	background-color: #E0E0E0 ;
+}
+.category-list-item[data-level='2']{
+	background-color: #F0F0F0;
+}
+.category-list-item[data-level='3']{
+	background-color: #F8F8F8;
+}
+
+.category-list-item[data-level='4']{
+	background-color: #FFFFFF;
+}			
+
+#selectedCategories button{
+	background-color: #8cb3d9;
+	margin-right: 2.5px;
+	margin-bottom: 2.5px;
+	cursor: default;
+    opacity: 1;
+}
+
+.remove-category{
+	cursor: pointer;
+	margin-left: 2.5px;
+}
+
+#categoryTree li .glyphicon-plus{
+	color: #009999;
+/* 			color: #00cc99; */
+}		
+
+#categoryTree li{
+	cursor: default;
+}		
+
+.disabled-category{
+	cursor: default !important; 
+}
+
+

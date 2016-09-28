@@ -25,7 +25,7 @@ import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;

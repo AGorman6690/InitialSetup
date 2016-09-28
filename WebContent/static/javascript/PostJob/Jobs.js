@@ -177,24 +177,27 @@ $(document).ready(function() {
 
 	function addJobToCart(){
 				
- 		if(validatePostJobInputs(jobs) == 0){
+// 		if(validatePostJobInputs(jobs) == 0){
+		
+			jobCount += 1;
+		
 			var job = {};
 			job = setJobInfo(job);
 			job.id = jobCount;			
 			jobs.push(job);
 			
-			$("#addedJobsContainer").show();
-			$("#submitJobsContainer").show();
+			$("#cartContainer").show(200);
+
 			
-			$("#addedJobs").append(
-					'<button value=' + jobCount + ' type="button" class="added-job btn inactive-button">'
+			$("#jobCart").append(
+					'<button data-job-id=' + jobCount + ' type="button" class="added-job btn inactive-button">'
 							+ job.jobName + '</button>')
 			
 			clearPostJobInputs();		
 			removeInvalidFormControlStyles()
 			
 			jobCount++			
-		}
+//		}
 	}
 	
 function submitJobs(confirmation){
@@ -268,22 +271,58 @@ function deleteJob(confirmation){
 	}
 }
 
+function getWorkDays(){
+	
+	var days = $("#times").find(".time");
+	var date;
+	var eStartTime;
+	var eEndTime;	
+	var workDays = [];
+	var workDay;
+	
+	$(days).each(function(){
+		
+		//Read the DOM
+		date = new Date;
+		date.setTime($(this).attr("data-date"));		
+		date = $.datepicker.formatDate("yy-mm-dd", date);
+		
+//		date = date.toString();
+		
+		
+		
+		eStartTime = $(this).find(".start-time")[0];
+		eEndTime = $(this).find(".end-time")[0];
+		
+		//Set the JSON
+		workDay = {};
+		workDay.stringDate = date;
+		workDay.stringStartTime = formatTime($(eStartTime).val());
+		workDay.stringEndTime = formatTime($(eEndTime).val());
+		
+		//Add to array
+		workDays.push(workDay);
+	})
+	
+	return workDays;
+}
 
 function setJobInfo(job) {
 	var i;
 	
-	job.jobName = document.getElementsByName('jobName')[0].value;
+	job.jobName = document.getElementsByName('name')[0].value;
 	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
 	job.city = document.getElementsByName('city')[0].value;
 	job.state = document.getElementsByName('state')[0].value;
 	job.zipCode = document.getElementsByName('zipCode')[0].value;
-	job.description = document.getElementsByName('jobDescription')[0].value;
-	job.userId = document.getElementsByName('userId')[0].value;
-	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
-	job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
-	job.stringStartTime = formatTime($("#startTime").val());
-	job.stringEndTime = formatTime($("#endTime").val());
-
+	job.description = document.getElementsByName('description')[0].value;
+//	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
+//	job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
+//	job.stringStartTime = formatTime($("#startTime").val());
+//	job.stringEndTime = formatTime($("#endTime").val());
+	
+	
+	job.workDays = getWorkDays();
 	
 	//set categories
 	job.categoryIds = [];

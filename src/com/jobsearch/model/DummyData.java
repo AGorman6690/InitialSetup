@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;

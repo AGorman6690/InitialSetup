@@ -1,0 +1,28 @@
+package com.jobsearch.job.service;
+
+public class PostQuestionDTO {
+	
+	private int id;
+	private String text;
+	private int formatId;
+		
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public String getText() {
+		return text;
+	}
+	public void setText(String text) {
+		this.text = text;
+	}
+	public int getFormatId() {
+		return formatId;
+	}
+	public void setFormatId(int formatId) {
+		this.formatId = formatId;
+	}
+	
+}
