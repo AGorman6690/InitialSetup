@@ -27,7 +27,7 @@
 <body>
 
 	<div class="container">
-		<div id="cartContainer" class="section">
+		<div id="cartContainer" class="section actions-not-clickable">
 			<div class="header">
 				<span class="header-text">Cart</span>
 				<span id="" class="button-container">
@@ -35,21 +35,38 @@
 					 data-toggle="modal" data-target="#confirmJobSubmit">Submit Jobs</button>
 				</span>				
 			</div>		
-			<div id="jobCart" class="section-body">
-				<div class="header-container">
-					<h4>Jobs</h4>
-					<span class="mock-anchor">Delete</span>
-					<span class="mock-anchor">Edit</span>
-					<span id="okEditJob" class="glyphicon glyphicon-ok"></span>
-					<span class="mock-anchor">Copy</span>
-					<span class="mock-anchor">Select Questions</span>
+			<div id="jobCart" class="sub-cart section-body">
+				<div class="relative">
+					<div class="header-container">
+						<h4>Jobs</h4>
+						<div class="action-container">
+							<span id="deleteJob" class="action" data-toggle="modal" data-target="">Delete</span>
+<!-- 							<span class="glyphicon glyphicon-ok"></span> -->
+						</div>
+						<div class="action-container">
+							<span class="action requires-acknowledgement">Edit</span>
+							<span class="glyphicon glyphicon-ok"></span>
+						</div>
+<!-- 						<div class="action-container"> -->
+<!-- 							<span class="action">Copy</span> -->
+<!-- <!-- 							<span class="glyphicon glyphicon-ok"></span> --> 
+<!-- 						</div> -->
+						<div class="action-container">
+							<span class="action requires-acknowledgement">Select Questions</span>
+							<span class="glyphicon glyphicon-ok"></span>
+						</div>															
+					</div>
 				</div>
 			</div>
-			<div id="questionCart" class="section-body" data-edit="0">
-				<div class="header-container">
-					<h4>Questions</h4>
-					<span id="editQuestion" class="mock-anchor">Edit</span>
-					<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span>
+			<div id="questionCart" class="sub-cart section-body" data-edit="0">
+				<div class="relative">
+					<div class="header-container">
+						<h4>Questions</h4>
+						<div class="action-container">
+							<span id="editQuestion" class="action requires-acknowledgement">Edit</span>
+							<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -112,7 +129,7 @@
 					<div class="section-body">
 						<h4>Dates and Times</h4>
 							<div class="body-element-container bottom-border-thinner">
-								<div id="calendar">
+								<div id="calendar" data-is-showing-job="0">
 								</div>
 								<button class="btn" id="clearCalendar">Clear</button>
 								
@@ -362,35 +379,151 @@
 	var postQuestionDtos = [];
 	var questionCount = 0;
 // 	var questionContainerIdPrefix = 'question-';
-	
+	var workDays = [];
 		
 
 	$(document).ready(function() {
 		
-		$("#editQuestion").click(function(){
-			$("#questionCart").attr("data-edit", 1);
-			$("#okEditQuestion").show();
-			
-			var buttons = $("#questionCart").find("button");
-			addClassToArrayItems(buttons, "question-edit");
-			
-		})
 		
-		
-		$("#jobCart").on("click", "button", function(){
-			var buttons = $("#jobCart").find("button");			
-			highlightGroupItemById(this, buttons, "job-selected", "data-job-id");
-		})
-		
-		$("#questionCart").on("click", "button", function(){
+		//Click event for an action that requires acknowledgement
+		$("body").on("click", ".actions-clickable .action.requires-acknowledgement", function(){
 			
-			if($("#questionCart").attr("data-edit") == 1){
-				var buttons = $("#questionCart").find("button");			
-				highlightGroupItemById(this, buttons, "question-selected", "data-question-id");	
+			//Show check mark
+			$($(this).siblings(".glyphicon-ok")).show();
+			
+			//Display the actions as "un-clickable".
+			//This forces the user to click the checkmark, and not another action, to signify
+			//they are finished with the action they clicked.
+			//Determine whether the button is a job or question
+			var subCartId = getSubCartId(this)			
+			toggleActionAppearances(subCartId);
+			
+			
+			
+			//If editing a quesiton, then collapse the job info body.
+			//This saves the user from having to scroll to the bottom of the page.
+			if($(this).attr("id") == "editQuestion"){
+				$("#jobInfoBody").hide(200);	
 			}
 			
 			
-		})		
+		})
+		
+		$(".action-container .glyphicon-ok").click(function(){
+			
+			//Hide check mark
+			$(this).hide();
+			
+			//Display the action "mock anchors" as "clickable"
+// 			toggleActionAppearances();
+			
+			//Clear selected button.
+			//By design, there can only be one selected button at any one time
+			deselectButton();
+			
+			
+		})
+		
+		function deselectButton(){
+			$($("#cartContainer").find("button.selected")[0]).removeClass("selected");
+		}
+		
+		function toggleActionAppearances(cartId){
+			//The cart id is passed because if the user clicks a job, then only the job
+			//actions should be enabled, and vice versa
+			
+			toggleClasses($("#" + cartId), "actions-clickable", "actions-not-clickable")
+			
+			//Only one cart's actions can be clickable.
+			//Always remove the "clickable" feature from the other cart.
+			if(cartId == "jobCart"){
+				$("#questionCart").removeClass("actions-clickable");
+			}else{
+				$("#jobCart").removeClass("actions-clickable");	
+			}
+			
+			//This ensures the confirmation modal to delete the job does not show when the
+			//user clicks "Delete" when the actions are disabled 
+			if($("#jobCart").hasClass("actions-not-clickable") == 1){
+				
+				//Remove the modal target
+				$("#deleteJob").attr("data-target", "");
+			}else{
+			
+				//Apply the modal target
+				$("#deleteJob").attr("data-target", "#confirmJobDelete");
+			}
+			
+// 			//By "Action" I mean the various actions the user can perform on an
+// 			//already-added job or question		
+// 			var actions = $("#cartContainer").find(".action");
+// 			$(actions).each(function(){
+// 				toggleClasses($(this), "mock-anchor", "not-clickable");
+// 			})
+			
+// 			var buttons = $("#cartContainer").find("button");
+// 			$(buttons).each(function(){
+// 				toggleClasses($(this), "clickable", "not-clickable");
+// 			})
+		
+		}
+		
+		
+		
+		
+// 		$("#editQuestion").click(function(){
+// 			$("#questionCart").attr("data-edit", 1);
+// 			$("#okEditQuestion").show();
+			
+// 			var buttons = $("#questionCart").find("button");
+// 			addClassToArrayItems(buttons, "question-edit");
+			
+// 		})
+		
+		
+		$("#cartContainer").on("click", "button", function(){
+			var buttons;
+			
+			//Determine whether the button is a job or question
+			var subCartId = getSubCartId(this)
+			
+			toggleActionAppearances(subCartId);
+			
+			if(subCartId == "jobCart"){
+				showAddedJob(this); 
+			}
+			
+
+			
+			//If the button is selected, un-select it
+			if($(this).hasClass("selected") == 1){
+				$(this).removeClass("selected");
+			
+			//Else hightlight the clicked button
+			}else{
+				//Get all job and question buttons in cart
+				buttons = $("#cartContainer").find("button");		
+				highlightArrayItemByAttribute(this, buttons, "selected");
+			}
+		})
+		
+// 		$("#questionCart").on("click", "button", function(){
+			
+// 			//If the button is clickable
+// 			if($(this).hasClass("not-clickable") == 0){
+// // 			if($("#questionCart").attr("data-edit") == 1){
+// 				var buttons = $("#questionCart").find("button");			
+// 				highlightGroupItemById(this, buttons, "question-selected", "data-question-id");	
+// 			}
+			
+			
+// 		})	
+
+		function getSubCartId(childElement){
+			var subCart = $(childElement).parents(".sub-cart")[0];
+			return $(subCart).attr("id");
+	
+		}
 	
 		
 		$("#addQuestion").click(function(){
@@ -567,7 +700,7 @@
 		var rangeIsSet = 0;
 		var rangeIsBeingSet = 0;
 		
-		var workDays = [];
+		
 		$("#calendar").datepicker({
 			numberOfMonths: 1,
 			 onSelect: function(dateText, inst) {
@@ -579,81 +712,94 @@
 				 	//**********************************************
 				 	
 
+				 
+					 	
+					 	
+			            
+					 	//Set the selected day
+					 	var workDay = {}
+					 	workDay.date = new Date(dateText);
+			            workDay.date = workDay.date.getTime();
+			            
+			            if(workDays.length == 3){
+			            	rangeIsSet = 1;
+			            }
+			            
+			            //If the day was already selected, remove the date
+	// 		            if($.inArray(workDay.date, workDays) > -1){
+						if(isWorkDayAlreadyAdded(workDay.date, workDays)){
+			            	
+			            	workDays = removeWorkDay(workDay.date, workDays);
+			            	
+	// 		            	workDays = $.grep(workDays, function(value){
+	// 		            		return value != workDay;
+	// 		            	})
+			            }
+			            else{
+	// 		            	workDays.push(workDay);
+							addWorkDay(workDay, workDays);
+			            }
+			            
+			            if(workDays.length == 0){
+			            	resetVars();
+			            }
+		            	else if(workDays.length == 1){
+		            		firstworkDay = workDays[0];
+		            		rangeIsSet = 0
+		            		isSecondDaySelected = 0;
+		            		
+		            	}
+		            	else if(workDays.length == 2){
+	
+		            		secondworkDay = workDays[1];
+		            		
+		            		isSecondDaySelected = 1;
+		            		rangeIsBeingSet = 1;
+		            		
+		            		if(secondworkDay.date < firstworkDay.date){
+		            			resetVars();
+		            		}
+		            		
+		            	}
+			            else{
+			            	rangeIsSet = 1;
+			            }
+			            
+					 	if($("#calendar").hasClass("invalid") == 1){
+					 		validateDates();	
+					 	}
+			            
+	// 		            }else if(rangeIsSet == 0){
+	// 			            if(workDays.length == 1 ){
+	// 			            	firstworkDay = workDay;
+	// 			            }
+	// 			            else if(workDays.length == 2){
+	// 			            	isSecondDaySelected = 1;
+	// 			            	secondworkDay = workDay;
+	// 			            	rangeIsSet = 1;
+	// 			            }
+	// // 			            else{
+	// // 			            	isMoreThanTwoDaysSelected = 1;
+	// // 			            	isSecondDaySelected = 0;
+	// // 			            }	            	
+	// 		            }
 				 	
-		            
-				 	//Set the selected day
-				 	var workDay = {}
-				 	workDay.date = new Date(dateText);
-		            workDay.date = workDay.date.getTime();
-		            
-		            if(workDays.length == 3){
-		            	rangeIsSet = 1;
-		            }
-		            
-		            //If the day was already selected, remove the date
-// 		            if($.inArray(workDay.date, workDays) > -1){
-					if(isWorkDayAlreadyAdded(workDay.date, workDays)){
-		            	
-		            	workDays = removeWorkDay(workDay.date, workDays);
-		            	
-// 		            	workDays = $.grep(workDays, function(value){
-// 		            		return value != workDay;
-// 		            	})
-		            }
-		            else{
-// 		            	workDays.push(workDay);
-						addWorkDay(workDay, workDays);
-		            }
-		            
-		            if(workDays.length == 0){
-		            	resetVars();
-		            }
-	            	else if(workDays.length == 1){
-	            		firstworkDay = workDays[0];
-	            		rangeIsSet = 0
-	            		isSecondDaySelected = 0;
-	            		
-	            	}
-	            	else if(workDays.length == 2){
-
-	            		secondworkDay = workDays[1];
-	            		
-	            		isSecondDaySelected = 1;
-	            		rangeIsBeingSet = 1;
-	            		
-	            		if(secondworkDay.date < firstworkDay.date){
-	            			resetVars();
-	            		}
-	            		
-	            	}
-		            else{
-		            	rangeIsSet = 1;
-		            }
-		            
-				 	if($("#calendar").hasClass("invalid") == 1){
-				 		validateDates();	
-				 	}
-		            
-// 		            }else if(rangeIsSet == 0){
-// 			            if(workDays.length == 1 ){
-// 			            	firstworkDay = workDay;
-// 			            }
-// 			            else if(workDays.length == 2){
-// 			            	isSecondDaySelected = 1;
-// 			            	secondworkDay = workDay;
-// 			            	rangeIsSet = 1;
-// 			            }
-// // 			            else{
-// // 			            	isMoreThanTwoDaysSelected = 1;
-// // 			            	isSecondDaySelected = 0;
-// // 			            }	            	
-// 		            }
 		        },
 		        
 		        // This is run for every day visible in the datepicker.
 		        beforeShowDay: function (date) {
 
-		        	if(rangeIsSet == 1){
+		        	
+		        	if($("#calendar").attr("data-is-showing-job") == 1){
+// 			        	if($.inArray(date.getTime(), workDays) > -1){
+						if(isWorkDayAlreadyAdded(date.getTime(), workDays)){
+			        		return [true, "active111"]; 
+			        	}
+			        	else{
+			        		return [true, ""];
+			        	}
+		        	}
+	        		else if(rangeIsSet == 1){
 		        		
 // 			        	if($.inArray(date.getTime(), workDays) > -1){
 						if(isWorkDayAlreadyAdded(date.getTime(), workDays)){
@@ -916,6 +1062,109 @@
 		});	
 		
 	}
+	
+	function clearPostJobInputs(){
+		document.getElementsByName('name')[0].value = "";		
+		document.getElementsByName('streetAddress')[0].value = "";
+		document.getElementsByName('city')[0].value = "";
+		document.getElementsByName('state')[0].value = "";
+		document.getElementsByName('zipCode')[0].value = "";
+		document.getElementsByName('description')[0].value = "";
+		
+		
+		$("#clearCalendar").trigger("click");
+		
+		
+		$("#selectedCategories").empty();
+	}	
+	
+	function showAddedJob(buttonElement){
+		var i;
+		var jobId = $(buttonElement).attr("data-job-id");
+// 		removeInvalidFormControlStyles();
+// 		disableFromControls(true);
+		
+//		var jobId = $(e).val();		
+		var job = {};
+		job = getJobById(jobId, jobs);
+// salert(job)
+		//Store the selected jobs id in case future action is taken
+//		$("#saveChanges").val(jobId);
+//		$("#deleteJob").val(jobId);
+		$("#activeJobId").val(jobId)
+
+		
+		//Update elements' value
+		document.getElementsByName('name')[0].value = job.jobName;			
+		document.getElementsByName('streetAddress')[0].value = job.streetAddress;
+		document.getElementsByName('city')[0].value = job.city;
+		document.getElementsByName('state')[0].value = job.state ;
+		document.getElementsByName('zipCode')[0].value = job.zipCode;
+		document.getElementsByName('description')[0].value = job.description;
+		
+		workDays = [];
+		var workDay = {};
+		$("#calendar").attr("data-is-showing-job", "1");
+			
+// 		//Show work days
+		for(i = 0; i< job.workDays.length; i++){
+			
+			workDay.date = job.workDays[i].millisecondsDate;
+			workDays.push(workDay);
+			$('#calendar').datepicker("setDate", new Date(job.workDays[i].stringDate) );
+	    	$('.ui-datepicker-current-day').click(); // rapresent the current selected day
+// 			date = new Date;
+// 			date.setTime($(this).attr("data-date"));		
+// 			date = $.datepicker.formatDate("yy-mm-dd", date);
+		}
+		
+		
+		
+
+		
+// 		   $('#calendar').datepicker("setDate", new Date(2016,09,29) );
+//     	$('.ui-datepicker-current-day').click(); // rapresent the current selected day
+
+//     	$('#calendar').datepicker("setDate", new Date(2016,09,27) );
+//     	$('.ui-datepicker-current-day').click(); // rapresent the current selected day
+    	
+
+		
+    	$("#calendar").attr("data-is-showing-job", "0");
+    	
+    	
+		//Show categories
+		for(i = 0; i < job.categoryIds.length; i++){
+			var id = job.categoryIds[i];
+			var name = $($($("#categoryTree").find("[data-cat-id=" + id + "]")[0])
+							.find(".category-name")[0]).text();
+			showCategory(id, name);
+		}
+		
+		//Reset all question check marks to disabled
+		var $check;
+		var questionElements = $("#addedQuestions").find(".added-question");
+		for(i = 0; i < questionElements.length; i++){
+			 $check = $($(questionElements[i]).find(".toggle-question-activeness")[0]);
+			if ($check.hasClass('enable-question') == 1){
+				$check.removeClass('enable-question');
+				$check.addClass('disable-question');
+			}
+		}
+
+		//Enable the selected questions for the active job
+		for(i = 0; i < job.selectedQuestionIds.length; i++){
+			
+			$check = $($("#" + questionContainerIdPrefix + job.selectedQuestionIds[i])
+							.find(".toggle-question-activeness")[0]);
+			$check.removeClass("disable-question");
+			$check.addClass("enable-question");
+		}
+		
+		
+		
+		
+	}	
 		
 	function setStates(){
 		var $e = $("#state"); 

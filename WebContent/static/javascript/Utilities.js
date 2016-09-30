@@ -5,10 +5,12 @@ function addClassToArrayItems(array, className){
 }
 
 
-function highlightGroupItemById(item, group, className, attribute){
+function highlightArrayItemByAttribute(itemToHighlight, array, className){
 	
-	$(group).each(function(){
-		if($(this).attr(attribute) == $(item).attr(attribute)){
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this)[0] == $(itemToHighlight)[0]){
 			$(this).addClass(className);
 		}else{
 			$(this).removeClass(className);

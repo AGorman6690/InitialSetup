@@ -190,7 +190,7 @@ $(document).ready(function() {
 
 			
 			$("#jobCart").append(
-					'<button data-job-id=' + jobCount + ' type="button" class="added-job btn inactive-button">'
+					'<button data-job-id=' + jobCount + ' type="button" class="added-job btn inactive-button clickable">'
 							+ job.jobName + '</button>')
 			
 			clearPostJobInputs();		
@@ -299,6 +299,7 @@ function getWorkDays(){
 		workDay.stringDate = date;
 		workDay.stringStartTime = formatTime($(eStartTime).val());
 		workDay.stringEndTime = formatTime($(eEndTime).val());
+		workDay.millisecondsDate = $(this).attr("data-date");
 		
 		//Add to array
 		workDays.push(workDay);

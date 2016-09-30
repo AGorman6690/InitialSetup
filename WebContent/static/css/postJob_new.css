@@ -1,5 +1,33 @@
+.action{
+	margin-left:10px;	
+}
+
+.actions-not-clickable .action{
+	cursor:default;
+}
+
+.actions-clickable .action{
+    color: #5B7BA3;
+    cursor:pointer;
+    font-size: 15px;  
+}
+
+.relative{
+	position:relative;
+	height:40px;
+}
+
+/* .not-clickable{ */
+/* 	cursor:default; */
+/* } */
+
+.action-container{
+	display: inline;
+}
+
 #cartContainer .section-body button{
 	margin:0px 3px;
+	
 }
 
 #cartContainer h4{
@@ -10,9 +38,7 @@
 	cursor:default;
 }
 
-.header-container span.mock-anchor{
-	margin-left:10px;	
-}
+
 
 .header-container span.glyphicon-ok{
 	display:none;
@@ -21,9 +47,10 @@
 }
 
 .header-container{
+	position:absolute;
     margin-bottom: 10px;
-    height:40px;
-    vertical-align: bottom;
+/*     height:40px; */
+    bottom:0;
 }
 
 
@@ -37,7 +64,7 @@
     background-color: #F6C627;
 }
 
-.job-selected{
+.selected{
     background-color: #F6C627;
 }
 
@@ -80,7 +107,8 @@
 }
 
 #cartContainer .section-body{
-	padding-bottom:13px;
+/* 	padding-bottom:5px; */
+	height:105px;
 }
 
 .form-group input .form-group label{
