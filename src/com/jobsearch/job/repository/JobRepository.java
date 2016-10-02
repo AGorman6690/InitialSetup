@@ -22,7 +22,7 @@ import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -171,7 +171,7 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(Question question : jobDto.getQuestions()){
+			for(PostQuestionDto question : jobDto.getQuestions()){
 
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);

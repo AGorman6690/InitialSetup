@@ -152,3 +152,23 @@ function toggleClasses($e, class1, class2){
 		$e.addClass(class1);
 	}
 }
+
+function addClassRemoveClass($e, add, remove){
+	$e.addClass(add);
+	$e.removeClass(remove);
+}
+
+function toggleClass($e, className){
+	
+	if($e.hasClass(className) == 1){
+		$e.removeClass(className);
+	}else{
+		$e.addClass(className);
+	}	
+}
+
+
+function removeElementFromDOM($container, attribute, value){
+	var e = $container.find("[" + attribute + "='" + value + "']")[0];
+	$(e).remove();
+}

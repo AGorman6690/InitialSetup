@@ -19,7 +19,7 @@ import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.MathUtility;
@@ -204,7 +204,7 @@ public class ApplicationRepository {
 
 
 
-	public List<Question> getQuestions(int id) {
+	public List<PostQuestionDto> getQuestions(int id) {
 		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
 		return this.QuestionRowMapper(sql, new Object[]{ id });
 	}
@@ -256,15 +256,15 @@ public class ApplicationRepository {
 	}
 
 
-	public List<Question> QuestionRowMapper(String sql, Object[] args) {
+	public List<PostQuestionDto> QuestionRowMapper(String sql, Object[] args) {
 
 		try{
 
-			return jdbcTemplate.query(sql, args, new RowMapper<Question>() {
+			return jdbcTemplate.query(sql, args, new RowMapper<PostQuestionDto>() {
 
 				@Override
-				public Question mapRow(ResultSet rs, int rownumber) throws SQLException {
-					Question e = new Question();
+				public PostQuestionDto mapRow(ResultSet rs, int rownumber) throws SQLException {
+					PostQuestionDto e = new PostQuestionDto();
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setJobId(rs.getInt("JobId"));
 					e.setFormatId(rs.getInt("FormatId"));
@@ -305,7 +305,7 @@ public class ApplicationRepository {
 
 	}
 
-	public void addQuestion(Question question) {
+	public void addQuestion(PostQuestionDto question) {
 
 
 		CallableStatement cStmt;

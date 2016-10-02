@@ -34,7 +34,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
@@ -67,9 +67,9 @@ public class JobServiceImpl {
 	@Qualifier("JobInformationVM")
 	Template vmTemplate_jobInformationVM;	
 	
-	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
+	public void addPosting(SubmitJobPostingDTO postingDto, JobSearchUser user) {
 
-		for (PostJobDTO jobDto : postingDto.getJobs()) {
+		for (PostJobDTO jobDto : postingDto.getPostJobDtos()) {
 			//***********************************************************************************
 			//Should we verify the address on the client side?  I'm thinking so... 
 			//Why go all the way to the server
@@ -106,7 +106,7 @@ public class JobServiceImpl {
 				jobDto.setLat((float) results[0].geometry.location.lat);
 				jobDto.setLng((float) results[0].geometry.location.lng);
 				
-				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getQuestions()));
+				jobDto.setQuestions(getQuestionsFromPostingDto(jobDto.selectedQuestionIds, postingDto.getPostQuestionDtos()));
 
 				repository.addJob(jobDto, user);
 
@@ -127,13 +127,13 @@ public class JobServiceImpl {
 		
 	}
 
-	private List<Question> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<Question> postingDtoQuestions) {
+	private List<PostQuestionDto> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<PostQuestionDto> postingDtoQuestions) {
 
-		List<Question> questions = new ArrayList<Question>();
+		List<PostQuestionDto> questions = new ArrayList<PostQuestionDto>();
 		
 		for(int selectedQuestionId : selectedQuestionIds){			
 			//Get question
-			for(Question postingDtoQuestion : postingDtoQuestions){
+			for(PostQuestionDto postingDtoQuestion : postingDtoQuestions){
 				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
 					questions.add(postingDtoQuestion);
 				}

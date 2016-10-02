@@ -163,17 +163,3 @@ function clearPostJobInputs(){
 	$("#selectedCategories").empty();
 }
 
-function removeInvalidFormControlStyles(){
-	
-	$("#jobPostContainer").find(".invalid-input-existence").each(function(){		
-		$(this).removeClass("invalid-input-existence");
-	})
-	
-	$("#jobPostContainer").find(".invalid-select-input").each(function(){		
-		$(this).removeClass("invalid-select-input");
-	})
-	
-	$("#jobPostContainer").find(".invalid-message").each(function(){
-		$(this).hide();
-	})
-}

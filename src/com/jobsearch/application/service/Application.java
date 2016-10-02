@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.model.WageProposal;
 
 public class Application {
@@ -15,7 +15,7 @@ public class Application {
 	private String jobName;
 	private Job job;
 	private JobSearchUser applicant;
-	private List<Question> questions;
+	private List<PostQuestionDto> questions;
 	private List<WageProposal> wageProposals;
 	private WageProposal currentWageProposal;
 	private float applicantsCurrentDesiredWage;
@@ -55,10 +55,10 @@ public class Application {
 	public void setWageProposals(List<WageProposal> wageProposals) {
 		this.wageProposals = wageProposals;
 	}
-	public List<Question> getQuestions() {
+	public List<PostQuestionDto> getQuestions() {
 		return questions;
 	}
-	public void setQuestions(List<Question> questions) {
+	public void setQuestions(List<PostQuestionDto> questions) {
 		this.questions = questions;
 	}
 

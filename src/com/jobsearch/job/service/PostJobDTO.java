@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 
 public class PostJobDTO {
 
@@ -71,7 +71,7 @@ public class PostJobDTO {
 	List<Integer> selectedQuestionIds;
 	
 	@JsonProperty("questions")
-	List<Question> questions;
+	List<PostQuestionDto> questions;
 	
 	@JsonProperty("workDays")
 	List<WorkDay> workDays;
@@ -86,11 +86,11 @@ public class PostJobDTO {
 		this.workDays = workDays;
 	}
 
-	public List<Question> getQuestions() {
+	public List<PostQuestionDto> getQuestions() {
 		return questions;
 	}
 
-	public void setQuestions(List<Question> questions) {
+	public void setQuestions(List<PostQuestionDto> questions) {
 		this.questions = questions;
 	}
 

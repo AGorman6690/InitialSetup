@@ -122,15 +122,15 @@ $(document).ready(function() {
 		
 	})
 	
-	$("#deleteJob").click(function(){
-	
-		//Check if the alert has been disabled.
-		//If it has been disabled, then the toggle attr will be empty.
-		//Delete the job if alert has been disabled.
-		if($(this).data("toggle") != "modal"){
-			deleteJob(1);
-		}
-	})
+//	$("#deleteJob").click(function(){
+//	
+//		//Check if the alert has been disabled.
+//		//If it has been disabled, then the toggle attr will be empty.
+//		//Delete the job if alert has been disabled.
+//		if($(this).data("toggle") != "modal"){
+//			deleteJob(1);
+//		}
+//	})
 	
 	$("#disableJobDeleteAlert").click(function(){
 		
@@ -177,21 +177,22 @@ $(document).ready(function() {
 
 	function addJobToCart(){
 				
+		if(is)
 // 		if(validatePostJobInputs(jobs) == 0){
 		
 			jobCount += 1;
 		
-			var job = {};
-			job = setJobInfo(job);
-			job.id = jobCount;			
-			jobs.push(job);
+			var postJobDto = {};
+			postJobDto = getPostJobDto();
+			postJobDto.id = jobCount;			
+			jobs.push(postJobDto);
 			
 			$("#cartContainer").show(200);
 
 			
 			$("#jobCart").append(
 					'<button data-job-id=' + jobCount + ' type="button" class="added-job btn inactive-button clickable">'
-							+ job.jobName + '</button>')
+							+ postJobDto.jobName + '</button>')
 			
 			clearPostJobInputs();		
 			removeInvalidFormControlStyles()
@@ -231,45 +232,48 @@ function submitJobs(confirmation){
 
 }
 
-function deleteJob(confirmation){
-	
-	if(confirmation == 1){
-		//Get the selected job
-//		var jobId = $(this).val();
-		var jobId = $("#activeJobId").val();
-		var job = getJobById(jobId, jobs);
-
-		//Display the job's info
-//		job = setJobInfo(job);
-
-		//Remove the job
-		$("#addedJobs button[value=" + jobId + "]").remove();			
-		var i;
-		for(i = 0; i < jobs.length; i++){
-			if(jobs[i].id == jobId){
-				jobs.splice(i, 1);
-			}
-		}
-		
-		if(jobs.length == 0){
-			$("#addedJobsContainer").hide();
-			$("#submitJobsContainer").hide();
-			disableFromControls(true);
-		}
-							
-		//De-activate certain job actions
-		$("#startNewJob").attr("disabled", false)
-		$("#addJob").attr("disabled", true);
-		$("#saveChanges").attr("disabled", true);
-		$("#deleteJob").attr("disabled", true);
-		$("#editJob").attr("disabled", true);
-		$("#copyJob").attr("disabled", true);
-		
-		clearPostJobInputs();
-		deactiveAddedJobButtons();			
-		
-	}
-}
+//function deleteJob(confirmation){
+//	
+//	if(confirmation == 1){
+//		//Get the selected job
+////		var jobId = $(this).val();
+//		var jobId = $("#activeJobId").val();
+//		var job = getJobById(jobId, jobs);
+//
+//		//Display the job's info
+////		job = setJobInfo(job);
+//
+//		//Remove the job
+//		$("#addedJobs button[value=" + jobId + "]").remove();			
+//		var i;
+//		for(i = 0; i < jobs.length; i++){
+//			if(jobs[i].id == jobId){
+//				jobs.splice(i, 1);
+//			}
+//		}
+//		
+//		if(jobs.length == 0){
+//			$("#addedJobsContainer").hide();
+//			$("#submitJobsContainer").hide();
+//			disableFromControls(true);
+//		}
+//							
+//		//De-activate certain job actions
+//		$("#startNewJob").attr("disabled", false)
+//		$("#addJob").attr("disabled", true);
+//		$("#saveChanges").attr("disabled", true);
+//		$("#deleteJob").attr("disabled", true);
+//		$("#editJob").attr("disabled", true);
+//		$("#copyJob").attr("disabled", true);
+//		
+//		clearPostJobInputs();
+//		deactiveAddedJobButtons();			
+//		//For a better ux, it seems appropriate for the controls to be enabled
+//		//if the current selection(s) are being unselected.
+//		//It feels awkward to have the controls disabled.
+//		disableInputFields(false, containerId);
+//	}
+//}
 
 function getWorkDays(){
 	
@@ -308,32 +312,33 @@ function getWorkDays(){
 	return workDays;
 }
 
-function setJobInfo(job) {
+function getPostJobDto() {
 	var i;
-	
-	job.jobName = document.getElementsByName('name')[0].value;
-	job.streetAddress = document.getElementsByName('streetAddress')[0].value;
-	job.city = document.getElementsByName('city')[0].value;
-	job.state = document.getElementsByName('state')[0].value;
-	job.zipCode = document.getElementsByName('zipCode')[0].value;
-	job.description = document.getElementsByName('description')[0].value;
+	var postJobDto = {};
+
+	postJobDto.jobName = document.getElementsByName('name')[0].value;
+	postJobDto.streetAddress = document.getElementsByName('streetAddress')[0].value;
+	postJobDto.city = document.getElementsByName('city')[0].value;
+	postJobDto.state = document.getElementsByName('state')[0].value;
+	postJobDto.zipCode = document.getElementsByName('zipCode')[0].value;
+	postJobDto.description = document.getElementsByName('description')[0].value;
 //	job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
 //	job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
 //	job.stringStartTime = formatTime($("#startTime").val());
 //	job.stringEndTime = formatTime($("#endTime").val());
 	
 	
-	job.workDays = getWorkDays();
+	postJobDto.workDays = getWorkDays();
 	
 	//set categories
-	job.categoryIds = [];
+	postJobDto.categoryIds = [];
 	var selectedCats = $("#selectedCategories").find("button");	
 	for(i = 0; i < selectedCats.length; i++){
-		job.categoryIds.push($(selectedCats[i]).attr("data-cat-id"));
+		postJobDto.categoryIds.push($(selectedCats[i]).attr("data-cat-id"));
 	}
 
 	//Set questions
-	job.selectedQuestionIds = [];
+	postJobDto.selectedQuestionIds = [];
 	var questions = $("#addedQuestions").find(".added-question");
 	for(i = 0; i < questions.length; i++){	
 		var question = questions[i];	
@@ -341,10 +346,10 @@ function setJobInfo(job) {
 		//Check if question is enabled
 		var $enableQuestion = $($(question).find(".toggle-question-activeness")[0]);
 		if($enableQuestion.hasClass("enable-question")){
-			job.selectedQuestionIds.push($(question).data("questionId"));
+			postJobDto.selectedQuestionIds.push($(question).data("questionId"));
 		}
 	}
 	
-	return job;
+	return postJobDto;
 
 }

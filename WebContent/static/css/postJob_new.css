@@ -1,5 +1,17 @@
-.action{
-	margin-left:10px;	
+
+/* Override Bootstrap */
+.form-control[disabled], fieldset[disabled] .form-control {
+    cursor: default;
+}
+
+.tied-to-job{
+    background-color: #00A7E1;
+    color: #ffffff;
+}
+
+.tied-to-job.focus, .tied-to-job:focus, .tied-to-job:hover {
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .actions-not-clickable .action{
@@ -7,9 +19,17 @@
 }
 
 .actions-clickable .action{
-    color: #5B7BA3;
+    color: #3B5E8B;
     cursor:pointer;
     font-size: 15px;  
+}
+
+button.clickable{
+	cursor:pointer;
+}
+
+button.not-clickable{
+    cursor:default;
 }
 
 .relative{
@@ -23,10 +43,11 @@
 
 .action-container{
 	display: inline;
+	margin-left:10px;	
 }
 
 #cartContainer .section-body button{
-	margin:0px 3px;
+	margin:3px 3px;
 	
 }
 
@@ -34,9 +55,9 @@
 	display:inline;
 }
 
-#questionCart button{
-	cursor:default;
-}
+/* #questionCart button{ */
+/* 	cursor:default; */
+/* } */
 
 
 
@@ -74,14 +95,30 @@
 
 .toggle-section{
     margin-right: 5px;
+    padding: 5px;
+
+}
+
+.show-section{
+	cursor:pointer;
 }
 
 .button-container button{
 	padding:5px 8px;
 	margin:4px 3px;
+}
+
+.button-container button.clickable{
 	background-color: #163B3D;
 	color:#ffffff;
 }
+
+.button-container button.not-clickable{
+    background-color:buttonface;
+    color:#000000;
+}
+
+
 
 #answerListContainer{
 	display:none;
@@ -102,8 +139,8 @@
 
 
 #cartContainer{
-/* 	display:none; */
-	padding-bottom:25px;
+	display:none;
+/* 	padding-bottom:25px; */
 }
 
 #cartContainer .section-body{
@@ -149,26 +186,34 @@
 	padding-bottom:10px;
 }
 
-.invalid-message{
-	display:none;
-}
+
 
 
 #jobInfo{
 	padding-bottom: 30px;	
 }
 
+#calendarContainer{
+	display: inline-block;
+}
+
+#clearCalendar{
+	margin-top:8px;
+	display: block;
+}
 
 
 
 
 
+#addedQuestions{
+    padding: 3px;	
+}
 
 
-
-
-
-
+.green-border{
+	border: #163B3D 4px solid;
+}
 
 
 #setAllLabel{
@@ -204,9 +249,13 @@
 	padding:20px 0px;
 }
 
-#timesContainer label{
-	display:block;
+#timeInputsContainer{
+	display:inline-block;
 }
+
+/* #timesContainer label{ */
+/* 	display:block; */
+/* } */
 
 #timesContainer .glyphicon-menu-down{
 	margin-right:10px;

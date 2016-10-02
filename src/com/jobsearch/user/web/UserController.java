@@ -40,7 +40,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
@@ -192,7 +192,7 @@ public class UserController {
 		
 		model.addObject("user", user);
 		
-		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
+		SubmitJobPostingDTO job = new SubmitJobPostingDTO();
 		model.addObject("job", job);
 
 		model.setViewName("PostJob");

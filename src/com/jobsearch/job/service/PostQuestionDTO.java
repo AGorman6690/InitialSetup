@@ -1,11 +1,22 @@
 package com.jobsearch.job.service;
 
+import java.util.List;
+
 public class PostQuestionDTO {
 	
 	private int id;
 	private String text;
 	private int formatId;
+	private List<String> answerOptions;
+	
+	
 		
+	public List<String> getAnswerOptions() {
+		return answerOptions;
+	}
+	public void setAnswerOptions(List<String> answerOptions) {
+		this.answerOptions = answerOptions;
+	}
 	public int getId() {
 		return id;
 	}

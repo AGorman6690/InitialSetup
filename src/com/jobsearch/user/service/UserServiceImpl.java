@@ -21,7 +21,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;

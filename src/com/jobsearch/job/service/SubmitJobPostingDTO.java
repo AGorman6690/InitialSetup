@@ -6,35 +6,37 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 
-public class SubmitJobPostingRequestDTO {
+public class SubmitJobPostingDTO {
 
 	@JsonProperty("jobs")
-	List<PostJobDTO> jobs;	
+	List<PostJobDTO> postJobDtos;	
 
 	@JsonProperty("questions")
-	List<Question> questions;
-
-	public List<Question> getQuestions() {
-		return questions;
+	List<PostQuestionDto> postQuestionDtos;
+	
+	public List<PostJobDTO> getPostJobDtos() {
+		return postJobDtos;
 	}
 
-	public void setQuestions(List<Question> questions) {
-		this.questions = questions;
+	public void setPostJobDtos(List<PostJobDTO> postJobDtos) {
+		this.postJobDtos = postJobDtos;
 	}
+
+	public List<PostQuestionDto> getPostQuestionDtos() {
+		return postQuestionDtos;
+	}
+
+	public void setPostQuestionDtos(List<PostQuestionDto> postQuestionDtos) {
+		this.postQuestionDtos = postQuestionDtos;
+	}
+
 
 //	
 //	@JsonProperty("jobQuestionPosts")
 //	List<JobQuestionPostRequestDTO> jobQuestionPosts;
 
-	public List<PostJobDTO> getJobs() {
-		return jobs;
-	}
-
-	public void setJobInfoPosts(List<PostJobDTO> jobs) {
-		this.jobs = jobs;
-	}
 
 //	public List<JobQuestionPostRequestDTO> getJobQuestionPosts() {
 //		return jobQuestionPosts;

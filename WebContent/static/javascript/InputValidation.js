@@ -81,22 +81,36 @@ function validateInputValueContains($e, value, valueCannotContain){
 function validateJobName(requestedJobName, jobs){
 	//Job names must be unique
 
-	var $eJobName = $(document.getElementsByName('jobName')[0]);
-	var i;
-	for(i = 0; i < jobs.length; i++){
-
-		if(jobs[i].jobName == requestedJobName){
-			$("#invalidJobName").show();
-			setInvalidCss($eJobName);
-			return 1;
-		}
-	}
+	var $eInvalidMessage = $("#invalidJobName");
+	var $eJobName = $(document.getElementsByName('name')[0]);
+	var invalid = 0;
 	
-	if(jobs.length > 0){
-		setValidCss($eJobName);
-		$("#invalidJobName").hide();
+	//Search each job's name
+	$.each(jobs, function(){
+		if(this.jobName == requestedJobName){
+			invalid = 1;
+		}
+	})
+	
+	if(invalid){
+		//Show invalid message
+		$eInvalidMessage.show();
+		
+		//Format input as invalid 
+		setInvalidCss($eJobName);	
+		
+		return 1;
+	}else{
+		
+		//Hide invalid message
+		$eInvalidMessage.hide();
+		
+		//Format input as valid 
+		setValidCss($eJobName);	
+		
+		return 0
 	}
-	return 0;
+
 }
 
 function setInvalidCss($e){
@@ -123,11 +137,13 @@ function validateTimes(){
 	var times = $("#times").find(".time-container input");
 	var result = 0;
 	if(times.length > 0){
-		$(times).each(function(){
+		$.each(times, function(){
 			result += validateInput($(this), $(this).val())
 		})
-		return result;
+		
 	}
+	
+	return result;
 }
 
 //function setInvalidSelectCss($e){
@@ -195,6 +211,16 @@ function validatePostJobInputs(jobs){
 	
 	//Validate categories
 	result += validateMinimumSelectedCategories();
+	
+	$e = $("#invalidAddJob");
+	if(result > 0){
+		$e.show();
+	}else{
+		$e.hide();
+	}
+	
+	
+	
 	return result;
 //	if(result > 0){
 //		return false;
@@ -255,10 +281,12 @@ function validateAddQuestionInputs(){
 	result += validateInput($e, $e.val());
 
 	
-
+	$e = $("#invalidAddQuestion");
 	if(result > 0){
+		$e.show();
 		return false;
 	}else{
+		$e.hide();
 		return true;
 	}
 }

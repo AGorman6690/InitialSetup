@@ -6,7 +6,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.PostQuestionDto;
 
 public class JobDTO {
 	

@@ -2,7 +2,7 @@ package com.jobsearch.model;
 
 import java.util.List;
 
-public class Question {
+public class PostQuestionDto {
 	
 	//0: Yes/N0
 	//1: Short answer
