@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-class Answer {
+public class Answer {
 	int questionId
 	int userId
 	String text

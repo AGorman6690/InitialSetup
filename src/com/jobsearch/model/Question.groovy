@@ -2,7 +2,7 @@ package com.jobsearch.model
 
 import java.util.List
 
-class Question {
+public class Question {
 	//0: Yes/N0
 	//1: Short answer
 	//2: Single answer

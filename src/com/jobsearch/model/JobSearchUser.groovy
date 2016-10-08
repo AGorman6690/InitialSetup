@@ -1,11 +1,11 @@
 package com.jobsearch.model
 
-import java.util.List
-
 import com.jobsearch.application.service.Application
-import com.jobsearch.category.service.Category
 import com.jobsearch.job.service.CompletedJobResponseDTO
 import com.jobsearch.job.service.Job
+import com.jobsearch.category.service.Category
+import java.util.List
+
 
 class JobSearchUser {
 	int userId

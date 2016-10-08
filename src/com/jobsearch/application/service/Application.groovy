@@ -6,7 +6,7 @@ import com.jobsearch.job.service.Job
 import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.Question
 
-class Application {
+public class Application {
 	int applicationId
 	int userId
 	int jobId

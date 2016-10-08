@@ -5,7 +5,7 @@ import java.util.List
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class FindEmployeesRequestDTOf {
+public class FindEmployeesRequestDTOf {
 	@JsonProperty
 	List<Date> availableDates
 

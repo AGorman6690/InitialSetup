@@ -5,7 +5,7 @@ import java.util.List
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class AvailabilityRequestDTO {
+public class AvailabilityRequestDTO {
 	@JsonProperty
 	int userId
 

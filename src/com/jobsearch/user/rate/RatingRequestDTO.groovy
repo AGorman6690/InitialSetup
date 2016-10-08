@@ -7,7 +7,7 @@ import com.jobsearch.model.CommentDTO
 import com.jobsearch.model.Endorsement
 import com.jobsearch.model.RateCriterion
 
-class RatingRequestDTO {
+public class RatingRequestDTO {
 	@JsonProperty("employeeId")
 	int employeeId
 

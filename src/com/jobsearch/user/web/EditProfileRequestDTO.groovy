@@ -4,7 +4,7 @@ import java.util.List
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class EditProfileRequestDTO {
+public class EditProfileRequestDTO {
 	@JsonProperty
 	int userId
 

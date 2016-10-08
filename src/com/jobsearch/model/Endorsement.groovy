@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-class Endorsement {
+public class Endorsement {
 	int jobId
 	int userId
 	int categoryId

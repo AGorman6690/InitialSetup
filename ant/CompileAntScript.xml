@@ -74,15 +74,11 @@
 
 		<mkdir dir="${dir.binaries}" />
 
-
 		<taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="classpath.compile" />
-		<presetdef name="compile">
-			<groovyc indy="true" fork="true" includeantruntime="false">
+
+			<groovyc srcdir="${dir.source}" destdir="${dir.binaries}" indy="true" fork="true" includeantruntime="false" classpathref="classpath.compile" >
 				<javac debug="true" source="1.8" target="1.8" />
 			</groovyc>
-		</presetdef>
-
-		<groovyc srcdir="${dir.source}" destdir="${dir.binaries}" classpathref="classpath.compile" />
 
 		<copy todir="${dir.binaries}">
 			<fileset dir="${dir.config}" />

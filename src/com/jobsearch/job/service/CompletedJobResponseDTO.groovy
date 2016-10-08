@@ -1,7 +1,7 @@
 package com.jobsearch.job.service
 
-import java.util.List
 import com.jobsearch.model.Endorsement
+import java.util.List
 
 class CompletedJobResponseDTO {
 	Job job

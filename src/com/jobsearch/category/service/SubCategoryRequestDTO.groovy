@@ -1,6 +1,6 @@
 package com.jobsearch.category.service
 
-class SubCategoryRequestDTO {
+public class SubCategoryRequestDTO {
 	int categoryId
 	int subCategoryId
 	String subCategoryName

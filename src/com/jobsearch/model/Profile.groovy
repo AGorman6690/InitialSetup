@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-class Profile {
+public class Profile {
 	int id
 	String name
 }

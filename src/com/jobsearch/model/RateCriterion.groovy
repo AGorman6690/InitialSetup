@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-class RateCriterion {
+public class RateCriterion {
 	int rateCriterionId
 	String name
 	int employeeId

@@ -1,6 +1,6 @@
 package com.jobsearch.model
 
-class CommentDTO {
+public class CommentDTO {
 	int jobId
 	int userId
 	String comment

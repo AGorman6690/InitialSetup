@@ -5,12 +5,11 @@ import java.sql.Time
 import java.util.List
 
 import org.springframework.format.annotation.DateTimeFormat
-import com.jobsearch.utilities.DateUtility
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.jobsearch.category.service.Category
 
-class FilterJobRequestDTO {
+public class FilterJobRequestDTO {
 
 	@JsonProperty("fromAddress")
 	String fromAddress

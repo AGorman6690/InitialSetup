@@ -10,36 +10,36 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
 public class FindEmployeesRequestDTO {
-	
+
 	@JsonProperty
 	private List<Date> availableDates;
-	
+
 	@JsonProperty
 	private List<String> stringAvailableDates;
-	
+
 	@JsonProperty
 	private String city;
-	
+
 	@JsonProperty
 	private String state;
-	
+
 	@JsonProperty
 	private String zipCode;
-	
+
 	@JsonProperty
 	private Float lng;
-	
+
 	@JsonProperty
 	private Float lat;
-	
+
 	@JsonProperty
 	private int radius;
-	
+
 	@JsonProperty
 	private List<Integer> categoryIds;
-	
-	
-	
+
+
+
 	public List<Integer> getCategoryIds() {
 		return categoryIds;
 	}
@@ -96,44 +96,44 @@ public class FindEmployeesRequestDTO {
 		this.zipCode = zipCode;
 	}
 
-	public FindEmployeesRequestDTO(String city, String state, String zipCode, int radius, 
+	public FindEmployeesRequestDTO(String city, String state, String zipCode, int radius,
 								List<String> dates, List<Integer> categoryIds2) {
-		
-		
+
+
 		//Location parameters are verified on the client side.
 		//At least one location parameter must be set.
 		this.setCity(city);
 		this.setState(state);
-		this.setZipCode(zipCode);		
-		
+		this.setZipCode(zipCode);
+
 		//Radius is verified to be greater than 0 on the client side.
 		this.setRadius(radius);
-		
+
 		if(categoryIds2.get(0) == -1){
-			this.setCategoryIds(null);	
+			this.setCategoryIds(null);
 		}
 		else{
 			this.setCategoryIds(categoryIds2);
 		}
-		
+
 		if(dates.get(0).matches("-1")){
 			this.setStringAvailableDates(null);
 			this.setAvailableDates(null);
 		}else{
 			this.setStringAvailableDates(dates);
-						
+
 			//Convert string dates to sql Dates
 			this.availableDates = new ArrayList<Date>();
 			for(String stringDate : dates){
-				
+
 				//The javascript date picker returns dates in the following format: "Wed Apr 13 2016 00:00:00 GMT-0500 (Central Daylight Time)"
-				//Also, replace GMT with UTC. 
+				//Also, replace GMT with UTC.
 				//See this SO post for an explanation why to replace: http://stackoverflow.com/questions/9490373/java-unparseable-date-need-format-to-match-gmt-0400
 				this.availableDates.add(DateUtility.getSqlDate(stringDate.replace("GMT-", "UTC-"), "EEE MMM dd yyyy HH:mm:ss zZ (zzzz)"));
 			}
 		}
 
-		
+
 		GoogleClient map = new GoogleClient();
 		GeocodingResult results[] = map.getLatAndLng( city + " " + state + " " + zipCode );
 		if(results.length == 1){
@@ -143,7 +143,7 @@ public class FindEmployeesRequestDTO {
 			this.setLat(null);
 			this.setLng(null);
 		}
-		
+
 	}
 
 	public List<String> getStringAvailableDates() {
@@ -161,6 +161,6 @@ public class FindEmployeesRequestDTO {
 	public void setAvailableDates(List<Date> availableDates) {
 		this.availableDates = availableDates;
 	}
-	
+
 
 }
