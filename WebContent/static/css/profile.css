@@ -42,7 +42,9 @@
 
 
 
-
+table#failedWageNegotiations{
+	width:500px;
+}
 
 
 .jobs-table-container{
@@ -74,7 +76,7 @@
 }
 
 .has-new-applicants{
-	color: #e24c9a;
+	color: #A73854;
     font-size: 17px;
     font-weight: bold;
 }
@@ -89,20 +91,20 @@ table{
 }
 
 
-#applicantsTable .applicant-name{
+th.applicant-name{
 	width:20%;
 }
 
-#applicantsTable .applicant-rating{
-	width:20%;
+th.applicant-rating{
+	width:15%;
 }
 
-#applicantsTable .applicant-endorsements{
+th.applicant-endorsements{
+	width:25%;
+}
+
+th.applicant-wage-negotiation{
 	width:40%;
-}
-
-#applicantsTable applicant-wage-negotiation{
-	width:20%;
 }
 
 

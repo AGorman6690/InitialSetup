@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.CompletedJobResponseDTO;
-import com.jobsearch.job.service.Job;
 
 
 public class JobSearchUser {

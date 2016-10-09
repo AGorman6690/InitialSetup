@@ -1,17 +1,10 @@
 package com.jobsearch.job.service;
 
 import java.io.StringWriter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.IntSummaryStatistics;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.servlet.http.HttpSession;
 
@@ -32,13 +25,11 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
-import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 @Service
 public class JobServiceImpl {
@@ -66,6 +57,10 @@ public class JobServiceImpl {
 	@Autowired
 	@Qualifier("JobInformationVM")
 	Template vmTemplate_jobInformationVM;	
+	
+	@Autowired
+	@Qualifier("EmployerJobsYetToStartVM")
+	Template employerJobsYetToStartTemplate;
 	
 	public void addPosting(SubmitJobPostingDTO postingDto, JobSearchUser user) {
 
@@ -178,6 +173,29 @@ public class JobServiceImpl {
 		return yetToStartJobs;
 
 	}	
+	
+	public List<JobDTO> getYetToStartJobsByEmployer_Dto(int userId) {
+
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+		
+		//Query the database
+		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
+		
+		//Set the job Dtos
+		for(Job job : yetToStartJobs){
+			JobDTO jobDto = new JobDTO();
+			
+			this.setJobApplicationSummary(job);
+			
+			jobDto.setJob(job);
+			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+			
+			jobDtos.add(jobDto);
+		}		
+
+		return jobDtos;
+
+	}
 
 
 	public List<Job> getActiveJobsByEmployer(int userId) {
@@ -195,15 +213,25 @@ public class JobServiceImpl {
 
 	private void setJobsApplicationSummary(List<Job> jobs) {
 	
-		for (Job job : jobs) {
-			
-			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
-			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
-			job.setEmployees(userService.getEmployeesByJob(job.getId()));
-			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
-		}
+		for (Job job : jobs) {			
+			this.setJobApplicationSummary(job);		}
 		
 	}	
+
+	public void setJobApplicationSummary(Job job) {
+		//*******************************************************		
+		//*******************************************************
+		//I'm beginning to think these properties should not be apart of the Job class
+		//but rather they should be part of the JobDTO class...
+		//*******************************************************
+		//*******************************************************
+		
+		job.setCategory(categoryService.getCategoryByJobId(job.getId()));
+		job.setApplications(applicationService.getApplicationsByJob(job.getId()));
+		job.setEmployees(userService.getEmployeesByJob(job.getId()));
+		job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
+		
+	}
 
 	public int getNewApplicationCount(List<Application> applications) {
 		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
@@ -692,6 +720,27 @@ public class JobServiceImpl {
 
 		return result;
 	}
+	
+
+	public String getEmployersJobsYetTemplate(JobSearchUser employer, List<JobDTO> yetToStartJobs_Dtos, boolean b) {
+		
+		StringWriter writer = new StringWriter();
+		
+		//Set the context
+		final VelocityContext context = new VelocityContext();	
+		context.put("employer", employer);
+		context.put("jobDtos", yetToStartJobs_Dtos);
+//		context.put("isActiveJobs", isActiveJobs);
+		context.put("mathUtility", MathUtility.class);		
+		context.put("numberTool", new NumberTool());
+		
+		//Run the template
+		employerJobsYetToStartTemplate.merge(context, writer);
+		
+		//Return the html
+		return writer.toString();
+	}
+
 
 	public String getEmployerProfileJobTableTemplate(JobSearchUser employer, List<Job> yetToStartJobs,
 														boolean isActiveJobs) {

@@ -8,9 +8,15 @@
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
+
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
+<%-- <script src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script> --%>
 <%-- <script	src="<c:url value="/static/External/jquery-ui.min.js" />"></script>    --%>
 </head>
 
@@ -23,7 +29,22 @@
 	<div class="container">
 	
 		<div class="section">
-			<div id="calendar"></div>
+		
+			<div id="availableDays">
+			<c:forEach items="${availableDays }" var="availableDay">
+				${availableDay }*
+			</c:forEach>
+			</div>
+			<div class="header">
+				<span data-toggle-id="availabilityContainer" class="glyphicon glyphicon-menu-down"></span>
+				<span class="header-text">Availability</span>
+			</div>		
+			<div class="section-body" id="availabilityContainer">	
+				<div id="calendar"></div>
+				<div id="saveButtonContainer">
+					<button id="saveAvailability" class="square-button">Save</button>
+				</div>
+			</div>
 		</div>
 		<!-- ****** Failed Wage Negotiations -->
 		<c:choose>
@@ -124,16 +145,18 @@
 														<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
 													</span>
 												</div>									
-												<div class="counter-offer-response">
+												<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
+												<span class="toggle glyphicon glyphicon-menu-hamburger" data-toggle="${ toggleId}"></span>														
+												<div id="${ toggleId}" class="counter-offer-response">
 													<button class="accept-counter">Accept</button>
 													<button class="re-counter">Counter</button>		
 													<button class="decline-counter">Decline</button>							
-													<div class="re-counter-amount-container hide-element">
+													<div class="re-counter-amount-container">
 														<input class="re-counter-amount"></input>
 														<button class="send-counter-offer">Send</button>
 														<button class="cancel-counter-offer">Cancel</button>
 													</div>										
-												</div>	
+												</div>
 											</div>
 											<div class="sent-response-notification"></div>	
 										</c:when>
@@ -261,59 +284,93 @@
 </body>
 
 <script>
+var availableDays = [];
+
 	$(document).ready(function(){
+
+		var dateToday = new Date();
 		
-		var dates = [];
-		dates.push(new Date(2016, 8 , 30))
+		//Set the user's current availability
+		var availableDaysHTML = $("#availableDays").html();
+		var availableDays_string = availableDaysHTML.split("*");		
+		var formattedDateString;
+		$.each(availableDays_string, function(){
+			
+			//For whatever reason, "2016-10-31" does not work although
+			//this is javascript's preferred formatt...
+			//However, "2016/10/31" does work...
+			formattedDateString = this.replace("-", "/");			
+			var date = new Date(formattedDateString);			
+			if(!isNaN(date)){
+				availableDays.push(date.getTime());	
+			}			
+		})
 
 		
       	$("#calendar").datepicker({
-    	      numberOfMonths: 3,
+    	      numberOfMonths: 2,
+    	      minDate: dateToday,
 //     	      showButtonPanel: true,
 //     	      multidate: true,
+			  onSelect:function(dateText){
+				var date = new Date(dateText);
+				
+				if(isDayAlreadyAdded(date.getTime(), availableDays)){
+					availableDays = removeDate(date.getTime(), availableDays); 
+	        	}
+	        	else{
+	        		availableDays.push(date.getTime());  
+	        	}
+				
+				
+			  },
     	      beforeShowDay:function(date){
     	    	  
-    	    	var aDate =   new Date(2016, 8 ,12);
-    	    	  if(date.getTime() == aDate.getTime()){
-    	    		 return [true, "test111"];
+				if(isDayAlreadyAdded(date.getTime(), availableDays)){
+	        		return [true, "active111"]; 
+	        	}
+	        	else{
+	        		return [true, ""];
+	        	}
+        	
+    	    	  
 
-    	    	  }else{
-    	    		  return [true, ""];
-    	    	  }
-    	      }
+    	      },
+      	
     	      
     	    });
-		
 
 
 
-		
-		
-		$('#availableDays').datepicker({
-			toggleActive: true,
-			clearBtn: true,
-			todayHighlight: true,
-			startDate: new Date(),
-			multidate: true
-		});
+		$("#saveAvailability").click(function(){
+			//Read the DOM
 
-		//Display employee's availability.
-		//This seems hackish...
-		var dates = [];
-		var str = $("#arrayDates").val();
-		str = str.substring(1, str.length -1);
-		dates = str.split(",");
-		var formatedDates = [];
-		for(var i = 0; i < dates.length; i++){
-			var date = dates[i];
-			date =  date.trim();
-			var day = date.substring(8, 10);
-			var month = date.substring(5, 7);
-			var year = date.substring(0, 4);
-			formatedDates.push(month + "-" + day + "-" + year);
-		}
+			
+			var availabilityDto = {};
+			availabilityDto.stringDays = [];
+			
+			$.each(availableDays, function(){
+				date = new Date;
+				date.setTime(this);		
+				date = $.datepicker.formatDate("yy-mm-dd", date);
+				
+				availabilityDto.stringDays.push(date);
+			})
+			
+			$.ajax({
+				type : "POST",
+				url : environmentVariables.LaborVaultHost + "/JobSearch/user/availability/update",
+				headers : getAjaxHeaders(),
+				contentType : "application/json",
+				data : JSON.stringify(availabilityDto)
+			}).done(function() { 				
+//				window.location = "/JobSearch/user/profile";
+			}).error(function() {
+//				alert("error submit jobs")
+//				$('#home')[0].click();
+			});			
+		})
 
-		$("#availableDays").datepicker('setDates', formatedDates);
 
 	})
 	

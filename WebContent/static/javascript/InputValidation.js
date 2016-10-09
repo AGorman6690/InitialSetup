@@ -15,8 +15,40 @@ $(document).ready(function(){
 		validateInput($(this), value);
 
 	})
+	
+	$("body").on("change", ".invalid.invalid-positive-number", function(){
+		
+		var value = "";
+		if($(this).id == "times"){
+			validateTimes();	
+		}else if($(this).is("input") || $(this).is("textarea")){
+			value = $(this).val()
+		}else if($(this).is("select")){
+			value = $(this).find(":selected").val();
+		}
+		
+		validatePositiveNumber($(this), value);
+
+	})
 
 })
+
+function validatePositiveNumber(value){
+	var result = 1;
+	if($.isNumeric(value) == 0){
+		result = 0;
+	}
+	else if(value < 0){
+		result = 0;
+	}
+	
+	if(result){
+		setValidCss($e);
+		hideErrorMessage($e);	
+	}else{
+		setInvalidCss($e);
+	}
+}
 
 
 function validateInput($e, value){
@@ -25,9 +57,16 @@ function validateInput($e, value){
 		return 1;
 	}else{
 		setValidCss($e);
+		hideErrorMessage($e);
 		return 0;
 	}
 
+}
+
+function hideErrorMessage($eInput){
+	var errorMessage = $("body").find("[data-message-for='" + $eInput.attr("id") + "']")[0];
+	
+	hide($(errorMessage));
 }
 
 

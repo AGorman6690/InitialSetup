@@ -51,6 +51,14 @@
     
     <bean id="JobInformationVM" factory-bean="VelocityEngine" factory-method="getTemplate">
     	<constructor-arg value="com/jobsearch/velocity/jobInformation.vm" />
-    </bean>       
+    </bean> 
+    
+    <bean id="FindEmployeesResponseVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/findEmployeesResponse.vm" />
+    </bean> 
+    
+    <bean id="EmployerJobsYetToStartVM" factory-bean="VelocityEngine" factory-method="getTemplate">
+    	<constructor-arg value="com/jobsearch/velocity/employerJobsYetToStart.vm" />
+    </bean>     
 
 </beans>

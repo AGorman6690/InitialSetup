@@ -83,11 +83,14 @@
 
 <link href="/JobSearch/static/css/global.css"
 	rel="stylesheet" />
+
+<link href="/JobSearch/static/css/layout.css"
+	rel="stylesheet" />
 	
 <link href="/JobSearch/static/css/navBar.css"
 	rel="stylesheet" />
 
-	
+<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
 
 </head>
 

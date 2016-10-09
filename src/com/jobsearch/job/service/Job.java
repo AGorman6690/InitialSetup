@@ -1,7 +1,6 @@
 package com.jobsearch.job.service;
 
 import java.sql.Time;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 

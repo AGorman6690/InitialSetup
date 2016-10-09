@@ -1,4 +1,4 @@
-#locationContainer input{
+.body-element-container input{
 	width:150px;
 	margin-bottom:8px;
 }
@@ -6,4 +6,43 @@
 #milesFromText{
 	padding-bottom: 10px;
 	font-weight: bold;
+}
+
+#resultsContainer #nameHeader{
+	width:20%
+}
+
+#resultsContainer #ratingHeader{
+	width:15%
+}
+
+#resultsContainer #endorsementsHeader{
+	width:50%
+}
+
+#resultsContainer #distanceHeader{
+	width:15%
+}
+
+#resultsContainer table{
+	width:100%;
+}
+
+#getEmployees{
+	padding: 10px 15px;
+}
+
+#clearCalendarContainer{
+	padding: 20px 0px 5px 25px;
+}
+
+#locationContainer input{
+	display:inline-block;
+}
+
+.main-table-style td a{
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #5B7BA3;
 }

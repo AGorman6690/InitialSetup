@@ -1,35 +1,27 @@
 package com.jobsearch.job.web;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CompletedJobResponseDTO;
-import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.json.JSON;
+import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 

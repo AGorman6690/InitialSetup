@@ -1,14 +1,21 @@
 package com.jobsearch.user.service;
 
+import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.tools.generic.ComparisonDateTool;
+import org.apache.velocity.tools.generic.DateTool;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -21,25 +28,21 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
-import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.DummyData;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FailedWageNegotiationDTO;
+import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.repository.UserRepository;
-import com.jobsearch.user.web.AvailabilityRequestDTO;
+import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
-import com.jobsearch.user.web.FindEmployeesRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 
@@ -67,6 +70,10 @@ public class UserServiceImpl {
 
 	@Value("${host.url}")
 	private String hostUrl;
+	
+	@Autowired
+	@Qualifier("FindEmployeesResponseVM")
+	Template findEmployeesResponseTemplate;	
 
 	public JobSearchUser createUser(JobSearchUser user) {
 
@@ -116,8 +123,8 @@ public class UserServiceImpl {
 
 	
 
-	public List<String> getAvailableDates(int userId) {
-		return repository.getAvailableDates(userId);
+	public List<String> getAvailableDays(int userId) {
+		return repository.getAvailableDays(userId);
 
 	}
 
@@ -298,9 +305,10 @@ public class UserServiceImpl {
 
 	}
 
-	public void updateAvailability(AvailabilityRequestDTO availabilityDTO) {
+	public void updateAvailability(AvailabilityDTO availabilityDTO) {
 		// TODO Auto-generated method stub
 
+		
 		repository.deleteAvailability(availabilityDTO.getUserId());
 
 		for (String date : availabilityDTO.getStringDays()) {
@@ -350,28 +358,58 @@ public class UserServiceImpl {
 //
 //	}
 
-	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
+	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
-		// A valid location must be supplied
-		if ((Float) findEmployeesRequest.getLat() != null && (Float) findEmployeesRequest.getLng() != null
-				&& findEmployeesRequest.getRadius() > 0) {
-
-			List<JobSearchUser> employees = repository.findEmployees(findEmployeesRequest);
+		
+		findEmployeesDto.setCoordinate(GoogleClient.getCoordinate(findEmployeesDto.getFromAddress()));
+		
+		
+		
+		
+		//If the address successfully yielded a coordinate	
+		if(findEmployeesDto.getCoordinate() != null){
+				
+			//Query the database
+			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
+			
+			//Set the categories if the user filtered by category
+			List<Category> categories = new ArrayList<Category>();
+			if(findEmployeesDto.getCategoryIds().size() > 0){
+				categories = categoryService.getCategories(findEmployeesDto.getCategoryIds());	
+			}
+			
+			
+			//Set additional properties for each employee
 			for (JobSearchUser employee : employees) {
-				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
-				employee.setEndorsements(
-						this.getUserEndorsementsByCategory(employee.getUserId(), employee.getCategories()));
+				
+				//Categories
+//				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
+				
+				
+				//Set endorsements if the user filtered by category
+				if(categories != null){
+				
+					employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(),
+											categories));
+				}
+				//Rating
 				employee.setRating(this.getRating(employee.getUserId()));
-				employee.setDistanceFromJob(MathUtility.round(GoogleClient.getDistance(findEmployeesRequest.getLat(),
-						findEmployeesRequest.getLng(), employee.getHomeLat(), employee.getHomeLng()), 1, 0));
+				
+				//Distance from job
+				employee.setDistanceFromJob(MathUtility.round(GoogleClient
+								.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
+								findEmployeesDto.getCoordinate().getLongitude(),employee.getHomeLat(),
+								employee.getHomeLng()), 1, 0));
 
 			}
 
 			return employees;
 
 		}
-
-		return null;
+		else{
+			return null;	
+		}
+		
 	}
 
 	public void createUsers_DummyData() {
@@ -460,6 +498,8 @@ public class UserServiceImpl {
 
 	public void setEmployeesProfileModel(JobSearchUser employee, Model model) {
 		
+		//Availability
+		List<String> availableDays = this.getAvailableDays(employee.getUserId());
 
 		//Get the employee's open job applications
 		List<ApplicationResponseDTO> openApplicationResponseDtos = 
@@ -483,6 +523,7 @@ public class UserServiceImpl {
 		
 		//Set the model attributes
 		model.addAttribute("user", employee);
+		model.addAttribute("availableDays", availableDays);
 		model.addAttribute("failedWageNegotiationDtos", failedWageNegotiationDtos);
 		model.addAttribute("yetToStartJobs", yetToStartJobs);
 		model.addAttribute("activeJobs", activeJobs);
@@ -495,6 +536,7 @@ public class UserServiceImpl {
 		
 		//Get the employer's yet-to-start jobs
 		List<Job>  yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
+		List<JobDTO>  yetToStartJobs_Dtos = jobService.getYetToStartJobsByEmployer_Dto(employer.getUserId());
 		
 		//Get the employer's active jobs
 		List<Job> activeJobs = jobService.getActiveJobsByEmployer(employer.getUserId());
@@ -511,8 +553,9 @@ public class UserServiceImpl {
 				activeJobsWithFailedWageNegotiations);		
 		
 		//Run a velocity template to render the yet-to-start-jobs table
-		String vtYetToStartJobs = jobService.getEmployerProfileJobTableTemplate(employer, yetToStartJobs, false);
-
+//		String vtYetToStartJobs = jobService.getEmployerProfileJobTableTemplate(employer, yetToStartJobs, false);
+		String vtYetToStartJobs = jobService.getEmployersJobsYetTemplate(employer, yetToStartJobs_Dtos, false);
+		
 		//Run a velocity template to render the active-jobs table
 		String vtActiveJobs = jobService.getEmployerProfileJobTableTemplate(employer, activeJobs, true);
 
@@ -536,6 +579,26 @@ public class UserServiceImpl {
 		//*********************************************************************			
 		//*********************************************************************
 		
+	}
+
+	public String getFindEmployeesResponseHTML(FindEmployeesDTO findEmployeesDto) {
+		
+		//Get the employees
+		List<JobSearchUser> employees = this.findEmployees(findEmployeesDto);
+		
+		
+		StringWriter writer = new StringWriter();
+		
+		//Set the context
+		final VelocityContext context = new VelocityContext();		
+		context.put("employees", employees);
+		context.put("mathUtility", MathUtility.class);		
+		
+				
+		findEmployeesResponseTemplate.merge(context, writer);
+		
+		return writer.toString();
+
 	}
 
 

@@ -14,15 +14,12 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Profile;
 import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.MathUtility;
 
 @Repository
 public class ApplicationRepository {

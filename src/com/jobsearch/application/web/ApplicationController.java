@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -54,17 +54,24 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
 	@ResponseBody
-	public void acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
 		
-		applicationService.acceptWageProposal(wageProposalId);
+//		applicationService.acceptWageProposal(wageProposalId);
+		
+		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
+		return JSON.stringify(wageProposal);
+		
 	}	
 	
 	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
 	@ResponseBody
-	public void declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
 		
 		
-		applicationService.declineWageProposalStatus(wageProposalId);
+//		applicationService.declineWageProposalStatus(wageProposalId);
+		
+		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
+		return JSON.stringify(wageProposal);
 		
 		
 	}		

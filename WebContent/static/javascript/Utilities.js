@@ -1,9 +1,30 @@
+$(document).ready(function(){
+	$(".toggle").click(function(){
+		var idToToggle = $(this).attr("data-toggle");
+		$("#" + idToToggle).toggle(200);
+
+	})
+		
+})
+
+
 function addClassToArrayItems(array, className){
 	$(array).each(function(){
 		$(this).addClass(className);
 	})
 }
 
+function show($e){
+	$e.show(200);
+}
+
+function hide($e){
+	$e.hide(200);
+}
+
+function toggle($e){
+	$e.toggle(200);
+}
 
 function highlightArrayItemByAttribute(itemToHighlight, array, className){
 	

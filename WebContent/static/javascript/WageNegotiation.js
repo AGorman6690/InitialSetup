@@ -21,17 +21,18 @@ $(document).ready(function(){
 
 		//Get the wage proposal id and proposal amount
 		var wageProposalId = $(counterOfferContainer).attr("id");
-		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
+//		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
 		
 		$.ajax({
 			type : "POST",
 			url :"/JobSearch/desired-pay/decline?wageProposalId=" + wageProposalId,
 			headers : getAjaxHeaders(),
-			contentType : "application/json",		
-		}).done(function() {	
+			contentType : "application/json",
+			dataType : "json",
+		}).done(function(wageProposal) {	
 			
 			updateDOM($(counterOfferContainer), $(responseNotificationContainer),
-						"Declined " + twoDecimalPlaces(proposalAmount) + " offer. Negotiations have ended.");
+						"Declined " + twoDecimalPlaces(wageProposal.amount) + " offer. Negotiations have ended.");
 			
 		}).error(function() {
 			$('#home')[0].click();
@@ -49,15 +50,19 @@ $(document).ready(function(){
 
 		//Get the wage proposal id and proposal amount
 		var wageProposalId = $(counterOfferContainer).attr("id");
-		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
+//		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
+		
+//		updateDOM($(counterOfferContainer), $(responseNotification),"Accepted " + twoDecimalPlaces(proposalAmount) + " offer");
 		
 		$.ajax({
 			type : "POST",
 			url :"/JobSearch/desired-pay/accept?wageProposalId=" + wageProposalId,
 			headers : getAjaxHeaders(),
-			contentType : "application/json",		
-		}).done(function() {			
-			updateDOM($(counterOfferContainer), $(responseNotification),"Accepted " + twoDecimalPlaces(proposalAmount) + " offer");
+			contentType : "application/json",	
+			dataType : "json",
+		}).done(function(wageProposal) {			
+			updateDOM($(counterOfferContainer), $(responseNotification),
+						"Accepted " + twoDecimalPlaces(wageProposal.amount) + " offer");
 			
 		}).error(function() {
 			$('#home')[0].click();
@@ -67,11 +72,14 @@ $(document).ready(function(){
 	
 	$(".re-counter").click(function(){
 		var $e = $($(this).siblings(".re-counter-amount-container")[0]); 
-		toggleClasses($e, "hide-element", "show-block");
+		$e.toggle(200);
+//		toggleClasses($e, "hide-element", "show-block");
 	})
 	
 	$(".cancel-counter-offer").click(function(){
-		$(this).parent().hide();
+		var $e = $($(this).parents(".re-counter-amount-container")[0]);
+		$e.toggle(200);
+//		toggleClasses($e, "hide-element", "show-block");
 		$($(this).siblings("input")[0]).val("");
 	})
 
@@ -96,6 +104,7 @@ $(document).ready(function(){
 
 })
 
+
 	function getResponseNotificationContainer($e){
 	 	return $e.siblings(".sent-response-notification")[0];		
 	}
@@ -107,11 +116,11 @@ $(document).ready(function(){
 	
 	function updateDOM($hide, $show, response){
 		//After the response has been made, hide the re-counter controls.			
-		$hide.hide();
+		$hide.hide(200);
 		
 		//Inform the user that the response has been sent.
 		$show.html(response);
-		$show.show();
+		$show.show(200);
 	}
 
 	function sendCounterOffer(wageProposalCounterDTO, callback){

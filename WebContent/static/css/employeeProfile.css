@@ -18,3 +18,14 @@ table th{
 a{
 	cursor:pointer;
 }
+
+
+
+
+#saveButtonContainer{
+    padding: 30px 25px;
+}
+
+#availableDays{
+	display:none;
+}

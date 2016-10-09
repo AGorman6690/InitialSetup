@@ -15,7 +15,7 @@
 	<script src="<c:url value="/static/javascript/TimePickerUtilities.js"/>"></script>	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" />		
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_new.css" />
-	
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
@@ -147,7 +147,7 @@
 									<div id="calendarContainer">
 										<div id="calendar" data-is-showing-job="0">
 										</div>
-										<button class="btn" id="clearCalendar">Clear</button>
+										<button class="square-button" id="clearCalendar">Clear</button>
 									</div>
 								</div>							
 

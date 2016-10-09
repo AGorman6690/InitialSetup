@@ -2,20 +2,13 @@ package com.jobsearch.user.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.tools.generic.ComparisonDateTool;
-import org.apache.velocity.tools.generic.DateTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,27 +20,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionAttributeStore;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.CompletedJobResponseDTO;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Profile;
-import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.rate.RatingRequestDTOs;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.MathUtility;
 
 @Controller
 //@SessionAttributes({ "user" })
@@ -205,29 +190,10 @@ public class UserController {
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model) {
 			
 
-//		JobSearchUser employee = userService.getUser(userId);
-//		employee.setEndorsements(userService.getUsersEndorsements(userId));
-//		if (jobId != null) {
-//			employee.setApplication(applicationService.getApplication(jobId, userId));
-//		}
-//		model.addObject("worker", employee);
-
-		// Job consideredForJob = jobService.getJob(jobId);
-		// model.addObject("consideredForJob", consideredForJob);
-
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
 		model.addAttribute("completedJobDtos", completedJobDtos);
 
-//		String context = null;
-//		if (viewContext == 0) {
-//			context = "viewingApplication";
-//		} else if (viewContext == 1) {
-//			context = "findEmployeeSearch";
-//		}
-//		model.addObject("context", context);
-
-//		model.setViewName("EmployeeWorkHistory");
-		return "EmployeeWorkHistory";
+		return "EmployerViewEmployee";
 	}
 
 
@@ -250,9 +216,11 @@ public class UserController {
 
 	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateAvailability(ModelAndView model, @RequestBody AvailabilityRequestDTO availabityRequest) {
+	public void updateAvailability(HttpSession session, @RequestBody AvailabilityDTO availabityDto) {
 
-		userService.updateAvailability(availabityRequest);
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");		
+		availabityDto.setUserId(user.getUserId());
+		userService.updateAvailability(availabityDto);
 	}
 
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
@@ -262,19 +230,21 @@ public class UserController {
 		userService.editEmployeeSettings(editProfileRequest, session);
 	}
 
-	@RequestMapping(value = "/employees/filter", method = RequestMethod.GET)
+	@RequestMapping(value = "/search/employees", method = RequestMethod.GET)
 	@ResponseBody
-	public String filterEmployees(@RequestParam(name = "city") String city, @RequestParam(name = "state") String state, 
-			@RequestParam(name = "zipCode")  String zipCode, @RequestParam(name="radius") int radius, 
-			@RequestParam(name = "date", value = "date") List<String> dates,
-			@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
+	public String findEmployees(@RequestParam(name = "fromAddress", required = true) String fromAddress,
+			@RequestParam(name = "radius", required = true) double radius,
+			@RequestParam(name = "day", value = "day", required = false) List<String> days,
+			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds){
 
-		FindEmployeesRequestDTO findEmployeesRequest = new FindEmployeesRequestDTO(city, state, zipCode, radius, dates,
-				categoryIds);
+		//Set the dto
+		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, days, categoryIds);
 
-		List<JobSearchUser> employees = userService.findEmployees(findEmployeesRequest);
+		//Run the velocity template
+		String findEmployeesResponseHTML = userService.getFindEmployeesResponseHTML(findEmployeesDto);
+		
 
-		return JSON.stringify(employees);
+		return findEmployeesResponseHTML;
 	}
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)

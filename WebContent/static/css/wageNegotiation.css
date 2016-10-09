@@ -1,0 +1,28 @@
+.counter-offer-response{
+	display:none;
+	padding-top:7px;
+}
+
+.offer-context{
+	display:inline-block;
+}
+
+.counter-offer-container .glyphicon-menu-hamburger{
+	cursor:pointer;
+	margin-left:5px;
+    font-size: 17px;
+}
+
+.re-counter-offer-response{
+	padding-top:5px;
+}
+
+.re-counter-amount-container{
+	display:none;	
+}
+
+.re-counter-amount-container input{
+	display:block;	
+	margin:5px 0px;
+	
+}

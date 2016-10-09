@@ -1,7 +1,5 @@
 package com.jobsearch.model;
 
-import java.util.List;
-
 public class Answer {
 //	private int answerOptionId;
 //	private List<Integer> answerOptionIds;

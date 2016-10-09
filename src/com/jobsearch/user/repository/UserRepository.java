@@ -13,17 +13,16 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.rate.RatingRequestDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.EditProfileRequestDTO;
-import com.jobsearch.user.web.FindEmployeesRequestDTO;
 
 @Repository
 public class UserRepository {
@@ -401,7 +400,7 @@ public class UserRepository {
 
 	}
 
-	public List<String> getAvailableDates(int userId) {
+	public List<String> getAvailableDays(int userId) {
 		String sql = "SELECT Day FROM availability WHERE UserId = ?";
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
 	}
@@ -433,7 +432,7 @@ public class UserRepository {
 //
 //	}
 
-	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
+	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
 		// ******************************************************************************************
 		// NOTE: For optimal performance, we may want to eventually do some
@@ -461,7 +460,7 @@ public class UserRepository {
 		// days.
 		// This sub query is optional.
 		String subQueryDates = null;
-		if (findEmployeesRequest.getAvailableDates() != null) {
+		if (findEmployeesDto.getDays().size() > 0) {
 
 			subQueryDates = " (SELECT a0.UserId FROM availability a0";
 
@@ -475,44 +474,46 @@ public class UserRepository {
 			// JOIN availability a1 ON a0.UserId = a1.UserId AND a1.Day = X
 			// JOIN availability a2 ON a1.UserId = a2.UserId AND a2.Day = Y
 			// WHERE Day = Z AND a0.UserId IN ([distance sub query])
-			for (int dateCount = 1; dateCount < findEmployeesRequest.getAvailableDates().size(); dateCount++) {
+			for (int dateCount = 1; dateCount < findEmployeesDto.getDays().size(); dateCount++) {
 				int dateCountMinus1 = dateCount - 1;
 				subQueryDates += " JOIN availability a" + dateCount + " ON a" + dateCountMinus1 + ".UserId" + " = a"
 						+ dateCount + ".UserId AND a" + dateCount + ".Day = ?";
-				argsList.add(findEmployeesRequest.getAvailableDates().get(dateCount));
+				argsList.add(findEmployeesDto.getDays().get(dateCount));
 			}
 
 			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
-			argsList.add(findEmployeesRequest.getAvailableDates().get(0));
+			argsList.add(findEmployeesDto.getDays().get(0));
 
 			sql += subQueryDates;
 			subQueryCount += 1;
 
 		}
 
+/*
 		// Build the sub query for categories.
 		// This sub query has the same structure as the availability sub query.
 		// This returns all user ids that have ALL the requested categories.
 		String subQueryCategories = null;
-		if (findEmployeesRequest.getCategoryIds() != null) {
+		if (findEmployeesDto.getCategoryIds() != null) {
 
 			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
 
-			for (int categoryCount = 1; categoryCount < findEmployeesRequest.getCategoryIds().size(); categoryCount++) {
+			for (int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++) {
 				int categoryCountMinus1 = categoryCount - 1;
 				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc" + categoryCountMinus1
 						+ ".UserId" + " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?";
-				argsList.add(findEmployeesRequest.getCategoryIds().get(categoryCount));
+				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
 			}
 
 			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
-			argsList.add(findEmployeesRequest.getCategoryIds().get(0));
+			argsList.add(findEmployeesDto.getCategoryIds().get(0));
 
 			sql += subQueryCategories;
 			subQueryCount += 1;
 
 		}
-
+*/
+		
 		// Distance sub query.
 		// This returns all user ids with a home radius within the requested
 		// radius.
@@ -523,10 +524,10 @@ public class UserRepository {
 
 		sql += subQueryDistance;
 
-		argsList.add(findEmployeesRequest.getLat());
-		argsList.add(findEmployeesRequest.getLng());
-		argsList.add(findEmployeesRequest.getLat());
-		argsList.add(findEmployeesRequest.getRadius());
+		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
+		argsList.add(findEmployeesDto.getCoordinate().getLongitude());
+		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
+		argsList.add(findEmployeesDto.getRadius());
 
 		// Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {

@@ -124,4 +124,13 @@ public class CategoryServiceImpl {
 
 	}
 
+	public List<Category> getCategories(List<Integer> categoryIds) {
+		List<Category> categories = new ArrayList<Category>();
+		
+		for(int categoryId : categoryIds){
+			categories.add(this.getCategory(categoryId));
+		}
+		return categories;
+	}
+
 }

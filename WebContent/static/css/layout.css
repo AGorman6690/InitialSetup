@@ -1,0 +1,47 @@
+.container{
+	padding-bottom:50px;
+}
+
+.section{
+    padding: 25px 0px;
+    
+}
+
+.header2{
+	border-bottom: 2px outset #F0F0F0;
+	padding-bottom:10px;
+}
+
+.header{
+	border-bottom: 2px outset #F0F0F0;
+}
+
+.section-body{
+	padding-left:50px;
+	padding-top:15px;
+}
+
+.body-element-container{
+	padding-left:25px;	
+	padding-bottom:10px;
+}
+
+.body-element{
+	padding-bottom:10px;
+}
+
+.header .glyphicon{
+	margin-right:5px;
+	font-size:17px;
+	padding:5px;
+}
+
+.sub-header .glyphicon{
+/* 	margin-right:5px; */
+	font-size:14px;
+	padding:5px;
+}
+
+.sub-header h4{
+	display:inline-block;
+}

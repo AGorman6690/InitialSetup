@@ -5,9 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class AvailabilityRequestDTO {
+public class AvailabilityDTO {
 	
-	@JsonProperty
 	private int userId;
 	
 	@JsonProperty
@@ -16,12 +15,13 @@ public class AvailabilityRequestDTO {
 	@JsonProperty
 	private List<Date> days;
 	
+	
 	public int getUserId() {
 		return userId;
 	}
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
+	}	
 	public String[] getStringDays() {
 		return stringDays;
 	}

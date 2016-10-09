@@ -1,0 +1,22 @@
+.main-table-style thead{
+    border-bottom: 2px solid #ddd;
+}
+
+
+
+.main-table-style td{
+	border-bottom: 1px outset #F0F0F0;
+}
+
+.main-table-style tbody tr{
+	height:30px;
+}
+
+.main-table-style tbody td .endorsement{
+	padding:2px 0px;
+}
+
+.main-table-style tbody td .badge.non-zero{
+	background-color: #2D8633;
+}
+    

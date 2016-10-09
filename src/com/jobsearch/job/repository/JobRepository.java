@@ -1,7 +1,6 @@
 package com.jobsearch.job.repository;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,9 +17,9 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.WorkDay;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.PostQuestionDto;
 import com.jobsearch.user.service.UserServiceImpl;

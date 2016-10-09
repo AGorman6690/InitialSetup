@@ -1,7 +1,5 @@
 package com.jobsearch.job.service;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;

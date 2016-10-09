@@ -1,18 +1,11 @@
 <div class="section">
 	<div class="header">
 		<h3>
-		
-		#if($isActiveJobs)
-			Jobs In Process
-			#set($noJobsMessage = "You have no active jobs at this time.")
-		#else
 			Jobs Waiting To Start
-			#set($noJobsMessage = "You have no jobs waiting to start at this time.")
-		#end
 		</h3>
 	</div>
 	<div class="section-body">
-	#if($jobs.size() == 0)
+	#if($jobsDtos.size() == 0)
 		$noJobsMessage
 	#else
 		<table id="">
@@ -20,6 +13,7 @@
 				<tr>
 					<th class="expand-job-header"></th>
 					<th id="name">Job Name</th>
+					<th id="failedWageNegotiations">Failed Wage Negotiations</th>
 					<th id="newApplicantions">New Applications</th>
 					<th id="totalApplications">Total Applications</th>
 					<th id="hires">Employees</th>									
@@ -29,40 +23,40 @@
 			<tbody>
 
 				## for each job
-				#foreach($job in $jobs)
-				<tr class="static-row" id="$job.id">
+				#foreach($jobDto in $jobDtos)
+				<tr class="static-row" id="$jobDto.job.id">
 				
 				## If the job has applications
-				#if($job.applications.size() > 0)
+				#if($jobDto.job.applications.size() > 0 || $jobDto.failedWageNegotiationDtos.size() > 0)
 					<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
 				#else						
 					<td></td>
 				#end
-				
-					<td class="job-name"><a class="accent" href="../job/$job.Id" >$job.jobName</a></td>
 					
+					<td class="job-name"><a class="accent" href="../job/$jobDto.job.Id" >$jobDto.job.jobName</a></td>
+					<td class="job-data"><span class="">$jobDto.failedWageNegotiationDtos.size()</span></td>
 				## if the job has NEW applications
-				#if($job.newApplicationCount > 0)
-					<td class="job-data has-new-applicants">$job.newApplicationCount</td>
+				#if($jobDto.job.newApplicationCount > 0)
+					<td class="job-data has-new-applicants">$jobDto.job.newApplicationCount</td>
 				#else
-					<td class="job-data"><span class="">$job.newApplicationCount</span></td>
+					<td class="job-data"><span class="">$jobDto.job.newApplicationCount</span></td>
 				#end
 
 																			
-					<td class="job-data"><span class="">$job.getApplications().size()</span></td>
-					<td class="job-data"><span class="">$job.getEmployees().size()</span></td>
+					<td class="job-data"><span class="">$jobDto.job.getApplications().size()</span></td>
+					<td class="job-data"><span class="">$jobDto.job.getEmployees().size()</span></td>
 					
 					## If job is active, show the "Mark Complete" button
-					#if($job.status == 1)
+					#if($jobDto.job.status == 1)
 					<td>														
-						<a href="/JobSearch/job/$job.id }/rate-employees?markComplete=1"><button class="square-button">Mark Complete (for debugging)</button></a>
+						<a href="/JobSearch/job/$jobDto.job.id }/rate-employees?markComplete=1"><button class="square-button">Mark Complete (for debugging)</button></a>
 					</td>
 					#end
 				</tr>
 								
 				## Expandable row that shows applicant info.
 				## If there are applicants, then create a table for this info.
-				#if($job.applications.size() > 0)												
+				#if($jobDto.job.applications.size() > 0)												
 					<tr class="expandable-row">
 						<td colspan="5">
 							<div class="applicants-container">
@@ -80,7 +74,7 @@
 										</thead>
 										<tbody>
 											## for each application
-											#foreach($application in $job.applications)
+											#foreach($application in $jobDto.job.applications)
 											<tr class="applicant-row">
 											
 												## Applicant info

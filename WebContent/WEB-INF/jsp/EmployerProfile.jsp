@@ -9,6 +9,8 @@
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 <link rel="stylesheet" type="text/css" href="../static/css/profile.css" />
+<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
+
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
@@ -102,6 +104,8 @@ $(document).ready(function(){
 		});
 		
 	})
+	
+
 
 })
 

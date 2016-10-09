@@ -12,15 +12,8 @@ var rangeIsBeingSet = 0;
 $(document).ready(function(){
 	
 	$("#clearCalendar").click(function(e){
-		
 		e.preventDefault();
-			
-		resetVars();
-		
-		removeActiveDaysFormatting();
-		$("#times").empty();
-		
-		$("#timesContainer").hide(200);
+		clearCalendar();
 		
 		
 	})
@@ -76,7 +69,7 @@ $(document).ready(function(){
 	            		rangeIsBeingSet = 1;
 	            		
 	            		if(secondworkDay.date < firstworkDay.date){
-	            			resetVars();
+	            			clearCalendar(this);
 	            		}
 	            		
 	            	}
@@ -155,14 +148,19 @@ $(document).ready(function(){
 	
 })
 
-
-
-function removeActiveDaysFormatting(){
-		var activeDays = $("#calendar").find(".active111");			
-		$(activeDays).each(function(){
-			$(this).removeClass("active111");
-		})
+	function clearCalendar(){
+		
+		
+		resetVars();
+		
+		removeActiveDaysFormatting();
+		$("#times").empty();
+		
+		$("#timesContainer").hide(200);
 	}
+	
+	
+
 	
 	function addWorkDay(workDay, workDays){
 		
@@ -310,5 +308,32 @@ function removeActiveDaysFormatting(){
 				$(par).addClass("active111");
 			}
 		})
+		
+	}
+	
+	
+	
+	
+	function removeDate(date, days){
+		return $.grep(days, function(day){
+			return day != date;
+		})
+	}
+	
+	function isDayAlreadyAdded(date, days){
+		
+		var arr = [];
+		
+		arr = $.grep(days, function(day){
+			return day == date;
+		})
+		
+		if(arr.length > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
+		
 		
 	}
