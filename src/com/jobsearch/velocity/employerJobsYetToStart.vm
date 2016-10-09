@@ -1,14 +1,15 @@
 <div class="section">
+
 	<div class="header">
 		<h3>
-			Jobs Waiting To Start
+			Jobs Waiting To Start 
 		</h3>
 	</div>
 	<div class="section-body">
-	#if($jobsDtos.size() == 0)
-		$noJobsMessage
+	#if($jobDtos.size() == 0)
+		<div>You have no jobs waiting to start
 	#else
-		<table id="">
+		<table id="" class="main-table-style">
 			<thead>
 				<tr>
 					<th class="expand-job-header"></th>
@@ -24,27 +25,34 @@
 
 				## for each job
 				#foreach($jobDto in $jobDtos)
-				<tr class="static-row" id="$jobDto.job.id">
+				
+				
+				#if($jobDto.job.applications.size() > 0)
+					#set ( $doCreateExpandableTable = "1" )
+				#else
+					#set ( $doCreateExpandableTable = "0" )
+				#end 
+				<tr id="$jobDto.job.id">
 				
 				## If the job has applications
-				#if($jobDto.job.applications.size() > 0 || $jobDto.failedWageNegotiationDtos.size() > 0)
-					<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
-				#else						
+				#if($doCreateExpandableTable == "1")
+					#set ( $expandId = "expand$jobDto.job.Id" )
+					<td><span data-toggle-id="$expandId" class="glyphicon glyphicon-menu-up"></span></td>
+				#else					
 					<td></td>
 				#end
 					
 					<td class="job-name"><a class="accent" href="../job/$jobDto.job.Id" >$jobDto.job.jobName</a></td>
-					<td class="job-data"><span class="">$jobDto.failedWageNegotiationDtos.size()</span></td>
+					<td class=""><span class="">$jobDto.failedWageNegotiationDtos.size()</span></td>
 				## if the job has NEW applications
 				#if($jobDto.job.newApplicationCount > 0)
-					<td class="job-data has-new-applicants">$jobDto.job.newApplicationCount</td>
+					<td class="has-new-applicants">$jobDto.job.newApplicationCount</td>
 				#else
-					<td class="job-data"><span class="">$jobDto.job.newApplicationCount</span></td>
+					<td><span class="">$jobDto.job.newApplicationCount</span></td>
 				#end
-
-																			
-					<td class="job-data"><span class="">$jobDto.job.getApplications().size()</span></td>
-					<td class="job-data"><span class="">$jobDto.job.getEmployees().size()</span></td>
+												
+					<td class=""><span class="">$jobDto.job.getApplications().size()</span></td>
+					<td class=""><span class="">$jobDto.job.getEmployees().size()</span></td>
 					
 					## If job is active, show the "Mark Complete" button
 					#if($jobDto.job.status == 1)
@@ -52,16 +60,18 @@
 						<a href="/JobSearch/job/$jobDto.job.id }/rate-employees?markComplete=1"><button class="square-button">Mark Complete (for debugging)</button></a>
 					</td>
 					#end
+					
+
 				</tr>
 								
 				## Expandable row that shows applicant info.
 				## If there are applicants, then create a table for this info.
-				#if($jobDto.job.applications.size() > 0)												
-					<tr class="expandable-row">
+				#if($doCreateExpandableTable == "1")												
+					<tr id="$expandId" class="toggle-row">
 						<td colspan="5">
 							<div class="applicants-container">
 								<h4>Applicants</h4>
-								<div class="applicants">
+								<div class="">
 									<table id="">
 										<thead>
 											<tr>
@@ -69,13 +79,12 @@
 												<th class="applicant-rating">Rating</th>
 												<th class="applicant-endorsements">Endorsements</th>	
 												<th class="applicant-wage-negotiation">Wage Negotiation</th>
-<!-- 																<th class="applicant-desired-pay">Offered Pay ($/hr)</th>									 -->
 											</tr>
 										</thead>
 										<tbody>
 											## for each application
 											#foreach($application in $jobDto.job.applications)
-											<tr class="applicant-row">
+											<tr class="">
 											
 												## Applicant info
 												<td><a>$application.applicant.firstName</a></td>
@@ -137,7 +146,27 @@
 										</tbody>
 									</table>
 								</div>
+							</div>
+							#*
+							<div class="applicants-container">
+								<h4>Failed Wage Negotiations</h4>
+									<table id="">
+										<thead>
+											<tr>
+												<th class="applicant-name">Name</th>
+												<th class="applicant-rating">Rating</th>
+												<th class="applicant-endorsements">Endorsements</th>	
+												<th class="applicant-wage-negotiation">Wage Negotiation</th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody
+									</table>
+									
+								
 							</div>	
+							
+							*#
 						</td>
 					</tr> <!-- close applicant dropdown row -->
 				#end ## end if the job has at least one application

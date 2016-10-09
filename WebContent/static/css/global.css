@@ -1,3 +1,9 @@
+.form-control-label{
+	font-size:15px;
+	font-weight:100;
+	margin-right:8px;
+}
+
 .mock-anchor{
     color: #5B7BA3;
     cursor:pointer;

@@ -62,6 +62,10 @@ public class JobServiceImpl {
 	@Qualifier("EmployerJobsYetToStartVM")
 	Template employerJobsYetToStartTemplate;
 	
+	@Autowired
+	@Qualifier("EmployerJobsInProcessVM")
+	Template employerJobsInProcessTemplate;
+	
 	public void addPosting(SubmitJobPostingDTO postingDto, JobSearchUser user) {
 
 		for (PostJobDTO jobDto : postingDto.getPostJobDtos()) {
@@ -752,12 +756,13 @@ public class JobServiceImpl {
 		final VelocityContext context = new VelocityContext();	
 		context.put("employer", employer);
 		context.put("jobs", yetToStartJobs);
-		context.put("isActiveJobs", isActiveJobs);
+//		context.put("isActiveJobs", isActiveJobs);
 		context.put("mathUtility", MathUtility.class);		
 		context.put("numberTool", new NumberTool());
 		
 		//Run the template
-		vmTemplate_employerProfileJobTable.merge(context, writer);
+//		vmTemplate_employerProfileJobTable.merge(context, writer);
+		employerJobsInProcessTemplate.merge(context, writer);
 		
 		//Return the html
 		return writer.toString();
@@ -779,7 +784,7 @@ public class JobServiceImpl {
 		//Get the applications
 		List<Application> applications = applicationService.getApplicationsByJob(jobId);
 		
-		//Get the failed wage negotiations
+//		//Get the failed wage negotiations
 		String vtFailedWageNegotiationsByJob = applicationService.
 				getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
 		

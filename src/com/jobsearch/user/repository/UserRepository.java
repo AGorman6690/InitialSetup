@@ -450,6 +450,7 @@ public class UserRepository {
 
 		String sql = "SELECT * FROM user WHERE user.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
+	
 
 		int subQueryCount = 1; // 1 because the distance sub query is required
 
@@ -529,10 +530,12 @@ public class UserRepository {
 		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
 		argsList.add(findEmployeesDto.getRadius());
 
+
 		// Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {
 			sql += ")";
 		}
+
 
 		return this.JobSearchUserRowMapper(sql, argsList.toArray());
 	}

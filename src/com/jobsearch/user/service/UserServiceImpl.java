@@ -365,10 +365,10 @@ public class UserServiceImpl {
 		
 		
 		
-		
 		//If the address successfully yielded a coordinate	
 		if(findEmployeesDto.getCoordinate() != null){
-				
+			List<JobSearchUser> result = new ArrayList<JobSearchUser>();
+			
 			//Query the database
 			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
 			
@@ -386,24 +386,35 @@ public class UserServiceImpl {
 //				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
 				
 				
-				//Set endorsements if the user filtered by category
-				if(categories != null){
 				
-					employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(),
-											categories));
-				}
 				//Rating
 				employee.setRating(this.getRating(employee.getUserId()));
 				
-				//Distance from job
-				employee.setDistanceFromJob(MathUtility.round(GoogleClient
-								.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
-								findEmployeesDto.getCoordinate().getLongitude(),employee.getHomeLat(),
-								employee.getHomeLng()), 1, 0));
+				//The database query does not filter on rating.
+				//This condition is the rating filter.
+				if(employee.getRating() >= findEmployeesDto.getRating()){
+					
+				
+					//Set endorsements if the user filtered by category
+					if(categories != null){				
+						employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(),
+												categories));
+					}
+	
+					
+					//Distance from job
+					employee.setDistanceFromJob(MathUtility.round(GoogleClient
+									.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
+									findEmployeesDto.getCoordinate().getLongitude(),employee.getHomeLat(),
+									employee.getHomeLng()), 1, 0));
+					
+					result.add(employee);
+				
+				}
 
 			}
 
-			return employees;
+			return result;
 
 		}
 		else{
@@ -583,7 +594,7 @@ public class UserServiceImpl {
 
 	public String getFindEmployeesResponseHTML(FindEmployeesDTO findEmployeesDto) {
 		
-		//Get the employees
+		//Query the database
 		List<JobSearchUser> employees = this.findEmployees(findEmployeesDto);
 		
 		

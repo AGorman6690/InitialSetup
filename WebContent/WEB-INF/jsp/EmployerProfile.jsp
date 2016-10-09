@@ -10,6 +10,7 @@
 <script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 <link rel="stylesheet" type="text/css" href="../static/css/profile.css" />
 <link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 
 
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -22,7 +23,7 @@
 	
 	<div class="container">
 
-		<div>${vtFailedWageNegotiations }</div>
+<%-- 		<div>${vtFailedWageNegotiations }</div> --%>
 		<div>${vtYetToStartJobs }</div>
 		<div>${vtActiveJobs }</div>
 
@@ -70,19 +71,19 @@ $(document).ready(function(){
 		window.location = '../job/' + $(this).parent().attr('id');
 	})	
 	
-	$(".expand-job").click(function(e){
+// 	$(".expand-job").click(function(e){
 		
-		//Only toggle if the element WITH "has-applicants" class (i.e. e.currentTaget)
-		//gets clicked.
-		//Do not toggle if any pathe job name hyperlink is clicked
-// 		if(e.target == e.currentTarget){
-			var parentRow = $(this).parents('tr')[0];
-			$(parentRow).next(".expandable-row").toggle(200);
-// 			$(parentRow).next(".expandable-row").slideToggle(1000);
-			toggleClasses($(this), "glyphicon-menu-down", "glyphicon-menu-up");
-// 		}
+// 		//Only toggle if the element WITH "has-applicants" class (i.e. e.currentTaget)
+// 		//gets clicked.
+// 		//Do not toggle if any pathe job name hyperlink is clicked
+// // 		if(e.target == e.currentTarget){
+// 			var parentRow = $(this).parents('tr')[0];
+// 			$(parentRow).next(".expandable-row").toggle(200);
+// // 			$(parentRow).next(".expandable-row").slideToggle(1000);
+// 			toggleClasses($(this), "glyphicon-menu-down", "glyphicon-menu-up");
+// // 		}
 		
-	})
+// 	})
 	
 	$(".mark-complete-ouououoiuiou").click(function(){
 	

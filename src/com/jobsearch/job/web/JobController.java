@@ -52,21 +52,7 @@ public class JobController {
 	}
 	
 	
-	@RequestMapping(value = "/create/job/post", method = RequestMethod.GET)
-	public ModelAndView createJobPost(ModelAndView model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		
-		model.addObject("user", user);
-		
-		
-		
-//		SubmitJobPostingRequestDTO job = new SubmitJobPostingRequestDTO();
-//		model.addObject("job", job);
-
-		model.setViewName("PostJob_new");
-		return model;
-	}
 	
 
 	

@@ -235,10 +235,11 @@ public class UserController {
 	public String findEmployees(@RequestParam(name = "fromAddress", required = true) String fromAddress,
 			@RequestParam(name = "radius", required = true) double radius,
 			@RequestParam(name = "day", value = "day", required = false) List<String> days,
+			@RequestParam(name = "rating", required = false) double rating,
 			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds){
 
 		//Set the dto
-		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, days, categoryIds);
+		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, rating, days, categoryIds);
 
 		//Run the velocity template
 		String findEmployeesResponseHTML = userService.getFindEmployeesResponseHTML(findEmployeesDto);

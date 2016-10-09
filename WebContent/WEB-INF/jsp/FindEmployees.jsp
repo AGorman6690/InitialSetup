@@ -61,7 +61,15 @@
 						<div class="bottom-border-thinner">
 							<div id="ratingContainer" class="body-element-container">	
 								<div id="invalidRating" class="invalid-message" data-message-for="rating"></div>
-								<input id="rating" placeholder="" class="form-control">
+<!-- 								<input id="rating" placeholder="" class="form-control"> -->
+									<label for="rating"	class="form-control-label">Greater Than Or Equal To </label>									
+									<select id="rating" name="state" class="form-control">
+										<option selected value="0">0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>	
 							</div>
 						</div>
 					</div>
@@ -83,11 +91,11 @@
 		</div>
 		
 
-		<div class="section">
+		<div id="resultsContainer" class="section">
 			<div class="header">
 				<span class="header-text">Results</span>
 			</div>
-			<div id="resultsContainer" class="section-body">
+			<div id="results" class="section-body">
 				
 			</div>
 		</div>
@@ -208,9 +216,9 @@
 			
 			param = "?fromAddress=" + findEmployeesDto.fromAddress;
 			param += "&radius=" + findEmployeesDto.radius;
+			param += "&rating=" + findEmployeesDto.rating; 
 			param += "&" + getListParameter("day", findEmployeesDto.days);
-			param += "&" + getListParameter("categoryId", findEmployeesDto.categoryIds);
-			
+			param += "&" + getListParameter("categoryId", findEmployeesDto.categoryIds);			
 			
 			$.ajax({
 				type : "GET",
@@ -220,8 +228,9 @@
 // 				data : JSON.stringify(findEmployeesDto)
 			}).done(function(html) { 		
 // 				alert(html)
-				$("#resultsContainer").empty();
-				$("#resultsContainer").append(html);
+				$("#results").empty();
+				$("#results").append(html);
+				scrollToElement("resultsContainer", 500);
 			}).error(function() {
 
 			});			

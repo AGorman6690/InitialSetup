@@ -2,10 +2,21 @@
     border-bottom: 2px solid #ddd;
 }
 
+.main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
+	margin-right:5px;
+	padding:5px;
+}
 
+.main-table-style tbody tr.toggle-row{
+	border-top: 0;
+}
 
-.main-table-style td{
-	border-bottom: 1px outset #F0F0F0;
+.main-table-style tbody tr{
+	border-top: 1px outset #F0F0F0;
+}
+
+.main-table-style tbody tr:first-child{
+	border-bottom: 0;
 }
 
 .main-table-style tbody tr{
@@ -20,3 +31,14 @@
 	background-color: #2D8633;
 }
     
+.toggle-row{
+	display:none;
+}
+
+.main-table-style td{
+	padding:8px;
+}
+
+.main-table-style th{
+	padding:4px 8px;
+}

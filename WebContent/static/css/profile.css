@@ -1,41 +1,41 @@
-.expand-job{
-	font-size:14px;
-	margin-right:10px;
-	cursor:pointer;
-}
+/* .expand-job{ */
+/* 	font-size:14px; */
+/* 	margin-right:10px; */
+/* 	cursor:pointer; */
+/* } */
 
-.expandable-table-container h4{
-	background-color:#163B3D;
-	color:#ffffff;
-	padding:5px;
-}
+/* .expandable-table-container h4{ */
+/* 	background-color:#163B3D; */
+/* 	color:#ffffff; */
+/* 	padding:5px; */
+/* } */
 
-.expandable-table-container{
-	padding:10px 60px;
-}
-
-
-.expandable-row{
-	display:none;
-}
-
-.expandable-row thead tr{
-	 border-bottom: 2px solid #ddd;   
-}
-
-.expandable-row tbody tr{
-	 border-bottom: 1px solid #ddd;   
-}
-
-.expandable-row tbody tr:last-child{
-	 border-bottom: 0;   
-}
+/* .expandable-table-container{ */
+/* 	padding:10px 60px; */
+/* } */
 
 
+/* .expandable-row{ */
+/* 	display:none; */
+/* } */
 
-.expand-job-header{
-	width:30px;
-}
+/* .expandable-row thead tr{ */
+/* 	 border-bottom: 2px solid #ddd;    */
+/* } */
+
+/* .expandable-row tbody tr{ */
+/* 	 border-bottom: 1px solid #ddd;    */
+/* } */
+
+/* .expandable-row tbody tr:last-child{ */
+/* 	 border-bottom: 0;    */
+/* } */
+
+
+
+/* .expand-job-header{ */
+/* 	width:30px; */
+/* } */
 
 
 
@@ -71,9 +71,9 @@ table#failedWageNegotiations{
 	padding-top:20px;
 }
 
-.has-applicants{
-/* 	cursor:pointer; */
-}
+/* .has-applicants{ */
+/* /* 	cursor:pointer; */ */
+/* } */
 
 .has-new-applicants{
 	color: #A73854;
@@ -81,14 +81,14 @@ table#failedWageNegotiations{
     font-weight: bold;
 }
 
-.no-applicants{
-	cursor:default;
-}
+/* .no-applicants{ */
+/* 	cursor:default; */
+/* } */
 
-table{
-	table-layout:fixed;
-	width:100%;
-}
+/* table{ */
+/* 	table-layout:fixed; */
+/* 	width:100%; */
+/* } */
 
 
 th.applicant-name{
@@ -108,13 +108,13 @@ th.applicant-wage-negotiation{
 }
 
 
-#applicantsTable thead tr{
-	 border-bottom: 2px solid #ddd;   
-}
+/* #applicantsTable thead tr{ */
+/* 	 border-bottom: 2px solid #ddd;    */
+/* } */
 
-#applicantsTable tbody tr{
-	 border-bottom: 1px solid #ddd;   
-}
+/* #applicantsTable tbody tr{ */
+/* 	 border-bottom: 1px solid #ddd;    */
+/* } */
 
 .applicants-container h4{
 	background-color:#163B3D;
@@ -122,34 +122,34 @@ th.applicant-wage-negotiation{
 	padding:5px;
 }
 
-td{
-	padding: 8px;
-}
+/* td{ */
+/* 	padding: 8px; */
+/* } */
 
-td.has-new-applicants{
-	padding: 6px;
-}
+/* td.has-new-applicants{ */
+/* 	padding: 6px; */
+/* } */
 
 
-.applicants-row tbody tr{
-	font-size:12.5px;
-}
+/* .applicants-row tbody tr{ */
+/* 	font-size:12.5px; */
+/* } */
 
-.applicants-row{
-	display:none;
-}
+/* .applicants-row{ */
+/* 	display:none; */
+/* } */
 
 .applicants-container{
 	padding:5px 90px;
 }
 
-.applicants{
-	padding:10px;
-}
+/* .applicants{ */
+/* 	padding:10px; */
+/* } */
 
-.count{
-	margin-left:5px;
-}
+/* .count{ */
+/* 	margin-left:5px; */
+/* } */
 
 .active-jobs-container{
     width: 800px;

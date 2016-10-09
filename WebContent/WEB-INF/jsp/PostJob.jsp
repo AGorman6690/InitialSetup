@@ -22,6 +22,7 @@
 	
 	<script	src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script>
 	<script	src="<c:url value="/static/javascript/PostJob.js" />"></script>
+	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script>
 	
 	
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
@@ -74,6 +75,9 @@
 							<span id="editQuestion" class="action requires-acknowledgement">Edit</span>
 							<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span>
 						</div>
+						<div class="action-container">
+							<span id="copyQuestion" class="action">Copy</span>
+						</div>						
 					</div>
 
 				</div>
@@ -179,13 +183,13 @@
 				
 					<div class="section-body">
 						<h4>Categories</h4>
-				
-										<div id="invalidCategoryInput-None" class="invalid-message">At least one category must be selected</div>
-										<div id="invalidCategoryInput-TooMany" class="invalid-message">A maximum of five categories can be selected</div>										
+										<div class="job-sub-info">
+											<div id="invalidCategoryInput-None" class="invalid-message">At least one category must be selected</div>
+											<div id="invalidCategoryInput-TooMany" class="invalid-message">A maximum of five categories can be selected</div>										
 	<!-- 									Eventaully render this with jstl -->
 	<!-- 									//********************************************************************************* -->
 	<!-- 									//********************************************************************************* -->
-										<div class="job-sub-info">
+										
 											<div id="selectedCategories">
 											</div>
 										
@@ -421,9 +425,13 @@
 			copyJob();
 		})
 		
-		$("#submitJobs").click(function(){
-			submitJobs(1);
-		})
+		$("#copyQuestion").click(function(){
+			copyQuestion();
+		})		
+		
+// 		$("#submitJobs").click(function(){
+// 			submitJobs(1);
+// 		})
 		
 		
 		
@@ -434,21 +442,50 @@
 				var infoContainerId = $($(this).parents(".info-container")[0]).attr("id");
 		
 				//Format input elements.
-				//Expand the info body. 
+				//Expand the info body.
 				disableInputFields(false, infoContainerId);			
 				if(infoContainerId == "jobInfo"){
 					clearPostJobInputs();	
 					expandInfoBody("jobInfoBody", true);
 					setButtonAsClickable(true, $("#addJobToCart"));
+// 					deselectQuestion
 				}
 				else if(infoContainerId == "questionInfo"){
 					clearPostQuestionInputs();
 					expandInfoBody("questionInfoBody", true);
 					setButtonAsClickable(true, $("#addQuestion"));
+// 					deselectJob
 				}
 				
-				//Deselect the cart container's buttons
-				deselectButtons("cartContainer");
+				if(isJobSelected()){
+					deselectJob();
+				}
+				else if(isQuestionSelected()){
+					deselectQuestion();
+				}
+				
+				
+// 				//Deselect the cart container's buttons
+// 				deselectButtons("cartContainer");
+// 				clearPostQuestionInputs();
+// 				clearPostJobInputs();
+				
+// 				//If a job was clicked
+// 				if(jobIsClicked(this)) {
+					
+// 					if(buttonIsCurrentlySelected(this)){
+// 						deselectJob();	
+// 					}
+// 				}
+// 				//Else a question was clicked
+// 				else{
+					
+// 					if(buttonIsCurrentlySelected(this)){
+// 						deselectQuestion();	
+// 					}else{
+// 						selectQuestion(this);
+// 					}	
+// 				}				
 			
 			}
 
@@ -551,7 +588,11 @@
 					//Add the edited question
 					postQuestionDtos.push(editedQuestion);
 					
+					//Set the job controls
+					setButtonsAsClickable(true, "jobInfo");
+					disableInputFields(false, "jobInfoBody");
 
+					//Set the question controls
 					setActionsAsClickable(true, "questionCart");
 					setButtonAsClickable(true, $("#newQuestion"));
 				}
@@ -598,7 +639,7 @@
 		
 
 		
-		$("#cartContainer").on("click", "button", function(){
+		$(".sub-cart").on("click", "button", function(){
 			var buttons;
 			
 			//If the clicked button's current state is clickable
@@ -629,8 +670,7 @@
 					
 				}
 				//Else a question was clicked
-				else{
-					
+				else{					
 					
 					if(buttonIsCurrentlySelected(this)){
 						deselectQuestion();	
@@ -638,38 +678,11 @@
 						selectQuestion(this);
 					}	
 				}
-				
-// 				//Else If the button is selected, un-select it
-// 				else if($(this).hasClass("selected") == 1){
-// 					$(this).removeClass("selected");
-				
-// 				//Else hightlight the clicked button
-// 				}else{
-					
-// 					//Get all job and question buttons in cart
-// 					buttons = $("#cartContainer").find("button");		
-// 					highlightArrayItemByAttribute(this, buttons, "selected");
-// 				}
-				
-// 				//If a job button was clicked, then show the job
-// 				if(subCartId == "jobCart"){
-// 					showAddedJob(this); 
-// 				}
+
 			
 			}
 		})
-		
-// 		$("#questionCart").on("click", "button", function(){
-			
-// 			//If the button is clickable
-// 			if($(this).hasClass("not-clickable") == 0){
-// // 			if($("#questionCart").attr("data-edit") == 1){
-// 				var buttons = $("#questionCart").find("button");			
-// 				highlightGroupItemById(this, buttons, "question-selected", "data-question-id");	
-// 			}
-			
-			
-// 		})	
+
 
 		function getSubCartId(childElement){
 			var subCart = $(childElement).parents(".sub-cart")[0];
@@ -678,12 +691,12 @@
 		}
 	
 		
-		$("#addQuestion").click(function(){
+		$("#addQuestion").click(function(e){
 			
 			//Validate inputs
 			if(isButtonClickable($(this))){
 				if(validateAddQuestionInputs()){
-					
+// 					e.stopPropagation();
 					//Get the question dto
 					var postQuestionDto = getPostQuestionDto();
 					
@@ -697,7 +710,8 @@
 					//Add question to the DOM
 					addQuestionToDOM(postQuestionDto);
 					
-					$("#cartContainer").show(200);
+					$("#jobInfoBody").hide(500);
+					$("#cartContainer").show(500);
 				}
 			}
 		})
@@ -755,11 +769,19 @@
 			var selectedOption = $(this).find("option:selected")[0];
 			var value = $(selectedOption).val(); 
 			if(value == 2 || value == 3){
-				$("#answerListContainer").show(200);				
+				$("#answerListContainer").show(500);				
 			}else{
-				$("#answerListContainer").hide(200);
+				$("#answerListContainer").hide(500);
 			}
 			
+// 			$("#questionInfo").animate({ scrollTop: $('#questionInfo').height()}, 1000);
+// 			$('#questionInfo').scrollTop($('#questionInfo')[0].scrollHeight);
+
+			
+		})
+		
+		$("#questionFormat").change(function(){
+			scrollToElement("questionInfo", 500);
 		})
 		
 		$("#addAnswer").click(function(){ 
@@ -775,68 +797,25 @@
 		
 		})
 		
-		$(".delete-answer").click(function(){
-	
-			//There must be at least 2 answers.
-			//If there are not at least 2 answers, then the user should not be using this question format.
-			var answers = $("#answerList").find(".answer-container");
-			if(answers.length > 2){
-				$(this).parent().remove();
-			}
+		$(".delete-answer").click(function(){	
+			deleteAnswer()
 		})
 			
 		$("#addJobToCart").click(function(){
-			addJobToCart();
-			
-		
+			addJobToCart();		
 		})
-
-				
 		
 		$("#expandSelectedDates").click(function(){
 			$("#times").toggle(200);
 			toggleClasses($(this), "glyphicon-menu-up", "glyphicon-menu-down");
 		})
 		
-		$("#applyTimesToAllDates").click(function(){
-			setEndTimes($("#allEndTimes").val(), workDays);
-			setStartTimes($("#allStartTimes").val(), workDays);
-			showTimes();
+		$("#applyTimesToAllDates").click(function(){			
+			applyTimesToAllDates();			
 		})	
 		
-		function setEndTimes(endTime, workDays){
-			
-			$(workDays).each(function(){				
-				this.endTime = endTime;
-			})
-			
-		}
 		
-		function setStartTimes(startTime, workDays){
-			
-			$(workDays).each(function(){				
-				this.startTime = startTime;
-			})
-			
-		}
-		
-		function showTimes(){
-			
-			var containerDiv;
-			var startTimeInput;
-			var endTimeInput;
-			
-			$(workDays).each(function(){				
-				
-				containerDiv = $("#times").find("div[data-date='" + this.date + "']")[0];
-				startTimeInput = $(containerDiv).find("input.start-time")[0];
-				endTimeInput = $(containerDiv).find("input.end-time")[0];
-				
-				$(startTimeInput).val(this.startTime);
-				$(endTimeInput).val(this.endTime);
-			})			
-			
-		}
+
 		
 
 		$('#allStartTimes').timepicker({
@@ -887,59 +866,7 @@
 	
 
 	
-	function showAddedJob(buttonElement){
-		
-		var questionButton;
-		var i;
-		var jobId = $(buttonElement).attr("data-job-id");
-// 		removeInvalidFormControlStyles();
-// 		disableFromControls(true);
 
-		var job = getSelectedJob();
-		
-		//Show the job details
-		document.getElementsByName('name')[0].value = job.jobName;			
-		document.getElementsByName('streetAddress')[0].value = job.streetAddress;
-		document.getElementsByName('city')[0].value = job.city;
-		document.getElementsByName('state')[0].value = job.state ;
-		document.getElementsByName('zipCode')[0].value = job.zipCode;
-		document.getElementsByName('description')[0].value = job.description;
-		
-
-			
-// 		//Show work days
-		workDays = [];
-		var workDay = {};
-		$("#calendar").attr("data-is-showing-job", "1");
-		for(i = 0; i< job.workDays.length; i++){
-			
-			workDay.date = job.workDays[i].millisecondsDate;
-			workDays.push(workDay);
-			$('#calendar').datepicker("setDate", new Date(job.workDays[i].stringDate) );
-	    	$('.ui-datepicker-current-day').click(); // rapresent the current selected day
-
-		}
-		$("#calendar").attr("data-is-showing-job", "0");
-
-		//Show categories
-		for(i = 0; i < job.categoryIds.length; i++){
-			var id = job.categoryIds[i];
-			var name = $($($("#categoryTree").find("[data-cat-id=" + id + "]")[0])
-							.find(".category-name")[0]).text();
-			showCategory(id, name);
-		}
-
-		//Hightlight the job's selected questions
-		deselectButtons("questionContainer");
-		$.each(job.selectedQuestionIds, function(){
-			questionButton = $("#questionCart").find("button[data-question-id='" + this + "']")[0];
-			showQuestionForSelectedJob(questionButton);
-		})
-		
-		
-		
-		
-	}	
 	function getPostQuestionDto(){
 		
 		var postQuestionDto = {};

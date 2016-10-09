@@ -14,9 +14,10 @@ public class FindEmployeesDTO {
 	private List<Integer> categoryIds;
 	private Coordinate coordinate;
 	
-	public FindEmployeesDTO(String fromAddress2, double radius2, List<String> days2, List<Integer> categoryIds2) {
+	public FindEmployeesDTO(String fromAddress2, double radius2, double rating2, List<String> days2, List<Integer> categoryIds2) {
 		this.setFromAddress(fromAddress2);
 		this.setRadius(radius2);
+		this.setRating(rating2);
 		
 		if(days2.get(0).matches("-1")){
 			this.setDays(new ArrayList<String>());

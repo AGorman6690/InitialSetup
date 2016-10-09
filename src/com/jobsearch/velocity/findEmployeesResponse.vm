@@ -1,33 +1,38 @@
-<table class="main-table-style">
-	<thead>
-		<tr>
-			<th id="nameHeader">Name</th>
-			<th id="ratingHeader">Rating</th>
-			<th id="endorsementsHeader">Endorsements</th>
-			<th id="distanceHeader">Distance</th>
-		</tr>
-	</thead>
-	<tbody>
-		#foreach($employee in $employees)
-		<tr>
-			<td><a href="/JobSearch/user/$employee.userId/jobs/completed">$employee.firstName</a></td>
-			<td>$employee.rating</td>
-			<td>
-			## Set the employee's endorsements
-			#foreach($endorsement in $employee.endorsements)
-				<div class="endorsement">		
-					#if($endorsement.count > 0)											
-						<span class="badge non-zero count"> $endorsement.count </span> $endorsement.categoryName
-					#else
-						##<span class="badge count">
-					#end
-					 	
-				</div>
+#if($employees.size() == 0)
+	<div>No employees match your search criteria</div>
+#else
+	
+	<table class="main-table-style">
+		<thead>
+			<tr>
+				<th id="nameHeader">Name</th>
+				<th id="ratingHeader">Rating</th>
+				<th id="endorsementsHeader">Endorsements</th>
+				<th id="distanceHeader">Distance</th>
+			</tr>
+		</thead>
+		<tbody>
+			#foreach($employee in $employees)
+			<tr>
+				<td><a href="/JobSearch/user/$employee.userId/jobs/completed">$employee.firstName</a></td>
+				<td>$employee.rating</td>
+				<td>
+				## Set the employee's endorsements
+				#foreach($endorsement in $employee.endorsements)
+					<div class="endorsement">		
+						#if($endorsement.count > 0)											
+							<span class="badge non-zero count"> $endorsement.count </span> $endorsement.categoryName
+						#else
+							##<span class="badge count">
+						#end
+						 	
+					</div>
+				#end
+	
+				</td>
+				<td>$employee.distanceFromJob</td>
+			</tr>
 			#end
-
-			</td>
-			<td>$employee.distanceFromJob</td>
-		</tr>
-		#end
-	</tbody>		
-</table>
+		</tbody>		
+	</table>
+#end

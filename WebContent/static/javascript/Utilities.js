@@ -7,6 +7,12 @@ $(document).ready(function(){
 		
 })
 
+function scrollToElement(id, speed){
+	 $('html, body').animate({
+	        scrollTop: $("#" + id).offset().top
+	    }, speed);
+}
+
 
 function addClassToArrayItems(array, className){
 	$(array).each(function(){

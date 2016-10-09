@@ -27,6 +27,14 @@
 			setButtonAsClickable(true, $("#addJobToCart"));
 		}
 		
+		function copyQuestion(){
+			disableInputFields(false, "questionInfoBody");
+			
+			deselectButtons("cartContainer");
+			setActionsAsClickable(false, "questionCart");
+			setButtonAsClickable(true, $("#addQuestion"));			
+		}
+		
 		function setButtonsAsClickable(request, containerId){
 			
 			var buttons = $("#" + containerId).find("button");
@@ -75,9 +83,13 @@
 		}
 		
 		function selectQuestion(questionButton){
+
+			if(isJobSelected()){
+				deselectJob();
+			}
 			
 			//Format the cart
-			deselectButtons("cartContainer");
+//			deselectButtons("cartContainer");
 			selectButton(questionButton);
 			setActionsAsClickable(true, "questionCart");
 			
@@ -89,10 +101,15 @@
 //			disableInputFields(true, "postingContainer");
 			
 			//Format the job inputs
-			clearPostJobInputs();
-			disableInputFields(false, "jobInfoBody");			
-			expandInfoBody("jobInfoBody", false);
+			
+
+
+//			clearPostJobInputs();
+			//Allow user to still create a job.
+			//Close the job info for user experience.
+			disableInputFields(false, "jobInfoBody");					
 			setButtonAsClickable(true, $("#addJobToCart"));
+			expandInfoBody("jobInfoBody", false);
 			
 		}
 		
@@ -128,6 +145,7 @@
 			var $eContainer = $("#" + containerId);
 			var inputs;
 			var requestedDisabledValue;
+			var datepickerContainer;
 			
 			//Per the request, set the value for the "disabled" property
 			if(request == true){
@@ -148,10 +166,11 @@
 			
 			
 			//Set the date picker's "enabledness"
+			datepickerContainer = $("#" + containerId).find("#calendar");
 			if(request == true){
-				$("#calendar").datepicker("disable");
+				$(datepickerContainer).datepicker("disable");
 			}else{
-				$("#calendar").datepicker("enable");
+				$(datepickerContainer).datepicker("enable");
 			}
 		}
 		
@@ -195,7 +214,13 @@
 
 		
 		function selectJob(jobButton){
-			deselectButtons("cartContainer");
+			
+			
+			if(isQuestionSelected()){
+				deselectQuestion();
+			}
+			
+//			deselectButtons("cartContainer");
 			selectButton(jobButton);
 			setActionsAsClickable(true, "jobCart");
 //			setActionsAsClickable(false, "questionCart");
@@ -206,14 +231,15 @@
 			disableInputFields(true, "jobInfoBody");
 			expandInfoBody("jobInfoBody", true);
 			
-			//Set the question info input
-			//Clear inputs, enable buttons, enable inputs
-			clearPostQuestionInputs();	
+			//Allow user to still create a question.
+//			clearPostQuestionInputs();	
 			setButtonsAsClickable(true, "questionInfo");
 			disableInputFields(false, "questionInfoBody");
 			
 			//Set the add job button as unclickable
 			setButtonAsClickable(false, $("#addJobToCart"));
+			
+
 			
 			
 		}
@@ -225,12 +251,12 @@
 			
 			//Expand 
 			if(request == true){
-				$eToHideOrShow.show(200);
+				$eToHideOrShow.show(500);
 				addClassRemoveClass($eGlyphicon, "glyphicon-menu-down", "glyphicon-menu-up");
 				
 			//Collapse
 			}else{
-				$eToHideOrShow.hide(200);
+				$eToHideOrShow.hide(500);
 				addClassRemoveClass($eGlyphicon, "glyphicon-menu-up", "glyphicon-menu-down");
 			}
 				
@@ -255,7 +281,7 @@
 			setButtonsAsClickable(true, "cartContainer");
 			setButtonsAsClickable(true, "jobInfo");
 			clearPostJobInputs();
-			clearPostQuestionInputs();
+//			clearPostQuestionInputs();
 			disableInputFields(false, "postingContainer");
 			
 		}
@@ -269,6 +295,7 @@
 			disableInputFields(false, "postingContainer");
 		}
 		
+
 		
 		function clearPostQuestionInputs(){
 			$("#question").val("");
@@ -420,6 +447,28 @@
 			
 		}
 		
+		function isJobSelected(){
+			var arr = $("#jobCart").find("button.selected");
+			
+			if(arr.length > 0){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
+		function isQuestionSelected(){
+			var arr = $("#questionCart").find("button.selected");
+			
+			if(arr.length > 0){
+				return true;
+			}
+			else{
+				return false;
+			}
+		}
+		
 		function jobIsClicked(button){
 			var subCart = $(button).parents(".sub-cart")[0];
 			
@@ -540,6 +589,54 @@
 		
 		}		
 		
+		function applyTimesToAllDates(){
+			setEndTimes($("#allEndTimes").val(), workDays);
+			setStartTimes($("#allStartTimes").val(), workDays);
+			showTimes();
+		}
+		
+		function setEndTimes(endTime, workDays){
+			
+			$(workDays).each(function(){				
+				this.endTime = endTime;
+			})
+			
+		}
+		
+		function setStartTimes(startTime, workDays){
+			
+			$(workDays).each(function(){				
+				this.startTime = startTime;
+			})
+			
+		}
+		
+		function deleteAnswer(){
+			//There must be at least 2 answers.
+			//If there are not at least 2 answers, then the user should not be using this question format.
+			var answers = $("#answerList").find(".answer-container");
+			if(answers.length > 2){
+				$(this).parent().remove();
+			}
+		}
+		
+		function showTimes(){
+			
+			var containerDiv;
+			var startTimeInput;
+			var endTimeInput;
+			
+			$(workDays).each(function(){				
+				
+				containerDiv = $("#times").find("div[data-date='" + this.date + "']")[0];
+				startTimeInput = $(containerDiv).find("input.start-time")[0];
+				endTimeInput = $(containerDiv).find("input.end-time")[0];
+				
+				$(startTimeInput).val(this.startTime);
+				$(endTimeInput).val(this.endTime);
+			})			
+			
+		}
 		
 		function addJobToCart(){
 			
@@ -552,7 +649,7 @@
 					postJobDto.id = jobCount;			
 					jobs.push(postJobDto);
 					
-					$("#cartContainer").show(200);
+//					$("#cartContainer").show(500);
 	
 					
 					$("#jobCart").append(
@@ -562,14 +659,74 @@
 					clearPostJobInputs();		
 //					removeInvalidFormControlStyles()
 					
-					$("#cartContainer").show(200);
+					$("#cartContainer").show(500);
 					
 					jobCount++			
 				}
 //			}
 		}
 		
-		
+		function showAddedJob(buttonElement){
+			
+			var questionButton;
+			var i;
+			var jobId = $(buttonElement).attr("data-job-id");
+//	 		removeInvalidFormControlStyles();
+//	 		disableFromControls(true);
+
+			var job = getSelectedJob();
+			
+			//Show the job details
+			document.getElementsByName('name')[0].value = job.jobName;			
+			document.getElementsByName('streetAddress')[0].value = job.streetAddress;
+			document.getElementsByName('city')[0].value = job.city;
+			document.getElementsByName('state')[0].value = job.state ;
+			document.getElementsByName('zipCode')[0].value = job.zipCode;
+			document.getElementsByName('description')[0].value = job.description;
+			
+
+				
+//	 		//Show work days
+			workDays = [];
+			var workDay = {};
+			$("#calendar").attr("data-is-showing-job", "1");
+			for(i = 0; i< job.workDays.length; i++){
+				
+				workDay.date = job.workDays[i].millisecondsDate;
+				workDays.push(workDay);
+				$('#calendar').datepicker("setDate", new Date(job.workDays[i].stringDate) );
+				
+				//Click the day.
+				//This click event creates the input for start and end time
+				$('.ui-datepicker-current-day').click(); 
+				
+				
+
+			}
+			
+			$("#calendar").attr("data-is-showing-job", "0");
+			
+			applyTimesToAllDates();
+
+			//Show categories
+			for(i = 0; i < job.categoryIds.length; i++){
+				var id = job.categoryIds[i];
+				var name = $($($("#categoryTree").find("[data-cat-id=" + id + "]")[0])
+								.find(".category-name")[0]).text();
+				showCategory(id, name);
+			}
+
+			//Hightlight the job's selected questions
+			deselectButtons("questionContainer");
+			$.each(job.selectedQuestionIds, function(){
+				questionButton = $("#questionCart").find("button[data-question-id='" + this + "']")[0];
+				showQuestionForSelectedJob(questionButton);
+			})
+			
+			
+			
+			
+		}			
 		
 	function submitJobs(confirmation){
 		
@@ -589,7 +746,7 @@
 				contentType : "application/json",
 				data : JSON.stringify(submitJobPostingDto)
 			}).done(function() { 				
-//				window.location = "/JobSearch/user/profile";
+				$("#home")[0].click();
 			}).error(function() {
 //				alert("error submit jobs")
 //				$('#home')[0].click();

@@ -289,7 +289,8 @@ var availableDays = [];
 	$(document).ready(function(){
 
 		var dateToday = new Date();
-		
+		var dateYesterday = new Date();
+		dateYesterday.setDate(dateToday.getDate() -1);
 		//Set the user's current availability
 		var availableDaysHTML = $("#availableDays").html();
 		var availableDays_string = availableDaysHTML.split("*");		
@@ -301,7 +302,7 @@ var availableDays = [];
 			//However, "2016/10/31" does work...
 			formattedDateString = this.replace("-", "/");			
 			var date = new Date(formattedDateString);			
-			if(!isNaN(date)){
+			if(!isNaN(date) & date > dateYesterday){
 				availableDays.push(date.getTime());	
 			}			
 		})
