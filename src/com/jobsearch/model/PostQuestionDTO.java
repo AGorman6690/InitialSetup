@@ -2,7 +2,7 @@ package com.jobsearch.model;
 
 import java.util.List;
 
-public class PostQuestionDto {
+public class PostQuestionDTO {
 	
 	//0: Yes/N0
 	//1: Short answer
@@ -11,6 +11,13 @@ public class PostQuestionDto {
 	//Use an enum???????
 	private int questionId;
 	
+	private int id;
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	private String text;
 	private int formatId;
 	private int jobId;

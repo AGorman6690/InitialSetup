@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -21,7 +22,7 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDto;
+import com.jobsearch.model.PostQuestionDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -65,8 +66,9 @@ public class JobRepository {
 					e.setZipCode(rs.getString("ZipCode"));
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
-					e.setStartDate(rs.getDate("StartDate"));
-					e.setEndDate(rs.getDate("EndDate"));
+//					e.setStartDate(rs.getDate("StartDate"));
+//					e.setEndDate(rs.getDate("EndDate"));
+
 					e.setStartTime(rs.getTime("StartTime"));
 					e.setEndTime(rs.getTime("EndTime"));	
 					e.setStatus(rs.getInt("Status"));
@@ -75,6 +77,14 @@ public class JobRepository {
 					DateTime dtStart = new DateTime(e.getStartDate());
 					DateTime dtEnd = new DateTime(e.getEndDate());
 					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
+					
+					try {
+						e.setStartDate(rs.getDate("work_day_StartDate"));
+						e.setEndDate(rs.getDate("work_day_EndDate"));
+					} catch (Exception e2) {
+						// TODO: handle exception
+						Job r = new Job();
+					}
 					
 					return e;
 				}
@@ -170,7 +180,7 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(PostQuestionDto question : jobDto.getQuestions()){
+			for(PostQuestionDTO question : jobDto.getQuestions()){
 
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
@@ -274,11 +284,22 @@ public class JobRepository {
 //	}
 
 	public Job getJob(int jobId) {
-		String sql = "SELECT * FROM job WHERE JobId=?";
+		
+//		select j.* , MIN(w.Date) as start, MAX(w.Date) as end 
+//		from job j inner join work_day w on j.jobid = w.jobid where j.jobid = '65'
+		
+		String sql = "SELECT j.*, MIN(w.Date) as work_day_StartDate, MAX(w.Date) as work_day_EndDate"
+						+ " FROM job j"
+						+ " INNER JOIN work_day w ON j.JobId = w.JobId"
+						+ " WHERE j.JobId = ?";
 
 		List<Job> jobs = this.JobRowMapper(sql, new Object[]{ jobId });
 
-		if(jobs.size() > 0) return jobs.get(0);
+		if(jobs != null){
+			
+			
+			return jobs.get(0);
+		}
 		else return null;
 	}
 
@@ -478,6 +499,7 @@ public class JobRepository {
 		jdbcTemplate.update(sql, new Object[]{ jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDate() });
 		
 	}
+
 
 
 

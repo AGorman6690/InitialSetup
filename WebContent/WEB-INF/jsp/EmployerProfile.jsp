@@ -23,7 +23,7 @@
 	
 	<div class="container">
 
-<%-- 		<div>${vtFailedWageNegotiations }</div> --%>
+		<div>${vtFailedWageNegotiations }</div>
 		<div>${vtYetToStartJobs }</div>
 		<div>${vtActiveJobs }</div>
 

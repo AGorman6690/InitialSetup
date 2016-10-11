@@ -662,8 +662,8 @@
 					$("#cartContainer").show(500);
 					
 					jobCount++			
-				}
-//			}
+//				}
+			}
 		}
 		
 		function showAddedJob(buttonElement){

@@ -31,7 +31,7 @@
 							<div>${category.name }</div>
 						</c:forEach>
 					</div>					
-					<div class="body-element">${job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+					<div class="body-element">${job.description }               Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 					</div>
 
@@ -41,7 +41,17 @@
 			
 		</div>
 		
-		
+		<div class="section">
+			<div class="header2">
+				<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
+				<span class="header-text">Questions (not built)</span>
+				
+			</div>
+			<div id="questionsContainer" class="section-body">
+
+			</div>
+			
+		</div>		
 		<c:if test="${not empty vtFailedWageNegotiationsByJob}">
 			<div class="section">
 				<div class="header2">

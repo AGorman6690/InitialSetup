@@ -67,12 +67,12 @@
 				## Expandable row that shows applicant info.
 				## If there are applicants, then create a table for this info.
 				#if($doCreateExpandableTable == "1")												
-					<tr id="$expandId" class="toggle-row">
+					<tr class="toggle-row">
 						<td colspan="5">
-							<div class="applicants-container">
+							<div id="$expandId" class="applicants-container">
 								<h4>Applicants</h4>
 								<div class="">
-									<table id="">
+									<table class="main-table-style">
 										<thead>
 											<tr>
 												<th class="applicant-name">Name</th>
@@ -119,8 +119,8 @@
 																<div class="offer-context">
 																	Applicant asking for $wageProposalAmount
 																</div>	
-																#set( $toggleId = "$application.currentWageProposal.id" + "-toggle-id")
-																<span class="toggle glyphicon glyphicon-menu-hamburger" data-toggle="$toggleId"></span>														
+																#set( $toggleId = "$application.currentWageProposal.id" + "-wnid")
+																<span class="toggle glyphicon glyphicon-menu-hamburger" data-toggle-id="$toggleId"></span>														
 																<div id="$toggleId" class="counter-offer-response">
 																	<button class="accept-counter">Hire</button>
 																	<button class="re-counter">Counter</button>		

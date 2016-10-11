@@ -17,7 +17,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDto;
+import com.jobsearch.model.PostQuestionDTO;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -201,7 +201,7 @@ public class ApplicationRepository {
 
 
 
-	public List<PostQuestionDto> getQuestions(int id) {
+	public List<PostQuestionDTO> getQuestions(int id) {
 		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
 		return this.QuestionRowMapper(sql, new Object[]{ id });
 	}
@@ -253,15 +253,15 @@ public class ApplicationRepository {
 	}
 
 
-	public List<PostQuestionDto> QuestionRowMapper(String sql, Object[] args) {
+	public List<PostQuestionDTO> QuestionRowMapper(String sql, Object[] args) {
 
 		try{
 
-			return jdbcTemplate.query(sql, args, new RowMapper<PostQuestionDto>() {
+			return jdbcTemplate.query(sql, args, new RowMapper<PostQuestionDTO>() {
 
 				@Override
-				public PostQuestionDto mapRow(ResultSet rs, int rownumber) throws SQLException {
-					PostQuestionDto e = new PostQuestionDto();
+				public PostQuestionDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
+					PostQuestionDTO e = new PostQuestionDTO();
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setJobId(rs.getInt("JobId"));
 					e.setFormatId(rs.getInt("FormatId"));
@@ -302,7 +302,7 @@ public class ApplicationRepository {
 
 	}
 
-	public void addQuestion(PostQuestionDto question) {
+	public void addQuestion(PostQuestionDTO question) {
 
 
 		CallableStatement cStmt;

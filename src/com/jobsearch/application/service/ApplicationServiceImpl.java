@@ -25,7 +25,7 @@ import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDto;
+import com.jobsearch.model.PostQuestionDTO;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -231,21 +231,21 @@ public class ApplicationServiceImpl {
 
 
 
-	public List<PostQuestionDto> getQuestions(int jobId) {
+	public List<PostQuestionDTO> getQuestions(int jobId) {
 		//This will not set an answer
 
-		List<PostQuestionDto> questions = repository.getQuestions(jobId);
-		for(PostQuestionDto q : questions){
+		List<PostQuestionDTO> questions = repository.getQuestions(jobId);
+		for(PostQuestionDTO q : questions){
 			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
 		}
 		return questions;
 	}
 	
-	public List<PostQuestionDto> getQuestionsWithAnswers(int jobId, int userId) {
+	public List<PostQuestionDTO> getQuestionsWithAnswers(int jobId, int userId) {
 		//This will set the user's answers 
 
-		List<PostQuestionDto> questions = repository.getQuestions(jobId);
-		for(PostQuestionDto q : questions){
+		List<PostQuestionDTO> questions = repository.getQuestions(jobId);
+		for(PostQuestionDTO q : questions){
 			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
 			q.setAnswers(this.getAnswers(q.getQuestionId(), userId));
 		}
@@ -270,7 +270,7 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public void addQuestion(PostQuestionDto question) {
+	public void addQuestion(PostQuestionDTO question) {
 		repository.addQuestion(question);
 
 	}

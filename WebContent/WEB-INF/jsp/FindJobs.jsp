@@ -282,7 +282,7 @@
 				<div class="sort-jobs-by-container">
 					<div class="dropdown-input-container sort-width ">
 						<div class="dropdown-input-label">
-							<span class="">Sort By</span>
+							<span class="">Sort By (Broken)</span>
 							<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>			
 						</div>
 						

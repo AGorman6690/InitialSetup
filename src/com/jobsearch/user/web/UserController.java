@@ -52,7 +52,7 @@ public class UserController {
 	ApplicationServiceImpl applicationService;
 
 	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public ModelAndView validate(@RequestParam(name = "userId") int userId, ModelAndView model,
+	public String validate(@RequestParam(name = "userId") int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.validateUser(userId);
@@ -61,15 +61,15 @@ public class UserController {
 		String view = null;
 		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
-//			view = "EmployeeProfile";
+			view = "EmployeeProfile";
 		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
-//			view = "EmployerProfile";
+			view = "EmployerProfile";
 		}
 
 //		model.addAttribute("user", user);
 		model.addObject("user", user);
-		return model;
+		return view;
 	}
 	
 
@@ -140,8 +140,13 @@ public class UserController {
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.createUser(user);
-		model.addObject("user", user);
-		model.setViewName("EmailValidateMessage");
+		if(user != null){
+			model.addObject("user", user);
+			model.setViewName("EmailValidateMessage");	
+		}
+		else{
+			model.setViewName("Invalid Login");
+		}
 		return model;
 	}
 
@@ -187,13 +192,18 @@ public class UserController {
 	
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 //	@ResponseBody
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model) {
-			
-
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
-		model.addAttribute("completedJobDtos", completedJobDtos);
-
-		return "EmployerViewEmployee";
+	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model,
+										HttpSession session) {
+		
+		if(userService.isLoggedIn(session)){			
+			List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
+			model.addAttribute("completedJobDtos", completedJobDtos);
+			return "EmployerViewEmployee";
+		}
+		else{
+			return "NotLoggedIn";
+		}
+		
 	}
 
 

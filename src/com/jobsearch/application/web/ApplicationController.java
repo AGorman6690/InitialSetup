@@ -56,7 +56,7 @@ public class ApplicationController {
 	@ResponseBody
 	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
 		
-//		applicationService.acceptWageProposal(wageProposalId);
+		applicationService.acceptWageProposal(wageProposalId);
 		
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
@@ -68,7 +68,7 @@ public class ApplicationController {
 	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
 		
 		
-//		applicationService.declineWageProposalStatus(wageProposalId);
+		applicationService.declineWageProposalStatus(wageProposalId);
 		
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);

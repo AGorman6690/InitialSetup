@@ -3,6 +3,7 @@ package com.jobsearch.job.service;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDto;
+import com.jobsearch.model.PostQuestionDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
@@ -126,13 +127,13 @@ public class JobServiceImpl {
 		
 	}
 
-	private List<PostQuestionDto> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<PostQuestionDto> postingDtoQuestions) {
+	private List<PostQuestionDTO> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds, List<PostQuestionDTO> postingDtoQuestions) {
 
-		List<PostQuestionDto> questions = new ArrayList<PostQuestionDto>();
+		List<PostQuestionDTO> questions = new ArrayList<PostQuestionDTO>();
 		
 		for(int selectedQuestionId : selectedQuestionIds){			
 			//Get question
-			for(PostQuestionDto postingDtoQuestion : postingDtoQuestions){
+			for(PostQuestionDTO postingDtoQuestion : postingDtoQuestions){
 				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
 					questions.add(postingDtoQuestion);
 				}
@@ -838,6 +839,8 @@ public class JobServiceImpl {
 		return writer.toString();	
 
 	}
+
+
 
 
 //	public void verifyJobStatusForUsersYetToStartJobs(int userId) {

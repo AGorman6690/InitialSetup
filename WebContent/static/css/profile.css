@@ -4,15 +4,16 @@
 /* 	cursor:pointer; */
 /* } */
 
-/* .expandable-table-container h4{ */
-/* 	background-color:#163B3D; */
-/* 	color:#ffffff; */
-/* 	padding:5px; */
-/* } */
+.expandable-table-container h4{
+	background-color:#163B3D;
+	color:#ffffff;
+	padding:5px;
+}
 
-/* .expandable-table-container{ */
-/* 	padding:10px 60px; */
-/* } */
+.expandable-table-container{
+	padding:10px 60px;
+	display:none;
+}
 
 
 /* .expandable-row{ */
@@ -37,9 +38,45 @@
 /* 	width:30px; */
 /* } */
 
+th.expand-job-header{
+	width:5%;
+}
 
+th#name{
+	width:20%;
+}
 
+th#failedWageNegotiations{
+	width:15%
+}
 
+th#newApplications{
+	width:20%;
+}
+
+th#totalApplications{
+	width:20%
+}
+
+th#hires{
+	width:20%;
+}
+
+th.applicant-name{
+	width:15%
+}
+
+th.applicant-rating{
+	width:10%
+}
+
+th.applicant-endorsements{
+	width:30%
+}
+
+th.applicant-wage-negotiation{
+	width:45%;
+}
 
 
 table#failedWageNegotiations{
@@ -107,6 +144,9 @@ th.applicant-wage-negotiation{
 	width:40%;
 }
 
+.applicants-container{
+	display:none;
+}
 
 /* #applicantsTable thead tr{ */
 /* 	 border-bottom: 2px solid #ddd;    */

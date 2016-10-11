@@ -6,7 +6,7 @@
 	
 		<div class="section-body">
 			##Table
-			<table id="failedWageNegotiations">
+			<table id="failedWageNegotiations" class="main-table-style">
 				<thead>
 					<tr>
 						<th class="expand-job-header"></th>
@@ -21,16 +21,17 @@
 					##Only jobs WITH failed wage negotiations are in this array.
 					##Therefore, there is no need to test for the existence of failed wage negotiations.
 					#foreach($jobDto in $activeJobsWithFailedWageNegotiations)
-					<tr class="static-row">
-						<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
+					<tr>
+						#set ( $expandId = "expand-${jobDto.job.Id}-fwn" )
+						<td><span data-toggle-id="$expandId" class="expand-job glyphicon glyphicon-menu-up"></span></td>
 						<td><a class="accent" href="/JobSearch/job/$jobDto.job.id">$jobDto.job.jobName</a></td>
 						<td>$jobDto.failedWageNegotiationDtos.size()</td>	
-						
+					</tr>
 						
 						##Each job's expandable row that contains the applicant names and failed negotiation info
-						<tr class="expandable-row">
+						<tr class="toggle-row">
 							<td colspan="3">
-								<div class="expandable-table-container">
+								<div id="$expandId" class="expandable-table-container">
 									#if($jobDto.failedWageNegotiationDtos.size() == 1)
 										<h4>Applicant</h4>
 									#else
@@ -49,7 +50,7 @@
 									## ********************************************************
 									 ###*
 									 
-									 <table class="">
+									 <table class="main-table-style">
 										<thead>
 											<th>Name</th>
 											<th>Negotiation Result</th>
@@ -79,7 +80,7 @@
 							</td>
 						</tr>
 	
-					</tr>
+					##</tr>
 					#end											
 				</tbody>
 			</table>						

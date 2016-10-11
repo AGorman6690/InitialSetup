@@ -78,7 +78,7 @@ $(document).ready(function(){
 	
 	$(".cancel-counter-offer").click(function(){
 		var $e = $($(this).parents(".re-counter-amount-container")[0]);
-		$e.toggle(200);
+		$e.hide(200);
 //		toggleClasses($e, "hide-element", "show-block");
 		$($(this).siblings("input")[0]).val("");
 	})

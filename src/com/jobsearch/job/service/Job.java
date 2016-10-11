@@ -7,7 +7,7 @@ import java.util.List;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDto;
+import com.jobsearch.model.PostQuestionDTO;
 
 public class Job{
 
@@ -36,7 +36,7 @@ public class Job{
 	private List<JobSearchUser> employees;
 	private List<JobSearchUser> applicants;
 	private List<Application> applications;
-	private List<PostQuestionDto> questions;
+	private List<PostQuestionDTO> questions;
 	private int newApplicationCount;
 	private Integer Duration;
 
@@ -71,11 +71,11 @@ public class Job{
 		this.newApplicationCount = newApplicationCount;
 	}
 
-	public List<PostQuestionDto> getQuestions() {
+	public List<PostQuestionDTO> getQuestions() {
 		return questions;
 	}
 
-	public void setQuestions(List<PostQuestionDto> questions) {
+	public void setQuestions(List<PostQuestionDTO> questions) {
 		this.questions = questions;
 	}
 

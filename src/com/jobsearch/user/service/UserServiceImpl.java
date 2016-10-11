@@ -45,6 +45,7 @@ import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+import com.sun.corba.se.spi.activation.Repository;
 
 @Service
 public class UserServiceImpl {
@@ -77,15 +78,32 @@ public class UserServiceImpl {
 
 	public JobSearchUser createUser(JobSearchUser user) {
 
-		user.setPassword(encryptPassword(user.getPassword()));
-
-		JobSearchUser newUser = repository.createUser(user);
-
-		if (newUser.getEmailAddress() != null) {
-			mailer.sendMail(user.getEmailAddress(), "email verification", "please click the link to verify your email "
-					+ hostUrl + "/JobSearch/validateEmail?userId=" + newUser.getUserId());
+		if(this.isValidEmailRequest(user.getEmailAddress())){
+			user.setPassword(encryptPassword(user.getPassword()));
+	
+			JobSearchUser newUser = repository.createUser(user);
+	
+			if (newUser.getEmailAddress() != null) {
+				mailer.sendMail(user.getEmailAddress(), "email verification", "please click the link to verify your email "
+						+ hostUrl + "/JobSearch/validateEmail?userId=" + newUser.getUserId());
+			}
+			return newUser;
 		}
-		return newUser;
+		else{
+			return null;
+		}
+	}
+
+	private boolean isValidEmailRequest(String email) {
+
+		JobSearchUser user = repository.getUserByEmail(email);
+		if(user == null){
+			return true;
+		}
+		else{
+			return false;	
+		}
+		
 	}
 
 	private String encryptPassword(String password) {
@@ -95,7 +113,7 @@ public class UserServiceImpl {
 
 	public void setUsersId(JobSearchUser user) {
 		repository.setUsersId(user);
-
+		
 	}
 
 	public JobSearchUser getUserByEmail(String emailAddress) {
@@ -610,6 +628,31 @@ public class UserServiceImpl {
 		
 		return writer.toString();
 
+	}
+
+	public boolean isLoggedIn(HttpSession session) {
+		
+		//*************************************
+		//*************************************
+		//This is hackish.
+		//Sometimes this user session attribute is not null...
+		//That is why the email is verified not to be null after the
+		//user is apparently "not" null...
+		//*************************************
+		//*************************************
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		if(user == null){
+			return false;
+		}
+		else{
+			if(user.getEmailAddress() == null){
+				return false;
+			}
+			else{
+				return true;	
+			}
+			
+		}
 	}
 
 

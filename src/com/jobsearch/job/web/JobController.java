@@ -112,11 +112,18 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
+	public String applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
 								HttpSession session) {
 
-
-		applicationService.applyForJob(applicationDto, session);
+		if(userService.isLoggedIn(session)){
+			applicationService.applyForJob(applicationDto, session);
+			return "redirect:/user/profile";
+		}
+		else{
+			return "NotLoggedIn";
+		}
+		
+		
 
 	}
 	

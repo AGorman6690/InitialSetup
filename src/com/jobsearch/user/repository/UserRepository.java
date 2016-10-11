@@ -221,7 +221,13 @@ public class UserRepository {
 
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
-		return list.get(0);
+		if(list.size() >0 ){
+			return list.get(0);	
+		}
+		else{
+			return null;
+		}
+		
 
 	}
 

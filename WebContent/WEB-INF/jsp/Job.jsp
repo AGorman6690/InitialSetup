@@ -553,9 +553,9 @@
 				contentType : "application/json",
 				data : JSON.stringify(applicationDTO),
 			}).done(function() {
-				$('#home')[0].click();
+// 				$('#home')[0].click();
 			}).error(function() {
-				$('#home')[0].click();
+// 				$('#home')[0].click();
 			});
 		}
 	}

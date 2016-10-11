@@ -171,12 +171,14 @@ function salert(array){
 
 function toggleClasses($e, class1, class2){
 	
-	if($e.hasClass(class1) == 1){
-		$e.removeClass(class1);
-		$e.addClass(class2);
-	}else{
-		$e.removeClass(class2);
-		$e.addClass(class1);
+	if($e.hasClass(class1) || $e.hasClass(class2)){
+		if($e.hasClass(class1) == 1){
+			$e.removeClass(class1);
+			$e.addClass(class2);
+		}else{
+			$e.removeClass(class2);
+			$e.addClass(class1);
+		}
 	}
 }
 
