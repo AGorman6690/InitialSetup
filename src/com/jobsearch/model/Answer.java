@@ -6,6 +6,7 @@ public class Answer {
 	private int questionId;
 	private int userId;
 	private String text;
+	private String questionText;
 //	private List<String> texts;
 //	private int answerBoolean;	
 //	private List<String> answers;
@@ -26,7 +27,13 @@ public class Answer {
 //		this.texts = texts;
 //	}
 
-//	
+public String getQuestionText() {
+		return questionText;
+	}
+	public void setQuestionText(String questionText) {
+		this.questionText = questionText;
+	}
+	//	
 //	public String getAnswer() {
 //		return answer;
 //	}

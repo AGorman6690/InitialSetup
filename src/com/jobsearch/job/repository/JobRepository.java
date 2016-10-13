@@ -3,6 +3,7 @@ package com.jobsearch.job.repository;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,9 +21,9 @@ import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -53,9 +54,10 @@ public class JobRepository {
 				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Job e = new Job();
 					
-				
 					
-					e.setId(rs.getInt("JobId"));
+					int jobId = rs.getInt("JobId");
+					
+					e.setId(jobId);
 					e.setJobName(rs.getString("JobName"));
 					e.setUserId(rs.getInt("UserId"));
 //					e.setIsActive(rs.getInt("IsActive"));
@@ -69,8 +71,10 @@ public class JobRepository {
 //					e.setStartDate(rs.getDate("StartDate"));
 //					e.setEndDate(rs.getDate("EndDate"));
 
-					e.setStartTime(rs.getTime("StartTime"));
-					e.setEndTime(rs.getTime("EndTime"));	
+					e.setStartDate(jobService.getStartDate(jobId));
+					e.setEndDate(jobService.getEndDate(jobId));
+					e.setStartTime(jobService.getStartTime(jobId));
+					e.setEndTime(jobService.getEndTime(jobId));	
 					e.setStatus(rs.getInt("Status"));
 					
 					//Set duration
@@ -79,8 +83,9 @@ public class JobRepository {
 					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
 					
 					try {
-						e.setStartDate(rs.getDate("work_day_StartDate"));
-						e.setEndDate(rs.getDate("work_day_EndDate"));
+
+//						e.setStartDate(rs.getDate("work_day_StartDate"));
+//						e.setEndDate(rs.getDate("work_day_EndDate"));
 					} catch (Exception e2) {
 						// TODO: handle exception
 						Job r = new Job();
@@ -498,6 +503,38 @@ public class JobRepository {
 		
 		jdbcTemplate.update(sql, new Object[]{ jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDate() });
 		
+	}
+
+	public Date getEndDate(int jobId) {
+		String sql = "SELECT MAX(Date)"
+				+ " FROM work_day"
+				+ " WHERE JobId = ?";	
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
+	}
+
+	public Date getStartDate(int jobId) {
+		String sql = "SELECT MIN(Date)"
+				+ " FROM work_day"
+				+ " WHERE JobId = ?";	
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
+	}
+
+	public Time getStartTime(int jobId) {
+		String sql = "SELECT MIN(StartTime)"
+				+ " FROM work_day"
+				+ " WHERE JobId = ?";	
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
+	}
+
+	public Time getEndTime(int jobId) {
+		String sql = "SELECT MAX(EndTime)"
+				+ " FROM work_day"
+				+ " WHERE JobId = ?";	
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
 	}
 
 

@@ -611,12 +611,12 @@
 			
 		}
 		
-		function deleteAnswer(){
+		function deleteAnswer(clickedGlyphicon){
 			//There must be at least 2 answers.
 			//If there are not at least 2 answers, then the user should not be using this question format.
 			var answers = $("#answerList").find(".answer-container");
 			if(answers.length > 2){
-				$(this).parent().remove();
+				$(clickedGlyphicon).parent().remove();
 			}
 		}
 		

@@ -30,8 +30,8 @@ function hide($e){
 
 function toggle($e){
 	$e.toggle(200);
-}
 
+}
 function highlightArrayItemByAttribute(itemToHighlight, array, className){
 	
 	$(array).each(function(){

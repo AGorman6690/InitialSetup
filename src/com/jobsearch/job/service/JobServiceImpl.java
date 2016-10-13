@@ -1,6 +1,7 @@
 package com.jobsearch.job.service;
 
 import java.io.StringWriter;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -26,8 +27,9 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
@@ -57,7 +59,7 @@ public class JobServiceImpl {
 
 	@Autowired
 	@Qualifier("JobInformationVM")
-	Template vmTemplate_jobInformationVM;	
+	Template vtJobInfo;	
 	
 	@Autowired
 	@Qualifier("EmployerJobsYetToStartVM")
@@ -66,6 +68,18 @@ public class JobServiceImpl {
 	@Autowired
 	@Qualifier("EmployerJobsInProcessVM")
 	Template employerJobsInProcessTemplate;
+	
+	@Autowired
+	@Qualifier("QuestionsVM")
+	Template questionsTemplate;	
+	
+	@Autowired
+	@Qualifier("AnswersVM")
+	Template answersTemplate;
+	
+	@Autowired
+	@Qualifier("QuestionsToAnswerVM")
+	Template questionsToAnswer;	
 	
 	public void addPosting(SubmitJobPostingDTO postingDto, JobSearchUser user) {
 
@@ -134,7 +148,7 @@ public class JobServiceImpl {
 		for(int selectedQuestionId : selectedQuestionIds){			
 			//Get question
 			for(PostQuestionDTO postingDtoQuestion : postingDtoQuestions){
-				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
+				if(postingDtoQuestion.getId() == selectedQuestionId){
 					questions.add(postingDtoQuestion);
 				}
 			}
@@ -340,7 +354,7 @@ public class JobServiceImpl {
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 		// Set job questions
-		job.setQuestions(applicationService.getQuestions(job.getId()));		
+//		job.setQuestions(applicationService.getQuestions(job.getId()));		
 		
 	}
 
@@ -374,7 +388,7 @@ public class JobServiceImpl {
 		
 
 //		// Set job questions
-		job.setQuestions(applicationService.getQuestions(job.getId()));
+//		job.setQuestions(applicationService.getQuestions(job.getId()));
 
 //		// Set job applicants
 //		job.setApplicants(userService.getApplicants(jobId));
@@ -806,38 +820,136 @@ public class JobServiceImpl {
 		return repository.getJobByApplicationId(applicationId);
 	}
 
-	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId) {
+	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId, int userId) {
 		
-		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_EmployeeViewJobFromProfile(jobId);
-
+		//Velocity templates
+		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId);
+		//String vtQuestions = this.getVelocityTemplate_Questions(jobId);
+		String vtAnswers = this.getVelocityTemplate_Answers(jobId, userId);
+		
 		model.addAttribute("vtJobInformation", vtJobInformation_EmployeeViewJobFromProfile);
+		model.addAttribute("vtAnswers", vtAnswers);
+		//model.addAttribute("vtQuestions", vtQuestions);
+		
 	
 	}
+	
+	private String getVelocityTemplate_Answers(int jobId, int userId) {
+		List<Answer> answers = applicationService.getAnswersByJobAndUser(jobId, userId);
+		
+		if(answers.size() >0){
+			
+			
+			
+			StringWriter writer = new StringWriter();
+			
+			//Set the context
+			final VelocityContext context = new VelocityContext();		
+			context.put("answers", answers);
+			
+			//Run the template
+			questionsTemplate.merge(context, writer);
 
-	private String getVelocityTemplate_EmployeeViewJobFromProfile(int jobId) {
+			//Return the html
+			return writer.toString();			
+		}
+		else{
+			return "";
+		}
+	}
+
+	private String getVelocityTemplate_Questions(int jobId){
 		
-		//Get job
-		Job job = this.getJob(jobId);
+		List<Question> questions = applicationService.getQuestions(jobId);
 		
-		//Set the job's posting info
-		this.setPostingInfoForJob(job);
+		if(questions.size() >0){
+			
+			applicationService.setAnswers(questions);
+			
+			StringWriter writer = new StringWriter();
+			
+			//Set the context
+			final VelocityContext context = new VelocityContext();		
+			context.put("questions", questions);
+			
+			//Run the template
+			questionsTemplate.merge(context, writer);
+
+			//Return the html
+			return writer.toString();			
+		}
+		else{
+			return "";
+		}
+
+	}
+
+	private String getVelocityTemplate_JobInfo(int jobId) {
 		
-		
+		//Job properties
+		Job job = this.getJob(jobId);		
+		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+	
 		StringWriter writer = new StringWriter();
 		
 		//Set the context
 		final VelocityContext context = new VelocityContext();		
 		context.put("job", job);
-//		context.put("mathUtility", MathUtility.class);	
-//		context.put("numberTool", new NumberTool());
-		
-		
+		context.put("categories", categories);
+
 		//Run the template
-		vmTemplate_jobInformationVM.merge(context, writer);
+		vtJobInfo.merge(context, writer);
 
 		//Return the html
 		return writer.toString();	
 
+	}
+
+	public Date getEndDate(int jobId) {
+		
+		return repository.getEndDate(jobId);
+	}
+
+	public Date getStartDate(int jobId) {
+		return repository.getStartDate(jobId);
+	}
+
+	public Time getStartTime(int jobId) {
+		
+		return repository.getStartTime(jobId);
+	}
+
+	public Time getEndTime(int jobId) {
+		return repository.getEndTime(jobId);
+	}
+
+	public void setModel_ApplyForJob(Model model, int jobId, HttpSession session) {
+		
+//		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId);
+		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
+		
+//		String vtJobInfo = this.velo
+		
+		model.addAttribute("vtJobInfo", vtJobInfo);
+		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
+//		model.setViewName("FindJobs");
+		
+	}
+
+	private String getVelocityTemplate_QuestionsToAnswer(int jobId) {
+
+		StringWriter writer = new StringWriter();		
+		final VelocityContext context = new VelocityContext();		
+		
+		List<Question> questions = applicationService.getQuestions(jobId);
+		
+		context.put("questions", questions);
+		questionsToAnswer.merge(context, writer);
+
+		return writer.toString();
 	}
 
 

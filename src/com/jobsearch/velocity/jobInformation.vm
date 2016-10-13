@@ -1,6 +1,6 @@
 <div class="section">
 	<div class="header2">
-		<span id="toggleJobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
+		<span data-toggle-id="jobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
 		<span class="header-text">Job Information</span>
 		
 		#if($context == "employer")
@@ -11,8 +11,8 @@
 		<div>
 			<div class="body-element">$job.jobName </div>
 			<div class="body-element">
-				<div>Start: $job.startTime  $job.startDate </div>
-				<div>End: $job.endTime  $job.endDate </div>
+				<div>Start: $date.format("h:mm a", $job.startTime), $date.format("full_date", $job.startDate)</div>
+				<div>End: $date.format("h:mm a", $job.endTime), $date.format("full_date", $job.endDate)</div>
 			</div>					
 			<div class="body-element">
 				<div>$job.streetAddress</div>

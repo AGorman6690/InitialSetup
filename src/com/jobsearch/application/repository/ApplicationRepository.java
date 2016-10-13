@@ -14,10 +14,11 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
+import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -201,7 +202,7 @@ public class ApplicationRepository {
 
 
 
-	public List<PostQuestionDTO> getQuestions(int id) {
+	public List<Question> getQuestions(int id) {
 		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
 		return this.QuestionRowMapper(sql, new Object[]{ id });
 	}
@@ -238,10 +239,10 @@ public class ApplicationRepository {
 				public AnswerOption mapRow(ResultSet rs, int rownumber) throws SQLException {
 					AnswerOption e = new AnswerOption();
 					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setAnswerOption(rs.getString("AnswerOption"));
+//					e.setQuestionId(rs.getInt("QuestionId"));
+					e.setText(rs.getString("AnswerOption"));
 
-
+				
 					return e;
 				}
 			});
@@ -253,17 +254,17 @@ public class ApplicationRepository {
 	}
 
 
-	public List<PostQuestionDTO> QuestionRowMapper(String sql, Object[] args) {
+	public List<Question> QuestionRowMapper(String sql, Object[] args) {
 
 		try{
 
-			return jdbcTemplate.query(sql, args, new RowMapper<PostQuestionDTO>() {
+			return jdbcTemplate.query(sql, args, new RowMapper<Question>() {
 
 				@Override
-				public PostQuestionDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
-					PostQuestionDTO e = new PostQuestionDTO();
+				public Question mapRow(ResultSet rs, int rownumber) throws SQLException {
+					Question e = new Question();
 					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setJobId(rs.getInt("JobId"));
+//					e.setJobId(rs.getInt("JobId"));
 					e.setFormatId(rs.getInt("FormatId"));
 					e.setText(rs.getString("Question"));
 
@@ -291,6 +292,9 @@ public class ApplicationRepository {
 					e.setText(rs.getString("Text"));
 //					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
 					e.setUserId(rs.getInt("UserId"));
+					
+					e.setQuestionText(rs.getString("QuestionText"));
+					
 
 					return e;
 				}
@@ -321,8 +325,8 @@ public class ApplicationRepository {
 
 			if(question.getAnswerOptions() != null){
 				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
-				for(AnswerOption answerOption : question.getAnswerOptions()){
-					jdbcTemplate.update(sql, new Object[]{ createdQuestionId, answerOption.getAnswerOption() });
+				for(String answerOption : question.getAnswerOptions()){
+					jdbcTemplate.update(sql, new Object[]{ createdQuestionId, answerOption });
 				}
 			}
 
@@ -466,6 +470,16 @@ public class ApplicationRepository {
 				+ ") AND w.Status = 2";
 		
 		return WageProposalRowMapper(sql, new Object[]{ userId });
+	}
+
+	public List<Answer> getAnswersByJobAndUser(int jobId, int userId) {
+		String sql = "SELECT * "
+					+ " FROM answer a"
+					+ " WHERE a.UserId = ? AND a.QuestionId"
+					+ " IN (SELECT q.QuestionId, q.Question as QuestionText FROM question q WHERE q.JobId = ?)";
+					
+		return this.AnswerRowMapper(sql, new Object[]{ userId, jobId });
+
 	}
 
 

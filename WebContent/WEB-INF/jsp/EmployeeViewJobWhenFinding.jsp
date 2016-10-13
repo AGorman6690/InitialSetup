@@ -2,16 +2,17 @@
 
 <head>
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/Category.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script>
-	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script>
-	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script>
+<%-- 	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script> --%>
+<%-- 	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script> --%>
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />	
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
+		
 	
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
@@ -28,10 +29,6 @@
 <!-- ***************************************************************** -->
 
 	<input id="jobId" value="${job.id }" type="hidden"></input>
-	<input id="jobLat" value="${job.lat }" type="hidden"></input>
-	<input id="jobLng" value="${job.lng }" type="hidden"></input>
-	
-	<div id="viewJobContainer">
 		<div class="container" >
 			<div class="row row-padding" style="">					
 				<div class="col-sm-12" style="">
@@ -47,155 +44,13 @@
 					    </div>			
 					</div>							
 				</div><!-- end row -->
-			</div><!-- end job cart container -->	
-	
-			<div id="">
-	
-					<div class="row" >
-						<div class="job-info-container col-sm-6">
-							<div class="header">
-								${job.jobName }
-							
-								<span class="categories job-sub-info">				
-									<c:forEach items="${job.categories }" var="category">
-									<button class="btn">${category.name }</button>
-									</c:forEach>
-								</span>
-							</div>
-							<div class="body">
-								<div class="start">
-									<span class="bold">Start: </span><fmt:formatDate value="${job.startDate }" pattern="EE, MMM d"/>, <fmt:formatDate value="${job.startTime }" pattern="K:mm a" />
-								</div>
-								<div>									
-									<span class="bold">End: </span><fmt:formatDate value="${job.endDate }" pattern="EE, MMM d"/>, <fmt:formatDate value="${job.endTime }" pattern="K:mm a" />
-								</div>
-								<div class="description">
-									${job.description }
-								</div>
-								<div class="location">
-									<div>${job.streetAddress }</div>
-									<div>${job.city }, ${job.state } ${job.zipCode }</div>
-									<div id="map"></div>											
-								</div>
-							</div>										
-						</div> <!-- end job general container -->
-						
-						
-						
-						<div id="questionsColumn" class="col-sm-6">
-						
-							<div class="questions-container">
-								<div class="questions-header">
-									<h3>Questions</h3>						
-								</div>
+			</div><!-- end job cart container -->
+			
+			<div>${vtJobInfo }</div>
+			<div>${vtQuestionsToAnswer }</div>
+				
+		</div>
 
-								
-								<div class="questions">
-									<c:forEach items="${job.questions }" var="question">
-										<div class="question" data-id="${question.questionId }" data-format-id="${question.formatId }">
-											<div class="text">
-												${question.text }
-											</div>
-											<div class="answer">
-											<c:choose>
-											
-												<c:when test="${question.formatId == 0 }">
-													<div class="radio">
-														<label class="block"><input type="radio" name="yes-no" value="1">Yes</label>
-														<label class="block"><input type="radio" name="yes-no" value="0">No</label>
-													</div>
-												</c:when>
-												<c:when test="${question.formatId == 1 }">
-													<div class="textarea">
-														<textarea class="form-control short-answer" rows="2"></textarea>
-													</div>
-												</c:when>
-												<c:when test="${question.formatId == 2 }">
-													<div class="radio">
-													<c:forEach items="${question.answerOptions }" var="answerOption">
-														<label class="block"><input type="radio" name="single-answer" value="${answerOption.answerOptionId }">${answerOption.answerOption }</label>
-													</c:forEach>
-													</div>
-												</c:when>
-												<c:when test="${question.formatId == 3 }">
-													<div class="checkbox">
-													<c:forEach items="${question.answerOptions }" var="answerOption">
-														<label class="block"><input type="checkbox" name="multi-answer" value="${answerOption.answerOptionId }">${answerOption.answerOption }</label>
-													</c:forEach>			
-													</div>									
-												</c:when>
-											
-											</c:choose>		
-											</div>						
-										</div>
-									</c:forEach>						
-								</div>		
-							</div>
-						</div>
-					</div><!-- end row -->
-				</div><!-- end job info container -->
-		</div><!-- end container -->
-	</div><!-- end post job container -->
-
-
-
-<!-- Modals -->
-<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-	<div id="confirmJobDelete" class="modal fade" role="dialog">
-	  <div class="modal-dialog modal-sm">
-	
-	    <!-- Modal content-->
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Confirmation</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p>Continue to delete job?</p>
-	        
-	        <div class="checkbox" style="margin: 10px 0px 0px 15px">
-	        	<label>
-	        		<input id="disableJobDeleteAlert" data-confirmed="0" type="checkbox"> Disable alert
-	        	</label>
-	        </div>	        
-	      </div>
-	      <div class="modal-footer">
-	        <button id="confirmJobDelete" type="button" class="btn btn-default" 
-	        	data-dismiss="modal" onclick="deleteJob(1)">Yes</button>
-	        <button id="cancelJobDelete" type="button" class="btn btn-default"
-	        	data-dismiss="modal" onclick="deleteJob(0)">No</button>
-	      </div>
-	    </div>
-	
-	  </div>
-	</div>	
-
-	<div id="confirmJobSubmit" class="modal fade" role="dialog">
-	  <div class="modal-dialog modal-sm">
-	
-	    <!-- Modal content-->
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        <h4 class="modal-title">Confirmation</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p>Complete job posting and submit jobs?</p>
-	      </div>
-	      <div class="modal-footer">
-	        <button id="confirmJobSubmit" type="button" class="btn btn-default" 
-	        	data-dismiss="modal" onclick="submitJobs(1)">Yes</button>
-	        <button id="cancelJobSubmit" type="button" class="btn btn-default"
-	        	data-dismiss="modal" onclick="submitJobs(0)">No</button>
-	      </div>
-	    </div>
-	
-	  </div>
-	</div>	
-	
-<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
-<!-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ -->
 
 
 
@@ -212,10 +67,17 @@
 		
 
 	$(document).ready(function() {
-	
-
 		
-//  		setPopovers();
+		$(".single").click(function(){
+			var container = $(this).closest(".answer");
+			var answers = $(container).find(".single")
+			highlightArrayItemByAttribute(this, answers, "selected");
+		})
+		
+				
+		$(".multi").click(function(){
+			toggleClass($(this), "selected");
+		})
 
 				
 	})

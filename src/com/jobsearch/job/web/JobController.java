@@ -140,15 +140,8 @@ public class JobController {
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 		
-		//Get the job
-		Job job = jobService.getJob(jobId);
-		
-		//Set the job's posting info
-		jobService.setPostingInfoForJob(job);
-		
-		model.addAttribute("job", job);
-		model.addAttribute("user", session.getAttribute("user"));
-//		model.setViewName("FindJobs");
+		jobService.setModel_ApplyForJob(model, jobId, session);
+
 		return "EmployeeViewJobWhenFinding";
 	}
 
@@ -160,7 +153,7 @@ public class JobController {
 		//If employee
 		if(user.getProfileId() == 1){
 			
-			jobService.setModelForEmployeeViewJobFromProfileJsp(model, jobId);
+			jobService.setModelForEmployeeViewJobFromProfileJsp(model, jobId, user.getUserId());
 			return "EmployeeViewJobFromProfile";
 		//Else if employer
 		}else if(user.getProfileId() == 2){

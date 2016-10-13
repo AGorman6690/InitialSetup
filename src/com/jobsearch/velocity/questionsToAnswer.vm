@@ -1,0 +1,46 @@
+<div class="section">
+	<div class="header2">
+		<span data-toggle-id="questionsContainer" class="glyphicon glyphicon-menu-down"></span>
+		<span class="header-text">Questions</span>
+	</div>
+	<div id="questionsContainer" class="section-body">
+	#foreach($question in $questions)
+		<div class="question-container bottom-border-thinner" data-question-id="$question.id">
+
+			<div class="question">					
+				$question.text
+			</div>			
+			<div class="answer">
+			
+			#if($question.formatId == 0)
+				<div class="radio">
+					<label><input type="radio" name="yesNo">Yes</label>
+				</div>
+				<div class="radio">
+					<label><input type="radio" name="yesNo">No</label>
+				</div>	
+			#elseif($question.formatId == 1)
+				<textarea class="form-control" rows="3"></textarea>
+			#elseif($question.formatId == 2 || $question.formatId == 3)
+			
+				#if($question.formatId == 2)
+					#set ( $classToAdd = "single" )
+					#set ( $help = "(select one)" )
+				#else
+					#set ( $classToAdd = "multi" )
+					#set ( $help = "(select multiple)" ) 
+				#end
+					<div>$help</div>
+				#foreach($answerOption in $question.answerOptions)
+					<div>
+						<div class="$classToAdd answer-option" data-answer-option-id="$answerOption.answerOptionId">$answerOption.text</div>
+					</div>
+				#end					
+					
+			#end
+			</div>
+
+		</div>
+	#end
+	</div>	
+</div>

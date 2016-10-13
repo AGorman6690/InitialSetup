@@ -13,7 +13,7 @@ $(document).ready(function(){
 //    		$eToToggle.show(200);
 //		}
 		  
-		if($(this).hasClass("glyphicon-menu-up"))
+		
 		toggleClasses($(this), "glyphicon-menu-up", "glyphicon-menu-down");
 	})
 	

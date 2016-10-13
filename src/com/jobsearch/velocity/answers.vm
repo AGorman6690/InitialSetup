@@ -1,0 +1,19 @@
+<div class="section">
+	<div class="header2">
+		<span data-toggle-id="questionsContainer" class="glyphicon glyphicon-menu-down"></span>
+		<span class="header-text">Answers</span>
+	</div>
+	<div id="answersContainer" class="section-body">
+	#foreach($answer in $answers)
+		<div class="answer-container body-element">
+		
+				<div class="question">
+					$answer.questionText
+				</div>		
+				<div class="answer">
+					$answer.text
+				</div>		
+		</div>
+	#end
+	</div>	
+</div>

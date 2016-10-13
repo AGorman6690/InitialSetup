@@ -7,7 +7,8 @@
 	</div>
 	<div class="section-body">
 	#if($jobDtos.size() == 0)
-		<div>You have no jobs waiting to start
+		<div>You have no jobs waiting to start</div>
+		
 	#else
 		<table id="" class="main-table-style">
 			<thead>

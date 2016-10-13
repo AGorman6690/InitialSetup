@@ -3,7 +3,6 @@ package com.jobsearch.job.service;
 import java.sql.Date;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 //@JsonIgnoreProperties(ignoreUnknown=true)

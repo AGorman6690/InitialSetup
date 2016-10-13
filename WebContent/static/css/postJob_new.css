@@ -4,6 +4,10 @@
     cursor: default;
 }
 
+#answerListContainer .glyphicon{
+	cursor:pointer;
+}
+
 .tied-to-job{
     background-color: #00A7E1;
     color: #ffffff;

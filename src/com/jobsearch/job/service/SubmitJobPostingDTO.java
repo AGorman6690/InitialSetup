@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-import com.jobsearch.model.PostQuestionDTO;
+
 
 public class SubmitJobPostingDTO {
 

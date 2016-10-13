@@ -117,7 +117,7 @@
 								<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
 								<td>
 									<c:choose>
-										<c:when test="${dto.application.status == 0  }">Waiting for response</c:when>
+										<c:when test="${dto.application.status == 0  }">Waiting for initial response</c:when>
 										<c:when test="${dto.application.status == 1  }">Declined</c:when>
 										<c:when test="${dto.application.status == 2  }">Being considered</c:when>
 										<c:when test="${dto.application.status == 3  }">Accepted</c:when>

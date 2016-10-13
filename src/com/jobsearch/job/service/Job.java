@@ -7,7 +7,6 @@ import java.util.List;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
 
 public class Job{
 

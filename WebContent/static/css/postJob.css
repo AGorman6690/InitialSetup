@@ -5,6 +5,10 @@
     padding-left: 6px;
 }
 
+#answerListContainer .glyphicon{
+	cursor:pointer;
+}
+
 #timesContainer{
 	display:none;
 }

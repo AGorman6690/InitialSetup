@@ -3,8 +3,9 @@ package com.jobsearch.application.service;
 import java.util.List;
 
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
+import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 
 public class Application {
@@ -15,7 +16,7 @@ public class Application {
 	private String jobName;
 	private Job job;
 	private JobSearchUser applicant;
-	private List<PostQuestionDTO> questions;
+	private List<Question> questions;
 	private List<WageProposal> wageProposals;
 	private WageProposal currentWageProposal;
 	private float applicantsCurrentDesiredWage;
@@ -55,10 +56,10 @@ public class Application {
 	public void setWageProposals(List<WageProposal> wageProposals) {
 		this.wageProposals = wageProposals;
 	}
-	public List<PostQuestionDTO> getQuestions() {
+	public List<Question> getQuestions() {
 		return questions;
 	}
-	public void setQuestions(List<PostQuestionDTO> questions) {
+	public void setQuestions(List<Question> questions) {
 		this.questions = questions;
 	}
 

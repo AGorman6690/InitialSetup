@@ -20,12 +20,13 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.PostQuestionDTO;
+import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -229,33 +230,51 @@ public class ApplicationServiceImpl {
 	}
 
 
+	public List<Answer> getAnswersByJobAndUser(int jobId, int userId) {
+		return repository.getAnswersByJobAndUser(jobId, userId);
+	}
 
 
-	public List<PostQuestionDTO> getQuestions(int jobId) {
+//	public List<PostQuestionDTO> getQuestions(int jobId) {
+//		//This will not set an answer
+//
+//		List<PostQuestionDTO> questions = repository.getQuestions(jobId);
+//		for(PostQuestionDTO q : questions){
+//			q.setAnswerOptions(repository.getAnswerOptions(q.getId()));
+//		}
+//		return questions;
+//	}
+	
+	public List<Question> getQuestions(int jobId) {
 		//This will not set an answer
 
-		List<PostQuestionDTO> questions = repository.getQuestions(jobId);
-		for(PostQuestionDTO q : questions){
-			q.setAnswerOptions(repository.getAnswerOptions(q.getQuestionId()));
+		List<Question> questions = repository.getQuestions(jobId);
+		for(Question q : questions){
+			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
 		}
 		return questions;
 	}
 	
-	public List<PostQuestionDTO> getQuestionsWithAnswers(int jobId, int userId) {
+	//**************************************
+	//**************************************
+	//Phase this out. It is replaced with "SetAnswers(List<Question> questions)"
+	//**************************************
+	//**************************************
+	public List<Question> getQuestionsWithAnswers(int jobId, int userId) {
 		//This will set the user's answers 
 
-		List<PostQuestionDTO> questions = repository.getQuestions(jobId);
-		for(PostQuestionDTO q : questions){
-			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
-			q.setAnswers(this.getAnswers(q.getQuestionId(), userId));
-		}
+		List<Question> questions = repository.getQuestions(jobId);
+//		for(PostQuestionDTO q : questions){
+//			q.setAnswerOptions(this.getAnswerOptions(q.Id()));
+//			q.setAnswers(this.getAnswers(q.Id(), userId));
+//		}
 		return questions;
 	}
 
-
+//
 	public  List<AnswerOption> getAnswerOptions(int questionId) {
-		repository.getAnswerOptions(questionId);
-		return null;
+		
+		return repository.getAnswerOptions(questionId);
 	}
 
 
@@ -614,6 +633,14 @@ public class ApplicationServiceImpl {
 
 
 	}
+
+
+	public void setAnswers(List<Question> questions) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	
 	
 	
