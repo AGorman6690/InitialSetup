@@ -1,12 +1,14 @@
 package com.jobsearch.model;
 
 public class Answer {
-//	private int answerOptionId;
+	
+
+	private int answerOptionId;
 //	private List<Integer> answerOptionIds;
 	private int questionId;
 	private int userId;
 	private String text;
-	private String questionText;
+//	private String questionText;
 //	private List<String> texts;
 //	private int answerBoolean;	
 //	private List<String> answers;
@@ -27,12 +29,12 @@ public class Answer {
 //		this.texts = texts;
 //	}
 
-public String getQuestionText() {
-		return questionText;
-	}
-	public void setQuestionText(String questionText) {
-		this.questionText = questionText;
-	}
+//public String getQuestionText() {
+//		return questionText;
+//	}
+//	public void setQuestionText(String questionText) {
+//		this.questionText = questionText;
+//	}
 	//	
 //	public String getAnswer() {
 //		return answer;
@@ -70,12 +72,12 @@ public String getQuestionText() {
 //	public void setAnswerOptionIds(List<Integer> answerOptionIds) {
 //		this.answerOptionIds = answerOptionIds;
 //	}
-//	public int getAnswerOptionId() {
-//		return answerOptionId;
-//	}
-//	public void setAnswerOptionId(int answerOptionId) {
-//		this.answerOptionId = answerOptionId;
-//	}
+	public int getAnswerOptionId() {
+		return answerOptionId;
+	}
+	public void setAnswerOptionId(int answerOptionId) {
+		this.answerOptionId = answerOptionId;
+	}
 	public int getQuestionId() {
 		return questionId;
 	}

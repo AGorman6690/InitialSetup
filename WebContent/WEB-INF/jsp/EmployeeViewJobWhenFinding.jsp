@@ -28,7 +28,7 @@
 <!-- NOTE: Allow user to add job to favorites -->
 <!-- ***************************************************************** -->
 
-	<input id="jobId" value="${job.id }" type="hidden"></input>
+	<input id="jobId" value="${jobId }" type="hidden"></input>
 		<div class="container" >
 			<div class="row row-padding" style="">					
 				<div class="col-sm-12" style="">
@@ -38,8 +38,10 @@
 					    <div class="btn-group">
 					    	<div id="applyContainer">
 					    		<div id="invalidAmount" class="invalid-message"></div>
+					    		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div>
 					    		<span>Desired Pay</span><input class="form-control" placeholder="$ per hour" id="amount"></input>
-								<button onclick="apply()">Apply</button>																						
+								
+								<button id="apply">Apply</button>																						
 				    		</div>
 					    </div>			
 					</div>							
@@ -79,6 +81,9 @@
 			toggleClass($(this), "selected");
 		})
 
+		$("#apply").click(function(){
+			apply();
+		})
 				
 	})
 	
@@ -86,34 +91,111 @@
 		var $e = $("#invalidAmount");
 		$e.html(message);
 		$e.show();
-		return 0;
+		return 1;
 	}
 	
 	function isInputValid(){
 		
-		//*******************************************************		
-		//*******************************************************
-		//Still need to verify aswers
-		//*******************************************************		
-		//*******************************************************
-		
 		var isValid = 1;
+		var errorMessage;
+		var desiredPayInput = $("#amount")
+		
+		//Desired pay
+		if(isDesiredPayValid() == 0) {
+			isValid = 0;
+			setInvalidCss($(desiredPayInput));
+		}
+		else{
+			setValidCss($(desiredPayInput));
+		}
+		
+		//Answers
+		errorMessage = $("#invalidAnswers");
+		if(areAnswersValid() == 0){
+			isValid = 0;
+			$(errorMessage).show();
+		}
+		else{
+			$(errorMessage).hide();
+		}
+		
+		
+		return isValid;
+		
+	}
+	
+	function isDesiredPayValid(){
+		
+		var invalidCount = 0;
 		var amount = $("#amount").val();
 		
 		//Verify pay proposal		
 		if(amount == ""){
-			isValid = showInvalidAmountMessage("Desired pay is required.");
+			invalidCount = showInvalidAmountMessage("Desired pay is required.");
 		}else if($.isNumeric(amount) == 0){
-			isValid = showInvalidAmountMessage("Desired pay must be numeric.");
+			invalidCount = showInvalidAmountMessage("Desired pay must be numeric.");
 		}else if(amount <= 0){
-			isValid = showInvalidAmountMessage("Desired pay must be greater than 0.");
+			invalidCount = showInvalidAmountMessage("Desired pay must be greater than 0.");
 		}
 		
 		//Hide error message if input is valid
-		if(isValid == 1){
-			$("#invalidAmount").hide();		}
+		if(invalidCount == 0){
+			$("#invalidAmount").hide();
+			return 1;
+		}
+		else{
+			return 0;
+		}
+	}
+	
+
+	
+	function isValidInput(value){
+		if(value == "" || value === null || value === undefined){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+	}
+	
+	function areAnswersValid(){
 		
-		return isValid;
+		var questionFormatId;
+		var answerContainers = $("#questionsContainer").find(".answer")
+		var invalidCount = 0;
+		var answer;
+		
+		var radioInput;
+		var textareaInput;
+		var answerOptionInput;
+		
+		
+		$.each(answerContainers, function(){
+			
+			//All possible answer inputs
+			radioInput = $(this).find("input[type=radio]:checked").parents('label').text();
+			textareaInput = $(this).find("textarea").val();
+			answerOptionInput = $(this).find(".answer-option.selected")[0];
+			
+			//If at least on possible input is valid
+			if(isValidInput(radioInput) || isValidInput(textareaInput) || isValidInput(answerOptionInput)){
+				setValidCss($(this));
+			}
+			else{				
+				setInvalidCss($(this));
+				invalidCount += 1;
+			}
+			
+		})
+		
+		if(invalidCount > 0){
+			return 0;
+		}
+		else{
+			return 1;
+		}
+		
 	}
 	
 	
@@ -124,98 +206,82 @@
 		
 		dto.jobId = jobId;
 		
-		//Set wage proposal
-		dto.wageProposal = {}
-		dto.wageProposal.amount = $("#amount").val();
-// 		dto.wageProposal.jobId = jobId;
-		dto.wageProposal.status = -1;
-		
-		return dto;
-		
+		dto.wageProposal = {};
+		dto.wageProposal = getWageProposal();
 
+		dto.answers = [];
+		dto.answers = getAnswers();
+	
+		return dto;
+	
 	};
+	
+	function getWageProposal(){
+		
+		var wageProposal = {}
+		wageProposal.amount = $("#amount").val();
+		wageProposal.status = -1;
+		
+		return wageProposal;
+	}
 	
 	function getAnswers(){
 		
-		var answerText;
-		var answerTexts = [];
-		var questionId;
-		var j;
-		var answer = {};
+		var selectedAnswers = [];
+		var selectedAnswer;		
 		var answers = [];
-		var questions = $(".questions-container").find(".question");
-		var invalidAnswer = 0;
-
-		//Loop through each question
-		for(var i = 0; i < questions.length; i++){
-			
-			
-			var questionElement = questions[i];
-			var questionFormatId = $(questionElement).data("formatId"); //$(questionElement).find(".question-format-id").val();
-			var questionId = $(questionElement).data('id');
-			
-
-			answerTexts = [];
-			
-			//Get answer value and validate answer value.
-			
-			//Yes/no or single answer
-			if(questionFormatId == 0 || questionFormatId == 2){
-				answerTexts[0] = $(questionElement).find('input[type=radio]:checked').parents('label').text();
-				
-			//Short answer
-			}else if(questionFormatId == 1){
-				
-				answerTexts[0] = $(questionElement).find('textarea').val()
-			
-			//Multi answer
-			}else if(questionFormatId == 3){
-				
-				//Get the checked checkbox's parent's text
-				answerTexts = $(questionElement).find('input[type=checkbox]:checked').map(function(){ return $(this).parents('label').text() }).get();
-
-			}
-			
-			//Validate answer
-			if(answerTexts.length == 0 || answerTexts[0] == ""){
-				invalidAnswer = 1;
-			}else{
-				
-				//Loop through all answers.
-				//Only multi answer will have more than 1.
-				for(j = 0; j < answerTexts.length; j++){
-					
-					//Initialize answer object
-					answer = {};
-					answer.text = answerTexts[j];
-					answer.questionId = questionId;
-					answers.push(answer);
-				}
-
-			}
-		}
+		var answer = {};
+		var questionContainers = $("#questionsContainer").find(".question-container");
+		var questionId;
+		var questionFormatId
 		
-		return answers;
+		$.each(questionContainers, function(){	
+
+			questionId = $(this).attr("data-question-id");
+			questionFormatId = $(this).attr("data-question-format-id");
+			
+			answer = {};
+			answer.questionId = questionId;
+			
+			if(questionFormatId == 0){
+				answer.text = $(this).find("input[type=radio]:checked").parents('label').text();
+				answers.push(answer);
+			}
+			else if(questionFormatId == 1){
+				answer.text = $(this).find("textarea").val();
+				answers.push(answer);
+			}
+			else if(questionFormatId == 2){
+				selectedAnswer = $(this).find(".answer-option.selected")[0];
+				answer.answerOptionId = $(selectedAnswer).attr("data-answer-option-id")
+				answers.push(answer);
+			}
+			else if(questionFormatId == 3){
+				selectedAnswers = $(this).find(".answer-option.selected"); 
+				$.each(selectedAnswers, function(){
+					answer = {};
+					answer.questionId = questionId;
+					answer.answerOptionId = $(this).attr("data-answer-option-id");
+					
+					answers.push(answer);
+				})
+			}	
+		})
+		
+		return answers;		
 	}
-	
 	
 	function apply(){
 		
 		var applicationRequestDTO = {};
-
-		//Verify input
+		var headers = {};
+		
 		if(isInputValid()){
 			
-			//Initialize application DTO
+			//Get dto			
 			applicationRequestDTO = getApplicationRequestDTO();
 			
-			//Get the applicant's answers
-			applicationRequestDTO.answers = [];
-			applicationRequestDTO.answers = getAnswers();
-
-	
-			//Submit the apppliation
-			var headers = {};
+			//Submit the apppliation			
 			headers[$("meta[name='_csrf_header']").attr("content")] = $(
 					"meta[name='_csrf']").attr("content");
 			$.ajax({
@@ -233,13 +299,13 @@
 	}
 
 
-	function initMap(){
-		var lat = $("#jobLat").val();
-		var lng = $("#jobLng").val();
-		var map =  initializeMap("map", lat, lng);
-		showMapMarker(map, lat, lng);
+// 	function initMap(){
+// 		var lat = $("#jobLat").val();
+// 		var lng = $("#jobLng").val();
+// 		var map =  initializeMap("map", lat, lng);
+// 		showMapMarker(map, lat, lng);
 
-	}
+// 	}
 
 		
 // 	function setPopovers(){
@@ -263,10 +329,10 @@
 
 </script>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+<!-- <script async defer -->
+<!-- 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap"> -->
 	
-</script>
+<!-- </script> -->
 
 
 <%@ include file="./includes/Footer.jsp"%>

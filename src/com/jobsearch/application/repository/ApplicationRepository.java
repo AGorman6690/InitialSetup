@@ -287,13 +287,13 @@ public class ApplicationRepository {
 				@Override
 				public Answer mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Answer e = new Answer();
-//					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
+					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setText(rs.getString("Text"));
 //					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
 					e.setUserId(rs.getInt("UserId"));
 					
-					e.setQuestionText(rs.getString("QuestionText"));
+//					e.setQuestionText(rs.getString("QuestionText"));
 					
 
 					return e;
@@ -382,6 +382,13 @@ public class ApplicationRepository {
 			
 			//Add the wage proposal
 			applicationService.addWageProposal(applicationDto.getWageProposal());
+			
+			//Add answers
+			for(Answer answer : applicationDto.getAnswers()){
+				answer.setUserId(applicationDto.getUserId());
+				applicationService.addAnswer(answer);
+
+			}
 			
 
 		} catch (SQLException e) {

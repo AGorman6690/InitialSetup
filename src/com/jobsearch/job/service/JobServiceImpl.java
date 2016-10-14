@@ -933,6 +933,7 @@ public class JobServiceImpl {
 		
 //		String vtJobInfo = this.velo
 		
+		model.addAttribute("jobId", jobId);
 		model.addAttribute("vtJobInfo", vtJobInfo);
 		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
 //		model.setViewName("FindJobs");

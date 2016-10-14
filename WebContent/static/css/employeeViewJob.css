@@ -13,9 +13,8 @@
     border-left-style: outset;
 }
 
-.question{
-	
-}
+
+
 
 .answer-option{
 	cursor:pointer;
@@ -29,6 +28,9 @@
 	color:#ffffff;
 }
 
+#apply{
+	margin-top: 10px;
+}
 
 #questionsContainer{
 	padding-top:0px;
@@ -41,12 +43,13 @@
 .radio:last-child{
 	margin-bottom:0px;
 }
-.answer{
+.answer-container{
 	padding-top:7px;
 	padding-left:45px;
 }
 
 .question-container{
+	margin: 10px 0px;
 	padding:20px 4px;
 /* 	border-bottom: 2px solid buttonface; */
 }

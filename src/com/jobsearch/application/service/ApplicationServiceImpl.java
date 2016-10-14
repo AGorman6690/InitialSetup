@@ -195,21 +195,7 @@ public class ApplicationServiceImpl {
 
 		//Whether the applicant answered all the questions is handled on the client side.
 		//At this point, all questions have a valid answer.		
-		for(Answer answer : applicationDto.getAnswers()){
-			answer.setUserId(applicationDto.getUserId());
-			repository.addAnswer(answer);
-//			if (answer.getText() != ""){
-//				repository.addTextAnswer(answer);
-//			}else if(answer.getAnswerBoolean() != -1){
-//				repository.addBooleanAnswer(answer);
-//			}else if(answer.getAnswerOptionId() != -1){
-//				repository.addOptionAnswer(answer, answer.getAnswerOptionId());
-//			}else if(answer.getAnswerOptionIds().size() > 0){
-//				for(int answerOptionId : answer.getAnswerOptionIds()){
-//					repository.addOptionAnswer(answer, answerOptionId);
-//				}
-//			}
-		}
+
 	}
 
 
@@ -637,6 +623,12 @@ public class ApplicationServiceImpl {
 
 	public void setAnswers(List<Question> questions) {
 		// TODO Auto-generated method stub
+		
+	}
+
+
+	public void addAnswer(Answer answer) {
+		repository.addAnswer(answer);
 		
 	}
 
