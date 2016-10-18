@@ -7,7 +7,7 @@ import com.jobsearch.model.CommentDTO;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.RateCriterion;
 
-public class RatingRequestDTO {
+public class SubmitRatingDTO {
 	
 //	@JsonProperty("rateCriterionId")
 //	int rateCriterionId;
@@ -24,34 +24,50 @@ public class RatingRequestDTO {
 	@JsonProperty("employeeId")
 	int employeeId;
 	
-	@JsonProperty("jobId")
-	int jobId;
-	
 	@JsonProperty("rateCriteria")
 	List<RateCriterion> rateCriteria;
 	
-	@JsonProperty("endorsements")
-	List<Endorsement> endorsements;
+//	@JsonProperty("endorsements")
+//	List<Endorsement> endorsements;
 	
-	@JsonProperty("comment")
-	CommentDTO comment;
+//	@JsonProperty("comment")
+//	CommentDTO comment;
+	
+	List<Integer> endorsementCategoryIds;
+	String commentString;
 	
 	
-	public CommentDTO getComment() {
-		return comment;
+	public String getCommentString() {
+		return commentString;
 	}
 
-	public void setComment(CommentDTO comment) {
-		this.comment = comment;
+	public void setCommentString(String commentString) {
+		this.commentString = commentString;
 	}
 
-	public int getJobId() {
-		return jobId;
+	public List<Integer> getEndorsementCategoryIds() {
+		return endorsementCategoryIds;
 	}
 
-	public void setJobId(int jobId) {
-		this.jobId = jobId;
+	public void setEndorsementCategoryIds(List<Integer> endorsementCategoryIds) {
+		this.endorsementCategoryIds = endorsementCategoryIds;
 	}
+
+//	public CommentDTO getComment() {
+//		return comment;
+//	}
+//
+//	public void setComment(CommentDTO comment) {
+//		this.comment = comment;
+//	}
+
+//	public int getJobId() {
+//		return jobId;
+//	}
+//
+//	public void setJobId(int jobId) {
+//		this.jobId = jobId;
+//	}
 
 	public int getEmployeeId() {
 		return employeeId;
@@ -69,13 +85,13 @@ public class RatingRequestDTO {
 		this.rateCriteria = rateCriteria;
 	}
 
-	public List<Endorsement> getEndorsements() {
-		return endorsements;
-	}
-
-	public void setEndorsements(List<Endorsement> endorsementCategoryIds) {
-		this.endorsements = endorsementCategoryIds;
-	}
+//	public List<Endorsement> getEndorsements() {
+//		return endorsements;
+//	}
+//
+//	public void setEndorsements(List<Endorsement> endorsementCategoryIds) {
+//		this.endorsements = endorsementCategoryIds;
+//	}
 
 //	public int getRateCriterionId() {
 //		return rateCriterionId;

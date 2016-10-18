@@ -30,6 +30,15 @@
 
 #apply{
 	margin-top: 10px;
+	padding:7px 13px;
+    background-color: #337ab7;
+    color: #ffffff;
+    border:0;
+    font-size:16px;
+}
+
+#amount{
+	width:100px;
 }
 
 #questionsContainer{

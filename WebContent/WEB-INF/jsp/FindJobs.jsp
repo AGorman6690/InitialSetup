@@ -756,17 +756,17 @@ $(document).ready(function() {
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
 				
-		$('#workingDays').datepicker({
-			toggleActive: true,
-			clearBtn: true,
-			todayHighlight: true,
-			startDate: new Date(),
-			multidate: true			
-		});	
+// 		$('#workingDays').datepicker({
+// 			toggleActive: true,
+// 			clearBtn: true,
+// 			todayHighlight: true,
+// 			startDate: new Date(),
+// 			multidate: true			
+// 		});	
 	
-		$('.date').datepicker({
-			autoclose: true,
-			toggleActive: true});
+// 		$('.date').datepicker({
+// 			autoclose: true,
+// 			toggleActive: true});
 
 // 		$('#filterStartTime').timepicker({
 // 			'useSelect' : true,

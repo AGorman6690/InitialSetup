@@ -12,8 +12,15 @@ public class Question {
 	private int questionId;
 	private String text;	
 	private List<AnswerOption> answerOptions;
-
+	private List<Answer> answers;
 	
+
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}
 	public int getFormatId() {
 		return formatId;
 	}

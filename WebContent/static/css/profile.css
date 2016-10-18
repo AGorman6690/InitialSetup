@@ -15,6 +15,9 @@
 	display:none;
 }
 
+.applicants-container table tr{
+	min-height: 85px;
+}
 
 /* .expandable-row{ */
 /* 	display:none; */
@@ -100,10 +103,13 @@ table#failedWageNegotiations{
 	padding:5px;
 }
 
-.completed-jobs-container{
-	padding-top:40px;
-}
+/* .completed-jobs-container{ */
+/* 	padding-top:40px; */
+/* } */
 
+/* .completed-jobs-container td{ */
+/* 	padding:10px 5px; */
+/* } */
 .active-jobs-container{
 	padding-top:20px;
 }

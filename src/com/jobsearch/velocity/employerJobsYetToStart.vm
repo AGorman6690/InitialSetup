@@ -88,7 +88,9 @@
 											<tr class="">
 											
 												## Applicant info
-												<td><a>$application.applicant.firstName</a></td>
+												<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed">
+													$application.applicant.firstName</a>
+												</td>
 												<td>$application.applicant.rating</td>
 												<td>
 													## Set the applicant's endorsements

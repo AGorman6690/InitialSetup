@@ -203,7 +203,7 @@
 						<tbody>		
 							<c:forEach items="${yetToStartJobs }" var="yetToStartJob">
 								<tr class="static-row">
-									<td><a class="accent">${yetToStartJob.jobName }</a></td>
+									<td><a class="accent" href="/JobSearch/job/${yetToStartJob.id }">${yetToStartJob.jobName }</a></td>
 									<td>${yetToStartJob.startDate }</td>
 									<td>${yetToStartJob.endDate }</td>
 								</tr>							

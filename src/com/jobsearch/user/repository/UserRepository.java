@@ -20,7 +20,7 @@ import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.user.rate.RatingRequestDTO;
+import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 
@@ -327,11 +327,10 @@ public class UserRepository {
 
 	}
 
-	public void addComment(RatingRequestDTO ratingDTO) {
-		String sql = "INSERT INTO comment (JobId, UserId," + " Comment) VALUES (?, ?, ?)";
+	public void addComment(int userId, int jobId, String comment) {
+		String sql = "INSERT INTO comment (JobId, UserId, Comment) VALUES (?, ?, ?)";
 
-		jdbcTemplate.update(sql,
-				new Object[] { ratingDTO.getJobId(), ratingDTO.getEmployeeId(), ratingDTO.getComment() });
+		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment });
 
 	}
 
@@ -358,7 +357,7 @@ public class UserRepository {
 	}
 
 	public Double getRating(int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ?";
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value > -1";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
 

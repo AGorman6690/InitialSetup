@@ -8,6 +8,16 @@ public class Endorsement {
 	int count;
 	String categoryName;
 
+	public Endorsement(int userId2, int categoryId2, int jobId2) {
+		this.userId = userId2;
+		this.categoryId = categoryId2;
+		this.jobId = jobId2;
+	}
+
+	public Endorsement() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getCategoryName() {
 		return categoryName;
 	}

@@ -19,6 +19,7 @@ $(document).ready(function(){
 	})
 	
 	$("#calendar").datepicker({
+		minDate: new Date(),
 		numberOfMonths: 1,
 		 onSelect: function(dateText, inst) {
 			 

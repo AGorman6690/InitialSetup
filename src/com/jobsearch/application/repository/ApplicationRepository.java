@@ -34,6 +34,9 @@ public class ApplicationRepository {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
+	//*********************************************************
+	//*********************************************************
+	//Do away with this
 	public List<Application> ApplicationWithUserRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
 			@Override
@@ -65,6 +68,8 @@ public class ApplicationRepository {
 			}
 		});
 	}
+	//*********************************************************
+	//*********************************************************
 	
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -181,8 +186,9 @@ public class ApplicationRepository {
 
 	public void addAnswer(Answer answer) {
 
-		String sql = "INSERT INTO answer (QuestionId, UserId, Text) VALUES(?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(), answer.getText() });
+		String sql = "INSERT INTO answer (QuestionId, UserId, Text, AnswerOptionId) VALUES(?, ?, ?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ answer.getQuestionId(), answer.getUserId(),
+										answer.getText(), answer.getAnswerOptionId() });
 
 	}
 
@@ -290,11 +296,13 @@ public class ApplicationRepository {
 					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setText(rs.getString("Text"));
-//					e.setAnswerBoolean(rs.getInt("AnswerBoolean"));
 					e.setUserId(rs.getInt("UserId"));
 					
 //					e.setQuestionText(rs.getString("QuestionText"));
 					
+					if(e.getAnswerOptionId() > 0){
+						e.setText(applicationService.getAnswerOption(e.getAnswerOptionId()).getText());
+					}
 
 					return e;
 				}
@@ -483,10 +491,15 @@ public class ApplicationRepository {
 		String sql = "SELECT * "
 					+ " FROM answer a"
 					+ " WHERE a.UserId = ? AND a.QuestionId"
-					+ " IN (SELECT q.QuestionId, q.Question as QuestionText FROM question q WHERE q.JobId = ?)";
+					+ " IN (SELECT q.QuestionId FROM question q WHERE q.JobId = ?)";
 					
 		return this.AnswerRowMapper(sql, new Object[]{ userId, jobId });
 
+	}
+
+	public AnswerOption getAnswerOption(int answerOptionId) {
+		String sql = "SELECT * FROM answer_option WHERE AnswerOptionId = ?";
+		return AnswerOptionRowMapper(sql, new Object[]{ answerOptionId }).get(0);
 	}
 
 

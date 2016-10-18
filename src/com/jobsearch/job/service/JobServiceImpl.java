@@ -156,9 +156,9 @@ public class JobServiceImpl {
 		return questions;
 	}
 
-	public void markJobComplete(int jobId) {
-		repository.markJobComplete(jobId);
-	}
+//	public void markJobComplete(int jobId) {
+//		repository.markJobComplete(jobId);
+//	}
 
 //	public List<Job> getJobsAppliedTo(int userId) {
 //		
@@ -674,27 +674,27 @@ public class JobServiceImpl {
 		return this.getFilterJobsTemplate(filteredJobs, request);
 	}
 
-	public String getRateEmployeesView(Model model, int jobId) {
+	public void setModel_RateEmployees(Model model, int jobId) {
 		
 		//Get the job
 		Job completedJob = repository.getJob(jobId);
 	
 		//Verify the job is complete.
-		//This is here because the user can edit the hyperlink's "markComplete" value.
 		if(completedJob.getStatus() < 2){
-			return null;
+
 		}else{
 			
 			//Set the employees
 			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
 			
 			//Set the categories
-			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
+			List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+//			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
 			
 			//Add to model
 			model.addAttribute("job", completedJob);
+			model.addAttribute("categories", categories);
 			
-			return "RateEmployees";
 		}
 	}
 
@@ -783,36 +783,49 @@ public class JobServiceImpl {
 		return writer.toString();
 	}
 
-	public void setEmployerViewJobModel(Model model, int jobId) {
+	public void setModel_EmployerViewJob(Model model, int jobId, HttpSession session) {
 
 		//Get the job
 		Job selectedJob = this.getEmployersJobProfile(jobId);
+		int hideJobInfoOnLoad;
 		
-		//Get the employees
-		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
-		for(JobSearchUser employee : employees){
+		if(userService.getSessionUser(session).getUserId() == selectedJob.getUserId()){
+		
+			//Get the employees
+			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+			for(JobSearchUser employee : employees){
+				
+				//Set their wage
+				employee.setWage(applicationService.getWage(employee.getUserId(), jobId));
+			}
 			
-			//Set their wage
-			employee.setWage(applicationService.getWage(employee.getUserId(), jobId));
+			//Get the applications
+			List<Application> applications = applicationService.getApplicationsByJob(jobId);
+			
+	//		//Get the failed wage negotiations
+			String vtFailedWageNegotiationsByJob = applicationService.
+					getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
+			
+			model.addAttribute("applications", applications);
+			model.addAttribute("employees", employees);
+			model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
+			
+			hideJobInfoOnLoad = 1;
 		}
+		else{
+			hideJobInfoOnLoad = 0;
+		}
+			
 		
-		//Get the applications
-		List<Application> applications = applicationService.getApplicationsByJob(jobId);
+		List<Question> questions = applicationService.getQuestions(jobId);	
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, hideJobInfoOnLoad);
 		
-//		//Get the failed wage negotiations
-		String vtFailedWageNegotiationsByJob = applicationService.
-				getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
-		
-		
-		
+
 		//Set the model attributes
 		model.addAttribute("job", selectedJob);
-		model.addAttribute("applications", applications);
-		model.addAttribute("employees", employees);
-		model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
-
-		
-		
+		model.addAttribute("questions", questions);
+		model.addAttribute("vtJobInfo", vtJobInfo);
+	
 	}
 
 	public Job getJobByApplicationId(int applicationId) {
@@ -823,7 +836,7 @@ public class JobServiceImpl {
 	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId, int userId) {
 		
 		//Velocity templates
-		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId);
+		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId, 0);
 		//String vtQuestions = this.getVelocityTemplate_Questions(jobId);
 		String vtAnswers = this.getVelocityTemplate_Answers(jobId, userId);
 		
@@ -884,7 +897,7 @@ public class JobServiceImpl {
 
 	}
 
-	private String getVelocityTemplate_JobInfo(int jobId) {
+	private String getVelocityTemplate_JobInfo(int jobId, int hideOnOpen) {
 		
 		//Job properties
 		Job job = this.getJob(jobId);		
@@ -893,8 +906,10 @@ public class JobServiceImpl {
 		StringWriter writer = new StringWriter();
 		
 		//Set the context
-		final VelocityContext context = new VelocityContext();		
+		final VelocityContext context = new VelocityContext();	
+		context.put("hideOnOpen", hideOnOpen);
 		context.put("job", job);
+		context.put("date", new DateTool());
 		context.put("categories", categories);
 
 		//Run the template
@@ -928,7 +943,7 @@ public class JobServiceImpl {
 //		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		
 		
-		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId);
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
 		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
 		
 //		String vtJobInfo = this.velo
@@ -951,6 +966,11 @@ public class JobServiceImpl {
 		questionsToAnswer.merge(context, writer);
 
 		return writer.toString();
+	}
+
+	public void UpdateJobStatus(int status, int jobId) {
+		repository.updateJobStatus(status, jobId);
+		
 	}
 
 

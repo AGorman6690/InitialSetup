@@ -72,13 +72,13 @@ $(document).ready(function(){
 	
 	$(".re-counter").click(function(){
 		var $e = $($(this).siblings(".re-counter-amount-container")[0]); 
-		$e.toggle(200);
+		$e.slideToggle(200);
 //		toggleClasses($e, "hide-element", "show-block");
 	})
 	
 	$(".cancel-counter-offer").click(function(){
 		var $e = $($(this).parents(".re-counter-amount-container")[0]);
-		$e.hide(200);
+		$e.slideToggle(200);
 //		toggleClasses($e, "hide-element", "show-block");
 		$($(this).siblings("input")[0]).val("");
 	})
@@ -116,11 +116,11 @@ $(document).ready(function(){
 	
 	function updateDOM($hide, $show, response){
 		//After the response has been made, hide the re-counter controls.			
-		$hide.hide(200);
+		$hide.slideUp(200);
 		
 		//Inform the user that the response has been sent.
 		$show.html(response);
-		$show.show(200);
+		$show.slideDown(200);
 	}
 
 	function sendCounterOffer(wageProposalCounterDTO, callback){

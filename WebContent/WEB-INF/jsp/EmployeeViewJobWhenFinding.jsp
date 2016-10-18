@@ -29,24 +29,24 @@
 <!-- ***************************************************************** -->
 
 	<input id="jobId" value="${jobId }" type="hidden"></input>
+		
 		<div class="container" >
-			<div class="row row-padding" style="">					
-				<div class="col-sm-12" style="">
+<!-- 			<div class="row row-padding" style="">					 -->
+<!-- 				<div class="col-sm-12" style=""> -->
 					
-					<div id="jobActionContainer" class="" style="">
-						<input id="activeJobId" type="hidden">
-					    <div class="btn-group">
-					    	<div id="applyContainer">
-					    		<div id="invalidAmount" class="invalid-message"></div>
-					    		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div>
-					    		<span>Desired Pay</span><input class="form-control" placeholder="$ per hour" id="amount"></input>
+<!-- 					<div id="jobActionContainer" class="" style=""> -->
+<!-- 					    <div class="btn-group"> -->
+<!-- 					    	<div id="applyContainer"> -->
+<!-- 					    		<div id="invalidAmount" class="invalid-message"></div> -->
+<!-- 					    		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div> -->
+<!-- 					    		<span>Desired Pay</span><input class="form-control" placeholder="$ per hour" id="amount"></input> -->
 								
-								<button id="apply">Apply</button>																						
-				    		</div>
-					    </div>			
-					</div>							
-				</div><!-- end row -->
-			</div><!-- end job cart container -->
+<!-- 								<button id="apply">Apply</button>																						 -->
+<!-- 				    		</div> -->
+<!-- 					    </div>			 -->
+<!-- 					</div>							 -->
+<!-- 				</div>end row -->
+<!-- 			</div>end job cart container -->
 			
 			<div>${vtJobInfo }</div>
 			<div>${vtQuestionsToAnswer }</div>

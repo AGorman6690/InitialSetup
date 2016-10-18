@@ -157,13 +157,25 @@ public class JobController {
 			return "EmployeeViewJobFromProfile";
 		//Else if employer
 		}else if(user.getProfileId() == 2){
-			jobService.setEmployerViewJobModel(model, jobId);
+			jobService.setModel_EmployerViewJob(model, jobId, session);
 			return "EmployerViewJob";	
 		}
 		
 		return null;
 		
 	}
+	
+	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
+	public String updateJobStatus(@PathVariable(value = "status") int status,
+								@PathVariable(value = "jobId") int jobId) {
+		
+		jobService.UpdateJobStatus(status, jobId);
+		
+		
+		return "redirect:/user/profile";
+		
+	}
+	
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {
@@ -183,19 +195,16 @@ public class JobController {
 //		return "RateEmployees";
 //	}
 	
-	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
-	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId,
-								@RequestParam(name = "markComplete", required = false) boolean markComplete,
-								Model model) {
+	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
+	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
 		
-		if(markComplete){
-			jobService.markJobComplete(jobId);
-		}
+//		if(markComplete){
+//			jobService.markJobComplete(jobId);
+//		}
 		
-		String viewName;
-		viewName = jobService.getRateEmployeesView(model, jobId);
+			jobService.setModel_RateEmployees(model, jobId);
 		
-		return viewName;
+		return "RateEmployees";
 	}	
 
 //	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)

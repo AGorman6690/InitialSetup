@@ -48,3 +48,9 @@ table.main-table-style{
 .main-table-style th{
 	padding:4px 8px;
 }
+
+td .accent{
+    color: #337ab7;
+    font-size: 15px;
+    font-weight: bold;
+}

@@ -36,7 +36,8 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.user.rate.RatingRequestDTOs;
+import com.jobsearch.user.rate.SubmitRatingDTO;
+import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
@@ -150,21 +151,34 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void rateEmployee(RatingRequestDTOs ratingRequestDTOs) {
+	public void insertRatings(SubmitRatingDTOs_Wrapper submitRatingDTOs_Wrapper) {
 
-//		for (RateCriterion rc : ratingRequestDTOs.getRateCriteria()) {
-//			repository.updateRating(rc);
-//		}
-//
-//		deleteEndorsements(ratingRequestDTOs.getEmployeeId(), ratingRequestDTOs.getJobId());
-//		for (Endorsement endorsement : ratingRequestDTOs.getEndorsements()) {
-//			repository.addEndorsement(endorsement);
-//		}
-//
-//		deleteComment(ratingRequestDTOs.getJobId(), ratingRequestDTOs.getEmployeeId());
-//		if (ratingRequestDTOs.getComment() != "") {
-//			repository.addComment(ratingRequestDTOs);
-//		}
+		//For each employee's rating
+		for(SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()){
+			
+			//Rate criterion
+			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
+				rc.setEmployeeId(submitRatingDto.getEmployeeId());
+				rc.setJobId(submitRatingDTOs_Wrapper.getJobId());
+				repository.updateRating(rc);
+			}
+
+			//Endorsements
+			deleteEndorsements(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId());
+			for (Integer categoryId: submitRatingDto.getEndorsementCategoryIds()) {
+				Endorsement endorsement = new Endorsement(submitRatingDto.getEmployeeId(),
+												categoryId, submitRatingDTOs_Wrapper.getJobId());
+				repository.addEndorsement(endorsement);
+			}
+
+			//Comment
+			deleteComment(submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getEmployeeId());
+			if (submitRatingDto.getCommentString() != "") {
+				repository.addComment(submitRatingDto.getEmployeeId(),
+									submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getCommentString());
+			}
+		}
+
 
 	}
 
@@ -355,6 +369,9 @@ public class UserServiceImpl {
 			editProfileRequestDto.setHomeLng((float) results[0].geometry.location.lng);
 //			this.updateHomeLocation(editProfileRequest);
 			repository.updateEmployeeSettings(editProfileRequestDto);
+			
+			
+			this.updateSessionUser(session);
 
 		}
 
@@ -371,6 +388,12 @@ public class UserServiceImpl {
 //		repository.updateHomeLocation(editProfileRequest);
 //
 //	}
+
+	public void updateSessionUser(HttpSession session) {
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		user = this.getUser(user.getUserId());
+		session.setAttribute("user", user);		
+	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
@@ -588,7 +611,7 @@ public class UserServiceImpl {
 		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
 		model.addAttribute("vtYetToStartJobs", vtYetToStartJobs);
 		model.addAttribute("vtActiveJobs", vtActiveJobs);
-		model.addAttribute("activeJobs", activeJobs);
+//		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 		
 		//When the profile is requested and presented to the user,
@@ -651,5 +674,19 @@ public class UserServiceImpl {
 		}
 	}
 
+	public void setModel_WorkHistoryByUser(Model model, int userId) {
+		
+	
+		List<CompletedJobResponseDTO> completedJobDtos = jobService.
+											getCompletedJobResponseDtosByEmployee(userId);
+		model.addAttribute("completedJobDtos", completedJobDtos);
+		
+	}
 
+	public  JobSearchUser getSessionUser(HttpSession session) {		
+		return (JobSearchUser) session.getAttribute("user");
+	}
+
+
+	
 }

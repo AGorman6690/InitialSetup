@@ -1,13 +1,24 @@
 <div class="section">
 	<div class="header2">
-		<span data-toggle-id="jobInfoContainer" class="glyphicon glyphicon-menu-down"></span>
-		<span class="header-text">Job Information</span>
+		<span data-toggle-id="jobInfoContainer">
+		#if($hideOnOpen == 1)
+			<span class="glyphicon glyphicon-menu-down"></span>
+		#else
+			<span class="glyphicon glyphicon-menu-up"></span>
+		#end
+			<span class="header-text">Job Information</span>
+		</span>
 		
 		#if($context == "employer")
 			<span id="editJobContainer"><a href="#" id="editJob square-button">Edit (not built)</a></span>
 		#end
 	</div>
+	
+#if($hideOnOpen == 1)
+	<div id="jobInfoContainer" class="hide-element section-body">
+#else
 	<div id="jobInfoContainer" class="section-body">
+#end	
 		<div>
 			<div class="body-element">$job.jobName </div>
 			<div class="body-element">

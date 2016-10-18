@@ -130,6 +130,8 @@
 			return newArray;
 		}
 		
+
+		
 		function addBorderToQuestionCart(request){
 			
 			var $e = $("#addedQuestions");
@@ -640,7 +642,7 @@
 		
 		function addJobToCart(){
 			
-//	 		if(validatePostJobInputs(jobs) == 0){
+	 		if(validatePostJobInputs(jobs) == 0){
 				if(isButtonClickable($("#addJobToCart"))){
 					jobCount += 1;
 				
@@ -657,12 +659,12 @@
 									+ postJobDto.jobName + '</button>')
 					
 					clearPostJobInputs();		
-//					removeInvalidFormControlStyles()
+
 					
 					$("#cartContainer").show(500);
 					
 					jobCount++			
-//				}
+				}
 			}
 		}
 		

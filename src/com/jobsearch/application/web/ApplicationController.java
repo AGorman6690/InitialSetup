@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.application.service.UpdateApplicationDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WageProposal;
@@ -39,10 +40,9 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateStatus(@RequestParam(name = "applicationId") int applicationId,
-							@RequestParam(name = "status") int status) {
+	public void updateStatus(@RequestBody UpdateApplicationDTO updateApplicationDto) {
 		
-		applicationService.updateApplicationStatus(applicationId, status);
+		applicationService.updateApplicationStatus(updateApplicationDto.getApplicationId(), updateApplicationDto.getNewStatus());
 	}
 	
 	@RequestMapping(value = "/desired-pay/counter", method = RequestMethod.POST)

@@ -204,21 +204,21 @@ $(document).ready(function() {
 	});					
 		  
        
-      	$("#calendar").datepicker({
-      	      numberOfMonths: 3,
-      	      showButtonPanel: true,
-      	      multidate: true,
+//       	$("#calendar").datepicker({
+//       	      numberOfMonths: 3,
+//       	      showButtonPanel: true,
+//       	      multidate: true,
       	      
-      	    });
+//       	    });
         	
-    $("#toggleWeekends").click(function(){				    	
-    	$("#availability").datepicker("setDates", ["09-09-2016", "09-10-2016"])
-    })
+//     $("#toggleWeekends").click(function(){				    	
+//     	$("#availability").datepicker("setDates", ["09-09-2016", "09-10-2016"])
+//     })
         
        
-   	$("#calendar").datepicker().on("changeDate", function(e){
+//    	$("#calendar").datepicker().on("changeDate", function(e){
    		
-   		})
+//    		})
 	
 	$("#saveChanges").click(function() {
 			

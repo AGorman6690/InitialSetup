@@ -20,6 +20,12 @@ function addClassToArrayItems(array, className){
 	})
 }
 
+function removeClassFromArrayItems(array, className){
+	$(array).each(function(){
+		$(this).removeClass(className);
+	})
+}
+
 function show($e){
 	$e.show(200);
 }
@@ -32,12 +38,61 @@ function toggle($e){
 	$e.toggle(200);
 
 }
+
+function slideUp($e){
+	$e.slideUp(200);
+}
+
+function slideDown($e){
+	$e.slideDown(200);
+}
+
+function removeArrayElementValue(valueToRemove, array){
+	var newArray = [];
+	newArray =  $.grep(array, function(value, i){
+					return value != valueToRemove
+				})
+							
+	return newArray;
+}
+
+//*****************************************
+//*****************************************
+//Phase this out. The name is horrible
+//*****************************************
+//*****************************************
 function highlightArrayItemByAttribute(itemToHighlight, array, className){
 	
 	$(array).each(function(){
 		
 		//Compare DOM elements
 		if($(this)[0] == $(itemToHighlight)[0]){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+function highlightArrayItem(itemToHighlight, array, className){
+	
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this)[0] == $(itemToHighlight)[0]){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+function highlightArrayItemByAttributeValue(attributeName, attributeValue, array, className){
+	
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this).attr(attributeName) == attributeValue){
 			$(this).addClass(className);
 		}else{
 			$(this).removeClass(className);

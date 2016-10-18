@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.PostQuestionDTO;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
@@ -17,6 +18,7 @@ public class Application {
 	private Job job;
 	private JobSearchUser applicant;
 	private List<Question> questions;
+	private List<Answer> answers;
 	private List<WageProposal> wageProposals;
 	private WageProposal currentWageProposal;
 	private float applicantsCurrentDesiredWage;
@@ -38,6 +40,12 @@ public class Application {
 //	public void setEmployersCurrentOfferedWage(float employersCurrentOfferedWage) {
 //		this.employersCurrentOfferedWage = employersCurrentOfferedWage;
 //	}
+	public List<Answer> getAnswers() {
+		return answers;
+	}
+	public void setAnswers(List<Answer> answers) {
+		this.answers = answers;
+	}	
 	public float getApplicantsCurrentDesiredWage() {
 		return applicantsCurrentDesiredWage;
 	}

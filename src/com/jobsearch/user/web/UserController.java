@@ -30,7 +30,7 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingDTO;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.user.rate.RatingRequestDTOs;
+import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -194,9 +194,8 @@ public class UserController {
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model,
 										HttpSession session) {
 		
-		if(userService.isLoggedIn(session)){			
-			List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
-			model.addAttribute("completedJobDtos", completedJobDtos);
+		if(userService.isLoggedIn(session)){	
+			userService.setModel_WorkHistoryByUser(model, userId);
 			return "EmployerViewEmployee";
 		}
 		else{
@@ -259,9 +258,11 @@ public class UserController {
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	@ResponseBody
-	public void rateEmployee(ModelAndView model, @RequestBody RatingRequestDTOs ratingRequestDTOs) {
+	public String rateEmployee(ModelAndView model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {
 
-		userService.rateEmployee(ratingRequestDTOs);
+		userService.insertRatings(submitRatingDtos_wrapper);
+		
+		return "redirect:/user/profile";
 	}
 
 	@RequestMapping(value = "/user/password/reset", method = RequestMethod.GET)

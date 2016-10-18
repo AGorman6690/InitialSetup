@@ -73,16 +73,17 @@ public class ApplicationServiceImpl {
 			//Set the application's wage proposals
 			application.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
-			//If applicable, get the application's current wage proposal, whether proposed by the employer or applicant
+			//If applicable, get the application's current wage proposal,
+			//whether proposed by the employer or applicant
 			application.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			
-			//If Set the current wage proposed BY the applicant.
+			//Set the current wage proposed BY the applicant.
 			//Since the desired pay can be countered several times,
-			//This holds the applican't most recent pay request.
+			//this holds the applicant's most recent pay request.
 			application.setApplicantsCurrentDesiredWage(
 					this.getCurrentWageProposedBy(application.getApplicationId(), applicant.getUserId()));
 			
-			
+			applicant.setRating(userService.getRating(applicant.getUserId()));
 			
 //			//Set the current wage proposed TO the applicant.
 //			application.setEmployersCurrentOfferedWage(this.getCurrentWageProposedTo(application.getApplicationId(), applicant.getUserId()));
@@ -91,7 +92,11 @@ public class ApplicationServiceImpl {
 //			applicant.setAnswers(this.getAnswers(application.ge, userId));
 			
 			//Set the application's questions and answers
-			application.setQuestions(this.getQuestionsWithAnswers(jobId, applicant.getUserId()));
+			//application.setQuestions(this.getQuestionsWithAnswers(jobId, applicant.getUserId()));
+			application.setQuestions(this.getQuestionsByJobAndUser(jobId, applicant.getUserId()));
+			
+//			application.setAnswers(this.getAnswersByJobAndUser(jobId, applicant.getUserId()));
+			//application.setAnswers(this.getAnswers(application.getQuestions(), applicant.getUserId());
 			
 			//Get the applicant's endorsement for ONLY the particular job's
 			//categories, not ALL categories.
@@ -115,6 +120,13 @@ public class ApplicationServiceImpl {
 
 		return applications;
 	}
+
+
+
+
+
+
+
 
 
 	public  float getCurrentWageProposedTo(int applicationId, int proposedToUserId) {
@@ -237,6 +249,16 @@ public class ApplicationServiceImpl {
 		List<Question> questions = repository.getQuestions(jobId);
 		for(Question q : questions){
 			q.setAnswerOptions(this.getAnswerOptions(q.getQuestionId()));
+		}
+		return questions;
+	}
+	
+	public List<Question> getQuestionsByJobAndUser(int jobId, int userId) {
+		
+		List<Question> questions = repository.getQuestions(jobId);
+		
+		for(Question question : questions){
+			question.setAnswers(this.getAnswers(question.getQuestionId(), userId));
 		}
 		return questions;
 	}
@@ -630,6 +652,19 @@ public class ApplicationServiceImpl {
 	public void addAnswer(Answer answer) {
 		repository.addAnswer(answer);
 		
+	}
+
+
+
+
+
+
+
+
+
+	public AnswerOption getAnswerOption(int answerOptionId) {
+		
+		return repository.getAnswerOption(answerOptionId);
 	}
 
 

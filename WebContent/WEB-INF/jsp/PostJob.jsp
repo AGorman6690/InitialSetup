@@ -122,24 +122,24 @@
 								<label for="streetAddress"
 									class="form-control-label">Street Address</label>
 								<input name="streetAddress" type="text" class="form-control"
-									id="streetAddress" value="2217 Bonnie Lane"></input>
+									id="streetAddress" value=""></input>
 							</div>
 							<div class="input-container">
 								<label for="city"
 									class="form-control-label">City</label>
 								<input name="city" type="text" class="form-control"
-									id="city" value="Saint Paul"></input>
+									id="city" value=""></input>
 							</div>
 							<div class="input-container">
 								<label for="streetAddress"
 									class="form-control-label">State</label>
-								<select id="state" name="state" class="form-control" value="MN"></select>	
+								<select id="state" name="state" class="form-control"></select>	
 							</div>
 							<div class="input-container">
 								<label for="zipCode"
 									class="form-control-label">Zip Code</label>
 								<input name="zipCode" type="text" class="form-control"
-									id="zipCode" value="55119"></input>
+									id="zipCode" value=""></input>
 							</div>
 						</div>					
 					</div>

@@ -29,11 +29,11 @@
 						<h4>Location</h4>
 						<div class="bottom-border-thinner">
 							<div class="body-element-container " id="locationContainer">
-								<input id="miles" placeholder="Number of" class="form-control" value="100">
+								<input id="miles" placeholder="Number of" class="form-control" value="">
 								<span id="milesFromText">Miles From</span>
 								<input id="city" placeholder="City" class="form-control">
 								<input id="state" placeholder="State" class="form-control">
-								<input id="zipCode" placeholder="Zip Code" class="form-control" value="55119">
+								<input id="zipCode" placeholder="Zip Code" class="form-control" value="">
 							</div>
 						</div>
 					</div>

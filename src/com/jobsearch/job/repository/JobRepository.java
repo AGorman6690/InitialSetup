@@ -231,12 +231,12 @@ public class JobRepository {
 //		return this.JobRowMapper(sql, new Object[] { userId });
 //	}
 
-	public void markJobComplete(int jobId) {
-		String sql = "UPDATE job" + " SET IsActive = 0 WHERE JobId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { jobId });
-
-	}
+//	public void markJobComplete(int jobId) {
+//		String sql = "UPDATE job" + " SET IsActive = 0 WHERE JobId = ?";
+//
+//		jdbcTemplate.update(sql, new Object[] { jobId });
+//
+//	}
 
 
 	public int getJobCountByCategory(int categoryId) {
@@ -535,6 +535,13 @@ public class JobRepository {
 				+ " WHERE JobId = ?";	
 		
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
+	}
+
+	public void updateJobStatus(int status, int jobId) {
+		
+		String sql = "UPDATE job set Status = ? WHERE JobId = ?";
+		jdbcTemplate.update(sql, new Object[]{ status, jobId });
+		
 	}
 
 

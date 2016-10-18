@@ -29,10 +29,10 @@
 
 		<c:choose>
 			<c:when test="${completedJobs.size() >0 }">			
-				<div class="completed-jobs-container">
+				<div class="section completed-jobs-container">
 					<div class="header"><h3>Completed Jobs</h3></div>
-					<div class="jobs-table-container">
-						<table id="">
+					<div class="section-body">
+						<table id="" class="main-table-style">
 							<thead>
 								<tr>
 									<th>Job Name</th>
@@ -43,9 +43,10 @@
 		<!-- 						For each active job -->
 								<c:forEach items="${completedJobs }" var="completedJobDTO">
 									<tr class="static-row" id="${completedJobDTO.job.id}">
-											<td class="job-name"><a href="#" class="accent">${completedJobDTO.job.jobName}</a></td>
+										<td class="job-name"><a href="/JobSearch/job/${completedJobDTO.job.id }" class="accent">${completedJobDTO.job.jobName}</a></td>
 		
-										<td><a href="/JobSearch/job/${completedJobDTO.job.id }/rate-employees?markComplete=1"><button class="square-button">Rate Employees</button></a>
+										<td >
+										<a href="/JobSearch/job/${completedJobDTO.job.id }/employees/rate"><button class="square-button">Rate Employees</button></a>
 										</td>
 									</tr>						
 		
