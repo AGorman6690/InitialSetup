@@ -88,7 +88,7 @@
 		<div id="postingContainer">
 			<div id="jobInfo" class="section info-container">
 				<div class="header">
-					<span data-toggle="jobInfoBody" class="toggle-section glyphicon glyphicon-menu-down"></span>
+					<span data-toggle-id="jobInfoBody" class="glyphicon glyphicon-menu-down"></span>
 					<span class="header-text">Job Info</span>
 					<span id="jobInfoButtons" class="button-container">
 						<button id="newJob" class="clickable new square-button">New</button>
@@ -249,7 +249,7 @@
 			</div>
 			<div id="questionInfo" class="section info-container">
 				<div class="header">
-					<span data-toggle="questionInfoBody" class="toggle-section glyphicon glyphicon-menu-down"></span>
+					<span data-toggle-id="questionInfoBody" class="glyphicon glyphicon-menu-down"></span>
 					<span class="header-text">Question Info</span>
 					<span class="button-container">
 						<button id="newQuestion" class="clickable new square-button">New</button>
@@ -664,6 +664,7 @@
 					if(buttonIsCurrentlySelected(this)){
 						deselectJob();	
 					}else{
+						
 						selectJob(this);
 						
 					}
@@ -710,8 +711,8 @@
 					//Add question to the DOM
 					addQuestionToDOM(postQuestionDto);
 					
-					$("#jobInfoBody").hide(500);
-					$("#cartContainer").show(500);
+// 					$("#jobInfoBody").hide(500);
+// 					$("#cartContainer").show(500);
 				}
 			}
 		})
@@ -735,20 +736,20 @@
 		}
 		
 		
-		$(".toggle-section").click(function(){
-			var idToToggle = $(this).attr("data-toggle");
+// 		$(".toggle-section").click(function(){
+// 			var idToToggle = $(this).attr("data-toggle");
 			
-			//If the secion is currenlyt visible
-			if($("#" + idToToggle).is(":visible")){
-				//Collapse
-				expandInfoBody(idToToggle, false);
-			}
-			else{
-				//Expand
-				expandInfoBody(idToToggle, true);
-			}
+// 			//If the secion is currenlyt visible
+// 			if($("#" + idToToggle).is(":visible")){
+// 				//Collapse
+// 				expandInfoBody(idToToggle, false);
+// 			}
+// 			else{
+// 				//Expand
+// 				expandInfoBody(idToToggle, true);
+// 			}
 
-		})
+// 		})
 		
 		$(".show-section").click(function(){
 			var idToToggle = $(this).attr("data-show");

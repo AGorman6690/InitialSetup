@@ -13,9 +13,6 @@
 
 
 	<div class="container">
-		<div><a href="/JobSearch/job/${job.id}/update/status/1" id="startJob">Start Job (For debugging purposes. This ultimately should
-								be triggered by Start Date or something.)</a>
-							</div>
 	
 		<div class="">${vtJobInfo }</div>
 

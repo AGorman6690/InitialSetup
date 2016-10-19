@@ -8,12 +8,14 @@
 		<button id="apply">Apply</button>
 	</div	
 	
-	<div id="amountContainer" class="section-body">
+	## For whatever reason, one of these divs is not rendered...
+	<div class="section-body">
+	<div class="section-body">
 		<div id="invalidAmount" class="invalid-message"></div>
 		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div>
 		<span>Desired Pay</span>
-		<input class="form-control" placeholder="$ per hour" id="amount"></input>
-																				
+		<input class="form-control" placeholder=" per hour" id="amount">
+	</div>
 	</div>
 				    		
 	<div id="questionsContainer" class="section-body">

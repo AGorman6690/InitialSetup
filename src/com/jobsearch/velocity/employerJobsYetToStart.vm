@@ -20,6 +20,7 @@
 					<th id="totalApplications">Total Applications</th>
 					<th id="hires">Employees</th>									
 					<th id="markJobCompleteHeader"></th>
+					<th></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -54,6 +55,8 @@
 												
 					<td class=""><span class="">$jobDto.job.getApplications().size()</span></td>
 					<td class=""><span class="">$jobDto.job.getEmployees().size()</span></td>
+					<td><a class="square-button-green" href="/JobSearch/job/$jobDto.job.id/update/status/1">Start Job</a></td>
+					
 					
 					## If job is active, show the "Mark Complete" button
 					#if($jobDto.job.status == 1)

@@ -234,7 +234,7 @@
 		
 							<c:forEach items="${activeJobs }" var="activeJob">
 								<tr class="static-row">
-									<td><a class="accent">${activeJob.jobName }</a></td>
+									<td><a class="accent" href="/JobSearch/job/${activeJob.id }">${activeJob.jobName }</a></td>
 									<td>${activeJob.startDate }</td>
 									<td>${activeJob.endDate }</td>
 								</tr>							
@@ -267,7 +267,7 @@
 						<tbody>		
 							<c:forEach items="${completedJobs }" var="completedJob">
 								<tr class="static-row">
-									<td><a class="accent">${completedJob.jobName }</a></td>
+									<td><a class="accent" href="/JobSearch/job/${completedJob.id}">${completedJob.jobName }</a></td>
 									<td>${completedJob.endDate }</td>
 								</tr>							
 							</c:forEach>

@@ -82,7 +82,7 @@
 				<div class="header bottom-border-thin">Comment</div>
 				<div class="content">
 					<textarea id="comment" rows="3"></textarea>
-					<button id="saveComment" class="square-button-green">Save</button>
+<!-- 					<button id="saveComment" class="square-button-green">Save</button> -->
 				</div>
 			</div>
 		</div>
@@ -193,15 +193,21 @@
 		}
 		
 		$("#employees li").click(function(){
-
-			highlightArrayItem($(this), $("#employees").find("li"), "clicked");
-						
+			
+			var clickedListItem = this;
+			
+			updateCurrentEmployeesComment(function(){
+				highlightClickedEmployee(clickedListItem);
+			})
+		
 			var submitRatingDto = getCurrentEmployeesSubmitRatingDto();
 			showSubmitRatingDto(submitRatingDto);
 
 		})
 		
 		$("#endorsements li").click(function(){
+			
+			
 			
 			toggleClass($(this), "clicked");
 			
@@ -213,6 +219,10 @@
 			
 		})
 		
+		function highlightClickedEmployee(listItem){
+			highlightArrayItem($(listItem), $("#employees").find("li"), "clicked");
+		}
+		
 		function updateCategoryEndorsements(categoryId, submitRatingDto){
 			
 			if($.inArray(categoryId, submitRatingDto.endorsementCategoryIds) > -1){
@@ -223,6 +233,13 @@
 				submitRatingDto.endorsementCategoryIds.push(categoryId);
 			}
 			
+		}
+		
+		function updateCurrentEmployeesComment(callback){
+			var submitRatingDto = getCurrentEmployeesSubmitRatingDto();
+			submitRatingDto.commentString = $("#comment").val();;
+			
+			callback();
 		}
 		
 		function getCurrentEmployeesSubmitRatingDto(){
@@ -253,17 +270,20 @@
 	
 		$("#submitRatings").click(function(){
 			
-			submitRatings();						
+			updateCurrentEmployeesComment(function(){
+				submitRatings();
+			});
+									
 			
 		})
 		
 
 	
 		
-		$("#saveComment").click(function(){
-			var submitRatingDto = getCurrentEmployeesSubmitRatingDto();
-			submitRatingDto.commentString = $("#comment").val();;	
-		})
+// 		$("#saveComment").click(function(){
+// 			var submitRatingDto = getCurrentEmployeesSubmitRatingDto();
+// 			submitRatingDto.commentString = $("#comment").val();;	
+// 		})
 			
 
 		
@@ -294,11 +314,11 @@
 	    });
 
 		function _success(){
-// 			window.location = "/JobSearch/user/profile";
+			window.location = "/JobSearch/user/profile";
 		}
 
-		function _error(response, errorThrown){
-			alert("error rateEmpoyee");
+		function _error(){
+// 			alert("error rateEmpoyee");
 		}
 				
 	}

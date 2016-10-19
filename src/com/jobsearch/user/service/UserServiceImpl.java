@@ -156,6 +156,8 @@ public class UserServiceImpl {
 		//For each employee's rating
 		for(SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()){
 			
+
+
 			//Rate criterion
 			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
 				rc.setEmployeeId(submitRatingDto.getEmployeeId());
@@ -177,6 +179,8 @@ public class UserServiceImpl {
 				repository.addComment(submitRatingDto.getEmployeeId(),
 									submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getCommentString());
 			}
+			
+
 		}
 
 

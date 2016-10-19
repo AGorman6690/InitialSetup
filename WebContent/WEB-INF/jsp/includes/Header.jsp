@@ -40,13 +40,13 @@
 
 <!-- 	Additional code for Bootstrap sortble table -->
 <!-- Used this website: https://datatables.net/examples/styling/bootstrap.html -->
-<link
-	href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"
-	rel="stylesheet" />
-<script
-	src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-<script
-	src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+<!-- <link -->
+<!-- 	href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" -->
+<!-- 	rel="stylesheet" /> -->
+<!-- <script -->
+<!-- 	src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> -->
+<!-- <script -->
+<!-- 	src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script> -->
 
 <!-- 	Additional code for Bootstrap date picker -->
 <script type="text/javascript"
@@ -58,11 +58,7 @@
 
 <!-- <script type="text/javascript" src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> -->
 <!-- <link rel="stylesheet" type="text/css" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css" /> -->
-<link
-	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
-	rel="stylesheet" />
-<!-- <script -->
-<!-- 	src="/JobSearch/static/External/bootstrap-datepicker.js"></script> -->
+
 
 <!-- Bootstrap Drop down -->
 <link rel="stylesheet"

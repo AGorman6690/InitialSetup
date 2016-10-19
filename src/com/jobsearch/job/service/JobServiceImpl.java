@@ -462,8 +462,12 @@ public class JobServiceImpl {
 			filter.startTime = null;
 		if (filter.getWorkingDays().get(0).matches("-1"))
 			filter.setWorkingDays(null);
+		
+		
 
-		// Get the filtered jobs
+//		List<Integer> jobIds = this.getJobsIdsByFilter(filter);
+
+		// Get the filtered jobs		
 		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
 
 		// For each filtered job, calculate the distance between the user's
@@ -490,6 +494,20 @@ public class JobServiceImpl {
 		// }
 	}
 	
+//	private List<Integer> getJobsIdsByFilter(FilterJobRequestDTO filter) {
+//		
+//		List<Integer> jobIds = new ArrayList<Integer>();
+//		List<Integer> ids = new ArrayList<Integer>();
+//		//By distance
+//		jobIds = repository.getActiveJobIdsByDistance(filter.getLat(), filter.getLng(), filter.getRadius());
+//		
+//		ids = repository.getActiveJobIdsByStartAndEndDates(filter.getBeforeEndDate(), filter.getEndDate(),
+//																filter.getBeforeStartDate(), filter.getStartDate()));
+//		
+//		return null;
+//	}
+
+
 	public void setJobsCategories(List<Job> jobs){
 		for (Job job : jobs) {
 			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));

@@ -40,11 +40,11 @@ function toggle($e){
 }
 
 function slideUp($e){
-	$e.slideUp(200);
+	$e.slideUp(300);
 }
 
 function slideDown($e){
-	$e.slideDown(200);
+	$e.slideDown(300);
 }
 
 function removeArrayElementValue(valueToRemove, array){

@@ -17,6 +17,11 @@
 <!-- <!-- Checkbox picker --> 
 <%-- <script src="<c:url value="/static/External/bootstrap-checkbox.min.js" />"></script> --%>
 
+<link
+	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
+	rel="stylesheet" />
+<script
+	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
 </head>
 
 <body>
@@ -54,8 +59,10 @@
 		</div>
 				
 		<div class="row">
+		
 			<div class="col-sm-12">
 				<div id="additionalFiltersContainer" class="input-container-group">
+				<b>(Filters are currently broken, but you can still "Get Jobs")</b>
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
 							<div data-display-text="Start"								
@@ -764,9 +771,9 @@ $(document).ready(function() {
 // 			multidate: true			
 // 		});	
 	
-// 		$('.date').datepicker({
-// 			autoclose: true,
-// 			toggleActive: true});
+		$('.date').datepicker({
+			autoclose: true,
+			toggleActive: true});
 
 // 		$('#filterStartTime').timepicker({
 // 			'useSelect' : true,

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -543,6 +544,25 @@ public class JobRepository {
 		jdbcTemplate.update(sql, new Object[]{ status, jobId });
 		
 	}
+
+	public List<Integer> getActiveJobIdsByDistance(float lat, float lng, int radius) {
+		
+		String sql = "SELECT JobId"
+				+ " FROM job"
+				+ " WHERE Status = 0"
+				+ " AND ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) <= ?";
+
+		return jdbcTemplate.queryForList(sql, new Object[]{ lat,  lng, lat, radius }, Integer.class);
+	}
+
+//	public List<Integer> getActiveJobIdsByStartAndEndDates(boolean beforeEndDate, java.sql.Date endDate,
+//			boolean beforeStartDate, java.sql.Date startDate) {
+//
+//		String sql = "SELECT JobId"
+//				+ " FROM"
+//	}
+
 
 
 

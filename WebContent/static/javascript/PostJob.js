@@ -218,9 +218,12 @@
 		function selectJob(jobButton){
 			
 			
-			if(isQuestionSelected()){
-				deselectQuestion();
-			}
+			deselectButtons("cartContainer");
+//			if(isQuestionSelected()){
+//				deselectQuestion();
+//			}
+			
+			
 			
 //			deselectButtons("cartContainer");
 			selectButton(jobButton);
@@ -312,9 +315,9 @@
 		
 		function hideCart(request){
 			if(request == true){
-				$("#cartContainer").hide(200);	
+				slideUp($("#cartContainer"));	
 			}else{
-				$("#cartContainer").show(200);
+				slideDown($("#cartContainer"));
 			}
 			
 		}
@@ -332,6 +335,9 @@
 			disableInputFields(false, "postingContainer");
 			clearPostJobInputs();
 			setActionsAsClickable(false, "jobCart");
+			setButtonsAsClickable(true, "postingContainer");
+			
+			deselectButtons("cartContainer");
 			
 			//If necessary, hide the cart
 			if(jobs.length < 1){

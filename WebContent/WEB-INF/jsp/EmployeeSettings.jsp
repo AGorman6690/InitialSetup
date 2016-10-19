@@ -226,7 +226,7 @@ $(document).ready(function() {
 			editProfileDTO.homeCity = $("#homeCity").val();
 			editProfileDTO.homeState = $("#homeState").val();
 			editProfileDTO.homeZipCode = $("#homeZipCode").val();
-			editProfileDTO.maxWorkRadius = $("#maxDistance").val();
+			editProfileDTO.maxWorkRadius = parseInt($("#maxDistance").val());
 			editProfileDTO.minPay = $("#minPay").val();
 			
 			//Verify

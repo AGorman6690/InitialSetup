@@ -257,11 +257,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
-	@ResponseBody
-	public String rateEmployee(ModelAndView model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {
+	public String rateEmployee(Model model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {
 
-		userService.insertRatings(submitRatingDtos_wrapper);
-		
+		userService.insertRatings(submitRatingDtos_wrapper);	
+
 		return "redirect:/user/profile";
 	}
 
