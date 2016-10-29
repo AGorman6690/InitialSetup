@@ -38,4 +38,7 @@ public class Job {
 	List<Question> questions
 	int newApplicationCount
 	Integer Duration
+	List<Integer> selectedQuestionIds
+	int status
+	List<WorkDay> workDays;
 }

@@ -17,6 +17,11 @@
 <!-- <!-- Checkbox picker --> 
 <%-- <script src="<c:url value="/static/External/bootstrap-checkbox.min.js" />"></script> --%>
 
+<link
+	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
+	rel="stylesheet" />
+<script
+	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
 </head>
 
 <body>
@@ -32,7 +37,7 @@
 				<div id="distanceFilter" class="input-container-group form-group">	
 					<div class="input-container">									
 						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value=""></input>
+							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
 					</div>			
 					<div class="input-container">					
 						<label id="milesFrom" for="radius">Miles From</label>
@@ -47,15 +52,17 @@
 					</div>			
 					<div class="input-container">			
 						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value=""></input>
+							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
 					</div>																			
 				</div>
 			</div>
 		</div>
 				
 		<div class="row">
+		
 			<div class="col-sm-12">
 				<div id="additionalFiltersContainer" class="input-container-group">
+				<b>(Filters are currently broken, but you can still "Get Jobs")</b>
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
 							<div data-display-text="Start"								
@@ -282,7 +289,7 @@
 				<div class="sort-jobs-by-container">
 					<div class="dropdown-input-container sort-width ">
 						<div class="dropdown-input-label">
-							<span class="">Sort By</span>
+							<span class="">Sort By (Broken)</span>
 							<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>			
 						</div>
 						
@@ -756,13 +763,13 @@ $(document).ready(function() {
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
 				
-		$('#workingDays').datepicker({
-			toggleActive: true,
-			clearBtn: true,
-			todayHighlight: true,
-			startDate: new Date(),
-			multidate: true			
-		});	
+// 		$('#workingDays').datepicker({
+// 			toggleActive: true,
+// 			clearBtn: true,
+// 			todayHighlight: true,
+// 			startDate: new Date(),
+// 			multidate: true			
+// 		});	
 	
 		$('.date').datepicker({
 			autoclose: true,

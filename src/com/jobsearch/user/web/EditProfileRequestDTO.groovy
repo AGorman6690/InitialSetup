@@ -28,4 +28,7 @@ public class EditProfileRequestDTO {
 
 	@JsonProperty
 	int maxWorkRadius
+
+	@JsonProperty
+	double minPay
 }

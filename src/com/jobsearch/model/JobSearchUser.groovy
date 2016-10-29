@@ -36,4 +36,6 @@ class JobSearchUser {
 	int maxWorkRadius //Units = miles
 	double distanceFromJob
 	int createNewPassword
+	double wage
+	double minimumDesiredPay
 }

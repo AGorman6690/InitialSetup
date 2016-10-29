@@ -1,226 +1,314 @@
 <%@ include file="./includes/Header.jsp" %>
-	<head>
-		<script src="<c:url value="/static/javascript/AppendHtml.js" />"></script>
-		<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	</head>
+<head>
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/findEmployees.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />
+		
+	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>	
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
+	<script   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"   integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
+</head>
 
-	<body>
-	
-	<h1>This page is old and still needs to be updated</h1>
-	
-
-		<div class="container">
-			<h1>Find Employees</h1>
-			<button id="findEmployees" class="btn btn-danger" type="button"
-				 style="margin-bottom: 10px">Find Employees</button>
-			<div style="width: 750px" class="panel panel-warning">
-				<div class="panel-heading">Available Days to Work</div>
-				<div class="panel-body">
-					<div id='availableDays' data-date-format="MM/DD/YYYY" class="input-group date" style="width: 250px">
-			  		</div>
-				</div>
+<body>
+	<div class="container">
+		<div class="section">
+			<div class="header">
+				<span data-toggle-id="findEmployeesContainer" class="glyphicon glyphicon-menu-down"></span>
+				<span class="header-text">Find Employees</span>
 			</div>
-
-
-			<div style="width: 750px" class="panel panel-warning">
-				<div class="panel-heading">Employee Location</div>
-				<div class="panel-body">
-
-					<div class="form-group row">
-						<label for="radius"
-							class="post-job-label col-sm-2 form-control-label">Number of miles:</label>
-						<div class="col-sm-10">
-							<input name="city" type="text"
-								class="post-job-input form-control" id="radius" value="50000"></input>
+			<div id="findEmployeesContainer" >
+				<div id="getEmployeesContainer" class="section-body">
+					<button id="getEmployees" class="square-button-green">Find Employees</button>
+				</div>
+				<div class="section-body">
+					<div class="sub-header">
+						<span data-toggle-id="locationContainer" class="glyphicon glyphicon-menu-down"></span>
+						<h4>Location</h4>
+						<div class="bottom-border-thinner">
+							<div class="body-element-container " id="locationContainer">
+								<input id="miles" placeholder="Number of" class="form-control" value="">
+								<span id="milesFromText">Miles From</span>
+								<input id="city" placeholder="City" class="form-control">
+								<input id="state" placeholder="State" class="form-control">
+								<input id="zipCode" placeholder="Zip Code" class="form-control" value="">
+							</div>
 						</div>
 					</div>
-
-					<h4>
-						<span class="label label-primary">From: (at least one field is required)</span>
-					</h4>
-					<div class="form-group row">
-						<label for="homeCity"
-							class="post-job-label col-sm-2 form-control-label">City</label>
-						<div class="col-sm-10">
-							<input name="city" type="text"
-								class="post-job-input form-control" id="homeCity"></input>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="homeState"
-							class="post-job-label col-sm-2 form-control-label">State</label>
-						<div class="col-sm-10">
-							<input name="state" type="text"
-								class="post-job-input form-control" id="homeState""></input>
-						</div>
-					</div>
-					<div class="form-group row">
-						<label for="homeZipCode"
-							class="post-job-label col-sm-2 form-control-label">Zip
-							Code</label>
-						<div class="col-sm-10">
-							<input name="zipCode" type="text"
-								class="post-job-input form-control" id="homeZipCode"
-								value="55119"></input>
+	
+				</div>
+				<div class="section-body">
+					<div class="sub-header">
+						<span data-toggle-id="availabilityContainer" class="glyphicon glyphicon-menu-down"></span>
+						<h4>Availability</h4>	
+						<div class="bottom-border-thinner">
+							<div class="body-element-container" id="availabilityContainer">	
+								<div id="calendar"></div>
+								<div id="clearCalendarContainer">
+									<button class="square-button" id="clearCalendar">Clear</button>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div><!-- end home location panel -->
-
-			<div class="panel panel-info">
-				<div class="panel-heading">Categories</div>
-				<div class="panel-body">
-					<div style="display: inline" id="selectedCategories">
+				
+				<div class="section-body">
+					<div class="sub-header">
+						<span data-toggle-id="ratingContainer" class="glyphicon glyphicon-menu-down"></span>
+						<h4>Rating</h4>	
+						<div class="bottom-border-thinner">
+							<div id="ratingContainer" class="body-element-container">	
+								<div id="invalidRating" class="invalid-message" data-message-for="rating"></div>
+<!-- 								<input id="rating" placeholder="" class="form-control"> -->
+									<label for="rating"	class="form-control-label">Greater Than Or Equal To </label>									
+									<select id="rating" name="state" class="form-control">
+										<option selected value="0">0</option>
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>	
+							</div>
+						</div>
 					</div>
-					<div id="addCategories" style="display: none"></div>
-					<div id="removeCategories" style="display: none"></div>
-					<br>
-					<div id="0T"></div>
-				</div>
-			</div><!-- end categories panel -->
+				</div>			
+				
+				<div class="section-body">
+					<div class="sub-header">
+						<span data-toggle-id="categoriesContainer" class="glyphicon glyphicon-menu-down"></span>
+						<h4>Categories</h4>
+						<div class="bottom-border-thinner">
+							<div class="body-element-container" id="categoriesContainer">
+							</div>
+						</div>
+					</div>
+	
+				</div>			
+			
+			</div>
+		</div>
+		
+
+		<div id="resultsContainer" class="section">
+			<div class="header">
+				<span class="header-text">Results</span>
+			</div>
+			<div id="results" class="section-body">
+				
+			</div>
+		</div>
+		
+		
+		
+	</div><!-- end container -->
 
 
-			<div style="width: 750px" class="panel panel-success">
-				<div class="panel-heading">Employees</div>
-				<div class="color-panel panel-body" id="employees">
-				</div>
-			</div>	<!-- end employees panel -->
 
-		</div><!-- end container -->
+</body>
 
 
+<script>
 
-	</body>
+	var days = [];
+	$(document).ready(function(){
+		var dateToday = new Date();
+		$("#calendar").datepicker({
+  	      numberOfMonths: 2,
+  	      minDate: dateToday,
+//   	      showButtonPanel: true,
+//   	      multidate: true,
+			  onSelect:function(dateText){
+				var date = new Date(dateText);
+				
+				if(isDayAlreadyAdded(date.getTime(), days)){
+					days = removeDate(date.getTime(), days); 
+	        	}
+	        	else{
+	        		days.push(date.getTime());  
+	        	}
+				
+				
+			  },
+  	      beforeShowDay:function(date){
+  	    	  
+				if(isDayAlreadyAdded(date.getTime(), days)){
+	        		return [true, "active111"]; 
+	        	}
+	        	else{
+	        		return [true, ""];
+	        	}
+      	
+  	    	  
 
+  	      },
+    	
+  	      
+  	    });
+		
+		$("#getEmployees").click(function(){
+			getEmployees();
+		})
+		
+		$("#clearCalendar").click(function(){
+			removeActiveDaysFormatting();
+			days = [];
+		})
 
-	<script>
+	}) 
 
-		var pageContext = "profile";
+	function getListParameter(paramName, arr){
+	
+		var result = "";
+		var i;
+		
+		if(arr.length == 0){
+			result = paramName + "=-1";
+		}
+		else{		
+			for(i=0; i<arr.length; i++){
+				
+				if(i > 0){
+					result += "&" ;
+				}			
+				result += paramName + "=" + arr[i];
+			}
+		}
+		return result;
+		
+	}
+	
+	function covertDatesFromMillisecondsToString(dates){
+		var date;
+		var newArr = [];
+		$.each(dates, function(){
+			date = new Date;
+			date.setTime(this);		
+			date = $.datepicker.formatDate("yy-mm-dd", date);
+			newArr.push(date);
+		})
+		
+		return newArr;
+		
+	}
+	
+	function getEmployees(){
+		
+		var stringDates = [];
+		var param;
+		var findEmployeesDto = {}
+		findEmployeesDto.radius = $("#miles").val();
+		findEmployeesDto.fromAddress = $("#city").val() + " " + $("#state").val() + $("#zipCode").val();
+		findEmployeesDto.rating = $("#rating").val();
+		
+		//Convert the dates from millisecond to a string.
+		//The database needs dates in yy-mm-dd format.
+		stringDates = covertDatesFromMillisecondsToString(days);
+		findEmployeesDto.days = stringDates;
+		
+		findEmployeesDto.categoryIds = [];
+		findEmployeesDto.categoryIds[0] = 1;
+		findEmployeesDto.categoryIds[1] = 2;
+		findEmployeesDto.categoryIds[2] = 3;
+		
+		if(areInputsValid(findEmployeesDto) == 1){
+			
+			param = "?fromAddress=" + findEmployeesDto.fromAddress;
+			param += "&radius=" + findEmployeesDto.radius;
+			param += "&rating=" + findEmployeesDto.rating; 
+			param += "&" + getListParameter("day", findEmployeesDto.days);
+			param += "&" + getListParameter("categoryId", findEmployeesDto.categoryIds);			
+			
+			$.ajax({
+				type : "GET",
+				url : environmentVariables.LaborVaultHost + "/JobSearch/search/employees" + param,
+				headers : getAjaxHeaders(),
+				contentType : "application/json",
+// 				data : JSON.stringify(findEmployeesDto)
+			}).done(function(html) { 		
+// 				alert(html)
+				$("#results").empty();
+				$("#results").append(html);
+				scrollToElement("resultsContainer", 500);
+			}).error(function() {
 
-// 		getCategoriesBySuperCat('0', function(response, categoryId) {
-// 			appendCategories(categoryId, "T", response, function() {
-// 			});
-// 		})
+			});			
+		}
+			
+	}
+	
+	function areInputsValid(findEmployeesDto){
+		
+		var $errorMessage;
+		var $e;
+		var value;
+		var result = 1;
+		
+		//*****Required*****
+		//Radius
+		$e = $("#miles")
+		value = $e.val()
+		if($.isNumeric(value) == 0){
+			result = 0;
+			setInvalidCss($e);
+		}
+		else if(value < 0){
+			result = 0;
+			setInvalidCss($e);
+		}
+		else{
+			setValidCss($e)
+		}
+		
+		//*****Required*****
+		//Address
+		if(findEmployeesDto.fromAddress.trim().length == 0){
+			result = 0;
+			setInvalidCss($("#city"));
+			setInvalidCss($("#state"));
+			setInvalidCss($("#zipCode"));
+		}else{
+			setValidCss($("#city"));
+			setValidCss($("#state"));
+			setValidCss($("#zipCode"));
+		}
+		
+		//*****Optional*****
+		//Rating		
+		value = findEmployeesDto.rating;
+		$e = $("#rating")
+		$errorMessage = $("#invalidRating")
+		//If the use suppled a rating 
+		if(value != ""){
+			
+			if($.isNumeric(value) == 0){
+				result = 0;
+				setInvalidCss($e);
+				$errorMessage.html("Rating must be numeric")
+				show($errorMessage);
+			}
+			else if(value < 0){
+				result = 0;
+				setInvalidCss($e);
+				$errorMessage.html("Rating must be greater than zero")
+				show($errorMessage);
+			}
+			else{
+				setValidCss($e);
+				hide($errorMessage);
+			}
+				
+		}
+		else{
+			setValidCss($e);
+			hide($errorMessage);
+		}
+		return result;
+		
+	}
 
-		$(document).ready(function(){
-
-
-
-			$('#availableDays').datepicker({
-				toggleActive: true,
-				format: "yyyy-MM-dd",
-				clearBtn: true,
-				todayHighlight: true,
-				startDate: new Date(),
-				multidate: true
-
-			});
-
-			$('#findEmployees').click(function(){
-
-				var radius = $("#radius").val();
-				var city = $("#homeCity").val();
-				var state = $("#homeState").val();
-				var zipCode = $("#homeZipCode").val();
-
-				if(radius > 0 && (city != "" || state != "" || zipCode != "")){
-
-					//Location
-					var parameters = "?radius=" + radius;
-					parameters += "&city=" + $("#homeCity").val();
-					parameters += "&state=" + $("#homeState").val();
-					parameters += "&zipCode=" + $("#homeZipCode").val();
-
-					//Dates
-					var dates = [];
-// 					var str = $("#arrayDates").val();
-// 					str = str.substring(1, str.length -1);
-// 					dates = str.split(",");
-					var dates= $("#availableDays").datepicker('getDates');
-					if(dates.length > 0){
-						for(var i = 0; i < dates.length; i++){
-							parameters += "&date=" + dates[i];
-						}
-					} else{parameters += "&date=-1"}
-
-					//Categories
-					var categories = getCategoryIds("selectedCategories");
-					if(categories.length > 0){
-						for(var i = 0; i < categories.length; i++){
-							parameters += "&categoryId=" + categories[i];
-						}
-					} else{parameters += "&categoryId=-1"}
-
-	 				alert(environmentVariables.LaborVaultHost + "/JobSearch/employees/filter" + parameters)
-					$.ajax({
-						type : "GET",
-						url : environmentVariables.LaborVaultHost + "/JobSearch/employees/filter" + parameters,
-						dataType : "json", // Response
-						success: _success,
-				        error: _error
-					    });
-
-					function _success(employees){
-
-						$("#employees").empty();
-
-						var j = -1;
-						var r = [];
-						r[++j] = '<table id="filterEmployeesTable" class="table table-hover table-striped'
-									+ ' table-bordered" cellspacing="0" width="100%">';
-						r[++j] = 	'<thead>';
-						r[++j] = 		'<tr>';
-						r[++j] =			'<th>Employee Name</th>';
-						r[++j] =			'<th>Categories</th>';
-						r[++j] =			'<th>Endorsements</th>';
-						r[++j] =			'<th>Rating</th>';
-						r[++j] =			'<th>Distance From Job</th>';
-						r[++j] =		'</tr>';
-						r[++j] =	'</thead>';
-						r[++j] = 	'<tbody>';
-
-						for(var i = 0; i < employees.length; i++){
-							var e = employees[i];
-							r[++j] = '<tr id="user_' + e.userId + '" class="clickToWorkHistory">';
-							r[++j] =	'<td>' + e.firstName + " " + e.lastName + '</td>';
-
-							var categoryNames = "";
-							for (var k = 0; k < e.categories.length; k++){
-								categoryNames += e.categories[k].name;
-								if ( k < e.categories.length - 1){
-									categoryNames +=  ", ";
-								}
-							}
-							r[++j] = 	'<td>' + categoryNames + '</td>';
-							r[++j] = 	'<td>(not built)</td>';
-							r[++j] = 	'<td>' + e.rating + '</td>';
-							r[++j] = 	'<td>' + e.distanceFromJob + '</td>';
-							r[++j] = '</tr>';
-						}
-
-						$("#employees").append(r.join(''));
-						$('#filterEmployeesTable').DataTable();
-
-						$(".clickToWorkHistory").click(function(){
-// 							alert(3)
-			 				elementId = $(this).attr('id');
-							var idBegin = elementId.indexOf("_") + 1;
-							var userId =  elementId.substring(idBegin);
-
-							window.location = "../jobs/completed/employee/?userId=" + userId + "&c=1";
-						})
-
-					}
-
-					function _error(response){
-
-					}
-				}
-			})	//end find employees click function
-		}) //end document ready
-
-
-	</script>
+</script>
 
 
 

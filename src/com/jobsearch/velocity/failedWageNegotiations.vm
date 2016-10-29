@@ -1,0 +1,90 @@
+
+#if($activeJobsWithFailedWageNegotiations.size() > 0)
+	<div id="failedWageNegotiationsContainer" class="section">
+		
+		<div class="header"><h3>Failed Wage Negotiations</h3></div>
+	
+		<div class="section-body">
+			##Table
+			<table id="failedWageNegotiations" class="main-table-style">
+				<thead>
+					<tr>
+						<th class="expand-job-header"></th>
+						<th>Job Name</th>
+						<th>Failed Wage Negotiations</th>
+					</tr>
+				</thead>
+				
+				##All active jobs with at least one failed wage negotiation
+				<tbody>
+					
+					##Only jobs WITH failed wage negotiations are in this array.
+					##Therefore, there is no need to test for the existence of failed wage negotiations.
+					#foreach($jobDto in $activeJobsWithFailedWageNegotiations)
+					<tr>
+						#set ( $expandId = "expand-${jobDto.job.Id}-fwn" )
+						<td><span data-toggle-id="$expandId" class="expand-job glyphicon glyphicon-menu-up"></span></td>
+						<td><a class="accent" href="/JobSearch/job/$jobDto.job.id">$jobDto.job.jobName</a></td>
+						<td>$jobDto.failedWageNegotiationDtos.size()</td>	
+					</tr>
+						
+						##Each job's expandable row that contains the applicant names and failed negotiation info
+						<tr class="toggle-row">
+							<td colspan="3">
+								<div id="$expandId" class="expandable-table-container">
+									#if($jobDto.failedWageNegotiationDtos.size() == 1)
+										<h4>Applicant</h4>
+									#else
+										<h4>Applicants</h4>
+									#end
+									
+									#set($failedWageNegotiationDtos = $jobDto.failedWageNegotiationDtos)
+									###include( "failedWageNegotiationsByJob.vm" )
+									         
+									## The failedWageNegotiationsByJob.vm template should be parsed
+									## and replace the code block below...
+									## However, I cannot load the failedWageNegotiationsByJob.vm template. I could not find
+									## a solution. Is velocity confitured correctly? Should the templates
+									## be stored in the /WEB-INF?
+									## http://docs.spring.io/spring/docs/2.5.x/reference/view.html#view-velocity
+									## ********************************************************
+									 ###*
+									 
+									 <table class="main-table-style">
+										<thead>
+											<th>Name</th>
+											<th>Negotiation Result</th>
+										</thead>
+										<tbody>
+											#foreach($failedWageNegotiationDto in $jobDto.failedWageNegotiationDtos)
+												<tr>
+													<td><a class="accent" href="#">$failedWageNegotiationDto.otherUser.firstName</a></td>
+													<td>
+														#set( $offerAmount = $mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) )
+														#set( $offerAmount = $numberTool.format("#0.00", $offerAmount))
+														#if($failedWageNegotiationDto.failedWageProposal.proposedToUserId ==
+																$failedWageNegotiationDto.otherUser.userId)
+															Your $offerAmount was rejected  															
+														#else
+															You rejected the applicant's $offerAmount proposal
+														#end
+													
+												</tr>
+											#end 
+										</tbody> 
+									</table> 
+									##*#
+									
+									## ********************************************************
+								</div>
+							</td>
+						</tr>
+	
+					##</tr>
+					#end											
+				</tbody>
+			</table>						
+		</div>
+	
+	</div> <!-- close failed wage negotiations -->				
+#end

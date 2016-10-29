@@ -1,6 +1,5 @@
 .job-category-container{
-	display:inline;
-	
+	padding:5px 0px;	
 }
 
 .job-container{
@@ -11,6 +10,7 @@
 	font-size:15px;
 	font-weight:bold;
 	cursor:pointer;
+    color: #5B7BA3;
 }
 
 .job-header{

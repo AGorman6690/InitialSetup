@@ -1,4 +1,4 @@
-.invalid-input-existence{
+.invalid{
 	border: 5px solid #b30000;
 }
 
@@ -15,3 +15,7 @@
 /* .valid-input-existence{ */
 /* 	border: 0px solid #b30000; */
 /* } */
+
+#invalidJobName{
+	margin-left: 95px;
+}

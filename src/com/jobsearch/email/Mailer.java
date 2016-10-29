@@ -2,7 +2,9 @@ package com.jobsearch.email;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mailer {
 
 	private JavaMailSenderImpl mailSender;

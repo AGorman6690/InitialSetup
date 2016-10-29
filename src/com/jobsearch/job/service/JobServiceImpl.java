@@ -1,8 +1,10 @@
 package com.jobsearch.job.service;
 
 import java.io.StringWriter;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,6 +14,7 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.DateTool;
+import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -52,9 +56,37 @@ public class JobServiceImpl {
 	@Qualifier("FilterJobsVM")
 	Template filterJobsTemplate;
 
+	@Autowired
+	@Qualifier("EmployerProfileJobTableVM")
+	Template vmTemplate_employerProfileJobTable;
+
+	@Autowired
+	@Qualifier("JobInformationVM")
+	Template vtJobInfo;
+
+	@Autowired
+	@Qualifier("EmployerJobsYetToStartVM")
+	Template employerJobsYetToStartTemplate;
+
+	@Autowired
+	@Qualifier("EmployerJobsInProcessVM")
+	Template employerJobsInProcessTemplate;
+
+	@Autowired
+	@Qualifier("QuestionsVM")
+	Template questionsTemplate;
+
+	@Autowired
+	@Qualifier("AnswersVM")
+	Template answersTemplate;
+
+	@Autowired
+	@Qualifier("QuestionsToAnswerVM")
+	Template questionsToAnswer;
+
 	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
 
-		for (JobInfoPostRequestDTO jobDto : postingDto.getJobs()) {
+		for (Job job : postingDto.getJobs()) {
 			// ***********************************************************************************
 			// Should we verify the address on the client side? I'm thinking
 			// so...
@@ -63,20 +95,22 @@ public class JobServiceImpl {
 			// ***********************************************************************************
 
 			// Build the job's full address
-			String address = jobDto.getStreetAddress() + " " + jobDto.getCity() + " " + jobDto.getState() + " "
-					+ jobDto.getZipCode();
+			String address = job.getStreetAddress() + " " + job.getCity() + " " + job.getState() + " "
+					+ job.getZipCode();
 
 			GeocodingResult[] results = googleClient.getLatAndLng(address);
 
 			if (results.length == 1) {
 
-				// Convert strings to sql Date objects
-				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
-				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
 
-				// Convert strings to sql Time objects
-				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
-				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
+
+//				// Convert strings to sql Date objects
+//				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
+//				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
+//
+//				// Convert strings to sql Time objects
+//				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
+//				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
 
 				// Address this idea later.
 				// Should we format the user's address and city per the data
@@ -88,13 +122,13 @@ public class JobServiceImpl {
 				// "POSTAL_CODE"));
 				// ***************************************************************
 
-				jobDto.setLat((float) results[0].geometry.location.lat);
-				jobDto.setLng((float) results[0].geometry.location.lng);
+				job.setLat((float) results[0].geometry.location.lat);
+				job.setLng((float) results[0].geometry.location.lng);
 
-				jobDto.setQuestions(
-						getQuestionsFromPostingDto(jobDto.getSelectedQuestionIds(), postingDto.getQuestions()));
+				job.setQuestions(getQuestionsFromPosting(job.getSelectedQuestionIds(), postingDto.getQuestions()));
 
-				repository.addJob(jobDto, user);
+				repository.addJob(job, user);
+
 			} else if (results.length == 0) {
 				// invalid address
 			} else if (results.length > 1) {
@@ -103,15 +137,23 @@ public class JobServiceImpl {
 		}
 	}
 
-	private List<Question> getQuestionsFromPostingDto(List<Integer> selectedQuestionIds,
-			List<Question> postingDtoQuestions) {
+	public void addWorkDays(int jobId, List<WorkDay> workDays) {
+
+		for(WorkDay workDay : workDays){
+			workDay.setDate(DateUtility.getSqlDate(workDay.getStringDate()));
+			repository.addWorkDay(jobId, workDay);
+		}
+
+	}
+
+	private List<Question> getQuestionsFromPosting(List<Integer> selectedQuestionIds, List<Question> postingDtoQuestions) {
 
 		List<Question> questions = new ArrayList<Question>();
 
-		for (int selectedQuestionId : selectedQuestionIds) {
-			// Get question
-			for (Question postingDtoQuestion : postingDtoQuestions) {
-				if (postingDtoQuestion.getQuestionId() == selectedQuestionId) {
+		for(int selectedQuestionId : selectedQuestionIds){
+			//Get question
+			for(Question postingDtoQuestion : postingDtoQuestions){
+				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
 					questions.add(postingDtoQuestion);
 				}
 			}
@@ -119,31 +161,98 @@ public class JobServiceImpl {
 		return questions;
 	}
 
-	public void markJobComplete(int jobId) {
-		repository.markJobComplete(jobId);
+//	public void markJobComplete(int jobId) {
+//		repository.markJobComplete(jobId);
+//	}
+
+//	public List<Job> getJobsAppliedTo(int userId) {
+//
+//		//Query the database
+//		List<Job> jobsAppliedTo = repository.getActiveJobsByUser(userId);
+//
+//		//
+//		for (Job job : jobsAppliedTo) {
+//
+//			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
+//			job.setApplications(applicationService.getApplicationsByApplicant(userId, job.getId()));
+//			job.setEmployees(userService.getEmployeesByJob(job.getId()));
+//			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
+//		}
+//
+//		return jobsAppliedTo;
+//	}
+
+//	public List<Job> getJobsHiredFor(int userId) {
+//		return repository.getActiveJobsByEmployee(userId);
+//	}
+
+	public List<Job> getYetToStartJobsByEmployer(int userId) {
+
+		//Query the database
+		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
+
+		//Set the jobs application summary (i.e. applicants and employees)
+		setJobsApplicationSummary(yetToStartJobs);
+
+		return yetToStartJobs;
 	}
 
-	public List<Job> getJobsAppliedTo(int userId) {
-		return repository.getJobsAppliedTo(userId);
-	}
+	public List<JobDTO> getYetToStartJobsByEmployer_Dto(int userId) {
 
-	public List<Job> getJobsHiredFor(int userId) {
-		return repository.getJobsHiredFor(userId);
-	}
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 
-	public List<Job> getActiveJobsByUser(int userId) {
+		//Query the database
+		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
 
-		List<Job> activeJobs = repository.getActiveJobsByUser(userId);
+		//Set the job Dtos
+		for(Job job : yetToStartJobs){
+			JobDTO jobDto = new JobDTO();
 
-		for (Job job : activeJobs) {
+			setJobApplicationSummary(job);
 
-			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
-			job.setApplications(applicationService.getApplicationsByJob(job.getId()));
-			job.setEmployees(userService.getEmployeesByJob(job.getId()));
-			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
+			jobDto.setJob(job);
+			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+
+			jobDtos.add(jobDto);
 		}
 
+		return jobDtos;
+
+	}
+
+
+	public List<Job> getActiveJobsByEmployer(int userId) {
+
+		//Query the database
+		List<Job> activeJobs = repository.getJobsByStatusAndByEmployer(userId, 1);
+
+		//Set the jobs application summary (i.e. applicants and employees)
+		setJobsApplicationSummary(activeJobs);
+
 		return activeJobs;
+
+	}
+
+
+	private void setJobsApplicationSummary(List<Job> jobs) {
+
+		for (Job job : jobs) {
+			this.setJobApplicationSummary(job);		}
+
+	}
+
+	public void setJobApplicationSummary(Job job) {
+		//*******************************************************
+		//*******************************************************
+		//I'm beginning to think these properties should not be apart of the Job class
+		//but rather they should be part of the JobDTO class...
+		//*******************************************************
+		//*******************************************************
+
+		job.setCategory(categoryService.getCategoryByJobId(job.getId()));
+		job.setApplications(applicationService.getApplicationsByJob(job.getId()));
+		job.setEmployees(userService.getEmployeesByJob(job.getId()));
+		job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
 
 	}
 
@@ -192,7 +301,7 @@ public class JobServiceImpl {
 		// (i.e. past employees, comments, ratings) would also be nice to
 		// display on the employer page.
 
-		List<Job> completedJobs = repository.getCompletedJobsByEmployer(userId);
+		List<Job> completedJobs = repository.getJobsByStatusAndByEmployer(userId, 2);
 
 		List<CompletedJobResponseDTO> completedJobDtos = new ArrayList<CompletedJobResponseDTO>();
 		for (Job job : completedJobs) {
@@ -205,10 +314,10 @@ public class JobServiceImpl {
 		return completedJobDtos;
 	}
 
-	public List<CompletedJobResponseDTO> getCompletedJobsByEmployee(int userId) {
+	public List<CompletedJobResponseDTO> getCompletedJobResponseDtosByEmployee(int userId) {
 
-		// Get completed jobs
-		List<Job> completedJobs = repository.getCompletedJobsByEmployee(userId);
+		//Get completed jobs
+		List<Job> completedJobs = getCompletedJobsByEmployee(userId);
 
 		// For each completed job, create a completed job response DTO
 		List<CompletedJobResponseDTO> completedJobDtos = new ArrayList<CompletedJobResponseDTO>();
@@ -231,19 +340,25 @@ public class JobServiceImpl {
 		return completedJobDtos;
 	}
 
-	public Job getJobPostingInfo(int jobId) {
+	public List<Job> getCompletedJobsByEmployee(int userId) {
+
+		return repository.getJobsByStatusByEmployee(userId, 2);
+	}
+
+	public Job getJob(int jobId){
+		return repository.getJob(jobId);
+	}
+
+	public void setPostingInfoForJob(Job job) {
 		// This only sets the job properties that relate to the job posting
 		// i.e. no applicants, no employees, etc.
-
-		Job job = repository.getJob(jobId);
 
 		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
 		// Set job questions
-		job.setQuestions(applicationService.getQuestions(job.getId()));
+//		job.setQuestions(applicationService.getQuestions(job.getId()));
 
-		return job;
 	}
 
 	public Job getEmployersJobProfile(int jobId) {
@@ -254,24 +369,24 @@ public class JobServiceImpl {
 		// Set job categories
 		job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 
-		// ****************************************************************************************
-		// ****************************************************************************************
-		// Why does the job have both applications and applicants???????
-		// Shouldn't applicants be enough?????
-		// Each application object has an applicant property.
-		// This is redundant.
-		// I will address this.
-		// UPDATE:
-		// This is done this way because the "Status" is a property of the
-		// application, not the applicant.
-		// I think removing the applicants from the job is the way to go.
-		// Check back later.
-		job.setApplications(applicationService.getApplicationsByJob(jobId));
-		// ****************************************************************************************
-		// ****************************************************************************************
+		//****************************************************************************************
+		//****************************************************************************************
+		//Why does the job have both applications and applicants???????
+		//Shouldn't applicants be enough?????
+		//Each application object has an applicant property.
+		//This is redundant.
+		//I will address this.
+		//UPDATE:
+		//This is done this way because the "Status" is a property of the application, not the applicant.
+		//I think removing the applicants from the job is the way to go.
+		//Check back later.
+//		job.setApplications(applicationService.getApplicationsByJob(jobId));
+		//****************************************************************************************
+		//****************************************************************************************
 
-		// // Set job questions
-		job.setQuestions(applicationService.getQuestions(job.getId()));
+
+//		// Set job questions
+//		job.setQuestions(applicationService.getQuestions(job.getId()));
 
 		// // Set job applicants
 		// job.setApplicants(userService.getApplicants(jobId));
@@ -298,10 +413,10 @@ public class JobServiceImpl {
 		// Set each employee's rating, application and endorsements
 		for (JobSearchUser employee : job.getEmployees()) {
 			// employee.setRatings(userService.getRatings(employee.getUserId()));
-			employee.setRating(userService.getRating(employee.getUserId()));
-			employee.setApplication(applicationService.getApplication(jobId, employee.getUserId()));
-			employee.setEndorsements(
-					userService.getUserEndorsementsByCategory(employee.getUserId(), job.getCategories()));
+//			employee.setRating(userService.getRating(employee.getUserId()));
+//			employee.setApplication(applicationService.getApplication(jobId, employee.getUserId()));
+//			employee.setEndorsements(
+//					userService.getUserEndorsementsByCategory(employee.getUserId(), job.getCategories()));
 		}
 
 		// // Set each employee's rating
@@ -348,6 +463,10 @@ public class JobServiceImpl {
 		if (filter.getWorkingDays().get(0).matches("-1"))
 			filter.setWorkingDays(null);
 
+
+
+//		List<Integer> jobIds = this.getJobsIdsByFilter(filter);
+
 		// Get the filtered jobs
 		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
 
@@ -376,7 +495,21 @@ public class JobServiceImpl {
 		// }
 	}
 
-	public void setJobsCategories(List<Job> jobs) {
+//	private List<Integer> getJobsIdsByFilter(FilterJobRequestDTO filter) {
+//
+//		List<Integer> jobIds = new ArrayList<Integer>();
+//		List<Integer> ids = new ArrayList<Integer>();
+//		//By distance
+//		jobIds = repository.getActiveJobIdsByDistance(filter.getLat(), filter.getLng(), filter.getRadius());
+//
+//		ids = repository.getActiveJobIdsByStartAndEndDates(filter.getBeforeEndDate(), filter.getEndDate(),
+//																filter.getBeforeStartDate(), filter.getStartDate()));
+//
+//		return null;
+//	}
+
+
+	public void setJobsCategories(List<Job> jobs){
 		for (Job job : jobs) {
 			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		}
@@ -570,29 +703,320 @@ public class JobServiceImpl {
 		return this.getFilterJobsTemplate(filteredJobs, request);
 	}
 
-	public String getRateEmployeesView(Model model, int jobId) {
+	public void setModel_RateEmployees(Model model, int jobId) {
 
-		// Get the job
+		//Get the job
 		Job completedJob = repository.getJob(jobId);
 
-		// Verify the job is complete.
-		// This is here because the user can edit the hyperlink's "markComplete"
-		// value.
-		if (completedJob.getIsActive() == 1) {
-			return null;
-		} else {
+		//Verify the job is complete.
+		if(completedJob.getStatus() < 2){
 
-			// Set the employees
+		}else{
+
+			//Set the employees
 			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
 
-			// Set the categories
-			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
+			//Set the categories
+			List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+//			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
 
-			// Add to model
+			//Add to model
 			model.addAttribute("job", completedJob);
+			model.addAttribute("categories", categories);
 
-			return "RateEmployees";
 		}
 	}
+
+	public int getJobStatus(int jobId) {
+		Job job = repository.getJob(jobId);
+		return job.getStatus();
+	}
+
+	public List<Job> getActiveJobsByEmployee(int userId) {
+
+		return repository.getJobsByStatusByEmployee(userId, 1);
+	}
+
+	public List<Job> getYetToStartJobsByEmployee(int userId) {
+
+		return repository.getJobsByStatusByEmployee(userId, 0);
+	}
+
+	public List<JobDTO> getJobsWithFailedWageNegotiations(int userId, List<Job> jobs) {
+
+		List<JobDTO> result = new ArrayList<JobDTO>();
+
+		for(Job job : jobs){
+
+			//Create a job dto
+			JobDTO jobDto = new JobDTO();
+
+			//Set the dto's job object
+			jobDto.setJob(job);
+
+			//Get the failed wage proposals for the job
+			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));;
+
+			//If there are failed negotiations, add the dto to the result
+			if(jobDto.getFailedWageNegotiationDtos().size() > 0){
+				result.add(jobDto);
+			}
+
+		}
+
+
+		return result;
+	}
+
+
+	public String getEmployersJobsYetTemplate(JobSearchUser employer, List<JobDTO> yetToStartJobs_Dtos, boolean b) {
+
+		StringWriter writer = new StringWriter();
+
+		//Set the context
+		final VelocityContext context = new VelocityContext();
+		context.put("employer", employer);
+		context.put("jobDtos", yetToStartJobs_Dtos);
+//		context.put("isActiveJobs", isActiveJobs);
+		context.put("mathUtility", MathUtility.class);
+		context.put("numberTool", new NumberTool());
+
+		//Run the template
+		employerJobsYetToStartTemplate.merge(context, writer);
+
+		//Return the html
+		return writer.toString();
+	}
+
+
+	public String getEmployerProfileJobTableTemplate(JobSearchUser employer, List<Job> yetToStartJobs,
+														boolean isActiveJobs) {
+
+
+		StringWriter writer = new StringWriter();
+
+		//Set the context
+		final VelocityContext context = new VelocityContext();
+		context.put("employer", employer);
+		context.put("jobs", yetToStartJobs);
+//		context.put("isActiveJobs", isActiveJobs);
+		context.put("mathUtility", MathUtility.class);
+		context.put("numberTool", new NumberTool());
+
+		//Run the template
+//		vmTemplate_employerProfileJobTable.merge(context, writer);
+		employerJobsInProcessTemplate.merge(context, writer);
+
+		//Return the html
+		return writer.toString();
+	}
+
+	public void setModel_EmployerViewJob(Model model, int jobId, HttpSession session) {
+
+		//Get the job
+		Job selectedJob = this.getEmployersJobProfile(jobId);
+		int hideJobInfoOnLoad;
+
+		if(userService.getSessionUser(session).getUserId() == selectedJob.getUserId()){
+
+			//Get the employees
+			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+			for(JobSearchUser employee : employees){
+
+				//Set their wage
+				employee.setWage(applicationService.getWage(employee.getUserId(), jobId));
+			}
+
+			//Get the applications
+			List<Application> applications = applicationService.getApplicationsByJob(jobId);
+
+	//		//Get the failed wage negotiations
+			String vtFailedWageNegotiationsByJob = applicationService.
+					getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
+
+			model.addAttribute("applications", applications);
+			model.addAttribute("employees", employees);
+			model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
+
+			hideJobInfoOnLoad = 1;
+		}
+		else{
+			hideJobInfoOnLoad = 0;
+		}
+
+
+		List<Question> questions = applicationService.getQuestions(jobId);
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, hideJobInfoOnLoad);
+
+
+		//Set the model attributes
+		model.addAttribute("job", selectedJob);
+		model.addAttribute("questions", questions);
+		model.addAttribute("vtJobInfo", vtJobInfo);
+
+	}
+
+	public Job getJobByApplicationId(int applicationId) {
+
+		return repository.getJobByApplicationId(applicationId);
+	}
+
+	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId, int userId) {
+
+		//Velocity templates
+		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId, 0);
+		//String vtQuestions = this.getVelocityTemplate_Questions(jobId);
+		String vtAnswers = this.getVelocityTemplate_Answers(jobId, userId);
+
+		model.addAttribute("vtJobInformation", vtJobInformation_EmployeeViewJobFromProfile);
+		model.addAttribute("vtAnswers", vtAnswers);
+		//model.addAttribute("vtQuestions", vtQuestions);
+
+
+	}
+
+	private String getVelocityTemplate_Answers(int jobId, int userId) {
+		List<Answer> answers = applicationService.getAnswersByJobAndUser(jobId, userId);
+
+		if(answers.size() >0){
+
+
+
+			StringWriter writer = new StringWriter();
+
+			//Set the context
+			final VelocityContext context = new VelocityContext();
+			context.put("answers", answers);
+
+			//Run the template
+			questionsTemplate.merge(context, writer);
+
+			//Return the html
+			return writer.toString();
+		}
+		else{
+			return "";
+		}
+	}
+
+	private String getVelocityTemplate_Questions(int jobId){
+
+		List<Question> questions = applicationService.getQuestions(jobId);
+
+		if(questions.size() >0){
+
+			applicationService.setAnswers(questions);
+
+			StringWriter writer = new StringWriter();
+
+			//Set the context
+			final VelocityContext context = new VelocityContext();
+			context.put("questions", questions);
+
+			//Run the template
+			questionsTemplate.merge(context, writer);
+
+			//Return the html
+			return writer.toString();
+		}
+		else{
+			return "";
+		}
+
+	}
+
+	private String getVelocityTemplate_JobInfo(int jobId, int hideOnOpen) {
+
+		//Job properties
+		Job job = this.getJob(jobId);
+		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+
+		StringWriter writer = new StringWriter();
+
+		//Set the context
+		final VelocityContext context = new VelocityContext();
+		context.put("hideOnOpen", hideOnOpen);
+		context.put("job", job);
+		context.put("date", new DateTool());
+		context.put("categories", categories);
+
+		//Run the template
+		vtJobInfo.merge(context, writer);
+
+		//Return the html
+		return writer.toString();
+
+	}
+
+	public Date getEndDate(int jobId) {
+
+		return repository.getEndDate(jobId);
+	}
+
+	public Date getStartDate(int jobId) {
+		return repository.getStartDate(jobId);
+	}
+
+	public Time getStartTime(int jobId) {
+
+		return repository.getStartTime(jobId);
+	}
+
+	public Time getEndTime(int jobId) {
+		return repository.getEndTime(jobId);
+	}
+
+	public void setModel_ApplyForJob(Model model, int jobId, HttpSession session) {
+
+//		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+
+
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
+		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
+
+//		String vtJobInfo = this.velo
+
+		model.addAttribute("jobId", jobId);
+		model.addAttribute("vtJobInfo", vtJobInfo);
+		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
+//		model.setViewName("FindJobs");
+
+	}
+
+	private String getVelocityTemplate_QuestionsToAnswer(int jobId) {
+
+		StringWriter writer = new StringWriter();
+		final VelocityContext context = new VelocityContext();
+
+		List<Question> questions = applicationService.getQuestions(jobId);
+
+		context.put("questions", questions);
+		questionsToAnswer.merge(context, writer);
+
+		return writer.toString();
+	}
+
+	public void UpdateJobStatus(int status, int jobId) {
+		repository.updateJobStatus(status, jobId);
+
+	}
+
+
+
+
+//	public void verifyJobStatusForUsersYetToStartJobs(int userId) {
+//
+//		//Query the database for the user's yet-to-start jobs
+//		List<Job> yetToStartJobs = repository.getJobsByStatusByEmployee(userId, 0);
+//
+//		//Verify start date and time is still in the future
+//		for(Job job : yetToStartJobs){
+//			if(job.getStartDate().before(LocalDateTime.now())
+//		}
+//
+//
+//
+//
+//	}
 
 }

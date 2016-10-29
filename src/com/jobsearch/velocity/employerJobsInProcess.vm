@@ -1,0 +1,42 @@
+<div class="section">
+	##parse("com/jobsearch/velocity/test.vm")
+	<div class="header">
+		<h3>Jobs In Process</h3>
+	</div>
+	<div class="section-body">
+	#if($jobs.size() == 0)
+		<div>You have no active jobs at this time</div>
+	#else
+		<table id="jobsInProgress" class="main-table-style">
+			<thead>
+				<tr>
+					<th id="name">Job Name</th>
+					<th id="newApplicantions">Start Date</th>
+					<th id="totalApplications">End Date</th>								
+					<th id="markJobCompleteHeader"></th>
+				</tr>
+			</thead>
+			<tbody>
+
+				## for each job
+				#foreach($job in $jobs)
+				<tr class="" id="$job.id">
+				
+					<td class="job-name"><a class="accent" href="../job/$job.Id" >$job.jobName</a></td>
+					<td><span class="">$job.startDate</span></td>
+					<td><span class="">$job.endDate</span></td>
+					
+					## If job is active, show the "Mark Complete" button
+					#if($job.status == 1)
+					<td>														
+						<a href="/JobSearch/job/$job.id/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>
+					</td>
+					#end
+				</tr>
+
+				#end ## end for each job
+			</tbody>
+		</table>		
+		#end ## end if there is at least one job
+	</div>
+</div>

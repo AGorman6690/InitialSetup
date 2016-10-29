@@ -1,0 +1,159 @@
+<div class="section">
+	<div class="header">
+		<h3>
+		
+		#if($isActiveJobs)
+			Jobs In Process
+			#set($noJobsMessage = "You have no active jobs at this time.")
+		#else
+			Jobs Waiting To Start
+			#set($noJobsMessage = "You have no jobs waiting to start at this time.")
+		#end
+		</h3>
+	</div>
+	<div class="section-body">
+	#if($jobs.size() == 0)
+		$noJobsMessage
+	#else
+		<table id="">
+			<thead>
+				<tr>
+					<th class="expand-job-header"></th>
+					<th id="name">Job Name</th>
+					<th id="newApplicantions">New Applications</th>
+					<th id="totalApplications">Total Applications</th>
+					<th id="hires">Employees</th>									
+					<th id="markJobCompleteHeader"></th>
+				</tr>
+			</thead>
+			<tbody>
+
+				## for each job
+				#foreach($job in $jobs)
+				<tr class="static-row" id="$job.id">
+				
+				## If the job has applications
+				#if($job.applications.size() > 0)
+					<td><span class="expand-job glyphicon glyphicon-menu-down"></span></td>
+				#else						
+					<td></td>
+				#end
+				
+					<td class="job-name"><a class="accent" href="../job/$job.Id" >$job.jobName</a></td>
+					
+				## if the job has NEW applications
+				#if($job.newApplicationCount > 0)
+					<td class="job-data has-new-applicants">$job.newApplicationCount</td>
+				#else
+					<td class="job-data"><span class="">$job.newApplicationCount</span></td>
+				#end
+
+																			
+					<td class="job-data"><span class="">$job.getApplications().size()</span></td>
+					<td class="job-data"><span class="">$job.getEmployees().size()</span></td>
+					
+					## If job is active, show the "Mark Complete" button
+					#if($job.status == 1)
+					<td>														
+						<a href="/JobSearch/job/$job.id/update/status/2><button class="square-button">Mark Complete (for debugging)</button></a>
+					</td>
+					#elseif($job.status == 2)
+					<td>														
+						<a href="/JobSearch/job/$job.id/update/status/2><button class="square-button">Mark Complete (for debugging)</button></a>
+					</td>
+					#end
+				</tr>
+								
+				## Expandable row that shows applicant info.
+				## If there are applicants, then create a table for this info.
+				#if($job.applications.size() > 0)												
+					<tr class="expandable-row">
+						<td colspan="5">
+							<div class="applicants-container">
+								<h4>Applicants</h4>
+								<div class="applicants">
+									<table id="">
+										<thead>
+											<tr>
+												<th class="applicant-name">Name</th>
+												<th class="applicant-rating">Rating</th>
+												<th class="applicant-endorsements">Endorsements</th>	
+												<th class="applicant-wage-negotiation">Wage Negotiation</th>
+<!-- 																<th class="applicant-desired-pay">Offered Pay ($/hr)</th>									 -->
+											</tr>
+										</thead>
+										<tbody>
+											## for each application
+											#foreach($application in $job.applications)
+											<tr class="applicant-row">
+											
+												## Applicant info
+												<td><a>$application.applicant.firstName</a></td>
+												<td>$application.applicant.rating</td>
+												<td>
+													## Set the applicant's endorsements
+													#foreach($endorsement in $application.applicant.endorsements)
+														<div class="endorsement">													
+															$endorsement.categoryName <span class="badge count">  $endorsement.count </span>
+														</div>
+													#end
+		
+												</td>
+														
+												## Set the application's wage status
+												<td id="$application.currentWageProposal.id">																	
+													<div class="wage-status">																				
+													#set($wageProposalAmount = $mathUtility.round($application.currentWageProposal.amount, 2, 0))							
+													#set($wageProposalAmount = $numberTool.format("#0.00", $wageProposalAmount))
+													## If the current wage proposal has been accepted	
+													#if($application.currentWageProposal.status == 1)																	
+														<div>$wageProposalAmount has been accepted</div>															
+													## If the current wage proposal has been denied									
+													#elseif($application.currentWageProposal.status == 2)																	
+														<div>$wageProposalAmount has been denied. Negotiations have ended.</div>															
+													## Else the current wage proposal is a counter offer
+													#else
+														## If the counter offer was proposed TO the employer
+														#if($employer.userId == $application.currentWageProposal.proposedToUserId)
+
+															<div id="$application.currentWageProposal.id" class="counter-offer-container">
+																<div class="offer-context">
+																	Applicant asking for $wageProposalAmount
+																</div>	
+																#set( $toggleId = "$application.currentWageProposal.id" + "-toggle-id")
+																<span class="toggle glyphicon glyphicon-menu-hamburger" data-toggle="$toggleId"></span>														
+																<div id="$toggleId" class="counter-offer-response">
+																	<button class="accept-counter">Hire</button>
+																	<button class="re-counter">Counter</button>		
+																	<button class="decline-counter">Decline</button>							
+																	<div class="re-counter-amount-container">
+																		<input class="re-counter-amount"></input>
+																		<button class="send-counter-offer">Send</button>
+																		<button class="cancel-counter-offer">Cancel</button>
+																	</div>										
+																</div>
+																																																																																
+															</div>
+															<div class="sent-response-notification"></div>	
+														## Else the counter offer was proposed BY the employer
+														#else
+															<div class="offer-context">Offered applicant $wageProposalAmount</div>																	
+														#end
+													#end ## end the wage status conditions	 													
+													</div> 	
+												</td>
+											</tr>
+											#end ## end the for each application 
+										</tbody>
+									</table>
+								</div>
+							</div>	
+						</td>
+					</tr> <!-- close applicant dropdown row -->
+				#end ## end if the job has at least one application
+				#end ## end for each job
+			</tbody>
+		</table>		
+		#end ## end if there is at least one job
+	</div>
+</div>

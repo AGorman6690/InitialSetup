@@ -312,7 +312,7 @@
 								<div id="question-${question.getQuestionId() }" class="panel panel-warning question">
 									<div class="panel-heading">Question</div>
 									<div class="panel-body">
-										<textarea class="form-control" rows="3">${question.question}</textarea>
+										<textarea class="form-control" rows="3">${question.text}</textarea>
 
 										<div class="dropdown" style="margin-top: 10px">
 											<input class="question-format-id" type="hidden" value=${question.getFormatId() }></input>
@@ -553,9 +553,9 @@
 				contentType : "application/json",
 				data : JSON.stringify(applicationDTO),
 			}).done(function() {
-				$('#home')[0].click();
+// 				$('#home')[0].click();
 			}).error(function() {
-				$('#home')[0].click();
+// 				$('#home')[0].click();
 			});
 		}
 	}

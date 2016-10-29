@@ -1,75 +1,7 @@
-.header{
-	padding:10px 0px;
+.answer-options-container{
+	display:none;
+	padding-left:40px;
 }
-
-.body{
-	padding:10px 0px;
-}
-
-.bold{
-	font-weight: bold;
-}
-
-.description{
-	padding:10px 0px;
-}
-
-.job-info-container{
-	border-top-style: inset;
-}
-
-
-.questions-container{
-	margin-left:50px;
-}
-
-.row-padding{
-	padding:10px 0px;
-}
-
-.questions-header{
-	border-top-style: inset;
-}
-
-
-.answer{
-	padding-left:10px;
-}
-
-.question{
-	padding:5px 0px;
-	border-bottom: 2px outset #F0F0F0;
-}
-
-/* To be consistent with bootstrap's .radio and .checkbox classes */
-.textarea{
-	margin-top:10px;
-	margin-bottom:10px;
-}
-
-#jobActionContainer button{
-    border: 1px solid rgb(192,192,192);
-    display: inline-block;
-    padding: 10px;
-    font-size: 14px;
-/*     float: right;	 */
-    background-color:#ffffff;
-}
-
-
-#jobActionContainer button:hover{
-	background-color:#163B3D;
-	color:#ffffff;
-}
-
-.job-sub-info-container input:disabled, .job-sub-info-container textarea:disabled{
-	cursor:default;
-}
-
-#viewJobContainer{
-	padding-bottom:60px;
-}
-
 
 #map{
 	height:400px;
@@ -80,11 +12,53 @@
     border-top-style: outset;
     border-left-style: outset;
 }
-/* #jobActionContainer button:last-child{ */
 
-/*     border-left-width: 0; */
-/* } */
 
-/* #jobActionContainer{ */
-/* 	padding-left:50px; */
-/* } */
+
+
+.answer-option{
+	cursor:pointer;
+	padding:4px 3px;
+	display:inline-block;
+	margin:1px 0px;
+}
+
+.selected{
+	background-color: #337ab7;
+	color:#ffffff;
+}
+
+#apply{
+	margin-top: 10px;
+	padding:7px 13px;
+    background-color: #337ab7;
+    color: #ffffff;
+    border:0;
+    font-size:16px;
+}
+
+#amount{
+	width:100px;
+}
+
+#questionsContainer{
+	padding-top:0px;
+}
+
+/* Override bootstrap */
+.radio{
+	margin-top:0px;
+}
+.radio:last-child{
+	margin-bottom:0px;
+}
+.answer-container{
+	padding-top:7px;
+	padding-left:45px;
+}
+
+.question-container{
+	margin: 10px 0px;
+	padding:20px 4px;
+/* 	border-bottom: 2px solid buttonface; */
+}

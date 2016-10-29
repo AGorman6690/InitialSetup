@@ -1,24 +1,24 @@
 package com.jobsearch.model;
 
 public class WageProposal {
-	
+
 	private int id;
 //	private int jobId;
 	private int applicationId;
 	private double amount;
 	private int proposedByUserId;
 	private int proposedToUserId;
-	
-	
+
+
 	//-1: No action taken;
 	//0: Countered;
 	//1: Accepted;
 	//2: Declined;
-	
+
 	private int status;
 
 
-	
+
 	public int getApplicationId() {
 		return applicationId;
 	}
@@ -87,7 +87,5 @@ public class WageProposal {
 	public void setStatus(int status) {
 		this.status = status;
 	}
-	
-	
 
 }

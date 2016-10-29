@@ -1,70 +1,166 @@
-.header{
-	border-bottom: 2px outset #F0F0F0;
+/* .expand-job{ */
+/* 	font-size:14px; */
+/* 	margin-right:10px; */
+/* 	cursor:pointer; */
+/* } */
+
+.expandable-table-container h4{
+	background-color:#163B3D;
+	color:#ffffff;
+	padding:5px;
 }
+
+.expandable-table-container{
+	padding:10px 60px;
+	display:none;
+}
+
+.applicants-container table tr{
+	min-height: 85px;
+}
+
+/* .expandable-row{ */
+/* 	display:none; */
+/* } */
+
+/* .expandable-row thead tr{ */
+/* 	 border-bottom: 2px solid #ddd;    */
+/* } */
+
+/* .expandable-row tbody tr{ */
+/* 	 border-bottom: 1px solid #ddd;    */
+/* } */
+
+/* .expandable-row tbody tr:last-child{ */
+/* 	 border-bottom: 0;    */
+/* } */
+
+
+
+/* .expand-job-header{ */
+/* 	width:30px; */
+/* } */
+
+th.expand-job-header{
+	width:5%;
+}
+
+th#name{
+	width:20%;
+}
+
+th#failedWageNegotiations{
+	width:15%
+}
+
+th#newApplications{
+	width:20%;
+}
+
+th#totalApplications{
+	width:20%
+}
+
+th#hires{
+	width:10%;
+}
+
+th.applicant-name{
+	width:15%
+}
+
+th.applicant-rating{
+	width:10%
+}
+
+th.applicant-endorsements{
+	width:30%
+}
+
+th.applicant-wage-negotiation{
+	width:45%;
+}
+
+
+table#failedWageNegotiations{
+	width:500px;
+}
+
 
 .jobs-table-container{
 	padding-top:25px;
+}
+
+.counter-offer-container{
+/* 	display:none; */
+}
+
+.sent-counter-notification{
+	padding-top:7px;
 }
 
 .endorsement{
 	padding:5px;
 }
 
-.completed-jobs-container{
-	padding-top:40px
-}
+/* .completed-jobs-container{ */
+/* 	padding-top:40px; */
+/* } */
 
+/* .completed-jobs-container td{ */
+/* 	padding:10px 5px; */
+/* } */
 .active-jobs-container{
-	padding-top:20px
+	padding-top:20px;
 }
 
-.has-applicants{
-	cursor:pointer;
-}
+/* .has-applicants{ */
+/* /* 	cursor:pointer; */ */
+/* } */
 
 .has-new-applicants{
-	color: #e24c9a;
+	color: #A73854;
     font-size: 17px;
     font-weight: bold;
 }
 
-.no-applicants{
-	cursor:default;
-}
+/* .no-applicants{ */
+/* 	cursor:default; */
+/* } */
 
-table{
-	table-layout:fixed;
-	width:100%;
-}
+/* table{ */
+/* 	table-layout:fixed; */
+/* 	width:100%; */
+/* } */
 
 
-#applicantsTable .applicant-name{
+th.applicant-name{
 	width:20%;
 }
 
-#applicantsTable .applicant-rating{
-	width:20%;
+th.applicant-rating{
+	width:15%;
 }
 
-#applicantsTable .applicant-endorsements{
+th.applicant-endorsements{
+	width:25%;
+}
+
+th.applicant-wage-negotiation{
 	width:40%;
 }
 
-.job-row {
-    border-top: 3px solid #ddd;    
+.applicants-container{
+	display:none;
 }
 
-.job-row:first-of-type {
-    border-top: 0;    
-}
+/* #applicantsTable thead tr{ */
+/* 	 border-bottom: 2px solid #ddd;    */
+/* } */
 
-#applicantsTable thead tr{
-	 border-bottom: 2px solid #ddd;   
-}
-
-#applicantsTable tbody tr{
-	 border-bottom: 1px solid #ddd;   
-}
+/* #applicantsTable tbody tr{ */
+/* 	 border-bottom: 1px solid #ddd;    */
+/* } */
 
 .applicants-container h4{
 	background-color:#163B3D;
@@ -72,34 +168,34 @@ table{
 	padding:5px;
 }
 
-td{
-	padding: 8px;
-}
+/* td{ */
+/* 	padding: 8px; */
+/* } */
 
-td.has-new-applicants{
-	padding: 6px;
-}
+/* td.has-new-applicants{ */
+/* 	padding: 6px; */
+/* } */
 
 
-.applicants-row tbody tr{
-	font-size:12.5px;
-}
+/* .applicants-row tbody tr{ */
+/* 	font-size:12.5px; */
+/* } */
 
-.applicants-row{
-	display:none;
-}
+/* .applicants-row{ */
+/* 	display:none; */
+/* } */
 
 .applicants-container{
-	padding:5px 150px;
+	padding:5px 90px;
 }
 
-.applicants{
-	padding:10px;
-}
+/* .applicants{ */
+/* 	padding:10px; */
+/* } */
 
-.count{
-	margin-left:5px;
-}
+/* .count{ */
+/* 	margin-left:5px; */
+/* } */
 
 .active-jobs-container{
     width: 800px;

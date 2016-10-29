@@ -1,4 +1,107 @@
+$(document).ready(function(){
+	$(".toggle").click(function(){
+		var idToToggle = $(this).attr("data-toggle");
+		$("#" + idToToggle).toggle(200);
+
+	})
+		
+})
+
+function scrollToElement(id, speed){
+	 $('html, body').animate({
+	        scrollTop: $("#" + id).offset().top
+	    }, speed);
+}
+
+
+function addClassToArrayItems(array, className){
+	$(array).each(function(){
+		$(this).addClass(className);
+	})
+}
+
+function removeClassFromArrayItems(array, className){
+	$(array).each(function(){
+		$(this).removeClass(className);
+	})
+}
+
+function show($e){
+	$e.show(200);
+}
+
+function hide($e){
+	$e.hide(200);
+}
+
+function toggle($e){
+	$e.toggle(200);
+
+}
+
+function slideUp($e){
+	$e.slideUp(300);
+}
+
+function slideDown($e){
+	$e.slideDown(300);
+}
+
+function removeArrayElementValue(valueToRemove, array){
+	var newArray = [];
+	newArray =  $.grep(array, function(value, i){
+					return value != valueToRemove
+				})
+							
+	return newArray;
+}
+
+//*****************************************
+//*****************************************
+//Phase this out. The name is horrible
+//*****************************************
+//*****************************************
+function highlightArrayItemByAttribute(itemToHighlight, array, className){
 	
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this)[0] == $(itemToHighlight)[0]){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+function highlightArrayItem(itemToHighlight, array, className){
+	
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this)[0] == $(itemToHighlight)[0]){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+function highlightArrayItemByAttributeValue(attributeName, attributeValue, array, className){
+	
+	$(array).each(function(){
+		
+		//Compare DOM elements
+		if($(this).attr(attributeName) == attributeValue){
+			$(this).addClass(className);
+		}else{
+			$(this).removeClass(className);
+		}
+	})
+}
+
+
+
 function initializeMap(mapDivId, lat, lng) {
 	//Eventually initialize it to a user defualt
 	var myLatLng = {
@@ -17,6 +120,15 @@ function initializeMap(mapDivId, lat, lng) {
 	});
 	
 	return map;
+}
+
+function getAjaxHeaders(){
+	
+	var headers = {};
+	headers[$("meta[name='_csrf_header']").attr("content")] = $(
+			"meta[name='_csrf']").attr("content");
+	
+	return headers;
 }
 	
 	
@@ -103,6 +215,10 @@ function formatTimeTo12Hours(time){
 
 }
 
+function twoDecimalPlaces(value){
+	return parseFloat(Math.round(value * 100) / 100).toFixed(2);
+}
+
 
 function salert(array){
 	alert(JSON.stringify(array))
@@ -110,11 +226,33 @@ function salert(array){
 
 function toggleClasses($e, class1, class2){
 	
-	if($e.hasClass(class1) == 1){
-		$e.removeClass(class1);
-		$e.addClass(class2);
-	}else{
-		$e.removeClass(class2);
-		$e.addClass(class1);
+	if($e.hasClass(class1) || $e.hasClass(class2)){
+		if($e.hasClass(class1) == 1){
+			$e.removeClass(class1);
+			$e.addClass(class2);
+		}else{
+			$e.removeClass(class2);
+			$e.addClass(class1);
+		}
 	}
+}
+
+function addClassRemoveClass($e, add, remove){
+	$e.addClass(add);
+	$e.removeClass(remove);
+}
+
+function toggleClass($e, className){
+	
+	if($e.hasClass(className) == 1){
+		$e.removeClass(className);
+	}else{
+		$e.addClass(className);
+	}	
+}
+
+
+function removeElementFromDOM($container, attribute, value){
+	var e = $container.find("[" + attribute + "='" + value + "']")[0];
+	$(e).remove();
 }

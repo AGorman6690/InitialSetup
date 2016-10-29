@@ -110,7 +110,8 @@ function addNewQuestion(e, event, $clonedNewQuestionContainer){
 	// 			event.stopPropagation();
 				event.preventDefault();
 				
-				var newId = questionContainerIdPrefix + questionCount;
+				var newId = questionContainerIdPrefix + 
+;
 				
 				//Clone added-question html template for new question
 				$("#added-question-template-container .added-question-template").clone().appendTo($("#addedQuestions"));			
@@ -144,7 +145,7 @@ function addNewQuestion(e, event, $clonedNewQuestionContainer){
 				question.questionId = $addedQuestion.data('questionId');
 				
 				//Set question text and question format					
-				question.question = $addedQuestion.find('.question-text').val();
+				question.text = $addedQuestion.find('.question-text').val();
 				question.formatId = $addedQuestion.find('select').find(":selected").val();
 
 				if(question.formatId == 0 || question.formatId == 2 || question.formatId == 3){

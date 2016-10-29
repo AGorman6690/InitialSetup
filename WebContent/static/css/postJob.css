@@ -1,3 +1,81 @@
+
+#setAllLabel{
+	width: 100px;
+    display: inline-block;
+    padding-left: 6px;
+}
+
+#answerListContainer .glyphicon{
+	cursor:pointer;
+}
+
+#timesContainer{
+	display:none;
+}
+
+#applyTimesToAllDates{
+	font-size: 17px;
+	cursor:pointer;
+}
+
+/* Override Bootstrap */
+#timesContainer .form-control{
+	height:26px;
+}
+
+#expandSelectedDates{
+/* 	display: none; */
+}
+
+
+#timesContainer{
+	padding:20px 0px;;
+}
+
+#timesContainer .glyphicon-menu-down{
+	margin-right:10px;
+}
+
+.time{
+/* 	cursor:pointer; */
+	padding:2.5px 25px;
+}
+
+#selectAllContainer .form-group{
+	display: inline-block;
+}
+
+.time span{
+	width:100px;
+	display:inline-block;
+}
+
+.time input[type=text], #selectAllContainer input[type=text]{
+	width: 75px;
+	margin-right: 3.5px;
+	
+}
+
+.time input[type=text]{
+	display: inline-block;
+}
+
+
+#selectAll{
+	display:inline;	
+    padding-left: 5px;
+}
+
+#selectAllContainer{
+	padding-bottom:10px;
+}
+
+#selectAll label{
+	width:95px;
+}
+
+
+
 .enable-question{
 		color: green
 	}
@@ -6,6 +84,7 @@
 	color: 	#C0C0C0;
 	
 }
+
 	
 
 .post-job-select{

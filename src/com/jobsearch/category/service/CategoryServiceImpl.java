@@ -28,10 +28,6 @@ public class CategoryServiceImpl {
 	@Autowired
 	UserRepository userRepository;
 
-	@Autowired
-	@Qualifier("CategoriesVM")
-	Template categoryTemplate;
-
 	public void addCategoryToUser(int userId, int categoryId) {
 		repository.addCategoryToUser(userId, categoryId);
 	}
@@ -103,6 +99,15 @@ public class CategoryServiceImpl {
 			return null;
 		}
 
+	}
+
+	public List<Category> getCategories(List<Integer> categoryIds) {
+		List<Category> categories = new ArrayList<Category>();
+
+		for(int categoryId : categoryIds){
+			categories.add(this.getCategory(categoryId));
+		}
+		return categories;
 	}
 
 }

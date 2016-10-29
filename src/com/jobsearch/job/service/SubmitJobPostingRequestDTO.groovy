@@ -9,7 +9,7 @@ import com.jobsearch.model.Question
 class SubmitJobPostingRequestDTO {
 
 	@JsonProperty("jobs")
-	List<JobInfoPostRequestDTO> jobs
+	List<Job> jobs
 
 	@JsonProperty("questions")
 	List<Question> questions

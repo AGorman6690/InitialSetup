@@ -1,62 +1,62 @@
 
-function showAddedJob(jobId){
-	var i;
-	
-	removeInvalidFormControlStyles();
-	disableFromControls(true);
-	
-//	var jobId = $(e).val();		
-	var job = {};
-	job = getJobById(jobId, jobs);
-
-	//Store the selected jobs id in case future action is taken
-//	$("#saveChanges").val(jobId);
-//	$("#deleteJob").val(jobId);
-	$("#activeJobId").val(jobId)
-
-	
-	//Update elements' value
-	document.getElementsByName('jobName')[0].value = job.jobName;			
-	document.getElementsByName('streetAddress')[0].value = job.streetAddress;
-	document.getElementsByName('city')[0].value = job.city;
-	document.getElementsByName('state')[0].value = job.state ;
-	document.getElementsByName('zipCode')[0].value = job.zipCode;
-	document.getElementsByName('jobDescription')[0].value = job.description;
-	document.getElementsByName('userId')[0].value = job.userId;				
-	$("#dateRange").data('daterangepicker').startDate = job.stringStartDate;
-	$("#dateRange").data('daterangepicker').endDate = job.stringEndDate;
-	$("#dateRange").val(job.stringStartDate.format('MM/DD/YYYY') + ' - ' + job.stringEndDate.format('MM/DD/YYYY'));
-	$("#startTime").val(formatTimeTo12Hours(job.stringStartTime));
-	$("#endTime").val(formatTimeTo12Hours(job.stringEndTime));
-	
-	//Show categories
-	for(i = 0; i < job.categoryIds.length; i++){
-		var id = job.categoryIds[i];
-		var name = $($($("#categoryTree").find("[data-cat-id=" + id + "]")[0])
-						.find(".category-name")[0]).text();
-		showCategory(id, name);
-	}
-	
-	//Reset all question check marks to disabled
-	var $check;
-	var questionElements = $("#addedQuestions").find(".added-question");
-	for(i = 0; i < questionElements.length; i++){
-		 $check = $($(questionElements[i]).find(".toggle-question-activeness")[0]);
-		if ($check.hasClass('enable-question') == 1){
-			$check.removeClass('enable-question');
-			$check.addClass('disable-question');
-		}
-	}
-
-	//Enable the selected questions for the active job
-	for(i = 0; i < job.selectedQuestionIds.length; i++){
-		
-		$check = $($("#" + questionContainerIdPrefix + job.selectedQuestionIds[i])
-						.find(".toggle-question-activeness")[0]);
-		$check.removeClass("disable-question");
-		$check.addClass("enable-question");
-	}
-}
+//function showAddedJob(jobId){
+//	var i;
+//	
+//	removeInvalidFormControlStyles();
+//	disableFromControls(true);
+//	
+////	var jobId = $(e).val();		
+//	var job = {};
+//	job = getJobById(jobId, jobs);
+//
+//	//Store the selected jobs id in case future action is taken
+////	$("#saveChanges").val(jobId);
+////	$("#deleteJob").val(jobId);
+//	$("#activeJobId").val(jobId)
+//
+//	
+//	//Update elements' value
+//	document.getElementsByName('jobName')[0].value = job.jobName;			
+//	document.getElementsByName('streetAddress')[0].value = job.streetAddress;
+//	document.getElementsByName('city')[0].value = job.city;
+//	document.getElementsByName('state')[0].value = job.state ;
+//	document.getElementsByName('zipCode')[0].value = job.zipCode;
+//	document.getElementsByName('jobDescription')[0].value = job.description;
+//	document.getElementsByName('userId')[0].value = job.userId;				
+//	$("#dateRange").data('daterangepicker').startDate = job.stringStartDate;
+//	$("#dateRange").data('daterangepicker').endDate = job.stringEndDate;
+//	$("#dateRange").val(job.stringStartDate.format('MM/DD/YYYY') + ' - ' + job.stringEndDate.format('MM/DD/YYYY'));
+//	$("#startTime").val(formatTimeTo12Hours(job.stringStartTime));
+//	$("#endTime").val(formatTimeTo12Hours(job.stringEndTime));
+//	
+//	//Show categories
+//	for(i = 0; i < job.categoryIds.length; i++){
+//		var id = job.categoryIds[i];
+//		var name = $($($("#categoryTree").find("[data-cat-id=" + id + "]")[0])
+//						.find(".category-name")[0]).text();
+//		showCategory(id, name);
+//	}
+//	
+//	//Reset all question check marks to disabled
+//	var $check;
+//	var questionElements = $("#addedQuestions").find(".added-question");
+//	for(i = 0; i < questionElements.length; i++){
+//		 $check = $($(questionElements[i]).find(".toggle-question-activeness")[0]);
+//		if ($check.hasClass('enable-question') == 1){
+//			$check.removeClass('enable-question');
+//			$check.addClass('disable-question');
+//		}
+//	}
+//
+//	//Enable the selected questions for the active job
+//	for(i = 0; i < job.selectedQuestionIds.length; i++){
+//		
+//		$check = $($("#" + questionContainerIdPrefix + job.selectedQuestionIds[i])
+//						.find(".toggle-question-activeness")[0]);
+//		$check.removeClass("disable-question");
+//		$check.addClass("enable-question");
+//	}
+//}
 
 function deactiveAddedJobButtons(){
 	
@@ -163,17 +163,3 @@ function clearPostJobInputs(){
 	$("#selectedCategories").empty();
 }
 
-function removeInvalidFormControlStyles(){
-	
-	$("#jobPostContainer").find(".invalid-input-existence").each(function(){		
-		$(this).removeClass("invalid-input-existence");
-	})
-	
-	$("#jobPostContainer").find(".invalid-select-input").each(function(){		
-		$(this).removeClass("invalid-select-input");
-	})
-	
-	$("#jobPostContainer").find(".invalid-message").each(function(){
-		$(this).hide();
-	})
-}

@@ -53,11 +53,11 @@ public class JobServiceTest {
 	@Test
 	public void test_addPosting() {
 		SubmitJobPostingRequestDTO submitJobPostingRequestDto = new SubmitJobPostingRequestDTO();
-		List<JobInfoPostRequestDTO> jobs = new ArrayList<>();
+		List<Job> jobs = new ArrayList<>();
 		List<Question> questions = new ArrayList<>();
 
-		JobInfoPostRequestDTO job1 = new JobInfoPostRequestDTO();
-		JobInfoPostRequestDTO job2 = new JobInfoPostRequestDTO();
+		Job job1 = new Job();
+		Job job2 = new Job();
 		jobs.add(job1);
 		jobs.add(job2);
 
@@ -76,7 +76,7 @@ public class JobServiceTest {
 
 		when(googleClient.getLatAndLng(anyString())).thenReturn(result);
 
-		Mockito.verify(repository, Mockito.times(1)).addJob((JobInfoPostRequestDTO) anyObject(),
+		Mockito.verify(repository, Mockito.times(1)).addJob((Job) anyObject(),
 				(JobSearchUser) anyObject());
 
 		assertThat(true).isTrue();

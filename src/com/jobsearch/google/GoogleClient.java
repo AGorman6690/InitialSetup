@@ -38,30 +38,25 @@ public class GoogleClient {
 	}
 
 	public static String getAddressComponent(AddressComponent[] addressComponents, String name) {
+		//************************************************
+		//TODO This is not finished.
+		//TODO The thought was to export to the database the address components returned from Google,
+		//TODO as opposed to the user's input.
+		//TODO This would do away with typos and make addresses, cities and states uniform.
+		//TODO Address this later.
+		//************************************************
 
-		// ************************************************
-		// TODO This not finished.
-		// TODO The thought was to export to the database the address components
-		// returned from Google,
-		// TODO as opposed to the user's input.
-		// TODO This would do away with typos and make addresses, cities and
-		// states uniform.
-		// TODO Address this later.
-		// ************************************************
+		//Address components (i.e. zip code, city, state, ect.) are not always returned in the same order.
+		//Therefore the entire AddressComponet array must be searched for a particular address component.
 
-		// Address components (i.e. zip code, city, state, ect.) are not always
-		// returned in the same order.
-		// Therefore the entire AddressComponet array must be searched for a
-		// particular address component.
+		for (AddressComponent cmp : addressComponents){
 
-		for (AddressComponent cmp : addressComponents) {
-
-			// If the component returned more than one type, then
-			// the address is ambiguous (i.e. apparently Google maps cannot tell
-			// whether the address component is a city or state).
-			// Do not add this job.
-			if (cmp.types.length == 1) {
-				if (cmp.types[0].name() == name) {
+			//If the component returned more than one type, then
+			//the address is ambiguous (i.e. apparently Google maps cannot tell
+			//whether the address component is a city or state).
+			//Do not add this job.
+			if(cmp.types.length == 1){
+				if(cmp.types[0].name() == name){
 					return cmp.shortName;
 				}
 			} else {
@@ -72,5 +67,37 @@ public class GoogleClient {
 		}
 
 		return null;
+	}
+
+	public static boolean isValidAddress(String address) {
+
+
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(address);
+
+		if (results.length == 1) {
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	public static Coordinate getCoordinate(String address) {
+
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(address);
+
+		if (results.length == 1) {
+			Coordinate coordinate = new Coordinate();
+			coordinate.setLatitude((float) results[0].geometry.location.lat);
+			coordinate.setLongitude((float) results[0].geometry.location.lng);
+			return coordinate;
+		}
+		else{
+			return null;
+		}
+
+
 	}
 }

@@ -14,15 +14,15 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobInfoPostRequestDTO;
+import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.user.rate.RatingRequestDTO;
+import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.EditProfileRequestDTO;
-import com.jobsearch.user.web.FindEmployeesRequestDTO;
 
 @Repository
 public class UserRepository {
@@ -116,6 +116,7 @@ public class UserRepository {
 	}
 
 	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
+		
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -132,6 +133,7 @@ public class UserRepository {
 				e.setHomeZipCode(rs.getString("HomeZipCode"));
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
 				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
+				e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
 
 				Profile profile = new Profile();
 				profile.setName(rs.getString("p.ProfileType"));
@@ -219,7 +221,13 @@ public class UserRepository {
 
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
-		return list.get(0);
+		if(list.size() >0 ){
+			return list.get(0);	
+		}
+		else{
+			return null;
+		}
+		
 
 	}
 
@@ -319,11 +327,10 @@ public class UserRepository {
 
 	}
 
-	public void addComment(RatingRequestDTO ratingDTO) {
-		String sql = "INSERT INTO comment (JobId, UserId," + " Comment) VALUES (?, ?, ?)";
+	public void addComment(int userId, int jobId, String comment) {
+		String sql = "INSERT INTO comment (JobId, UserId, Comment) VALUES (?, ?, ?)";
 
-		jdbcTemplate.update(sql,
-				new Object[] { ratingDTO.getJobId(), ratingDTO.getEmployeeId(), ratingDTO.getComment() });
+		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment });
 
 	}
 
@@ -350,7 +357,7 @@ public class UserRepository {
 	}
 
 	public Double getRating(int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ?";
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value > -1";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
 
@@ -398,7 +405,7 @@ public class UserRepository {
 
 	}
 
-	public List<String> getAvailableDates(int userId) {
+	public List<String> getAvailableDays(int userId) {
 		String sql = "SELECT Day FROM availability WHERE UserId = ?";
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
 	}
@@ -413,24 +420,24 @@ public class UserRepository {
 
 	}
 
-	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
-		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
-				+ " HomeZipCode = ? WHERE UserId = ?";
+//	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
+//		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+//				+ " HomeZipCode = ? WHERE UserId = ?";
+//
+//		jdbcTemplate.update(sql,
+//				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
+//						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
+//						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
+//
+//	}
 
-		jdbcTemplate.update(sql,
-				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
-						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
-						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
+//	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
+//		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
+//		jdbcTemplate.update(sql, new Object[] { maxWorkRadius, userId });
+//
+//	}
 
-	}
-
-	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
-		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
-		jdbcTemplate.update(sql, new Object[] { maxWorkRadius, userId });
-
-	}
-
-	public List<JobSearchUser> findEmployees(FindEmployeesRequestDTO findEmployeesRequest) {
+	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
 		// ******************************************************************************************
 		// NOTE: For optimal performance, we may want to eventually do some
@@ -448,6 +455,7 @@ public class UserRepository {
 
 		String sql = "SELECT * FROM user WHERE user.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
+	
 
 		int subQueryCount = 1; // 1 because the distance sub query is required
 
@@ -458,7 +466,7 @@ public class UserRepository {
 		// days.
 		// This sub query is optional.
 		String subQueryDates = null;
-		if (findEmployeesRequest.getAvailableDates() != null) {
+		if (findEmployeesDto.getDays().size() > 0) {
 
 			subQueryDates = " (SELECT a0.UserId FROM availability a0";
 
@@ -472,44 +480,46 @@ public class UserRepository {
 			// JOIN availability a1 ON a0.UserId = a1.UserId AND a1.Day = X
 			// JOIN availability a2 ON a1.UserId = a2.UserId AND a2.Day = Y
 			// WHERE Day = Z AND a0.UserId IN ([distance sub query])
-			for (int dateCount = 1; dateCount < findEmployeesRequest.getAvailableDates().size(); dateCount++) {
+			for (int dateCount = 1; dateCount < findEmployeesDto.getDays().size(); dateCount++) {
 				int dateCountMinus1 = dateCount - 1;
 				subQueryDates += " JOIN availability a" + dateCount + " ON a" + dateCountMinus1 + ".UserId" + " = a"
 						+ dateCount + ".UserId AND a" + dateCount + ".Day = ?";
-				argsList.add(findEmployeesRequest.getAvailableDates().get(dateCount));
+				argsList.add(findEmployeesDto.getDays().get(dateCount));
 			}
 
 			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
-			argsList.add(findEmployeesRequest.getAvailableDates().get(0));
+			argsList.add(findEmployeesDto.getDays().get(0));
 
 			sql += subQueryDates;
 			subQueryCount += 1;
 
 		}
 
+/*
 		// Build the sub query for categories.
 		// This sub query has the same structure as the availability sub query.
 		// This returns all user ids that have ALL the requested categories.
 		String subQueryCategories = null;
-		if (findEmployeesRequest.getCategoryIds() != null) {
+		if (findEmployeesDto.getCategoryIds() != null) {
 
 			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
 
-			for (int categoryCount = 1; categoryCount < findEmployeesRequest.getCategoryIds().size(); categoryCount++) {
+			for (int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++) {
 				int categoryCountMinus1 = categoryCount - 1;
 				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc" + categoryCountMinus1
 						+ ".UserId" + " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?";
-				argsList.add(findEmployeesRequest.getCategoryIds().get(categoryCount));
+				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
 			}
 
 			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
-			argsList.add(findEmployeesRequest.getCategoryIds().get(0));
+			argsList.add(findEmployeesDto.getCategoryIds().get(0));
 
 			sql += subQueryCategories;
 			subQueryCount += 1;
 
 		}
-
+*/
+		
 		// Distance sub query.
 		// This returns all user ids with a home radius within the requested
 		// radius.
@@ -520,15 +530,17 @@ public class UserRepository {
 
 		sql += subQueryDistance;
 
-		argsList.add(findEmployeesRequest.getLat());
-		argsList.add(findEmployeesRequest.getLng());
-		argsList.add(findEmployeesRequest.getLat());
-		argsList.add(findEmployeesRequest.getRadius());
+		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
+		argsList.add(findEmployeesDto.getCoordinate().getLongitude());
+		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
+		argsList.add(findEmployeesDto.getRadius());
+
 
 		// Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {
 			sql += ")";
 		}
+
 
 		return this.JobSearchUserRowMapper(sql, argsList.toArray());
 	}
@@ -585,7 +597,7 @@ public class UserRepository {
 		return this.JobSearchUserRowMapper(sql, new Object[] {});
 	}
 
-	public void createJob_DummyData(JobInfoPostRequestDTO dummyJob, int dummyCreationId) {
+	public void createJob_DummyData(PostJobDTO dummyJob, int dummyCreationId) {
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
@@ -597,10 +609,10 @@ public class UserRepository {
 			cStmt.setString(4, dummyJob.getState());
 			cStmt.setFloat(5, dummyJob.getLat());
 			cStmt.setFloat(6, dummyJob.getLng());
-			cStmt.setDate(7, dummyJob.getStartDate());
-			cStmt.setDate(8, dummyJob.getEndDate());
-			cStmt.setTime(9, dummyJob.getStartTime());
-			cStmt.setTime(10, dummyJob.getEndTime());
+//			cStmt.setDate(7, dummyJob.getStartDate());
+//			cStmt.setDate(8, dummyJob.getEndDate());
+//			cStmt.setTime(9, dummyJob.getStartTime());
+//			cStmt.setTime(10, dummyJob.getEndTime());
 			cStmt.setInt(11, dummyCreationId);
 
 			// cStmt.addBatch();
@@ -655,5 +667,17 @@ public class UserRepository {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 0 WHERE email = ?";
 
 		jdbcTemplate.update(sql, new Object[] { password, email });
+	}
+
+	public void updateEmployeeSettings(EditProfileRequestDTO editProfileRequestDto) {
+		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+				+ " HomeZipCode = ?, MaxWorkRadius = ?, MinimumPay = ? WHERE UserId = ?";
+		
+	jdbcTemplate.update(sql,
+				new Object[] { editProfileRequestDto.getHomeLat(), editProfileRequestDto.getHomeLng(),
+						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
+						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
+						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
+		
 	}
 }

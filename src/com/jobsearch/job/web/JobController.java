@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationRequestDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -42,7 +43,7 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void addJob(@RequestBody SubmitJobPostingRequestDTO postingDto,
+	public void postJobs(@RequestBody SubmitJobPostingRequestDTO postingDto,
 						HttpSession session, ModelAndView model) {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
@@ -104,12 +105,18 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public void applyForJob(@RequestBody ApplicationRequestDTO applicationDto,
-								ModelAndView model, HttpSession session) {
+	public String applyForJob(@RequestBody Application application,
+								HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		applicationDto.setUserId(user.getUserId());
-		applicationService.applyForJob(applicationDto);
+		if(userService.isLoggedIn(session)){
+			applicationService.applyForJob(application, session);
+			return "redirect:/user/profile";
+		}
+		else{
+			return "NotLoggedIn";
+		}
+
+
 
 	}
 
@@ -126,28 +133,41 @@ public class JobController {
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 
-		Job job = jobService.getJobPostingInfo(jobId);
-		model.addAttribute("job", job);
-		model.addAttribute("user", session.getAttribute("user"));
-//		model.setViewName("FindJobs");
-		return "EmployeeViewJob";
+		jobService.setModel_ApplyForJob(model, jobId, session);
+
+		return "EmployeeViewJobWhenFinding";
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public String getJob(@PathVariable(value = "jobId") int jobId, Model model) {
+	public String getJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
 
-		Job selectedJob = jobService.getEmployersJobProfile(jobId);
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 
+		//If employee
+		if(user.getProfileId() == 1){
 
+			jobService.setModelForEmployeeViewJobFromProfileJsp(model, jobId, user.getUserId());
+			return "EmployeeViewJobFromProfile";
+		//Else if employer
+		}else if(user.getProfileId() == 2){
+			jobService.setModel_EmployerViewJob(model, jobId, session);
+			return "EmployerViewJob";
+		}
 
+		return null;
 
-
-		//
-
-		model.addAttribute("job", selectedJob);
-//		model.setViewName("Job");
-		return "EmployerViewJob";
 	}
+
+	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
+	public String updateJobStatus(@PathVariable(value = "status") int status,
+								@PathVariable(value = "jobId") int jobId) {
+
+		jobService.UpdateJobStatus(status, jobId);
+
+
+		return "redirect:/user/profile";
+	}
+
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {
@@ -167,32 +187,29 @@ public class JobController {
 //		return "RateEmployees";
 //	}
 
-	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
-	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId,
-								@RequestParam(name = "markComplete", required = false) boolean markComplete,
-								Model model) {
+	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
+	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
 
-		if(markComplete){
-			jobService.markJobComplete(jobId);
-		}
+//		if(markComplete){
+//			jobService.markJobComplete(jobId);
+//		}
 
-		String viewName;
-		viewName = jobService.getRateEmployeesView(model, jobId);
+			jobService.setModel_RateEmployees(model, jobId);
 
-		return viewName;
+		return "RateEmployees";
 	}
 
-	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
-	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
-
-		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
-		model.addObject("employees", employees);
-
-		Job job = jobService.getEmployersJobProfile(jobId);
-		model.addObject("job", job);
-
-		model.setViewName("RateEmployees");
-		return model;
-	}
+//	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
+//	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
+//
+//		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+//		model.addObject("employees", employees);
+//
+//		Job job = jobService.getEmployersJobProfile(jobId);
+//		model.addObject("job", job);
+//
+//		model.setViewName("RateEmployees");
+//		return model;
+//	}
 
 }

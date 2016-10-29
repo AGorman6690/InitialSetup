@@ -1,5 +1,5 @@
 .login-signup .form-control{
-    padding: 15px;
+/*     padding: 15px; */
     margin: 10px auto;	
 }
 
@@ -9,29 +9,35 @@
 
 
 .nav-items{
-	float:right;
+/* 	float:right; */
+/* 	margin-top:12px; */
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding-right: 35px;
 }
 
 .logo{
 	float:left;
-	border: 1px solid rgb(192,192,192);
-	padding:10px;
-	font-size:20px;	
+/* 	border: 1px solid rgb(192,192,192); */
+	padding:10px 10px 10px 10px;
+	font-size:30px;	
 }
 
 .nav-items a{
-	border: 1px solid rgb(192,192,192);
+/* 	border: 1px solid rgb(192,192,192); */
 	display:inline-block;
 	list-style: none;
-	padding:10px;
+	padding:7px 10px;
 	border-left-width: 0;
 	font-size:16px;	
 	float:right;
 	cursor:pointer;
+	
 }
 
 .nav-items a:last-child{
-	border-left: 1px solid rgb(192,192,192);
+/* 	border-left: 1px solid rgb(192,192,192); */
 }
 
 .modal-dialog input[type=submit]{
@@ -71,6 +77,9 @@
 	text-decoration: none;
 	background-color: #163B3D;
 	color:#ffffff;
+	
+/* 	font-size:18px; */
+/* 	color: #163B3D; */
 }
 
 a{
@@ -78,16 +87,17 @@ a{
 }
 
 .nav-container{
-	padding:45px 45px 10px 45px;
+	padding:45px 45px 0px 45px;
 /* 	background-color:#F6C627; */
 /* 	position:fixed; */
 /* 	top:0px; */
-	overflow:overlay;
+	overflow:auto;
     max-width: 1200px;
     margin: auto;	
    	border-bottom: 2px outset #F0F0F0;
-	overflow:overlay;
+	overflow:auto;
 /* 	padding-bottom:10px; */
+	position: relative;
 
 }
 

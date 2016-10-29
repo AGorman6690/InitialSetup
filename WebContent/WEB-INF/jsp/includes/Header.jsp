@@ -40,13 +40,13 @@
 
 <!-- 	Additional code for Bootstrap sortble table -->
 <!-- Used this website: https://datatables.net/examples/styling/bootstrap.html -->
-<link
-	href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"
-	rel="stylesheet" />
-<script
-	src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
-<script
-	src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
+<!-- <link -->
+<!-- 	href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" -->
+<!-- 	rel="stylesheet" /> -->
+<!-- <script -->
+<!-- 	src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script> -->
+<!-- <script -->
+<!-- 	src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script> -->
 
 <!-- 	Additional code for Bootstrap date picker -->
 <script type="text/javascript"
@@ -58,11 +58,7 @@
 
 <!-- <script type="text/javascript" src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> -->
 <!-- <link rel="stylesheet" type="text/css" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css" /> -->
-<link
-	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
-	rel="stylesheet" />
-<script
-	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
+
 
 <!-- Bootstrap Drop down -->
 <link rel="stylesheet"
@@ -83,11 +79,14 @@
 
 <link href="/JobSearch/static/css/global.css"
 	rel="stylesheet" />
+
+<link href="/JobSearch/static/css/layout.css"
+	rel="stylesheet" />
 	
 <link href="/JobSearch/static/css/navBar.css"
 	rel="stylesheet" />
 
-	
+<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
 
 </head>
 
@@ -110,21 +109,22 @@
 			<div class="nav-items">					
 				<c:choose>
 					<c:when test="${user.profileId > 0 }">
-							<a href="/JobSearch/logout">Log out</a>
+							<a id="logOut" href="/JobSearch/logout">Log out</a>
 						<c:choose>
 							<c:when test="${user.profileId == 1}">
-								<a href="/JobSearch/jobs/find">Find Jobs</a>
+								<a href="/JobSearch/settings">Settings</a>
+								<a href="/JobSearch/jobs/find">Find Jobs</a>								
 							</c:when>
 							<c:when test="${user.profileId == 2}">
 								<a href="/JobSearch/employees/find">Find Employees</a>
 								<a href="/JobSearch/viewPostJob">Post Job</a>
 							</c:when>
 						</c:choose>				
-						<c:choose>
-							<c:when test="${user.getFirstName() != null}">
-								<a href="/JobSearch/viewProfile">Profile</a>
-							</c:when>
-						</c:choose>
+<%-- 						<c:choose> --%>
+<%-- 							<c:when test="${user.getFirstName() != null}"> --%>
+<!-- 								<a href="/JobSearch/viewProfile">Settings</a> -->
+<%-- 							</c:when> --%>
+<%-- 						</c:choose> --%>
 					</c:when>
 					<c:otherwise>
 						<a data-toggle="modal" data-target="#loginContainer">Login</a>
