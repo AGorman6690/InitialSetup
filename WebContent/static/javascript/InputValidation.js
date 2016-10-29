@@ -27,27 +27,30 @@ $(document).ready(function(){
 			value = $(this).find(":selected").val();
 		}
 		
-		validatePositiveNumber($(this), value);
+//		validatePositiveNumber($(this), value);
 
 	})
 
 })
 
-function validatePositiveNumber(value){
-	var result = 1;
+function isValidatePositiveNumber(value){
+	
+	var isValid = 1;
 	if($.isNumeric(value) == 0){
-		result = 0;
+		isValid = 0;
 	}
 	else if(value < 0){
-		result = 0;
+		isValid = 0;
 	}
 	
-	if(result){
-		setValidCss($e);
-		hideErrorMessage($e);	
-	}else{
-		setInvalidCss($e);
-	}
+//	if(isValid){
+//		setValidCss($e);
+//		hideErrorMessage($e);	
+//	}else{
+//		setInvalidCss($e);
+//	}
+	
+	return isValid;
 }
 
 
@@ -327,5 +330,17 @@ function validateAddQuestionInputs(){
 	}else{
 		$e.hide();
 		return true;
+	}
+}
+
+function isValidInput(value){
+	if(value == undefined){
+		return 0;
+	}
+	else if(value == ""){
+		return 0;
+	}
+	else{
+		return 1;
 	}
 }

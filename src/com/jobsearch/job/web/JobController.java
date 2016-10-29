@@ -90,7 +90,7 @@ public class JobController {
 			@RequestParam(name = "endDate", required = false) String endDate,
 			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
 			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
-			@RequestParam(name = "day", value = "day", required = false) List<String> workingDays,
+			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
 			@RequestParam(name = "duration", required = false, defaultValue= "-1") Double duration,
 			@RequestParam(name = "lessThanDuration", required = false) boolean lessThanDuration,
 			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount, 
@@ -98,7 +98,7 @@ public class JobController {
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
-			HttpSession session, Model model
+			HttpSession session
 			){
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
@@ -106,7 +106,8 @@ public class JobController {
 				lessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
 	
 		
-		return jobService.getFilterdJobsResponseHtml(request, session, model);
+		return jobService.getVelocityTemplate_FilterJobs(request, session);
+		//return jobService.getFilterdJobsResponseHtml(request, session, model);
 
 	}	
 
@@ -135,6 +136,16 @@ public class JobController {
 		model.addAttribute("user", session.getAttribute("user"));
 //		model.setViewName("FindJobs");
 		return "FindJobs";
+	}
+	
+	
+	@RequestMapping(value = "/jobs/find-old", method = RequestMethod.GET)
+	public String viewFindJobs_OLD(Model model, HttpSession session) {
+		
+		
+		model.addAttribute("user", session.getAttribute("user"));
+//		model.setViewName("FindJobs");
+		return "FindJobs_NEW";
 	}
 	
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)

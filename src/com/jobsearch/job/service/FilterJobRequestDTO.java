@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.google.GoogleClient;
 import com.jobsearch.utilities.DateUtility;
 
 public class FilterJobRequestDTO {
@@ -260,23 +261,48 @@ public class FilterJobRequestDTO {
 
 		
 		// Convert strings to sql Time objects.
-		try {
+		if(startTime != null){
 			this.setStartTime(java.sql.Time.valueOf(startTime));
-		} catch (Exception e) {
-			//filter values were not sent from client
 		}
 		
-		try {
+		if(endTime != null){
 			this.setEndTime(java.sql.Time.valueOf(endTime));
-		} catch (Exception e) {
-			//filter values were not sent from client
 		}
 		
 		// Convert strings to sql Date objects
-		this.setStartDate(DateUtility.getSqlDate(startDate, "MM/dd/yyyy"));
-		this.setEndDate(DateUtility.getSqlDate(endDate, "MM/dd/yyyy"));
+		this.setStartDate(DateUtility.getSqlDate(startDate, "yyyy-MM-dd"));
+		this.setEndDate(DateUtility.getSqlDate(endDate, "yyyy-MM-dd"));
 
 		this.setWorkingDays(workingDays2);
+		
+		
+		
+		//************************************************************
+		//************************************************************
+		//The user's requested locations should be cached somewhere with 
+		//either cookies or a global array on the client side.
+		//This would put less load on the Google API quota.
+		//Or a table can be created that stores the lat/lng for all requested
+		//city/states/zip code
+		//************************************************************
+		//************************************************************
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(this.getFromAddress());
+
+		// **********************************************************************
+		// The below condition has been removed because "Woodbury, MN" returns
+		// two results.
+		// I left it as a reminder for whether we want to handle potential
+		// ambiguous responses.
+		// **********************************************************************
+		// Filter location must return a valid response
+		// if (results.length == 1){
+		
+		if(results.length > 0){
+			this.setLng((float) results[0].geometry.location.lng);
+			this.setLat((float) results[0].geometry.location.lat);	
+		}
+		
 
 	}
 

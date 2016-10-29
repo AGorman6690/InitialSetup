@@ -311,104 +311,232 @@ public class JobRepository {
 
 
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
-		// TODO Auto-generated method stub
-
-		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
-		//This calculates the distance between each job and a given lat/lng.
-		String sql = "SELECT *, "
-					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance,"
-					+ " (EndDate - StartDate + 1) AS duration"
-					+ " FROM job WHERE job.JobId IN (SELECT job.JobId FROM job WHERE job.IsAcceptingApplications = 1 ";
 
 
+	//SQL example for filtering jobs.
+	//Copy and paste into MySQL for better viewing.
+	//***********************************************************
+	//***********************************************************
+//	select j.*, 
+//		( 3959 * acos( cos( radians( 45.104839) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-93.144936) ) 
+//		+ sin( radians( 45.104839) ) * sin( radians( lat ) ) ) ) AS distance,
+//		(EndDate - StartDate + 1) as duration
+//	from job j
+//
+//	-- work days
+//	join (
+//		select distinct w0.jobid
+//		from work_day w0
+//		join work_day w1 on w0.jobid = w1.jobid and w1.date = '2016-10-26'
+//		join work_day w2 on w1.jobid = w2.jobid and w2.date = '2016-10-25'
+//	) wd0
+//	on wd0.jobid = j.jobid
+//
+//	-- categories
+//	join (
+//		select distinct jc0.jobid
+//		from job_category jc0
+//		join job_category jc1 on jc0.jobid = jc1.jobid and jc1.categoryid = '3'
+//		join job_category jc2 on jc1.jobid = jc2.jobid and jc2.categoryid = '3'
+//	) jc
+//	on jc.jobid = wd0.jobid
+//
+//	-- start time
+//	join(
+//		select distinct jobid
+//		from work_day
+//		group by jobid
+//		having min(starttime) < '07:30:00'
+//	) wd1
+//	on wd1.jobid = jc.jobid
+//
+//	-- end time
+//	join(
+//		select distinct jobid
+//		from work_day
+//		group by jobid
+//		having min(endtime) > '17:30:00'
+//	) wd2
+//	on wd2.jobid = wd1.jobid
+//
+//	having distance < 16 and j.jobid <> 71 and j.jobid <> 73;
+		//***********************************************************
+		//***********************************************************		
+		
 		List<Object> argsList = new ArrayList<Object>();
 
 		//Arguments for distance filter
+
+		
+		String nextTableToJoin;
+		String subTable;
+		
+		//Distance
+		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
+		String sql = "SELECT *, "
+					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
+					+ " FROM job j";
+		
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
 		argsList.add(filter.getLat());
+		
+		nextTableToJoin = "j";
+		
+		//Work days
+		if(filter.getWorkingDays() != null){
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT wd0.jobId";
+			sql += " FROM work_day wd0";
+			
 
-		//If there are no categories to filter on
-		if(filter.getCategoryIds() == null){
-
-//			sql += " WHERE job.IsActive = 1";
-
-		//Else build the where condition for the categories
-		}else{
-
-			sql += " INNER JOIN job_category ON job.JobId = job_category.JobId WHERE job.IsActive = 1 AND (";
-			for(int i = 0; i < filter.getCategoryIds().length; i++){
-				if(i < filter.getCategoryIds().length - 1){
-					sql += " job_category.CategoryId = ? OR";
-				}else{
-					sql += " job_category.CategoryId = ?)";
-				}
-
-				argsList.add(filter.getCategoryIds()[i]);
+			for (int i = 1; i < filter.getWorkingDays().size() + 1; i++) {
+				
+				String table1 = "wd" + (i - 1);
+				String table2 = "wd" + i;
+				
+				sql += " JOIN work_day " + table2;
+				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".date = ?";
+				
+				argsList.add(filter.getWorkingDays().get(i - 1));
+						
 			}
-
+			subTable = "wd_work_days";
+		
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
 		}
+					
+		//Categories
+		if(filter.getCategoryIds() != null){
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT jc0.jobId";
+			sql += " FROM job_category jc0";
+			
+
+			for (int i = 1; i < filter.getCategories().size() + 1; i++) {
+				
+				String table1 = "jc" + (i - 1);
+				String table2 = "jc" + i;
+				
+				sql += " JOIN job_categories " + table2;
+				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".categoryId = ?";
+				
+				argsList.add(filter.getCategories().get(i).getId());
+						
+			}
+			subTable = "job_category";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
+		}					
 
 		//Start time
 		if(filter.getStartTime() != null){
-			sql += " AND job.StartTime";
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT jobId";
+			sql += " FROM work_day";
+			sql += " GROUP BY jobId";
+			
 			if(filter.getBeforeStartTime()){
-				sql += " <= ?";
-			}else{
-				sql += " >= ?";
+				sql += " HAVING MAX(startTime) <= ?";
 			}
-
+			else{
+				sql += " HAVING MIN(startTime) >= ?";
+			}
+			
 			argsList.add(filter.getStartTime());
-		}
-
+			
+			subTable = "wd_start_time";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = "wd_start_time";
+		}	
+		
 		//End time
 		if(filter.getEndTime() != null){
-			sql += " AND job.EndTime";
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT jobId";
+			sql += " FROM work_day";
+			sql += " GROUP BY jobId";
+			
 			if(filter.getBeforeEndTime()){
-				sql += " <= ?";
-			}else{
-				sql += " >= ?";
+				sql += " HAVING MAX(endTime) <= ?";	
 			}
-
+			else{
+				sql += " HAVING MIN(endTime) >= ?";
+			}
+			
 			argsList.add(filter.getEndTime());
-		}
-
+			
+			subTable = "wd_end_time";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
+		}	
+		
 		//Start date
 		if(filter.getStartDate() != null){
-			sql += " AND job.StartDate";
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT jobId";
+			sql += " FROM work_day";
+			sql += " GROUP BY jobId";
+			sql += " HAVING MIN(Date)";
+			
 			if(filter.getBeforeStartDate()){
 				sql += " <= ?";
-			}else{
+			}
+			else{
 				sql += " >= ?";
 			}
-
+			
 			argsList.add(filter.getStartDate());
-		}
+			
+			subTable = "wd_start_date";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
+		}		
 
 		//End date
-		if(filter.getEndDate() != null){
-			sql += " AND job.EndDate";
+		if(filter.getStartDate() != null){
+			sql += " JOIN (";
+			sql += " SELECT DISTINCT jobId";
+			sql += " FROM work_day";
+			sql += " GROUP BY jobId";
+			sql += " HAVING MAX(Date)";
+			
 			if(filter.getBeforeEndDate()){
 				sql += " <= ?";
-			}else{
+			}
+			else{
 				sql += " >= ?";
 			}
-
+			
 			argsList.add(filter.getEndDate());
+			
+			subTable = "wd_end_date";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
 		}
 
-		//Duration
-		if(filter.getDuration() > 0){
-			sql += " AND job.EndDate - job.StartDate";
-			if(filter.getLessThanDuration()){
-				sql += " <= ?";
-			}else{
-				sql += " >= ?";
-			}
-
-			argsList.add(filter.getDuration());
-		}
+		//Complete the distance filter.			
+		sql += " HAVING distance < ?";
+		argsList.add(filter.getRadius());	
 		
 		//Skip already-loaded jobs
 		if(alreadyLoadedFilteredJobIds != null){
@@ -418,11 +546,6 @@ public class JobRepository {
 				argsList.add(id);
 			}
 		}
-
-
-		//Close the sub query and complete the distance filter.
-		argsList.add(filter.getRadius());		
-		sql += ") HAVING distance < ?";
 		
 		//Order by
 		sql += " ORDER BY ";

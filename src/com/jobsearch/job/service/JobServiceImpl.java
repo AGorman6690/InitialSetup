@@ -425,8 +425,7 @@ public class JobServiceImpl {
 	}
 
 	
-
-	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
+	public List<Job> getFilteredJobs_OLD(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 		// TODO Auto-generated method stub
 		
 		//************************************************************
@@ -493,6 +492,50 @@ public class JobServiceImpl {
 		// return null;
 		// }
 	}
+	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, HttpSession session) {
+
+
+
+		//******************************************************
+		//******************************************************
+		//Need to validate location.
+		//Can it be done client side?
+		//Currently the lat and lng are being set in the filter request Dto's constructor
+		//******************************************************
+		//******************************************************
+		
+		
+		//If appending jobs, get the job ids that have already been rendered to the user.
+		//The already-rendered-job ids are held in the session.
+		List<Integer> alreadyLoadedFilteredJobIds = getAlreadyLoadedFilteredJobsIds(filter, session);
+
+
+		// Get the filtered jobs		
+		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
+
+		// For each filtered job, calculate the distance between the user's
+		// specified filter lat/lng
+		if (filteredJobs != null) {
+			this.setJobsCategories(filteredJobs);
+			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
+//				job.setDistanceFromFilterLocation(
+//			for (Job job : filteredJobs) {
+//						MathUtility.round(
+//								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
+//								1, 0));
+//				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+//
+//			}
+			
+//		} else {
+//			return null;
+		}
+		return filteredJobs;
+		// }else {
+		// //the address is ambiguous
+		// return null;
+		// }
+	}
 	
 //	private List<Integer> getJobsIdsByFilter(FilterJobRequestDTO filter) {
 //		
@@ -522,7 +565,12 @@ public class JobServiceImpl {
 		}
 	}
 	
-	public String getFilterJobsTemplate(List<Job> filteredJobs, FilterJobRequestDTO request){
+	
+
+	public String getVelocityTemplate_FilterJobs(FilterJobRequestDTO request, HttpSession session) {
+		
+		List<Job> filteredJobs = new ArrayList<Job>();
+		filteredJobs = this.getFilteredJobs(request, session);
 		
 		StringWriter writer = new StringWriter();
 		
@@ -557,74 +605,84 @@ public class JobServiceImpl {
 		filterJobsTemplate.merge(context, writer);
 		
 		return writer.toString();
-		
 	}
+	
 
 	@SuppressWarnings("unchecked")
-	public String getFilterdJobsResponseHtml(FilterJobRequestDTO request, HttpSession session, Model model) {
-
-		request.setIsSortingJobs(false);
-		
-		//***************************************************************		
-		//***************************************************************
-		//The session attributes loadedFilteredJobIds and loadedFilteredJobs are redundant.
-		//The loadedFilteredJobIds was created first and is for loading additional filtered jobs, but
-		//excluding the already-rendered jobs. The database queries the job table excluding the job
-		//ids contained in this session list of job ids. HTML for these jobs is then appended to the
-		//existing filtered jobs HTML.
-		//The loadedFilteredJobs was created so that when sorting already-rendered jobs, the
-		//data base would not have to be queried again. Rather the session list of jobs would be sorted
-		//by the requested job attribute and then rendered to the user. 
-		//It amounts to: have a session list of job ids and re-query the database when the user wants to sort,
-		//or have a session list of jobs and sort the session list when the user wants to sort.
-		//Essentially: is it cheaper to re-query or to store JOBS, not job ids, in session?
-		//It may not even matter, just an FYI.
-		//For now both session variables will be used, but I think only one should be kept.
-		//***************************************************************
-		//***************************************************************		
-		
-		//If appending jobs, get the job ids that have already been rendered to the user.
-		//The already-rendered-jobs are held in the session.
-		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
-		List<Job> alreadyLoadedFilteredJobs = new ArrayList<Job>();
+	private List<Integer> getAlreadyLoadedFilteredJobsIds(FilterJobRequestDTO request, HttpSession session) {
 		
 		if(request.getIsAppendingJobs()){				
-			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
-			alreadyLoadedFilteredJobs = (List<Job>) session.getAttribute("loadedFilteredJobs");
+			return (List<Integer>) session.getAttribute("loadedFilteredJobIds");
 		}else{
-			alreadyLoadedFilteredJobIds = null;
-			alreadyLoadedFilteredJobs = null;
+			return null;
 		}
-		
-		//From the request, set the jobs.
-		//The already-loaded-jobs (if there are any) will not be queried.
-		List<Job> filteredJobs = new ArrayList<Job>();
-		filteredJobs = this.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
-		
-		//Get the job ids that were just queried
-		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
-												.map(j -> j.getId()).collect(Collectors.toList());
-		
-		//If appending jobs, then add the already-loaded-job-ids to the
-		//just-loaded-job-ids
-		if(request.getIsAppendingJobs()){			
-			if(alreadyLoadedFilteredJobIds != null){
-				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
-				filteredJobs.addAll(alreadyLoadedFilteredJobs);
-			}			
-		}
-		
-		//Update the session variables
-		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
-		session.setAttribute("loadedFilteredJobs", filteredJobs);
-				
-		//Add jobs ids to the model
-		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
-		
-		//Run the velocity template and return the HTML
-		return this.getFilterJobsTemplate(filteredJobs, request);
-		
 	}
+
+//	@SuppressWarnings("unchecked")
+//	public String getFilterdJobsResponseHtml(FilterJobRequestDTO request, HttpSession session, Model model) {
+//
+//		request.setIsSortingJobs(false);
+//		
+//		//***************************************************************		
+//		//***************************************************************
+//		//The session attributes loadedFilteredJobIds and loadedFilteredJobs are redundant.
+//		//The loadedFilteredJobIds was created first and is for loading additional filtered jobs, but
+//		//excluding the already-rendered jobs. The database queries the job table excluding the job
+//		//ids contained in this session list of job ids. HTML for these jobs is then appended to the
+//		//existing filtered jobs HTML.
+//		//The loadedFilteredJobs was created so that when sorting already-rendered jobs, the
+//		//data base would not have to be queried again. Rather the session list of jobs would be sorted
+//		//by the requested job attribute and then rendered to the user. 
+//		//It amounts to: have a session list of job ids and re-query the database when the user wants to sort,
+//		//or have a session list of jobs and sort the session list when the user wants to sort.
+//		//Essentially: is it cheaper to re-query or to store JOBS, not job ids, in session?
+//		//It may not even matter, just an FYI.
+//		//For now both session variables will be used, but I think only one should be kept.
+//		//***************************************************************
+//		//***************************************************************		
+//		
+//		//If appending jobs, get the job ids that have already been rendered to the user.
+//		//The already-rendered-jobs are held in the session.
+//		List<Integer> alreadyLoadedFilteredJobIds = new ArrayList<Integer>();
+//		List<Job> alreadyLoadedFilteredJobs = new ArrayList<Job>();
+//		
+//		if(request.getIsAppendingJobs()){				
+//			alreadyLoadedFilteredJobIds = (List<Integer>) session.getAttribute("loadedFilteredJobIds");
+//			alreadyLoadedFilteredJobs = (List<Job>) session.getAttribute("loadedFilteredJobs");
+//		}else{
+//			alreadyLoadedFilteredJobIds = null;
+//			alreadyLoadedFilteredJobs = null;
+//		}
+//		
+//		//From the request, set the jobs.
+//		//The already-loaded-jobs (if there are any) will not be queried.
+//		List<Job> filteredJobs = new ArrayList<Job>();
+//		filteredJobs = this.getFilteredJobs(request, alreadyLoadedFilteredJobIds);
+//		
+//		//Get the job ids that were just queried
+//		List<Integer> loadedFilteredJobIds = filteredJobs.stream()
+//												.map(j -> j.getId()).collect(Collectors.toList());
+//		
+//		//If appending jobs, then add the already-loaded-job-ids to the
+//		//just-loaded-job-ids
+//		if(request.getIsAppendingJobs()){			
+//			if(alreadyLoadedFilteredJobIds != null){
+//				loadedFilteredJobIds.addAll(alreadyLoadedFilteredJobIds);	
+//				filteredJobs.addAll(alreadyLoadedFilteredJobs);
+//			}			
+//		}
+//		
+//		//Update the session variables
+//		session.setAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+//		session.setAttribute("loadedFilteredJobs", filteredJobs);
+//				
+//		//Add jobs ids to the model
+//		model.addAttribute("loadedFilteredJobIds", loadedFilteredJobIds);
+//		
+//		//Run the velocity template and return the HTML
+//		return this.getVelocityTemplate_FilterJobs(filteredJobs, request);
+//		
+//	}
 
 	public String getSortedJobsHTML(FilterJobRequestDTO request, HttpSession session) {
 		
@@ -689,7 +747,7 @@ public class JobServiceImpl {
 //		this.setJobsCategories(sortedJobs);
 		
 		
-		return this.getFilterJobsTemplate(filteredJobs, request);
+		return this.getVelocityTemplate_FilterJobs(filteredJobs, request);
 	}
 
 	public void setModel_RateEmployees(Model model, int jobId) {
@@ -990,6 +1048,7 @@ public class JobServiceImpl {
 		repository.updateJobStatus(status, jobId);
 		
 	}
+
 
 
 

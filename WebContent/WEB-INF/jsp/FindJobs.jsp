@@ -4,6 +4,7 @@
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+<script src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script>
 
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
@@ -27,6 +28,7 @@
 <body>
 
 	<input type="hidden" id="userId" value="${user.userId}" />
+		<a href="/JobSearch/jobs/find-old">New Find Jobs</a>
 	
 	<div class="container">
 		<div class="row">
@@ -256,6 +258,7 @@
 							</div>	
 						</div>										
 					</div>
+					
 					<div class="row row-margin-override">
 						<div class="col-sm-4 col-padding">
 							<div class="input-container dropdown-input-container input-width">
@@ -263,6 +266,11 @@
 									<span class="">Working Days (not built)</span>
 									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
 								</div>
+								<div class="additional-filter dropdown-input-selection-container input-width">
+									<div id="calendar" data-is-showing-job="0">
+									</div>
+									
+								</div>								
 							</div>
 						</div>
 									

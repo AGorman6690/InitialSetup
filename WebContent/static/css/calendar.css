@@ -1,17 +1,20 @@
-#calendar td{
+#calendar td,
+.calendar-single-date td{
 	border-radius:4px;
 	text-align:center;
 }
-#calendar td a:hover{
+#calendar td a:hover,
+.calendar-single-date td a:hover{
 	text-decoration: none;
 	color:#000000;	
 }
 
-#calendar td.active111{
+td.active111,
+td.active111{
 	background-color: #25705A;
 }
 
-#calendar td.active111 a{
+td.active111 a{
 	color: #ffffff;
 }
 

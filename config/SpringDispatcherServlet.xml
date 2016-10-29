@@ -38,6 +38,7 @@
 	<mvc:resources mapping="/static/javascript/**" location="/static/javascript/" />
 	<mvc:resources mapping="/static/css/**" location="/static/css/" />
 	<mvc:resources mapping="/static/External/**" location="/static/External/" />
+	<mvc:resources mapping="/static/images/**" location="/static/images/" />
 
 
 	<!-- enable resolution of ${...} placeholders within @Value annotations

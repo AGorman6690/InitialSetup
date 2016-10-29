@@ -1,0 +1,691 @@
+$(document).ready(function() {
+		
+		var filteredStartDate = null;
+		var filteredEndDate = null;
+	
+		$("#getJobs").click(function(){
+			getJobs(1);
+		})
+		
+		
+	
+		$(".remove-filter").click(function(){
+			removeFilter(getFilterContainer($(this)));
+		})
+	
+		$(".glyphicon-ok").click(function(){
+			
+			var filterContainer = getFilterContainer($(this));
+			
+			if(areApproveFilterInputsValid(filterContainer)){
+				approveFilter(filterContainer);
+				
+			}
+			
+			
+		})
+		
+		
+		
+		
+		$("#jobsContainer").on("click", ".show-more-less", function(){
+			//Toggle the filter job's description to show more or less
+			
+			var description = $(this).siblings(".job-description")[0];			
+//			var isShowingMore;
+//			var exceedsMaxHeight;
+			
+			//Determine if the user is showing more or less
+//			if($(description).hasClass("less-description")){
+//				isShowingMore = 1;
+//			}else{
+//				isShowingMore = 0;
+//			}
+			
+//			//Determine if job description exceeds an arbitrary max height
+//			if ($(description)[0].scrollHeight > 180){	
+//				exceedsMaxHeight = 1
+//			}else{
+//				exceedsMaxHeight = 0;
+//			}		
+			
+//			if(isShowingMore){				
+//				if(exceedsMaxHeight){	
+//					$(description).addClass("exceeds-max-description")
+//				}else{
+//					$(description).removeClass("exceeds-max-description")				
+//				}				
+//			}else{
+				//Always remove this class if showing less
+//				$(description).removeClass("exceeds-max-description")
+//			}
+			
+			toggleClasses($(description), "less-description", "more-description");
+
+			//Toggle icon
+			var icon = $(this).find(".plus-minus")[0];
+			toggleClasses($(icon), "glyphicon-plus", "glyphicon-minus");
+			
+			//Set text
+			var text = $(this).find(".show-more-less-text")[0];
+			if(isShowingMore){
+				$(text).html(" Show less");
+			}else{
+				$(text).html(" Show more");
+			}
+		})
+
+		
+// 		**********************************************************************************
+// 		**********************************************************************************
+		
+		$("#filteredJobs").scroll(function(){
+
+			//Load more jobs when they scroll to the bottom
+			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
+				appendFilteredJobs();
+			}
+		})
+
+		
+		$("body").click(function(e){
+
+			var len = $(e.target).closest(".filter-container");
+			if(doCloseDropdown(e.target)){
+				$(".dropdown").each(function(){
+					$(this).hide();
+				})
+			}
+
+		})
+		
+		
+
+		
+// 		$("#.filter-container").click(function(){
+// 			$.each($("#additionalFiltersContainer").find(".dropdown"), function(){
+// 				if($(this).is("visible")){
+// 					$(this).
+// 				}
+// 			})
+// 		})
+
+		
+		$(".select-time").click(function(){
+	
+			//Not working. trying to set a default scroll position
+// 			//***************************************************************************
+// 			var $s = $(this);		
+// 			var defaultScrollValue = $s.data("default-scroll-value");			
+// 			var optionTop = $s.find('[value="' + defaultScrollValue + '"]').offset().top;
+// 			var selectTop = $s.offset().top;
+// 			$s.scrollTop($s.scrollTop() + (optionTop - selectTop));
+			//***************************************************************************
+		})
+
+// 		$(".clear-filter").click(function(){
+// 			var filterContent = $(this).parents(".filter-content")[0];
+			
+// 			$(filterContent).find("input, select").each(function(){
+// 				$(this).val("");
+// 			})
+			
+// 			//Reset filter header text
+// 			var f = $(this).parents(".filter-content-container")[0];
+// 			var g = $(f).find(".filter-criteria-header")[0];
+// 			var header = $($(this).parents(".filter-criteria-container")[0]).find(".filter-criteria-header")[0];
+// 			$(header).text($(this).data("reset-header"));
+			
+// 			$(this).hide();
+// 		})
+		
+		//******************************************************************************
+		//******************************************************************************
+		//Currently not being used.
+		//This is used so the user can view time by 15 or 30 minute intervals, not just 60.
+		//Incorporate this later
+		$(".show-time-options-container").click(function(){
+
+			$($(this).siblings(".time-options")[0]).toggle();	
+		})	
+		
+		$(".change-time-options").click(function(){
+			setTimeOptions($("#" + $(this).data("for-select")), $(this).data("increment"));
+		})		
+
+		setTimeOptions($("#startTimeOptions"), 60);
+		setTimeOptions($("#endTimeOptions"), 60);
+		//******************************************************************************
+		//******************************************************************************		
+
+
+		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+		
+				
+// 		$('#workingDays').datepicker({
+// 			toggleActive: true,
+// 			clearBtn: true,
+// 			todayHighlight: true,
+// 			startDate: new Date(),
+// 			multidate: true			
+// 		});	
+	
+		$('.date').datepicker({
+			autoclose: true,
+			toggleActive: true});
+
+// 		$('#filterStartTime').timepicker({
+// 			'useSelect' : true,
+// 			'scrollDefault': '7:00am'
+			
+// 		});
+		
+// 		$('#filterEndTime').timepicker({
+// 			'scrollDefault': '5:00pm'
+			
+// 		});
+	
+	})
+
+
+
+function areInputsValid(){
+	
+	var areValid = 1;
+
+	areValid *= isRadiusValid();
+	areValid = areValid * isLocationValid();
+
+	return areValid;
+	
+}
+
+
+function isLocationValid(){
+	
+	var location = getLocation();
+	var $e = $("#locationContainer");
+	$errorMessage = $("#locationErrorMessage");
+	
+	if(location == ""){
+		setInvalidCss($e);
+		$errorMessage.show();
+		return 0;
+	}
+	else{
+		setValidCss($e);
+		$errorMessage.hide();
+		return 1;
+	}
+	
+}
+
+function isRadiusValid(){
+	var $e;
+	var $errorMessage;
+	
+	$e = $("#radius");
+	$errorMessage = $("#radiusErrorMessage");
+	if(!isValidatePositiveNumber($e.val())){
+		areValid = 0;
+		setInvalidCss($e);
+		$errorMessage.show();
+		return 0;
+	}
+	else{
+		setValidCss($e);
+		$errorMessage.hide();
+		return 1;
+	}
+}
+
+
+function getLocation(){
+	var city = $.trim($("#city").val());
+	var state = $.trim($("#state").val());
+	var zipCode = $.trim($("#zipCode").val());
+	
+ 	var location = "";
+ 	if(city != ""){
+ 		city += " ";
+ 	}
+ 	
+ 	if(state != ""){
+ 		state += " ";
+ 	}
+	
+	return city +  state +  zipCode;
+}
+
+
+
+function appendTime(filterDropdownId, paramName1, paramName2_isBefore){
+	
+	var endTime = $($("#" + filterDropdownId).find("option:checked")[0]).val();
+	var isBefore;
+	var param = "";
+	if(isValidInput(endTime)){
+		param += "&" + paramName1 + "=" + formatTime(endTime);
+		
+		isBefore = $($("#" + filterDropdownId).find("input[type=radio]:checked")[0]).attr("data-filter-value");
+		
+		param += "&" + paramName2_isBefore + "=" + parseInt(isBefore);
+	}
+	return param;
+}
+
+function appendDate(filterDropdownId, paramName1, paramName2_isBefore){
+	var selectedDate = getSelectedDate("#" + filterDropdownId);
+	var param = "";
+	var isBefore;
+	if(selectedDate != null){
+		
+		isBefore = GetIsBefore($("#" + filterDropdownId));
+		param += "&" + paramName1 + "=" + $.datepicker.formatDate("yy-mm-dd", selectedDate);
+		param += "&" + paramName2_isBefore + "=" + isBefore;
+	}
+	
+	return param;
+	
+}
+
+
+
+function GetIsBefore($radioContainer){
+	return $($radioContainer.find("input[type=radio]:checked")[0]).attr("data-filter-value");
+}
+
+function appendWorkDays(){
+	var param = "";
+	if(selectedDays.length > 0){
+		$.each(selectedDays, function(){
+			var date = new Date(this)
+			param += "&d=" + $.datepicker.formatDate("yy-mm-dd", date);
+		})
+	}
+	else{
+// 		param += "&d=-1";
+	}
+	return param;
+}
+
+function getSelectedDate(calendarContainer){
+	var td = $(calendarContainer).find(".active111")[0];
+	var month;
+	var year;
+	var day;
+	if(td == undefined){
+		return null;
+	}
+	else{
+		year = $(td).attr("data-year");
+		month = parseInt($(td).attr("data-month"));
+		day = $(td).children().html();
+		return  new Date(year, month, day);
+	}
+	
+}
+
+function isValidRadioSelection(filterContainer){
+	
+	var selectedRadio;
+	var radioContainer = $(filterContainer).find(".radio-container")[0];
+	var isValid = 1;
+	
+	if(filterHasRadioSelection(filterContainer)){
+		selectedRadio = $(filterContainer).find("input[type=radio]:checked")[0];
+		if(selectedRadio == undefined){
+			isValid = 0;
+		}					
+	}	
+	
+	if(isValid){
+		setValidCss($(radioContainer));
+		return true;
+	}
+	else{
+		setInvalidCss($(radioContainer));
+		return false;
+	}
+	
+}
+
+function filterHasRadioSelection(filterContainer){
+	
+	var radios = $(filterContainer).find("input[type=radio]");			
+	if(radios.length > 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+
+
+function isValidFilterValue(filterContainer){
+	
+	var filterValue = getFilterValue(filterContainer);
+	var filterValueContainer = $(filterContainer).find(".filter-value-container")[0];
+	
+	//Filter value input
+	if(filterValue == null){
+		setInvalidCss($(filterValueContainer));
+		return false;
+	}
+	else{
+		setValidCss($(filterValueContainer));
+		return true;
+	}
+				
+}
+
+function areApproveFilterInputsValid(filterContainer){
+	
+	var areValid = true;
+
+	//Radio button
+	if(!isValidRadioSelection(filterContainer)){
+		areValid = false;
+	}
+	
+	//Filter value
+	if(!isValidFilterValue(filterContainer)){
+		areValid = false;
+	}
+	
+	return areValid;
+	
+}
+
+function removeFilter(filterContainer){
+
+	var $filterText = $($(filterContainer).find(".filter-text")[0]);
+	$filterText.html($filterText.attr("data-reset-text"));
+	
+	$(filterContainer).removeClass("approve-filter");		
+	
+	$($(filterContainer).find(".remove-filter")[0]).hide();
+//		slideUp($($(filterContainer).find(".dropdown")[0]));	
+//		hideDropdown(filterContainer);
+	
+	
+	clearFilterValueText(filterContainer);
+}
+
+function getFilterContainer($e){
+	return $e.closest(".filter-container");
+}
+
+function hideDropdown(filterContainer){
+	$($(filterContainer).find(".trigger-dropdown")[0]).trigger("click");
+}
+
+
+function approveFilter(filterContainer){
+	
+	var beginningTextToShow;
+	var newText;
+	var filterContainerText;
+	var endingTextToShow;
+	var filterValueText;			
+	var selectedRadioText;
+	
+	if(filterHasRadioSelection(filterContainer)){
+		selectedRadioText= $($(filterContainer).find("input[type=radio]:checked")[0]).attr("data-display-text");
+	}
+	else{
+		selectedRadioText = "";
+	}
+	
+	
+	if($(filterContainer).attr("id") == "workDays"){
+		filterValueText = "";
+	}
+	else{
+		filterValueText = getFilterValue(filterContainer);	
+	}
+					
+	beginningTextToShow = $(filterContainer).attr("data-display-text");
+	endingTextToShow = getEndingTextToShow(filterContainer);
+	newText = beginningTextToShow + " " + selectedRadioText + " " + filterValueText + " " + endingTextToShow;
+	filterContainerText = $(filterContainer).find(".filter-text")[0];
+
+	filterContainer.addClass("approve-filter");
+	$(filterContainerText).html(newText);
+	
+	$($(filterContainer).find(".remove-filter")[0]).show();
+//		slideUp($($(filterContainer).find(".dropdown")[0]));
+	hideDropdown(filterContainer);
+	
+}
+
+function getEndingTextToShow(filterContainer){
+	var value = $(filterContainer).attr("data-display-text-suffix");
+	
+	if(value == undefined){
+		return "";
+	}
+	else{
+		return value;
+	}
+}
+
+function getFilterValue(filterContainer){
+	var selectOption;
+	var inputValue;
+	var calendarContainer;
+	var selectedDate;
+
+	//Attemp to find the select
+	selectOption = $($(filterContainer).find("select option:checked")[0]).val();
+	if(selectOption != undefined){
+		return selectOption;
+	}
+	
+	//Attempt to find input
+	inputValue = $($(filterContainer).find(".input-container input")[0]).val();
+	if(inputValue != undefined && inputValue != ""){
+		return inputValue;
+	}
+	
+	
+	//Attempt to find **single** date calendar
+	calendarContainer = $(filterContainer).find(".calendar-single-date")[0];
+	if(calendarContainer != undefined){
+		
+		selectedDate = getSelectedDate(calendarContainer);
+		if(selectedDate != null){
+			return $.datepicker.formatDate("D m/d", selectedDate);
+		}
+	}
+	
+	//Attempt to find **multi** date calendar
+	calendarContainer = $(filterContainer).find(".calendar-multi-date")[0];
+	if(calendarContainer != undefined){
+		
+		selectedDate = getSelectedDate(calendarContainer);
+		if(selectedDate != null){
+			return $.datepicker.formatDate("D m/d", selectedDate);	
+		}
+		
+	}
+	
+	return null;
+
+}
+
+
+function clearFilterValueText(filterContainer){
+	
+	var radio;
+	var input;
+	var select;
+	var calendarContainer;
+	var selectedCalendarDays;
+	
+	radio = $(filterContainer).find("input[type=radio]:checked")[0];
+	$(radio).prop("checked", false);
+	
+	select = $(filterContainer).find("select")[0];
+	$(select).val("");
+	
+	input = $(filterContainer).find(".input-container input")[0];
+	$(input).val("");
+
+	selectedCalendarDays = $(filterContainer).find("td.active111");
+	$.each(selectedCalendarDays, function(){
+		$(this).removeClass("active111");
+	})
+
+}
+
+function doCloseDropdown(clickedElement){
+	if($(clickedElement).parents(".filter-container").length > 0){
+		return false;
+	}
+	// For whatever reason if the user clicks the "Next" button on the datepicker,
+	// only two parent elements are returned. Thus the above equality equates to true even
+	// though the date picker is a child of the .filter-container div.
+	// This ensures the dropdown will not close when the user clicks the datepicker.
+	else if ($(clickedElement).parent().hasClass("ui-datepicker-next")){
+		return false;
+	}
+	else if ($(clickedElement).parent().hasClass("ui-datepicker-prev")){
+		return false;
+	}			
+	else{
+		return true;
+	}
+}
+
+function getJobs(doSetMap){
+	
+	if(areInputsValid()){
+		
+		var params = ""; 
+		params += "?isAppendingJobs=0";
+		params += "&radius=" + $("#radius").val();
+		params += "&fromAddress=" + getLocation();
+		params += appendTime("start-time-dropdown", "startTime", "beforeStartTime");
+		params += appendTime("end-time-dropdown", "endTime", "beforeEndTime");
+		params += appendDate("start-date-dropdown", "startDate", "beforeStartDate");
+		params += appendDate("end-date-dropdown", "endDate", "beforeEndDate");
+		params += appendWorkDays();
+		
+//			params += "&categoryId=-1";
+		
+		$.ajax({
+			type : "GET",
+				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
+				success : _success,
+				error : _error,
+				cache: true
+			});
+
+		function _success(response) {
+			//This function receives a velocity template
+			
+			$("#filteredJobs").html(response);		
+			
+			//Show the jobs and map container if this is the first job request
+			if(!$("#mainBottom").is("visible")){
+				$("#mainBottom").show();
+			}
+			
+			//The map should not be set when sorting jobs because the same jobs will be returned,
+			//they will only be displayed in a different order.
+			//Because the same jobs will be returned, the map markers will remain the same.
+			//Reloading the map is a bit awkward when sorting. 
+			if(doSetMap == 1){
+				setMap();	
+			}
+				
+		}	
+
+		function _error(response) {
+			alert('DEBUG: error set filter jobs')
+		}
+	}
+}	
+
+
+function setMap(){
+	
+	var requestedLat = $("#requestOrigin").data("lat");
+	var requestedLng = $("#requestOrigin").data("lng");
+	var requestedRadius = $("#requestOrigin").data("max-dist");
+	
+	var requestedLatLng = {
+			lat : requestedLat,
+			lng : requestedLng,
+		};
+
+	var map = new google.maps.Map(document.getElementById('map'), {
+		zoom : getZoom(requestedRadius),
+		center : requestedLatLng,
+		scrollwheel: false,
+		streetViewControl: false,
+//			disableDefaultUI: true,
+	    mapTypeControlOptions: {
+	      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+	    }
+	});
+	
+	//Show job markers
+	$("#filteredJobs").find(".job").each(function(){
+		var jobLatLng = {
+				lat : $(this).data("lat"),
+				lng : $(this).data("lng")
+			};
+		var marker = new google.maps.Marker({
+			position : jobLatLng,
+			map : map,
+			icon: "/JobSearch/static/images/Capture.png",
+		});
+		
+		marker.addListener('mouseover', function() {
+			alert(3543)
+		  });
+		
+	})	
+	
+}
+
+function getZoom(radius){
+	
+	if (radius < 0)
+		//This will occur if no jobs match the user's fiter(s)
+		return 11;
+	else if (radius < 5)
+		return 12
+	else if (radius < 25)
+		return 11
+	else if (radius < 50)
+		return 10
+	else if (radius < 100)
+		return 8
+	else if (radius < 500)
+		return 6
+	else
+		return 5;
+}
+
+function initMap() {
+	//Eventually initialize it to a user defualt
+	var myLatLng = {
+		lat : 44.954445,
+		lng : -93.091301,
+	};
+	var map = new google.maps.Map(document.getElementById('map'), {
+		zoom : 8,
+		center : myLatLng,
+		scrollwheel: false,
+		streetViewControl: false,
+//			disableDefaultUI: true,
+	    mapTypeControlOptions: {
+	      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+	    }
+
+	});
+}

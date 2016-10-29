@@ -1,5 +1,5 @@
 .invalid{
-	border: 5px solid #b30000;
+	border: 5px solid #b30000 !important;
 }
 
 .invalid-select-input{
@@ -18,4 +18,14 @@
 
 #invalidJobName{
 	margin-left: 95px;
+}
+
+
+.error-message{
+	display:none;
+	color:#b30000;
+}
+
+.error-message-container{
+	padding:5px 0px;
 }
