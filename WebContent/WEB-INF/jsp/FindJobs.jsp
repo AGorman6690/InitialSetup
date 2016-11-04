@@ -4,58 +4,60 @@
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/User.js" />"></script>
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<script src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script>
+<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
+<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
+<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
 
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
 <!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Gitman_Bros.css" />
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_Jobs.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_new.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/datepicker.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/calendar.css" />
 
-<!-- Time picker -->
-<!-- <link rel="stylesheet" type="text/css" href="http://localhost:8080/JobSearch/static/External/jquery.timepicker.css" /> -->
-<%-- <script src="<c:url value="http://localhost:8080/JobSearch/static/External/jquery.timepicker.min.js" />"></script> --%>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 
-<!-- <!-- Checkbox picker --> 
-<%-- <script src="<c:url value="/static/External/bootstrap-checkbox.min.js" />"></script> --%>
 
-<link
-	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css"
-	rel="stylesheet" />
-<script
-	src="/JobSearch/static/External/bootstrap-datepicker.js"></script>
-</head>
+<!-- <link -->
+<!-- 	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css" -->
+<!-- 	rel="stylesheet" /> -->
+<!-- <script -->
+<!-- 	src="/JobSearch/static/External/bootstrap-datepicker.js"></script> -->
+<!-- </head> -->
 
 <body>
 
-	<input type="hidden" id="userId" value="${user.userId}" />
-		<a href="/JobSearch/jobs/find-old">New Find Jobs</a>
-	
 	<div class="container">
 		<div class="row">
-			<div id="distanceFilterContainer" class="col-sm-12">
-			
-				<div id="radiusErrorMessage" class="error-message"></div>
-				<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
-				<div id="distanceFilter" class="input-container-group form-group">	
+			<div id="distanceContainer" class="col-sm-12">
+				<div>
+
+				<div id="distance" class="filter-container form-group">	
+					<div id="distanceErrorMessage" class="error-message-container">
+						<div id="radiusErrorMessage" class="error-message">The number of miles must be a positive number</div>
+						<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
+					</div>
 					<div class="input-container">									
 						<input name="radius" type="text"
-							class="form-control" id="radius" placeholder="Number Of" value="50"></input>
+							class="" id="radius" placeholder="Number Of" value="50"></input>
 					</div>			
-					<div class="input-container">					
+					<span id="milesFromContainer">					
 						<label id="milesFrom" for="radius">Miles From</label>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="city" placeholder="City"></input>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="state" placeholder="State"></input>
-					</div>			
-					<div class="input-container">			
-						<input name="radius" type="text"
-							class="form-control" id="zipCode" placeholder="Zip Code" value="55119"></input>
-					</div>																			
+					</span>		
+					<div id="locationContainer">	
+						<div class="input-container">			
+							<input name="radius" type="text"
+								class="" id="city" placeholder="City"></input>
+						</div>			
+						<div class="input-container">			
+							<input name="radius" type="text"
+								class="" id="state" placeholder="State"></input>
+						</div>			
+						<div class="input-container">			
+							<input name="radius" type="text"
+								class="" id="zipCode" placeholder="Zip Code" value="55119"></input>
+						</div>			
+					</div>																
+				</div>
 				</div>
 			</div>
 		</div>
@@ -63,21 +65,22 @@
 		<div class="row">
 		
 			<div class="col-sm-12">
-				<div id="additionalFiltersContainer" class="input-container-group">
-				<b>(Filters are currently broken, but you can still "Get Jobs")</b>
-					<div class="row row-margin-override">
-						<div class="col-sm-4 col-padding">
-							<div data-display-text="Start"								
-								class="input-container dropdown-input-container input-width">
+				<div id="additionalFiltersContainer" class="">
+					<div class="row">
+						<div class="col-sm-4">
+							<div data-display-text="Start" class="filter-container">
 								
-								<div class="dropdown-input-label">									
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="display-text"
-										data-reset-text="Start Time" >Start Time</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="start-time-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="Start Time" >Start Time</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
 								</div>
 							
-								<div class="additional-filter dropdown-input-selection-container input-width">
+								<div id="start-time-dropdown" class="dropdown">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="startTime"
@@ -90,29 +93,33 @@
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
-									<div class="select-container">								
-										<select id="startTimeOptions" data-default-scroll-value="7:00am"
-											data-filter-dto-prop="startTime" name="startTime"
-											class="filter-input form-control size">
-										 </select>	
-							  		</div>	
-							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+									<div class="filter-value-container">
+										<div class="select-container">								
+											<select id="startTimeOptions" data-default-scroll-value="7:00am"
+												data-filter-dto-prop="startTime" name="startTime"
+												class="filter-input form-control size">
+											 </select>	
+								  		</div>	
+							  		</div>
+							  		<span class="glyphicon glyphicon-ok"></span>							  		
 								</div>
 								
 							</div>
 						</div>	
-						<div class="col-sm-4 col-padding">
-							<div data-display-text="End"								
-								class="input-container dropdown-input-container input-width">
+						<div class="col-sm-4">
+							<div data-display-text="End" class="filter-container">
 								
-								<div class="dropdown-input-label">									
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="display-text"
-										data-reset-text="End Time">End Time</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="end-time-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="End Time" >End Time</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
 								</div>
 							
-								<div class="additional-filter dropdown-input-selection-container input-width">
+								<div id="end-time-dropdown" class="dropdown">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="endTime"
@@ -125,66 +132,75 @@
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
-									<div class="select-container">								
-										<select id="endTimeOptions" data-default-scroll-value="5:00pm"
-											data-filter-dto-prop="endTime" name="endTime"
-											class="filter-input form-control size">
-										 </select>	
-							  		</div>	
-							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+									<div class="filter-value-container">
+										<div class="select-container">								
+											<select id="endTimeOptions" data-default-scroll-value="7:00am"
+												data-filter-dto-prop="endTime" name="endTime"
+												class="filter-input form-control size">
+											 </select>	
+								  		</div>	
+								  	</div>
+							  		<span class="glyphicon glyphicon-ok"></span>							  		
 								</div>
 								
 							</div>
 						</div>
-						<div class="col-sm-4 col-padding">
+						<div class="col-sm-4">
 							<div data-display-text="" data-display-text-suffix="Days"
-								 class="input-container dropdown-input-container input-width">
+								 class="filter-container">
 
-								<div class="dropdown-input-label">									
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="display-text"
-										data-reset-text="Duration">Duration</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="duration-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="Duration" >Duration (not built)</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
 								</div>
 								
 								
-								<div class="additional-filter dropdown-input-selection-container input-width">
+								<div id="duration-dropdown" class="dropdown">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="duration"
 										  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration"
-										  	data-filter-value="1">Less Than</label>
+										  	data-filter-value="1">Shorter Than</label>
 										</div>
 										<div class="radio">
 										  <label><input type="radio" name="duration"
 										  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration"
-										  	data-filter-value="0">Greater Than</label>
+										  	data-filter-value="0">Longer Than</label>
 										</div>										
 									</div>
-<!-- 									<div class="select-container">								 -->
-									<div class="input-container form-group">
-								  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
-							  		</div>		
-<!-- 							  		</div>	 -->
+<!-- 									<div class="select-container">		
+						 -->
+									<div class="filter-value-container">
+										<div class="input-container form-group">
+									  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
+								  		</div>		
+	<!-- 							  		</div>	 -->
+									</div>
 							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
 								</div>
 							</div>
-
+						</div>
 					</div>
-					<div class="row row-margin-override">
-						<div class="col-sm-4 col-padding">
-							<div data-display-text="Start"								
-								class="input-container dropdown-input-container input-width">
-
-								<div class="dropdown-input-label">									
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="display-text"
-										data-reset-text="Start Date">Start Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+					<div class="row">
+						<div class="col-sm-4">
+							<div data-display-text="Start" class="filter-container">
+								
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="start-date-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="Start Date" >Start Date</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
 								</div>
-								
-								
-								<div class="additional-filter dropdown-input-selection-container input-width">
+							
+								<div id="start-date-dropdown" class="dropdown">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="startDate"
@@ -197,33 +213,29 @@
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
-<!-- 									<div class="select-container">								 -->
-									<div class="input-container form-group">
-								  		<input type="text" class="filter-input form-control date" data-filter-dto-prop="startDate" >
-							  		</div>		
-<!-- 							  		</div>	 -->
-							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+									<div class="filter-value-container">
+										<div class="calendar-single-date" data-number-of-months="1">
+										</div>
+									</div>
+							  		<span id="okFilterStartDate" class="glyphicon glyphicon-ok"></span>
 								</div>
-								
-
-								
 								
 							</div>
-						</div>
-						
-						<div class="col-sm-4 col-padding">
-							<div data-display-text="End"								
-								class="input-container dropdown-input-container input-width">
-
-								<div class="dropdown-input-label">									
-									<span class="remove-additional-filter glyphicon glyphicon-remove"></span>
-									<span class="display-text"
-										data-reset-text="End Date">End Date</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>					
+						</div>	
+						<div class="col-sm-4">
+							<div data-display-text="End" class="filter-container">
+								
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="end-date-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="End Date">End Date</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
 								</div>
-								
-								
-								<div class="additional-filter dropdown-input-selection-container input-width">
+							
+								<div id="end-date-dropdown" class="dropdown">
 									<div class="radio-container">
 										<div class="radio">
 										  <label><input type="radio" name="endDate"
@@ -236,44 +248,55 @@
 										  	data-filter-value="0">After</label>
 										</div>										
 									</div>
-<!-- 									<div class="select-container">								 -->
-									<div class="input-container form-group">
-								  		<input type="text" class="filter-input form-control date" data-filter-dto-prop="endDate" >
-							  		</div>		
-<!-- 							  		</div>	 -->
-							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
-								</div>
-								
-
-								
-								
-							</div>
-						</div>
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container input-width">
-								<div class="dropdown-input-label">
-									<span class="">Categories (not built)</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-							</div>	
-						</div>										
-					</div>
-					
-					<div class="row row-margin-override">
-						<div class="col-sm-4 col-padding">
-							<div class="input-container dropdown-input-container input-width">
-								<div class="dropdown-input-label">
-									<span class="">Working Days (not built)</span>
-									<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>
-								</div>
-								<div class="additional-filter dropdown-input-selection-container input-width">
-									<div id="calendar" data-is-showing-job="0">
+									<div class="filter-value-container">
+										<div class="calendar-single-date" data-number-of-months="1">
+										</div>
 									</div>
-									
-								</div>								
+							  		<span id="okFilterEndDate" class="glyphicon glyphicon-ok"></span>			  		
+								</div>
+								
 							</div>
+						</div>										
+						<div class="col-sm-4">
+							<div id="workDays" data-display-text="Work Days" class="filter-container">
+								
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="work-days-dropdown" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="Work Days" >Work Days</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
+								</div>
+							
+								<div id="work-days-dropdown" class="dropdown">
+									<div class="note">Jobs having at least one work day in the selected date range will be returned</div>
+									<div class="filter-value-container">
+										<div id="calendar" class="calendar-multi-date" data-number-of-months="2">
+										</div>
+									</div>
+									<button class="square-button" id="clearCalendar">Clear</button>
+									<span id="okFilterWorkingDays" class="glyphicon glyphicon-ok"></span>
+								</div>															  		
+							</div>								
 						</div>
-									
+					</div>
+					<div class="row">
+						<div class="col-sm-4">
+							<div data-display-text="sadf" class="filter-container">
+								
+								<div  class="dropdown-container">	
+									<div class="remove-filter">								
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div data-toggle-id="" class="trigger-dropdown">	
+										<span class="filter-text" data-reset-text="Categories" >Categories (not built)</span>
+										<span class="glyphicon glyphicon-menu-down"></span>		
+									</div>			
+								</div>
+							</div>								
+						</div>										
 					</div>					
 				</div>			
 			</div> <!--  end filters container -->
@@ -281,17 +304,18 @@
 		
 		<div class="row">
 			<div class="col-sm-12">
-				<div id="getJobsContainer" class="input-container-group">
+				<div id="getJobsContainer"> 
 					<div class="input-container">
-						<button id="getJobs" class="btn">Get Jobs</button>
+						<button id="getJobs" class="square-button-green">Get Jobs</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		
-		</div>
-		<div class="row" id="mainBottom">
-			<div id="jobsContainer" class="col-sm-4 right-border" >
+	<div id="mainBottom">
+		<div class="row">
+			<div class="col-sm-12">
+<!-- 				<div id="jobsContainer" class="col-sm-4 right-border" > -->
 <!-- 				<h3 class="header">Jobs</h3>							 -->
 				
 				<div class="sort-jobs-by-container">
@@ -301,7 +325,7 @@
 							<span class="dropdown-input-icon glyphicon glyphicon-menu-down"></span>			
 						</div>
 						
-						<div id="sortOptions" class="dropdown-input-selection-container">
+						<div id="sortOptions" class="dropdown">
 							<ul class="sort-width">
 								<li>
 									<div class="sort">
@@ -410,12 +434,12 @@
 						</div>
 				
 					</div>
-				</div>
-
-				<div id="filteredJobs" class="">
 				</div>			
 			</div>
-						
+		</div>
+		<div class="row" >
+			<div id="filteredJobs" class="col-sm-4">
+			</div>					
 			<div id="mapContainer" class="col-sm-8">				
 <!-- 				<h3 class="header">Map</h3>				 -->
 				<div id="map" class="right-border">
@@ -424,7 +448,7 @@
 			</div>		
 		</div>
 	</div>
-
+</div>
 	
 	
 <!-- 	<form> -->
@@ -455,432 +479,10 @@
 
 <script>
 
-$(document).ready(function() {
-	
-		$("#jobsContainer").on("click", ".sort-direction input[type='radio']", function(){
-			
-// 			setFilteredJobs(0);
-			
-			//*********************************************			
-			//*********************************************
-			//Finish this
-			
-			sortLoadedJobs();
-			//*********************************************
-			//*********************************************			
-			
-			//Hide the sort dropdown
-			$("#sortOptions").hide();
-		})
+
+
 		
 	
-		$("body").on("click", ".dropdown-input-label", function(){
-			
-			//Get the filter dropdown div to toggle
-			var $container = $($(this).parents(".dropdown-input-container")[0]);
-			var $dropdown = $($container.find(".dropdown-input-selection-container")[0]); 
-			
-			//Save the current state of the clicked filter.
-			//If it is currently hidden, it needs to be shown.
-			//However, the code below attempts to hide any filter that is shown.
-			var willHide;			
-			if($dropdown.is(":visible")){
-				willHide = true; 
-			}else{
-				willHide = false;
-			}
-			
-			//If another filter's dropdown is shown, then hide it. 
-			$($("#additionalFiltersContainer").find(".dropdown-input-selection-container:visible")[0]).hide();
-			
-			//Toggle the clicked filter's dropdown
-			if(willHide){
-				$dropdown.hide();
-			}else{
-				$dropdown.show();
-			}
-
-		})
-		
-		$(".approve-additional-filter").click(function(){
-			
-			//************************************************************************
-			//************************************************************************
-			//Note: When the input is invalid, outline the missing input in red
-			//************************************************************************
-			//************************************************************************
-			
-			
-			var dropdownContainer = $(this).parents(".dropdown-input-container")[0];
-			var displayText = $(dropdownContainer).data("display-text");
-			var displayTextSuffix = $(dropdownContainer).data("display-text-suffix");
-			var arr = [];
-			var checkedRadio;
-			var select;
-			var input;
-			var isValidInput = 0;
-			var $inputLabel;
-			
-			//If filter has a radio group
-			arr = $(dropdownContainer).find(".radio-container");
-			if(arr.length > 0){
-				checkedRadio = $(arr[0]).find("input[type=radio]:checked")[0];
-				
-				//If a radio has not been selected
-				if(checkedRadio == null){
-					isValidInput = -1;		
-				}else{
-					displayText += " " + $(checkedRadio).data("display-text");
-				}					
-			}
-				
-			//If filter has a select 
-			arr = $(dropdownContainer).find(".select-container");
-			if(arr.length > 0){
-				select = $(arr[0]).find("select")[0]; 
-				
-				//If select is blank
-				if($(select).val() == ""){
-					isValidInput = -1;
-				}else{
-					displayText += " " + $(select).val();
-				}				
-			}
-			
-			//If filter has text input
-			arr = $(dropdownContainer).find(".input-container");
-			if(arr.length > 0){
-				input = $(arr[0]).find("input[type=text]")[0]; 
-				
-				//If input is blank
-				if($(input).val() == ""){
-					isValidInput = -1;
-				}else{
-					displayText += " " + $(input).val();
-				}				
-			}			
-			
-			//Add the suffix to display after the filter value
-			if(displayTextSuffix != null){
-				displayText += " " + displayTextSuffix;
-			}
-			
-			//If input is valid, then format the dropdown.
-			$inputLabel = $($(dropdownContainer).find(".dropdown-input-label")[0]);
-			if(isValidInput > -1){ 
-				
-				//Change the visible text
-				$($(dropdownContainer).find(".display-text")[0]).html(displayText);
-				
-				//Add color
-				$inputLabel.addClass("selected");
-				
-				//Hide filter dropdown
-				$($(dropdownContainer).find(".dropdown-input-selection-container")[0]).hide();
-				
-				//Add "X"
-				$($(dropdownContainer).find(".remove-additional-filter")[0]).show();
-			}else{
-				$inputLabel.removeClass("selected");
-			}
-			
-		})
-		
-		$(".remove-additional-filter").click(function(event){
-			
-			event.stopImmediatePropagation();
-			
-			var container;
-			var selectionDiv;
-			var $displayText;
-			
-			$(this).parent().removeClass("selected");
-			$(this).hide();
-			
-			//Reset the display text
-			$displayText = $($(this).parent().find(".display-text")[0]);
-			$displayText.html($displayText.data("reset-text"));
-			
-			//Get the dropdown div that was used to set the filter
-			container = $(this).parents(".dropdown-input-container")[0];
-			selectionDiv = $(container).find(".dropdown-input-selection-container")[0];
-			
-			//If applicable, clear select
-			$(selectionDiv).find(".select-container select").each(function(){
-				$(this).val("");
-			})
-			
-			//If applicable, clear radios
-			$(selectionDiv).find("input[type=radio]").each(function(){
-				$(this).removeAttr("checked");
-			})
-			
-			//If applicable, clear text inputs
-			$(selectionDiv).find("input[type=text]").each(function(){
-				$(this).val("");
-			})
-			
-		})
-		
-	
-		
-		
-		$("#jobsContainer").on("click", ".show-more-less", function(){
-			//Toggle the filter job's description to show more or less
-			
-			var description = $(this).siblings(".job-description")[0];			
-			var isShowingMore;
-			var exceedsMaxHeight;
-			
-			//Determine if the user is showing more or less
-			if($(description).hasClass("less-description")){
-				isShowingMore = 1;
-			}else{
-				isShowingMore = 0;
-			}
-			
-			//Determine if job description exceeds an arbitrary max height
-			if ($(description)[0].scrollHeight > 180){	
-				exceedsMaxHeight = 1
-			}else{
-				exceedsMaxHeight = 0;
-			}		
-			
-			if(isShowingMore){				
-				if(exceedsMaxHeight){	
-					$(description).addClass("exceeds-max-description")
-				}else{
-					$(description).removeClass("exceeds-max-description")				
-				}				
-			}else{
-				//Always remove this class if showing less
-				$(description).removeClass("exceeds-max-description")
-			}
-			
-			toggleClasses($(description), "less-description", "more-description");
-
-			//Toggle icon
-			var icon = $(this).find(".plus-minus")[0];
-			toggleClasses($(icon), "glyphicon-plus", "glyphicon-minus");
-			
-			//Set text
-			var text = $(this).find(".show-more-less-text")[0];
-			if(isShowingMore){
-				$(text).html(" Show less");
-			}else{
-				$(text).html(" Show more");
-			}
-		})
-		
-		$("#getJobs").click(function(){
-			
-			var invalidInputs = 0;
-			
-			//If invalid location input
-			if(validateLocation() == 0){
-				invalidInputs += 1;
-			};			
-				
-			//If invalid radius input
-			if(validateRadius() == 0){
-				invalidInputs += 1;	
-			}
-			
-			//If there are no invalid inputs
-			if(invalidInputs == 0){
-				setFilteredJobs(1);
-			}
-		})
-		
-		
-// 		**********************************************************************************
-// 		**********************************************************************************
-		
-		$("#filteredJobs").scroll(function(){
-
-			//Load more jobs when they scroll to the bottom
-			if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight){
-				appendFilteredJobs();
-			}
-		})
-
-		
-		$("body").click(function(e){
-			
-			//Hide the additional filter selection containers if the user clicked outside of one
-			if($(e.target).parents(".dropdown-input-container").length == 0){
-				$(".dropdown-input-selection-container").each(function(){
-					$(this).hide();
-				})
-			}
-
-		})
-
-		
-
-
-		
-		$(".select-time").click(function(){
-	
-			//Not working. trying to set a default scroll position
-// 			//***************************************************************************
-// 			var $s = $(this);		
-// 			var defaultScrollValue = $s.data("default-scroll-value");			
-// 			var optionTop = $s.find('[value="' + defaultScrollValue + '"]').offset().top;
-// 			var selectTop = $s.offset().top;
-// 			$s.scrollTop($s.scrollTop() + (optionTop - selectTop));
-			//***************************************************************************
-		})
-
-// 		$(".clear-filter").click(function(){
-// 			var filterContent = $(this).parents(".filter-content")[0];
-			
-// 			$(filterContent).find("input, select").each(function(){
-// 				$(this).val("");
-// 			})
-			
-// 			//Reset filter header text
-// 			var f = $(this).parents(".filter-content-container")[0];
-// 			var g = $(f).find(".filter-criteria-header")[0];
-// 			var header = $($(this).parents(".filter-criteria-container")[0]).find(".filter-criteria-header")[0];
-// 			$(header).text($(this).data("reset-header"));
-			
-// 			$(this).hide();
-// 		})
-		
-		//******************************************************************************
-		//******************************************************************************
-		//Currently not being used.
-		//This is used so the user can view time by 15 or 30 minute intervals, not just 60.
-		//Incorporate this later
-		$(".show-time-options-container").click(function(){
-
-			$($(this).siblings(".time-options")[0]).toggle();	
-		})	
-		
-		$(".change-time-options").click(function(){
-			setTimeOptions($("#" + $(this).data("for-select")), $(this).data("increment"));
-		})		
-
-		setTimeOptions($("#startTimeOptions"), 60);
-		setTimeOptions($("#endTimeOptions"), 60);
-		//******************************************************************************
-		//******************************************************************************		
-
-
-		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-		
-				
-// 		$('#workingDays').datepicker({
-// 			toggleActive: true,
-// 			clearBtn: true,
-// 			todayHighlight: true,
-// 			startDate: new Date(),
-// 			multidate: true			
-// 		});	
-	
-		$('.date').datepicker({
-			autoclose: true,
-			toggleActive: true});
-
-// 		$('#filterStartTime').timepicker({
-// 			'useSelect' : true,
-// 			'scrollDefault': '7:00am'
-			
-// 		});
-		
-// 		$('#filterEndTime').timepicker({
-// 			'scrollDefault': '5:00pm'
-			
-// 		});
-	
-	})
-		
-	function validateRadius(){
-		
-		//Radius		
-		var errorMessage;
-		var isValidRadius = 0;
-		var radius = $("#radius").val();
-		var errorMessageText;
-		
-		//Validate
-		if(radius == ""){
-			errorMessageText = "Number of miles is required."
-			validRadius = 0;		
-		}else if(!$.isNumeric(radius)){
-			errorMessageText = "Number of miles must be numeric."
-			validRadius = 0;
-		}else if(radius <= 0){
-			errorMessageText = "Number of miles must be greater than 0."
-			validRadius = 0;
-		}else{
-			validRadius = 1;
-		}
-		
-		//Set error message
-		errorMessage = $("#radiusErrorMessage"); 			
-		if(validRadius == 0){
-			$(errorMessage).html(errorMessageText);
-			$(errorMessage).show();
-		}else{
-			$(errorMessage).hide();
-		}
-		
-		return validRadius;
-	}
-	
-	function validateLocation(){
-	
-		var errorMessage;
-		var city;
-		var state;
-		var zipCode;
-		var validRadius;
-		var validCity;
-		var validState;
-		var validZipCode;
-		var validLocation;
-		
-		//City		
-		city = $("#city").val();
-		if( !city || city.length === 0){
-			validCity = 0;
-		}else{
-			validCity = 1;
-		}
-		
-		//State
-		state = $("#state").val();
-		if( !state || state.length === 0){
-			validState = 0;
-		}else{
-			validState = 1;
-		}
-
-		//Zip code
-		zipCode = $("#zipCode").val();
-		if( !zipCode || zipCode.length === 0){
-			validZipCode = 0;
-		}else{
-			validZipCode = 1;
-	
-		}			
-		
-		//Set error message
-		errorMessage = $("#locationErrorMessage");
-		if(validCity == 0 && validState == 0 && validZipCode == 0){			
-			//$(errorMessage).html("City, state or zip code required.")
-			$(errorMessage).show();
-			validLocation = 0;
-
-		}else{
-			$(errorMessage).hide();
-			validLocation = 1;
-		}
-		
-		return validLocation;
-	}
 
 	
 	function setTimeOptions($eSelect, increment){
@@ -931,59 +533,6 @@ $(document).ready(function() {
 		}
 	}
 
-	function setMap(){
-		
-		//Set map origin
-		var myLatLng = {
-				lat : $("#requestOrigin").data("lat"),
-				lng : $("#requestOrigin").data("lng")
-			};
-
-		//Set map zoom
-		var zoom;
-		var requestedRadius = $("#requestOrigin").data("max-dist");
-		
-		if (requestedRadius < 0)
-			//This will occur if no jobs match the user's fiter(s)
-			zoom = 11;
-		else if (requestedRadius < 5)
-			zoom = 12
-		else if (requestedRadius < 25)
-			zoom = 11
-		else if (requestedRadius < 50)
-			zoom = 10
-		else if (requestedRadius < 100)
-			zoom = 8
-		else if (requestedRadius < 500)
-			zoom = 6
-		else
-			zoom = 5;
-		
-		//Set map
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom : zoom,
-			center : myLatLng,
-			scrollwheel: false,
-			streetViewControl: false,
-// 			disableDefaultUI: true,
-		    mapTypeControlOptions: {
-		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-		    }
-		});
-		
-		//Show job markers
-		$("#filteredJobs").find(".job").each(function(){
-			var jobLatLng = {
-					lat : $(this).data("lat"),
-					lng : $(this).data("lng")
-				};
-			var marker = new google.maps.Marker({
-				position : jobLatLng,
-				map : map,
-			});
-		})	
-		
-	}
 	
 	function getFilterParameters(){
 		
@@ -1143,74 +692,14 @@ $(document).ready(function() {
 			}
 	}
 	
-	function getRequestedLatAndLngParams(){
-		var params;
-		params = "lat=" + $("#requestOrigin").data("lat");
-		params += "&lng=" + $("#requestOrigin").data("lng");
-		return params;
-	}
 	
-	function setFilteredJobs(doSetMap) {
-		
-		var params = getFilterParameters();
-		params += "&isAppendingJobs=0";
-		
-		$.ajax({
-			type : "GET",
-				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
-				success : _success,
-				error : _error,
-				cache: true
-			});
 
-			function _success(response) {
-				//This function receives a velocity template
-				
-				$("#filteredJobs").html(response);		
-				
-				//Show the jobs and map container if this is the first job request
-				if(!$("#mainBottom").is("visible")){
-					$("#mainBottom").show();
-				}
-				
-				//The map should not be set when sorting jobs because the same jobs will be returned,
-				//they will only be displayed in a different order.
-				//Because the same jobs will be returned, the map markers will remain the same.
-				//Reloading the map is a bit akward when sorting. 
-				if(doSetMap ==1){
-					setMap();	
-				}
-					
-			}	
-
-			function _error(response) {
-				alert('DEBUG: error set filter jobs')
-			}
-	}
 	
-// 	function initMap2() {
-// 		//Eventually initialize it to a user defualt
-// 		var myLatLng = {
-// 			lat : 44.954445,
-// 			lng : -93.091301,
-// 		};
-// 		var map = new google.maps.Map(document.getElementById('map'), {
-// 			zoom : 8,
-// 			center : myLatLng,
-// 			scrollwheel: false,
-// 			streetViewControl: false,
-// // 			disableDefaultUI: true,
-// 		    mapTypeControlOptions: {
-// 		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-// 		    }
-
-// 		});
-// 	}
+	
 </script>
 
 <script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap_NO_CALLBACK_FOR_NOW">
-	
-</script>
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+</script> 
 
 <%@ include file="./includes/Footer.jsp"%>

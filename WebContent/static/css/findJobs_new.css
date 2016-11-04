@@ -23,6 +23,13 @@
 #filteredJobs{
 	overflow-y:auto;
 	max-height:915px;
+
+}
+
+.glyphicon-move{
+	float:right;
+	cursor:pointer;
+	font-size:16px;
 }
 
 .row{
@@ -66,6 +73,10 @@
 .radio-container,
 .filter-value-container{
 	padding:5px;
+}
+
+div[data-scroll-to]{
+	cursor:pointer;
 }
 
 .radio-container{

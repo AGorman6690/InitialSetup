@@ -25,7 +25,32 @@ $(document).ready(function() {
 			
 		})
 		
+		$("#filteredJobs").on("mouseover", ".job", function(){
+		  
+//			var btn1 = document.getElementById('btn1');
+
+
+		})
 		
+		$("#mainBottom").on("click", "div[data-scroll-to]", function(){
+			
+			var currentScrollPosition = $('#filteredJobs').scrollTop();
+			var topFilteredJobsContainer = $('#filteredJobs').offset().top; 
+			var topClickedJob = $("#" + $(this).attr("data-scroll-to")).offset().top;
+			var newScrollTop;
+			
+			//If the current job to scroll to is already scrolled past
+			if(topClickedJob < topFilteredJobsContainer){
+				
+				//Scroll up
+				newScrollTop = currentScrollPosition - topFilteredJobsContainer + topClickedJob;
+			}
+			else{
+				//Scroll down
+				newScrollTop =  currentScrollPosition + topClickedJob - topFilteredJobsContainer;
+			}
+			$('#filteredJobs').animate({ scrollTop: newScrollTop}, 500);
+		})
 		
 		
 		$("#jobsContainer").on("click", ".show-more-less", function(){
@@ -638,19 +663,65 @@ function setMap(){
 				lat : $(this).data("lat"),
 				lng : $(this).data("lng")
 			};
+		
+		var icon = {
+			url: "/JobSearch/static/images/map-marker-black.png",
+			scaledSize: new google.maps.Size(30, 30),
+		}
+		
+		var icon_mouseover = {
+    			url: "/JobSearch/static/images/map-marker-red.png",
+    			scaledSize: new google.maps.Size(30, 30),
+    		}
+		
 		var marker = new google.maps.Marker({
 			position : jobLatLng,
 			map : map,
-			icon: "/JobSearch/static/images/Capture.png",
+			icon: icon,
 		});
 		
-		marker.addListener('mouseover', function() {
-			alert(3543)
-		  });
+
+	  var infowindow = new google.maps.InfoWindow({
+	    content: "<div>" +
+	    			"<div data-scroll-to='" + $(this).attr("id") + "'>Scroll To Job</div>" +
+//	    			"<a href='#" + $(this).attr("id") + "'>Scroll To Job</div>" +
+	    		"</div>",
+	  });
+
+
+	 
+	marker.addListener('mouseover', function() {
+		infowindow.open(map,marker);
+	  });
+	
+	var jobName = this;//.find("a.job-name")[0];
+	var centerMapOnJob = $(this).find(".glyphicon-move")[0];
+	
+    google.maps.event.addDomListener(jobName, 'mouseout', function () {    	  
+    	marker.setIcon(icon);
+    });
+	
+    google.maps.event.addDomListener(jobName, 'mouseover', function () {  
+    	marker.setIcon(icon_mouseover);
+
+    });
+    
+    google.maps.event.addDomListener(centerMapOnJob, "click", function () {
+//        infowindow.setContent(this.html);
+//        infowindow.open(map, this);
+        map.setCenter(marker.getPosition()); 
+//        map.setZoom(5);
+    });
+	
+//	marker.addListener('mouseout', function() {
+//		infowindow.close();
+//	  });
 		
 	})	
 	
 }
+
+
 
 function getZoom(radius){
 	
