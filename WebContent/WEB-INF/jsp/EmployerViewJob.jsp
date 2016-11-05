@@ -1,12 +1,17 @@
 <%@ include file="./includes/Header.jsp"%>
-<head>
+
 <%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
+<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 <link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
 <link rel="stylesheet" type="text/css" href="../static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+
+
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 
 <body>
@@ -67,9 +72,12 @@
 	<c:if test="${not empty vtFailedWageNegotiationsByJob}">
 		<div class="section">
 			<div class="header2">
-				<span class="header-text">Failed Wage Negotiations</span>
+				<span data-toggle-id="failedWageNegotiationsContainer" data-toggle-speed="1">
+					<span class="glyphicon glyphicon-menu-up"></span>
+					<span class="header-text">Failed Wage Negotiations</span>
+				</span>
 			</div>
-			<div class="section-body">
+			<div id="failedWageNegotiationsContainer" class="section-body">
 				<div>${vtFailedWageNegotiationsByJob }</div>
 			</div>
 		
@@ -99,6 +107,7 @@
 					<thead>
 						<tr>
 							<th id="applicantName">Name</th>
+							<th id="wageNegotiaion">Wage Negotiation</th>
 							<th id="rating">Rating</th>
 							<th id="endorsements">Endorsements</th>
 						<c:if test="${questions.size() > 0 }">
@@ -129,8 +138,9 @@
 													
 							</th>
 						</c:if>
+							
 							<th id="status">
-								<span data-toggle-id="selectStatusContainer" >
+								<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
 									<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
 								</span>					
 								<div id="selectStatusContainer">
@@ -159,6 +169,48 @@
 							<tr class="" data-application-status="${application.status }"
 								data-application-id="${application.applicationId }">
 								<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+								
+								<td>
+									<c:choose>
+										<c:when test="${application.currentWageProposal.status == 1 }">
+										<!-- ****** If the current wage proposal has been accepted-->
+											<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
+										</c:when>						
+										<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
+			<!-- 						******* If applicant has made the last wage proposal -->
+											<div id="${application.currentWageProposal.id}" class="counter-offer-container">
+												
+												<div class="offer-context">
+													Applicant asking for 
+													<span id="amount">
+														<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+													</span>
+												</div>									
+												<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
+												<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
+												<div id="${ toggleId}" class="counter-offer-response">
+													<button class="accept-counter">Hire</button>
+													<button class="re-counter">Counter</button>		
+													<button class="decline-counter">Decline</button>							
+													<div class="re-counter-amount-container">
+														<input class="re-counter-amount"></input>
+														<button class="send-counter-offer">Send</button>
+														<button class="cancel-counter-offer">Cancel</button>
+													</div>										
+												</div>
+											</div>
+											<div class="sent-response-notification"></div>	
+										</c:when>
+										<c:otherwise>
+			<!-- 						******* Otherwise the employer has made the last wage proposal -->							
+												<div class="offer-context">
+													You offered   
+													<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+												</div>									
+										</c:otherwise>
+									</c:choose>
+								</td>									
+								
 								<td> ${application.applicant.rating}</td>
 								<td>										
 									<c:forEach items="${application.applicant.endorsements }" var="endorsement">
@@ -185,6 +237,15 @@
 									</div>
 								</c:forEach>
 								</td>
+								
+								
+								
+								
+								
+								
+								
+								
+								
 <!-- 								Application Status						 -->
 								<td>
 									<div class="application-status-container">
@@ -237,7 +298,7 @@
 				
 				
 				<c:when test="${empty employees}">
-					<div>There are currently no applicants for this job</div>
+					<div>There are currently no employees for this job</div>
 				</c:when>
 				
 				<c:otherwise>
@@ -252,7 +313,7 @@
 						<tbody>						
 						<c:forEach items="${employees }" var="employee">
 							<tr>
-								<td><a href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
+								<td><a class="accent" href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
 								<td>${employee.rating }</td>
 							</tr>	
 						</c:forEach>						

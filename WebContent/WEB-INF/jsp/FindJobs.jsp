@@ -476,9 +476,33 @@
 <!-- 	</form> -->
 </body>
 
+		
+<!-- 		<script async defer -->
+	<script
+		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+	</script>
 
 <script>
 
+
+
+	$(document).ready(function(){
+
+	
+// 		if(sessionStorage.showFilteredOnPageReturn == "1"){
+// 			$("#map").html(sessionStorage.map);
+			
+			if(sessionStorage.doStoreFilteredJobs == "1"){
+				$("#filteredJobs").html(sessionStorage.filteredJobs);
+				setMap();				
+				$("#mainBottom").show();
+			}
+			else{
+				$("#mainBottom").hide();
+			}
+
+// 		}
+	})
 
 
 		
@@ -698,8 +722,6 @@
 	
 </script>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-</script> 
+ 
 
 <%@ include file="./includes/Footer.jsp"%>

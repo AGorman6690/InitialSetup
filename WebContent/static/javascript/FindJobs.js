@@ -2,11 +2,47 @@ $(document).ready(function() {
 		
 		var filteredStartDate = null;
 		var filteredEndDate = null;
-	
+		var exitClickEvent = false;
+		
+		
 		$("#getJobs").click(function(){
 			getJobs(1);
 		})
 		
+		$(".trigger-dropdown").click(function(e){
+			
+			//The below click event that is triggered will infinitely fire this event.
+			//(i.e. the aTriggerDropdown element has the trigger-dropdown class).
+			//The below code should only execute on the **user's** actual click,
+			//not the click that is generated programmatically. 
+			if(exitClickEvent == false){
+				
+				var aTriggerDropdown;
+				var clickedTriggerDropdown = this;
+				var visibleDropdowns = $("#additionalFiltersContainer")
+										.find(".dropdown:visible");
+				
+				if(visibleDropdowns.length > 1){
+					$.each(visibleDropdowns, function(){
+						aTriggerDropdown = $(this).closest(".filter-container").find(".trigger-dropdown")[0];
+						if(aTriggerDropdown != clickedTriggerDropdown){
+							
+							//Used to inform the click event, that will be triggered by the next line, to exit
+							exitClickEvent = true;
+							
+							//Close this other dropdown
+							$(aTriggerDropdown).trigger("click");
+
+						}
+					})
+				}				
+			}
+			else{
+				exitClickEvent = false;
+			}
+			
+
+		})
 		
 	
 		$(".remove-filter").click(function(){
@@ -34,22 +70,22 @@ $(document).ready(function() {
 		
 		$("#mainBottom").on("click", "div[data-scroll-to]", function(){
 			
-			var currentScrollPosition = $('#filteredJobs').scrollTop();
-			var topFilteredJobsContainer = $('#filteredJobs').offset().top; 
-			var topClickedJob = $("#" + $(this).attr("data-scroll-to")).offset().top;
-			var newScrollTop;
-			
-			//If the current job to scroll to is already scrolled past
-			if(topClickedJob < topFilteredJobsContainer){
-				
-				//Scroll up
-				newScrollTop = currentScrollPosition - topFilteredJobsContainer + topClickedJob;
-			}
-			else{
-				//Scroll down
-				newScrollTop =  currentScrollPosition + topClickedJob - topFilteredJobsContainer;
-			}
-			$('#filteredJobs').animate({ scrollTop: newScrollTop}, 500);
+//			var currentScrollPosition = $('#filteredJobs').scrollTop();
+//			var topFilteredJobsContainer = $('#filteredJobs').offset().top; 
+//			var topClickedJob = $("#" + $(this).attr("data-scroll-to")).offset().top;
+//			var newScrollTop;
+//			
+//			//If the current job to scroll to is already scrolled past
+//			if(topClickedJob < topFilteredJobsContainer){
+//				
+//				//Scroll up
+//				newScrollTop = currentScrollPosition - topFilteredJobsContainer + topClickedJob;
+//			}
+//			else{
+//				//Scroll down
+//				newScrollTop =  currentScrollPosition + topClickedJob - topFilteredJobsContainer;
+//			}
+//			$('#filteredJobs').animate({ scrollTop: newScrollTop}, 500);
 		})
 		
 		
@@ -613,6 +649,10 @@ function getJobs(doSetMap){
 			
 			$("#filteredJobs").html(response);		
 			
+			
+			
+			
+			
 			//Show the jobs and map container if this is the first job request
 			if(!$("#mainBottom").is("visible")){
 				$("#mainBottom").show();
@@ -625,6 +665,15 @@ function getJobs(doSetMap){
 			if(doSetMap == 1){
 				setMap();	
 			}
+			
+			sessionStorage.clear();
+			sessionStorage.setItem("doStoreFilteredJobs", doStoreFilteredJobs(response));
+			
+			if(sessionStorage.doStoreFilteredJobs == 1){
+				sessionStorage.setItem("filteredJobs", response);
+				sessionStorage.setItem("map", $("#map").html());	
+			}
+			
 				
 		}	
 
@@ -634,6 +683,14 @@ function getJobs(doSetMap){
 	}
 }	
 
+function doStoreFilteredJobs(response){
+	if(response.indexOf("Sorry, no jobs match your search.") == -1){
+		return 1;
+	}
+	else{
+		return 0;
+	}
+}
 
 function setMap(){
 	
@@ -659,14 +716,16 @@ function setMap(){
 	
 	//Show job markers
 	$("#filteredJobs").find(".job").each(function(){
+		var jobId = $(this).attr("id");
+		
 		var jobLatLng = {
 				lat : $(this).data("lat"),
 				lng : $(this).data("lng")
 			};
 		
 		var icon = {
-			url: "/JobSearch/static/images/map-marker-black.png",
-			scaledSize: new google.maps.Size(30, 30),
+			url: "/JobSearch/static/images/green-square.png",
+			scaledSize: new google.maps.Size(15, 15),
 		}
 		
 		var icon_mouseover = {
@@ -678,6 +737,7 @@ function setMap(){
 			position : jobLatLng,
 			map : map,
 			icon: icon,
+			jobId: jobId,
 		});
 		
 
@@ -689,10 +749,14 @@ function setMap(){
 	  });
 
 
+      marker.addListener('click', function() {
+         scrollToJob(this.jobId);
+        });
+      
 	 
-	marker.addListener('mouseover', function() {
-		infowindow.open(map,marker);
-	  });
+//	marker.addListener('mouseover', function() {
+//		infowindow.open(map,marker);
+//	  });
 	
 	var jobName = this;//.find("a.job-name")[0];
 	var centerMapOnJob = $(this).find(".glyphicon-move")[0];
@@ -719,6 +783,25 @@ function setMap(){
 		
 	})	
 	
+}
+
+function scrollToJob(jobId){
+	var currentScrollPosition = $('#filteredJobs').scrollTop();
+	var topFilteredJobsContainer = $('#filteredJobs').offset().top; 
+	var topClickedJob = $("#" + jobId).offset().top;
+	var newScrollTop;
+	
+	//If the current job to scroll to is already scrolled past
+	if(topClickedJob < topFilteredJobsContainer){
+		
+		//Scroll up
+		newScrollTop = currentScrollPosition - topFilteredJobsContainer + topClickedJob;
+	}
+	else{
+		//Scroll down
+		newScrollTop =  currentScrollPosition + topClickedJob - topFilteredJobsContainer;
+	}
+	$('#filteredJobs').animate({ scrollTop: newScrollTop}, 700);
 }
 
 

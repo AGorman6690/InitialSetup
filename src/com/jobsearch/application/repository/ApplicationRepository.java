@@ -122,7 +122,7 @@ public class ApplicationRepository {
 		argsList.add(userId);
 		
 		
-		//Build or string for statuses
+		//Build a string for statuses
 		boolean isFirst = true;
 		for(int status : statuses){
 			if(isFirst){

@@ -180,10 +180,10 @@
 					<span class="bold">Distance</span> - $mathUtility.round($job.distanceFromFilterLocation, 1, 0) miles
 				</div>				
 			</div>
-			
+			#*			
 			<div class="job-footer">
 			
-			</div>
+			</div> *#
 		</div>
 	 #end
 	 

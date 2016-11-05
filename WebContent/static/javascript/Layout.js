@@ -1,12 +1,24 @@
 $(document).ready(function(){
 	$("[data-toggle-id]").click(function(){
 		var toggleId = $(this).attr("data-toggle-id");
-		
-		
+		var toggleSpeed = $(this).attr("data-toggle-speed");
+		var $e = $("#" + toggleId);
 		//For whatever reason, using .toggle() function makes the container of the element-to-toggle
 		//move to the right and back again ever so slightly.
 		//Using .hide
-		$("#" + toggleId).slideToggle(300);
+		
+		if(toggleSpeed == 0){
+			$e.slideToggle(700);	
+		}
+		else if(toggleSpeed == 1){
+			$e.slideToggle(500);	
+		}
+		else if(toggleSpeed == 2){
+			$e.slideToggle(300);	
+		}else{
+			$e.slideToggle(500);	
+		}
+		
 //		var $eToToggle = $("#" + toggleId);
 //        if($eToToggle.is(":visible")){
 //        	$eToToggle.hide(200);

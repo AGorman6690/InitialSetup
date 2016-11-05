@@ -156,6 +156,20 @@ public class JobController {
 		return "EmployeeViewJobWhenFinding";
 	}
 
+	@RequestMapping(value = "/job/{jobId}/user/{employeeId}", method = RequestMethod.GET)
+	public String getJobInfoAndAnswers_ByEmployee(@PathVariable(value = "jobId") int jobId,
+													@PathVariable(value = "employeeId") int employeeId,
+													Model model, HttpSession session) {
+		
+		
+		
+		jobService.setModel_EmployerViewJob_WhenViewingEmployeeWorkHistory(model, session, jobId, employeeId);
+
+		
+		return "EmployerViewJob_WhenViewingEmployeeWorkHistory";
+		
+	}
+
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
 		
@@ -175,6 +189,18 @@ public class JobController {
 		return null;
 		
 	}
+	
+	@RequestMapping(value = "/completed/job/{jobId}", method = RequestMethod.GET)
+	public String getCompletedJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
+		
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+
+		jobService.setModel_EmployerViewCompletedJob(model, jobId, session);
+		return "EmployerViewCompletedJob";	
+		
+		
+	}
+	
 	
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
 	public String updateJobStatus(@PathVariable(value = "status") int status,
@@ -206,17 +232,17 @@ public class JobController {
 //		return "RateEmployees";
 //	}
 	
-	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
-	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
-		
-//		if(markComplete){
-//			jobService.markJobComplete(jobId);
-//		}
-		
-			jobService.setModel_RateEmployees(model, jobId);
-		
-		return "RateEmployees";
-	}	
+//	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
+//	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
+//		
+////		if(markComplete){
+////			jobService.markJobComplete(jobId);
+////		}
+//		
+//			jobService.setModel_RateEmployees(model, jobId);
+//		
+//		return "RateEmployees";
+//	}	
 
 //	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
 //	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {

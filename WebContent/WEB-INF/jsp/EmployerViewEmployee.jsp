@@ -23,7 +23,7 @@
 			<div class="job-container bottom-border-thinner">
 				<div class="job-categories info">
 					<div class="mock-row"><span class="accent mock-label">Job Name</span>
-					<a class="accent" href="/JobSearch/job/${dto.job.id}">${dto.job.jobName }</a></div>
+					<a class="accent" href="/JobSearch/job/${dto.job.id}/user/${userId_employee}">${dto.job.jobName }</a></div>
 					<div class="mock-row"><span class="accent mock-label">Completion Date</span> ${dto.job.endDate }</div>
 					<div class="mock-row"><span class="accent mock-label">Categories</span> 
 					<c:forEach items="${dto.job.categories }" var="category">

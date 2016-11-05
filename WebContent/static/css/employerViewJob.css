@@ -38,17 +38,25 @@
 }
 
 #rating{
-	width:10%;
+	width:5%;
 }
 
 #endorsements{
-	width:25%;
+	width:15%;
 }
 
 
 #questions{
-	width:35%;
+	width:30%;
 	
+}
+
+#wageNegotiation{
+	width:25%;
+}
+
+#status{
+	width:15%;
 }
 
 #selectQuestionsOK,
@@ -76,9 +84,7 @@
 .question-format{
 	padding-
 }
-#status{
-	width:20%;
-}
+
 
 .application-status-container button{
 	border: 0;

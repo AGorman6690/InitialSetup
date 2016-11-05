@@ -13,8 +13,16 @@
     border-left-style: outset;
 }
 
+#calendar{
+	width:200px !important;
+/* 	cursor:default !important; */
+	min-height:200px;
+}
 
-
+/* #calendar td, */
+.ui-datepicker-calendar a{
+	cursor:default !important;
+}
 
 .answer-option{
 	cursor:pointer;

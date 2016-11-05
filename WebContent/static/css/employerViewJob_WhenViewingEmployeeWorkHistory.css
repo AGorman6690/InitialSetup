@@ -1,0 +1,27 @@
+.selected-answer-option-id{
+	display:none;
+}
+
+.selected {
+    background-color: #337ab7;
+    color: #ffffff;
+}
+
+.answer-container{
+	padding-left:50px;
+}
+.answer-option{
+	width:125px;
+	margin:3px 0px;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+.question-container{
+	padding-bottom:15px;
+}
+
+.question-text{
+	font-weight: bold;
+	font-style: italic;
+}

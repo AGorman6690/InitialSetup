@@ -683,7 +683,9 @@ public class UserServiceImpl {
 	
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.
 											getCompletedJobResponseDtosByEmployee(userId);
+		
 		model.addAttribute("completedJobDtos", completedJobDtos);
+		model.addAttribute("userId_employee", userId);
 		
 	}
 

@@ -1,17 +1,22 @@
 <%@ include file="./includes/Header.jsp"%>
 
-<head>
+
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script>
+	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js"/>"></script>
 <%-- 	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script> --%>
 <%-- 	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script> --%>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
+
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css " />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/datepicker.css " />
 		
 	
 	<!-- Time picker -->
@@ -28,7 +33,6 @@
 <!-- NOTE: Allow user to add job to favorites -->
 <!-- ***************************************************************** -->
 
-	<input id="jobId" value="${jobId }" type="hidden"></input>
 		
 		<div class="container" >
 <!-- 			<div class="row row-padding" style="">					 -->
@@ -48,14 +52,15 @@
 <!-- 				</div>end row -->
 <!-- 			</div>end job cart container -->
 			
-			<div>${vtJobInfo }</div>
+			<div>${vtJobInfo }			
+			</div>
 			<div>${vtQuestionsToAnswer }</div>
 				
 		</div>
 
 
 
-
+<input id="jobId" value="${jobId }" type="hidden"></input>
 
 <script>
 
@@ -69,6 +74,15 @@
 		
 
 	$(document).ready(function() {
+		
+		setAllDatesAsUnselectable($("#calendar"), true);
+
+		$.each($("#workDays").find("[data-date]"), function(){
+			var workDay_date = $(this).attr("data-date");
+			var date = new Date(workDay_date);
+			activateDate($("#calendar"), date);
+		})
+		
 		
 		$(".single").click(function(){
 			var container = $(this).closest(".answer");
@@ -297,6 +311,39 @@
 			});
 		}
 	}
+	
+	function initMap() {
+		
+		var jobLat = parseFloat($("#map").attr("data-lat"));
+		var jobLng = parseFloat($("#map").attr("data-lng"));
+
+		var center = {
+			lat : jobLat,
+			lng : jobLng,
+		};
+		var map = new google.maps.Map(document.getElementById('map'), {
+			zoom : 11,
+			center : center,
+			scrollwheel: false,
+			streetViewControl: false,
+//				disableDefaultUI: true,
+		    mapTypeControlOptions: {
+		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+		    }
+
+		});
+		
+		var icon = {
+				url: "/JobSearch/static/images/map-marker-black.png",
+				scaledSize: new google.maps.Size(30, 30),
+			}
+		
+		var marker = new google.maps.Marker({
+			position : center,
+			map : map,
+			icon: icon,
+		});
+	}
 
 
 // 	function initMap(){
@@ -329,10 +376,9 @@
 
 </script>
 
-<!-- <script async defer -->
-<!-- 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap"> -->
-	
-<!-- </script> -->
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+</script>
 
 
 <%@ include file="./includes/Footer.jsp"%>

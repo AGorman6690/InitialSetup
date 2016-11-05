@@ -14,61 +14,35 @@
 	
 	<script src="<c:url value="/static/javascript/TimePickerUtilities.js"/>"></script>	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" />		
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_new.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_new_without_cart.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
 	
 	<script	src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script>
-	<script	src="<c:url value="/static/javascript/PostJob.js" />"></script>
+	<script	src="<c:url value="/static/javascript/PostJob_without_cart.js" />"></script>
 	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script>
-	
-	
+		
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 		
 </head>
 
 <body>
 
-	<div class="container">
-		
+	<div class="container">	
+	<a href="/JobSearch/postJob-without-cart">Post Job - With Cart</a>
+		<div id="submitJobContainer" class="button-container">
+<!-- 			<button id="submitJobs" data-confirmed="0" type="button" class="clickable square-button" -->
+<!-- 			 	data-toggle="modal" data-target="#confirmJobSubmit">Submit Job</button> -->
+ 			<button id="submitJobs" data-confirmed="0" type="button" class="clickable square-button">Submit Job</button>
+		</div>		
 		<div id="cartContainer" class="section actions-not-clickable">
 			<div class="header">
-				<span class="header-text">Cart</span>
-				<span id="" class="button-container">
-				<button id="submitJobs" data-confirmed="0" type="button" class="clickable square-button"
-					 data-toggle="modal" data-target="#confirmJobSubmit">Submit Jobs</button>
-				</span>				
-			</div>		
-			<div id="jobCart" class="sub-cart section-body">
-				<div class="relative">
-					<div class="header-container">
-						<h4 data-show="jobInfoBody" class="show-section">Jobs</h4>
-						<div class="action-container">
-							<span id="deleteJob" class="delete action" data-toggle="modal" data-target="">Delete</span>
-<!-- 							<span class="glyphicon glyphicon-ok"></span> -->
-						</div>
-						<div class="action-container">
-							<span id="editJob" class="action requires-acknowledgement">Edit</span>
-							<span id="okEditJob" class="glyphicon glyphicon-ok"></span>							
-						</div>
-						<div class="action-container">
-							<span id="copyJob" class="action">Copy</span>
-							<span class="glyphicon glyphicon-ok"></span>							
-						</div>
-						<div class="action-container">
-							<span id="selectQuestions" class="action requires-acknowledgement">Select Questions</span>
-							<span id="okSelectedQuestions" class="glyphicon glyphicon-ok"></span>
-						</div>															
-					</div>
-				</div>
-			</div>
-			<div id="questionCart" class="sub-cart section-body" data-edit="0">
+				<span class="header-text">Questions</span>
 				
-				<div class="relative">
-					<div class="header-container">
-						<h4 data-show="questionInfoBody" class="show-section">Questions</h4>
+
+				
 						<div class="action-container">
 							<span id="deleteQuestion" class="delete action">Delete</span>
 						</div>
@@ -78,24 +52,105 @@
 						</div>
 						<div class="action-container">
 							<span id="copyQuestion" class="action">Copy</span>
-						</div>						
-					</div>
+						</div>		
+			</div>		
+<!-- 			<div id="jobCart" class="sub-cart section-body"> -->
+<!-- 				<div class="relative"> -->
+<!-- 					<div class="header-container"> -->
+<!-- 						<h4 data-show="jobInfoBody" class="show-section">Jobs</h4> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="deleteJob" class="delete action" data-toggle="modal" data-target="">Delete</span> -->
+<!-- <!-- 							<span class="glyphicon glyphicon-ok"></span> -->
+<!-- 						</div> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="editJob" class="action requires-acknowledgement">Edit</span> -->
+<!-- 							<span id="okEditJob" class="glyphicon glyphicon-ok"></span>							 -->
+<!-- 						</div> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="copyJob" class="action">Copy</span> -->
+<!-- 							<span class="glyphicon glyphicon-ok"></span>							 -->
+<!-- 						</div> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="selectQuestions" class="action requires-acknowledgement">Select Questions</span> -->
+<!-- 							<span id="okSelectedQuestions" class="glyphicon glyphicon-ok"></span> -->
+<!-- 						</div>															 -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+			<div id="questionCart" class="sub-cart section-body" data-edit="0">
+				
+<!-- 				<div class="relative"> -->
+<!-- 					<div class="header-container"> -->
+<!-- 						<h4 data-show="questionInfoBody" class="show-section">Questions</h4> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="deleteQuestion" class="delete action">Delete</span> -->
+<!-- 						</div> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="editQuestion" class="action requires-acknowledgement">Edit</span> -->
+<!-- 							<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span> -->
+<!-- 						</div> -->
+<!-- 						<div class="action-container"> -->
+<!-- 							<span id="copyQuestion" class="action">Copy</span> -->
+<!-- 						</div>						 -->
+<!-- 					</div> -->
 
-				</div>
+<!-- 				</div> -->
 				<div id="addedQuestions">
 				</div>
 			</div>
 		</div>
 		<div id="postingContainer">
+			<div id="questionInfo" class="section info-container">
+				<div class="header">
+					<span data-toggle-id="questionInfoBody" data-toggle-speed="1" class="glyphicon glyphicon-menu-up"></span>
+					<span class="header-text">Question Info</span>
+					<span class="button-container">
+						<button id="newQuestion" class="clickable new square-button">New</button>
+						<button id="addQuestion" class="clickable square-button">Add</button>
+						<span id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</span>
+					</span>					
+				</div>	
+				<div id="questionInfoBody">
+					<div class="section-body">
+						<h4>Question Format</h4>
+						<div class="body-element-container form-group bottom-border-thinner">
+							<select id="questionFormat" class="question-formats form-control" title="">
+							  <option selected value="-1" style="display: none"></option>	
+							  <option class="answer-format-item" value="0">Yes or No</option>
+							  <option class="answer-format-item" value="1">Short Answer</option>
+							  <option class="answer-format-item" value="2">Single Answer</option>
+							  <option class="answer-format-item" value="3">Multiple Answer</option>
+							</select>
+						</div>					
+					</div>	
+					<div class="section-body">
+						<h4>Question</h4>
+						<div class="body-element-container form-group bottom-border-thinner">
+							<textarea id="question" class="form-control" rows="2"></textarea>
+						</div>					
+					</div>	
+					<div id="answerListContainer" class="section-body">
+						<h4>Answers</h4>
+						<div class="body-element-container form-group bottom-border-thinner">
+							<div id="answerList">
+								<div class="answer-container">
+									<span class="delete-answer glyphicon glyphicon-remove"></span>
+									<input class="form-control answer-option">
+								</div>
+								<div class="answer-container">
+									<span class="delete-answer glyphicon glyphicon-remove"></span>
+									<input class="form-control answer-option">
+								</div>
+							</div>
+							<span id="addAnswer" class="glyphicon glyphicon-plus"></span>
+						</div>					
+					</div>	
+				</div>												
+			</div>			
 			<div id="jobInfo" class="section info-container">
 				<div class="header">
-					<span data-toggle-id="jobInfoBody" class="glyphicon glyphicon-menu-down"></span>
+					<span data-toggle-id="jobInfoBody" data-toggle-speed="0" class="glyphicon glyphicon-menu-down"></span>
 					<span class="header-text">Job Info</span>
-					<span id="jobInfoButtons" class="button-container">
-						<button id="newJob" class="clickable new square-button">New</button>
-						<button id="addJobToCart" class="clickable square-button">Add</button>
-						<span id="invalidAddJob" class="invalid-message">Please fill in all required fields</span>
-					</span>
 				</div>	
 				<div id="jobInfoBody">
 					<div class="section-body">
@@ -248,53 +303,7 @@
 									
 				</div>
 			</div>
-			<div id="questionInfo" class="section info-container">
-				<div class="header">
-					<span data-toggle-id="questionInfoBody" class="glyphicon glyphicon-menu-down"></span>
-					<span class="header-text">Question Info</span>
-					<span class="button-container">
-						<button id="newQuestion" class="clickable new square-button">New</button>
-						<button id="addQuestion" class="clickable square-button">Add</button>
-						<span id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</span>
-					</span>					
-				</div>	
-				<div id="questionInfoBody">
-					<div class="section-body">
-						<h4>Question Format</h4>
-						<div class="body-element-container form-group bottom-border-thinner">
-							<select id="questionFormat" class="question-formats form-control" title="">
-							  <option selected value="-1" style="display: none"></option>	
-							  <option class="answer-format-item" value="0">Yes or No</option>
-							  <option class="answer-format-item" value="1">Short Answer</option>
-							  <option class="answer-format-item" value="2">Single Answer</option>
-							  <option class="answer-format-item" value="3">Multiple Answer</option>
-							</select>
-						</div>					
-					</div>	
-					<div class="section-body">
-						<h4>Question</h4>
-						<div class="body-element-container form-group bottom-border-thinner">
-							<textarea id="question" class="form-control" rows="2"></textarea>
-						</div>					
-					</div>	
-					<div id="answerListContainer" class="section-body">
-						<h4>Answers</h4>
-						<div class="body-element-container form-group bottom-border-thinner">
-							<div id="answerList">
-								<div class="answer-container">
-									<span class="delete-answer glyphicon glyphicon-remove"></span>
-									<input class="form-control answer-option">
-								</div>
-								<div class="answer-container">
-									<span class="delete-answer glyphicon glyphicon-remove"></span>
-									<input class="form-control answer-option">
-								</div>
-							</div>
-							<span id="addAnswer" class="glyphicon glyphicon-plus"></span>
-						</div>					
-					</div>	
-				</div>												
-			</div>			
+		
 		</div>
 	</div>
 	
@@ -430,40 +439,42 @@
 			copyQuestion();
 		})		
 		
-// 		$("#submitJobs").click(function(){
-// 			submitJobs(1);
-// 		})
+		$("#submitJobs").click(function(){
+			submitJobs(1);
+		})
 		
 		
 		
 		$(".button-container .new").click(function(){
 			
-			if(isButtonClickable($(this))){
-				//Get the info container's id
-				var infoContainerId = $($(this).parents(".info-container")[0]).attr("id");
+// 			if(isButtonClickable($(this))){
+// 				//Get the info container's id
+// 				var infoContainerId = $($(this).parents(".info-container")[0]).attr("id");
 		
-				//Format input elements.
-				//Expand the info body.
-				disableInputFields(false, infoContainerId);			
-				if(infoContainerId == "jobInfo"){
-					clearPostJobInputs();	
-					expandInfoBody("jobInfoBody", true);
-					setButtonAsClickable(true, $("#addJobToCart"));
-// 					deselectQuestion
-				}
-				else if(infoContainerId == "questionInfo"){
+// 				//Format input elements.
+// 				//Expand the info body.
+// 				disableInputFields(false, infoContainerId);			
+// 				if(infoContainerId == "jobInfo"){
+// 					clearPostJobInputs();	
+// 					expandInfoBody("jobInfoBody", true);
+// 					setButtonAsClickable(true, $("#addJobToCart"));
+// // 					deselectQuestion
+// 				}
+// 				else if(infoContainerId == "questionInfo"){
 					clearPostQuestionInputs();
 					expandInfoBody("questionInfoBody", true);
 					setButtonAsClickable(true, $("#addQuestion"));
-// 					deselectJob
-				}
-				
-				if(isJobSelected()){
-					deselectJob();
-				}
-				else if(isQuestionSelected()){
 					deselectQuestion();
-				}
+					setActionsAsClickable(false, "cartContainer");
+// 					deselectJob
+// 				}
+				
+// 				if(isJobSelected()){
+// 					deselectJob();
+// 				}
+// 				else if(isQuestionSelected()){
+// 					deselectQuestion();
+// 				}
 				
 				
 // 				//Deselect the cart container's buttons
@@ -488,7 +499,7 @@
 // 					}	
 // 				}				
 			
-			}
+// 			}
 
 		})
 		
@@ -509,28 +520,28 @@
 			toggleActionAppearances(subCartId);
 			
 			//Set all job and question buttons as un-clickable
-			setButtonsAsClickable(false, "jobCart");
-			setButtonsAsClickable(false, "postingContainer");
+// 			setButtonsAsClickable(false, "jobCart");
+// 			setButtonsAsClickable(false, "postingContainer");
 			
 // 			disableInputFields(false, "postingContainer");
 			
 			//If editing a quesiton, then collapse the job info body.
 			//This saves the user from having to scroll to the bottom of the page.
 			if(clickedId == "editQuestion"){
-				expandInfoBody("jobInfoBody", false);
+// 				expandInfoBody("jobInfoBody", false);
 				expandInfoBody("questionInfoBody", true);
 				disableInputFields(false, "questionInfoBody");
-				disableInputFields(true, "jobInfoBody");
+// 				disableInputFields(true, "jobInfoBody");
 			}
-			else if(clickedId == "editJob"){
-				expandInfoBody("jobInfoBody", true);
-				expandInfoBody("questionInfoBody", false);
-				disableInputFields(true, "questionInfoBody");
-				disableInputFields(false, "jobInfoBody");
-			}
-			else if(clickedId == "selectQuestions"){
-				addBorderToQuestionCart(true);
-			}
+// 			else if(clickedId == "editJob"){
+// 				expandInfoBody("jobInfoBody", true);
+// 				expandInfoBody("questionInfoBody", false);
+// 				disableInputFields(true, "questionInfoBody");
+// 				disableInputFields(false, "jobInfoBody");
+// 			}
+// 			else if(clickedId == "selectQuestions"){
+// 				addBorderToQuestionCart(true);
+// 			}
 			
 			
 		})
@@ -544,34 +555,36 @@
 			var selectedJob = {};
 			var editedJob = {};
 			
-			//Hide check mark
-			$(this).hide();
+
 			
 			//Display the action "mock anchors" as "clickable"
 // 			toggleActionAppearances();
 			
 			
 			
-			if(clickedId == "okSelectedQuestions"){
-				setSelectedQuestionIdsForJob();
+// 			if(clickedId == "okSelectedQuestions"){
+// 				setSelectedQuestionIdsForJob();
 
-// 				setActionsAsClickable(false, "questionCart");
-// 				deselectButtons("cartContainer");
-				setActionsAsClickable(true, "jobCart");
+// // 				setActionsAsClickable(false, "questionCart");
+// // 				deselectButtons("cartContainer");
+// 				setActionsAsClickable(true, "jobCart");
 				
-				addBorderToQuestionCart(false);
+// 				addBorderToQuestionCart(false);
 				
-				//All the user to start a new job, but not add
-				setButtonAsClickable(true, $("#newJob"));
+// 				//All the user to start a new job, but not add
+// 				setButtonAsClickable(true, $("#newJob"));
 				
-				//All the user to start a new qeustion and add
-				setButtonsAsClickable(true, "questionInfo");
-			}
-			else if(clickedId == "okEditQuestion"){
+// 				//All the user to start a new qeustion and add
+// 				setButtonsAsClickable(true, "questionInfo");
+// 			}
+// 			else if(clickedId == "okEditQuestion"){
 				
 
 				
 				if(validateAddQuestionInputs()){
+					
+					//Hide check mark
+					$(this).hide();
 					
 					//Format elements
 					setActionsAsClickable(true, "questionCart");
@@ -583,51 +596,53 @@
 					//When editing a question, the id must remain the same
 					editedQuestion.id = selectedQuestion.id;
 					
-					//Remove the selected question
+					//Remove the old selected question
 					postQuestionDtos = removeArrayElement(selectedQuestion.id, postQuestionDtos);
 					
-					//Add the edited question
+					//Add the new edited question
 					postQuestionDtos.push(editedQuestion);
 					
-					//Set the job controls
-					setButtonsAsClickable(true, "jobInfo");
-					disableInputFields(false, "jobInfoBody");
+					updateAddedQuestionButtonText(editedQuestion.id, editedQuestion.text);
+					
+// 					//Set the job controls
+// 					setButtonsAsClickable(true, "jobInfo");
+// 					disableInputFields(false, "jobInfoBody");
 
 					//Set the question controls
 					setActionsAsClickable(true, "questionCart");
 					setButtonAsClickable(true, $("#newQuestion"));
 				}
 				
-			}
-			else if(clickedId == "okEditJob"){
+// 			}
+// 			else if(clickedId == "okEditJob"){
 				
-// 				if(validatePostJobInputs(jobs)){
+// // 				if(validatePostJobInputs(jobs)){
 					
-					//Format elements
-					setActionsAsClickable(true, "jobCart");
-					disableInputFields(true, "jobInfoBody");
+// 					//Format elements
+// 					setActionsAsClickable(true, "jobCart");
+// 					disableInputFields(true, "jobInfoBody");
 					
-					selectedJob = getSelectedJob();
-					editedJob = getPostJobDto();
+// 					selectedJob = getSelectedJob();
+// 					editedJob = getPostJobDto();
 					
-					//When editing a job, the id must remain the same
-					editedJob.id = selectedJob.id;					
+// 					//When editing a job, the id must remain the same
+// 					editedJob.id = selectedJob.id;					
 					
-					//Remove the selected job
-					jobs = removeArrayElement(selectedJob.id, jobs);
+// 					//Remove the selected job
+// 					jobs = removeArrayElement(selectedJob.id, jobs);
 					
-					//Add the edited job
-					jobs.push(editedJob);
+// 					//Add the edited job
+// 					jobs.push(editedJob);
 					
-					setActionsAsClickable(true, "jobCart");
-					setButtonAsClickable(true, $("#newJob"));
+// 					setActionsAsClickable(true, "jobCart");
+// 					setButtonAsClickable(true, $("#newJob"));
 					
-// 				}
-			}
+// // 				}
+// 			}
 				
 
-			setButtonsAsClickable(true, "jobCart");
-			setButtonsAsClickable(true, "questionCart");
+// 			setButtonsAsClickable(true, "jobCart");
+// 			setButtonsAsClickable(true, "questionCart");
 
 
 			
@@ -712,21 +727,50 @@
 					//Add question to the DOM
 					addQuestionToDOM(postQuestionDto);
 					
+					if(postQuestionDtos.length > 0){
+						slideDown($("#cartContainer"), 700);	
+					}
+					else{
+						slideUp($("#cartContainer"));
+					}
+					
 // 					$("#jobInfoBody").hide(500);
 // 					$("#cartContainer").show(500);
 				}
 			}
 		})
 		
+		
+		function updateAddedQuestionButtonText(questionId, questionText){
+			
+			var button = $("#addedQuestions").find("button[data-question-id='" + questionId + "']")[0];
+			
+			var buttonText = getAddedQuestionButtonText(questionText);
+			
+			$(button).html(buttonText);
+			
+		}
+		
+		function getAddedQuestionButtonText(questionText){
+			
+			//If the qustion is longer than 20 characters, then only show the first 20.
+			if(questionText.length > 20){
+				return questionText.substring(0, 19) + "..."
+			}else{
+				return questionText;
+			}
+		}
+		
 		function addQuestionToDOM(postQuestionDto){
 			var html = "<button data-question-id='" + postQuestionDto.id + "' class='btn clickable'>";
 			
-			//If the qustion is longer than 20 characters, then only show the first 20.
-			if(postQuestionDto.text.length > 20){
-				html += postQuestionDto.text.substring(0, 19) + "..."
-			}else{
-				html += postQuestionDto.text;
-			}
+			var buttonText = getAddedQuestionButtonText(postQuestionDto.text);
+			html += buttonText;
+// 			if(postQuestionDto.text.length > 20){
+// 				html += postQuestionDto.text.substring(0, 19) + "..."
+// 			}else{
+// 				html += postQuestionDto.text;
+// 			}
 			
 			html += "</button>";
 						
@@ -735,6 +779,7 @@
 			clearPostQuestionInputs();
 				
 		}
+
 		
 		
 // 		$(".toggle-section").click(function(){
@@ -783,7 +828,7 @@
 		})
 		
 		$("#questionFormat").change(function(){
-			scrollToElement("questionInfo", 500);
+// 			scrollToElement("questionInfo", 500);
 		})
 		
 		$("#addAnswer").click(function(){ 

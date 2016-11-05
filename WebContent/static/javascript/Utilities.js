@@ -39,12 +39,24 @@ function toggle($e){
 
 }
 
-function slideUp($e){
-	$e.slideUp(300);
+function slideUp($e, milliseconds){
+	if(milliseconds != undefined){
+		$e.slideUp(milliseconds);	
+	}
+	else{
+		$e.slideUp(300);
+	}
 }
 
-function slideDown($e){
-	$e.slideDown(300);
+function slideDown($e, milliseconds){
+	
+	if(milliseconds != undefined){
+		$e.slideDown(milliseconds);	
+	}
+	else{
+		$e.slideDown(300);
+	}
+	
 }
 
 function removeArrayElementValue(valueToRemove, array){

@@ -22,8 +22,11 @@
 	
 	
 	<div class="container">
+	
+		<div id="storageTest"></div>
+		<button id="test">Storage Test</button>
 
-		<div>${vtFailedWageNegotiations }</div>
+<%-- 		<div>${vtFailedWageNegotiations }</div> --%>
 		<div>${vtYetToStartJobs }</div>
 		<div>${vtActiveJobs }</div>
 
@@ -43,11 +46,11 @@
 		<!-- 						For each active job -->
 								<c:forEach items="${completedJobs }" var="completedJobDTO">
 									<tr class="static-row" id="${completedJobDTO.job.id}">
-										<td class="job-name"><a href="/JobSearch/job/${completedJobDTO.job.id }" class="accent">${completedJobDTO.job.jobName}</a></td>
+										<td class="job-name"><a href="/JobSearch/completed/job/${completedJobDTO.job.id }" class="accent">${completedJobDTO.job.jobName}</a></td>
 		
-										<td >
-										<a href="/JobSearch/job/${completedJobDTO.job.id }/employees/rate"><button class="square-button">Rate Employees</button></a>
-										</td>
+<!-- 										<td > -->
+<%-- 										<a href="/JobSearch/job/${completedJobDTO.job.id }/employees/rate"><button class="square-button">Rate Employees</button></a> --%>
+<!-- 										</td> -->
 									</tr>						
 		
 								</c:forEach>
@@ -67,6 +70,12 @@
 
 $(document).ready(function(){
 
+	$("#storageTest").html(sessionStorage.test);
+	$("#test").click(function(){
+		var str = "store this, yo";
+		$("#storageTest").html(str);
+		sessionStorage.setItem("test", str);
+	})
 	
 	$("#activeJobsTable tr td").click(function(){
 		window.location = '../job/' + $(this).parent().attr('id');

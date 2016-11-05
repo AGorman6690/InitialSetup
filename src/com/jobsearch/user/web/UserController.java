@@ -184,9 +184,24 @@ public class UserController {
 		SubmitJobPostingDTO job = new SubmitJobPostingDTO();
 		model.addObject("job", job);
 
-		model.setViewName("PostJob");
+		model.setViewName("PostJob_without_cart");
 		return model;
 	}
+	
+	
+	@RequestMapping(value = "/postJob-without-cart", method = RequestMethod.GET)
+	public ModelAndView viewPostJob_without_cart(ModelAndView model, HttpSession session) {
+
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		model.addObject("user", user);
+		
+		SubmitJobPostingDTO job = new SubmitJobPostingDTO();
+		model.addObject("job", job);
+
+		model.setViewName("PostJob");
+		return model;
+	}	
 
 	
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)

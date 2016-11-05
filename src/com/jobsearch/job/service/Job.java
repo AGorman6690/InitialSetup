@@ -4,6 +4,8 @@ import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.JobSearchUser;
@@ -38,6 +40,8 @@ public class Job{
 	private List<PostQuestionDTO> questions;
 	private int newApplicationCount;
 	private Integer Duration;
+//	private List<WorkDay> workDays;
+
 
 	//I think this is better than "isActive". It gives more transparency.
 	//Do away with "isActive".
@@ -46,6 +50,18 @@ public class Job{
 	//2 = finished; 	
 	private int status;
 	
+	
+	
+	
+	
+
+//	public List<WorkDay> getWorkDays() {
+//		return workDays;
+//	}
+//
+//	public void setWorkDays(List<WorkDay> workDays) {
+//		this.workDays = workDays;
+//	}
 	public int getStatus() {
 		return status;
 	}

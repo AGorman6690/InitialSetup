@@ -1,4 +1,4 @@
-<table class="">
+<table class="main-table-style">
 	<thead>
 		<th>Name</th>
 		<th>Negotiation Result</th>
@@ -6,7 +6,7 @@
 	<tbody>
 		#foreach($failedWageNegotiationDto in $failedWageNegotiationDtos)
 			<tr>
-				<td><a>$failedWageNegotiationDto.otherUser.firstName</a></td>
+				<td><a class="accent" href="/JobSearch/user/$failedWageNegotiationDto.otherUser.userId/jobs/completed">$failedWageNegotiationDto.otherUser.firstName</a></td>
 				<td>
 					#set( $offerAmount = $mathUtility.round($failedWageNegotiationDto.failedWageProposal.amount, 2, 0) )
 					#set( $offerAmount = $numberTool.format("#0.00", $offerAmount))

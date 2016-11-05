@@ -20,7 +20,95 @@ $(document).ready(function(){
 		
 	})
 
+
+	$(".calendar-single-date").datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1,
+		onSelect: function(dateText, inst) {			
+			var temp = (new Date(dateText)).getTime();
+			
+			if(temp == selectedDay){
+				selectedDay = null;	
+			}
+			else{
+				selectedDay = temp;
+			}
+			 
+		},
+	        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date) {
+
+        	date = date.getTime();   	
+
+			if(date == selectedDay){
+        		return [true, "active111"]; 
+        	}
+        	else{
+        		return [true, ""];
+        	}
+        },
+	
+	})
+	
+	initializeCalendar();
+	
+})
+
+	function initializeCalendar(){
+		var numberOfMonths = getNumberOfMonths($("#calendar"));
 		
+		$("#calendar").datepicker({
+			minDate: new Date(),
+			numberOfMonths: numberOfMonths,
+			onSelect: function(dateText, inst) {	
+				
+				//There's odd behavior when the user clicks, for example,
+				//the 1st then the 3rd, highlighting the 2nd as part of the range.
+				//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
+				//because the
+	            if(selectedDays.length == 3){
+	            	rangeIsSet = 1;
+	            }
+	            
+				selectDate(dateText);
+			},
+		        
+		        // This is run for every day visible in the datepicker.
+		        beforeShowDay: function (date) {
+	
+		        	date = date.getTime();
+						if(isDateAlreadySelected(date)){
+			        		return [true, "active111"]; 
+			        	}
+	
+	//	        	}
+		        	else if(isSecondDaySelected() && !rangeIsSet){
+		        		
+		        		//Add the dates in between the first and second days
+		        		if(isDateInRange(date)){
+		        			
+							if(!isDateAlreadySelected(date)){
+	
+		        				addDay(date);
+		        			}
+		        			
+		        			return [true, "active111"];
+		        		}
+		        		else{
+	
+		        			return [true, ""];
+		        		}	  
+	
+		        	}else{
+		        		return [true, ""];
+		        	}
+	
+		        }
+	    });
+}
+
+
 	function removeDay(dateToRemove){
 		
 		return modifiedSelectedDays = $.grep(selectedDays, function(day){
@@ -48,6 +136,22 @@ $(document).ready(function(){
 			return false;
 		}		
 		
+	}
+	
+	function activateDate($calendar, date){
+	
+		var m = date.getMonth();
+		var d = date.getDate();
+		var y = date.getFullYear();
+		
+		var tds = $calendar.find("td[data-month='" + m + "'][data-year='" + y + "']");
+		var a;
+		$.each(tds, function(){
+			a = $(this).find("a");
+			if($(a).html() == d){
+				$(this).addClass("active111");
+			}
+		})
 	}
 	
 	function getDate(dateText){
@@ -111,105 +215,6 @@ $(document).ready(function(){
 		callback();
 		
 	}
-
-	$(".calendar-single-date").datepicker({
-		minDate: new Date(),
-		numberOfMonths: 1,
-		onSelect: function(dateText, inst) {			
-			var temp = (new Date(dateText)).getTime();
-			
-			if(temp == selectedDay){
-				selectedDay = null;	
-			}
-			else{
-				selectedDay = temp;
-			}
-			 
-		},
-	        
-        // This is run for every day visible in the datepicker.
-        beforeShowDay: function (date) {
-
-        	date = date.getTime();   	
-
-			if(date == selectedDay){
-        		return [true, "active111"]; 
-        	}
-        	else{
-        		return [true, ""];
-        	}
-        },
-	
-	})
-	
-	var numberOfMonths = getNumberOfMonths($("#calendar"));
-	
-	$("#calendar").datepicker({
-		minDate: new Date(),
-		numberOfMonths: numberOfMonths,
-		onSelect: function(dateText, inst) {	
-			
-			//There's odd behavior when the user clicks, for example,
-			//the 1st then the 3rd, highlighting the 2nd as part of the range.
-			//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
-			//because the
-            if(selectedDays.length == 3){
-            	rangeIsSet = 1;
-            }
-            
-			selectDate(dateText);
-		},
-	        
-	        // This is run for every day visible in the datepicker.
-	        beforeShowDay: function (date) {
-
-	        	date = date.getTime();
-	        	
-//	        	if(rangeIsSet == 1){
-
-					if(isDateAlreadySelected(date)){
-		        		return [true, "active111"]; 
-		        	}
-//		        	else{
-//		        		return [true, ""];
-//		        	}
-
-//	        	}
-	        	else if(isSecondDaySelected() && !rangeIsSet){
-	        		
-	        		//Add the dates in between the first and second days
-	        		if(isDateInRange(date)){
-	        			
-						if(!isDateAlreadySelected(date)){
-
-	        				addDay(date);
-	        			}
-	        			
-	        			return [true, "active111"];
-	        		}
-	        		else{
-
-	        			return [true, ""];
-	        		}	  
-	        		
-	        		
-	        		
-	        	}else{
-
-//					if(isDateAlreadySelected(date)){
-//		        		return [true, "active111"]; 
-//		        	}
-//		        	else{
-		        		return [true, ""];
-//		        	}
-		        		
-	        	}
-
-	        }
-	    });
-	
-})
-
 
 function isDateInRange(dateText){
 	if(dateText >= selectedDays[0] && dateText <= selectedDays[1]){
@@ -305,5 +310,20 @@ function getNumberOfMonths($e){
 //		rangeIsBeingSet = 0;
 	}
 	
+	function setAllDatesAsUnselectable($calendar, request){
+		
+		if(request == true){
+			$.each($calendar.find("td"), function(){
+				$(this).addClass("ui-datepicker-unselectable");
+			})	
+		}
+		else{
+			$.each($calendar.find("td"), function(){
+				$(this).removeClass("ui-datepicker-unselectable");
+			})
+		}
+		
+		
+	}
 	
 

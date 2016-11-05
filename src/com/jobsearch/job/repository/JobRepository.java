@@ -79,12 +79,11 @@ public class JobRepository {
 					e.setStatus(rs.getInt("Status"));
 					
 					//Set duration
-					DateTime dtStart = new DateTime(e.getStartDate());
-					DateTime dtEnd = new DateTime(e.getEndDate());
-					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
+//					DateTime dtStart = new DateTime(e.getStartDate());
+//					DateTime dtEnd = new DateTime(e.getEndDate());
+//					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
 					
 					try {
-
 //						e.setStartDate(rs.getDate("work_day_StartDate"));
 //						e.setEndDate(rs.getDate("work_day_EndDate"));
 					} catch (Exception e2) {
@@ -102,6 +101,31 @@ public class JobRepository {
 
 	}
 
+	public List<WorkDay> WorkDayMapper(String sql, Object[] args) {
+
+		try{
+
+			return jdbcTemplate.query(sql, args, new RowMapper<WorkDay>() {
+
+				@Override
+				public WorkDay mapRow(ResultSet rs, int rownumber) throws SQLException {
+					
+					WorkDay e = new WorkDay();
+										
+					e.setDate(rs.getDate("Date"));
+					e.setStringStartTime(rs.getString("StartTime"));
+					e.setStringEndTime(rs.getString("EndTime"));
+										
+					return e;
+				}
+			});
+
+		}catch(Exception e){
+			return null;
+		}
+
+	}
+	
 	public void addJob(List<PostJobDTO> jobDtos) {
 		try {
 
@@ -390,7 +414,6 @@ public class JobRepository {
 			sql += " SELECT DISTINCT wd0.jobId";
 			sql += " FROM work_day wd0";
 			
-
 			for (int i = 1; i < filter.getWorkingDays().size() + 1; i++) {
 				
 				String table1 = "wd" + (i - 1);
@@ -677,6 +700,17 @@ public class JobRepository {
 				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) <= ?";
 
 		return jdbcTemplate.queryForList(sql, new Object[]{ lat,  lng, lat, radius }, Integer.class);
+	}
+
+	public Integer getDuration(int jobId) {
+		
+		String sql = "SELECT COUNT(*) FROM work_day WHERE JobId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
+	}
+
+	public List<WorkDay> getWorkDays(int jobId) {
+		String sql = "SELECT * FROM work_day WHERE JobId = ?";
+		return this.WorkDayMapper(sql, new Object[]{ jobId });
 	}
 
 //	public List<Integer> getActiveJobIdsByStartAndEndDates(boolean beforeEndDate, java.sql.Date endDate,

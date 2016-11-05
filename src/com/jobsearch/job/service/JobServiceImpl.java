@@ -343,6 +343,7 @@ public class JobServiceImpl {
 
 	public Job getJob(int jobId){
 		return repository.getJob(jobId);
+
 	}
 	
 	public void setPostingInfoForJob(Job job) {
@@ -518,6 +519,7 @@ public class JobServiceImpl {
 		if (filteredJobs != null) {
 			this.setJobsCategories(filteredJobs);
 			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
+			this.setDurationForJobs(filteredJobs);
 //				job.setDistanceFromFilterLocation(
 //			for (Job job : filteredJobs) {
 //						MathUtility.round(
@@ -551,6 +553,17 @@ public class JobServiceImpl {
 //	}
 
 
+	public void setDurationForJobs(List<Job> jobs) {
+		for (Job job : jobs){
+			job.setDuration(this.getDuration(job.getId()));
+		}
+		
+	}
+
+	public Integer getDuration(int jobId) {
+		return repository.getDuration(jobId);
+	}
+
 	public void setJobsCategories(List<Job> jobs){
 		for (Job job : jobs) {
 			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
@@ -569,6 +582,7 @@ public class JobServiceImpl {
 
 	public String getVelocityTemplate_FilterJobs(FilterJobRequestDTO request, HttpSession session) {
 		
+		//Query the database
 		List<Job> filteredJobs = new ArrayList<Job>();
 		filteredJobs = this.getFilteredJobs(request, session);
 		
@@ -747,10 +761,11 @@ public class JobServiceImpl {
 //		this.setJobsCategories(sortedJobs);
 		
 		
-		return this.getVelocityTemplate_FilterJobs(filteredJobs, request);
+		return "";
+//		return this.getVelocityTemplate_FilterJobs(filteredJobs, request);
 	}
-
-	public void setModel_RateEmployees(Model model, int jobId) {
+	
+	public void setModel_EmployerViewCompletedJob(Model model, int jobId, HttpSession session) {
 		
 		//Get the job
 		Job completedJob = repository.getJob(jobId);
@@ -760,6 +775,8 @@ public class JobServiceImpl {
 
 		}else{
 			
+			String vtJobInfo = getVelocityTemplate_JobInfo(completedJob.getId(), 1);
+			
 			//Set the employees
 			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
 			
@@ -768,6 +785,35 @@ public class JobServiceImpl {
 //			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
 			
 			//Add to model
+			model.addAttribute("vtJobInfo", vtJobInfo);
+			model.addAttribute("job", completedJob);
+			model.addAttribute("categories", categories);
+			
+		}
+		
+	}
+
+	public void setModel_RateEmployees_DELETE(Model model, int jobId) {
+		
+		//Get the job
+		Job completedJob = repository.getJob(jobId);
+	
+		//Verify the job is complete.
+		if(completedJob.getStatus() < 2){
+
+		}else{
+			
+			String vtJobInfo = getVelocityTemplate_JobInfo(completedJob.getId(), 1);
+			
+			//Set the employees
+			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
+			
+			//Set the categories
+			List<Category> categories = categoryService.getCategoriesByJobId(jobId);
+//			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
+			
+			//Add to model
+			model.addAttribute("vtJobInfo", vtJobInfo);
 			model.addAttribute("job", completedJob);
 			model.addAttribute("categories", categories);
 			
@@ -861,11 +907,14 @@ public class JobServiceImpl {
 
 	public void setModel_EmployerViewJob(Model model, int jobId, HttpSession session) {
 
+		JobSearchUser user = userService.getSessionUser(session);
+		
+		
 		//Get the job
 		Job selectedJob = this.getEmployersJobProfile(jobId);
 		int hideJobInfoOnLoad;
 		
-		if(userService.getSessionUser(session).getUserId() == selectedJob.getUserId()){
+		if(user.getUserId() == selectedJob.getUserId()){
 		
 			//Get the employees
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
@@ -877,11 +926,15 @@ public class JobServiceImpl {
 			
 			//Get the applications
 			List<Application> applications = applicationService.getApplicationsByJob(jobId);
+			for(Application application : applications){
+				application.setCurrentWageProposal(applicationService.getCurrentWageProposal(application));
+			}
 			
 	//		//Get the failed wage negotiations
 			String vtFailedWageNegotiationsByJob = applicationService.
 					getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
 			
+			model.addAttribute("user", user);
 			model.addAttribute("applications", applications);
 			model.addAttribute("employees", employees);
 			model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
@@ -902,6 +955,21 @@ public class JobServiceImpl {
 		model.addAttribute("questions", questions);
 		model.addAttribute("vtJobInfo", vtJobInfo);
 	
+	}
+	
+	
+
+	public void setModel_EmployerViewJob_WhenViewingEmployeeWorkHistory(Model model,
+											HttpSession session, int jobId, int employeeId) {
+		
+		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
+		Application application = applicationService.getApplication(jobId, employeeId);
+		application.setQuestions(applicationService.getQuestionsByJobAndUser(jobId, employeeId));
+		
+		model.addAttribute("vtJobInfo", vtJobInfo);
+		model.addAttribute("questions", application.getQuestions());
+		
+		
 	}
 
 	public Job getJobByApplicationId(int applicationId) {
@@ -973,10 +1041,12 @@ public class JobServiceImpl {
 
 	}
 
-	private String getVelocityTemplate_JobInfo(int jobId, int hideOnOpen) {
 		
+	private String getVelocityTemplate_JobInfo(int jobId, int hideOnOpen) {
 		//Job properties
-		Job job = this.getJob(jobId);		
+		Job job = this.getJob(jobId);	
+		job.setDuration(this.getDuration(jobId));
+		List<WorkDay> workDays = this.getWorkDays(jobId);
 		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
 	
 		StringWriter writer = new StringWriter();
@@ -987,6 +1057,7 @@ public class JobServiceImpl {
 		context.put("job", job);
 		context.put("date", new DateTool());
 		context.put("categories", categories);
+		context.put("workDays", workDays);
 
 		//Run the template
 		vtJobInfo.merge(context, writer);
@@ -994,6 +1065,10 @@ public class JobServiceImpl {
 		//Return the html
 		return writer.toString();	
 
+	}
+
+	public List<WorkDay> getWorkDays(int jobId) {
+		return repository.getWorkDays(jobId);
 	}
 
 	public Date getEndDate(int jobId) {
@@ -1016,18 +1091,14 @@ public class JobServiceImpl {
 
 	public void setModel_ApplyForJob(Model model, int jobId, HttpSession session) {
 		
-//		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		
 		
 		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
 		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
 		
-//		String vtJobInfo = this.velo
-		
 		model.addAttribute("jobId", jobId);
 		model.addAttribute("vtJobInfo", vtJobInfo);
 		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
-//		model.setViewName("FindJobs");
+
 		
 	}
 
@@ -1048,6 +1119,9 @@ public class JobServiceImpl {
 		repository.updateJobStatus(status, jobId);
 		
 	}
+
+
+
 
 
 
