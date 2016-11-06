@@ -3,9 +3,7 @@ package com.jobsearch.category.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.velocity.Template;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.category.repository.CategoryRepository;

@@ -25,7 +25,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.FindEmployeesDTO;
@@ -34,9 +33,8 @@ import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-//@SessionAttributes({ "user" })
+// @SessionAttributes({ "user" })
 public class UserController {
-
 
 	@Autowired
 	UserServiceImpl userService;
@@ -56,7 +54,7 @@ public class UserController {
 
 		user = userService.validateUser(userId);
 
-//		model.addObject("user", user);
+		// model.addObject("user", user);
 		String view = null;
 		if (user.getProfile().getName().equals("Employee")) {
 			model.setViewName("EmployeeProfile");
@@ -66,84 +64,69 @@ public class UserController {
 			view = "EmployerProfile";
 		}
 
-//		model.addAttribute("user", user);
+		// model.addAttribute("user", user);
 		model.addObject("user", user);
 		return view;
 	}
 
-
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpServletRequest request,
-			@ModelAttribute("user") JobSearchUser user, HttpSession session) {
+	public String getProfile(Model model, HttpServletRequest request, @ModelAttribute("user") JobSearchUser user,
+			HttpSession session) {
 
+		// Why is there a try/catch here????
+		// Can the user session object checked whether it's null???
+		// Or is there something special about the authentication process?
 
+		if (user.getUserId() == 0) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			user = userService.getUserByEmail(auth.getName());
 
-
-		//Why is there a try/catch here????
-		//Can the user session object checked whether it's null???
-		//Or is there something special about the authentication process?
-		try {
-
-			if (user.getUserId() == 0) {
-				Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-				user = userService.getUserByEmail(auth.getName());
-
-			}
-
-			//Get the user's profile
-//			user = userService.getProfile(user);
-			model.addAttribute("user", user);
-
-			//Update session user after they have logged in
-			session.setAttribute("user", user);
-
-
-			//If not creating new password
-			String viewName = null;
-			if (user.getCreateNewPassword() == 0) {
-
-				//Per the profile type, set the model attributes and view name
-				if (user.getProfile().getName().equals("Employee")) {
-
-					//Set model attributes
-					userService.setEmployeesProfileModel(user, model);
-
-					viewName = "EmployeeProfile";
-
-				} else if (user.getProfile().getName().equals("Employer")) {
-
-					//Set model attributes
-					userService.setEmployersProfileModel(user, model);
-
-					viewName = "EmployerProfile";
-
-
-				}
-			} else {
-				viewName = "NewPassword";
-				model.addAttribute("newPassword", new JobSearchUser());
-			}
-
-			return viewName;
-		} catch (Exception e) {
-			return null;
-			// TODO: handle exception
 		}
 
-//		return null;
+		// Get the user's profile
+		// user = userService.getProfile(user);
+		model.addAttribute("user", user);
+
+		// Update session user after they have logged in
+		session.setAttribute("user", user);
+
+		// If not creating new password
+		String viewName = null;
+		if (user.getCreateNewPassword() == 0) {
+
+			// Per the profile type, set the model attributes and view name
+			if (user.getProfile().getName().equals("Employee")) {
+
+				// Set model attributes
+				userService.setEmployeesProfileModel(user, model);
+
+				viewName = "EmployeeProfile";
+
+			} else if (user.getProfile().getName().equals("Employer")) {
+
+				// Set model attributes
+				userService.setEmployersProfileModel(user, model);
+
+				viewName = "EmployerProfile";
+
+			}
+		} else {
+			viewName = "NewPassword";
+			model.addAttribute("newPassword", new JobSearchUser());
+		}
+
+		return viewName;
 
 	}
-
 
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.createUser(user);
-		if(user != null){
+		if (user != null) {
 			model.addObject("user", user);
 			model.setViewName("EmailValidateMessage");
-		}
-		else{
+		} else {
 			model.setViewName("Invalid Login");
 		}
 		return model;
@@ -157,17 +140,16 @@ public class UserController {
 
 		model.setViewName("FindEmployees");
 
-//		model.setViewName("Test");
+		// model.setViewName("Test");
 		return model;
 	}
-
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
 	public ModelAndView viewSettings(ModelAndView model, HttpSession session) {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 
-		if(user.getProfileId() == 1){
+		if (user.getProfileId() == 1) {
 			model.setViewName("EmployeeSettings");
 		}
 
@@ -188,23 +170,18 @@ public class UserController {
 		return model;
 	}
 
-
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
-//	@ResponseBody
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model,
-										HttpSession session) {
+	// @ResponseBody
+	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model, HttpSession session) {
 
-		if(userService.isLoggedIn(session)){
+		if (userService.isLoggedIn(session)) {
 			userService.setModel_WorkHistoryByUser(model, userId);
 			return "EmployerViewEmployee";
-		}
-		else{
+		} else {
 			return "NotLoggedIn";
 		}
 
 	}
-
-
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
@@ -244,14 +221,13 @@ public class UserController {
 			@RequestParam(name = "radius", required = true) double radius,
 			@RequestParam(name = "day", value = "day", required = false) List<String> days,
 			@RequestParam(name = "rating", required = false) double rating,
-			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds){
+			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds) {
 
-		//Set the dto
+		// Set the dto
 		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, rating, days, categoryIds);
 
-		//Run the velocity template
+		// Run the velocity template
 		String findEmployeesResponseHTML = userService.getFindEmployeesResponseHTML(findEmployeesDto);
-
 
 		return findEmployeesResponseHTML;
 	}
@@ -285,10 +261,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/upload/resume", method = RequestMethod.POST)
-	public void uploadResume(@RequestParam(name="file", value = "file") MultipartFile file) throws IOException {
+	public void uploadResume(@RequestParam(name = "file", value = "file") MultipartFile file) throws IOException {
 
 		if (file != null) {
-			ByteArrayInputStream stream = new   ByteArrayInputStream(file.getBytes());
+			ByteArrayInputStream stream = new ByteArrayInputStream(file.getBytes());
 			String myString = IOUtils.toString(stream, "UTF-8");
 			System.out.println(myString);
 		}

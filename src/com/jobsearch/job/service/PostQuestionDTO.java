@@ -2,24 +2,21 @@ package com.jobsearch.job.service;
 
 import java.util.List;
 
-import com.jobsearch.model.Answer;
-import com.jobsearch.model.AnswerOption;
-
 public class PostQuestionDTO {
-	
+
 	//0: Yes/N0
 	//1: Short answer
 	//2: Single answer
 	//3: Multi answer
 	private int formatId;
-	
-	
+
+
 	private int id;
-	private String text;	
+	private String text;
 	private List<String> answerOptions;
 	private int jobId;
-	
-		
+
+
 	public int getJobId() {
 		return jobId;
 	}
@@ -50,5 +47,5 @@ public class PostQuestionDTO {
 	public void setFormatId(int formatId) {
 		this.formatId = formatId;
 	}
-	
+
 }

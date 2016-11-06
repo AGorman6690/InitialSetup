@@ -85,10 +85,7 @@ public class WelcomeController {
 
 		// Return to welcome page
 		model.setViewName("Welcome");
-
-		user = new JobSearchUser();
-
-		model.addObject("user", user);
+		model.addObject("user", new JobSearchUser());
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);

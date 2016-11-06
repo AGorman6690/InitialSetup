@@ -20,7 +20,6 @@ import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 
@@ -116,7 +115,7 @@ public class UserRepository {
 	}
 
 	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
-		
+
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -222,12 +221,12 @@ public class UserRepository {
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
 		if(list.size() >0 ){
-			return list.get(0);	
+			return list.get(0);
 		}
 		else{
 			return null;
 		}
-		
+
 
 	}
 
@@ -420,23 +419,6 @@ public class UserRepository {
 
 	}
 
-//	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
-//		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
-//				+ " HomeZipCode = ? WHERE UserId = ?";
-//
-//		jdbcTemplate.update(sql,
-//				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
-//						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
-//						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
-//
-//	}
-
-//	public void UpdateMaxWorkRadius(int userId, int maxWorkRadius) {
-//		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
-//		jdbcTemplate.update(sql, new Object[] { maxWorkRadius, userId });
-//
-//	}
-
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
 		// ******************************************************************************************
@@ -455,7 +437,7 @@ public class UserRepository {
 
 		String sql = "SELECT * FROM user WHERE user.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
-	
+
 
 		int subQueryCount = 1; // 1 because the distance sub query is required
 
@@ -519,7 +501,7 @@ public class UserRepository {
 
 		}
 */
-		
+
 		// Distance sub query.
 		// This returns all user ids with a home radius within the requested
 		// radius.
@@ -672,12 +654,12 @@ public class UserRepository {
 	public void updateEmployeeSettings(EditProfileRequestDTO editProfileRequestDto) {
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
 				+ " HomeZipCode = ?, MaxWorkRadius = ?, MinimumPay = ? WHERE UserId = ?";
-		
+
 	jdbcTemplate.update(sql,
 				new Object[] { editProfileRequestDto.getHomeLat(), editProfileRequestDto.getHomeLng(),
 						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
 						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
 						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
-		
+
 	}
 }

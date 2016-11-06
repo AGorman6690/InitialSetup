@@ -20,7 +20,6 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
@@ -130,24 +129,14 @@ public class ApplicationServiceImpl {
 	}
 
 	public WageProposal getCurrentWageProposal(Application application) {
-
-		// //Verify the application has at least 1 wage proposal
-		// if(application.getWageProposals().size() > 0){
 		return repository.getCurrentWageProposal(application.getApplicationId());
-		// }else{
-		// return null;
-		// }
-
 	}
 
 	public float getCurrentWageProposedBy(int applicationId, int proposedByUserId) {
-
 		return repository.getCurrentWageProposedBy(applicationId, proposedByUserId);
-
 	}
 
 	public List<WageProposal> getWageProposals(int applicationId) {
-
 		return repository.getWageProposals(applicationId);
 	}
 
@@ -156,15 +145,12 @@ public class ApplicationServiceImpl {
 	}
 
 	public void updateApplicationStatus(int applicationId, int status) {
-
 		// //If hired
 		if (status == 3) {
 			Application application = getApplication(applicationId);
 			userService.hireApplicant(application.getUserId(), application.getJobId());
 		}
-
 		repository.updateApplicationStatus(applicationId, status);
-
 	}
 
 	public Application getApplication(int applicationId) {
@@ -217,16 +203,6 @@ public class ApplicationServiceImpl {
 		return repository.getAnswersByJobAndUser(jobId, userId);
 	}
 
-	// public List<PostQuestionDTO> getQuestions(int jobId) {
-	// //This will not set an answer
-	//
-	// List<PostQuestionDTO> questions = repository.getQuestions(jobId);
-	// for(PostQuestionDTO q : questions){
-	// q.setAnswerOptions(repository.getAnswerOptions(q.getId()));
-	// }
-	// return questions;
-	// }
-
 	public List<Question> getQuestions(int jobId) {
 		// This will not set an answer
 
@@ -271,19 +247,11 @@ public class ApplicationServiceImpl {
 	}
 
 	public Answer getAnswer(int questionId, int userId) {
-
-		Answer answer = repository.getAnswer(questionId, userId);
-		// for (Answe)
-		//
-		// //Set the answer's answer.
-		// //Because a question can be in one of several formats, the answer
-		// this will
 		return repository.getAnswer(questionId, userId);
 	}
 
 	public void addQuestion(Question question) {
 		repository.addQuestion(question);
-
 	}
 
 	public void setJobsApplicationsHasBeenViewed(List<Job> jobs, int value) {
@@ -375,60 +343,16 @@ public class ApplicationServiceImpl {
 	}
 
 	public List<ApplicationResponseDTO> getOpenApplicationResponseDtosByApplicant(int userId) {
-
-		// List<ApplicationResponseDTO> result = new
-		// ArrayList<ApplicationResponseDTO>();
-
-		// Query the database.
 		// Return only applications with a status of "submitted" (0) or
 		// "considered" (2)
-		List<Application> openApplications = this.getApplicationsByUserAndStatuses(userId,
+		List<Application> openApplications = getApplicationsByUserAndStatuses(userId,
 				new ArrayList<Integer>(Arrays.asList(0, 2)));
 
 		// Get application response DTOs
 		if (openApplications.size() > 0) {
 			return getApplicationResponseDTOsByApplicant(openApplications, userId);
-		} else {
-			return null;
 		}
-
-		// //Create application response dtos
-		// for(Application application : openApplications){
-		//
-		//
-		// //Only consider the application if it is still open.
-		// //I.e. the employer has not declinded it nor has the wage negotiation
-		// ended
-		//// if (this.isApplicationOpen(application.getStatus())){
-		//
-		// ApplicationResponseDTO dto = new ApplicationResponseDTO();
-		// dto.setApplication(application);
-		// dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(),
-		// userId));
-		// dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
-		// // dto.setJobStatus(jobService.getJobStatus(application.getJobId()));
-		// dto.setJob(jobService.getJob(application.getJobId()));
-		//
-		// //*****************************************************
-		// //*****************************************************
-		// //This shouldn't need to be here.
-		// //In reality, all open applications at the time a job is ended should
-		// be
-		// //closed by default.
-		// //Thus, as long as an application's status is 0 or 2, then the job by
-		// definition is still open.
-		// //Leave this here for now.
-		// //*****************************************************
-		// //*****************************************************
-		// //Add the dto if the job is still active
-		// if(dto.getJob().getStatus() < 2){
-		// result.add(dto);
-		// }
-		//// }
-		//
-		// }
-		//
-		// return result;
+		return null;
 	}
 
 	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
@@ -457,10 +381,8 @@ public class ApplicationServiceImpl {
 	}
 
 	public void acceptWageProposal(int wageProposalId) {
-
 		// Update the wage proposal's status to accepted
-		this.updateWageProposalStatus(wageProposalId, 1);
-
+		updateWageProposalStatus(wageProposalId, 1);
 		// Hire the applicant
 		userService.hireApplicant(wageProposalId);
 
@@ -468,7 +390,6 @@ public class ApplicationServiceImpl {
 
 	public void updateWageProposalStatus(int wageProposalId, int status) {
 		repository.updateWageProposalStatus(wageProposalId, status);
-
 	}
 
 	public void declineWageProposalStatus(int wageProposalId) {
@@ -606,14 +527,12 @@ public class ApplicationServiceImpl {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	public void addAnswer(Answer answer) {
 		repository.addAnswer(answer);
-
 	}
 
 	public AnswerOption getAnswerOption(int answerOptionId) {
-
 		return repository.getAnswerOption(answerOptionId);
 	}
 }

@@ -65,13 +65,9 @@ public class ApplicationController {
 	@ResponseBody
 	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
 
-
 		applicationService.declineWageProposalStatus(wageProposalId);
 
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
-
-
 	}
-
 }

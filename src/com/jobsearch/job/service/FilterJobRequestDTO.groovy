@@ -9,6 +9,8 @@ import org.springframework.format.annotation.DateTimeFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.jobsearch.category.service.Category
 
+import  com.jobsearch.utilities.DateUtility
+
 public class FilterJobRequestDTO {
 
 	@JsonProperty("fromAddress")

@@ -36,6 +36,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
@@ -75,18 +76,18 @@ public class UserServiceImpl {
 
 	public JobSearchUser createUser(JobSearchUser user) {
 
-		if(this.isValidEmailRequest(user.getEmailAddress())){
+		if (this.isValidEmailRequest(user.getEmailAddress())) {
 			user.setPassword(encryptPassword(user.getPassword()));
 
 			JobSearchUser newUser = repository.createUser(user);
 
 			if (newUser.getEmailAddress() != null) {
-				mailer.sendMail(user.getEmailAddress(), "email verification", "please click the link to verify your email "
-						+ hostUrl + "/JobSearch/validateEmail?userId=" + newUser.getUserId());
+				mailer.sendMail(user.getEmailAddress(), "email verification",
+						"please click the link to verify your email " + hostUrl + "/JobSearch/validateEmail?userId="
+								+ newUser.getUserId());
 			}
 			return newUser;
-		}
-		else{
+		} else {
 			return null;
 		}
 	}
@@ -94,10 +95,9 @@ public class UserServiceImpl {
 	private boolean isValidEmailRequest(String email) {
 
 		JobSearchUser user = repository.getUserByEmail(email);
-		if(user == null){
+		if (user == null) {
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
 
@@ -135,7 +135,6 @@ public class UserServiceImpl {
 
 	}
 
-
 	public List<String> getAvailableDays(int userId) {
 		return repository.getAvailableDays(userId);
 
@@ -151,36 +150,32 @@ public class UserServiceImpl {
 
 	public void insertRatings(SubmitRatingDTOs_Wrapper submitRatingDTOs_Wrapper) {
 
-		//For each employee's rating
-		for(SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()){
+		// For each employee's rating
+		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()) {
 
-
-
-			//Rate criterion
+			// Rate criterion
 			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
 				rc.setEmployeeId(submitRatingDto.getEmployeeId());
 				rc.setJobId(submitRatingDTOs_Wrapper.getJobId());
 				repository.updateRating(rc);
 			}
 
-			//Endorsements
+			// Endorsements
 			deleteEndorsements(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId());
-			for (Integer categoryId: submitRatingDto.getEndorsementCategoryIds()) {
-				Endorsement endorsement = new Endorsement(submitRatingDto.getEmployeeId(),
-												categoryId, submitRatingDTOs_Wrapper.getJobId());
+			for (Integer categoryId : submitRatingDto.getEndorsementCategoryIds()) {
+				Endorsement endorsement = new Endorsement(submitRatingDto.getEmployeeId(), categoryId,
+						submitRatingDTOs_Wrapper.getJobId());
 				repository.addEndorsement(endorsement);
 			}
 
-			//Comment
+			// Comment
 			deleteComment(submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getEmployeeId());
 			if (submitRatingDto.getCommentString() != "") {
-				repository.addComment(submitRatingDto.getEmployeeId(),
-									submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getCommentString());
+				repository.addComment(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId(),
+						submitRatingDto.getCommentString());
 			}
 
-
 		}
-
 
 	}
 
@@ -208,12 +203,18 @@ public class UserServiceImpl {
 		return MathUtility.round(repository.getRating(userId), 1, 0);
 	}
 
+	/**
+	 * This does not return ALL endorsements. This consolidates ALL endorsements
+	 * into each endorsement's category. For instance, if a user has 10 concrete
+	 * endorsements, only one endorsement object will be created, but the count
+	 * property will be equal to 10.
+	 *
+	 * @param userId
+	 * @param categories
+	 * @return
+	 */
 	public List<Endorsement> getUserEndorsementsByCategory(int userId, List<Category> categories) {
-		// NOTE: this does not return ALL endorsements.
-		// This consolidates ALL endorsements into each endorsement's category.
-		// For instance, if a user has 10 concrete endorsements,
-		// only one endorsement object will be created, but the count
-		// property will be equal to 10.
+		//
 
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
@@ -233,13 +234,16 @@ public class UserServiceImpl {
 		return endorsements;
 	}
 
+	/**
+	 * This does not return ALL endorsements. This consolidates ALL endorsements
+	 * into each endorsement's category. For instance, if a user has 10 concrete
+	 * endorsements, only one endorsement object will be created, but the count
+	 * property will be equal to 10.
+	 *
+	 * @param userId
+	 * @return
+	 */
 	public List<Endorsement> getUsersEndorsements(int userId) {
-		// NOTE: this does not return ALL endorsements.
-		// This consolidates ALL endorsements into each endorsement's category.
-		// For instance, if a user has 10 concrete endorsements,
-		// only one endorsement object will be created, but the count
-		// property will be equal to 10.
-
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
 		// Get the category Ids that the user has endorsements for
@@ -254,7 +258,7 @@ public class UserServiceImpl {
 			endorsement.setCategoryId(category.getId());
 
 			// Get how many endorsements the user has in the particular category
-			int endorsementCount = this.getEndorsementCountByCategory(userId, category.getId());
+			int endorsementCount = getEndorsementCountByCategory(userId, category.getId());
 			endorsement.setCount(endorsementCount);
 
 			endorsements.add(endorsement);
@@ -268,13 +272,17 @@ public class UserServiceImpl {
 		return repository.getEndorsementCountByCategory(userId, categoryId);
 	}
 
+	/**
+	 * This does not return ALL endorsements. This consolidates ALL endorsements
+	 * into each endorsement's category. For instance, if a user has 10 concrete
+	 * endorsements, only one endorsement object will be created, but the count
+	 * property will be equal to 10.
+	 *
+	 * @param userId
+	 * @param jobId
+	 * @return
+	 */
 	public List<Endorsement> getUsersEndorsementsByJob(int userId, int jobId) {
-
-		// NOTE: this does not return ALL endorsements.
-		// This consolidates ALL endorsements into each endorsement's category.
-		// For instance, if a user has 10 concrete endorsements,
-		// only one endorsement object will be created, but the count
-		// property will be equal to 10.
 
 		List<Endorsement> endorsements = new ArrayList<Endorsement>();
 
@@ -335,8 +343,6 @@ public class UserServiceImpl {
 	}
 
 	public void updateAvailability(AvailabilityDTO availabilityDTO) {
-		// TODO Auto-generated method stub
-
 
 		repository.deleteAvailability(availabilityDTO.getUserId());
 
@@ -348,102 +354,72 @@ public class UserServiceImpl {
 
 	public void editEmployeeSettings(EditProfileRequestDTO editProfileRequestDto, HttpSession session) {
 
-		//Get the user from the session
+		// Get the user from the session
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 
-		//Set the dto's user id
+		// Set the dto's user id
 		editProfileRequestDto.setUserId(user.getUserId());
-
-		// Edit categories
-//		categoryService.deleteCategoriesFromUser(user.getUserId());
-//		for (int categoryId : editProfileRequest.getCategoryIds()) {
-//			categoryService.addCategoryToUser(user.getUserId(), categoryId);
-//		}
 
 		// Edit home location
 		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileRequestDto.getHomeCity() + " " + editProfileRequestDto.getHomeState()
-				+ " " + editProfileRequestDto.getHomeZipCode());
+		GeocodingResult[] results = maps.getLatAndLng(editProfileRequestDto.getHomeCity() + " "
+				+ editProfileRequestDto.getHomeState() + " " + editProfileRequestDto.getHomeZipCode());
 
 		if (results.length == 1) {
 			editProfileRequestDto.setHomeLat((float) results[0].geometry.location.lat);
 			editProfileRequestDto.setHomeLng((float) results[0].geometry.location.lng);
-//			this.updateHomeLocation(editProfileRequest);
+			// this.updateHomeLocation(editProfileRequest);
 			repository.updateEmployeeSettings(editProfileRequestDto);
-
 
 			this.updateSessionUser(session);
 
 		}
-
-//		if (editProfileRequest.getMaxWorkRadius() > 0) {
-//			repository.UpdateMaxWorkRadius(user.getUserId(), editProfileRequest.getMaxWorkRadius());
-//		}
-
-
-
-
 	}
 
-//	public void updateHomeLocation(EditProfileRequestDTO editProfileRequest) {
-//		repository.updateHomeLocation(editProfileRequest);
-//
-//	}
-
 	public void updateSessionUser(HttpSession session) {
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		user = this.getUser(user.getUserId());
+		JobSearchUser user = getUser(SessionContext.getSessionUser(session).getUserId());
 		session.setAttribute("user", user);
 	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
-
 		findEmployeesDto.setCoordinate(GoogleClient.getCoordinate(findEmployeesDto.getFromAddress()));
 
-
-
-		//If the address successfully yielded a coordinate
-		if(findEmployeesDto.getCoordinate() != null){
+		// If the address successfully yielded a coordinate
+		if (findEmployeesDto.getCoordinate() != null) {
 			List<JobSearchUser> result = new ArrayList<JobSearchUser>();
 
-			//Query the database
+			// Query the database
 			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
 
-			//Set the categories if the user filtered by category
+			// Set the categories if the user filtered by category
 			List<Category> categories = new ArrayList<Category>();
-			if(findEmployeesDto.getCategoryIds().size() > 0){
+			if (findEmployeesDto.getCategoryIds().size() > 0) {
 				categories = categoryService.getCategories(findEmployeesDto.getCategoryIds());
 			}
 
-
-			//Set additional properties for each employee
+			// Set additional properties for each employee
 			for (JobSearchUser employee : employees) {
 
-				//Categories
-//				employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
+				// Categories
+				// employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
 
-
-
-				//Rating
+				// Rating
 				employee.setRating(this.getRating(employee.getUserId()));
 
-				//The database query does not filter on rating.
-				//This condition is the rating filter.
-				if(employee.getRating() >= findEmployeesDto.getRating()){
+				// The database query does not filter on rating.
+				// This condition is the rating filter.
+				if (employee.getRating() >= findEmployeesDto.getRating()) {
 
-
-					//Set endorsements if the user filtered by category
-					if(categories != null){
-						employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(),
-												categories));
+					// Set endorsements if the user filtered by category
+					if (categories != null) {
+						employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(), categories));
 					}
 
-
-					//Distance from job
-					employee.setDistanceFromJob(MathUtility.round(GoogleClient
-									.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
-									findEmployeesDto.getCoordinate().getLongitude(),employee.getHomeLat(),
+					// Distance from job
+					employee.setDistanceFromJob(
+							MathUtility.round(GoogleClient.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
+									findEmployeesDto.getCoordinate().getLongitude(), employee.getHomeLat(),
 									employee.getHomeLng()), 1, 0));
 
 					result.add(employee);
@@ -454,8 +430,7 @@ public class UserServiceImpl {
 
 			return result;
 
-		}
-		else{
+		} else {
 			return null;
 		}
 
@@ -529,48 +504,51 @@ public class UserServiceImpl {
 
 		repository.updatePassword(encryptedPassword, email);
 	}
+
 	public void hireApplicant(int wageProposalId) {
 
-		//Get the wage proposal
+		// Get the wage proposal
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 
-		//Get the application
+		// Get the application
 		Application application = applicationService.getApplication(wageProposal.getApplicationId());
 
-		//Update the application's status to hired
+		// Update the application's status to hired
 		applicationService.updateApplicationStatus(application.getApplicationId(), 3);
 
-		//Hire the applicant
+		// Hire the applicant
 		this.hireApplicant(application.getUserId(), application.getJobId());
 
 	}
 
 	public void setEmployeesProfileModel(JobSearchUser employee, Model model) {
 
-		//Availability
+		// Availability
 		List<String> availableDays = this.getAvailableDays(employee.getUserId());
 
-		//Get the employee's open job applications
-		List<ApplicationResponseDTO> openApplicationResponseDtos =
-							applicationService.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
+		// Get the employee's open job applications
+		List<ApplicationResponseDTO> openApplicationResponseDtos = applicationService
+				.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
 
-//		//Verify the start date for the not-yet-started-jobs is still in the future.
-//		jobService.verifyJobStatusForUsersYetToStartJobs(employee.getUserId());
+		// //Verify the start date for the not-yet-started-jobs is still in the
+		// future.
+		// jobService.verifyJobStatusForUsersYetToStartJobs(employee.getUserId());
 
-		//Get the employee's hired-for, but not-yet-started jobs
+		// Get the employee's hired-for, but not-yet-started jobs
 		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployee(employee.getUserId());
 
-		//Get the employee's completed jobs
+		// Get the employee's completed jobs
 		List<Job> completedJobs = jobService.getCompletedJobsByEmployee(employee.getUserId());
 
-		//Get the employee's active jobs
+		// Get the employee's active jobs
 		List<Job> activeJobs = jobService.getActiveJobsByEmployee(employee.getUserId());
 
-		//Get the failed wage negotiations that the employee has been involved in
-		List<FailedWageNegotiationDTO> failedWageNegotiationDtos =
-							applicationService.getFailedWageNegotiationsDTOsByUser(employee.getUserId());
+		// Get the failed wage negotiations that the employee has been involved
+		// in
+		List<FailedWageNegotiationDTO> failedWageNegotiationDtos = applicationService
+				.getFailedWageNegotiationsDTOsByUser(employee.getUserId());
 
-		//Set the model attributes
+		// Set the model attributes
 		model.addAttribute("user", employee);
 		model.addAttribute("availableDays", availableDays);
 		model.addAttribute("failedWageNegotiationDtos", failedWageNegotiationDtos);
@@ -583,66 +561,68 @@ public class UserServiceImpl {
 
 	public void setEmployersProfileModel(JobSearchUser employer, Model model) {
 
-		//Get the employer's yet-to-start jobs
-		List<Job>  yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
-		List<JobDTO>  yetToStartJobs_Dtos = jobService.getYetToStartJobsByEmployer_Dto(employer.getUserId());
+		// Get the employer's yet-to-start jobs
+		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
+		List<JobDTO> yetToStartJobs_Dtos = jobService.getYetToStartJobsByEmployer_Dto(employer.getUserId());
 
-		//Get the employer's active jobs
+		// Get the employer's active jobs
 		List<Job> activeJobs = jobService.getActiveJobsByEmployer(employer.getUserId());
 
-		//Get the employer's completed jobs
+		// Get the employer's completed jobs
 		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
 
-		//Get the failed wage negotiations that the employer has been involved in
-		List<JobDTO> activeJobsWithFailedWageNegotiations =
-							jobService.getJobsWithFailedWageNegotiations(employer.getUserId(), yetToStartJobs);
+		// Get the failed wage negotiations that the employer has been involved
+		// in
+		List<JobDTO> activeJobsWithFailedWageNegotiations = jobService
+				.getJobsWithFailedWageNegotiations(employer.getUserId(), yetToStartJobs);
 
-//		//Run the failed wage negotiations velocity template
-		String vtFailedWageNegotiations = applicationService.getFailedWageNegotiationsVelocityTemplate(
-				activeJobsWithFailedWageNegotiations);
+		// //Run the failed wage negotiations velocity template
+		String vtFailedWageNegotiations = applicationService
+				.getFailedWageNegotiationsVelocityTemplate(activeJobsWithFailedWageNegotiations);
 
-		//Run a velocity template to render the yet-to-start-jobs table
-//		String vtYetToStartJobs = jobService.getEmployerProfileJobTableTemplate(employer, yetToStartJobs, false);
+		// Run a velocity template to render the yet-to-start-jobs table
+		// String vtYetToStartJobs =
+		// jobService.getEmployerProfileJobTableTemplate(employer,
+		// yetToStartJobs, false);
 		String vtYetToStartJobs = jobService.getEmployersJobsYetTemplate(employer, yetToStartJobs_Dtos, false);
 
-		//Run a velocity template to render the active-jobs table
+		// Run a velocity template to render the active-jobs table
 		String vtActiveJobs = jobService.getEmployerProfileJobTableTemplate(employer, activeJobs, true);
-
 
 		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
 		model.addAttribute("vtYetToStartJobs", vtYetToStartJobs);
 		model.addAttribute("vtActiveJobs", vtActiveJobs);
-//		model.addAttribute("activeJobs", activeJobs);
+		// model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 
-		//When the profile is requested and presented to the user,
-		//all the applications' "HasBeenViewed" property, for the user's active jobs,
-		//will be set to true.
+		// When the profile is requested and presented to the user,
+		// all the applications' "HasBeenViewed" property, for the user's active
+		// jobs,
+		// will be set to true.
 
-		//*********************************************************************
-		//*********************************************************************
-		//On second thought, this should be set to zero when the user clicks and views
-		//the new applicants
+		// *********************************************************************
+		// *********************************************************************
+		// On second thought, this should be set to zero when the user clicks
+		// and views
+		// the new applicants
 		applicationService.setJobsApplicationsHasBeenViewed(yetToStartJobs, 1);
 		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
-		//*********************************************************************
-		//*********************************************************************
+		// *********************************************************************
+		// *********************************************************************
 
 	}
 
 	public String getFindEmployeesResponseHTML(FindEmployeesDTO findEmployeesDto) {
 
-		//Query the database
+		// Query the database
 		List<JobSearchUser> employees = this.findEmployees(findEmployeesDto);
-
 
 		StringWriter writer = new StringWriter();
 
-		//Set the context
+		// Set the context
 		final VelocityContext context = new VelocityContext();
 		context.put("employees", employees);
 		context.put("mathUtility", MathUtility.class);
-
 
 		findEmployeesResponseTemplate.merge(context, writer);
 
@@ -652,23 +632,21 @@ public class UserServiceImpl {
 
 	public boolean isLoggedIn(HttpSession session) {
 
-		//*************************************
-		//*************************************
-		//This is hackish.
-		//Sometimes this user session attribute is not null...
-		//That is why the email is verified not to be null after the
-		//user is apparently "not" null...
-		//*************************************
-		//*************************************
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		if(user == null){
+		// *************************************
+		// *************************************
+		// This is hackish.
+		// Sometimes this user session attribute is not null...
+		// That is why the email is verified not to be null after the
+		// user is apparently "not" null...
+		// *************************************
+		// *************************************
+		JobSearchUser user = SessionContext.getSessionUser(session);
+		if (user == null) {
 			return false;
-		}
-		else{
-			if(user.getEmailAddress() == null){
+		} else {
+			if (user.getEmailAddress() == null) {
 				return false;
-			}
-			else{
+			} else {
 				return true;
 			}
 
@@ -677,14 +655,9 @@ public class UserServiceImpl {
 
 	public void setModel_WorkHistoryByUser(Model model, int userId) {
 
-
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.
-											getCompletedJobResponseDtosByEmployee(userId);
+		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
 		model.addAttribute("completedJobDtos", completedJobDtos);
 
 	}
 
-	public  JobSearchUser getSessionUser(HttpSession session) {
-		return (JobSearchUser) session.getAttribute("user");
-	}
 }

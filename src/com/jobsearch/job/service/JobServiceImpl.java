@@ -30,6 +30,7 @@ import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
@@ -817,7 +818,7 @@ public class JobServiceImpl {
 		Job selectedJob = this.getEmployersJobProfile(jobId);
 		int hideJobInfoOnLoad;
 
-		if(userService.getSessionUser(session).getUserId() == selectedJob.getUserId()){
+		if(SessionContext.getSessionUser(session).getUserId() == selectedJob.getUserId()){
 
 			//Get the employees
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);

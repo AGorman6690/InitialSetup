@@ -3,11 +3,11 @@
 		<span data-toggle-id="questionsContainer" class="glyphicon glyphicon-menu-down"></span>
 		<span class="header-text">Application</span>
 	</div>
-	
+
 	<div class="section-body">
 		<button id="apply">Apply</button>
-	</div	
-	
+	</div
+
 	## For whatever reason, one of these divs is not rendered...
 	<div class="section-body">
 	<div class="section-body">
@@ -17,15 +17,15 @@
 		<input class="form-control" placeholder=" per hour" id="amount">
 	</div>
 	</div>
-				    		
+
 	<div id="questionsContainer" class="section-body">
 	#foreach($question in $questions)
 		<div class="question-container bottom-border-thinner" data-question-id="$question.questionId"
 				data-question-format-id="$question.formatId">
 
-			<div class="question">					
+			<div class="question">
 				$question.text
-			</div>			
+			</div>
 			<div class="answer-container">
 				<div class="answer">
 				#if($question.formatId == 0)
@@ -34,30 +34,30 @@
 					</div>
 					<div class="radio">
 						<label><input type="radio" name="yesNo">No</label>
-					</div>	
+					</div>
 				#elseif($question.formatId == 1)
 					<textarea class="form-control" rows="3"></textarea>
 				#elseif($question.formatId == 2 || $question.formatId == 3)
-				
+
 					#if($question.formatId == 2)
 						#set ( $classToAdd = "single" )
 						#set ( $help = "(select one)" )
 					#else
 						#set ( $classToAdd = "multi" )
-						#set ( $help = "(select multiple)" ) 
+						#set ( $help = "(select multiple)" )
 					#end
 						<div>$help</div>
 					#foreach($answerOption in $question.answerOptions)
 						<div>
-							<div class="$classToAdd answer-option" data-answer-option-id="$answerOption.answerOptionId">$answerOption.text</div>
+							<div class="$classToAdd answer-option" data-answer-option-id="$answerOption.answerOptionId">$answerOption.answerOption</div>
 						</div>
-					#end					
-						
+					#end
+
 				#end
 				</div>
 			</div>
 
 		</div>
 	#end
-	</div>	
+	</div>
 </div>
