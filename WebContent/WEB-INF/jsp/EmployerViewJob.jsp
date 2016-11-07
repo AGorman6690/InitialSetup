@@ -1,17 +1,12 @@
-<%@ include file="./includes/Header.jsp"%>
+	<%@ include file="./includes/Header.jsp"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	
+	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 
-<%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
-<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
-<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
-<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
-<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 
 <body>
@@ -221,6 +216,7 @@
 									</c:forEach>
 
 								</td>	
+							<c:if test="${questions.size() > 0 }">
 								<td>
 								<c:forEach items="${application.questions }" var="question">
 									<div data-question-id="${question.questionId }" class="question-container">
@@ -237,15 +233,8 @@
 									</div>
 								</c:forEach>
 								</td>
-								
-								
-								
-								
-								
-								
-								
-								
-								
+							</c:if>			
+
 <!-- 								Application Status						 -->
 								<td>
 									<div class="application-status-container">

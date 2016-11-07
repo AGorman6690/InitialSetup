@@ -959,7 +959,7 @@ public class JobServiceImpl {
 	
 	
 
-	public void setModel_EmployerViewJob_WhenViewingEmployeeWorkHistory(Model model,
+	public void setModel_EmployerViewJob_WhenViewingFromEmployeeWorkHistory(Model model,
 											HttpSession session, int jobId, int employeeId) {
 		
 		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);

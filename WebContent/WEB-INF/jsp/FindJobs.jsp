@@ -1,307 +1,302 @@
 <%@ include file="./includes/Header.jsp"%>
 
-<head>
-<script src="<c:url value="/static/javascript/Category.js" />"></script>
-<script src="<c:url value="/static/javascript/User.js" />"></script>
-<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
-<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
 
-<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-<!-- <link rel="stylesheet" type="text/css"	href="../static/css/findJobs.css" /> -->
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_new.css" />
-<link rel="stylesheet" type="text/css"	href="../static/css/datepicker.css" />
-<link rel="stylesheet" type="text/css"	href="../static/css/calendar.css" />
+	<script src="<c:url value="/static/javascript/Category.js" />"></script>
+	<script src="<c:url value="/static/javascript/User.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
+	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
+	<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
+	
+	<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_new.css" />
+	<link rel="stylesheet" type="text/css"	href="../static/css/datepicker.css" />
+	<link rel="stylesheet" type="text/css"	href="../static/css/calendar.css" />
 
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 
-
-<!-- <link -->
-<!-- 	href="/JobSearch/static/css/bootstrap-datepicker3.standalone.css" -->
-<!-- 	rel="stylesheet" /> -->
-<!-- <script -->
-<!-- 	src="/JobSearch/static/External/bootstrap-datepicker.js"></script> -->
-<!-- </head> -->
+</head>
 
 <body>
 
 	<div class="container">
-		<div class="row">
-			<div id="distanceContainer" class="col-sm-12">
-				<div>
-
-				<div id="distance" class="filter-container form-group">	
-					<div id="distanceErrorMessage" class="error-message-container">
-						<div id="radiusErrorMessage" class="error-message">The number of miles must be a positive number</div>
-						<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
+<!-- 	<button id="clearSession">Clear Session Storage</button> -->
+		<div id="filterContainer">
+			<div class="row">
+				<div id="distanceContainer" class="col-sm-12">
+					<div>
+	
+					<div id="distance" class="filter-container form-group">	
+						<div id="distanceErrorMessage" class="error-message-container">
+							<div id="radiusErrorMessage" class="error-message">The number of miles must be a positive number</div>
+							<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
+						</div>
+						<div class="input-container">									
+							<input name="radius" type="text"
+								class="" id="radius" placeholder="Number Of" value="50"></input>
+						</div>			
+						<span id="milesFromContainer">					
+							<label id="milesFrom" for="radius">Miles From</label>
+						</span>		
+						<div id="locationContainer">	
+							<div class="input-container">			
+								<input name="radius" type="text"
+									class="" id="city" placeholder="City"></input>
+							</div>			
+							<div class="input-container">			
+								<input name="radius" type="text"
+									class="" id="state" placeholder="State"></input>
+							</div>			
+							<div class="input-container">			
+								<input name="radius" type="text"
+									class="" id="zipCode" placeholder="Zip Code" value="55119"></input>
+							</div>			
+						</div>																
 					</div>
-					<div class="input-container">									
-						<input name="radius" type="text"
-							class="" id="radius" placeholder="Number Of" value="50"></input>
-					</div>			
-					<span id="milesFromContainer">					
-						<label id="milesFrom" for="radius">Miles From</label>
-					</span>		
-					<div id="locationContainer">	
-						<div class="input-container">			
-							<input name="radius" type="text"
-								class="" id="city" placeholder="City"></input>
-						</div>			
-						<div class="input-container">			
-							<input name="radius" type="text"
-								class="" id="state" placeholder="State"></input>
-						</div>			
-						<div class="input-container">			
-							<input name="radius" type="text"
-								class="" id="zipCode" placeholder="Zip Code" value="55119"></input>
-						</div>			
-					</div>																
-				</div>
+					</div>
 				</div>
 			</div>
+					
+			<div class="row">
+			
+				<div class="col-sm-12">
+					<div id="additionalFiltersContainer" class="">
+						<div class="row">
+							<div class="col-sm-4">
+								<div data-display-text="Start" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="start-time-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="Start Time" >Start Time</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								
+									<div id="start-time-dropdown" class="dropdown">
+										<div class="radio-container">
+											<div class="radio">
+											  <label><input type="radio" name="startTime"
+											  	data-display-text="Before" data-filter-dto-prop="beforeStartTime"
+											  	data-filter-value="1">Before</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="startTime"
+											  	data-display-text="After" data-filter-dto-prop="beforeStartTime"
+											  	data-filter-value="0">After</label>
+											</div>										
+										</div>
+										<div class="filter-value-container">
+											<div class="select-container">								
+												<select id="startTimeOptions" data-default-scroll-value="7:00am"
+													data-filter-dto-prop="startTime" name="startTime"
+													class="filter-input form-control size">
+												 </select>	
+									  		</div>	
+								  		</div>
+								  		<span class="glyphicon glyphicon-ok"></span>							  		
+									</div>
+									
+								</div>
+							</div>	
+							<div class="col-sm-4">
+								<div data-display-text="End" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="end-time-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="End Time" >End Time</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								
+									<div id="end-time-dropdown" class="dropdown">
+										<div class="radio-container">
+											<div class="radio">
+											  <label><input type="radio" name="endTime"
+											  	data-display-text="Before" data-filter-dto-prop="beforeEndTime"
+											  	data-filter-value="1">Before</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="endTime"
+											  	data-display-text="After" data-filter-dto-prop="beforeEndTime"
+											  	data-filter-value="0">After</label>
+											</div>										
+										</div>
+										<div class="filter-value-container">
+											<div class="select-container">								
+												<select id="endTimeOptions" data-default-scroll-value="7:00am"
+													data-filter-dto-prop="endTime" name="endTime"
+													class="filter-input form-control size">
+												 </select>	
+									  		</div>	
+									  	</div>
+								  		<span class="glyphicon glyphicon-ok"></span>							  		
+									</div>
+									
+								</div>
+							</div>
+							<div class="col-sm-4">
+								<div data-display-text="" data-display-text-suffix="Days"
+									 class="filter-container">
+	
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="duration-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="Duration" >Duration (not built)</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+									
+									
+									<div id="duration-dropdown" class="dropdown">
+										<div class="radio-container">
+											<div class="radio">
+											  <label><input type="radio" name="duration"
+											  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration"
+											  	data-filter-value="1">Shorter Than</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="duration"
+											  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration"
+											  	data-filter-value="0">Longer Than</label>
+											</div>										
+										</div>
+	<!-- 									<div class="select-container">		
+							 -->
+										<div class="filter-value-container">
+											<div class="input-container form-group">
+										  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
+									  		</div>		
+		<!-- 							  		</div>	 -->
+										</div>
+								  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div data-display-text="Start" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="start-date-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="Start Date" >Start Date</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								
+									<div id="start-date-dropdown" class="dropdown">
+										<div class="radio-container">
+											<div class="radio">
+											  <label><input type="radio" name="startDate"
+											  	data-display-text="Before" data-filter-dto-prop="beforeStartDate"
+											  	data-filter-value="1">Before</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="startDate"
+											  	data-display-text="After" data-filter-dto-prop="beforeStartDate"
+											  	data-filter-value="0">After</label>
+											</div>										
+										</div>
+										<div class="filter-value-container">
+											<div class="calendar-single-date" data-number-of-months="1">
+											</div>
+										</div>
+								  		<span id="okFilterStartDate" class="glyphicon glyphicon-ok"></span>
+									</div>
+									
+								</div>
+							</div>	
+							<div class="col-sm-4">
+								<div data-display-text="End" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="end-date-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="End Date">End Date</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								
+									<div id="end-date-dropdown" class="dropdown">
+										<div class="radio-container">
+											<div class="radio">
+											  <label><input type="radio" name="endDate"
+											  	data-display-text="Before" data-filter-dto-prop="beforeEndDate"
+											  	data-filter-value="1">Before</label>
+											</div>
+											<div class="radio">
+											  <label><input type="radio" name="endDate"
+											  	data-display-text="After" data-filter-dto-prop="beforeEndDate"
+											  	data-filter-value="0">After</label>
+											</div>										
+										</div>
+										<div class="filter-value-container">
+											<div class="calendar-single-date" data-number-of-months="1">
+											</div>
+										</div>
+								  		<span id="okFilterEndDate" class="glyphicon glyphicon-ok"></span>			  		
+									</div>
+									
+								</div>
+							</div>										
+							<div class="col-sm-4">
+								<div id="workDays" data-display-text="Work Days" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="work-days-dropdown" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="Work Days" >Work Days</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								
+									<div id="work-days-dropdown" class="dropdown">
+										<div class="note">Jobs having at least one work day in the selected date range will be returned</div>
+										<div class="filter-value-container">
+											<div id="calendar" class="calendar-multi-date" data-number-of-months="2">
+											</div>
+										</div>
+										<button class="square-button" id="clearCalendar">Clear</button>
+										<span id="okFilterWorkingDays" class="glyphicon glyphicon-ok"></span>
+									</div>															  		
+								</div>								
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-4">
+								<div data-display-text="sadf" class="filter-container">
+									
+									<div  class="dropdown-container">	
+										<div class="remove-filter">								
+											<span class="glyphicon glyphicon-remove"></span>
+										</div>
+										<div data-toggle-id="" class="trigger-dropdown">	
+											<span class="filter-text" data-reset-text="Categories" >Categories (not built)</span>
+											<span class="glyphicon glyphicon-menu-down"></span>		
+										</div>			
+									</div>
+								</div>								
+							</div>										
+						</div>					
+					</div>			
+				</div> <!--  end filters container -->
+			</div> <!-- end filters row -->	
 		</div>
-				
-		<div class="row">
-		
-			<div class="col-sm-12">
-				<div id="additionalFiltersContainer" class="">
-					<div class="row">
-						<div class="col-sm-4">
-							<div data-display-text="Start" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="start-time-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="Start Time" >Start Time</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							
-								<div id="start-time-dropdown" class="dropdown">
-									<div class="radio-container">
-										<div class="radio">
-										  <label><input type="radio" name="startTime"
-										  	data-display-text="Before" data-filter-dto-prop="beforeStartTime"
-										  	data-filter-value="1">Before</label>
-										</div>
-										<div class="radio">
-										  <label><input type="radio" name="startTime"
-										  	data-display-text="After" data-filter-dto-prop="beforeStartTime"
-										  	data-filter-value="0">After</label>
-										</div>										
-									</div>
-									<div class="filter-value-container">
-										<div class="select-container">								
-											<select id="startTimeOptions" data-default-scroll-value="7:00am"
-												data-filter-dto-prop="startTime" name="startTime"
-												class="filter-input form-control size">
-											 </select>	
-								  		</div>	
-							  		</div>
-							  		<span class="glyphicon glyphicon-ok"></span>							  		
-								</div>
-								
-							</div>
-						</div>	
-						<div class="col-sm-4">
-							<div data-display-text="End" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="end-time-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="End Time" >End Time</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							
-								<div id="end-time-dropdown" class="dropdown">
-									<div class="radio-container">
-										<div class="radio">
-										  <label><input type="radio" name="endTime"
-										  	data-display-text="Before" data-filter-dto-prop="beforeEndTime"
-										  	data-filter-value="1">Before</label>
-										</div>
-										<div class="radio">
-										  <label><input type="radio" name="endTime"
-										  	data-display-text="After" data-filter-dto-prop="beforeEndTime"
-										  	data-filter-value="0">After</label>
-										</div>										
-									</div>
-									<div class="filter-value-container">
-										<div class="select-container">								
-											<select id="endTimeOptions" data-default-scroll-value="7:00am"
-												data-filter-dto-prop="endTime" name="endTime"
-												class="filter-input form-control size">
-											 </select>	
-								  		</div>	
-								  	</div>
-							  		<span class="glyphicon glyphicon-ok"></span>							  		
-								</div>
-								
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div data-display-text="" data-display-text-suffix="Days"
-								 class="filter-container">
-
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="duration-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="Duration" >Duration (not built)</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-								
-								
-								<div id="duration-dropdown" class="dropdown">
-									<div class="radio-container">
-										<div class="radio">
-										  <label><input type="radio" name="duration"
-										  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration"
-										  	data-filter-value="1">Shorter Than</label>
-										</div>
-										<div class="radio">
-										  <label><input type="radio" name="duration"
-										  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration"
-										  	data-filter-value="0">Longer Than</label>
-										</div>										
-									</div>
-<!-- 									<div class="select-container">		
-						 -->
-									<div class="filter-value-container">
-										<div class="input-container form-group">
-									  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
-								  		</div>		
-	<!-- 							  		</div>	 -->
-									</div>
-							  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<div data-display-text="Start" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="start-date-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="Start Date" >Start Date</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							
-								<div id="start-date-dropdown" class="dropdown">
-									<div class="radio-container">
-										<div class="radio">
-										  <label><input type="radio" name="startDate"
-										  	data-display-text="Before" data-filter-dto-prop="beforeStartDate"
-										  	data-filter-value="1">Before</label>
-										</div>
-										<div class="radio">
-										  <label><input type="radio" name="startDate"
-										  	data-display-text="After" data-filter-dto-prop="beforeStartDate"
-										  	data-filter-value="0">After</label>
-										</div>										
-									</div>
-									<div class="filter-value-container">
-										<div class="calendar-single-date" data-number-of-months="1">
-										</div>
-									</div>
-							  		<span id="okFilterStartDate" class="glyphicon glyphicon-ok"></span>
-								</div>
-								
-							</div>
-						</div>	
-						<div class="col-sm-4">
-							<div data-display-text="End" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="end-date-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="End Date">End Date</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							
-								<div id="end-date-dropdown" class="dropdown">
-									<div class="radio-container">
-										<div class="radio">
-										  <label><input type="radio" name="endDate"
-										  	data-display-text="Before" data-filter-dto-prop="beforeEndDate"
-										  	data-filter-value="1">Before</label>
-										</div>
-										<div class="radio">
-										  <label><input type="radio" name="endDate"
-										  	data-display-text="After" data-filter-dto-prop="beforeEndDate"
-										  	data-filter-value="0">After</label>
-										</div>										
-									</div>
-									<div class="filter-value-container">
-										<div class="calendar-single-date" data-number-of-months="1">
-										</div>
-									</div>
-							  		<span id="okFilterEndDate" class="glyphicon glyphicon-ok"></span>			  		
-								</div>
-								
-							</div>
-						</div>										
-						<div class="col-sm-4">
-							<div id="workDays" data-display-text="Work Days" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="work-days-dropdown" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="Work Days" >Work Days</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							
-								<div id="work-days-dropdown" class="dropdown">
-									<div class="note">Jobs having at least one work day in the selected date range will be returned</div>
-									<div class="filter-value-container">
-										<div id="calendar" class="calendar-multi-date" data-number-of-months="2">
-										</div>
-									</div>
-									<button class="square-button" id="clearCalendar">Clear</button>
-									<span id="okFilterWorkingDays" class="glyphicon glyphicon-ok"></span>
-								</div>															  		
-							</div>								
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-4">
-							<div data-display-text="sadf" class="filter-container">
-								
-								<div  class="dropdown-container">	
-									<div class="remove-filter">								
-										<span class="glyphicon glyphicon-remove"></span>
-									</div>
-									<div data-toggle-id="" class="trigger-dropdown">	
-										<span class="filter-text" data-reset-text="Categories" >Categories (not built)</span>
-										<span class="glyphicon glyphicon-menu-down"></span>		
-									</div>			
-								</div>
-							</div>								
-						</div>										
-					</div>					
-				</div>			
-			</div> <!--  end filters container -->
-		</div> <!-- end filters row -->	
-		
 		<div class="row">
 			<div class="col-sm-12">
 				<div id="getJobsContainer"> 
@@ -488,20 +483,21 @@
 
 	$(document).ready(function(){
 
-	
-// 		if(sessionStorage.showFilteredOnPageReturn == "1"){
-// 			$("#map").html(sessionStorage.map);
-			
-			if(sessionStorage.doStoreFilteredJobs == "1"){
-				$("#filteredJobs").html(sessionStorage.filteredJobs);
-				setMap();				
-				$("#mainBottom").show();
-			}
-			else{
-				$("#mainBottom").hide();
-			}
+// 		$("#clearSession").click(function(){
+// 			sessionStorage.clear();
+// 		})
 
+		
+// 		if(sessionStorage.doStoreFilteredJobs == "1"){
+// 			$("#filteredJobs").html(sessionStorage.filteredJobs);
+// 			setMap();				
+// 			$("#mainBottom").show();
+// 			$("#filterContainer").empty();
+// 			$("#filterContainer").append(sessionStorage.filters);
 // 		}
+// 		else{
+// 		}
+
 	})
 
 

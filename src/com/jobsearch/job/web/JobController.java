@@ -163,10 +163,10 @@ public class JobController {
 		
 		
 		
-		jobService.setModel_EmployerViewJob_WhenViewingEmployeeWorkHistory(model, session, jobId, employeeId);
+		jobService.setModel_EmployerViewJob_WhenViewingFromEmployeeWorkHistory(model, session, jobId, employeeId);
 
 		
-		return "EmployerViewJob_WhenViewingEmployeeWorkHistory";
+		return "EmployerViewJob_WhenViewingFromEmployeeWorkHistory";
 		
 	}
 

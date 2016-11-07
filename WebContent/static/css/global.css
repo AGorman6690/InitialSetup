@@ -1,4 +1,6 @@
-
+html.waiting * {
+    cursor: progress;
+}
 
 
 .form-control-label{

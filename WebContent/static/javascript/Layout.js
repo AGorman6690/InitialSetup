@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$("[data-toggle-id]").click(function(){
+	$("body").on("click", "[data-toggle-id]", function(){
 		var toggleId = $(this).attr("data-toggle-id");
 		var toggleSpeed = $(this).attr("data-toggle-speed");
 		var $e = $("#" + toggleId);

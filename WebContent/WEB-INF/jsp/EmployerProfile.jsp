@@ -22,10 +22,6 @@
 	
 	
 	<div class="container">
-	
-		<div id="storageTest"></div>
-		<button id="test">Storage Test</button>
-
 <%-- 		<div>${vtFailedWageNegotiations }</div> --%>
 		<div>${vtYetToStartJobs }</div>
 		<div>${vtActiveJobs }</div>
@@ -70,13 +66,6 @@
 
 $(document).ready(function(){
 
-	$("#storageTest").html(sessionStorage.test);
-	$("#test").click(function(){
-		var str = "store this, yo";
-		$("#storageTest").html(str);
-		sessionStorage.setItem("test", str);
-	})
-	
 	$("#activeJobsTable tr td").click(function(){
 		window.location = '../job/' + $(this).parent().attr('id');
 	})	

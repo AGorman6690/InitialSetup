@@ -9,7 +9,7 @@ $(document).ready(function() {
 			getJobs(1);
 		})
 		
-		$(".trigger-dropdown").click(function(e){
+		$("#filterContainer").on("click", ".trigger-dropdown", function(e){
 			
 			//The below click event that is triggered will infinitely fire this event.
 			//(i.e. the aTriggerDropdown element has the trigger-dropdown class).
@@ -22,7 +22,7 @@ $(document).ready(function() {
 				var visibleDropdowns = $("#additionalFiltersContainer")
 										.find(".dropdown:visible");
 				
-				if(visibleDropdowns.length > 1){
+				if(visibleDropdowns.length == 1){
 					$.each(visibleDropdowns, function(){
 						aTriggerDropdown = $(this).closest(".filter-container").find(".trigger-dropdown")[0];
 						if(aTriggerDropdown != clickedTriggerDropdown){
@@ -45,28 +45,20 @@ $(document).ready(function() {
 		})
 		
 	
-		$(".remove-filter").click(function(){
+		$("#filterContainer").on("click", ".remove-filter", function(){
 			removeFilter(getFilterContainer($(this)));
 		})
 	
-		$(".glyphicon-ok").click(function(){
+		$("#filterContainer").on("click", ".glyphicon-ok", function(){
 			
 			var filterContainer = getFilterContainer($(this));
 			
 			if(areApproveFilterInputsValid(filterContainer)){
-				approveFilter(filterContainer);
-				
+				approveFilter(filterContainer);				
 			}
-			
-			
+						
 		})
 		
-		$("#filteredJobs").on("mouseover", ".job", function(){
-		  
-//			var btn1 = document.getElementById('btn1');
-
-
-		})
 		
 		$("#mainBottom").on("click", "div[data-scroll-to]", function(){
 			
@@ -93,33 +85,6 @@ $(document).ready(function() {
 			//Toggle the filter job's description to show more or less
 			
 			var description = $(this).siblings(".job-description")[0];			
-//			var isShowingMore;
-//			var exceedsMaxHeight;
-			
-			//Determine if the user is showing more or less
-//			if($(description).hasClass("less-description")){
-//				isShowingMore = 1;
-//			}else{
-//				isShowingMore = 0;
-//			}
-			
-//			//Determine if job description exceeds an arbitrary max height
-//			if ($(description)[0].scrollHeight > 180){	
-//				exceedsMaxHeight = 1
-//			}else{
-//				exceedsMaxHeight = 0;
-//			}		
-			
-//			if(isShowingMore){				
-//				if(exceedsMaxHeight){	
-//					$(description).addClass("exceeds-max-description")
-//				}else{
-//					$(description).removeClass("exceeds-max-description")				
-//				}				
-//			}else{
-				//Always remove this class if showing less
-//				$(description).removeClass("exceeds-max-description")
-//			}
 			
 			toggleClasses($(description), "less-description", "more-description");
 
@@ -154,7 +119,7 @@ $(document).ready(function() {
 			var len = $(e.target).closest(".filter-container");
 			if(doCloseDropdown(e.target)){
 				$(".dropdown").each(function(){
-					$(this).hide();
+					slideUp($(this), 300);
 				})
 			}
 
@@ -184,29 +149,12 @@ $(document).ready(function() {
 			//***************************************************************************
 		})
 
-// 		$(".clear-filter").click(function(){
-// 			var filterContent = $(this).parents(".filter-content")[0];
-			
-// 			$(filterContent).find("input, select").each(function(){
-// 				$(this).val("");
-// 			})
-			
-// 			//Reset filter header text
-// 			var f = $(this).parents(".filter-content-container")[0];
-// 			var g = $(f).find(".filter-criteria-header")[0];
-// 			var header = $($(this).parents(".filter-criteria-container")[0]).find(".filter-criteria-header")[0];
-// 			$(header).text($(this).data("reset-header"));
-			
-// 			$(this).hide();
-// 		})
-		
 		//******************************************************************************
 		//******************************************************************************
 		//Currently not being used.
 		//This is used so the user can view time by 15 or 30 minute intervals, not just 60.
 		//Incorporate this later
 		$(".show-time-options-container").click(function(){
-
 			$($(this).siblings(".time-options")[0]).toggle();	
 		})	
 		
@@ -222,14 +170,6 @@ $(document).ready(function() {
 
 		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
-				
-// 		$('#workingDays').datepicker({
-// 			toggleActive: true,
-// 			clearBtn: true,
-// 			todayHighlight: true,
-// 			startDate: new Date(),
-// 			multidate: true			
-// 		});	
 	
 		$('.date').datepicker({
 			autoclose: true,
@@ -499,7 +439,6 @@ function approveFilter(filterContainer){
 		selectedRadioText = "";
 	}
 	
-	
 	if($(filterContainer).attr("id") == "workDays"){
 		filterValueText = "";
 	}
@@ -516,7 +455,6 @@ function approveFilter(filterContainer){
 	$(filterContainerText).html(newText);
 	
 	$($(filterContainer).find(".remove-filter")[0]).show();
-//		slideUp($($(filterContainer).find(".dropdown")[0]));
 	hideDropdown(filterContainer);
 	
 }
@@ -636,6 +574,7 @@ function getJobs(doSetMap){
 		
 //			params += "&categoryId=-1";
 		
+		$("html").addClass("waiting");
 		$.ajax({
 			type : "GET",
 				url: environmentVariables.LaborVaultHost + '/JobSearch/jobs/filter' + params,
@@ -666,19 +605,20 @@ function getJobs(doSetMap){
 				setMap();	
 			}
 			
-			sessionStorage.clear();
-			sessionStorage.setItem("doStoreFilteredJobs", doStoreFilteredJobs(response));
+//			sessionStorage.clear();
+//			sessionStorage.setItem("doStoreFilteredJobs", doStoreFilteredJobs(response));			
+//			if(sessionStorage.doStoreFilteredJobs == 1){
+//				sessionStorage.setItem("filteredJobs", response);
+//				sessionStorage.setItem("map", $("#map").html());
+//				sessionStorage.setItem("filters", $("#filterContainer").html());
+//			}
 			
-			if(sessionStorage.doStoreFilteredJobs == 1){
-				sessionStorage.setItem("filteredJobs", response);
-				sessionStorage.setItem("map", $("#map").html());	
-			}
-			
-				
+			$("html").removeClass("waiting");
 		}	
 
 		function _error(response) {
 			alert('DEBUG: error set filter jobs')
+			$("html").removeClass("waiting");
 		}
 	}
 }	
