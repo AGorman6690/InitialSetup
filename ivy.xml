@@ -60,6 +60,8 @@
 
         <!-- Testing libraries -->
         <dependency org="junit" name="junit" rev="4.12" conf="local" />
+        <dependency org="org.springframework" name="spring-test" rev="4.3.2.RELEASE"/>
+
 
         <dependency org="org.easytesting" name="fest-assert" rev="1.4" conf="local" />
         <dependency org="org.mockito" name="mockito-all" rev="1.10.19" conf="local" />
@@ -117,6 +119,11 @@
 		<dependency org="org.jasypt" name="jasypt" rev="1.9.2"/>
 		<dependency org="org.jasypt" name="jasypt-spring3" rev="1.9.2"/>
 		<dependency org="org.jasypt" name="jasypt-springsecurity3" rev="1.9.2"/>
+
+		<!-- Groovy -->
+		<dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.3"/>
+		<dependency org="org.codehaus.groovy" name="groovy" rev="2.4.3"/>
+		<dependency org="org.codehaus.groovy" name="groovy-ant" rev="2.4.3"/>
 
     </dependencies>
 

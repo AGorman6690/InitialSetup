@@ -23,7 +23,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "loadedFilteredJobIds", "loadedFilteredJobs"})
+@SessionAttributes({ "user", "loadedFilteredJobIds", "loadedFilteredJobs" })
 public class WelcomeController {
 
 	@Autowired
@@ -31,36 +31,35 @@ public class WelcomeController {
 
 	@Value("${host.url}")
 	private String hostUrl;
-	
+
 	@ModelAttribute("user")
-	public JobSearchUser getSessionUser(){
+	public JobSearchUser getSessionUser() {
 		JobSearchUser sessionUser = new JobSearchUser();
 		return sessionUser;
 	}
-	
+
 	@ModelAttribute("loadedFilteredJobIds")
-	public List<Integer> getSessionLoadedFilteredJobIds(){
+	public List<Integer> getSessionLoadedFilteredJobIds() {
 		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
 		return loadedFilteredJobIds;
 	}
-	
+
 	@ModelAttribute("loadedFilteredJobs")
-	public List<Job> getSessionLoadedFilteredJobs(){
+	public List<Job> getSessionLoadedFilteredJobs() {
 		List<Job> loadedFilteredJobs = new ArrayList<Job>();
 		return loadedFilteredJobs;
-	}	
+	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome(Model model, HttpServletRequest request,
 			@RequestParam(name = "error", required = false) boolean error) {
 
-
 		// // Set session objects
-//		JobSearchUser user = new JobSearchUser();
+		// JobSearchUser user = new JobSearchUser();
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addAttribute("profiles", profiles);
-//		model.addAttribute("user", user);
+		// model.addAttribute("user", user);
 
 		model.addAttribute("url", hostUrl);
 
@@ -68,31 +67,25 @@ public class WelcomeController {
 			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
 		}
 
-//		model.setViewName("Welcome");
+		// model.setViewName("Welcome");
 
 		return "Welcome";
 	}
-	
+
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ModelAndView logout(ModelAndView model, SessionStatus status,
-						@ModelAttribute("user") JobSearchUser user) {
-		//*******************************************
-		//*******************************************
-		//Need to figure this out
-		//*******************************************
-		//*******************************************
-		
-		//Set the session complete
-//		status.setComplete();
-		
+	public ModelAndView logout(ModelAndView model, SessionStatus status, @ModelAttribute("user") JobSearchUser user) {
+		// *******************************************
+		// *******************************************
+		// Need to figure this out
+		// *******************************************
+		// *******************************************
 
-		
-		//Return to welcome page
+		// Set the session complete
+		// status.setComplete();
+
+		// Return to welcome page
 		model.setViewName("Welcome");
-
-		user = new JobSearchUser();
-
-		model.addObject("user", user);
+		model.addObject("user", new JobSearchUser());
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);

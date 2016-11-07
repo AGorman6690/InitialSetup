@@ -18,7 +18,6 @@ import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-//@SessionAttributes({ "user" })
 public class ApplicationController {
 
 	@Autowired
@@ -41,39 +40,34 @@ public class ApplicationController {
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateStatus(@RequestBody UpdateApplicationDTO updateApplicationDto) {
-		
 		applicationService.updateApplicationStatus(updateApplicationDto.getApplicationId(), updateApplicationDto.getNewStatus());
 	}
-	
+
 	@RequestMapping(value = "/desired-pay/counter", method = RequestMethod.POST)
 	@ResponseBody
 	public void counterOffer(@RequestBody WageProposalCounterDTO dto) {
-		
+
 		applicationService.insertCounterOffer(dto);
 	}
-	
+
 	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
 	@ResponseBody
 	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
-		
+
 		applicationService.acceptWageProposal(wageProposalId);
-		
+
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
-		
-	}	
-	
+
+	}
+
 	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
 	@ResponseBody
 	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
-		
-		
+
 		applicationService.declineWageProposalStatus(wageProposalId);
-		
+
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
-		
-		
-	}		
-
+	}
 }

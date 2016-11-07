@@ -1,13 +1,9 @@
 package com.jobsearch.category.service;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.category.repository.CategoryRepository;
@@ -30,10 +26,6 @@ public class CategoryServiceImpl {
 	@Autowired
 	UserRepository userRepository;
 
-	@Autowired
-	@Qualifier("CategoriesVM")
-	Template categoryTemplate;
-
 	public void addCategoryToUser(int userId, int categoryId) {
 		repository.addCategoryToUser(userId, categoryId);
 	}
@@ -44,18 +36,6 @@ public class CategoryServiceImpl {
 
 	public List<Category> getCategoriesByJobId(int jobId) {
 		return repository.getCategoriesByJobId(jobId);
-	}
-
-	public String categoryTemplate(List<Category> categories) {
-		StringWriter writer = new StringWriter();
-
-		final VelocityContext context = new VelocityContext();
-
-		context.put("categories", categories);
-
-		categoryTemplate.merge(context, writer);
-
-		return writer.toString();
 	}
 
 	public Category getCategoryByJobId(int jobId) {
@@ -99,10 +79,6 @@ public class CategoryServiceImpl {
 
 				List<Category> subCategories = this.getSubCategories(categoryId);
 
-
-				String categoryHTML = categoryTemplate(subCategories);
-
-
 				for (Category subCategory : subCategories) {
 
 					SubCategoryRequestDTO dto = new SubCategoryRequestDTO();
@@ -112,7 +88,6 @@ public class CategoryServiceImpl {
 					dto.setSubSubCategoryCount(getSubCategories(subCategory.getId()).size());
 
 					dtos.add(dto);
-
 				}
 			}
 
@@ -126,7 +101,7 @@ public class CategoryServiceImpl {
 
 	public List<Category> getCategories(List<Integer> categoryIds) {
 		List<Category> categories = new ArrayList<Category>();
-		
+
 		for(int categoryId : categoryIds){
 			categories.add(this.getCategory(categoryId));
 		}

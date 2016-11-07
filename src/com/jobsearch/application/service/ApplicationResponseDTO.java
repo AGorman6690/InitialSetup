@@ -4,7 +4,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.model.WageProposal;
 
 public class ApplicationResponseDTO {
-	
+
 	//**********************************************
 	//**********************************************
 	//It now appears that this DTO can be done away with.
@@ -13,15 +13,15 @@ public class ApplicationResponseDTO {
 	//Consider removing this DTO class entirely
 	//**********************************************
 	//**********************************************
-	
+
 	private Application application;
 	private float currentDesiredWage;
 	private float currentOfferedWage;
 	private WageProposal currentWageProposal;
 	private Job job;
-	
-	
-	
+
+
+
 	public WageProposal getCurrentWageProposal() {
 		return currentWageProposal;
 	}
@@ -52,6 +52,6 @@ public class ApplicationResponseDTO {
 	public void setCurrentDesiredWage(float currentDesiredWage) {
 		this.currentDesiredWage = currentDesiredWage;
 	}
-	
-	
+
+
 }

@@ -1,5 +1,9 @@
 table td{
+<<<<<<< HEAD
+	padding:10px 5px;
+=======
 	padding:10px 10px;
+>>>>>>> master
 }
 
 table th{
@@ -7,16 +11,23 @@ table th{
 }
 
 
+<<<<<<< HEAD
+.table-container{
+	padding-top:25px;
+=======
 .section{
 	padding:25px 0px;
 }
 
 .table-container{
 	padding-left:25px;
+>>>>>>> master
 }
 
 a{
 	cursor:pointer;
+<<<<<<< HEAD
+=======
 }
 
 
@@ -28,4 +39,5 @@ a{
 
 #availableDays{
 	display:none;
+>>>>>>> master
 }

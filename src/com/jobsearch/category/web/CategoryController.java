@@ -17,7 +17,6 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 
 @Controller
-//@SessionAttributes({ "user" })
 public class CategoryController {
 
 	@Autowired
@@ -35,17 +34,14 @@ public class CategoryController {
 		return JSON.stringify(categories);
 
 	}
-	
+
 	@RequestMapping(value = "/categories/subCategories", method = RequestMethod.GET)
 	@ResponseBody
 	public String getSubCategories(@RequestParam(name = "categoryId", value = "categoryId") List<Integer> categoryIds) {
-		
+
 		List<SubCategoryRequestDTO> subCategoryRequestDtos = categoryService.getSubCategoryDTOs(categoryIds);
 
 		return JSON.stringify(subCategoryRequestDtos);
 
 	}
-	
-	
-
 }

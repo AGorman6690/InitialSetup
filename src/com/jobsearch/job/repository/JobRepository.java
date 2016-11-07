@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -22,9 +21,9 @@ import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
-import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Repository
@@ -47,21 +46,20 @@ public class JobRepository {
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
-		try{
+		try {
 
 			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
 
 				@Override
 				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Job e = new Job();
-					
-					
+
+
 					int jobId = rs.getInt("JobId");
-					
+
 					e.setId(jobId);
 					e.setJobName(rs.getString("JobName"));
 					e.setUserId(rs.getInt("UserId"));
-//					e.setIsActive(rs.getInt("IsActive"));
 					e.setDescription(rs.getString("Description"));
 					e.setStreetAddress(rs.getString("StreetAddress"));
 					e.setCity(rs.getString("City"));
@@ -69,16 +67,15 @@ public class JobRepository {
 					e.setZipCode(rs.getString("ZipCode"));
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
-//					e.setStartDate(rs.getDate("StartDate"));
-//					e.setEndDate(rs.getDate("EndDate"));
 
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
 					e.setStartTime(jobService.getStartTime(jobId));
-					e.setEndTime(jobService.getEndTime(jobId));	
+					e.setEndTime(jobService.getEndTime(jobId));
 					e.setStatus(rs.getInt("Status"));
-					
+
 					//Set duration
+<<<<<<< HEAD
 //					DateTime dtStart = new DateTime(e.getStartDate());
 //					DateTime dtEnd = new DateTime(e.getEndDate());
 //					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
@@ -91,11 +88,16 @@ public class JobRepository {
 						Job r = new Job();
 					}
 					
+=======
+					DateTime dtStart = new DateTime(e.getStartDate());
+					DateTime dtEnd = new DateTime(e.getEndDate());
+					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 					return e;
 				}
 			});
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return null;
 		}
 
@@ -137,7 +139,6 @@ public class JobRepository {
 					cStmt.setString(1, job.getJobName());
 					cStmt.setInt(2, job.getUserId());
 					cStmt.setString(3, job.getDescription());
-//					cStmt.setString(4, job.getLocation());
 					cStmt.setInt(5, job.getOpenings());
 
 					result = cStmt.executeQuery();
@@ -146,10 +147,8 @@ public class JobRepository {
 					while (result.next()) {
 						createdJob.setId(result.getInt("JobId"));
 						createdJob.setJobName(result.getString("JobName"));
-//						createdJob.setIsActive(result.getInt("isActive"));
 						createdJob.setUserId(result.getInt("UserId"));
 						createdJob.setDescription(result.getString("Description"));
-//						createdJob.setLocation(result.getString("Location"));
 						createdJob.setOpenings(result.getInt("Openings"));
 					}
 					for(Integer categoryId: job.getCategoryIds()){
@@ -161,8 +160,7 @@ public class JobRepository {
 
 						cStmt.executeQuery();
 					}
-			}
-
+				}
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -170,27 +168,21 @@ public class JobRepository {
 		}
 	}
 
-
-	public void addJob(PostJobDTO jobDto, JobSearchUser user) {
+	public void addJob(Job job, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
 					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, jobDto.getJobName());
+			 cStmt.setString(1, job.getJobName());
 			 cStmt.setInt(2, user.getUserId());
-			 cStmt.setString(3, jobDto.getDescription());
-			 //cStmt.setInt(6, jobDto.getOpenings());
-			 cStmt.setString(4, jobDto.getStreetAddress());
-			 cStmt.setString(5, jobDto.getCity());
-			 cStmt.setString(6, jobDto.getState());
-			 cStmt.setString(7, jobDto.getZipCode());
-			 cStmt.setFloat(8,  jobDto.getLat());
-			 cStmt.setFloat(9,  jobDto.getLng());
-//			 cStmt.setDate(10, (Date) jobDto.getStartDate());
-//			 cStmt.setDate(11, (Date) jobDto.getEndDate());
-//			 cStmt.setTime(12,  jobDto.getStartTime());
-//			 cStmt.setTime(13,  jobDto.getEndTime());
+			 cStmt.setString(3, job.getDescription());
+			 cStmt.setString(4, job.getStreetAddress());
+			 cStmt.setString(5, job.getCity());
+			 cStmt.setString(6, job.getState());
+			 cStmt.setString(7, job.getZipCode());
+			 cStmt.setFloat(8,  job.getLat());
+			 cStmt.setFloat(9,  job.getLng());
 
 			 ResultSet result = cStmt.executeQuery();
 
@@ -200,7 +192,7 @@ public class JobRepository {
 			 createdJob.setId(result.getInt("JobId"));
 
 			 //Add the job's categories to the database
-			 for(Integer categoryId: jobDto.getCategoryIds()){
+			 for(Integer categoryId: job.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
 
@@ -210,14 +202,13 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(PostQuestionDTO question : jobDto.getQuestions()){
-
+			for(Question question : job.getQuestions()){
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
-			
+
 			//Set the work days
-			jobService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
+			jobService.addWorkDays(createdJob.getId(), job.getWorkDays());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -225,44 +216,10 @@ public class JobRepository {
 		}
 	}
 
-//	public List<Job> getJobsByUser(int userId) {
-//		String sql = "SELECT * FROM job WHERE UserId = ?";
-//		return this.JobRowMapper(sql, new Object[] { userId });
-//
-//	}
-
 	public List<Job> getJobsByStatusAndByEmployer(int userId, int jobStatus) {
 		String sql = "SELECT * FROM job WHERE Status = ? AND UserId = ?";
 		return this.JobRowMapper(sql, new Object[] { jobStatus , userId});
 	}
-	
-//	public List<Job> getActiveJobsByEmployer(int userId) {
-//
-//		// Get active jobs
-//		String sql = "SELECT * FROM job WHERE Status 1 AND UserId = ?";
-//		return this.JobRowMapper(sql, new Object[] { userId });
-//
-//
-//	}
-
-//	public List<Job> getCompletedJobsByEmployer(int userId) {
-//		String sql = "SELECT * FROM job WHERE IsActive = 0 AND UserId = ?";
-//		return this.JobRowMapper(sql, new Object[] { userId });
-//	}
-
-//	public List<Job> getCompletedJobsByEmployee(int userId) {
-//		String sql = "SELECT * FROM job INNER JOIN employment ON job.JobId = employment.JobId"
-//						+ " AND job.Status = 2 AND employment.UserId = ?";
-//		return this.JobRowMapper(sql, new Object[] { userId });
-//	}
-
-//	public void markJobComplete(int jobId) {
-//		String sql = "UPDATE job" + " SET IsActive = 0 WHERE JobId = ?";
-//
-//		jdbcTemplate.update(sql, new Object[] { jobId });
-//
-//	}
-
 
 	public int getJobCountByCategory(int categoryId) {
 
@@ -280,14 +237,13 @@ public class JobRepository {
 //
 //		return this.JobRowMapper(sql, new Object[] { userId });
 //	}
-	
+
 	public List<Job> getJobsByStatusByEmployee(int userId, int jobStatus) {
 		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
 				+ "	AND employment.UserId = ? and job.Status = ?";
 
 		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
 	}
-
 
 //	public List<Job> getYetToStartJobsByEmployee(int userId) {
 //		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
@@ -314,27 +270,25 @@ public class JobRepository {
 //	}
 
 	public Job getJob(int jobId) {
-		
-//		select j.* , MIN(w.Date) as start, MAX(w.Date) as end 
+
+//		select j.* , MIN(w.Date) as start, MAX(w.Date) as end
 //		from job j inner join work_day w on j.jobid = w.jobid where j.jobid = '65'
-		
+
 		String sql = "SELECT j.*, MIN(w.Date) as work_day_StartDate, MAX(w.Date) as work_day_EndDate"
 						+ " FROM job j"
 						+ " INNER JOIN work_day w ON j.JobId = w.JobId"
 						+ " WHERE j.JobId = ?";
 
-		List<Job> jobs = this.JobRowMapper(sql, new Object[]{ jobId });
+		List<Job> jobs = this.JobRowMapper(sql, new Object[] { jobId });
 
 		if(jobs != null){
-			
-			
 			return jobs.get(0);
 		}
-		else return null;
+		return null;
 	}
 
-
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
+<<<<<<< HEAD
 
 
 	//SQL example for filtering jobs.
@@ -424,6 +378,43 @@ public class JobRepository {
 				
 				argsList.add(filter.getWorkingDays().get(i - 1));
 						
+=======
+		// TODO Auto-generated method stub
+
+		// Distance formula found here:
+		// https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
+		// This calculates the distance between each job and a given lat/lng.
+		String sql = "SELECT *, "
+					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance,"
+					+ " (EndDate - StartDate + 1) AS duration"
+					+ " FROM job WHERE job.JobId IN (SELECT job.JobId FROM job WHERE job.IsAcceptingApplications = 1 ";
+
+		List<Object> argsList = new ArrayList<Object>();
+
+		// Arguments for distance filter
+		argsList.add(filter.getLat());
+		argsList.add(filter.getLng());
+		argsList.add(filter.getLat());
+
+		// If there are no categories to filter on
+		if (filter.getCategoryIds() == null) {
+
+//			sql += " WHERE job.IsActive = 1";
+
+			// Else build the where condition for the categories
+		} else {
+
+			sql += " INNER JOIN job_category ON job.JobId = job_category.JobId WHERE job.IsActive = 1 AND (";
+			for (int i = 0; i < filter.getCategoryIds().length; i++) {
+				if (i < filter.getCategoryIds().length - 1) {
+					sql += " job_category.CategoryId = ? OR";
+				} else {
+					sql += " job_category.CategoryId = ?)";
+				}
+
+				argsList.add(filter.getCategoryIds()[i]);
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 			}
 			subTable = "wd_work_days";
 		
@@ -459,6 +450,7 @@ public class JobRepository {
 			nextTableToJoin = subTable;
 		}					
 
+<<<<<<< HEAD
 		//Start time
 		if(filter.getStartTime() != null){
 			sql += " JOIN (";
@@ -468,12 +460,22 @@ public class JobRepository {
 			
 			if(filter.getBeforeStartTime()){
 				sql += " HAVING MAX(startTime) <= ?";
+=======
+		// Start time
+		if (filter.getStartTime() != null) {
+			sql += " AND job.StartTime";
+			if (filter.getBeforeStartTime()) {
+				sql += " <= ?";
+			} else {
+				sql += " >= ?";
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 			}
 			else{
 				sql += " HAVING MIN(startTime) >= ?";
 			}
 			
 			argsList.add(filter.getStartTime());
+<<<<<<< HEAD
 			
 			subTable = "wd_start_time";
 			
@@ -492,12 +494,24 @@ public class JobRepository {
 			
 			if(filter.getBeforeEndTime()){
 				sql += " HAVING MAX(endTime) <= ?";	
+=======
+		}
+
+		// End time
+		if (filter.getEndTime() != null) {
+			sql += " AND job.EndTime";
+			if (filter.getBeforeEndTime()) {
+				sql += " <= ?";
+			} else {
+				sql += " >= ?";
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 			}
 			else{
 				sql += " HAVING MIN(endTime) >= ?";
 			}
 			
 			argsList.add(filter.getEndTime());
+<<<<<<< HEAD
 			
 			subTable = "wd_end_time";
 			
@@ -519,6 +533,16 @@ public class JobRepository {
 				sql += " <= ?";
 			}
 			else{
+=======
+		}
+
+		// Start date
+		if (filter.getStartDate() != null) {
+			sql += " AND job.StartDate";
+			if (filter.getBeforeStartDate()) {
+				sql += " <= ?";
+			} else {
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 				sql += " >= ?";
 			}
 			
@@ -532,6 +556,7 @@ public class JobRepository {
 			nextTableToJoin = subTable;
 		}		
 
+<<<<<<< HEAD
 		//End date
 		if(filter.getStartDate() != null){
 			sql += " JOIN (";
@@ -544,6 +569,14 @@ public class JobRepository {
 				sql += " <= ?";
 			}
 			else{
+=======
+		// End date
+		if (filter.getEndDate() != null) {
+			sql += " AND job.EndDate";
+			if (filter.getBeforeEndDate()) {
+				sql += " <= ?";
+			} else {
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 				sql += " >= ?";
 			}
 			
@@ -557,6 +590,7 @@ public class JobRepository {
 			nextTableToJoin = subTable;
 		}
 
+<<<<<<< HEAD
 		//Complete the distance filter.			
 		sql += " HAVING distance < ?";
 		argsList.add(filter.getRadius());	
@@ -565,134 +599,157 @@ public class JobRepository {
 		if(alreadyLoadedFilteredJobIds != null){
 			
 			for(Integer id : alreadyLoadedFilteredJobIds){
+=======
+		// Duration
+		if (filter.getDuration() > 0) {
+			sql += " AND job.EndDate - job.StartDate";
+			if (filter.getLessThanDuration()) {
+				sql += " <= ?";
+			} else {
+				sql += " >= ?";
+			}
+
+			argsList.add(filter.getDuration());
+		}
+
+		// Skip already-loaded jobs
+		if (alreadyLoadedFilteredJobIds != null) {
+
+			for (Integer id : alreadyLoadedFilteredJobIds) {
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 				sql += " AND job.jobId <> ?";
 				argsList.add(id);
 			}
 		}
+<<<<<<< HEAD
 		
 		//Order by
+=======
+
+		// Close the sub query and complete the distance filter.
+		argsList.add(filter.getRadius());
+		sql += ") HAVING distance < ?";
+
+		// Order by
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 		sql += " ORDER BY ";
-		if(filter.getSortBy() != null){
+		if (filter.getSortBy() != null) {
 			sql += filter.getSortBy() + " ";
-			if(filter.getIsAscending()){
+			if (filter.getIsAscending()) {
 				sql += "ASC";
-			}else{
+			} else {
 				sql += "DESC";
 			}
-		}else{
-			//If user did not sort, the sort by ascending distance as a default
+		} else {
+			// If user did not sort, the sort by ascending distance as a default
 			sql += " distance ASC";
 		}
-		
-		
-		
-		//Number of jobs to return
-		//argsList.add(filter.getReturnJobCount());
+
+		// Number of jobs to return
+		// argsList.add(filter.getReturnJobCount());
 		sql += " LIMIT 0 , 25";
 
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 
-	
-	//*******************************************************************
-	//*******************************************************************
-	//This method can be deleted if the job objects that are filtered are stored in session,
-	//not the job ids
-	//*******************************************************************
-	//*******************************************************************
+	// *******************************************************************
+	// *******************************************************************
+	// This method can be deleted if the job objects that are filtered are
+	// stored in session,
+	// not the job ids
+	// *******************************************************************
+	// *******************************************************************
 	public List<Job> sortJobs(List<Integer> jobIds, String sortBy, boolean isAscending) {
-		
-		List<Object> argsList = new ArrayList<Object>();		
-		String sql = "SELECT * FROM job WHERE ";		
-		
-		
-//		if(sortBy.matches("Distance")){
-//			
-//		}
-		
-		
-		//Append job ids
+
+		List<Object> argsList = new ArrayList<Object>();
+		String sql = "SELECT * FROM job WHERE ";
+
+		// if(sortBy.matches("Distance")){
+		//
+		// }
+
+		// Append job ids
 		boolean first = true;
-		for(Integer id : jobIds){
-			if(first) {
+		for (Integer id : jobIds) {
+			if (first) {
 				sql += "JobId = ?";
 				first = false;
-			}else{
+			} else {
 				sql += " OR JobId = ?";
 			}
-			
+
 			argsList.add(id);
 		}
-		
-		//Order by
+
+		// Order by
 		sql += " ORDER BY ?";
 		argsList.add(sortBy);
-		
-		if(isAscending){
+
+		if (isAscending) {
 			sql += " ASC";
-		}else{
+		} else {
 			sql += " DESC";
 		}
-				
+
 		return JobRowMapper(sql, argsList.toArray());
 	}
 
 	public Job getJobByApplicationId(int applicationId) {
 		String sql = "SELECT * FROM job j INNER JOIN application a"
 						+ " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
-		
+
 		return this.JobRowMapper(sql, new Object[]{ applicationId }).get(0);
 	}
 
 	public void addWorkDay(int jobId, WorkDay workDay) {
 		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date)"
 						+ "  VALUES (?, ?, ?, ?)";
-		
+
 		jdbcTemplate.update(sql, new Object[]{ jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDate() });
-		
+
 	}
 
 	public Date getEndDate(int jobId) {
 		String sql = "SELECT MAX(Date)"
 				+ " FROM work_day"
-				+ " WHERE JobId = ?";	
-		
+				+ " WHERE JobId = ?";
+
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
 	}
 
 	public Date getStartDate(int jobId) {
 		String sql = "SELECT MIN(Date)"
 				+ " FROM work_day"
-				+ " WHERE JobId = ?";	
-		
+				+ " WHERE JobId = ?";
+
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
 	}
 
 	public Time getStartTime(int jobId) {
 		String sql = "SELECT MIN(StartTime)"
 				+ " FROM work_day"
-				+ " WHERE JobId = ?";	
-		
+				+ " WHERE JobId = ?";
+
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
 	}
 
 	public Time getEndTime(int jobId) {
 		String sql = "SELECT MAX(EndTime)"
 				+ " FROM work_day"
-				+ " WHERE JobId = ?";	
-		
+				+ " WHERE JobId = ?";
+
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
 	}
 
 	public void updateJobStatus(int status, int jobId) {
-		
+
 		String sql = "UPDATE job set Status = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ status, jobId });
-		
+
 	}
 
 	public List<Integer> getActiveJobIdsByDistance(float lat, float lng, int radius) {
-		
+
 		String sql = "SELECT JobId"
 				+ " FROM job"
 				+ " WHERE Status = 0"
@@ -701,6 +758,7 @@ public class JobRepository {
 
 		return jdbcTemplate.queryForList(sql, new Object[]{ lat,  lng, lat, radius }, Integer.class);
 	}
+<<<<<<< HEAD
 
 	public Integer getDuration(int jobId) {
 		
@@ -724,4 +782,6 @@ public class JobRepository {
 
 
 
+=======
+>>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 }
