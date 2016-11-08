@@ -176,7 +176,8 @@
 					<div class="checkbox date-time-container">
 						<div><label><input id="january" type="checkbox" value="">All day</label></div>
 						<div class="specify-time radio">
-							<div><label><input id="january" type="radio" name="endTime">Before</label></div>
+							<div>
+							<label><input id="january" type="radio" name="endTime">Before</label></div>
 							<div><label><input id="february" type="radio" name="endTime">After</label></div>	
 							<input name="endTime" type="text"
 								class="form-control time ui-timepicker-input"
