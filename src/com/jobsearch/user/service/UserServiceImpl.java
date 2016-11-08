@@ -654,7 +654,7 @@ public class UserServiceImpl {
 	}
 
 	public void setModel_WorkHistoryByUser(Model model, int userId) {
-<<<<<<< HEAD
+
 		
 	
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.
@@ -662,13 +662,6 @@ public class UserServiceImpl {
 		
 		model.addAttribute("completedJobDtos", completedJobDtos);
 		model.addAttribute("userId_employee", userId);
-		
-	}
-=======
-
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
-		model.addAttribute("completedJobDtos", completedJobDtos);
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 
 	}
 

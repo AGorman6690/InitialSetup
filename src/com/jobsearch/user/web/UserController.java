@@ -177,10 +177,6 @@ public class UserController {
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		
 		model.addObject("user", user);
-		
-		SubmitJobPostingDTO job = new SubmitJobPostingDTO();
-		model.addObject("job", job);
-
 		model.setViewName("PostJob");
 		return model;
 	}	

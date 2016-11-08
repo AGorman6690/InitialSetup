@@ -15,6 +15,8 @@ public class GoogleClient {
 	private GeoApiContext context;
 
 	public GeocodingResult[] getLatAndLng(String address) {
+		
+		GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI");
 		try {
 			return GeocodingApi.geocode(context, address).await();
 		} catch (Exception e) {

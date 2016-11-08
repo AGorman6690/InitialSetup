@@ -7,135 +7,126 @@ import java.util.List
 import org.springframework.format.annotation.DateTimeFormat
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.google.maps.model.GeocodingResult
 import com.jobsearch.category.service.Category
+import com.jobsearch.google.GoogleClient
 
 import  com.jobsearch.utilities.DateUtility
 
 public class FilterJobRequestDTO {
 
-	@JsonProperty("fromAddress")
 	String fromAddress
-
-	@JsonProperty("lat")
 	float lat
-
-	@JsonProperty("lng")
 	float lng
-
-	@JsonProperty("radius")
 	int radius
-
-	@JsonProperty("categoryIds")
 	int[] categoryIds
-
-	@JsonProperty("categories")
 	List<Category> categories
-
-	@JsonProperty("startDate")
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	Date startDate
-
-	@JsonProperty("endDate")
-	@DateTimeFormat(pattern = "MM/dd/yyyy")
 	Date endDate
-
-	@JsonProperty("startTime")
 	Time startTime
-
-	@JsonProperty("endTime")
 	Time endTime
-
-	@JsonProperty("stringStartDate")
 	String stringStartDate
-
-	@JsonProperty("stringEndDate")
 	String stringEndDate
-
-	@JsonProperty("stringStartTime")
 	String stringStartTime
-
-	@JsonProperty("stringEndTime")
 	String stringEndTime
-
-	@JsonProperty("beforeStartTime")
 	boolean beforeStartTime
-
-	@JsonProperty("beforeEndTime")
 	boolean beforeEndTime
-
-	@JsonProperty("beforeStartDate")
 	boolean beforeStartDate
-
-	@JsonProperty("beforeEndDate")
 	boolean beforeEndDate
-
-	@JsonProperty("workingDays")
 	List<String> workingDays
-
-	@JsonProperty("duration")
 	double duration
-
-	@JsonProperty("lessThanDuration")
 	boolean lessThanDuration
-
-	@JsonProperty("returnJobCount")
 	int returnJobCount
-
-	@JsonProperty("sortBy")
 	String sortBy
-
-	@JsonProperty("isAscending")
 	boolean isAscending
-
-	@JsonProperty("loadedJobIds")
 	int[] loadedJobIds
-
-	@JsonProperty("isAppendingJobs")
 	boolean isAppendingJobs
-
-	@JsonProperty("isSortingJobs")
 	boolean isSortingJobs
 
 	public static final String ZERO_TIME = "00:00:00"
 
-	public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
-	boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate,
-	boolean beforeEndDate, List<String> workingDays, double duration, boolean lessThanDuration,
-	int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs) {
-		this.radius = radius
-		this.returnJobCount = returnJobCount
-		this.duration = duration
-		this.lessThanDuration = lessThanDuration
-		this.fromAddress = fromAddress
-		this.categoryIds = categoryIds
-		this.beforeEndTime = beforeEndTime
-		this.beforeStartTime = beforeStartTime
-		this.beforeStartDate = beforeStartDate
-		this.beforeEndDate = beforeEndDate
-		this.sortBy = sortBy
-		this.isAscending = isAscending
-		this.isAppendingJobs = isAppendingJobs
-		this.workingDays = workingDays
+public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
+			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
+			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
+			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2) {
+		// TODO Auto-generated constructor stub
 
+		this.setRadius(radius);
+
+		this.setReturnJobCount(returnJobCount);
+
+		this.setDuration(duration2);
+		this.setLessThanDuration(lessThanDuration2);
+
+		this.setFromAddress(fromAddress);
+		this.setCategoryIds(categoryIds);
+
+		this.setStringStartTime(startTime);
+		
+		this.setStringEndTime(endTime);
+
+		this.setStringStartDate(startDate);
+		this.setStringEndDate(endDate);
+
+		this.setBeforeEndTime(beforeEndTime);
+		this.setBeforeStartTime(beforeStartTime);
+
+		this.setBeforeStartDate(beforeStartDate2);
+		this.setBeforeEndDate(beforeEndDate2);
+		
+		this.setSortBy(sortBy);
+		this.setIsAscending(isAscending);
+		
+		this.setIsAppendingJobs(isAppendingJobs2);
+		
+//		this.setLoadedJobIds(loadedJobIds2);
+
+		
 		// Convert strings to sql Time objects.
-		try {
-			this.startTime = java.sql.Time.valueOf(startTime)
-		} catch (Exception e) {
-			//filter values were not sent from client
+		if(startTime != null){
+			this.setStartTime(java.sql.Time.valueOf(startTime));
 		}
-
-		try {
-			this.endTime = java.sql.Time.valueOf(endTime)
-		} catch (Exception e) {
-			//filter values were not sent from client
+		
+		if(endTime != null){
+			this.setEndTime(java.sql.Time.valueOf(endTime));
 		}
-
+		
 		// Convert strings to sql Date objects
-		this.startDate = DateUtility.getSqlDate(startDate, "MM/dd/yyyy")
-		this.endDate = DateUtility.getSqlDate(endDate, "MM/dd/yyyy")
+		this.setStartDate(DateUtility.getSqlDate(startDate, "yyyy-MM-dd"));
+		this.setEndDate(DateUtility.getSqlDate(endDate, "yyyy-MM-dd"));
 
+		this.setWorkingDays(workingDays2);
+		
+		
+		
+		//************************************************************
+		//************************************************************
+		//The user's requested locations should be cached somewhere with 
+		//either cookies or a global array on the client side.
+		//This would put less load on the Google API quota.
+		//Or a table can be created that stores the lat/lng for all requested
+		//city/states/zip code
+		//************************************************************
+		//************************************************************
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(this.getFromAddress());
+
+		// **********************************************************************
+		// The below condition has been removed because "Woodbury, MN" returns
+		// two results.
+		// I left it as a reminder for whether we want to handle potential
+		// ambiguous responses.
+		// **********************************************************************
+		// Filter location must return a valid response
+		// if (results.length == 1){
+		
+		if(results.length > 0){
+			this.setLng((float) results[0].geometry.location.lng);
+			this.setLat((float) results[0].geometry.location.lat);	
+		}
+		
 	}
-
+			
 	public FilterJobRequestDTO() {
 		// TODO Auto-generated constructor stub
 	}

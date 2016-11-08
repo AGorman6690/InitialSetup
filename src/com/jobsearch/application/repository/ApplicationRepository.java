@@ -117,14 +117,9 @@ public class ApplicationRepository {
 		String sql = "SELECT * FROM application WHERE UserId = ?";
 
 		argsList.add(userId);
-<<<<<<< HEAD
-		
-		
-		//Build a string for statuses
-=======
+
 
 		// Build or string for statuses
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 		boolean isFirst = true;
 		for (int status : statuses) {
 			if (isFirst) {

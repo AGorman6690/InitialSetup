@@ -79,19 +79,13 @@ public class JobController {
 			@RequestParam(name = "endDate", required = false) String endDate,
 			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
 			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
-<<<<<<< HEAD
 			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
 			@RequestParam(name = "duration", required = false, defaultValue= "-1") Double duration,
-=======
-			@RequestParam(name = "day", value = "day", required = false) List<String> workingDays,
-			@RequestParam(name = "duration", required = false, defaultValue = "-1") Double duration,
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 			@RequestParam(name = "lessThanDuration", required = false) boolean lessThanDuration,
 			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
 			@RequestParam(name = "sortBy", required = false) String sortBy,
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
-<<<<<<< HEAD
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
 			HttpSession session
 			){
@@ -102,18 +96,7 @@ public class JobController {
 	
 		
 		return jobService.getVelocityTemplate_FilterJobs(request, session);
-		//return jobService.getFilterdJobsResponseHtml(request, session, model);
-=======
-			// @RequestParam(value = "id", required = false) int[] loadedJobIds
-			// ,
-			HttpSession session, Model model) {
 
-		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime,
-				beforeStartTime, beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays,
-				duration, lessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
-
-		return jobService.getFilterdJobsResponseHtml(request, session, model);
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 
 	}
 
@@ -136,7 +119,7 @@ public class JobController {
 		model.addAttribute("user", session.getAttribute("user"));
 		return "FindJobs";
 	}
-<<<<<<< HEAD
+
 	
 	
 	@RequestMapping(value = "/jobs/find-old", method = RequestMethod.GET)
@@ -147,10 +130,7 @@ public class JobController {
 //		model.setViewName("FindJobs");
 		return "FindJobs_NEW";
 	}
-	
-=======
 
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 
@@ -191,7 +171,7 @@ public class JobController {
 		return null;
 
 	}
-<<<<<<< HEAD
+
 	
 	@RequestMapping(value = "/completed/job/{jobId}", method = RequestMethod.GET)
 	public String getCompletedJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
@@ -204,10 +184,7 @@ public class JobController {
 		
 	}
 	
-	
-=======
 
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
 	public String updateJobStatus(@PathVariable(value = "status") int status,
 			@PathVariable(value = "jobId") int jobId) {
@@ -224,51 +201,5 @@ public class JobController {
 		return model;
 	}
 
-<<<<<<< HEAD
-
-
-//	@RequestMapping(value = "/job/{jobId}/mark-complete", method = RequestMethod.GET)
-//	public String markJobComplete(@PathVariable("jobId") int jobId, Model model) {
-//		
-//		return "RateEmployees";
-//	}
-	
-//	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
-//	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
-//		
-////		if(markComplete){
-////			jobService.markJobComplete(jobId);
-////		}
-//		
-//			jobService.setModel_RateEmployees(model, jobId);
-//		
-//		return "RateEmployees";
-//	}	
-
-//	@RequestMapping(value = "/job/{jobId}/rateEmployees", method = RequestMethod.GET)
-//	public ModelAndView viewRateEmployees(@PathVariable(value = "jobId") int jobId, ModelAndView model) {
-//
-//		List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
-//		model.addObject("employees", employees);
-//
-//		Job job = jobService.getEmployersJobProfile(jobId);
-//		model.addObject("job", job);
-//
-//		model.setViewName("RateEmployees");
-//		return model;
-//	}
-=======
-	@RequestMapping(value = "/job/{jobId}/employees/rate", method = RequestMethod.GET)
-	public String getRateEmployeesView(@PathVariable(value = "jobId") int jobId, Model model) {
-
-		// if(markComplete){
-		// jobService.markJobComplete(jobId);
-		// }
-
-		jobService.setModel_RateEmployees(model, jobId);
-
-		return "RateEmployees";
-	}
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 
 }

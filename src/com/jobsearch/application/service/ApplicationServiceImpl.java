@@ -216,14 +216,9 @@ public class ApplicationServiceImpl {
 	public List<Question> getQuestionsByJobAndUser(int jobId, int userId) {
 
 		List<Question> questions = repository.getQuestions(jobId);
-<<<<<<< HEAD
 		
 		for(Question question : questions){
 			question.setAnswerOptions(this.getAnswerOptions(question.getQuestionId()));
-=======
-
-		for (Question question : questions) {
->>>>>>> bf9c9a6c360a24a6b78679a3831fabd86140de1f
 			question.setAnswers(this.getAnswers(question.getQuestionId(), userId));
 		}
 		return questions;
