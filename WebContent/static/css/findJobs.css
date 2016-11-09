@@ -1,236 +1,237 @@
-		body{
-			font-family: "Open Sans", open-sans, Arial, "Helvetica Neue", sans-serif;
-		}
+#city {
+    width: 150px;
+}
 
-		#mapContainer{
-			height: 1000px;			
-		}
-		
-				
-		#toggleOtherFilters{
-			display:inline-block;
-			margin-top:10px;
-		}	
+#radius, #state, #zipCode {
+    width: 95px;
+}
 
-		#filtersContainer{
-/* 			border-bottom-style: outset */
-			margin-bottom: 25px;
-/* 			position:relative; */
-			
-		}
-		
-		#otherFiltersContainer{
-			display:inline;
-/* 			width:300px; */
-			height:auto;
-			position:relative;
-/* 			margin-left:20px;	 */
-/* 			cursor:pointer;		 */
-			display:inline-block;	
-			top:0px;	
-			min-height:45px;	
-		}
-		
-		#otherFilters .other-filter-container:last-child{
-			margin-bottom:0px;
-			border-bottom:0px;
-		}
-		
-		#getJobsContainer button{
-			background-color:#163B3D;
-			color: #ffffff;
-			
-		}
-		
-		#selectedFilters button{
-			background-color:#163B3D;
-			color: #ffffff;
-			cursor: default;
-/* 			margin:10px 5px 0px 0px; */
-			display:inline-block;
-			vertical-align:top;
-			margin-left:5px;
-		}
-		
-		#selectedFilters .remove-filter{
-			margin-left: 5px;
-			font-size: 14px;
-			cursor: pointer;
-		}
-				
-		#selectedFilters{
-			margin-left:10px;
-			display:inline;
-/* 			display:inline-block; */
-			min-width:750px;
-			min-height:50px;
-/* 			position:relative; */
-/* 			left:125px; */
-			vertical-align: top;
-		}
-		
-		#otherFilters{
-			position:absolute;
-			left:0px;
-			width:400px;
-			background-color:#F8F8F8;
-			border: 1px solid #B8B8B8;
-			display:none;
-			z-index:1000;
-			margin-top: 10px;
-/* 			border-left: 1px solid #000000; */
-/* 			border-top: 1px solid #000000; */
-		}
-		
-		.other-filter-label{
-			width: 90px;
-			font-weight: bold;
-			display: inline-block;
-			font-size: 14; 
-			font-weight: bold;	
-			position:absolute;
-/* 	    	vertical-align:middle; */
-			top:5px;
-		}
-		
-		.other-filter-container{
-			margin:5px 0px 5px 0px;
-			padding:0px 0px 5px 10px;
-			position:relative;
-			min-height:60px;
-			border-bottom: 2px outset 	#F0F0F0  ;
-			border-left: 0px;
-			
-		}
-		
-		.other-filter-content{
-			display:inline;
-/* 			width:100%; */
-			margin-left:10px;
-			height:50px;
-			position:absolute;
-			left:210px;
-		}
-		
-		.radio-button-container{
-			display:inline-block;
-			width:100px;
-			position:absolute;
-			left:100px;
-			top:5px;
-			margin-bottom:10px;
-/* 			min-height:75px; */
-		}
-		
-		#distanceFilter{
-/* 			position:relative; */
-/* 			top:0px; */
-			vertical-align:top;
-			height:45px;
-			display:inline-block;
-			margin:0px 20px 0px 0px;
-		}
+.selected-job{
+	border:3px #163B3D solid !important;
+	border-radius:10px;
+}
 
-		
-		#distanceFilter input{
-			display:inline;
-			max-width: 120px;
-			overflow: hidden;
-			vertical-align:top;
+.container{
+	width:100%;
+	padding:0px 25px 50px 25px;
+}
 
-		}	
-		
-		#distanceFilter label{
-/* 			vertical-align:middle; */
-			margin-top:10px;
-		}
+#distance input {
+    display: inline;
+    overflow: hidden;
+    border-radius: 0 !important;
+    padding: 10px 10px 10px 10px;
+    height: auto;
+}
+.note{
+	padding: 20px;
+}
+#filterContainer .col-sm-4{
+	padding: 0px 2px 4px 2px;
+}
 
-		
-		.filter-content-container{
- 			display: none; 
-			background-color: #F0F0F0 ;
-			z-index: 1000;
-			border: 2px solid #888888;
-			border-radius: 5px;			
-		}
-		
-		.other-filter-content .size{
-			width: 100px;
-			display: inline;
-		}
-			
-		
-		div .inline{
-			display:inline;
-		}
-		
-		.header{
-			font-size: 14; 
-			font-weight: bold
-		}
-		
-		.normal-text{
-			font-weight: normal;
-		}
-		
- 		.bold-text{ 
- 			font-weight: bold;
- 			display: block;
-  			margin-bottom: 5px;
- 		} 
-		
-		h3.header{		
-			border-bottom-style: outset;
-			padding-bottom: 10px;
-		}
+#filteredJobs{
+	overflow-y:auto;
+/* 	max-height:915px; */
+	height:1000px;
+}
 
-		input[type=radio], input[type=checkbox] {
-		    display:none;
-		}
-		input[type=radio] + label:before {
-		    content: "";  
-		    display: inline-block;  
-		    width: 15px;  
-		    height: 15px;  
-		    vertical-align:middle;
-		    margin-right: 8px;  
-		    background-color: #D0D0D0 ;  
-		    box-shadow: inset 0px 2px 2px rgba(0, 0, 0, .3);
-		    border-radius: 8px;  
-		}
-		
-		input[type=radio] + label{
-			cursor: pointer;
-		}
+.glyphicon-move{
+	float:right;
+	cursor:pointer;
+	font-size:16px;
+}
 
-		input[type=radio]:checked + label:before {
-			content: "\2022";
-			color:#006666;
-		    background-color: #aaa; 
-			font-size:2.2em;
-			text-align:center;
-/* 			vertical-align: middle; */
- 			line-height:15px; 
- 			text-shadow:0px 0px 3px #eee;
-		}
+.row{
+	padding:0px 0px;
+    margin: 0px;
+}
+.dropdown-container{
+	padding:10px;  
+    width: 230px;
+    border: 1px solid rgb(192,192,192);
+/*     line-height: 40px; */
+
+}
+
+#map{
+	width:auto;
+	margin-left:5px;
+/* 	height:auto; */
+	height:1000px;	
+}
+
+#map, #filteredJobs{
+	border-right-style:outset;
+	border-bottom-style:inset;
+	border-top-style:inset;
+	border-left-style:outset;
+}
+
+.glyphicon-remove{
+	cursor:pointer;
+}
+/* Override Boostrap */
+.dropdown-container .glyphicon{
+	line-height:inherit;
+}
+
+.input-container input{
+	border: 1px solid #ccc;
+}
+
+.radio-container,
+.filter-value-container{
+	padding:5px;
+}
+
+div[data-scroll-to]{
+	cursor:pointer;
+}
+
+.radio-container{
+	margin-bottom:10px;
+}
+
+.input-container{
+	display:inline-block;
+}
 
 
+#milesFromContainer{
+	padding:0px 10px;
+}
 
-		#map{
-			width: 100%;
-			height: 100%;	
-			border-right-style:outset;
-			height: 1000px;
-/* 		****************************************************** */
-/* 		Map is not respecting the padding-right... */
-/* 		****************************************************** */			
-			padding-right:10px;		
-		}
-		
-		.error-message{
-			color: #b30000;
-			margin-bottom: 5px;
-			display: none;
-		}
+.filter-container{
+	position:relative;
+	width: 230px;
+	
+}
 
-		
+.remove-filter{
+	width:15px;
+	float:left;
+	display:none;
+}
+
+.trigger-dropdown{
+	cursor: pointer;
+	width:100%;
+}
+
+.dropdown-container div{
+/* 	display:inline-block; */
+/* 	position:relative; */
+}
+
+#distance{
+	margin: auto;
+    width: 600px;
+    display: block;
+}
+
+.dropdown{
+	position:absolute;
+	z-index: 1000;
+    border: 3px solid rgb(192,192,192);
+    padding: 10px;
+    background-color: #ffffff;
+	width:100%;
+	display:none;
+}
+
+.trigger-dropdown .glyphicon-menu-up,
+.trigger-dropdown .glyphicon-menu-down{
+	float: right;
+}
+
+.glyphicon-ok{
+    padding: 10px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+.filter-text{
+    padding: 0px 3px;
+    font-size: 16px;
+}
+
+.approve-filter{
+	background-color:#F6C627;
+}
+
+#work-days-dropdown{
+	width:520px;
+}
+
+#distanceContainer{
+	padding:25px 12px;
+/*     width: 700px; */
+    margin:auto;
+}
+
+#additionalFiltersContainer{
+	width:700px;
+	margin:auto;
+}
+
+#getJobsContainer{
+    margin: auto;
+    width: 100px;
+    padding: 10px 0px;
+}
+
+#getJobs{
+	padding: 13px 20px;
+	font-size:16px;
+	width:110px;
+}
+
+#locationContainer{
+	display:inline-block;
+}
+
+#mainBottom{
+	padding-top:25px;
+	display:none;
+}
+
+.job-header,
+.job-body,
+.job-footer{
+	padding: 0px 20px 15px 20px;
+}
+
+.show-more-less{
+	padding-bottom:10px;
+}
+
+.bold{
+	font-weight:bold;
+}
+
+.less-description{
+	height:60px;
+	overflow: hidden;
+}
+
+.more-description{
+	overflow:scroll;
+	max-height:180px;
+	overflow-x:hidden;
+}
+
+.show-more-less{
+    padding: 5px;
+	font-size:12px;
+	cursor:pointer;
+}
+
+.job{
+	padding-top: 10px;
+	border-bottom: 1px solid gray;    
+}
+
+.job:last-child{
+	border-bottom:0;
+}

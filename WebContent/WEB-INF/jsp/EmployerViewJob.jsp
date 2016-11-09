@@ -102,7 +102,7 @@
 					<thead>
 						<tr>
 							<th id="applicantName">Name</th>
-							<th id="wageNegotiaion">Wage Negotiation</th>
+							<th id="wageNegotiation">Wage Negotiation</th>
 							<th id="rating">Rating</th>
 							<th id="endorsements">Endorsements</th>
 						<c:if test="${questions.size() > 0 }">

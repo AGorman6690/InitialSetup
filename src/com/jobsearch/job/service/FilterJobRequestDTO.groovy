@@ -34,8 +34,8 @@ public class FilterJobRequestDTO {
 	boolean beforeStartDate
 	boolean beforeEndDate
 	List<String> workingDays
-	double duration
-	boolean lessThanDuration
+	Double duration
+	boolean isLessThanDuration
 	int returnJobCount
 	String sortBy
 	boolean isAscending
@@ -47,7 +47,7 @@ public class FilterJobRequestDTO {
 
 public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
-			boolean beforeEndDate2, List<String> workingDays2, double duration2, boolean lessThanDuration2,
+			boolean beforeEndDate2, List<String> workingDays2, Double duration2, boolean lessThanDuration2,
 			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2) {
 		// TODO Auto-generated constructor stub
 
@@ -56,7 +56,7 @@ public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, St
 		this.setReturnJobCount(returnJobCount);
 
 		this.setDuration(duration2);
-		this.setLessThanDuration(lessThanDuration2);
+		this.setIsLessThanDuration(lessThanDuration2);
 
 		this.setFromAddress(fromAddress);
 		this.setCategoryIds(categoryIds);

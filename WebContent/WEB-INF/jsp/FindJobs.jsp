@@ -2,14 +2,13 @@
 
 
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/User.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 	<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
 	
 	<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_new.css" />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs.css" />
 	<link rel="stylesheet" type="text/css"	href="../static/css/datepicker.css" />
 	<link rel="stylesheet" type="text/css"	href="../static/css/calendar.css" />
 
@@ -69,7 +68,7 @@
 										<div class="remove-filter">								
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
-										<div data-toggle-id="start-time-dropdown" class="trigger-dropdown">	
+										<div data-toggle-id="start-time-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
 											<span class="filter-text" data-reset-text="Start Time" >Start Time</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
@@ -108,7 +107,7 @@
 										<div class="remove-filter">								
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
-										<div data-toggle-id="end-time-dropdown" class="trigger-dropdown">	
+										<div data-toggle-id="end-time-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
 											<span class="filter-text" data-reset-text="End Time" >End Time</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
@@ -141,7 +140,7 @@
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div data-display-text="" data-display-text-suffix="Days"
+								<div id="durationFilterContainer" data-display-text="" data-display-text-suffix="Days"
 									 class="filter-container">
 	
 									<div  class="dropdown-container">	
@@ -149,7 +148,7 @@
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
 										<div data-toggle-id="duration-dropdown" class="trigger-dropdown">	
-											<span class="filter-text" data-reset-text="Duration" >Duration (not built)</span>
+											<span class="filter-text" data-reset-text="Duration" >Duration</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
 									</div>
@@ -171,7 +170,7 @@
 	<!-- 									<div class="select-container">		
 							 -->
 										<div class="filter-value-container">
-											<div class="input-container form-group">
+											<div class="input-container ">
 										  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
 									  		</div>		
 		<!-- 							  		</div>	 -->

@@ -758,8 +758,8 @@
 				jobs.push(postJobDto);
 				
 				var submitJobPostingDto ={};
-				submitJobPostingDto.postJobDtos = jobs;
-				submitJobPostingDto.postQuestionDtos = postQuestionDtos;
+				submitJobPostingDto.jobs = jobs;
+				submitJobPostingDto.questions = postQuestionDtos;
 				
 				
 

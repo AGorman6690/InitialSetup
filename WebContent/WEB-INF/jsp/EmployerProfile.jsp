@@ -70,19 +70,6 @@ $(document).ready(function(){
 		window.location = '../job/' + $(this).parent().attr('id');
 	})	
 	
-// 	$(".expand-job").click(function(e){
-		
-// 		//Only toggle if the element WITH "has-applicants" class (i.e. e.currentTaget)
-// 		//gets clicked.
-// 		//Do not toggle if any pathe job name hyperlink is clicked
-// // 		if(e.target == e.currentTarget){
-// 			var parentRow = $(this).parents('tr')[0];
-// 			$(parentRow).next(".expandable-row").toggle(200);
-// // 			$(parentRow).next(".expandable-row").slideToggle(1000);
-// 			toggleClasses($(this), "glyphicon-menu-down", "glyphicon-menu-up");
-// // 		}
-		
-// 	})
 	
 	$(".mark-complete-ouououoiuiou").click(function(){
 	

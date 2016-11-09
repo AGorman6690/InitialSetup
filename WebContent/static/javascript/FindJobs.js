@@ -81,7 +81,7 @@ $(document).ready(function() {
 		})
 		
 		
-		$("#jobsContainer").on("click", ".show-more-less", function(){
+		$("#filteredJobs").on("click", ".show-more-less", function(){
 			//Toggle the filter job's description to show more or less
 			
 			var description = $(this).siblings(".job-description")[0];			
@@ -125,17 +125,7 @@ $(document).ready(function() {
 
 		})
 		
-		
-
-		
-// 		$("#.filter-container").click(function(){
-// 			$.each($("#additionalFiltersContainer").find(".dropdown"), function(){
-// 				if($(this).is("visible")){
-// 					$(this).
-// 				}
-// 			})
-// 		})
-
+	
 		
 		$(".select-time").click(function(){
 	
@@ -166,25 +156,12 @@ $(document).ready(function() {
 		setTimeOptions($("#endTimeOptions"), 60);
 		//******************************************************************************
 		//******************************************************************************		
-
-
-		//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 		
 	
 		$('.date').datepicker({
 			autoclose: true,
 			toggleActive: true});
 
-// 		$('#filterStartTime').timepicker({
-// 			'useSelect' : true,
-// 			'scrollDefault': '7:00am'
-			
-// 		});
-		
-// 		$('#filterEndTime').timepicker({
-// 			'scrollDefault': '5:00pm'
-			
-// 		});
 	
 	})
 
@@ -261,14 +238,14 @@ function getLocation(){
 
 
 function appendTime(filterDropdownId, paramName1, paramName2_isBefore){
-	
+
 	var endTime = $($("#" + filterDropdownId).find("option:checked")[0]).val();
-	var isBefore;
+	var isBefore = $($("#" + filterDropdownId).find("input[type=radio]:checked")[0]).attr("data-filter-value");
 	var param = "";
-	if(isValidInput(endTime)){
+	if(isValidInput(endTime) && isValidInput(isBefore)){
 		param += "&" + paramName1 + "=" + formatTime(endTime);
 		
-		isBefore = $($("#" + filterDropdownId).find("input[type=radio]:checked")[0]).attr("data-filter-value");
+		
 		
 		param += "&" + paramName2_isBefore + "=" + parseInt(isBefore);
 	}
@@ -276,23 +253,39 @@ function appendTime(filterDropdownId, paramName1, paramName2_isBefore){
 }
 
 function appendDate(filterDropdownId, paramName1, paramName2_isBefore){
+	
 	var selectedDate = getSelectedDate("#" + filterDropdownId);
 	var param = "";
-	var isBefore;
-	if(selectedDate != null){
-		
-		isBefore = GetIsBefore($("#" + filterDropdownId));
+	var isBefore = getIsBeforeOrIsShorter($("#" + filterDropdownId));
+	
+	if(selectedDate != null && isValidInput(isBefore)){		
 		param += "&" + paramName1 + "=" + $.datepicker.formatDate("yy-mm-dd", selectedDate);
 		param += "&" + paramName2_isBefore + "=" + isBefore;
 	}
 	
+	return param;	
+}
+
+
+function appendDuration(){
+	var $filterContainer = $("#durationFilterContainer");
+	var param = "";
+	var duration = getFilterValue($filterContainer);
+	var isShorter = getIsBeforeOrIsShorter($filterContainer)
+	
+	if(isValidatePositiveNumber(duration) && isValidInput(isShorter)){		
+		param += "&duration=" + duration;
+		param += "&isLessThanDuration=" + isShorter;		
+	}
 	return param;
+}
+
+function isValidRadioSelection(radioResult){
 	
 }
 
 
-
-function GetIsBefore($radioContainer){
+function getIsBeforeOrIsShorter($radioContainer){
 	return $($radioContainer.find("input[type=radio]:checked")[0]).attr("data-filter-value");
 }
 
@@ -471,12 +464,13 @@ function getEndingTextToShow(filterContainer){
 }
 
 function getFilterValue(filterContainer){
+		
 	var selectOption;
 	var inputValue;
 	var calendarContainer;
 	var selectedDate;
 
-	//Attemp to find the select
+	//Attempt to find the select
 	selectOption = $($(filterContainer).find("select option:checked")[0]).val();
 	if(selectOption != undefined){
 		return selectOption;
@@ -558,6 +552,7 @@ function doCloseDropdown(clickedElement){
 	}
 }
 
+
 function getJobs(doSetMap){
 	
 	if(areInputsValid()){
@@ -570,6 +565,7 @@ function getJobs(doSetMap){
 		params += appendTime("end-time-dropdown", "endTime", "beforeEndTime");
 		params += appendDate("start-date-dropdown", "startDate", "beforeStartDate");
 		params += appendDate("end-date-dropdown", "endDate", "beforeEndDate");
+		params += appendDuration();
 		params += appendWorkDays();
 		
 //			params += "&categoryId=-1";
@@ -665,7 +661,7 @@ function setMap(){
 		
 		var icon = {
 			url: "/JobSearch/static/images/green-square.png",
-			scaledSize: new google.maps.Size(15, 15),
+			scaledSize: new google.maps.Size(10, 10),
 		}
 		
 		var icon_mouseover = {
@@ -691,7 +687,8 @@ function setMap(){
 
       marker.addListener('click', function() {
          scrollToJob(this.jobId);
-        });
+         addBorderToJob(this.jobId, true);
+    });
       
 	 
 //	marker.addListener('mouseover', function() {
@@ -723,6 +720,10 @@ function setMap(){
 		
 	})	
 	
+}
+
+function addBorderToJob(jobId, request){	
+	highlightArrayItem($("#" + jobId), $("#filteredJobs").find(".job"), "selected-job");
 }
 
 function scrollToJob(jobId){

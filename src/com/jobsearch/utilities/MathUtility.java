@@ -7,7 +7,7 @@ public final class MathUtility {
 		double multiplier = Math.pow(10, decimalPlaces);
 
 		double value = number * multiplier;
-		value = Math.round(value) / multiplier;
+		value = Math.round(value);
 		value = value / multiplier;
 		value = Math.max(value, minRoundingValue);
 		return value;

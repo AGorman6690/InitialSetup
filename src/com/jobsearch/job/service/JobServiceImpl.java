@@ -162,30 +162,6 @@ public class JobServiceImpl {
 		return questions;
 	}
 
-//	public void markJobComplete(int jobId) {
-//		repository.markJobComplete(jobId);
-//	}
-
-//	public List<Job> getJobsAppliedTo(int userId) {
-//
-//		//Query the database
-//		List<Job> jobsAppliedTo = repository.getActiveJobsByUser(userId);
-//
-//		//
-//		for (Job job : jobsAppliedTo) {
-//
-//			job.setCategory(categoryService.getCategoryByJobId(job.getId()));
-//			job.setApplications(applicationService.getApplicationsByApplicant(userId, job.getId()));
-//			job.setEmployees(userService.getEmployeesByJob(job.getId()));
-//			job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
-//		}
-//
-//		return jobsAppliedTo;
-//	}
-
-//	public List<Job> getJobsHiredFor(int userId) {
-//		return repository.getActiveJobsByEmployee(userId);
-//	}
 
 	public List<Job> getYetToStartJobsByEmployer(int userId) {
 
@@ -457,23 +433,9 @@ public class JobServiceImpl {
 			this.setJobsCategories(filteredJobs);
 			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
 			this.setDurationForJobs(filteredJobs);
-//				job.setDistanceFromFilterLocation(
-//			for (Job job : filteredJobs) {
-//						MathUtility.round(
-//								GoogleClient.getDistance(filter.getLat(), filter.getLng(), job.getLat(), job.getLng()),
-//								1, 0));
-//				job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-//
-//			}
-			
-//		} else {
-//			return null;
 		}
 		return filteredJobs;
-		// }else {
-		// //the address is ambiguous
-		// return null;
-		// }
+
 	}
 
 //	private List<Integer> getJobsIdsByFilter(FilterJobRequestDTO filter) {
@@ -534,6 +496,7 @@ public class JobServiceImpl {
 		context.put("date", new DateTool());
 		context.put("dateCompare", new ComparisonDateTool());
 		context.put("mathUtility", MathUtility.class);
+		
 
 		// If the request is to GET filtered jobs, not SORT already-filtered
 		// jobs.
