@@ -303,19 +303,19 @@ function validateAddQuestionInputs(){
 	var result = 0;
 	var answerItems = [];
 	var i;
-	
+	var validAnswerOptionCount = 0;
 	
 	//Verify question format
 	$e = $("#questionFormat");
 	$selectedOption = $($e.find("option:selected")[0]);
 	result += validateInput($e, $selectedOption.html());
 	
-	//If multiple choice question, verify answers have been given
+	//If multiple choice question, verify at least two answers have been given
 	if($selectedOption.val() == 2 || $selectedOption.val() ==3){
 		answerItems = $("#answerList").find(".answer-container input");
-		$(answerItems).each(function(){
-			result += validateInput($(this), $(this).val());
-		})
+		for(i = 0; i < 2; i++){
+			result += validateInput($(answerItems[i]), $(answerItems[i]).val());
+		}
 	}
 		
 	//Verify question

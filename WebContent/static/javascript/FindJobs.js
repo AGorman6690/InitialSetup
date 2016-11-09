@@ -81,7 +81,7 @@ $(document).ready(function() {
 		})
 		
 		
-		$("#jobsContainer").on("click", ".show-more-less", function(){
+		$("#filteredJobs").on("click", ".show-more-less", function(){
 			//Toggle the filter job's description to show more or less
 			
 			var description = $(this).siblings(".job-description")[0];			
@@ -665,7 +665,7 @@ function setMap(){
 		
 		var icon = {
 			url: "/JobSearch/static/images/green-square.png",
-			scaledSize: new google.maps.Size(15, 15),
+			scaledSize: new google.maps.Size(10, 10),
 		}
 		
 		var icon_mouseover = {
@@ -691,7 +691,8 @@ function setMap(){
 
       marker.addListener('click', function() {
          scrollToJob(this.jobId);
-        });
+         addBorderToJob(this.jobId, true);
+    });
       
 	 
 //	marker.addListener('mouseover', function() {
@@ -723,6 +724,10 @@ function setMap(){
 		
 	})	
 	
+}
+
+function addBorderToJob(jobId, request){	
+	highlightArrayItem($("#" + jobId), $("#filteredJobs").find(".job"), "selected-job");
 }
 
 function scrollToJob(jobId){

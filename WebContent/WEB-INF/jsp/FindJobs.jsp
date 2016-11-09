@@ -2,14 +2,13 @@
 
 
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/User.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 	<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
 	
 	<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs_new.css" />
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs.css" />
 	<link rel="stylesheet" type="text/css"	href="../static/css/datepicker.css" />
 	<link rel="stylesheet" type="text/css"	href="../static/css/calendar.css" />
 

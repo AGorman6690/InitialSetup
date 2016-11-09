@@ -554,31 +554,7 @@
 			var selectedQuestion = {};
 			var selectedJob = {};
 			var editedJob = {};
-			
 
-			
-			//Display the action "mock anchors" as "clickable"
-// 			toggleActionAppearances();
-			
-			
-			
-// 			if(clickedId == "okSelectedQuestions"){
-// 				setSelectedQuestionIdsForJob();
-
-// // 				setActionsAsClickable(false, "questionCart");
-// // 				deselectButtons("cartContainer");
-// 				setActionsAsClickable(true, "jobCart");
-				
-// 				addBorderToQuestionCart(false);
-				
-// 				//All the user to start a new job, but not add
-// 				setButtonAsClickable(true, $("#newJob"));
-				
-// 				//All the user to start a new qeustion and add
-// 				setButtonsAsClickable(true, "questionInfo");
-// 			}
-// 			else if(clickedId == "okEditQuestion"){
-				
 
 				
 				if(validateAddQuestionInputs()){
@@ -612,43 +588,6 @@
 					setActionsAsClickable(true, "questionCart");
 					setButtonAsClickable(true, $("#newQuestion"));
 				}
-				
-// 			}
-// 			else if(clickedId == "okEditJob"){
-				
-// // 				if(validatePostJobInputs(jobs)){
-					
-// 					//Format elements
-// 					setActionsAsClickable(true, "jobCart");
-// 					disableInputFields(true, "jobInfoBody");
-					
-// 					selectedJob = getSelectedJob();
-// 					editedJob = getPostJobDto();
-					
-// 					//When editing a job, the id must remain the same
-// 					editedJob.id = selectedJob.id;					
-					
-// 					//Remove the selected job
-// 					jobs = removeArrayElement(selectedJob.id, jobs);
-					
-// 					//Add the edited job
-// 					jobs.push(editedJob);
-					
-// 					setActionsAsClickable(true, "jobCart");
-// 					setButtonAsClickable(true, $("#newJob"));
-					
-// // 				}
-// 			}
-				
-
-// 			setButtonsAsClickable(true, "jobCart");
-// 			setButtonsAsClickable(true, "questionCart");
-
-
-			
-			//Clear selected button.
-			//By design, there can only be one selected button at any one time
-// 			deselectButton();
 			
 			
 		})
@@ -765,13 +704,7 @@
 			var html = "<button data-question-id='" + postQuestionDto.id + "' class='btn clickable'>";
 			
 			var buttonText = getAddedQuestionButtonText(postQuestionDto.text);
-			html += buttonText;
-// 			if(postQuestionDto.text.length > 20){
-// 				html += postQuestionDto.text.substring(0, 19) + "..."
-// 			}else{
-// 				html += postQuestionDto.text;
-// 			}
-			
+			html += buttonText;			
 			html += "</button>";
 						
 			$("#addedQuestions").append(html);
@@ -780,22 +713,6 @@
 				
 		}
 
-		
-		
-// 		$(".toggle-section").click(function(){
-// 			var idToToggle = $(this).attr("data-toggle");
-			
-// 			//If the secion is currenlyt visible
-// 			if($("#" + idToToggle).is(":visible")){
-// 				//Collapse
-// 				expandInfoBody(idToToggle, false);
-// 			}
-// 			else{
-// 				//Expand
-// 				expandInfoBody(idToToggle, true);
-// 			}
-
-// 		})
 		
 		$(".show-section").click(function(){
 			var idToToggle = $(this).attr("data-show");
