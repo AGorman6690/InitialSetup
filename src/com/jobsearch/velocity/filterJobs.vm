@@ -177,8 +177,7 @@
 					<span class="bold">Location</span> - $job.city, $job.state
 				</div>
 				<div class="job-distance">
-				    <span class="bold">Distance</span> $job.distanceFromFilterLocation - $mathUtility.round($job.distanceFromFilterLocation, 1, 0) miles
-					## <span class="bold">Distance</span> - $job.distanceFromFilterLocation miles
+				    <span class="bold">Distance</span> - $mathUtility.round($job.distanceFromFilterLocation, 1, 0) miles
 				</div>				
 			</div>
 			#*			

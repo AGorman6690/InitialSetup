@@ -68,7 +68,7 @@
 										<div class="remove-filter">								
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
-										<div data-toggle-id="start-time-dropdown" class="trigger-dropdown">	
+										<div data-toggle-id="start-time-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
 											<span class="filter-text" data-reset-text="Start Time" >Start Time</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
@@ -107,7 +107,7 @@
 										<div class="remove-filter">								
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
-										<div data-toggle-id="end-time-dropdown" class="trigger-dropdown">	
+										<div data-toggle-id="end-time-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
 											<span class="filter-text" data-reset-text="End Time" >End Time</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
@@ -140,7 +140,7 @@
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div data-display-text="" data-display-text-suffix="Days"
+								<div id="durationFilterContainer" data-display-text="" data-display-text-suffix="Days"
 									 class="filter-container">
 	
 									<div  class="dropdown-container">	
@@ -148,7 +148,7 @@
 											<span class="glyphicon glyphicon-remove"></span>
 										</div>
 										<div data-toggle-id="duration-dropdown" class="trigger-dropdown">	
-											<span class="filter-text" data-reset-text="Duration" >Duration (not built)</span>
+											<span class="filter-text" data-reset-text="Duration" >Duration</span>
 											<span class="glyphicon glyphicon-menu-down"></span>		
 										</div>			
 									</div>
@@ -170,7 +170,7 @@
 	<!-- 									<div class="select-container">		
 							 -->
 										<div class="filter-value-container">
-											<div class="input-container form-group">
+											<div class="input-container ">
 										  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
 									  		</div>		
 		<!-- 							  		</div>	 -->

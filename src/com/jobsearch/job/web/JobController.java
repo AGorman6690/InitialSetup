@@ -80,8 +80,8 @@ public class JobController {
 			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
 			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
 			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
-			@RequestParam(name = "duration", required = false, defaultValue= "-1") Double duration,
-			@RequestParam(name = "lessThanDuration", required = false) boolean lessThanDuration,
+			@RequestParam(name = "duration", required = false) Double duration,
+			@RequestParam(name = "isLessThanDuration", required = false) boolean isLessThanDuration,
 			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
 			@RequestParam(name = "sortBy", required = false) String sortBy,
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
@@ -92,7 +92,7 @@ public class JobController {
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				lessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
+				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
 	
 		
 		return jobService.getVelocityTemplate_FilterJobs(request, session);
@@ -120,16 +120,6 @@ public class JobController {
 		return "FindJobs";
 	}
 
-	
-	
-	@RequestMapping(value = "/jobs/find-old", method = RequestMethod.GET)
-	public String viewFindJobs_OLD(Model model, HttpSession session) {
-		
-		
-		model.addAttribute("user", session.getAttribute("user"));
-//		model.setViewName("FindJobs");
-		return "FindJobs_NEW";
-	}
 
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {

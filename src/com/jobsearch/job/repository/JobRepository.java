@@ -409,7 +409,7 @@ public class JobRepository {
 		}		
 
 		//End date
-		if(filter.getStartDate() != null){
+		if(filter.getEndDate() != null){
 			sql += " JOIN (";
 			sql += " SELECT DISTINCT jobId";
 			sql += " FROM work_day";
@@ -426,6 +426,32 @@ public class JobRepository {
 			argsList.add(filter.getEndDate());
 			
 			subTable = "wd_end_date";
+			
+			sql += ") " + subTable;
+			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+			
+			nextTableToJoin = subTable;
+		}
+
+			
+		//Duration
+		if(filter.getDuration() != null){
+			sql += " JOIN (";
+			sql += " SELECT jobId";
+			sql += " FROM work_day";
+			sql += " GROUP BY jobId";
+			sql += " HAVING COUNT(jobId)";
+			
+			if(filter.getIsLessThanDuration()){
+				sql += " <= ?";
+			}
+			else{
+				sql += " >= ?";
+			}
+			
+			argsList.add(filter.getDuration());
+			
+			subTable = "wd_duration";
 			
 			sql += ") " + subTable;
 			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
