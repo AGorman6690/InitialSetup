@@ -1,0 +1,9 @@
+#map{
+	width:250px;
+	height:250px;
+    margin-top: 10px;
+    border-right-style: inset;
+    border-bottom-style: inset;
+    border-top-style: outset;
+    border-left-style: outset;
+}

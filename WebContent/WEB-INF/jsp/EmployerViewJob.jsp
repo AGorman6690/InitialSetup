@@ -5,7 +5,9 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/Map.js" />"></script>
 
 </head>
 
@@ -132,8 +134,7 @@
 							
 													
 							</th>
-						</c:if>
-							
+						</c:if>							
 							<th id="status">
 								<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
 									<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
@@ -141,6 +142,11 @@
 								<div id="selectStatusContainer">
 									
 									<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
+									<div id="statusAllContainer">
+										<div class="checkbox">
+										  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
+										</div>								
+									</div>									
 									<div id="statusListContainer">
 										<div class="checkbox">
 										  <label><input id="selectStatusSubmitted" type="checkbox" 
@@ -253,16 +259,7 @@
 											<c:otherwise>
 											<button id="" value="2" class="">Consider</button>
 											</c:otherwise>
-										</c:choose>
-<%-- 													<c:choose> --%>
-<%-- 														<c:when test="${application.status == 3 }"> --%>
-<!-- 														<button id="" value="3" class="active">Hire</button> -->
-<%-- 														</c:when> --%>
-<%-- 														<c:otherwise> --%>
-<!-- 														<button id="" value="3" class="">Hire</button> -->
-<%-- 														</c:otherwise> --%>
-<%-- 													</c:choose>																						 --%>
-										
+										</c:choose>										
 									</div>
 								</td>
 							</tr>
@@ -292,17 +289,19 @@
 				
 				<c:otherwise>
 				
-					<table id="applicantsTable" class="main-table-style">
+					<table id="employeesTable" class="main-table-style">
 						<thead>
 							<tr>
-								<th id="applicantName">Name</th>
-								<th id="rating">Rating</th>
+								<th id="employeeName">Name</th>
+								<th id="wage">Wage</th>
+								<th id="employeerating">Rating</th>
 							</tr>
 						</thead>
 						<tbody>						
 						<c:forEach items="${employees }" var="employee">
 							<tr>
 								<td><a class="accent" href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
+								<td>${employee.wage }</td>
 								<td>${employee.rating }</td>
 							</tr>	
 						</c:forEach>						
@@ -342,16 +341,26 @@ $(document).ready(function(){
 	})
 	
 	$("#selectAllQuestions").click(function(){
-		selectAllQuestions(true);
+		selectAllCheckboxes($("#questionListContainer"), true);
 	})
 	
 	$("#selectNoQuestions").click(function(){
-		selectAllQuestions(false);
+		selectAllCheckboxes($("#questionListContainer"), false);
+	})
+	
+	$("#statusListContainer input[type=checkbox]").click(function(){
+		$("#selectAllStatuses").prop("checked", false);
+	})
+	
+	$("#selectAllStatuses").click(function(){
+		selectAllCheckboxes($("#statusListContainer"), $(this).prop("checked"));
 	})
 	
 	$(".application-status-container button").click(function(){
 		
+		
 		var updateApplicationStatusDto = getUpdateApplicationStatusDto(this);
+
 		updateApplicationStatus(updateApplicationStatusDto);
 
 	})
@@ -362,6 +371,21 @@ $(document).ready(function(){
 	})
 	
 })
+
+function isAddingApplicationStatus(clickedStatusButton){
+	
+	var currentApplicationStatus = $($(clickedStatusButton).closest("[data-application-status]")[0]).attr("data-application-status");
+	var clickedApplicationStatus = $(clickedStatusButton).val();
+	
+	// If the row's application status is the same as the clicked button's status,
+	// then the user is toggling the status to off (i.e. they are removing the application status) 
+	if (currentApplicationStatus == clickedApplicationStatus){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
 
 
 function getStatusValuesToShow(){
@@ -378,11 +402,18 @@ function getStatusValuesToShow(){
 
 
 function getUpdateApplicationStatusDto(clickedStatusButton){
+	
 	var updateApplicationStatusDto = {}
 	
 	updateApplicationStatusDto.applicationId = $($(clickedStatusButton).closest("[data-application-id]")[0]).attr("data-application-id");
-	updateApplicationStatusDto.newStatus = $(clickedStatusButton).val();
 	
+	if(isAddingApplicationStatus(clickedStatusButton)){
+		updateApplicationStatusDto.newStatus = $(clickedStatusButton).val();
+	}
+	else{
+		updateApplicationStatusDto.newStatus = 0;
+	}
+
 	return updateApplicationStatusDto;
 }
 
@@ -414,12 +445,7 @@ function showQuestions(idsToShow){
 		}
 	})
 }
-
-function selectAllQuestions(request){	
-	$.each($("#questionListContainer").find("input[type=checkbox]"), function(){
-		$(this).prop("checked", request);
-	})
-}
+ 
 
 function getQuestionIdsToShow(){
 
@@ -452,8 +478,15 @@ function updateApplicationStatus(updateApplicationStatusDto){
 
 		applicationStatusButtons = getApplicationStatusButtonsByApplicationId(updateApplicationStatusDto.applicationId)
 		
-		highlightArrayItemByAttributeValue("value", updateApplicationStatusDto.newStatus,
-				applicationStatusButtons, "active");
+
+		if(updateApplicationStatusDto.newStatus == 0){
+			removeClassFromArrayItems(applicationStatusButtons, "active");
+		}
+		else{
+			highlightArrayItemByAttributeValue("value", updateApplicationStatusDto.newStatus,
+					applicationStatusButtons, "active");	
+		}
+		
 
 	}
 	
@@ -480,6 +513,10 @@ function getApplicationStatusButtonsByApplicationId(applicationId){
 }
 
 
+</script>
+
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
 </script>
 
 <%@ include file="./includes/Footer.jsp"%>

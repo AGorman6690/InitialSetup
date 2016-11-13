@@ -12,5 +12,5 @@ class SubmitJobPostingRequestDTO {
 	List<Job> jobs
 
 	@JsonProperty("questions")
-	List<Question> questions
+	List<PostQuestionDTO> questions
 }

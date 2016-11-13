@@ -147,14 +147,14 @@ public class JobServiceImpl {
 
 	}
 
-	private List<Question> getQuestionsFromPosting(List<Integer> selectedQuestionIds, List<Question> postingDtoQuestions) {
+	private List<PostQuestionDTO> getQuestionsFromPosting(List<Integer> selectedQuestionIds, List<PostQuestionDTO> postingDtoQuestions) {
 
-		List<Question> questions = new ArrayList<Question>();
+		List<PostQuestionDTO> questions = new ArrayList<PostQuestionDTO>();
 
 		for(int selectedQuestionId : selectedQuestionIds){
 			//Get question
-			for(Question postingDtoQuestion : postingDtoQuestions){
-				if(postingDtoQuestion.getQuestionId() == selectedQuestionId){
+			for(PostQuestionDTO postingDtoQuestion : postingDtoQuestions){
+				if(postingDtoQuestion.getId() == selectedQuestionId){
 					questions.add(postingDtoQuestion);
 				}
 			}
@@ -438,19 +438,6 @@ public class JobServiceImpl {
 
 	}
 
-//	private List<Integer> getJobsIdsByFilter(FilterJobRequestDTO filter) {
-//
-//		List<Integer> jobIds = new ArrayList<Integer>();
-//		List<Integer> ids = new ArrayList<Integer>();
-//		//By distance
-//		jobIds = repository.getActiveJobIdsByDistance(filter.getLat(), filter.getLng(), filter.getRadius());
-//
-//		ids = repository.getActiveJobIdsByStartAndEndDates(filter.getBeforeEndDate(), filter.getEndDate(),
-//																filter.getBeforeStartDate(), filter.getStartDate()));
-//
-//		return null;
-//	}
-
 
 	public void setDurationForJobs(List<Job> jobs) {
 		for (Job job : jobs){
@@ -733,8 +720,8 @@ public class JobServiceImpl {
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 			for(JobSearchUser employee : employees){
 
-				//Set their wage
-				employee.setWage(applicationService.getWage(employee.getUserId(), jobId));
+				employee.setWage(applicationService.getWage(employee.getUserId(), jobId));				
+				employee.setRating(userService.getRating(employee.getUserId()));
 			}
 
 			//Get the applications

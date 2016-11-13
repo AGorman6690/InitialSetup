@@ -35,7 +35,7 @@ public class Job {
 	List<JobSearchUser> employees
 	List<JobSearchUser> applicants
 	List<Application> applications
-	List<Question> questions
+	List<PostQuestionDTO> questions
 	int newApplicationCount
 	Integer Duration
 	List<Integer> selectedQuestionIds

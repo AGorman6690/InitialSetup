@@ -1,5 +1,4 @@
 
-
 .expandable-table-container h4{
 	background-color:#163B3D;
 	color:#ffffff;
@@ -91,7 +90,7 @@ table#failedWageNegotiations{
 }
 
 
-.has-new-applicants{
+td .pop{
 	color: #A73854;
     font-size: 17px;
     font-weight: bold;

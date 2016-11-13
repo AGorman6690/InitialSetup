@@ -21,6 +21,7 @@ import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
@@ -196,7 +197,7 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(Question question : job.getQuestions()){
+			for(PostQuestionDTO question : job.getQuestions()){
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
@@ -213,10 +214,12 @@ public class JobRepository {
 	public List<Job> getFilteredJobs(FilterJobRequestDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
 
 
-	//SQL example for filtering jobs.
-	//Copy and paste into MySQL for better viewing.
-	//***********************************************************
-	//***********************************************************
+//SQL example for filtering jobs.
+//Copy and paste into MySQL for better viewing.
+//***********************************************************
+//***********************************************************
+		
+		
 //	select j.*, 
 //		( 3959 * acos( cos( radians( 45.104839) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-93.144936) ) 
 //		+ sin( radians( 45.104839) ) * sin( radians( lat ) ) ) ) AS distance,
@@ -259,10 +262,11 @@ public class JobRepository {
 //	) wd2
 //	on wd2.jobid = wd1.jobid
 //
-//	having distance < 16 and j.jobid <> 71 and j.jobid <> 73;
-		//***********************************************************
-		//***********************************************************		
+//	having distance < 16 and j.jobid <> 71 and j.jobid <> 73;		
 		
+//***********************************************************
+//***********************************************************		
+
 		List<Object> argsList = new ArrayList<Object>();
 
 		//Arguments for distance filter

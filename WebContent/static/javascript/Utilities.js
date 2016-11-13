@@ -26,6 +26,12 @@ function removeClassFromArrayItems(array, className){
 	})
 }
 
+function selectAllCheckboxes($checkboxContainer, request){
+	$.each($checkboxContainer.find("input[type=checkbox]"), function(){
+		$(this).prop("checked", request);
+	})
+}
+
 function show($e){
 	$e.show(200);
 }

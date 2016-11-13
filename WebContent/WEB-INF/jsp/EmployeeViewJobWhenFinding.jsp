@@ -4,12 +4,9 @@
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script>
 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js"/>"></script>
-<%-- 	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script> --%>
-<%-- 	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script> --%>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
-
+	<script src="<c:url value="/static/javascript/Map.js" />"></script>
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
@@ -34,24 +31,7 @@
 <!-- ***************************************************************** -->
 
 		
-		<div class="container" >
-<!-- 			<div class="row row-padding" style="">					 -->
-<!-- 				<div class="col-sm-12" style=""> -->
-					
-<!-- 					<div id="jobActionContainer" class="" style=""> -->
-<!-- 					    <div class="btn-group"> -->
-<!-- 					    	<div id="applyContainer"> -->
-<!-- 					    		<div id="invalidAmount" class="invalid-message"></div> -->
-<!-- 					    		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div> -->
-<!-- 					    		<span>Desired Pay</span><input class="form-control" placeholder="$ per hour" id="amount"></input> -->
-								
-<!-- 								<button id="apply">Apply</button>																						 -->
-<!-- 				    		</div> -->
-<!-- 					    </div>			 -->
-<!-- 					</div>							 -->
-<!-- 				</div>end row -->
-<!-- 			</div>end job cart container -->
-			
+		<div class="container" >			
 			<div>${vtJobInfo }			
 			</div>
 			<div>${vtQuestionsToAnswer }</div>
@@ -312,38 +292,6 @@
 		}
 	}
 	
-	function initMap() {
-		
-		var jobLat = parseFloat($("#map").attr("data-lat"));
-		var jobLng = parseFloat($("#map").attr("data-lng"));
-
-		var center = {
-			lat : jobLat,
-			lng : jobLng,
-		};
-		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom : 11,
-			center : center,
-			scrollwheel: false,
-			streetViewControl: false,
-//				disableDefaultUI: true,
-		    mapTypeControlOptions: {
-		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-		    }
-
-		});
-		
-		var icon = {
-				url: "/JobSearch/static/images/map-marker-black.png",
-				scaledSize: new google.maps.Size(30, 30),
-			}
-		
-		var marker = new google.maps.Marker({
-			position : center,
-			map : map,
-			icon: icon,
-		});
-	}
 
 
 // 	function initMap(){

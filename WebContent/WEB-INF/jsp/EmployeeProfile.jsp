@@ -1,26 +1,18 @@
-<%@ include file="./includes/Header.jsp"%>
+	<%@ include file="./includes/Header.jsp"%>
+	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
+		
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+	<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
 
-<head>
-<%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
-
-
-<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
-<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
-<%-- <script src="<c:url value="/static/javascript/DatePickerUtilities.js" />"></script> --%>
-<%-- <script	src="<c:url value="/static/External/jquery-ui.min.js" />"></script>    --%>
 </head>
 
-<!-- <script src="https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script> -->
 
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 	
@@ -101,7 +93,7 @@
 			<div class="section-body">
 			<c:choose>
 				<c:when test="${openApplicationResponseDtos.size() > 0 }">						
-					<table id="openApplications">
+					<table id="openApplications" class="main-table-style">
 						<thead>
 							<tr>
 								<th>Job Name</th>
@@ -222,7 +214,7 @@
 			<div class="section-body">
 			<c:choose>
 				<c:when test="${activeJobs.size() > 0 }">					
-					<table id="activeJobs">
+					<table id="activeJobs" class="main-table-style">
 						<thead>
 							<tr>
 								<th>Job Name</th>
@@ -257,7 +249,7 @@
 			<div class="section-body">
 			<c:choose>
 				<c:when test="${completedJobs.size() > 0 }">					
-					<table id="completedJobs">
+					<table id="completedJobs" class="main-table-style">
 						<thead>
 							<tr>
 								<th>Job Name</th>

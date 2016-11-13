@@ -20,6 +20,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
@@ -251,7 +252,7 @@ public class ApplicationServiceImpl {
 		return repository.getAnswer(questionId, userId);
 	}
 
-	public void addQuestion(Question question) {
+	public void addQuestion(PostQuestionDTO question) {
 		repository.addQuestion(question);
 	}
 

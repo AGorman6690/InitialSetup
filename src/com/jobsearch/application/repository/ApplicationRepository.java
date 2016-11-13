@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
@@ -215,7 +216,7 @@ public class ApplicationRepository {
 				public AnswerOption mapRow(ResultSet rs, int rownumber) throws SQLException {
 					AnswerOption e = new AnswerOption();
 					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
-					e.setAnswerOption(rs.getString("AnswerOption"));
+					e.setText(rs.getString("AnswerOption"));
 
 					return e;
 				}
@@ -264,8 +265,11 @@ public class ApplicationRepository {
 					e.setText(rs.getString("Text"));
 					e.setUserId(rs.getInt("UserId"));
 
+					
 					if (e.getAnswerOptionId() > 0) {
-						e.setText(applicationService.getAnswerOption(e.getAnswerOptionId()).getAnswerOption());
+						
+						//Set the answer text equal to the selected answer option's text
+						e.setText(applicationService.getAnswerOption(e.getAnswerOptionId()).getText());
 					}
 
 					return e;
@@ -278,7 +282,7 @@ public class ApplicationRepository {
 
 	}
 
-	public void addQuestion(Question question) {
+	public void addQuestion(PostQuestionDTO question) {
 
 		CallableStatement cStmt;
 		try {
@@ -294,8 +298,8 @@ public class ApplicationRepository {
 
 			if (question.getAnswerOptions() != null) {
 				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
-				for (AnswerOption answerOption : question.getAnswerOptions()) {
-					jdbcTemplate.update(sql, new Object[] { createdQuestionId, answerOption.getAnswerOption() });
+				for (String answerOption : question.getAnswerOptions()) {
+					jdbcTemplate.update(sql, new Object[] { createdQuestionId, answerOption });
 				}
 			}
 

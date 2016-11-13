@@ -4,9 +4,6 @@
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-<%-- 	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script> --%>
-<%-- 	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script> --%>
-<%-- 	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script> --%>
 
 <!-- 	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" /> -->
 <!-- 	<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" /> -->

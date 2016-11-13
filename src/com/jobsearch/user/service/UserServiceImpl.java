@@ -654,7 +654,6 @@ public class UserServiceImpl {
 	}
 
 	public void setModel_WorkHistoryByUser(Model model, int userId) {
-
 		
 	
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.

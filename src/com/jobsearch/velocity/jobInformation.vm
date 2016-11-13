@@ -36,7 +36,14 @@
 	##				<div>End: $date.format("h:mm a", $job.endTime), $date.format("full_date", $job.endDate)</div>
 					<div>Start: $date.format("full_date", $job.startDate)</div>
 					<div>End: $date.format("full_date", $job.endDate)</div>
-					<div>Duration: $job.duration days</div>
+					
+				#set ($duration = $job.duration)
+				#if ($duration > 1)					
+					<div>Duration: $duration days</div>
+				#else
+					<div>Duration: $duration day</div>
+				#end
+				
 				</div>	
 				<div class="body-element">
 					<div id="workDays">

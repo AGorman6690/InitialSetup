@@ -27,3 +27,15 @@ a{
 #availableDays{
 	display:none;
 }
+
+#openApplications{
+	width:600px;
+}
+
+#completedJobs{
+	width:400px;
+}
+
+#activeJobs{
+	width:600px;
+}

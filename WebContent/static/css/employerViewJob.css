@@ -17,6 +17,17 @@
 	padding-left:25px;	
 }
 
+/* In order for the map the render, the map container */
+/* has to be shown. */
+/* If it is desired for the job info to be hidden on page load, */
+/* it might have to be hidden after the map is rendered, */
+/* not with css */
+#jobInfoContainer{
+	display:inline-block;
+}
+
+
+
 .question-format{
 	padding:5px 0px;
 }
@@ -25,12 +36,13 @@
 	display:none;
 }
 
-#jobInfoContainer{
-/* 	display:none; */
-}
 
 #applicantsTable{
 	width:100%;
+}
+
+#employeesTable{
+	width:400px;
 }
 
 #applicantName{
@@ -74,12 +86,20 @@
 	position:absolute;
 	z-index:1000;
 	background-color:#ffffff;
-	width:400px;
+	
 	height:auto;
-	padding:0px 5px 0px 25px;
+	padding:0px 25px;
 	display:none;
 	border: 5px groove #F0F0F0;
 }
+
+#selectQuestionsContainer{
+	max-width:400px;
+}
+
+/* #selectStatusContainer{ */
+/* 	width:200px; */
+/* } */
 
 .question-format{
 	padding-
