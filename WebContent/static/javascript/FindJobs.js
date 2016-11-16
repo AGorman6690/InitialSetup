@@ -742,7 +742,7 @@ function scrollToJob(jobId){
 		//Scroll down
 		newScrollTop =  currentScrollPosition + topClickedJob - topFilteredJobsContainer;
 	}
-	$('#filteredJobs').animate({ scrollTop: newScrollTop}, 700);
+	$('#filteredJobs').animate({ scrollTop: newScrollTop}, 1000);
 }
 
 

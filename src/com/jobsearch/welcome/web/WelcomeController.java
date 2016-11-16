@@ -55,11 +55,11 @@ public class WelcomeController {
 			@RequestParam(name = "error", required = false) boolean error) {
 
 		// // Set session objects
-		// JobSearchUser user = new JobSearchUser();
+//		 JobSearchUser user = new JobSearchUser();
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addAttribute("profiles", profiles);
-		// model.addAttribute("user", user);
+//		 model.addAttribute("user", user);
 
 		model.addAttribute("url", hostUrl);
 

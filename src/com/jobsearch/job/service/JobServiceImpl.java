@@ -891,15 +891,14 @@ public class JobServiceImpl {
 
 	public void setModel_ApplyForJob(Model model, int jobId, HttpSession session) {
 
-		
-		
 		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
 		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
 		
 		model.addAttribute("jobId", jobId);
 		model.addAttribute("vtJobInfo", vtJobInfo);
 		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
-
+		
+		SessionContext.verifyLoggedInUser(session, model);
 
 	}
 

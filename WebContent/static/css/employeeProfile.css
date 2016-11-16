@@ -11,6 +11,9 @@ table th{
 	padding:25px 0px;
 }
 
+.updating{
+	background-color:#337ab7;
+}
 .table-container{
 	padding-left:25px;
 }

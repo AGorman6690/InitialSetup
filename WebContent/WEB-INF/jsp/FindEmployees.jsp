@@ -220,6 +220,7 @@
 			param += "&" + getListParameter("day", findEmployeesDto.days);
 			param += "&" + getListParameter("categoryId", findEmployeesDto.categoryIds);			
 			
+			$("html").addClass("waiting");
 			$.ajax({
 				type : "GET",
 				url : environmentVariables.LaborVaultHost + "/JobSearch/search/employees" + param,
@@ -231,8 +232,9 @@
 				$("#results").empty();
 				$("#results").append(html);
 				scrollToElement("resultsContainer", 500);
+				$("html").removeClass("waiting");
 			}).error(function() {
-
+				$("html").removeClass("waiting");
 			});			
 		}
 			

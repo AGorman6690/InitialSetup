@@ -630,28 +630,7 @@ public class UserServiceImpl {
 
 	}
 
-	public boolean isLoggedIn(HttpSession session) {
 
-		// *************************************
-		// *************************************
-		// This is hackish.
-		// Sometimes this user session attribute is not null...
-		// That is why the email is verified not to be null after the
-		// user is apparently "not" null...
-		// *************************************
-		// *************************************
-		JobSearchUser user = SessionContext.getSessionUser(session);
-		if (user == null) {
-			return false;
-		} else {
-			if (user.getEmailAddress() == null) {
-				return false;
-			} else {
-				return true;
-			}
-
-		}
-	}
 
 	public void setModel_WorkHistoryByUser(Model model, int userId) {
 		

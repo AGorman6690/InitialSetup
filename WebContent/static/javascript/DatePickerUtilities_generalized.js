@@ -19,7 +19,9 @@ $(document).ready(function(){
 		
 		
 	})
+	
 
+	
 
 	$(".calendar-single-date").datepicker({
 		minDate: new Date(),
@@ -60,7 +62,7 @@ $(document).ready(function(){
 		
 		$("#calendar").datepicker({
 			minDate: new Date(),
-			numberOfMonths: numberOfMonths,
+			numberOfMonths: numberOfMonths, 
 			onSelect: function(dateText, inst) {	
 				
 				//There's odd behavior when the user clicks, for example,

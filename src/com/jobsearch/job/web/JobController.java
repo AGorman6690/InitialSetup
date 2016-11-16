@@ -22,6 +22,7 @@ import com.jobsearch.job.service.FilterJobRequestDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -104,7 +105,7 @@ public class JobController {
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
 	public String applyForJob(@RequestBody Application application, HttpSession session) {
 
-		if (userService.isLoggedIn(session)) {
+		if (SessionContext.isLoggedIn(session)) {
 			applicationService.applyForJob(application, session);
 			return "redirect:/user/profile";
 		} else {

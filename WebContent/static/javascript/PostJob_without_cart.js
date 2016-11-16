@@ -739,7 +739,7 @@
 	function submitJobs(confirmation){
 		
 		if(confirmation == 1){
-//			if(validatePostJobInputs(jobs) == 0){
+			if(validatePostJobInputs(jobs) == 0){
 				var headers = getAjaxHeaders();
 				
 				//Once we decide how the post jobs page will function (i.e. with or without a cart),
@@ -781,7 +781,7 @@
 	//				alert("error submit jobs")
 	//				$('#home')[0].click();
 				});
-//			}
+			}
 		}
 
 	}

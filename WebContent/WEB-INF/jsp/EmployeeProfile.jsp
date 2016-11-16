@@ -10,6 +10,7 @@
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 	<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script> --%>
 
 </head>
 
@@ -32,7 +33,7 @@
 				<span class="header-text">Availability</span>
 			</div>		
 			<div class="section-body" id="availabilityContainer">	
-				<div id="calendar"></div>
+				<div id="calendar" class="calendar-multi-date-no-range" data-number-of-months="2"></div>
 				<div id="saveButtonContainer">
 					<button id="saveAvailability" class="square-button">Save</button>
 				</div>
@@ -300,39 +301,38 @@ var availableDays = [];
 		})
 
 		
-      	$("#calendar").datepicker({
-    	      numberOfMonths: 2,
-    	      minDate: dateToday,
-//     	      showButtonPanel: true,
-//     	      multidate: true,
-			  onSelect:function(dateText){
-				var date = new Date(dateText);
-				
-				if(isDayAlreadyAdded(date.getTime(), availableDays)){
-					availableDays = removeDate(date.getTime(), availableDays); 
-	        	}
-	        	else{
-	        		availableDays.push(date.getTime());  
-	        	}
-				
-				
-			  },
-    	      beforeShowDay:function(date){
-    	    	  
-				if(isDayAlreadyAdded(date.getTime(), availableDays)){
-	        		return [true, "active111"]; 
-	        	}
-	        	else{
-	        		return [true, ""];
-	        	}
-        	
-    	    	  
-
-    	      },
-      	
-    	      
-    	    });
-
+      
+// 	var numberOfMonths = getNumberOfMonths($(".calendar-multi-date-no-range"));
+	$(".calendar-multi-date-no-range").datepicker({
+		 numberOfMonths: 2,
+		 minDate: new Date(),
+		 onSelect:function(dateText){
+			var date = new Date(dateText);
+			
+			if(isDayAlreadyAdded(date.getTime(), availableDays)){
+				availableDays = removeDate(date.getTime(), availableDays); 
+			}
+			else{
+				availableDays.push(date.getTime());  
+			}
+			
+			
+		  },
+	      beforeShowDay:function(date){
+	    	  
+			if(isDayAlreadyAdded(date.getTime(), availableDays)){
+	    		return [true, "active111"]; 
+	    	}
+	    	else{
+	    		return [true, ""];
+	    	}
+		
+	    	  
+	
+	      },
+	
+	      
+	    });
 
 
 		$("#saveAvailability").click(function(){

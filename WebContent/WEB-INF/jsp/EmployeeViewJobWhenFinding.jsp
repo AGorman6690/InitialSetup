@@ -34,8 +34,33 @@
 		<div class="container" >			
 			<div>${vtJobInfo }			
 			</div>
-			<div>${vtQuestionsToAnswer }</div>
-				
+<!-- 			<div class="section"> -->
+
+			<c:choose>				
+				<c:when test="${empty user.emailAddress }">					
+					<c:set var="notLoggedInClass" value="not-logged-in"> </c:set>		
+				</c:when>
+				<c:otherwise>
+					<c:set var="notLoggedInClass" value=""> </c:set>
+				</c:otherwise>
+			</c:choose>
+			<div class="section ${notLoggedInClass }">
+				<div class="header2">
+					<span data-toggle-id="questionsContainer" class="glyphicon glyphicon-menu-down"></span>
+					<span class="header-text">Application</span>
+				</div>	
+				<c:if test="${empty user.emailAddress }">
+					<div id="notLoggedIn-ApplicationWarning" class="section-body">
+						You must be logged in to apply for a job.
+					</div>
+				</c:if>				
+				${vtQuestionsToAnswer }
+			
+			
+			
+			
+			</div>
+	
 		</div>
 
 

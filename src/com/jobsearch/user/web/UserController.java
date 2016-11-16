@@ -29,6 +29,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -185,7 +186,7 @@ public class UserController {
 	// @ResponseBody
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model, HttpSession session) {
 
-		if (userService.isLoggedIn(session)) {
+		if (SessionContext.isLoggedIn(session)) {
 			userService.setModel_WorkHistoryByUser(model, userId);
 			return "EmployerViewEmployee";
 		} else {

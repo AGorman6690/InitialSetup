@@ -48,7 +48,7 @@
 					<td class=""><span class="">$jobDto.failedWageNegotiationDtos.size()</span></td>
 				## if the job has NEW applications
 				#if($jobDto.job.newApplicationCount > 0)
-					<td class="pop">$jobDto.job.newApplicationCount</td>
+					<td class="pop">-</td>
 				#else
 					<td><span class="">$jobDto.job.newApplicationCount</span></td>
 				#end
@@ -57,14 +57,14 @@
 				#if	($applicationCount > 0) 
 					<td class=""><span class="pop">$applicationCount</span></td>
 				#else
-					<td class=""><span class="">$applicationCount</span></td>
+					<td class=""><span class="">-</span></td>
 				#end 
 				
 				#set ($employeeCount = $jobDto.job.getEmployees().size() )	
 				#if	($employeeCount > 0)
 					<td class=""><span class="pop">$employeeCount</span></td>
 				#else
-					<td class=""><span class="">$employeeCount</span></td>
+					<td class=""><span class="">-</span></td>
 				#end 				
 					
 					<td><a class="square-button-green" href="/JobSearch/job/$jobDto.job.id/update/status/1">Start Job</a></td>
