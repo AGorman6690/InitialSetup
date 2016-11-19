@@ -521,7 +521,7 @@ public class UserServiceImpl {
 
 	}
 
-	public void setEmployeesProfileModel(JobSearchUser employee, Model model) {
+	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
 
 		// Availability
 		List<String> availableDays = this.getAvailableDays(employee.getUserId());
@@ -559,12 +559,21 @@ public class UserServiceImpl {
 
 	}
 
-	public void setEmployersProfileModel(JobSearchUser employer, Model model) {
+	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
 
+		//**************************************************************
+		//**************************************************************	
+		//Why is there a dto list?????
+		//Address this later.
+		
+		
 		// Get the employer's yet-to-start jobs
 		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
 		List<JobDTO> yetToStartJobs_Dtos = jobService.getYetToStartJobsByEmployer_Dto(employer.getUserId());
-
+		//**************************************************************
+		//**************************************************************
+		
+		
 		// Get the employer's active jobs
 		List<Job> activeJobs = jobService.getActiveJobsByEmployer(employer.getUserId());
 

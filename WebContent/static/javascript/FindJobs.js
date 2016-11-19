@@ -652,7 +652,9 @@ function setMap(){
 	
 	//Show job markers
 	$("#filteredJobs").find(".job").each(function(){
+		var job = this;
 		var jobId = $(this).attr("id");
+		var jobName = $(this).find(".job-name").html();
 		
 		var jobLatLng = {
 				lat : $(this).data("lat"),
@@ -677,46 +679,43 @@ function setMap(){
 		});
 		
 
-	  var infowindow = new google.maps.InfoWindow({
-	    content: "<div>" +
-	    			"<div data-scroll-to='" + $(this).attr("id") + "'>Scroll To Job</div>" +
-//	    			"<a href='#" + $(this).attr("id") + "'>Scroll To Job</div>" +
-	    		"</div>",
-	  });
+		var infowindow = new google.maps.InfoWindow({
+			content: "<div>" + jobName + "</div>"
+		});
 
 
-      marker.addListener('click', function() {
-         scrollToJob(this.jobId);
-         addBorderToJob(this.jobId, true);
-    });
+		marker.addListener('click', function() {
+			scrollToJob(this.jobId);
+			addBorderToJob(this.jobId, true);
+		});
       
 	 
-//	marker.addListener('mouseover', function() {
-//		infowindow.open(map,marker);
-//	  });
+		marker.addListener('mouseover', function() {
+			infowindow.open(map,marker);
+		});
 	
-	var jobName = this;//.find("a.job-name")[0];
-	var centerMapOnJob = $(this).find(".glyphicon-move")[0];
+		
+		var centerMapOnJob = $(this).find(".glyphicon-move")[0];
+		
+	    google.maps.event.addDomListener(job, 'mouseout', function () {    	  
+	    	marker.setIcon(icon);
+	    });
+		
+	    google.maps.event.addDomListener(job, 'mouseover', function () {  
+	    	marker.setIcon(icon_mouseover);
 	
-    google.maps.event.addDomListener(jobName, 'mouseout', function () {    	  
-    	marker.setIcon(icon);
-    });
+	    });
+	    
+	    google.maps.event.addDomListener(centerMapOnJob, "click", function () {
+	//        infowindow.setContent(this.html);
+	//        infowindow.open(map, this);
+	        map.setCenter(marker.getPosition()); 
+	//        map.setZoom(5);
+	    });
 	
-    google.maps.event.addDomListener(jobName, 'mouseover', function () {  
-    	marker.setIcon(icon_mouseover);
-
-    });
-    
-    google.maps.event.addDomListener(centerMapOnJob, "click", function () {
-//        infowindow.setContent(this.html);
-//        infowindow.open(map, this);
-        map.setCenter(marker.getPosition()); 
-//        map.setZoom(5);
-    });
-	
-//	marker.addListener('mouseout', function() {
-//		infowindow.close();
-//	  });
+	    marker.addListener('mouseout', function() {
+	    	infowindow.close();
+	    });
 		
 	})	
 	

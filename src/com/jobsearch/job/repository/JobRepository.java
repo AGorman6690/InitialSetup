@@ -649,6 +649,15 @@ public class JobRepository {
 		String sql = "SELECT * FROM work_day WHERE JobId = ?";
 		return this.WorkDayMapper(sql, new Object[]{ jobId });
 	}
+	
+	
+	public int getRatingCountByJobAndRatingValue(int jobId, double value){
+
+		String sql = "SELECT COUNT(*) FROM rating WHERE JobId = ? AND Value = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, value }, Integer.class);
+
+	}
+
 
 }
 

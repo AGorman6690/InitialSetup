@@ -99,14 +99,14 @@ public class UserController {
 			if (user.getProfile().getName().equals("Employee")) {
 
 				// Set model attributes
-				userService.setEmployeesProfileModel(user, model);
+				userService.setModel_EmployeeProfile(user, model);
 
 				viewName = "EmployeeProfile";
 
 			} else if (user.getProfile().getName().equals("Employer")) {
 
 				// Set model attributes
-				userService.setEmployersProfileModel(user, model);
+				userService.setModel_EmployerProfile(user, model);
 
 				viewName = "EmployerProfile";
 

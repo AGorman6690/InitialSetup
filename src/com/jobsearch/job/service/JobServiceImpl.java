@@ -610,16 +610,28 @@ public class JobServiceImpl {
 			List<Category> categories = categoryService.getCategoriesByJobId(jobId);
 //			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
 			
+			boolean haveJobRatingsBeenSubmitted = this.getHaveJobRatingsBeenSubmitted(jobId);
+			
 			//Add to model
 			model.addAttribute("vtJobInfo", vtJobInfo);
 			model.addAttribute("job", completedJob);
 			model.addAttribute("categories", categories);
+			model.addAttribute("haveJobRatingsBeenSubmitted", haveJobRatingsBeenSubmitted);
 			
 		}
 		
 	}
 
 
+
+	public boolean getHaveJobRatingsBeenSubmitted(int jobId) {
+		
+		int unsubmittedRatingsCount = repository.getRatingCountByJobAndRatingValue(jobId, -1);
+		
+		if(unsubmittedRatingsCount == 0) return true;
+		else return false;
+		
+	}
 
 	public int getJobStatus(int jobId) {
 		Job job = repository.getJob(jobId);

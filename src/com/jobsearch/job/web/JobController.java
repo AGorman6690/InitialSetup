@@ -167,8 +167,6 @@ public class JobController {
 	@RequestMapping(value = "/completed/job/{jobId}", method = RequestMethod.GET)
 	public String getCompletedJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
 		
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
 		jobService.setModel_EmployerViewCompletedJob(model, jobId, session);
 		return "EmployerViewCompletedJob";	
 		

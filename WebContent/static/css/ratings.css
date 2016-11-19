@@ -1,44 +1,63 @@
 
-.rate-label{
-	font-size: 15px;
-	display: inline;
-	height: 100%
+/* Override plugin */
+.rating-container{
+	display:inline-block !important;
+	padding-left:10px !important;
+
 }
 
-.rate-group{
-/* 	position: absolute; */
-/* 	float: left;	 */
-	display: block;
-	margin: 10px 0px 10px 0px;	
-/* 	left: 220px; */
+.rating-container .caption{
+	padding-top:12px !important;
+}
+
+.rating-container .caption span{
+	color: #163B3D;
+	background-color:#ffffff !important;
+	padding: 6px !important;
+	margin: 0px !important;
+	font-size:75% !important;
+	font-weight:bold !important;
+}
+
+.rating-container .filled-stars{
+	text-shadow: none !important;
+}
+
+.rated{
+	color: #337ab7 !important;
 }
 
 
-.rate-values{
-/* 	position: absolute; */
-/* 	float: left; */
-	vertical-align: middle;
-	display: inline;
-/* 	height:20px; */
-	
+.rate-criterion{
+    padding: 5px 5px;
+    margin: 5px 0px;
 }
 
-.button-active{
-	background-color: #e6ac00;
+th#employee{
+	width:10%;
 }
 
-.rate-submit {
-/* 	position: absolute; */
-	margin-top: 20px;
-	float: left;
-	display: block;
-	bottom: 10px;
+th#rating{
+	width:45%;
 }
 
-.rate-employees{
-	position: absoloute;
+th#comment{
+	width:45%;
+}
+
+textarea.comment{
 	width: 100%;
-/* 	position: absolute; */
-	float: left;
-	height: 100%
+    border-radius: 2px;
+}
+
+table#ratings{
+	width:100%;
+}
+
+#submitRatings{
+	padding: 5px 10px;
+	background-color: #163B3D;
+	color:#ffffff;
+	margin-bottom:25px;
+	font-size:17px;
 }
