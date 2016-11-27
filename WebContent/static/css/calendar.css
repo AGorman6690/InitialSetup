@@ -1,9 +1,9 @@
-#calendar td,
+#calendarContainer td,
 .calendar-single-date td{
 	border-radius:4px;
 	text-align:center;
 }
-#calendar td a:hover,
+#calendarContainertd a:hover,
 .calendar-single-date td a:hover{
 	text-decoration: none;
 	color:#000000;	
@@ -23,6 +23,6 @@ td.active111 a{
 	padding:10px;
 }
 
-#calendar .ui-datepicker-multi{
+#calendarContainer .ui-datepicker-multi{
 	width:100% !important;
 }

@@ -68,6 +68,7 @@ public class JobRepository {
 					e.setZipCode(rs.getString("ZipCode"));
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
+					e.setDurationTypeId(rs.getInt("DurationTypeId"));
 
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
@@ -167,7 +168,7 @@ public class JobRepository {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, job.getJobName());
 			 cStmt.setInt(2, user.getUserId());
@@ -178,6 +179,7 @@ public class JobRepository {
 			 cStmt.setString(7, job.getZipCode());
 			 cStmt.setFloat(8,  job.getLat());
 			 cStmt.setFloat(9,  job.getLng());
+			 cStmt.setInt(10, job.getDurationTypeId());
 
 			 ResultSet result = cStmt.executeQuery();
 
@@ -287,6 +289,27 @@ public class JobRepository {
 		argsList.add(filter.getLat());
 		
 		nextTableToJoin = "j";
+		
+		//Duration Type
+		if(filter.getDurationTypeIds() != null){
+			boolean isFirst = true;
+			sql += " WHERE (";
+			for(Integer durationTypeId : filter.getDurationTypeIds()){
+				
+				if (isFirst){
+					sql += " j.DurationTypeId = ?";
+					isFirst = false;
+				}
+				else sql += " OR j.DurationTypeId = ?";
+				
+				argsList.add(durationTypeId);
+			}
+			
+			sql += ")";
+			
+		}
+		
+		
 		
 		//Work days
 		if(filter.getWorkingDays() != null){
@@ -462,6 +485,7 @@ public class JobRepository {
 			
 			nextTableToJoin = subTable;
 		}
+		
 
 		//Complete the distance filter.			
 		sql += " HAVING distance < ?";

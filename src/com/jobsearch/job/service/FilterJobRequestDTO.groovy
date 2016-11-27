@@ -42,16 +42,19 @@ public class FilterJobRequestDTO {
 	int[] loadedJobIds
 	boolean isAppendingJobs
 	boolean isSortingJobs
+	Integer[] durationTypeIds
 
 	public static final String ZERO_TIME = "00:00:00"
 
 public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, Double duration2, boolean lessThanDuration2,
-			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2) {
+			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2, Integer[] durationTypeIds) {
 		// TODO Auto-generated constructor stub
 
 		this.setRadius(radius);
+		
+		this.setDurationTypeIds(durationTypeIds);
 
 		this.setReturnJobCount(returnJobCount);
 

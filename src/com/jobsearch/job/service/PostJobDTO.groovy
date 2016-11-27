@@ -46,4 +46,10 @@ class PostJobDTO {
 
 	@JsonProperty("workDays")
 	List<WorkDay> workDays
+	
+	@JsonProperty("durationTypeId")
+	int durationTypeId
+	
+	@JsonProperty("durationUnitLength")
+	Integer durationUnitLength
 }

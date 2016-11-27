@@ -31,12 +31,18 @@
 }
 
 .header{
-	border-bottom: 2px outset #F0F0F0;
+	height:40px;
+/* 	border-bottom: 2px outset #F0F0F0; */
 }
 
 .section-body{
 	padding-left:50px;
 	padding-top:15px;
+}
+
+.section-body h4{
+    border-top: 1px inset #F0F0F0;
+    padding-top: 13px;
 }
 
 .body-element-container{

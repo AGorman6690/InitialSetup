@@ -7,7 +7,10 @@ $(document).ready(function(){
 		//move to the right and back again ever so slightly.
 		//Using .hide
 		
-		if(toggleSpeed == 0){
+		if(toggleSpeed == -1){
+			$e.slideToggle(1000);	
+		}
+		else if(toggleSpeed == 0){
 			$e.slideToggle(700);	
 		}
 		else if(toggleSpeed == 1){

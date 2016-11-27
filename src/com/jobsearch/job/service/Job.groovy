@@ -41,4 +41,14 @@ public class Job {
 	List<Integer> selectedQuestionIds
 	int status
 	List<WorkDay> workDays;
+	
+	// 1 = Hours
+	// 2 = Days
+	// 3 = Weeks
+	// 4 = Months
+	// 5 = Years
+	// 6 = Hopefully Forever
+	Integer durationTypeId;
+	
+	Integer durationUnitLength;
 }

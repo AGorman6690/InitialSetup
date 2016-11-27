@@ -37,6 +37,7 @@
 					<tr>
 						<th id="employee">Employee</th>
 						<th id="rating">Rating</th>
+						<th id="endorsements">Endorsements</th>
 						<th id="comment">Comment</th>
 					</tr>
 				</thead>
@@ -58,6 +59,18 @@
 								<input name="hire-again" class="hire-again rating-loading" data-size="xs">
 							</div>	
 						</td>
+						
+						<td>
+							<div class="endorsementsContainer">
+							<c:forEach items="${categories }" var="category">
+								<div data-id="${category.id }" data-value="0" class="endorsement">
+									<span class="glyphicon glyphicon-remove"></span>
+									${category.name }
+								</div>
+							</c:forEach>
+							</div>
+						</td>
+						
 						<td><textarea class="comment" rows="3"></textarea></td>
 						
 					</tr>
@@ -79,6 +92,17 @@
 	
 	$(document).ready(function(){
 		
+		$(".endorsement").click(function(){
+			var value = $(this).attr("data-value");
+			toggleClasses($(this).find(".glyphicon"), "glyphicon-remove", "glyphicon-ok");
+			if(value == 0){
+				$(this).attr("data-value", "1");
+			}
+			else{
+				$(this).attr("data-value", "0");
+			}
+		})
+		
 		
 	    $('.timeliness').rating({
 	        step: 1,
@@ -97,18 +121,18 @@
 
 	    $('.hire-again').rating({
 	        step: 1,
-	        starCaptions: {1: 'Never', 2: 'Reluctantly', 3: 'Potentially', 4: 'Probably', 5: 'Absolutely'},
+	        starCaptions: {1: 'Never', 2: 'Reluctantly', 3: 'Maybe', 4: 'Probably', 5: 'Absolutely'},
 	        starCaptionClasses: {1: 'rated', 2: 'rated', 3: 'rated', 4: 'rated', 5: 'rated'},
 	        hoverOnClear: false,
 	    });
 
-	    $('.timeliness, .work-ethic, .hire-agian').on('rating.change', function(event, value, caption) {
+	    $('.timeliness, .work-ethic, .hire-again').on('rating.change', function(event, value, caption) {
 	        setRateCriterionValue($(this), value);
 
 	        
 	      });
 		
-	    $('.timeliness, .work-ethic').on('rating.clear', function(event) {
+	    $('.timeliness, .work-ethic, .hire-again').on('rating.clear', function(event) {
 	    	setRateCriterionValue($(this), "0");
 	      });
 		
@@ -159,9 +183,21 @@
 		submitRatingDto.employeeId = $employee.attr("data-id");
 		submitRatingDto.rateCriteria = getRateCriteria($rateCriteriaContainer);
 		submitRatingDto.commentString = getComment($employeeContainer);
-		submitRatingDto.endorsementCategoryIds = [];
+		submitRatingDto.endorsementCategoryIds = getEndorsementCategoryIds($employeeContainer);
 	
 		return submitRatingDto;
+	}
+	
+	function getEndorsementCategoryIds($employeeContainer){
+		
+		var endorsementCategoryIds = [];
+		var endorsements = $employeeContainer.find(".endorsement");
+		$.each(endorsements, function(){
+			if($(this).attr("data-value") == 1){
+				endorsementCategoryIds.push($(this).attr("data-id"));	
+			}			
+		})
+		return endorsementCategoryIds;
 	}
 	
 	function getComment($employeeContainer){

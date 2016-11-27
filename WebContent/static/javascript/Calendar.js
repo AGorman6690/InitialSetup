@@ -25,9 +25,9 @@
 	}
 	
 	
-	function removeActiveDaysFormatting(){
-		var activeDays = $("#calendar").find(".active111");			
-		$(activeDays).each(function(){
-			$(this).removeClass("active111");
-		})
-	}
+//	function removeActiveDaysFormatting(){
+//		var activeDays = $("#calendar").find(".active111");			
+//		$(activeDays).each(function(){
+//			$(this).removeClass("active111");
+//		})
+//	}

@@ -167,10 +167,20 @@ public class UserController {
 		Job job = new Job();
 		model.addObject("job", job);
 
-		model.setViewName("PostJob_without_cart");
+		model.setViewName("PostJob_durations");
 		return model;
 	}
 	
+	
+	@RequestMapping(value = "/postJob-with-cart", method = RequestMethod.GET)
+	public ModelAndView viewPostJob_with_cart(ModelAndView model, HttpSession session) {
+
+		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+		model.addObject("user", user);
+		model.setViewName("PostJob");
+		return model;
+	}	
 	
 	@RequestMapping(value = "/postJob-without-cart", method = RequestMethod.GET)
 	public ModelAndView viewPostJob_without_cart(ModelAndView model, HttpSession session) {
@@ -178,7 +188,7 @@ public class UserController {
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		
 		model.addObject("user", user);
-		model.setViewName("PostJob");
+		model.setViewName("PostJob_without_cart");
 		return model;
 	}	
 

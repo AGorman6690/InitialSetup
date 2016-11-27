@@ -359,19 +359,24 @@ function filterHasRadioSelection(filterContainer){
 
 function isValidFilterValue(filterContainer){
 	
-	var filterValue = getFilterValue(filterContainer);
-	var filterValueContainer = $(filterContainer).find(".filter-value-container")[0];
 	
-	//Filter value input
-	if(filterValue == null){
-		setInvalidCss($(filterValueContainer));
-		return false;
-	}
-	else{
-		setValidCss($(filterValueContainer));
-		return true;
-	}
-				
+//	if(hasFilterValueInput(filterContainer)){
+	
+		//Verify filter input value
+		var filterValue = getFilterValue(filterContainer);
+		var filterValueContainer = $(filterContainer).find(".filter-value-container")[0];
+		
+		
+		if(filterValue == null){
+			setInvalidCss($(filterValueContainer));
+			return false;
+		}
+		else{
+			setValidCss($(filterValueContainer));
+			return true;
+		}
+//	}	
+//	else return true;
 }
 
 function areApproveFilterInputsValid(filterContainer){
@@ -418,6 +423,7 @@ function hideDropdown(filterContainer){
 
 function approveFilter(filterContainer){
 	
+//	var prefixText;
 	var beginningTextToShow;
 	var newText;
 	var filterContainerText;
@@ -438,17 +444,44 @@ function approveFilter(filterContainer){
 	else{
 		filterValueText = getFilterValue(filterContainer);	
 	}
-					
+	
+//	prefixText = $(filterContainer).attr("data-display-text-prefix");
 	beginningTextToShow = $(filterContainer).attr("data-display-text");
 	endingTextToShow = getEndingTextToShow(filterContainer);
-	newText = beginningTextToShow + " " + selectedRadioText + " " + filterValueText + " " + endingTextToShow;
+	newText = getNewFilterText(beginningTextToShow, selectedRadioText, filterValueText, endingTextToShow);
+	
 	filterContainerText = $(filterContainer).find(".filter-text")[0];
-
-	filterContainer.addClass("approve-filter");
 	$(filterContainerText).html(newText);
 	
+	filterContainer.addClass("approve-filter");
+
 	$($(filterContainer).find(".remove-filter")[0]).show();
 	hideDropdown(filterContainer);
+	
+}
+
+function getNewFilterText(prefix, radioText, filter, suffix){
+	
+	var newFilterText = "";
+	if(prefix != null && prefix != "") newFilterText += prefix;
+	if(radioText != null && radioText != "") newFilterText += " " + radioText;
+	if(filter != null && filter != ""){
+		
+		if($.isArray($.makeArray(filter)) == 1){
+			
+			newFilterText +=  " " + $(filter[0]).attr("data-display-text");
+			if(filter.length > 1){
+				newFilterText += "...";
+			}
+			
+		}
+		else newFilterText +=  " " + filter;
+	
+		
+	}
+	if(suffix != null && suffix != "") newFilterText += " " + suffix;
+	
+	return newFilterText;
 	
 }
 
@@ -463,17 +496,53 @@ function getEndingTextToShow(filterContainer){
 	}
 }
 
+function hasFilterValueInput(filterContainer){
+	
+	var selectOption;
+	var inputValue;
+	var calendarContainer;
+	var selectedDate;
+	
+	//Attempt to find the select
+	selectOption = $(filterContainer).find("select option:checked")[0];
+	if(selectOption != undefined){		
+		return true;		
+	}
+	
+	//Attempt to find input
+	inputValue = $(filterContainer).find(".input-container input")[0];
+	if(inputValue != undefined && inputValue != ""){
+		return true;
+	}
+	
+	
+	//Attempt to find **single** date calendar
+	calendarContainer = $(filterContainer).find(".calendar-single-date")[0];
+	if(calendarContainer != undefined){
+		return true;		
+	}
+	
+	//Attempt to find **multi** date calendar
+	calendarContainer = $(filterContainer).find(".calendar-multi-date")[0];
+	if(calendarContainer != undefined){
+		return true;		
+	}
+	
+	return false;	
+}
+
 function getFilterValue(filterContainer){
 		
 	var selectOption;
 	var inputValue;
 	var calendarContainer;
 	var selectedDate;
-
+	var checkbox;
+	
 	//Attempt to find the select
 	selectOption = $($(filterContainer).find("select option:checked")[0]).val();
-	if(selectOption != undefined){
-		return selectOption;
+	if(selectOption != undefined){		
+		if(selectOptions != "")	return selectOption;		
 	}
 	
 	//Attempt to find input
@@ -482,6 +551,11 @@ function getFilterValue(filterContainer){
 		return inputValue;
 	}
 	
+	//Attempt to find checkbox
+	checkbox = $(filterContainer).find(".checkbox-container input:checked");
+	if(checkbox != undefined && checkbox != ""){
+		return checkbox;
+	}
 	
 	//Attempt to find **single** date calendar
 	calendarContainer = $(filterContainer).find(".calendar-single-date")[0];
@@ -552,6 +626,31 @@ function doCloseDropdown(clickedElement){
 	}
 }
 
+function appendDurationTypeId(){
+	var param = "";
+	
+//	if(isRadioSelected("duration")){
+//		param += "&durationTypeId=" + getSelectedRadioAttributeValue("duration", "data-filter-value");
+//	}
+//	
+//	return param;
+	
+	
+	
+	
+	var param = "";
+	var durationTypeIds = getSelectedCheckboxesAttributeValue("duration", "data-filter-value");
+	if(durationTypeIds.length > 0){
+		$.each(durationTypeIds, function(){
+			
+			param += "&dt=" + this;
+		})
+	}
+	return param;	
+	
+	
+}
+
 
 function getJobs(doSetMap){
 	
@@ -567,6 +666,7 @@ function getJobs(doSetMap){
 		params += appendDate("end-date-dropdown", "endDate", "beforeEndDate");
 		params += appendDuration();
 		params += appendWorkDays();
+		params += appendDurationTypeId();
 		
 //			params += "&categoryId=-1";
 		

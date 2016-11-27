@@ -181,7 +181,7 @@
 		<c:if test="${yetToStartJobs.size() > 0 }">	
 			<div id="notYetStartedJobsContainer" class="section">
 				<div class="header">
-					<span class="header-text">Jobs Hired For - Waiting To Begin</span>
+					<span class="header-text">Jobs Waiting To Begin</span>
 				</div>
 				
 				<div class="section-body">				

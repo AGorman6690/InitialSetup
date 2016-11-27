@@ -87,16 +87,17 @@ public class JobController {
 			@RequestParam(name = "sortBy", required = false) String sortBy,
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
+			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
 			HttpSession session
 			){
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs);
+				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds);
 	
 		
-		return jobService.getVelocityTemplate_FilterJobs(request, session);
+			return jobService.getVelocityTemplate_FilterJobs(request, session);
 
 
 	}

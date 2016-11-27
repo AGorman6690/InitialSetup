@@ -140,7 +140,7 @@
 								</div>
 							</div>
 							<div class="col-sm-4">
-								<div id="durationFilterContainer" data-display-text="" data-display-text-suffix="Days"
+								<div id="durationFilterContainer" data-display-text="Duration:"
 									 class="filter-container">
 	
 									<div  class="dropdown-container">	
@@ -155,26 +155,55 @@
 									
 									
 									<div id="duration-dropdown" class="dropdown">
-										<div class="radio-container">
-											<div class="radio">
-											  <label><input type="radio" name="duration"
-											  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration"
-											  	data-filter-value="1">Shorter Than</label>
+										<div class="checkbox-container filter-value-container">
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Hours"
+											  	data-filter-value="1">Hours</label>
 											</div>
-											<div class="radio">
-											  <label><input type="radio" name="duration"
-											  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration"
-											  	data-filter-value="0">Longer Than</label>
-											</div>										
-										</div>
-	<!-- 									<div class="select-container">		
-							 -->
-										<div class="filter-value-container">
-											<div class="input-container ">
-										  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" >
-									  		</div>		
-		<!-- 							  		</div>	 -->
-										</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Days"
+											  	data-filter-value="2">Days</label>
+											</div>	
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Weeks"
+											  	data-filter-value="3">Weeks</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Months"
+											  	data-filter-value="4">Months</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Years"
+											  	data-filter-value="5">Years</label>
+											</div>
+											<div class="checkbox">
+											  <label><input type="checkbox" name="duration"
+											  	data-display-text="Hopefully Forever"
+											  	data-filter-value="6">Hopefully Forever</label>
+											</div>																																																				
+										</div>									
+<!-- 										<div class="radio-container"> -->
+<!-- 											<div class="radio"> -->
+<!-- 											  <label><input type="radio" name="duration" -->
+<!-- 											  	data-display-text="Shorter Than" data-filter-dto-prop="lessThanDuration" -->
+<!-- 											  	data-filter-value="1">Shorter Than</label> -->
+<!-- 											</div> -->
+<!-- 											<div class="radio"> -->
+<!-- 											  <label><input type="radio" name="duration" -->
+<!-- 											  	data-display-text="Longer Than" data-filter-dto-prop="lessThanDuration" -->
+<!-- 											  	data-filter-value="0">Longer Than</label> -->
+<!-- 											</div>										 -->
+<!-- 										</div> -->
+<!-- 										<div class="filter-value-container"> -->
+<!-- 											<div class="input-container "> -->
+<!-- 										  		<input type="text" placeholder="Number of days" class="filter-input form-control" data-filter-dto-prop="duration" > -->
+<!-- 									  		</div>		 -->
+<!-- 										</div> -->
 								  		<span class="approve-additional-filter glyphicon glyphicon-ok"></span>
 									</div>
 								</div>

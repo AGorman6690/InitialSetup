@@ -16,7 +16,7 @@ table.main-table-style{
 }
 
 .main-table-style tbody > tr{
-	border-top: 1px outset #F0F0F0;
+	border-top:1px solid #ddd;
 }
 
 .main-table-style tbody tr:first-child{

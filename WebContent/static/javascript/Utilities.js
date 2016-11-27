@@ -233,6 +233,29 @@ function formatTimeTo12Hours(time){
 
 }
 
+function isRadioSelected(radioName){
+	var selectedRadio = $("html").find("input[type='radio'][name='" + radioName + "']:checked")[0];
+	
+	if(selectedRadio == undefined) return false;
+	else return true;
+	
+}
+
+function getSelectedRadioAttributeValue(radioName, attributeName){
+	return $($("html").find("input[type='radio'][name='" + radioName + "']:checked")[0]).attr(attributeName);
+}
+
+function getSelectedCheckboxesAttributeValue(checkboxName, attributeName){
+	
+	var seletedCheckboxes = $("html").find("input[type='checkbox'][name='" + checkboxName + "']:checked"); 
+	var values = [];
+	$.each(seletedCheckboxes, function(){
+		values.push($(this).attr(attributeName));
+	})	
+	return values;
+
+}
+
 function twoDecimalPlaces(value){
 	return parseFloat(Math.round(value * 100) / 100).toFixed(2);
 }

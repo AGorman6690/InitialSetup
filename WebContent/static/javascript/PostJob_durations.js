@@ -627,7 +627,20 @@
 				$(clickedGlyphicon).parent().remove();
 			}
 		}
-	
+		
+		
+		function deleteListItem($listItem, minRequiredListItems){
+			
+			var listContainer = $listItem.closest(".list-container");
+			var listItems = $(listContainer).find(".list-item");
+			if(listItems.length > minRequiredListItems){
+				$listItem.remove();
+			}
+			else{
+				$listItem.find("input").val("");
+			}
+			
+		}	
 		
 		function showTimes(){
 			
@@ -740,17 +753,18 @@
 	function submitJobs(confirmation){
 		
 		if(confirmation == 1){
-			if(validatePostJobInputs(jobs) == 0){
+			
+			//Once we decide how the post jobs page will function (i.e. with or without a cart),
+			//pretty up the DTO.
+			//This is a just a quick hack to get the "without cart" functionality built.
+			var postJobDto = {};
+			postJobDto = getPostJobDto();
+			postJobDto.id = jobCount;			
+			
+			
+//			if(validatePostJobInputs(postJobDto) == 0){
 				var headers = getAjaxHeaders();
-				
-				//Once we decide how the post jobs page will function (i.e. with or without a cart),
-				//pretty up the DTO.
-				//This is a just a quick hack to get the "without cart" functionality built.
-				var postJobDto = {};
-				postJobDto = getPostJobDto();
-				postJobDto.id = jobCount;			
-				
-				
+
 				postJobDto.selectedQuestionIds = [];
 				$.each($("#addedQuestions").find("button"), function(){
 					postJobDto.selectedQuestionIds.push($(this).attr("data-question-id"));
@@ -783,7 +797,7 @@
 	//				$('#home')[0].click();
 				});
 			}
-		}
+//		}
 
 	}
 	
@@ -824,6 +838,14 @@
 		
 		return workDays;
 	}
+	
+	function getDurationTypeId(){
+		return $("#durationsContainer").find(".selected-duration").attr("data-id");
+	}
+	
+	function getDurationUnitLength(){
+		return $("#durationUnitLength").val();
+	}
 
 	function getPostJobDto() {
 		var i;
@@ -835,6 +857,8 @@
 		postJobDto.state = document.getElementsByName('state')[0].value;
 		postJobDto.zipCode = document.getElementsByName('zipCode')[0].value;
 		postJobDto.description = document.getElementsByName('description')[0].value;
+		postJobDto.durationTypeId = getDurationTypeId();
+		postJobDto.durationUnitLength = getDurationUnitLength(); 
 //		job.stringStartDate = $("#dateRange").data('daterangepicker').startDate;
 //		job.stringEndDate =  $("#dateRange").data('daterangepicker').endDate;
 //		job.stringStartTime = formatTime($("#startTime").val());
@@ -865,4 +889,64 @@
 		
 		return postJobDto;
 
+	}
+	
+
+	
+	
+	function showTime(date){
+		
+		var newTimeDiv = null;
+		var $insertBeforeE;
+		var formattedDate = new Date();
+		
+		//Show the times container
+// 		$("#selectAllContainer").show();
+		$("#timesContainer").show(200);
+		
+		
+		//Format the date
+		
+		formattedDate.setTime(date);
+		formattedDate = $.datepicker.formatDate("D M d", formattedDate);
+		
+		//Build the html
+		var html = "<div class='time' data-date='" + workDay.date + "'>"
+					+ "<span>" + formattedDate + "</span>"
+					+ "<div class='time-container'><input class='form-control start-time' type='text'></div>"
+					+ "<div class='time-container'><input class='form-control end-time' type='text'></div>"
+		     		+ "</div>";
+		
+		//By the logic established for calendar date selection,
+		//the second date must be later than the first date.
+		//Therefore, the correct placement does not need to be determined for the first two dates.
+		if(workDays.length < 2){
+			$("#times").append(html);	
+		}
+		else{
+			
+			//Determine which time div element this new date will be place before
+			$insertBeforeE = getInsertBeforeElement(workDay.date);
+			
+			//If the new date is in the middle of the already-added days
+			if($insertBeforeE != null){
+				$(html).insertBefore($insertBeforeE);
+			}
+			//Else the new day is the latest thus far
+			else{
+				$("#times").append(html);	
+			}
+			
+		}
+				
+		//Set the time picker
+		newTimeDiv = $("#times").find("div[data-date='" + workDay.date + "']");
+		$($(newTimeDiv).find("input.start-time")[0]).timepicker({
+			'scrollDefault' : '7:00am'
+		});
+		$($(newTimeDiv).find("input.end-time")[0]).timepicker({
+			'scrollDefault' : '5:00pm'
+		});
+		
+		
 	}

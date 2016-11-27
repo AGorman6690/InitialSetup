@@ -35,6 +35,8 @@ $(document).ready(function(){
 			else{
 				selectedDay = temp;
 			}
+			
+		
 			 
 		},
 	        
@@ -56,6 +58,92 @@ $(document).ready(function(){
 	initializeCalendar();
 	
 })
+
+function initSingleDayCalendar($e){
+	$e.datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1,
+		onSelect: function(dateText, inst) {			
+			var temp = (new Date(dateText)).getTime();
+			
+			if(temp == selectedDay){
+				selectedDay = null;	
+			}
+			else{
+				selectedDay = temp;
+			}
+			 
+		},
+	        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date) {
+
+        	date = date.getTime();   	
+
+			if(date == selectedDay){
+        		return [true, "active111"]; 
+        	}
+        	else{
+        		return [true, ""];
+        	}
+        },
+	
+	})
+}
+
+function initMultiDayCalendar($e){
+	var numberOfMonths = getNumberOfMonths($("#calendar"));
+	
+	$e.datepicker({
+		minDate: new Date(),
+		numberOfMonths: numberOfMonths, 
+		onSelect: function(dateText, inst) {	
+			
+			//There's odd behavior when the user clicks, for example,
+			//the 1st then the 3rd, highlighting the 2nd as part of the range.
+			//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
+			//because the
+            if(selectedDays.length == 3){
+            	rangeIsSet = 1;
+            }
+            
+			selectDate(dateText);
+		},
+	        
+	        // This is run for every day visible in the datepicker.
+	        beforeShowDay: function (date) {
+
+	        	date = date.getTime();
+					if(isDateAlreadySelected(date)){
+		        		return [true, "active111"]; 
+		        	}
+
+//	        	}
+	        	else if(isSecondDaySelected() && !rangeIsSet){
+	        		
+	        		//Add the dates in between the first and second days
+	        		if(isDateInRange(date)){
+	        			
+						if(!isDateAlreadySelected(date)){
+
+	        				addDay(date);
+	        			}
+	        			
+	        			return [true, "active111"];
+	        		}
+	        		else{
+
+	        			return [true, ""];
+	        		}	  
+
+	        	}else{
+	        		return [true, ""];
+	        	}
+
+	        }
+    });
+}
+
 
 	function initializeCalendar(){
 		var numberOfMonths = getNumberOfMonths($("#calendar"));
@@ -255,7 +343,7 @@ function getNumberOfMonths($e){
 	
 
 	function removeActiveDaysFormatting(){
-		var activeDays = $("#calendar").find(".active111");			
+		var activeDays = $("#calendarContainer").find(".active111");			
 		$(activeDays).each(function(){
 			$(this).removeClass("active111");
 		})

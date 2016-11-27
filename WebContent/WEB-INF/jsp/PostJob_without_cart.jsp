@@ -32,6 +32,7 @@
 
 	<div class="container">	
 	<a href="/JobSearch/postJob-without-cart">Post Job - Method 2 - With Cart</a>
+
 		<div id="submitJobContainer" class="button-container">
 <!-- 			<button id="submitJobs" data-confirmed="0" type="button" class="clickable square-button" -->
 <!-- 			 	data-toggle="modal" data-target="#confirmJobSubmit">Submit Job</button> -->

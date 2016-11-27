@@ -13,6 +13,9 @@ class SubmitRatingDTO {
 	@JsonProperty("rateCriteria")
 	List<RateCriterion> rateCriteria
 
+	@JsonProperty("endorsementCategoryIds")
 	List<Integer> endorsementCategoryIds
+	
+	@JsonProperty("commentString")
 	String commentString
 }

@@ -159,6 +159,7 @@
 				<div class="show-more-less"><span class="plus-minus glyphicon glyphicon-plus"></span>
 					<span class="show-more-less-text"> Show more</span>
 				</div>
+			#if ($dtId == 2)
 				<div class="job-dates-times">
 					<div class="start-date-time">
 						##<span class="bold">Start</span> - $date.format("E, M-d, h:m a", $job.startDate) $job.startTime
@@ -173,6 +174,24 @@
 						<span class="bold">Duration</span> - $duration days
 					</div>
 				</div>	
+			#end
+				<div class="job-duration">
+					<span class="bold">Duration</span>
+					#set ($dtId = $job.durationTypeId)
+					#if($dtId == 1)
+						Hours
+					#elseif ($dtId == 2)
+						Days
+					#elseif ($dtId == 3)
+						Weeks
+					#elseif ($dtId == 4)
+						Months
+					#elseif ($dtId == 5)
+						Years
+					#elseif ($dtId == 6)
+						Hopefully Forever
+					#end
+				</div>
 				<div class="job-location">
 					<span class="bold">Location</span> - $job.city, $job.state
 				</div>

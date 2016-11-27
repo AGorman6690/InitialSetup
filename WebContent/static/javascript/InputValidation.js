@@ -35,12 +35,15 @@ $(document).ready(function(){
 
 function isValidatePositiveNumber(value){
 	
-	var isValid = 1;
-	if($.isNumeric(value) == 0){
-		isValid = 0;
+	var isValid = true;
+	if(value == null || value == undefined || value == ""){
+		isValid = false;
+	}
+	else if($.isNumeric(value) == 0){
+		isValid = false;
 	}
 	else if(value < 0){
-		isValid = 0;
+		isValid = false;
 	}
 	
 //	if(isValid){
@@ -162,6 +165,19 @@ function setInvalidCss($e){
 	}	
 }
 
+function validateDates_durations(){
+//	var selectedDates = $("#times").find(".time");
+	var $e = $("#calendarContainer");
+	if(selectedDays.length == 0){
+		setInvalidCss($e);
+		return 0;
+		
+	}else{
+		setValidCss($e);
+		return 1;
+	}
+}
+
 function validateDates(){
 	var selectedDates = $("#times").find(".time");
 	var $e = $("#calendar");
@@ -188,6 +204,30 @@ function validateTimes(){
 	return result;
 }
 
+function validateTimes_singleStartAndEnd(){
+	var $eStartTime = $("#startTime-singleDate");
+	var $eEndTime = $("#endTime-singleDate");
+
+	var isValid = true;
+	if(!isValidInput($eStartTime.val())){
+		setInvalidCss($eStartTime);
+		isValid = false;
+	}
+	else{
+		setValidCss($eStartTime)
+	}
+
+	if(!isValidInput($eEndTime.val())){
+		setInvalidCss($eEndTime);
+		isValid = false;
+	}
+	else{
+		setValidCss($eEndTime)
+	}
+	
+	return isValid;
+}
+
 //function setInvalidSelectCss($e){
 //	if($e.hasClass("invalid-select-input") == 0){
 //		$e.addClass("invalid-select-input");
@@ -205,7 +245,14 @@ function setValidCss($e){
 //	}	
 //}
 
-function validatePostJobInputs(jobs){
+function validatePostJobInputs(postJobDto){
+	
+	//********************************************************************
+	//********************************************************************
+	// Once the post job logic is figured out, this validation needs to be redone.
+	// Currently it's incredibly patched together. 
+	//********************************************************************	
+	//********************************************************************	
 
 	var $e;
 	var result = 0;
@@ -216,7 +263,7 @@ function validatePostJobInputs(jobs){
 	
 	//Verify the job name is unique only if the job name is provided
 	if(result == 0){
-		result += validateJobName(document.getElementsByName('name')[0].value, jobs)	
+//		result += validateJobName(document.getElementsByName('name')[0].value, jobs)	
 	}
 		
 	//Validate job description is provided	
@@ -239,7 +286,16 @@ function validatePostJobInputs(jobs){
 	result += validateDates();
 	
 	//Validate times are set
-	result += validateTimes();
+//	result += validateTimes();
+	if(!validateTimes_singleStartAndEnd()){
+		result += 1;
+	}
+	
+	if(!validateDates_durations()){
+		result += 1;
+	}
+	
+	result += validateDuration(postJobDto.durationTypeId, postJobDto.durationUnitLength);
 	
 //	//Validate date range is selected
 //	$e = $("#dateRange");
@@ -270,6 +326,32 @@ function validatePostJobInputs(jobs){
 //		return true;
 //	}
 	
+}
+
+function validateDuration(durationTypeId, durationUnitLength){
+	
+	var $eDurationUnitLength = $("#durationUnitLength");
+	var $eInvalidDurationLength = $("#invalidDurationLength");
+	var isValid = true;
+	
+	// Weeks, months or years
+	if(durationTypeId == 3 || durationTypeId == 4 || durationTypeId == 5){		
+		if(!isValidatePositiveNumber(durationUnitLength)){
+			isValid = false;
+		}
+	}
+
+	
+	if(isValid){
+		setValidCss($eDurationUnitLength);
+		slideUp($eInvalidDurationLength, 500);
+		return 0;
+	}
+	else{
+		setInvalidCss($eDurationUnitLength);
+		slideDown($eInvalidDurationLength, 500);
+		return 1;
+	}
 }
 
 function validateMinimumSelectedCategories(){
@@ -338,6 +420,9 @@ function isValidInput(value){
 		return 0;
 	}
 	else if(value == ""){
+		return 0;
+	}
+	else if(value == null){
 		return 0;
 	}
 	else{

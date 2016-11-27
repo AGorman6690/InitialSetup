@@ -38,17 +38,41 @@ th#employee{
 }
 
 th#rating{
-	width:45%;
+	width:40%;
+}
+
+th#endorsements{
+	width:20;
 }
 
 th#comment{
-	width:45%;
+	width:30%;
 }
 
 textarea.comment{
 	width: 100%;
     border-radius: 2px;
 }
+
+.endorsement{
+	height:26px;
+	cursor:pointer;
+}
+
+.endorsement .glyphicon{
+	line-height:13px;
+	font-size:17px;
+}
+
+.glyphicon-remove{
+	color:#b30000;
+}
+
+.glyphicon-ok{
+	color:#0A5032;
+}
+
+
 
 table#ratings{
 	width:100%;
