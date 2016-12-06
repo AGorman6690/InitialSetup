@@ -9,6 +9,13 @@ html.waiting * {
 	margin-right:8px;
 }
 
+.selected-blue{
+    background-color: #337ab7;
+    color: #ffffff;
+}
+
+
+
 .mock-anchor{
     color: #5B7BA3;
     cursor:pointer;
@@ -61,6 +68,12 @@ html.waiting * {
     border: 1px solid rgb(192,192,192);
 }
 
+.btn-sqr{
+	border-radius: 0;
+	padding:5px 10px;
+	border: 1px solid rgb(192,192,192);
+}
+
 .square-button:hover{
 	background-color: #163B3D;
 	color:#ffffff;
@@ -77,10 +90,15 @@ html.waiting * {
 }
 
 
-a.accent{
+.accent{
     font-size: 15px;
     font-weight: bold;
     color: #5B7BA3;
+    cursor:pointer;
+}
+
+a.accent.no-hover:hover{
+	text-decoration: none;
 }
 
 span.accent{

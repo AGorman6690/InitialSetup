@@ -4,6 +4,8 @@ $(document).ready(function(){
 		$("#" + idToToggle).toggle(200);
 
 	})
+	
+	
 		
 })
 

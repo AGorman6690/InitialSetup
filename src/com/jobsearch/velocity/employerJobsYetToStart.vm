@@ -11,18 +11,31 @@
 		
 	#else
 		<table id="" class="main-table-style">
-			<thead>
-				<tr>
-					<th class="expand-job-header"></th>
-					<th id="name">Job Name</th>
-					<th id="failedWageNegotiations">Failed Wage Negotiations</th>
-					<th id="newApplicantions">New Applications</th>
-					<th id="totalApplications">Total Applications</th>
-					<th id="hires">Employees</th>									
-					<th id="markJobCompleteHeader"></th>
-					<th></th>
+				<col>
+				<col>
+				<colgroup span="3"></colgroup>
+				<colgroup span="2"></colgroup>
+				<col>
+				<tr class="header-1">
+
+					<td rowspan="1"></td>
+					<td rowspan="1"></td>
+					<th id="headerWageNegotiaions" class="span" colspan="3" scope="colgroup">Wage Negotiations</th>
+					<th id="headerApplications" class="span" colspan="2" scope="colgroup">Applications</th>
+					<td rowspan="1"></td>
+					<tr class="header-2">
+						<th class="expand-job-header"></th>
+						<th id="name">Job Name</th>
+						<th id="" class="left-edge">New</th>
+						<th id="">Waiting</th>
+						<th id="" class="right-edge">Failed</th>
+						<th id="newApplicantions" class="left-edge">New</th>
+						<th id="" class="right-edge">Total</th>
+						<th id="hires">Employees</th>									
+						<th id="markJobCompleteHeader"></th>
+						<th></th>
+					</tr>
 				</tr>
-			</thead>
 			<tbody>
 
 				## for each job
@@ -45,26 +58,35 @@
 				#end
 					
 					<td class="job-name"><a class="accent" href="../job/$jobDto.job.Id" >$jobDto.job.jobName</a></td>
-					<td class=""><span class="">$jobDto.failedWageNegotiationDtos.size()</span></td>
-				## if the job has NEW applications
-				#if($jobDto.job.newApplicationCount > 0)
-					<td class="pop">-</td>
+					<td class="data">-</td>
+					<td class="data">-</td>
+										
+				#if($jobDto.failedWageNegotiationDtos.size() > 0)
+					<td class="data">$jobDto.failedWageNegotiationDtos.size()</td>
 				#else
-					<td><span class="">$jobDto.job.newApplicationCount</span></td>
+					<td class="pop">-</td>					
+				#end
+					
+				## if the job has NEW applications
+				
+				#if($jobDto.job.newApplicationCount > 0)
+					<td class="pop">$jobDto.job.newApplicationCount</td>
+				#else
+					<td class="data">-</td>					
 				#end
 				
 				#set ($applicationCount = $jobDto.job.getApplications().size() )	
 				#if	($applicationCount > 0) 
-					<td class=""><span class="pop">$applicationCount</span></td>
+					<td class="data"><span class="pop">$applicationCount</span></td>
 				#else
-					<td class=""><span class="">-</span></td>
+					<td class="data"><span class="">-</span></td>
 				#end 
 				
 				#set ($employeeCount = $jobDto.job.getEmployees().size() )	
 				#if	($employeeCount > 0)
-					<td class=""><span class="pop">$employeeCount</span></td>
+					<td class="data"><span class="pop">$employeeCount</span></td>
 				#else
-					<td class=""><span class="">-</span></td>
+					<td class="data"><span class="">-</span></td>
 				#end 				
 					
 					<td><a class="square-button-green" href="/JobSearch/job/$jobDto.job.id/update/status/1">Start Job</a></td>

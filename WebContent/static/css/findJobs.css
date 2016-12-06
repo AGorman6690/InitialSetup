@@ -157,7 +157,9 @@ div[data-scroll-to]{
 }
 
 .approve-filter{
-	background-color:#F6C627;
+/* 	background-color:#F6C627; */
+	background-color:#9a7601;
+	color:#ffffff;
 }
 
 #work-days-dropdown{

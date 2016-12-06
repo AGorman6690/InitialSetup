@@ -100,16 +100,7 @@
 			setButtonAsClickable(false, $("#addQuestion"));
 //			disableInputFields(true, "postingContainer");
 			
-			//Format the job inputs
-			
 
-
-//			clearPostJobInputs();
-			//Allow user to still create a job.
-			//Close the job info for user experience.
-//			disableInputFields(false, "jobInfoBody");					
-//			setButtonAsClickable(true, $("#addJobToCart"));
-//			expandInfoBody("jobInfoBody", false);
 			
 		}
 		
@@ -302,16 +293,7 @@
 		
 
 		
-		function clearPostQuestionInputs(){
-			$("#question").val("");
-			$("#questionFormat option[value='-1']").prop("selected", "selected");
-			
-			$("#answerList").find(".answer-container input").each(function(){
-				$(this).val("");
-			});
-			
-			clearInvalidCss();
-		}
+
 		
 		function hideCart(request){
 			if(request == true){
@@ -411,7 +393,7 @@
 		}	
 		
 		function getSelectedQuestion(){
-			var selectedQuestionId = $($("#questionCart").find("button.selected")[0]).attr("data-question-id");
+			var selectedQuestionId = $($("#questionCart").find("a.selected")[0]).attr("data-question-id");
 			selectedQuestionId = parseInt(selectedQuestionId);
 			
 			var selectedQuestion = {};
@@ -489,15 +471,7 @@
 			}
 		}
 		
-		function buttonIsCurrentlySelected(button){
-			if($(button).hasClass("selected") == 1){
-				return true;
-			}
-			else{
-				return false;
-			}
-		}
-		
+
 		
 		function setActionsAsClickable(request, cartId){
 			//The cart id is passed because if the user clicks a job, then only the job
@@ -511,7 +485,6 @@
 				$e.removeClass("actions-not-clickable");
 				$e.addClass("actions-clickable");
 			}else{
-				$e.removeClass("actions-clickable");
 				$e.addClass("actions-not-clickable");
 			}
 			

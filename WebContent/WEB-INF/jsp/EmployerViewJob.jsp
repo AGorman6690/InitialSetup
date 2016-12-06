@@ -8,6 +8,7 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
+	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
 
 </head>
 
@@ -16,55 +17,291 @@
 
 	<div class="container">
 	
-		<div class="">${vtJobInfo }</div>
-
-
-<c:choose>
-	<c:when test="${questions.size() > 0 }">
-		<div class="section">
-			<div class="header2">
-				<span data-toggle-id="questionsContainer">
-					<span class="glyphicon glyphicon-menu-down"></span>
-					<span class="header-text">Questions</span>
-				</span>
+	
+		<div class="row">
+			<div id="sideBarContainer" class="col-sm-2">
+				<div id="applicants" class="first side-bar selected-blue"
+					 data-section-id="applicantsContainer">Applicants</div>
+				<div id="" class="side-bar" data-section-id="employeesContainer">Employees</div>
+				<div id="jobInfo" class="side-bar" data-section-id="jobInfoContainer">Job Information</div>				
+				<div id="questionInfo" class="side-bar" data-section-id="questionsContainer">Questions</div>
 			</div>
-			<div id="questionsContainer" class="section-body">
-				<c:forEach items="${questions }" var="question">
-					<div class="question-container">
-						${question.text }
-						<div class="answer-container">
-							<div class="question-format">
-							<c:choose>
-								<c:when test="${question.formatId == 0}">
-									(Yes or No)
-								</c:when>
-								<c:when test="${question.formatId == 1}">
-									(Short Answer)
-								</c:when>
-								<c:when test="${question.formatId == 2}">
-									(Select One Answer)
-								</c:when>
-								<c:when test="${question.formatId == 3}">
-									(Select One or Multiple Answers)
-								</c:when>
-							</c:choose>
-							</div>
-							<c:choose>
-								<c:when test="${question.formatId == 2 || question.formatId == 3}">
-									<div class="answer-options-container">
-									<c:forEach items="${question.answerOptions }" var="answerOption">
-										<div>${answerOption.text }</div>
-									</c:forEach>
-									</div>
-								</c:when>
-							</c:choose>
-						</div>
+			
+			<div class="col-sm-10" id="sectionContainers">
+				<div id="applicantsContainer" class="section-container">
+
+				<h4>Applicants</h4>
+					
+				<div id="applicantsContainer" class="section-body">
+				<c:choose>
+					
+					
+					<c:when test="${empty applications}">
+						<div>There are currently no applicants for this job</div>
+					</c:when>
+					
+					<c:otherwise>
+					
+						<table id="applicantsTable" class="main-table-style">
+							<thead>
+								<tr>
+									<th id="applicantName">Name</th>
+									<th id="wageNegotiation">Wage Negotiation</th>
+									<th id="rating">Rating</th>
+									<th id="endorsements">Endorsements</th>
+								<c:if test="${questions.size() > 0 }">
+									<th id="questions">
+									<span data-toggle-id="selectQuestionsContainer" >
+										<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
+									</span>					
+										<div id="selectQuestionsContainer">
+											
+											<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
+											<div id="questionsAllOrNoneContainer">
+												<div class="radio">
+												  <label><input id="selectAllQuestions" type="radio" name="questions-all-or-none">All</label>
+												</div>
+												<div class="radio">
+												  <label><input id="selectNoQuestions" type="radio" name="questions-all-or-none">None</label>
+												</div>								
+											</div>
+											<div id="questionListContainer">
+											<c:forEach items="${questions }" var="question">
+												<div class="checkbox">
+													<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
+												</div>
+											</c:forEach>
+											</div>
+										</div>
+									
+															
+									</th>
+								</c:if>							
+									<th id="status">
+										<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
+											<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
+										</span>					
+										<div id="selectStatusContainer">
+											
+											<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
+											<div id="statusAllContainer">
+												<div class="checkbox">
+												  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
+												</div>								
+											</div>									
+											<div id="statusListContainer">
+												<div class="checkbox">
+												  <label><input id="selectStatusSubmitted" type="checkbox" 
+												  		name="status-select" value="0">No Action Taken</label>
+												</div>									
+												<div class="checkbox">
+												  <label><input id="selectStatusDeclined" type="checkbox" 
+												  		name="status-select" value="1">Declined</label>
+												</div>
+												<div class="checkbox">
+												  <label><input id="selectStatusConsidering" type="checkbox"
+												  		name="status-select" value="2">Considering</label>
+												</div>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+								<tbody>
+								<c:forEach items="${applications }" var="application">
+									<tr class="" data-application-status="${application.status }"
+										data-application-id="${application.applicationId }">
+										<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+										
+										<td>
+											<c:choose>
+												<c:when test="${application.currentWageProposal.status == 1 }">
+												<!-- ****** If the current wage proposal has been accepted-->
+													<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
+												</c:when>						
+												<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
+					<!-- 						******* If applicant has made the last wage proposal -->
+													<div id="${application.currentWageProposal.id}" class="counter-offer-container">
+														
+														<div class="offer-context">
+															Applicant asking for 
+															<span id="amount">
+																<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+															</span>
+														</div>									
+														<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
+														<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
+														<div id="${ toggleId}" class="counter-offer-response">
+															<button class="accept-counter">Hire</button>
+															<button class="re-counter">Counter</button>		
+															<button class="decline-counter">Decline</button>							
+															<div class="re-counter-amount-container">
+																<input class="re-counter-amount"></input>
+																<button class="send-counter-offer">Send</button>
+																<button class="cancel-counter-offer">Cancel</button>
+															</div>										
+														</div>
+													</div>
+													<div class="sent-response-notification"></div>	
+												</c:when>
+												<c:otherwise>
+					<!-- 						******* Otherwise the employer has made the last wage proposal -->							
+														<div class="offer-context">
+															You offered   
+															<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+														</div>									
+												</c:otherwise>
+											</c:choose>
+										</td>									
+										
+										<td> ${application.applicant.rating}</td>
+										<td>										
+											<c:forEach items="${application.applicant.endorsements }" var="endorsement">
+											
+												<div class="endorsement">													
+													${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
+												</div>
+											</c:forEach>
+		
+										</td>	
+									<c:if test="${questions.size() > 0 }">
+										<td>
+										<c:forEach items="${application.questions }" var="question">
+											<div data-question-id="${question.questionId }" class="question-container">
+												<div class="question">${question.text }</div>										
+												<div class="answer">
+													<c:set var="answerCount" value="${question.answers.size() }"></c:set>
+													<c:set var="i" value="${0 }"></c:set>
+													<c:forEach items="${question.answers }" var="answer">
+														${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
+														<c:set var="i" value="${i +1 }"></c:set>
+													</c:forEach>
+													
+												</div>
+											</div>
+										</c:forEach>
+										</td>
+									</c:if>			
+		
+		<!-- 								Application Status						 -->
+										<td>
+											<div class="application-status-container">
+												<c:choose>
+													<c:when test="${application.status == 1 }">
+													<button id="" value="1" class="active">Decline</button>
+													</c:when>
+													<c:otherwise>
+													<button id="" value="1" class="">Decline</button>
+													</c:otherwise>
+												</c:choose>
+												<c:choose>
+													<c:when test="${application.status == 2 }">
+													<button id="" value="2" class="active">Consider</button>
+													</c:when>
+													<c:otherwise>
+													<button id="" value="2" class="">Consider</button>
+													</c:otherwise>
+												</c:choose>										
+											</div>
+										</td>
+									</tr>
+								</c:forEach>						
+								</tbody>					
+							</table>			
+						</c:otherwise>			
+					</c:choose>
 					</div>
-				</c:forEach>
-			</div>			
-		</div>			
-	</c:when>
-</c:choose>
+				</div> <!-- end applicants -->				
+
+				
+				<div id="employeesContainer" class="section-container">
+		
+					<h4>Employees</h4>
+					<div id="employees" class="section-body">
+					<c:choose>
+						
+						
+						<c:when test="${empty employees}">
+							<div>There are currently no employees for this job</div>
+						</c:when>
+						
+						<c:otherwise>
+						
+							<table id="employeesTable" class="main-table-style">
+								<thead>
+									<tr>
+										<th id="employeeName">Name</th>
+										<th id="wage">Wage</th>
+										<th id="employeerating">Rating</th>
+									</tr>
+								</thead>
+								<tbody>						
+								<c:forEach items="${employees }" var="employee">
+									<tr>
+										<td><a class="accent" href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
+										<td>${employee.wage }</td>
+										<td>${employee.rating }</td>
+									</tr>	
+								</c:forEach>						
+								</tbody>
+							</table>
+						</c:otherwise>
+					</c:choose>
+					</div>			
+				</div>	
+				
+			
+				<div id="jobInfoContainer" class="section-container">		
+<%-- 					<div class="">${vtJobInfo }</div> --%>
+					<
+				</div>
+				
+				<div id="questionsContainer" class="section-container">
+					<c:choose>
+						<c:when test="${questions.size() > 0 }">
+							<h4>Questions</h4>
+							<div id="questionsContainer" class="section-body">
+								<c:forEach items="${questions }" var="question">
+									<div class="question-container">
+										${question.text }
+										<div class="answer-container">
+											<div class="question-format">
+											<c:choose>
+												<c:when test="${question.formatId == 0}">
+													(Yes or No)
+												</c:when>
+												<c:when test="${question.formatId == 1}">
+													(Short Answer)
+												</c:when>
+												<c:when test="${question.formatId == 2}">
+													(Select One Answer)
+												</c:when>
+												<c:when test="${question.formatId == 3}">
+													(Select One or Multiple Answers)
+												</c:when>
+											</c:choose>
+											</div>
+											<c:choose>
+												<c:when test="${question.formatId == 2 || question.formatId == 3}">
+													<div class="answer-options-container">
+													<c:forEach items="${question.answerOptions }" var="answerOption">
+														<div>${answerOption.text }</div>
+													</c:forEach>
+													</div>
+												</c:when>
+											</c:choose>
+										</div>
+									</div>
+								</c:forEach>
+							</div>						
+						</c:when>
+					</c:choose>
+				</div>
+
+				
+			</div> <!-- end column -->
+
+
 	
 	<c:if test="${not empty vtFailedWageNegotiationsByJob}">
 		<div class="section">
@@ -82,236 +319,11 @@
 	</c:if>
 	
 	
-		<div class="section">
-			<div class="header2">
-				<span data-toggle-id="applicantsContainer">
-					<span class="glyphicon glyphicon-menu-up"></span>
-					<span class="header-text">Applicants</span>
-				</span>
-			</div>
-			
-		<div id="applicantsContainer" class="section-body">
-		<c:choose>
-			
-			
-			<c:when test="${empty applications}">
-				<div>There are currently no applicants for this job</div>
-			</c:when>
-			
-			<c:otherwise>
-			
-				<table id="applicantsTable" class="main-table-style">
-					<thead>
-						<tr>
-							<th id="applicantName">Name</th>
-							<th id="wageNegotiation">Wage Negotiation</th>
-							<th id="rating">Rating</th>
-							<th id="endorsements">Endorsements</th>
-						<c:if test="${questions.size() > 0 }">
-							<th id="questions">
-							<span data-toggle-id="selectQuestionsContainer" >
-								<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
-							</span>					
-								<div id="selectQuestionsContainer">
-									
-									<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
-									<div id="questionsAllOrNoneContainer">
-										<div class="radio">
-										  <label><input id="selectAllQuestions" type="radio" name="questions-all-or-none">All</label>
-										</div>
-										<div class="radio">
-										  <label><input id="selectNoQuestions" type="radio" name="questions-all-or-none">None</label>
-										</div>								
-									</div>
-									<div id="questionListContainer">
-									<c:forEach items="${questions }" var="question">
-										<div class="checkbox">
-											<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
-										</div>
-									</c:forEach>
-									</div>
-								</div>
-							
-													
-							</th>
-						</c:if>							
-							<th id="status">
-								<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
-									<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
-								</span>					
-								<div id="selectStatusContainer">
-									
-									<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
-									<div id="statusAllContainer">
-										<div class="checkbox">
-										  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
-										</div>								
-									</div>									
-									<div id="statusListContainer">
-										<div class="checkbox">
-										  <label><input id="selectStatusSubmitted" type="checkbox" 
-										  		name="status-select" value="0">No Action Taken</label>
-										</div>									
-										<div class="checkbox">
-										  <label><input id="selectStatusDeclined" type="checkbox" 
-										  		name="status-select" value="1">Declined</label>
-										</div>
-										<div class="checkbox">
-										  <label><input id="selectStatusConsidering" type="checkbox"
-										  		name="status-select" value="2">Considering</label>
-										</div>
-									</div>
-								</div>
-							</th>
-						</tr>
-					</thead>
-						<tbody>
-						<c:forEach items="${applications }" var="application">
-							<tr class="" data-application-status="${application.status }"
-								data-application-id="${application.applicationId }">
-								<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
-								
-								<td>
-									<c:choose>
-										<c:when test="${application.currentWageProposal.status == 1 }">
-										<!-- ****** If the current wage proposal has been accepted-->
-											<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
-										</c:when>						
-										<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
-			<!-- 						******* If applicant has made the last wage proposal -->
-											<div id="${application.currentWageProposal.id}" class="counter-offer-container">
-												
-												<div class="offer-context">
-													Applicant asking for 
-													<span id="amount">
-														<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-													</span>
-												</div>									
-												<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
-												<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
-												<div id="${ toggleId}" class="counter-offer-response">
-													<button class="accept-counter">Hire</button>
-													<button class="re-counter">Counter</button>		
-													<button class="decline-counter">Decline</button>							
-													<div class="re-counter-amount-container">
-														<input class="re-counter-amount"></input>
-														<button class="send-counter-offer">Send</button>
-														<button class="cancel-counter-offer">Cancel</button>
-													</div>										
-												</div>
-											</div>
-											<div class="sent-response-notification"></div>	
-										</c:when>
-										<c:otherwise>
-			<!-- 						******* Otherwise the employer has made the last wage proposal -->							
-												<div class="offer-context">
-													You offered   
-													<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-												</div>									
-										</c:otherwise>
-									</c:choose>
-								</td>									
-								
-								<td> ${application.applicant.rating}</td>
-								<td>										
-									<c:forEach items="${application.applicant.endorsements }" var="endorsement">
-									
-										<div class="endorsement">													
-											${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
-										</div>
-									</c:forEach>
 
-								</td>	
-							<c:if test="${questions.size() > 0 }">
-								<td>
-								<c:forEach items="${application.questions }" var="question">
-									<div data-question-id="${question.questionId }" class="question-container">
-										<div class="question">${question.text }</div>										
-										<div class="answer">
-											<c:set var="answerCount" value="${question.answers.size() }"></c:set>
-											<c:set var="i" value="${0 }"></c:set>
-											<c:forEach items="${question.answers }" var="answer">
-												${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
-												<c:set var="i" value="${i +1 }"></c:set>
-											</c:forEach>
-											
-										</div>
-									</div>
-								</c:forEach>
-								</td>
-							</c:if>			
-
-<!-- 								Application Status						 -->
-								<td>
-									<div class="application-status-container">
-										<c:choose>
-											<c:when test="${application.status == 1 }">
-											<button id="" value="1" class="active">Decline</button>
-											</c:when>
-											<c:otherwise>
-											<button id="" value="1" class="">Decline</button>
-											</c:otherwise>
-										</c:choose>
-										<c:choose>
-											<c:when test="${application.status == 2 }">
-											<button id="" value="2" class="active">Consider</button>
-											</c:when>
-											<c:otherwise>
-											<button id="" value="2" class="">Consider</button>
-											</c:otherwise>
-										</c:choose>										
-									</div>
-								</td>
-							</tr>
-						</c:forEach>						
-						</tbody>					
-					</table>			
-				</c:otherwise>			
-			</c:choose>
-			</div>
-		</div> <!-- end applicants -->
+		</div>
 		
-		<div class="section">
-			<div class="header2">
-				<span data-toggle-id="employeesContainer">
-					<span class="glyphicon glyphicon-menu-up"></span>
-					<span class="header-text">Employees</span>
-				</span>
-			</div>
-			
-			<div id="employeesContainer" class="section-body">
-			<c:choose>
-				
-				
-				<c:when test="${empty employees}">
-					<div>There are currently no employees for this job</div>
-				</c:when>
-				
-				<c:otherwise>
-				
-					<table id="employeesTable" class="main-table-style">
-						<thead>
-							<tr>
-								<th id="employeeName">Name</th>
-								<th id="wage">Wage</th>
-								<th id="employeerating">Rating</th>
-							</tr>
-						</thead>
-						<tbody>						
-						<c:forEach items="${employees }" var="employee">
-							<tr>
-								<td><a class="accent" href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
-								<td>${employee.wage }</td>
-								<td>${employee.rating }</td>
-							</tr>	
-						</c:forEach>						
-						</tbody>
-					</table>
-				</c:otherwise>
-			</c:choose>
-			</div>			
-		</div>			
 	</div>
+	
 </body>
 
 

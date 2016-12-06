@@ -22,13 +22,23 @@
 	
 	
 	<div class="container">
+	
+		<div id="jobTypeSelectionBoard">
+			<div id="jobsWaitingToStart" class="job-type selected-blue">Waiting To Start</div>
+			<div id="jobsInProcess" class="job-type">In Process</div>
+			<div id="jobsCompleted" class="job-type">Completed</div>			
+		</div>
+		
+	
+	
+	
 <%-- 		<div>${vtFailedWageNegotiations }</div> --%>
-		<div>${vtYetToStartJobs }</div>
-		<div>${vtActiveJobs }</div>
+		<div id="waiting" class="job-type-section">${vtYetToStartJobs }</div>
+		<div id="active" class="job-type-section">${vtActiveJobs }</div>
 
 		<c:choose>
 			<c:when test="${completedJobs.size() >0 }">			
-				<div class="section completed-jobs-container">
+				<div id="complete" class="section completed-jobs-container job-type-section">
 					<div class="header"><h3>Completed Jobs</h3></div>
 					<div class="section-body">
 						<table id="" class="main-table-style">
@@ -90,6 +100,31 @@ $(document).ready(function(){
 
 		});
 		
+	})
+	
+	$(".job-type").click(function(){
+		
+		var id = $(this).attr("id");
+		var sectionIdToShow;
+		highlightArrayItem(this, $("#jobTypeSelectionBoard").find(".job-type"), "selected-blue");
+		
+		$.each($("body").find(".job-type-section"), function(){
+			$(this).hide();
+		})
+		
+		
+		if(id == "jobsWaitingToStart"){
+			sectionIdToShow = "waiting";
+		}
+		else if(id == "jobsInProcess"){
+			sectionIdToShow = "active";
+		}
+		else if(id == "jobsCompleted"){
+			sectionIdToShow = "complete";
+		}
+		
+		$("#" + sectionIdToShow).show();	
+				
 	})
 	
 

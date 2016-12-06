@@ -29,6 +29,7 @@ th.expand-job-header{
 
 th#name{
 	width:20%;
+	text-align:left;
 }
 
 th#failedWageNegotiations{
@@ -131,4 +132,60 @@ th.applicant-wage-negotiation{
 
 .active-jobs-container{
     width: 800px;
+}
+
+.job-type{
+	cursor:pointer;
+	padding:10px;
+	border: 1px solid rgb(192,192,192);
+	margin: 5px 2px;
+    font-size: 16px;
+    overflow:hidden;
+	width:150px;
+	display:inline-block;
+}
+
+#jobTypeSelectionBoard{
+	padding-top:25px;
+}
+
+#active, #complete{
+	display:none;
+}
+
+th.span{
+	text-align:center;
+	border-right: 2px solid #337ab7;
+    border-left: 2px solid #337ab7;
+}
+
+tr.header-1{
+	text-align:center;
+
+}
+
+tr.header-2{
+	border-top:0 !important;
+}
+
+tr.header-2 .left-edge{
+	border-left: 2px solid #337ab7;
+}
+
+tr.header-2 .right-edge{
+	border-right: 2px solid #337ab7;
+}
+
+#headerWageNegotiaions, #headerApplications{
+
+}
+
+th{
+	font-weight:100;
+	font-size:16px;
+	text-align:center;
+}
+
+td.data{
+	text-align:center;
 }

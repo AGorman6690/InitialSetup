@@ -24,411 +24,387 @@
 	<script	src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 	<script	src="<c:url value="/static/javascript/PostJob_durations.js" />"></script>
 	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script>
-	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>
 		
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 		
 </head>
 
 <body>
-						
 
 	<div class="container">	
 <!-- 	<a href="/JobSearch/postJob-with-cart">Post Job - Method 2 - With Cart</a> -->
 <!-- 	<div><a href="/JobSearch/postJob-without-cart">Post Job - Method 3 - WithOUT Cart</a></div> -->
 	
 		<div class="row">
-			<div id="sideBarContainer" class="col-sm-2">
-				<div id="general" class="first side-bar selected-blue" data-section-id="generalContainer">General</div>
-				<div id="date" class="side-bar" data-section-id="datesContainer">Dates</div>
-				<div id="location" class="side-bar" data-section-id="locationContainer">Location</div>
-				<div id="compensation" class="side-bar" data-section-id="compensationContainer">Compensation</div>
-				<div id="categories" class="side-bar" data-section-id="categoriesContainer">Categories</div>
-				<div id="questions" class="side-bar" data-section-id="questionsContainer">Questions</div>
-				<div id="employeeSkills" class="side-bar" data-section-id="employeeSkillsContainer">Employee Skills</div>					
+			<div class="col-sm-2">
+				<div id="postingCriteriaContainer">
+					<div id="general" class="posting-criteria">General</div>
+					<div id="date" class="posting-criteria">Dates</div>
+					<div id="location" class="posting-criteria">Location</div>
+					<div id="compensation" class="posting-criteria">Compensation</div>
+					<div id="categories" class="posting-criteria">Categories</div>
+					<div id="questions" class="posting-criteria">Questions</div>
+					<div id="employeeSkills" class="posting-criteria">Employee Skills</div>					
+				</div>
 			</div>
 			
-			<div class="col-sm-10" id="sectionContainers">
-				<div id="generalContainer" class="section-container">
+			<div class="col-sm-10">
+				<div id="generalContainer">
 					<div class="section-body">
 						<h4>General</h4>
 						<div class="body-element-container form-group ">
-
 							<div class="input-container">
 								<div id="invalidJobName" class="invalid-message">Job names must be unique</div>
-								<div class="row">
-									<div class="col-sm-3">
-										<label for="description"
-											class="form-control-label">Employment Type</label>
-									</div>
-									<div class="col-sm-9">
-										<div id="employmentTypeContainer">
-											<div class="radio">
-											  <label><input value="0" id="employmentType_employee" type="radio" name="employmentType">Employee</label>
-											</div>
-											<div class="radio">
-											  <label><input value="1" id="employmentType_contractor" type="radio" name="employmentType">Contractor</label>
-											</div>
-										</div>						
-									</div>			
-								</div>
+								<label for="name"
+									class="form-control-label">Name</label>
+								<input name="name" type="text" class="form-control"
+									id="name" value=""></input>
+							</div>
+							<div class="input-container">
+								<label for="description"
+									class="form-control-label">Description</label>
+								<textarea name="description" class="form-control"
+									id="description" rows="3"></textarea>
 							</div>
 							
 							<div class="input-container">
-								<div id="invalidJobName" class="invalid-message">Job names must be unique</div>
-								<div class="row">
-									<div class="col-sm-3">
-										<label for="name"
-											class="form-control-label">Job Name</label>
+								<label for="description"
+									class="form-control-label">Employment Type</label>
+								<div id="employmentTypeContainer">
+									<div class="radio">
+									  <label><input value="0" id="employmentType_employee" type="radio" name="employmentType">Employee</label>
 									</div>
-									<div class="col-sm-9">
-										<input name="name" type="text" class="form-control"
-											id="name" value=""></input>								
-									</div>			
-								</div>
-							</div>
-							
-							<div class="input-container">
-								<div id="invalidJobName" class="invalid-message">Job names must be unique</div>
-								<div class="row">
-									<div class="col-sm-3">
-										<label for="description"
-											class="form-control-label">Job Description</label>
+									<div class="radio">
+									  <label><input value="1" id="employmentType_contractor" type="radio" name="employmentType">Contractor</label>
 									</div>
-									<div class="col-sm-9">
-										<textarea name="description" class="form-control"
-											id="description" rows="6"></textarea>							
-									</div>			
 								</div>
-							</div>
-
-
-
-						
+							</div>								
 							
 						</div>					
 					</div>	
 				</div>
 				
-				<div id="datesContainer" class="section-container">
-					<div class="section-body">
-						<h4>Dates</h4>
-						<div class="body-element-container form-group ">
-						<div id="durationQuestion" class="section-sub-head">How long will the job last?</div>
-							<div id="durationsContainer" class="body-element-container">
-								
-								<div id="durations">
-									<div id="hours" class="duration" data-id="1">Hours</div>
-									<div id="days" class="duration" data-id="2">Days</div>
-<!-- 									<div id="weeks" class="duration" data-id="3">Weeks</div> -->
-									<div id="months" class="duration" data-id="4">Months</div>
-<!-- 									<div id="years" class="duration" data-id="5">Years</div> -->
-									<div id="hopefullyForever" class="duration" data-id="6">Hopefully Forever</div>
+				<div id="dateContainer">
+						<div class="section-body">
+							<h4>Dates</h4>
+							<div class="body-element-container form-group ">
+								<div id="durationsContainer">
+									<div id="durationQuestion">How long will the job last?</div>
+									<div id="durations">
+										<div id="hours" class="duration" data-id="1">Hours</div>
+										<div id="days" class="duration" data-id="2">Days</div>
+										<div id="weeks" class="duration" data-id="3">Weeks</div>
+										<div id="months" class="duration" data-id="4">Months</div>
+										<div id="years" class="duration" data-id="5">Years</div>
+										<div id="hopefullyForever" class="duration" data-id="6">Hopefully Forever</div>
+									</div>
 								</div>
-							</div>
+							</div>					
+						</div>		
+				
+				</div>
+			</div>
+		</div>
+	
+	
+
+	
+
+		<div id="infoContainer">	
+			<div id="submitJobContainer" class="button-container">
+	 			<button id="submitJobs" data-confirmed="0" type="button" class="clickable square-button">Submit Job</button>
+			</div>						
+			<div id="postingContainer">
+				<div id="jobTypeInfo" class="section info-container">
+					<div class="header">
+						<span data-toggle-id="jobTypeInfoBody" data-toggle-speed="0">
+							<span class="glyphicon glyphicon-menu-down"></span>
+							<span class="header-text">Job Type</span>
+						</span>				
+					</div>
+					<div id="jobTypeInfoBody">
+						<div class="section-body">
+							<h4>Duration</h4>
+							<div class="body-element-container form-group ">
+								<div id="durationsContainer">
+									<div id="durationQuestion">How long will the job last?</div>
+									<div id="durations">
+										<div id="hours" class="duration" data-id="1">Hours</div>
+										<div id="days" class="duration" data-id="2">Days</div>
+										<div id="weeks" class="duration" data-id="3">Weeks</div>
+										<div id="months" class="duration" data-id="4">Months</div>
+										<div id="years" class="duration" data-id="5">Years</div>
+										<div id="hopefullyForever" class="duration" data-id="6">Hopefully Forever</div>
+									</div>
+								</div>
+							</div>					
+						</div>		
+						<div class="section-body">
+							<h4>Employment Type</h4>
+							<div class="body-element-container ">
+								<div id="employmentTypeContainer">
+									<div class="radio">
+									  <label><input value="0" id="employmentType_employee" type="radio" name="employmentType">Employee</label>
+									</div>
+									<div class="radio">
+									  <label><input value="1" id="employmentType_contractor" type="radio" name="employmentType">Contractor</label>
+									</div>
+								</div>
+							</div>					
 						</div>	
-						
-						<div id="durationFollowUp">
-							<div class="body-element-container form-group ">
-								<div id="calendarSelectionNote" class="section-sub-head"></div>
-								<div class="input-container body-element-container">								
-									<div id="calendarContainer">
-										<div id="calendar-single-day" data-is-showing-job="0">
-										</div>
-										<div id="calendar-multi-day" data-is-showing-job="0">
-										</div>											
-										<button class="square-button" id="clearCalendar">Clear</button>
-									</div>
-								</div>															
-							</div>			
-							
-							<div class="body-element-container form-group ">
-								<div class="section-sub-head">Specify start and end times</div>
-								<div id="timeContainer-SingleDate" class="body-element-container input-container" >
-									
-									<div class="input-container">
-										<label for="startTime"
-											class="form-control-label">Start Time</label>
-										<input id="startTime-singleDate" name="startTime" type="text" class="form-control time-input"
-											value=""></input>
-									</div>
-									<div class="input-container">
-										<label for="endTime"
-											class="form-control-label">End Time</label>
-										<input id="endTime-singleDate" name="endTime" type="text" class="form-control time-input"
-											value=""></input>
-									</div>
-								</div>		
-							</div>	
-												
-							<div class="body-element-container contractor-content">
-								<div class="section-sub-head">Allow contractor to submit alternate dates?</div>
-								<div class="body-element-container" >
-									<div class="radio">
-									  <label><input type="radio" name="allow-alternate-days" value="0">No</label>
-									</div>
-									<div class="radio">
-									  <label><input type="radio" name="allow-alternate-days" value="1">Yes</label>
-									</div>
-								</div>		
-							</div>		
-							
-							<div class="body-element-container contractor-content">
-								<div class="section-sub-head">Allow contractor to submit alternate times?</div>
-								<div class="body-element-container" >
-									<div class="radio">
-									  <label><input type="radio" name="allow-alternate-days" value="0">No</label>
-									</div>
-									<div class="radio">
-									  <label><input type="radio" name="allow-alternate-days" value="1">Yes</label>
-									</div>
-								</div>		
-							</div>												
-						</div>																
+					</div>								
+				</div>															
+		
+				<div id="jobInfo" class="section info-container">
+					<div class="header">
+						<span data-toggle-id="jobInfoBody" data-toggle-speed="-1">
+							<span class="glyphicon glyphicon-menu-down"></span>
+							<span class="header-text">Job Info</span>
+						</span>
 					</div>	
-				</div>
-				
-				<div id="locationContainer" class="section-container">
-					<div class="section-body">
-						<h4>Location</h4>
-						<div class="body-element-container form-group ">
-							<div class="input-container">
-								<label for="streetAddress"
-									class="form-control-label">Street Address</label>
-								<input name="streetAddress" type="text" class="form-control"
-									id="streetAddress" value=""></input>
-							</div>
-							<div class="input-container">
-								<label for="city"
-									class="form-control-label">City</label>
-								<input name="city" type="text" class="form-control"
-									id="city" value=""></input>
-							</div>
-							<div class="input-container">
-								<label for="streetAddress"
-									class="form-control-label">State</label>
-								<select id="state" name="state" class="form-control"></select>	
-							</div>
-							<div class="input-container">
-								<label for="zipCode"
-									class="form-control-label">Zip Code</label>
-								<input name="zipCode" type="text" class="form-control"
-									id="zipCode" value=""></input>
-							</div>
-						</div>					
-					</div>				
-				</div>
-				
-				<div id="compensationContainer" class="section-container">
-					<div class="section-body">
-						<h4>Compensation</h4>
-						<div class="body-element-container">
-							<div>
-															
-								<div class="body-element-container input-container contractor-content">
-								
-									<div class="row">
-										<div class="col-sm-2">
-											<label for="description"
-												class="form-control-label">Method</label>
+					<div id="jobInfoBody">
+						<div class="section-body">
+							<h4>General</h4>
+							<div class="body-element-container form-group ">
+								<div class="input-container">
+									<div id="invalidJobName" class="invalid-message">Job names must be unique</div>
+									<label for="name"
+										class="form-control-label">Name</label>
+									<input name="name" type="text" class="form-control"
+										id="name" value=""></input>
+								</div>
+								<div class="input-container">
+									<label for="description"
+										class="form-control-label">Description</label>
+									<textarea name="description" class="form-control"
+										id="description" rows="3"></textarea>
+								</div>
+							</div>					
+						</div>				
+						<div class="section-body">
+							<h4>Location</h4>
+							<div class="body-element-container form-group ">
+								<div class="input-container">
+									<label for="streetAddress"
+										class="form-control-label">Street Address</label>
+									<input name="streetAddress" type="text" class="form-control"
+										id="streetAddress" value=""></input>
+								</div>
+								<div class="input-container">
+									<label for="city"
+										class="form-control-label">City</label>
+									<input name="city" type="text" class="form-control"
+										id="city" value=""></input>
+								</div>
+								<div class="input-container">
+									<label for="streetAddress"
+										class="form-control-label">State</label>
+									<select id="state" name="state" class="form-control"></select>	
+								</div>
+								<div class="input-container">
+									<label for="zipCode"
+										class="form-control-label">Zip Code</label>
+									<input name="zipCode" type="text" class="form-control"
+										id="zipCode" value=""></input>
+								</div>
+							</div>					
+						</div>
+					
+						<div class="section-body">
+							<h4 id="datesHeader">Dates</h4>
+								<div class="body-element-container form-group ">
+									<div class="input-container">
+										<div id="calendarContainer">
+											<div id="calendar-single-day" data-is-showing-job="0">
+											</div>
+											<div id="calendar-multi-day" data-is-showing-job="0">
+											</div>											
+											<button class="square-button" id="clearCalendar">Clear</button>
 										</div>
-										<div class="col-sm-10">
+									</div>	
+									<div id="numberOfDuration" class="input-container" >
+										<div id="invalidDurationLength" class="invalid-message">Duration length must be a positive number</div>
+										<div id="durationUnitLengthContainer" class="input-container">
+											<label id="numberOf-label" for="durationUnitLength"
+												class="form-control-label">Number of</label>
+											<input id="durationUnitLength" name="startTime" type="text" class="form-control time-input"
+												value=""></input>
+										</div>
+									</div>																
+								</div>					
+						</div>
+						<div id="timeSectionBody" class="section-body">
+							<h4 id="timesHeader">Times</h4>
+								<div class="body-element-container form-group ">
+									
+									<div id="timeContainer-SingleDate" class="input-container" >
+										<div class="input-container">
+											<label for="startTime"
+												class="form-control-label">Start Time</label>
+											<input id="startTime-singleDate" name="startTime" type="text" class="form-control time-input"
+												value=""></input>
+										</div>
+										<div class="input-container">
+											<label for="endTime"
+												class="form-control-label">End Time</label>
+											<input id="endTime-singleDate" name="endTime" type="text" class="form-control time-input"
+												value=""></input>
+										</div>
+									</div>		
+																
+<!-- 									<div id="timeContainer-MultiDate" class="input-container"> -->
+<!--  										<label class="form-control-label">Times</label> --> 
+<!-- 										<div id="timeInputsContainer"> -->
+<!-- 											<div id="selectAllContainer" class=""> -->
+<!-- 												<span id="expandSelectedDates" class="glyphicon glyphicon-menu-up"></span> -->
+<!-- 												<span id="setAllLabel">Set All Dates</span> -->
+<!-- 												<div class="form-group time-container"> -->
+<!-- 												  <label for="allStartTimes">Start Time</label> -->
+<!-- 												  <input type="text" class="form-control" id="allStartTimes"> -->
+<!-- 												</div> -->
+<!-- 												<div class="form-group time-container"> -->
+<!-- 												  <label for="allEndTimes">End Time</label> -->
+<!-- 												  <input type="text" class="form-control" id="allEndTimes"> -->
+<!-- 												</div>		 -->
+<!-- 												<span id="applyTimesToAllDates" class="glyphicon glyphicon-ok"></span>								 -->
+<!-- 			   								</div>							 -->
+											
+				
+<!-- 											<div id="times">												 -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+								</div>	
+												
+						</div>			
+						<div class="section-body">
+							<h4>Pay</h4>
+								<div class="body-element-container">
+									<div>
+										<div class="sub-header">Method</div>								
+										<div class="body-element-container input-container">
 											<div class="radio">
-											  <label><input type="radio" name="pay-method">By the hour</label>
+											  <label><input type="radio" name="pay-method">By Hour</label>
 											</div>
 											<div class="radio">
-											  <label><input type="radio" name="pay-method">By the job</label>
+											  <label><input type="radio" name="pay-method">By Job</label>
 											</div>
 											<div id="pay-method-salary" class="radio">
 											  <label><input type="radio" name="pay-method">Salary</label>
-											</div>						
-										</div>			
-									</div>								
-								</div>
-							</div>
-							<div>
-							
-								<div class="body-element-container">	
-									<div class="row">
-										<div class="col-sm-2">
-											<label for="description"
-												class="form-control-label">Range</label>
+											</div>
 										</div>
-										<div class="col-sm-10">
+									</div>
+									<div>
+										<div class="sub-header">Range</div>
+										<div class="body-element-container input-container">
 											<div class="radio">
-											  <label><input value="0" type="radio" name="pay-range">No, accept all offers</label>
+											  <label><input value="0" type="radio" name="pay-range">No</label>
 											</div>
 											<div class="radio">
-											  <label><input value = "1" type="radio" name="pay-range">Yes, only accept offers between:</label>
-											</div>	
-											<div id="payRangeContainer"> 
+											  <label><input value = "1" type="radio" name="pay-range">Yes</label>
+											</div>
+											<div id="payRangeContainer" class="body-element-container">										
 												<div id="minPayContainer" class="form-group">
 													<label for="startTime"
 														class="form-control-label">Min</label>
-													<input id="minPay" name="" type="text" class="form-control"
+													<input id="startTime-singleDate" name="startTime" type="text" class="form-control time-input"
 														value=""></input>												
 												</div>
 												<div id="maxPayContainer" class="form-group">
 													<label for="startTime"
 														class="form-control-label">Max</label>
-													<input id="maxPay" name="" type="text" class="form-control"
+													<input id="startTime-singleDate" name="startTime" type="text" class="form-control time-input"
 														value=""></input>												
 												</div>	
-											</div>																
-										</div>			
-									</div>																				 									
-								</div>		
-								
-							</div>
-						</div>												
-					</div>					
-				</div>
-				
-				<div id="categoriesContainer" class="section-container">
-					<div class="section-body">
-						<h4>Categories</h4>
-						<div class="job-sub-info">
-							<div id="invalidCategoryInput-None" class="invalid-message">At least one category must be selected</div>
-							<div id="invalidCategoryInput-TooMany" class="invalid-message">A maximum of five categories can be selected</div>										
-<!-- 									Eventaully render this with jstl -->
-<!-- 									//********************************************************************************* -->
-<!-- 									//********************************************************************************* -->
-						
-							<div id="selectedCategories">
-							</div>
-						
-						
-							<ul id="categoryTree" class="list-group ">
-								<li class="category-list-item list-group-item"
-									data-cat-id="1" data-super-cat-id="0" data-level="0"
-									data-sub-categories-set="0">
-									<span style="float:left" class="category-name level-zero">Concrete</span>	
-									<span style="font-size: 1em; float:left"
-										class="add-category glyphicon glyphicon-plus"></span>																					 
-									<span style="font-size: 1em; display: inline-block" 
-										class="show-sub-categories glyphicon glyphicon-menu-down"></span>
-								
-								</li>
-							
-								<li class="category-list-item list-group-item"
-								data-cat-id="3" data-super-cat-id="0" data-level="0"
-								data-sub-categories-set="0">
-									<span class="category-name level-zero">Construction</span>	
-									<span style="font-size: 1em" 
-										class="add-category glyphicon glyphicon-plus"></span>												 
-									<span style="font-size: 1em" 
-										class="show-sub-categories glyphicon glyphicon-menu-down"></span>
-								
-								</li>
-								<li class="category-list-item list-group-item"
-								data-cat-id="2" data-super-cat-id="0" data-level="0"
-								data-sub-categories-set="0">
-									<span class="category-name level-zero">Landscape</span>	
-									<span style="font-size: 1em" 
-										class="add-category glyphicon glyphicon-plus"></span>												 
-									<span style="font-size: 1em" 
-										class="show-sub-categories glyphicon glyphicon-menu-down"></span>
-								
-								</li>
-								
-								<li class="category-list-item list-group-item"
-								data-cat-id="9" data-super-cat-id="0" data-level="0"
-								data-sub-categories-set="0">											 
-									<span class="category-name level-zero">Snow Removal</span>
-									<span style="font-size: 1em" 
-										class="add-category glyphicon glyphicon-plus"></span>													
-									<span style="font-size: 1em" 
-										class="show-sub-categories glyphicon glyphicon-menu-down"></span>
-								
-								</li>										
-							</ul>
-						</div>
-<!-- 									Eventaully render this with jstl -->
-<!-- 									//********************************************************************************* -->
-<!-- 									//********************************************************************************* -->
-
-					</div>						
-														
-				</div>
-				
-				<div id="questionsContainer" class="section-container">
-					<div class="section-body">
-						<h4>Questions</h4>
-<!-- 						<div id="cartContainer" class="body-element-container actions-not-clickable"> -->
-<!-- 							<div class="action-container"> -->
-<!-- 								<span id="deleteQuestion" class="delete action">Delete</span> -->
-<!-- 							</div> -->
-<!-- 							<div class="action-container"> -->
-<!-- 								<span id="editQuestion" class="action requires-acknowledgement">Edit</span> -->
-<!-- 								<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span> -->
-<!-- 							</div> -->
-<!-- 							<div class="action-container"> -->
-<!-- 								<span id="copyQuestion" class="action">Copy</span> -->
-<!-- 							</div>		 -->
-
-<!-- 						</div>							 -->
-						<div class="body-element-container">
-							<button id="addQuestion" class="clickable btn-sqr selected-blue">Add</button>
-							<button id="deleteQuestion" class="selected-question-action not-clickable btn-sqr selected-blue">Delete</button>
-							<button id="editQuestion" class="selected-question-action not-clickable btn-sqr selected-blue">Edit</button>
-							<span id="saveEditQuestionChanges" class="selected-question-action glyphicon glyphicon-ok"></span>
-							<span id="cancelEditQuestionChanges" class="selected-question-action glyphicon glyphicon-remove"></span>
-							<span id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</span>
-						
-							<div id="cartContainer" class="actions-not-clickable">
-								<div id="questionCart" class="" data-edit="0">
-									<div id="addedQuestions"></div>
-								</div>
-							</div>
+											</div>											 									
+										</div>		
+										
+									</div>
+								</div>												
 						</div>			
-						
-						<div class="body-element-container form-group ">
-							<div class="section-sub-head">Question Format</div>
-							<select id="questionFormat" class="question-formats form-control" title="">
-							  <option selected value="-1" style="display: none"></option>	
-							  <option class="answer-format-item" value="0">Yes or No</option>
-							  <option class="answer-format-item" value="1">Short Answer</option>
-							  <option class="answer-format-item" value="2">Single Answer</option>
-							  <option class="answer-format-item" value="3">Multiple Answer</option>
-							</select>
-						</div>					
-						
-						<div class="body-element-container form-group ">
-							<div class="section-sub-head">Question</div>
-							<textarea id="question" class="form-control" rows="2"></textarea>
-						</div>					
-						
-						<div id="answerListContainer"  class="body-element-container form-group ">
-							<div class="section-sub-head">Answers</div>
-							<div id="answerList">
-								<div class="answer-container">
-									<span class="delete-answer glyphicon glyphicon-remove"></span>
-									<input class="form-control answer-option">
-								</div>
-								<div class="answer-container">
-									<span class="delete-answer glyphicon glyphicon-remove"></span>
-									<input class="form-control answer-option">
-								</div>
-							</div>
-							<span id="addAnswer" class="glyphicon glyphicon-plus"></span>
-						</div>					
-					</div>																							
+															
+						<div class="section-body">
+							<h4>Categories</h4>
+											<div class="job-sub-info">
+												<div id="invalidCategoryInput-None" class="invalid-message">At least one category must be selected</div>
+												<div id="invalidCategoryInput-TooMany" class="invalid-message">A maximum of five categories can be selected</div>										
+		<!-- 									Eventaully render this with jstl -->
+		<!-- 									//********************************************************************************* -->
+		<!-- 									//********************************************************************************* -->
+											
+												<div id="selectedCategories">
+												</div>
+											
+											
+												<ul id="categoryTree" class="list-group ">
+													<li class="category-list-item list-group-item"
+														data-cat-id="1" data-super-cat-id="0" data-level="0"
+														data-sub-categories-set="0">
+														<span style="float:left" class="category-name level-zero">Concrete</span>	
+														<span style="font-size: 1em; float:left"
+															class="add-category glyphicon glyphicon-plus"></span>																					 
+														<span style="font-size: 1em; display: inline-block" 
+															class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+													
+													</li>
+												
+													<li class="category-list-item list-group-item"
+													data-cat-id="3" data-super-cat-id="0" data-level="0"
+													data-sub-categories-set="0">
+														<span class="category-name level-zero">Construction</span>	
+														<span style="font-size: 1em" 
+															class="add-category glyphicon glyphicon-plus"></span>												 
+														<span style="font-size: 1em" 
+															class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+													
+													</li>
+													<li class="category-list-item list-group-item"
+													data-cat-id="2" data-super-cat-id="0" data-level="0"
+													data-sub-categories-set="0">
+														<span class="category-name level-zero">Landscape</span>	
+														<span style="font-size: 1em" 
+															class="add-category glyphicon glyphicon-plus"></span>												 
+														<span style="font-size: 1em" 
+															class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+													
+													</li>
+													
+													<li class="category-list-item list-group-item"
+													data-cat-id="9" data-super-cat-id="0" data-level="0"
+													data-sub-categories-set="0">											 
+														<span class="category-name level-zero">Snow Removal</span>
+														<span style="font-size: 1em" 
+															class="add-category glyphicon glyphicon-plus"></span>													
+														<span style="font-size: 1em" 
+															class="show-sub-categories glyphicon glyphicon-menu-down"></span>
+													
+													</li>										
+												</ul>
+											</div>
+		<!-- 									Eventaully render this with jstl -->
+		<!-- 									//********************************************************************************* -->
+		<!-- 									//********************************************************************************* -->
+		
+										</div>						
+										
+					</div>
 				</div>
 				
-				
-				
-				<div id="employeeSkillsContainer" class="section-container">
-
-				
+				<div id="employeeInfo" class="section info-container">
+					<div class="header">
+						<span data-toggle-id="employeeInfoBody" data-toggle-speed="0">
+							<span class="glyphicon glyphicon-menu-down"></span>
+							<span id="employeeOrContractor" class="header-text">Employee Info</span>
+						</span>
+					</div>	
+					<div id="employeeInfoBody">
 						<div class="section-body">
 							<h4>Required Skills</h4>
 							<div class="list-container body-element-container form-group ">
 								<div id="requiredSkillsContainer" class="list-items-container">
 									<div class="list-item">
 										<span class="delete-list-item glyphicon glyphicon-remove"></span>
-										<span class="answer-option-container">
-											<input class="form-control answer-option">
-										</span>
+										<input class="form-control answer-option">
 									</div>
 								</div>
 								<span class="add-list-item glyphicon glyphicon-plus"></span>
@@ -436,13 +412,11 @@
 						</div>	
 						<div class="section-body">
 							<h4>Desired Skills</h4>
-							<div class="list-container body-element-container ">
+							<div class="list-container body-element-container form-group ">
 								<div id="desiredSkillsContainer" class="list-items-container">
 									<div class="list-item">
 										<span class="delete-list-item glyphicon glyphicon-remove"></span>
-										<span class="answer-option-container">
-											<input class="form-control answer-option">
-										</span>
+										<input class="form-control answer-option">
 									</div>
 								</div>
 								<span class="add-list-item glyphicon glyphicon-plus"></span>
@@ -479,15 +453,89 @@
 								</div>
 							</div>														
 						</div>						
-					</div>			
-					
-					<div id="nextContainer" class="section-container section-body">
-						<span id="next" class="accent">Next</span>
-					</div>		
-				</div>
+					</div>												
+				</div>	
+								
+				<div id="questionInfo" class="section info-container">
+					<div class="header">
+						<span data-toggle-id="questionInfoBody" data-toggle-speed="1">
+							<span class="glyphicon glyphicon-menu-up"></span>
+							<span class="header-text">Question Info</span>
+						</span>
+						<span class="button-container">
+							<button id="newQuestion" class="clickable new square-button">New</button>
+							<button id="addQuestion" class="clickable square-button">Add</button>
+							<span id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</span>
+						</span>					
+					</div>	
+					<div id="questionInfoBody">
+						<div class="section-body">
+							<h4>Question Format</h4>
+							<div class="body-element-container form-group ">
+								<select id="questionFormat" class="question-formats form-control" title="">
+								  <option selected value="-1" style="display: none"></option>	
+								  <option class="answer-format-item" value="0">Yes or No</option>
+								  <option class="answer-format-item" value="1">Short Answer</option>
+								  <option class="answer-format-item" value="2">Single Answer</option>
+								  <option class="answer-format-item" value="3">Multiple Answer</option>
+								</select>
+							</div>					
+						</div>	
+						<div class="section-body">
+							<h4>Question</h4>
+							<div class="body-element-container form-group ">
+								<textarea id="question" class="form-control" rows="2"></textarea>
+							</div>					
+						</div>	
+						<div id="answerListContainer" class="section-body">
+							<h4>Answers</h4>
+							<div class="body-element-container form-group ">
+								<div id="answerList">
+									<div class="answer-container">
+										<span class="delete-answer glyphicon glyphicon-remove"></span>
+										<input class="form-control answer-option">
+									</div>
+									<div class="answer-container">
+										<span class="delete-answer glyphicon glyphicon-remove"></span>
+										<input class="form-control answer-option">
+									</div>
+								</div>
+								<span id="addAnswer" class="glyphicon glyphicon-plus"></span>
+							</div>					
+						</div>	
+						<div id="cartContainer" class="section-body actions-not-clickable">
+<!-- 							<div class="header"> -->
+								<h4>Questions</h4>
+								<div class="action-container">
+									<span id="deleteQuestion" class="delete action">Delete</span>
+								</div>
+								<div class="action-container">
+									<span id="editQuestion" class="action requires-acknowledgement">Edit</span>
+									<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span>
+								</div>
+								<div class="action-container">
+									<span id="copyQuestion" class="action">Copy</span>
+								</div>		
+<!-- 							</div>		 -->
+							<div id="questionCart" class="body-element-container" data-edit="0">
+								<div id="addedQuestions">
+								</div>
+							</div>
+						</div>						
+					</div>												
+				</div>				
 			</div>
 		</div>
-
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
 <div style="display: none">
 	<ul>
 		<li id="categoryListItemTemplate" style="display: none" 
@@ -577,50 +625,10 @@
 // 	var questionContainerIdPrefix = 'question-';
 	var workDays = [];
 	
-	var $addQuestion = $("#addQuestion");
-	var $editQuestion = $("#editQuestion")
-	var $deleteQuestion = $("#deleteQuestion");
-	
 	var employmentType = -1;
 	var duration = -1;
-	
-	function hideSectionContainers(sectionContainerId){
-		$.each($("#sectionContainers").find(".section-container"), function(){
-			if($(this).attr("id") != sectionContainerId){
-				//slideUp($(this), 500);
-				$(this).hide();
-			}
-			
-		})
-	}
-	
-	function showSectionContainer(sectionContainerId){
-		var sectionContainer = $("#sectionContainers").find("#" + sectionContainerId)[0];
-		
-		//slideDown($(sectionContainer), 500);
-		$(sectionContainer).show();
-		
-	}
-	
-	function showContractorContent(request){
-		
-		$.each($("#sectionContainers").find(".contractor-content"), function(){
-			if(request)$(this).show();	
-			else $(this).hide();
-		})
-		
-		
-	}
-	
 
 	$(document).ready(function() {
-		
-		
-
-		
-
-		
-		
 		
 		
 		
@@ -699,13 +707,12 @@
 			if(employmentType == "1"){
 				doShow_contractorSection = true;
 				$employeeOrContractorHeader.html("Contractor Info");
-				showContractorContent(true);
 // 				slideUp($payMethod_salary, speed)
 			}
 			else if(employmentType == "0"){
 				
 				$employeeOrContractorHeader.html("Employee Info");
-				showContractorContent(false);
+				
 				if(duration == "5" || duration == "6"){
 					doShow_payMethod_salary = true;
 				}
@@ -732,19 +739,16 @@
 		
 		$(".duration").click(function(){
 		
-			slideDown($("#durationFollowUp"), 500);
-			
 			duration= $(this).attr("data-id");
 			setJobInfoControls();
 			
 			
 			var id = $(this).attr("id");
 			
-			var $eCalendarSelectionNote = $("#calendarSelectionNote");
 			var $eSingle = $("#calendar-single-day");
 			var $eMulti = $("#calendar-multi-day");
 			var $eDatesLabel = $("#datesLabel");
-// 			var $eDatesHeader = $("#datesHeader");
+			var $eDatesHeader = $("#datesHeader");
 			var $eTimeSectionBody = $("#timeSectionBody")
 			var $eTimeContainerSingle = $("#timeContainer-SingleDate");
 			var $eTimeContainerMulti = $("#timeContainer-MultiDate");
@@ -769,27 +773,22 @@
 			
 			if(id == "hours"){
 				$eDatesLabel.html("");
-// 				$eDatesHeader.html("Date");
+				$eDatesHeader.html("Date");
 // 				$eTimeContainerSingle.show();
 // 				$eTimeContainerMulti.hide();
 // 				slideDown($eTimeSectionBody, 500);
-
-				$eCalendarSelectionNote.html("Select a day");
 			}
 			else if(id == "days"){
 				$eDatesLabel.html("");
-// 				$eDatesHeader.html("Dates");
+				$eDatesHeader.html("Dates");
 // 				$eTimeContainerSingle.show();
 // 				$eTimeContainerMulti.show();
 // 				slideDown($eTimeSectionBody, 500);
-
-				$eCalendarSelectionNote.html("Select all days");
 			}
-			else if(id == "months"){
-				$eCalendarSelectionNote.html("Select a start date and an end date");
-			}			
-			else if(id == "hopefullyForever"){
-				$eCalendarSelectionNote.html("Select a start date");
+			else{
+				$eDatesLabel.html("");
+				$eDatesHeader.html("Start Date");
+// 				slideUp($eTimeSectionBody, 500);
 			}
 			
 			if(id == "hours" || id == "days" || id == "hopefullyForever"){
@@ -814,25 +813,70 @@
 			
 		})
 		
-
-
 		
-		$("#deleteQuestion").click(function(){
-			if(isButtonClickable($("#deleteQuestion"))){
-				deleteQuestion();
-				setQuestionActionsAsClickable(false);
-				disableInputFields(false, "questionsContainer");
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		$("#confirmJobDelete").click(function(){
+			var d = this;
+			deleteJob();
+			
+			//If necessary, disable the "delete job" alert
+			if($("#disableJobDeleteAlert").is(":checked")){
+				
+				//Set the element's attributes such that the alert/modal will not display
+				var $e = $("#deleteJob");
+				$e.attr("data-disable-alert", 1);
+				$e.attr("data-target", "");
+				
+				//Attach the delete job function directly to the "delete" action
+				$e.click(deleteJob);
 			}
 			
+			
 		})
-
+		
+		$("#deleteQuestion").click(function(){
+			deleteQuestion();
+		})
+		
+		$("#copyJob").click(function(){
+			copyJob();
+		})
+		
+		$("#copyQuestion").click(function(){
+			copyQuestion();
+		})		
+		
 		$("#submitJobs").click(function(){
 			submitJobs(1);
 		})
 		
 		
 		
+		$(".button-container .new").click(function(){
+			
 
+					clearPostQuestionInputs();
+					expandInfoBody("questionInfoBody", true);
+					setButtonAsClickable(true, $("#addQuestion"));
+					deselectQuestion();
+					setActionsAsClickable(false, "cartContainer");
+
+
+		})
 		
 		
 		//Click event for an action that requires acknowledgement
@@ -863,7 +907,7 @@
 		})
 
 		
-		$("#saveEditQuestionChanges").click(function(){
+		$(".action-container .glyphicon-ok").click(function(){
 			
 			var clickedId = $(this).attr("id");
 			var editedQuestion = {};
@@ -901,112 +945,66 @@
 // 					disableInputFields(false, "jobInfoBody");
 
 					//Set the question controls
-					resetAddedQuestionContainer();
+					setActionsAsClickable(true, "questionCart");
+					setButtonAsClickable(true, $("#newQuestion"));
 				}
 			
 			
 		})
 		
-		function resetAddedQuestionContainer(){
-			setActionAsClickable(false, $editQuestion);
-			setActionAsClickable(false, $deleteQuestion);
-			setActionAsClickable(true, $addQuestion);
-			
-			showSaveAndCancelEditQuestionChanges(false);
-			// unselectQuestion();
-			
-			
-		}
-		
 
 		
-		$("#addedQuestions").on("click", "a", function(){
-			
+		$(".sub-cart").on("click", "button", function(){
 			var buttons;
 			
-			if(buttonIsCurrentlySelected(this)){
-// 				deselectQuestion();	
-				unselectQuestion();
-				setQuestionActionsAsClickable(false);
-				disableInputFields(false, "questionsContainer");
-				setQuestionActionsAsClickable(false);
-			}else{
-				//selectQuestion(this);
+			//If the clicked button's current state is clickable
+			if(isButtonClickable($(this))){
+				//Determine whether the clicked button is a job or question
+// 				var subCartId = getSubCartId(this)
+				
+// 				toggleActionAppearances(subCartId);
 				
 				
-				highlightArrayItem(this, $("#addedQuestions").find("a"), "selected");
-				showQuestion();
-				disableInputFields(true, "questionsContainer");
-				setQuestionActionsAsClickable(true);
-			}	
-			
+				//If the user is selecting questions for a job
+				if(isSelectingQuestions()){
+					
+					//If a question button was clicked
+					if(jobIsClicked(this) == false){
+						toggleClass($(this), "tied-to-job");
+					}
+				}
+				//If a job was clicked
+				else if(jobIsClicked(this)) {
+					
+					if(buttonIsCurrentlySelected(this)){
+						deselectJob();	
+					}else{
+						
+						selectJob(this);
+						
+					}
+					
+				}
+				//Else a question was clicked
+				else{					
+					
+					if(buttonIsCurrentlySelected(this)){
+						deselectQuestion();	
+					}else{
+						selectQuestion(this);
+					}	
+				}
 
+			
+			}
 		})
-		
-		function unselectQuestion(){
-			var q = $("#addedQuestions").find(".selected")[0];
-			$(q).removeClass("selected");
-			
-			clearPostQuestionInputs();
-		}
-	
-		function setQuestionActionsAsClickable(request){
-			
 
-			if(request){
-				setActionAsClickable(true, $editQuestion);
-				setActionAsClickable(true, $deleteQuestion);
-			}
-			else{
-				setActionAsClickable(false, $editQuestion);
-				setActionAsClickable(false, $deleteQuestion);
-			}
-			
-		}
 
-		function setActionAsClickable(request, $e){
-			if(request){
-				$e.addClass("clickable");
-				$e.removeClass("not-clickable");
-			}
-			else{
-				$e.removeClass("clickable");
-				$e.addClass("not-clickable");
-			}
-		}
-		
 		function getSubCartId(childElement){
 			var subCart = $(childElement).parents(".sub-cart")[0];
 			return $(subCart).attr("id");
 	
 		}
-		
-		$("#editQuestion").click(function(){
-			if(isButtonClickable($editQuestion)){
-				setActionAsClickable(false, $addQuestion);
-				setQuestionActionsAsClickable(false);
-				showSaveAndCancelEditQuestionChanges(true);	
-				disableInputFields(false, "questionsContainer");
-			}
-			
-		})
-		
-		function showSaveAndCancelEditQuestionChanges(request){
-			if(request){
-				$("#saveEditQuestionChanges").show();
-				$("#cancelEditQuestionChanges").show();
-			}
-			else{
-				$("#saveEditQuestionChanges").hide();
-				$("#cancelEditQuestionChanges").hide();
-			}
-		}
-		
-		$("#cancelEditQuestionChanges").click(function(){
-			showQuestion();
-			resetAddedQuestionContainer();
-			unselectQuestion();
-		})
 	
 		
 		$("#addQuestion").click(function(e){
@@ -1029,34 +1027,17 @@
 					addQuestionToDOM(postQuestionDto);
 					
 					if(postQuestionDtos.length > 0){
-						showAddedQuestions(true);
+						slideDown($("#cartContainer"), 700);	
 					}
 					else{
-						showAddedQuestions(false);
+						slideUp($("#cartContainer"));
 					}
-					
-					unselectQuestion();
-					disableInputFields(false, "questionsContainer");
-					setQuestionActionsAsClickable(false);
 					
 // 					$("#jobInfoBody").hide(500);
 // 					$("#cartContainer").show(500);
 				}
 			}
 		})
-		
-		function showAddedQuestions(request){
-			if(request){
-				slideDown($("#cartContainer"), 500);
-				$("#editQuestion").show();
-				$("#deleteQuestion").show();
-			}
-			else{
-				slideUp($("#cartContainer"), 500);
-				$("#editQuestion").hide();
-				$("#deleteQuestion").hide();
-			}
-		}
 		
 		
 		function updateAddedQuestionButtonText(questionId, questionText){
@@ -1080,11 +1061,11 @@
 		}
 		
 		function addQuestionToDOM(postQuestionDto){
-			var html = "<a data-question-id='" + postQuestionDto.id + "' class='accent no-hover clickable'>";
+			var html = "<button data-question-id='" + postQuestionDto.id + "' class='btn clickable'>";
 			
 			var buttonText = getAddedQuestionButtonText(postQuestionDto.text);
 			html += buttonText;			
-			html += "</a>";
+			html += "</button>";
 						
 			$("#addedQuestions").append(html);
 			
@@ -1215,25 +1196,7 @@
 		
 	}
 	
-	function clearPostQuestionInputs(){
-		$("#question").val("");
-		$("#questionFormat option[value='-1']").prop("selected", "selected");
-		
-		$("#answerList").find(".answer-container input").each(function(){
-			$(this).val("");
-		});
-		
-		clearInvalidCss();
-	}
-	
-	function buttonIsCurrentlySelected(button){
-		if($(button).hasClass("selected") == 1){
-			return true;
-		}
-		else{
-			return false;
-		}
-	}
+
 	
 
 	function getPostQuestionDto(){

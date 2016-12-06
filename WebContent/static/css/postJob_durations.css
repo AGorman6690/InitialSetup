@@ -37,7 +37,7 @@ button.not-clickable{
 }
 
 #questionInfoBody{
-	display:none;
+/* 	display:none; */
 }
 .relative{
 	position:relative;
@@ -51,6 +51,10 @@ button.not-clickable{
 .action-container{
 	display: inline;
 	margin-left:10px;	
+}
+
+.action-container:first-child{
+	margin-left:0px;	
 }
 
 #cartContainer .section-body button{
@@ -93,7 +97,8 @@ button.not-clickable{
 }
 
 .selected{
-    background-color: #F6C627;
+/*     background-color: #F6C627; */
+	color:#163B3D !important;
 }
 
 .button-container{
@@ -319,7 +324,7 @@ button.not-clickable{
 
 #requiredSkillsContainer .list-item input,
 #desiredSkillsContainer .list-item input{
-	width:500px;
+	width:100%;
 }
 
 
@@ -415,9 +420,7 @@ button.not-clickable{
 	width:220px;
 /* 	padding: 0px 0px 40px 0px; */
 }
-#durationQuestion{
-	font-weight: bold;
-}
+
 
 #numberOfDuration{
 	padding-top:25px;
@@ -433,7 +436,7 @@ button.not-clickable{
 /* } */
 
 .duration{
-	padding:3px 0px 3px 20px;
+	padding:3px 0px 3px 3px;
 	margin:1px 0px;
 	cursor:pointer;
     border-radius: 2px;
@@ -443,6 +446,21 @@ button.not-clickable{
 .duration:hover{
 	background-color: #163B3D;
 	color:#ffffff;
+}
+
+.delete-list-item{
+	float:left;
+	line-height:33px;
+}
+
+.add-list-item{
+	padding-top:10px;
+}
+
+.answer-option-container{
+	display:block;
+	overflow:hidden;
+	padding-left:10px;
 }
 
 .selected-duration{
