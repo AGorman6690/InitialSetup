@@ -64,13 +64,13 @@
 				#if($jobDto.failedWageNegotiationDtos.size() > 0)
 					<td class="data">$jobDto.failedWageNegotiationDtos.size()</td>
 				#else
-					<td class="pop">-</td>					
+					<td class="pop data">-</td>					
 				#end
 					
 				## if the job has NEW applications
 				
 				#if($jobDto.job.newApplicationCount > 0)
-					<td class="pop">$jobDto.job.newApplicationCount</td>
+					<td class="pop data">$jobDto.job.newApplicationCount</td>
 				#else
 					<td class="data">-</td>					
 				#end

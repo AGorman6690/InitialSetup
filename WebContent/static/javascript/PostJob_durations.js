@@ -11,7 +11,6 @@ function showAddedQuestions(request){
 		$("#deleteQuestion").hide();
 	}
 }
-
 		
 function updateAddedQuestionText(questionId, questionText){
 	
@@ -26,7 +25,7 @@ function updateAddedQuestionText(questionId, questionText){
 function getAddedQuestionText(questionText){
 	
 	//If the qustion is longer than 20 characters, then only show the first 20.
-	if(questionText.length > 20){
+	if(questionText.length > 50){
 		return questionText.substring(0, 19) + "..."
 	}else{
 		return questionText;

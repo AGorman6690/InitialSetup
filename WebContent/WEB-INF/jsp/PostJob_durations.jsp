@@ -43,7 +43,6 @@
 					<div class="section-body">
 						<h4>General</h4>
 						<div class="body-element-container form-group ">
-
 							<div class="input-container">
 								<div id="invalidJobName" class="invalid-message">Job names must be unique</div>
 								<div class="row">
@@ -421,7 +420,7 @@
 							<div class="section-body">
 							<h4>LLC</h4>
 								<div class="body-element-container">									
-									<div class="sub-header">Must have an LLC?</div>								
+									<div class="sub-header">The contractor must have an LLC?</div>								
 									<div class="body-element-container input-container">
 										<div class="radio">
 										  <label><input type="radio" name="contractor-llc">Yes</label>
@@ -435,7 +434,7 @@
 							<div class="section-body">
 							<h4>Licenses</h4>
 								<div class="body-element-container">									
-									<div class="sub-header">Must have the following licenses:</div>								
+									<div class="sub-header">The contractor must have the following licenses:</div>								
 									<div class="list-container form-group ">
 										<div id="desiredSkillsContainer" class="list-items-container">
 											<div class="list-item">
@@ -676,6 +675,9 @@
 						updateAddedQuestionText(editedQuestion.id, editedQuestion.text);
 						
 						doResetControls = true;
+					}
+					else{
+						doResetControls = false;
 					}
 				}
 				else{
