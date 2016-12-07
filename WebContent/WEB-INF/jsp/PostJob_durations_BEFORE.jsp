@@ -1,21 +1,31 @@
 <%@ include file="./includes/Header.jsp"%>
 
+<head>
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/Category.js" />"></script>
+	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/PostJob/Jobs.js"/>"></script> --%>
+<%-- 	<script src="<c:url value="/static/javascript/PostJob/Questions.js"/>"></script> --%>
+<%-- 	<script src="<c:url value="/static/javascript/PostJob/ChangeForm.js"/>"></script> --%>
+
+<!-- 	<link rel="stylesheet" type="text/css" href="./static/css/categories.css" /> -->
+<!-- 	<link rel="stylesheet" type="text/css" href="./static/css/postJob.css" /> -->
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />		
+	
+	<script src="<c:url value="/static/javascript/TimePickerUtilities.js"/>"></script>	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" />		
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_durations.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_ColumnLayout.css" />
+	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
+	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>
 	
-	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
 	<script	src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 	<script	src="<c:url value="/static/javascript/PostJob_durations.js" />"></script>
 	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script>
 	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-	<script src="<c:url value="/static/javascript/TimePickerUtilities.js"/>"></script>			
+		
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 		
 </head>
@@ -90,7 +100,12 @@
 											id="description" rows="6"></textarea>							
 									</div>			
 								</div>
-							</div>	
+							</div>
+
+
+
+						
+							
 						</div>					
 					</div>	
 				</div>
@@ -339,12 +354,25 @@
 				<div id="questionsContainer" class="section-container">
 					<div class="section-body">
 						<h4>Questions</h4>
+<!-- 						<div id="cartContainer" class="body-element-container actions-not-clickable"> -->
+<!-- 							<div class="action-container"> -->
+<!-- 								<span id="deleteQuestion" class="delete action">Delete</span> -->
+<!-- 							</div> -->
+<!-- 							<div class="action-container"> -->
+<!-- 								<span id="editQuestion" class="action requires-acknowledgement">Edit</span> -->
+<!-- 								<span id="okEditQuestion" class="glyphicon glyphicon-ok"></span> -->
+<!-- 							</div> -->
+<!-- 							<div class="action-container"> -->
+<!-- 								<span id="copyQuestion" class="action">Copy</span> -->
+<!-- 							</div>		 -->
+
+<!-- 						</div>							 -->
 						<div class="body-element-container">
 							<button id="addQuestion" class="clickable btn-sqr selected-blue">Add</button>
 							<button id="deleteQuestion" class="selected-question-action not-clickable btn-sqr selected-blue">Delete</button>
 							<button id="editQuestion" class="selected-question-action not-clickable btn-sqr selected-blue">Edit</button>
-							<span id="saveEditQuestionChanges" class="edit-question-response selected-question-action glyphicon glyphicon-ok"></span>
-							<span id="cancelEditQuestionChanges" class="edit-question-response selected-question-action glyphicon glyphicon-remove"></span>
+							<span id="saveEditQuestionChanges" class="selected-question-action glyphicon glyphicon-ok"></span>
+							<span id="cancelEditQuestionChanges" class="selected-question-action glyphicon glyphicon-remove"></span>
 							<span id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</span>
 						
 							<div id="cartContainer" class="actions-not-clickable">
@@ -387,8 +415,11 @@
 					</div>																							
 				</div>
 				
-
+				
+				
 				<div id="employeeSkillsContainer" class="section-container">
+
+				
 						<div class="section-body">
 							<h4>Required Skills</h4>
 							<div class="list-container body-element-container form-group ">
@@ -539,25 +570,67 @@
 <script>
 
 	var pageContext = "postJob";
-// 	var jobs = [];	
-// 	var jobCount = 0;
+	var jobs = [];	
+	var jobCount = 0;
 	var postQuestionDtos = [];
 	var questionCount = 0;
+// 	var questionContainerIdPrefix = 'question-';
 	var workDays = [];
 	
 	var $addQuestion = $("#addQuestion");
 	var $editQuestion = $("#editQuestion")
 	var $deleteQuestion = $("#deleteQuestion");
 	
+	var employmentType = -1;
+	var duration = -1;
+	
+	function hideSectionContainers(sectionContainerId){
+		$.each($("#sectionContainers").find(".section-container"), function(){
+			if($(this).attr("id") != sectionContainerId){
+				//slideUp($(this), 500);
+				$(this).hide();
+			}
+			
+		})
+	}
+	
+	function showSectionContainer(sectionContainerId){
+		var sectionContainer = $("#sectionContainers").find("#" + sectionContainerId)[0];
+		
+		//slideDown($(sectionContainer), 500);
+		$(sectionContainer).show();
+		
+	}
+	
+	function showContractorContent(request){
+		
+		$.each($("#sectionContainers").find(".contractor-content"), function(){
+			if(request)$(this).show();	
+			else $(this).hide();
+		})
+		
+		
+	}
+	
 
 	$(document).ready(function() {
 		
+		
 
+		
+
+		
+		
+		
+		
+		
+		
 		initMultiDayCalendar($("#calendar-multi-day"));
 		initSingleDayCalendar($("#calendar-single-day"));
 		
 		
-		$(".add-list-item").click(function(){ 			
+		$(".add-list-item").click(function(){ 
+			
 			
 			var listContainer = $(this).closest(".list-container");
 			var listItemsContainer = $(listContainer).find(".list-items-container")[0];
@@ -577,6 +650,10 @@
 		
 
 		
+		$("#calendarContainer tbody").on("click", "td", function(){
+// 			alert(89)
+		})
+		
 		$("input[type='radio'][name='pay-range']").click(function(){
 			var $container = $("#payRangeContainer");
 			var speed = 500;
@@ -590,58 +667,161 @@
 		
 		$("#employmentTypeContainer input[type='radio']").click(function(){
 			
-
-			var employmentType = $(this).val();
-
-			if(employmentType == "1"){
-				showContractorContent(true);
-			}
-			else if(employmentType == "0"){				
-				showContractorContent(false);
-			}	
-
+			employmentType = $(this).attr("value");
+			
+			setJobInfoControls();
+			
+// 			var id = $(this).attr("id");
+// 			var speed = 500;
+// 			var $payMethod_salary = $("#pay-method-salary");
+// 			if(id == "employmentType_contractor"){
+// 				slideUp($payMethod_salary, speed)
+// 			}
+// 			else if(id == "employmentType_employee"){
+// 				slideDown($payMethod_salary, speed)
+// 			}
 		})
 		
 		$("#employmentType_employee").click();
 		
-		
+		function setJobInfoControls(){
+			// EmploymentType: 0 = employee; 1 = contractor
+			
+			
+			var doShow_payMethod_salary = false;
+			var doShow_contractorSection = false;
+			var speed = 500;
+			var $payMethod_salary = $("#pay-method-salary");
+			var $contractorSection = $("#contractorRequirements");
+			var $employeeOrContractorHeader = $("#employeeOrContractor");
+			
+			
+			if(employmentType == "1"){
+				doShow_contractorSection = true;
+				$employeeOrContractorHeader.html("Contractor Info");
+				showContractorContent(true);
+// 				slideUp($payMethod_salary, speed)
+			}
+			else if(employmentType == "0"){
+				
+				$employeeOrContractorHeader.html("Employee Info");
+				showContractorContent(false);
+				if(duration == "5" || duration == "6"){
+					doShow_payMethod_salary = true;
+				}
+				
+			}	
+			
+			
+			if(doShow_payMethod_salary){
+				slideDown($payMethod_salary, speed);
+			}
+			else{
+				slideUp($payMethod_salary, speed);
+			}
+			
+			if(doShow_contractorSection){
+				slideDown($contractorSection, speed);
+			}
+			else{
+				slideUp($contractorSection, speed);
+			}
+			
+		}
+
 		
 		$(".duration").click(function(){
 		
 			slideDown($("#durationFollowUp"), 500);
 			
-			var id = $(this).attr("id");			
+			duration= $(this).attr("data-id");
+			setJobInfoControls();
+			
+			
+			var id = $(this).attr("id");
+			
 			var $eCalendarSelectionNote = $("#calendarSelectionNote");
 			var $eSingle = $("#calendar-single-day");
 			var $eMulti = $("#calendar-multi-day");
+			var $eDatesLabel = $("#datesLabel");
+// 			var $eDatesHeader = $("#datesHeader");
+			var $eTimeSectionBody = $("#timeSectionBody")
+			var $eTimeContainerSingle = $("#timeContainer-SingleDate");
+			var $eTimeContainerMulti = $("#timeContainer-MultiDate");
+			var $eNumberOf_label = $("#numberOf-label");
+			var $eNumberOfDuration = $("#numberOfDuration");
 			var slideSpeed = 500;
 			
 			if(id == "days"){
+// 				slideDown($eMulti, 500);
+// 				slideUp($eSingle, 500);
 				$eSingle.hide();
 				$eMulti.show();
+				
+				
 			}
 			else{
+// 				slideUp($eMulti, 500);
+// 				slideDown($eSingle, 500);
 				$eSingle.show();
 				$eMulti.hide();
 			}
-						
-			if(id == "hours") $eCalendarSelectionNote.html("Select a day");
-			else if(id == "days") $eCalendarSelectionNote.html("Select all days");
-			else if(id == "months") $eCalendarSelectionNote.html("Select a start date and an end date");		
-			else if(id == "hopefullyForever") $eCalendarSelectionNote.html("Select a start date");
+			
+			if(id == "hours"){
+				$eDatesLabel.html("");
+// 				$eDatesHeader.html("Date");
+// 				$eTimeContainerSingle.show();
+// 				$eTimeContainerMulti.hide();
+// 				slideDown($eTimeSectionBody, 500);
 
+				$eCalendarSelectionNote.html("Select a day");
+			}
+			else if(id == "days"){
+				$eDatesLabel.html("");
+// 				$eDatesHeader.html("Dates");
+// 				$eTimeContainerSingle.show();
+// 				$eTimeContainerMulti.show();
+// 				slideDown($eTimeSectionBody, 500);
+
+				$eCalendarSelectionNote.html("Select all days");
+			}
+			else if(id == "months"){
+				$eCalendarSelectionNote.html("Select a start date and an end date");
+			}			
+			else if(id == "hopefullyForever"){
+				$eCalendarSelectionNote.html("Select a start date");
+			}
+			
+			if(id == "hours" || id == "days" || id == "hopefullyForever"){
+				slideUp($eNumberOfDuration, slideSpeed);
+			}
+			else if(id == "weeks"){
+				slideDown($eNumberOfDuration, slideSpeed);
+				$eNumberOf_label.html("Number of weeks");
+			}
+			else if(id == "months"){
+				slideDown($eNumberOfDuration, slideSpeed);
+				$eNumberOf_label.html("Number of months");
+			}
+			else if(id == "years"){
+				slideDown($eNumberOfDuration, slideSpeed);
+				$eNumberOf_label.html("Number of years");
+			}
+			
 			highlightArrayItem(this, $("#durationsContainer").find(".duration"), "selected-duration");
-
+			
+			
+			
 		})
 		
 
-		$("#deleteQuestion").click(function(){
+
 		
+		$("#deleteQuestion").click(function(){
 			if(isButtonClickable($("#deleteQuestion"))){
 				deleteQuestion();
 				setQuestionActionsAsClickable(false);
 				disableInputFields(false, "questionsContainer");
-				clearPostQuestionInputs();
 			}
 			
 		})
@@ -650,70 +830,156 @@
 			submitJobs(1);
 		})
 		
-		$(".edit-question-response").click(function(){
+		
+		
+
+		
+		
+		//Click event for an action that requires acknowledgement
+		$("body").on("click", ".actions-clickable .action.requires-acknowledgement", function(){
+			
+			var clickedId = $(this).attr("id");
+			
+			//Show check mark
+			$($(this).siblings(".glyphicon-ok")).show();
+			
+			//Display the actions as "un-clickable".
+			//This forces the user to click the checkmark, and not another action, to signify
+			//they are finished with the action they clicked.
+			//Determine whether the button is a job or question
+			var subCartId = getSubCartId(this)			
+			toggleActionAppearances(subCartId);
+			
+			
+			//If editing a quesiton, then collapse the job info body.
+			//This saves the user from having to scroll to the bottom of the page.
+			if(clickedId == "editQuestion"){
+				expandInfoBody("questionInfoBody", true);
+				disableInputFields(false, "questionInfoBody");
+
+			}
+
+			
+		})
+
+		
+		$("#saveEditQuestionChanges").click(function(){
 			
 			var clickedId = $(this).attr("id");
 			var editedQuestion = {};
 			var selectedQuestion = {};
-			var doResetControls = false;
+			var selectedJob = {};
+			var editedJob = {};
 
+
+				
+				if(validateAddQuestionInputs()){
+					
+					//Hide check mark
+					$(this).hide();
+					
+					//Format elements
+					setActionsAsClickable(true, "questionCart");
+					disableInputFields(true, "questionInfoBody");
+					
+					selectedQuestion = getSelectedQuestion();
+					editedQuestion = getPostQuestionDto();
+					
+					//When editing a question, the id must remain the same
+					editedQuestion.id = selectedQuestion.id;
+					
+					//Remove the old selected question
+					postQuestionDtos = removeArrayElement(selectedQuestion.id, postQuestionDtos);
+					
+					//Add the new edited question
+					postQuestionDtos.push(editedQuestion);
+					
+					updateAddedQuestionText(editedQuestion.id, editedQuestion.text);
+					
+// 					//Set the job controls
+// 					setButtonsAsClickable(true, "jobInfo");
+// 					disableInputFields(false, "jobInfoBody");
+
+					//Set the question controls
+					resetAddedQuestionContainer();
+				}
 			
-				if(clickedId == "saveEditQuestionChanges"){
-					if(validateAddQuestionInputs()){
-					
-						selectedQuestion = getSelectedQuestion();
-						editedQuestion = getPostQuestionDto();
-						
-						//When editing a question, the id must remain the same
-						editedQuestion.id = selectedQuestion.id;
-						
-						//Remove the old selected question
-						postQuestionDtos = removeArrayElementByIdProp(selectedQuestion.id, postQuestionDtos);
-						
-						//Add the new edited question
-						postQuestionDtos.push(editedQuestion);
-						
-						updateAddedQuestionText(editedQuestion.id, editedQuestion.text);
-						
-						doResetControls = true;
-					}
-				}
-				else{
-					showSelectedQuestion();
-					doResetControls = true;
-				}
-
-				if(doResetControls){
-					setActionAsClickable(true, $addQuestion);
-					setActionAsClickable(true, $editQuestion);
-					setActionAsClickable(true, $deleteQuestion);
-					showSaveAndCancelEditQuestionChanges(false);
-					disableInputFields(true, "questionsContainer");	
-				}
-					
-						
+			
 		})
+		
+		function resetAddedQuestionContainer(){
+			setActionAsClickable(false, $editQuestion);
+			setActionAsClickable(false, $deleteQuestion);
+			setActionAsClickable(true, $addQuestion);
+			
+			showSaveAndCancelEditQuestionChanges(false);
+			// unselectQuestion();
+			
+			
+		}
+		
 
-
+		
 		$("#addedQuestions").on("click", "a", function(){
 			
 			var buttons;
 			
 			if(buttonIsCurrentlySelected(this)){
+// 				deselectQuestion();	
 				unselectQuestion();
 				setQuestionActionsAsClickable(false);
 				disableInputFields(false, "questionsContainer");
 				setQuestionActionsAsClickable(false);
 			}else{
+				//selectQuestion(this);
+				
+				
 				highlightArrayItem(this, $("#addedQuestions").find("a"), "selected");
-				showSelectedQuestion();
+				showQuestion();
 				disableInputFields(true, "questionsContainer");
 				setQuestionActionsAsClickable(true);
 			}	
+			
 
 		})
 		
+		function unselectQuestion(){
+			var q = $("#addedQuestions").find(".selected")[0];
+			$(q).removeClass("selected");
+			
+			clearPostQuestionInputs();
+		}
+	
+		function setQuestionActionsAsClickable(request){
+			
 
+			if(request){
+				setActionAsClickable(true, $editQuestion);
+				setActionAsClickable(true, $deleteQuestion);
+			}
+			else{
+				setActionAsClickable(false, $editQuestion);
+				setActionAsClickable(false, $deleteQuestion);
+			}
+			
+		}
+
+		function setActionAsClickable(request, $e){
+			if(request){
+				$e.addClass("clickable");
+				$e.removeClass("not-clickable");
+			}
+			else{
+				$e.removeClass("clickable");
+				$e.addClass("not-clickable");
+			}
+		}
+		
+		function getSubCartId(childElement){
+			var subCart = $(childElement).parents(".sub-cart")[0];
+			return $(subCart).attr("id");
+	
+		}
 		
 		$("#editQuestion").click(function(){
 			if(isButtonClickable($editQuestion)){
@@ -725,11 +991,30 @@
 			
 		})
 		
+		function showSaveAndCancelEditQuestionChanges(request){
+			if(request){
+				$("#saveEditQuestionChanges").show();
+				$("#cancelEditQuestionChanges").show();
+			}
+			else{
+				$("#saveEditQuestionChanges").hide();
+				$("#cancelEditQuestionChanges").hide();
+			}
+		}
+		
+		$("#cancelEditQuestionChanges").click(function(){
+			showQuestion();
+			resetAddedQuestionContainer();
+			unselectQuestion();
+		})
+	
+		
 		$("#addQuestion").click(function(e){
 			
+			//Validate inputs
 			if(isButtonClickable($(this))){
 				if(validateAddQuestionInputs()){
-
+// 					e.stopPropagation();
 					//Get the question dto
 					var postQuestionDto = getPostQuestionDto();
 					
@@ -753,10 +1038,73 @@
 					unselectQuestion();
 					disableInputFields(false, "questionsContainer");
 					setQuestionActionsAsClickable(false);
-
+					
+// 					$("#jobInfoBody").hide(500);
+// 					$("#cartContainer").show(500);
 				}
 			}
 		})
+		
+		function showAddedQuestions(request){
+			if(request){
+				slideDown($("#cartContainer"), 500);
+				$("#editQuestion").show();
+				$("#deleteQuestion").show();
+			}
+			else{
+				slideUp($("#cartContainer"), 500);
+				$("#editQuestion").hide();
+				$("#deleteQuestion").hide();
+			}
+		}
+		
+		
+		function updateAddedQuestionButtonText(questionId, questionText){
+			
+			var button = $("#addedQuestions").find("button[data-question-id='" + questionId + "']")[0];
+			
+			var buttonText = getAddedQuestionButtonText(questionText);
+			
+			$(button).html(buttonText);
+			
+		}
+		
+		function getAddedQuestionButtonText(questionText){
+			
+			//If the qustion is longer than 20 characters, then only show the first 20.
+			if(questionText.length > 20){
+				return questionText.substring(0, 19) + "..."
+			}else{
+				return questionText;
+			}
+		}
+		
+		function addQuestionToDOM(postQuestionDto){
+			var html = "<a data-question-id='" + postQuestionDto.id + "' class='accent no-hover clickable'>";
+			
+			var buttonText = getAddedQuestionButtonText(postQuestionDto.text);
+			html += buttonText;			
+			html += "</a>";
+						
+			$("#addedQuestions").append(html);
+			
+			clearPostQuestionInputs();
+				
+		}
+
+		
+		$(".show-section").click(function(){
+			var idToToggle = $(this).attr("data-show");
+			
+			if(idToToggle == "questionInfoBody"){				
+				expandInfoBody("jobInfoBody", false);
+				expandInfoBody("questionInfoBody", true);
+			}
+			else if(idToToggle == "jobInfoBody"){
+				expandInfoBody("jobInfoBody", true);
+			}
+
+		})		
 		
 		
 		$("#questionFormat").click(function(){
@@ -769,9 +1117,15 @@
 				$("#answerListContainer").hide(500);
 			}
 			
+// 			$("#questionInfo").animate({ scrollTop: $('#questionInfo').height()}, 1000);
+// 			$('#questionInfo').scrollTop($('#questionInfo')[0].scrollHeight);
+
+			
 		})
 		
-
+		$("#questionFormat").change(function(){
+// 			scrollToElement("questionInfo", 500);
+		})
 		
 		$("#addAnswer").click(function(){ 
 			
@@ -798,6 +1152,11 @@
 			$("#times").toggle(200);
 			toggleClasses($(this), "glyphicon-menu-up", "glyphicon-menu-down");
 		})
+		
+		$("#applyTimesToAllDates").click(function(){			
+			applyTimesToAllDates();			
+		})	
+		
 		
 
 		
@@ -856,7 +1215,52 @@
 		
 	}
 	
+	function clearPostQuestionInputs(){
+		$("#question").val("");
+		$("#questionFormat option[value='-1']").prop("selected", "selected");
+		
+		$("#answerList").find(".answer-container input").each(function(){
+			$(this).val("");
+		});
+		
+		clearInvalidCss();
+	}
 	
+	function buttonIsCurrentlySelected(button){
+		if($(button).hasClass("selected") == 1){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+
+	function getPostQuestionDto(){
+		
+		var postQuestionDto = {};
+		var answerOptionsInputs = []
+		var answerOptions = [];
+		
+		
+		postQuestionDto.text = $("#question").val();
+		postQuestionDto.formatId = $("#questionFormat").find("option:selected").val();
+	
+		//If necessary, set the answer options
+		if(doesQuestionHaveAnAnswerList(postQuestionDto)){
+			answerInputs = $("#answerList").find(".answer-container input");
+			$.each(answerInputs, function(){
+				answerOptions.push($(this).val());
+			})
+			
+			postQuestionDto.answerOptions = answerOptions;
+		
+		}else{
+			postQuestionDto.answerOptions = [];
+		}
+		
+		return postQuestionDto;
+	}
 	
 
 	

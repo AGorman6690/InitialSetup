@@ -76,6 +76,15 @@ function removeArrayElementValue(valueToRemove, array){
 	return newArray;
 }
 
+function removeArrayElementByIdProp(idToRemove, array){
+	var newArray = [];
+	newArray =  $.grep(array, function(e, i){
+					return e.id != idToRemove
+				})
+							
+	return newArray;
+}
+
 //*****************************************
 //*****************************************
 //Phase this out. The name is horrible
