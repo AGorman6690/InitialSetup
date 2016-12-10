@@ -1,0 +1,66 @@
+/* .job-label{ */
+/* 	display:inline-block; */
+/* 	width:150px; */
+/* 	vertical-align:top; */
+/* /* 	font-weight:bold; */ */
+/* 	font-size:16px; */
+/*     border-bottom: 3px solid #337ab7; */
+/*     margin-right:50px; */
+/*     padding-bottom:16px; */
+/* } */
+
+/* .job-value{ */
+/* 	display:inline-block; */
+/* 	font-size:16px;	 */
+/* /* 	border-top: 2px solid gray; */ */
+/* /* 	padding-top:20px; */ */
+/* } */
+
+/* .job-value-container{ */
+/* 	padding: 30px 0px; */
+/* } */
+
+#jobAddress:hover{
+	text-decoration: underline;
+	cursor:pointer;
+}
+
+.container{
+	padding-top:30px;
+}
+
+#jobInfoContainer{
+	display:block;
+}
+
+#questionsContainer .answer-options-container{
+	padding-left:25px;
+}
+
+.answer-option .glyphicon{
+	font-size:11px;
+	padding-right:8px;
+	
+}
+
+.answer-option{
+	padding:3px 0px;
+}
+
+.answer-container .help{
+	font-style: italic;
+    font-size: 14px;
+    padding-bottom: 5px;
+}
+
+.checkbox{
+	margin-top:0px;
+}
+
+.section-container .info-container:first-child{
+	padding-top:0px;
+}
+
+.questions-container .info-container{
+	padding:15px 0px;
+}

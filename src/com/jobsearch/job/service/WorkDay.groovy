@@ -5,7 +5,8 @@ import java.sql.Date;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-class WorkDay {
+public class WorkDay {
+	
 	@JsonProperty("millisecondsDate")
 	String millisecondsDate
 

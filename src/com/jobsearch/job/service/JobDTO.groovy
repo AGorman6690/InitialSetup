@@ -1,10 +1,12 @@
 package com.jobsearch.job.service
 
-import java.util.List;
+import java.util.List
 
+import com.jobsearch.category.service.Category;
 import com.jobsearch.model.FailedWageNegotiationDTO;
+import com.jobsearch.model.Question
 
-class JobDTO {
+public class JobDTO {
 	//**********************************************
 	 //**********************************************
 	 //The thought behind this DTO was to create a place to put all the
@@ -18,4 +20,9 @@ class JobDTO {
 
 	 Job job
 	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
+	 int durationDays
+	 double durationHours
+	 List<WorkDay> workDays
+	 List<Category> categories
+	 List<Question> questions
 }

@@ -18,9 +18,6 @@
 	display:inlne-block;
 }
 
-.section-container{
-	display:none;
-}
 
 #generalContainer{
 	display:block;
@@ -35,9 +32,7 @@
     width: 100%;
 }
 
-.section-container{
-	width:600px;
-}
+
 
 .form-group input {
 /*     width: 100px; */

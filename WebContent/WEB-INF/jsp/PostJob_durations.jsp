@@ -4,6 +4,7 @@
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" />		
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_durations.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob_ColumnLayout.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 	
@@ -105,9 +106,9 @@
 									<div id="hours" class="duration" data-id="1">Hours</div>
 									<div id="days" class="duration" data-id="2">Days</div>
 <!-- 									<div id="weeks" class="duration" data-id="3">Weeks</div> -->
-									<div id="months" class="duration" data-id="4">Months</div>
+									<div id="months" class="duration" data-id="3">Months</div>
 <!-- 									<div id="years" class="duration" data-id="5">Years</div> -->
-									<div id="hopefullyForever" class="duration" data-id="6">Hopefully Forever</div>
+									<div id="hopefullyForever" class="duration" data-id="4">Hopefully Forever</div>
 								</div>
 							</div>
 						</div>	

@@ -1,20 +1,4 @@
 
-
-	<div class="section-body">
-		<button id="apply">Apply</button>
-	</div
-
-	## For whatever reason, one of these divs is not rendered...
-	## Probably missing an end tag somewhere...
-	<div class="section-body">
-	<div class="section-body">
-		<div id="invalidAmount" class="invalid-message"></div>
-		<div id="invalidAnswers" class="invalid-message">All questions must be answered.</div>
-		<span>Desired Pay</span>
-		<input class="form-control" placeholder=" per hour" id="amount">
-	</div>
-
-
 	<div id="questionsContainer" class="section-body">
 	#foreach($question in $questions)
 		<div class="question-container bottom-border-thinner" data-question-id="$question.questionId"

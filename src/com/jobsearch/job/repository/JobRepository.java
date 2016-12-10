@@ -26,6 +26,7 @@ import com.jobsearch.job.service.WorkDay;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Repository
 public class JobRepository {
@@ -75,6 +76,25 @@ public class JobRepository {
 					e.setStartTime(jobService.getStartTime(jobId));
 					e.setEndTime(jobService.getEndTime(jobId));
 					e.setStatus(rs.getInt("Status"));
+					
+					//The default **string** time format is, for example,: "3:30 PM"
+					if (e.getStartTime() != null){
+						e.setStringStartTime(DateUtility.formatSqlTime(e.getStartTime(), "h:mm a"));	
+					}
+					
+					if(e.getEndTime() != null){
+						e.setStringEndTime(DateUtility.formatSqlTime(e.getEndTime(), "h:mm a"));	
+					}
+					
+					//The default **string" date format is, for example,: "Sun Dec 25, 2017"
+					if (e.getStartTime() != null){
+						e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d, y"));	
+					}
+					
+					if(e.getEndDate() != null){
+						e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d, y"));	
+					}					
+					
 
 					//Set duration
 //					DateTime dtStart = new DateTime(e.getStartDate());

@@ -34,6 +34,7 @@ import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
 
 @Service
 public class JobServiceImpl {
@@ -906,12 +907,46 @@ public class JobServiceImpl {
 		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
 		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
 		
+		
+		JobDTO jobDto = new JobDTO();
+		Job job = this.getJob(jobId);
+		jobDto.setJob(job);
+		jobDto.setWorkDays(this.getWorkDays(jobId));
+		jobDto.setQuestions(applicationService.getQuestions(jobId));
+		
+		this.setJobDtoDuration(jobDto);
+		
+		
+		
+		
+		List<Category> categories = categoryService.getCategoriesByJobId(jobId);		
+		
+		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobId", jobId);
 		model.addAttribute("vtJobInfo", vtJobInfo);
 		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
+		model.addAttribute("jobDto", jobDto);
+		model.addAttribute("categories", categories);
 		
 		SessionContext.verifyLoggedInUser(session, model);
 
+	}
+
+	public void setJobDtoDuration(JobDTO jobDto) {
+
+		if(jobDto.getJob() != null){
+			
+			jobDto.setDurationHours(DateUtility.getTimeSpan(jobDto.getJob().getStartDate(), 
+												jobDto.getJob().getStartTime(),
+												jobDto.getJob().getEndDate(), 
+												jobDto.getJob().getEndTime(), TimeSpanUnit.Hours));
+			
+			jobDto.setDurationDays(DateUtility.getTimeSpan(jobDto.getJob().getStartDate(), 
+													null,
+													jobDto.getJob().getEndDate(), 
+													null, TimeSpanUnit.Days).intValue());
+		}
+		
 	}
 
 	private String getVelocityTemplate_QuestionsToAnswer(int jobId) {

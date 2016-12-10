@@ -5,15 +5,18 @@
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js"/>"></script>
+	<script src="<c:url value="/static/javascript/SideBar.js"/>"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob2.css " />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css " />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/datepicker.css " />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/map.css" />
 		
 	
 	<!-- Time picker -->
@@ -31,41 +34,88 @@
 <!-- ***************************************************************** -->
 
 		
-		<div class="container" >			
-			<div>${vtJobInfo }			
-			</div>
-<!-- 			<div class="section"> -->
-
-			<c:choose>				
-				<c:when test="${empty user.emailAddress }">					
-					<c:set var="notLoggedInClass" value="not-logged-in"> </c:set>		
-				</c:when>
-				<c:otherwise>
-					<c:set var="notLoggedInClass" value=""> </c:set>
-				</c:otherwise>
-			</c:choose>
-			<div class="section ${notLoggedInClass }">
-				<div class="header2">
-					<span data-toggle-id="questionsContainer" class="glyphicon glyphicon-menu-down"></span>
-					<span class="header-text">Application</span>
-				</div>	
-				<c:if test="${empty user.emailAddress }">
-					<div id="notLoggedIn-ApplicationWarning" class="section-body">
-						You must be logged in to apply for a job.
+		<div class="container" >
+			<div class="row">
+				<div id="sideBarContainer" class="col-sm-2">
+					<div id="jobInfo" class="first side-bar selected-blue" data-section-id="jobInfoContainer">Job Information</div>
+<!-- 					<div id="questions" class="side-bar" data-section-id="questionsContainer">Questions</div> -->
+					<div id="apply" class="side-bar" data-section-id="applyContainer">Apply</div>					
+				</div>
+				
+				<div class="col-sm-10" id="sectionContainers">
+					<div id="jobInfoContainer" class="section-container">
+						<div class="section-body">
+							<h4>Job Information</h4>
+							<div class="body-element-container">
+								<%@ include file="./templates/JobInformation.jsp"%>
+							</div>
+						</div>
 					</div>
-				</c:if>				
-				${vtQuestionsToAnswer }
+					
+<!-- 					<div id="questionsContainer" class="section-container"> -->
+<!-- 						<div class="section-body"> -->
+<!-- 							<h4>Questions</h4> -->
+							
+<%-- 							<c:set var="param_questions" value="${jobDto.questions }"/>		 --%>
+<!-- 							<div id="questionsContainer" class="body-element-container">					 -->
+<%-- 								<c:forEach items="${param_questions }" var="question"> --%>
+<!-- 									<div class="question body-element info-container"> -->
+<%-- 										<div class="question-text">${question.text }</div>			 --%>
+<!-- 										<div class="answer-options-container"> -->
+<%-- 											<c:forEach items="${question.answerOptions }" var="answerOption"> --%>
+<%-- 											<div class="answer-option"><span class="glyphicon glyphicon-menu-right"></span>${answerOption.text }</div> --%>
+<%-- 											</c:forEach> --%>
+<!-- 										</div> -->
+<!-- 									</div> -->
+<%-- 								</c:forEach>	 --%>
+<!-- 							</div> -->
+										
+<!-- 						</div> -->
+<!-- 					</div> -->
+					
+					<c:choose>				
+						<c:when test="${isLoggedIn == false }">					
+							<c:set var="notLoggedInClass" value="not-logged-in"> </c:set>		
+						</c:when>
+						<c:otherwise>
+							<c:set var="notLoggedInClass" value=""> </c:set>
+						</c:otherwise>				
+					</c:choose>
 			
-			
-			
-			
+					<div id="applyContainer" class="section-container ${notLoggedInClass }">
+						<div class="section-body">
+							<h4>Apply</h4>
+							<div class="body-element-container">
+							
+								<c:if test="${isLoggedIn == false }">
+									<div id="notLoggedIn-ApplicationWarning">
+										You must be logged in to apply for a job.
+									</div>
+								</c:if>									
+							
+								<div class="info-container">
+									<div class="info-label">Desired Pay Per Hour</div>
+									<div class="info-value">
+										<input class="form-control" placeholder="" id="amount">								
+									</div>
+								</div>
+											
+								<div class="body-element-container info-container">
+									<div class="info-label">Answers</div>
+									<div id="answersContainer" class="info-value">									
+										<c:forEach items="${jobDto.questions }" var="param_question">
+											<%@ include file="./templates/Questions_AnswerInput.jsp" %>
+										</c:forEach>																	
+									</div>
+								</div>		
+							</div>								
+						</div>
+					</div>
+					
+				</div> <!-- close sections container -->
 			</div>
 	
 		</div>
-
-
-
-<input id="jobId" value="${jobId }" type="hidden"></input>
 
 <script>
 
@@ -80,14 +130,36 @@
 
 	$(document).ready(function() {
 		
-		setAllDatesAsUnselectable($("#calendar"), true);
-
-		$.each($("#workDays").find("[data-date]"), function(){
-			var workDay_date = $(this).attr("data-date");
-			var date = new Date(workDay_date);
-			activateDate($("#calendar"), date);
+		
+		$("#jobAddress").click(function(){
+			var lat = $("#map").attr("data-lat");
+			var lng = $("#map").attr("data-lng");
+			var win = window.open("https://www.google.com/maps/preview/@" + lat + "," + lng + ",15z", "_blank");
+			win.focus();
 		})
 		
+		
+		setAllDatesAsUnselectable($("#calendar"), true);
+
+		
+
+		var $calendar = $("#workDaysCalendar")
+		
+		
+
+		var firstDate;
+		$.each($("#workDays").find("[data-date]"), function(i){
+
+			var workDay_date = $(this).attr("data-date");
+			var date = $.datepicker.parseDate("yy-mm-dd", workDay_date)
+			
+			if(i == 0) firstDate = date;
+			
+			selectedDays.push(date.getTime());
+		})
+		
+		initReadOnlyCalendar($calendar, firstDate);		
+		$calendar.datepicker("setDate", firstDate);
 		
 		$(".single").click(function(){
 			var container = $(this).closest(".answer");
@@ -100,9 +172,10 @@
 			toggleClass($(this), "selected");
 		})
 
-		$("#apply").click(function(){
+		$("#sendApplication").click(function(){
 			apply();
 		})
+
 				
 	})
 	

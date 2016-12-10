@@ -29,9 +29,11 @@ public class Job {
 	Time endTime
 	String stringStartTime
 	String stringEndTime
+	String stringStartDate
+	String stringEndDate
 	Double distanceFromFilterLocation
 	List<Integer> categoryIds
-	List<Category> categories
+	List<Category> categories // do away with
 	List<JobSearchUser> employees
 	List<JobSearchUser> applicants
 	List<Application> applications
@@ -40,6 +42,8 @@ public class Job {
 	Integer Duration
 	List<Integer> selectedQuestionIds
 	int status
+	
+	// Do away with work days from the job lass
 	List<WorkDay> workDays;
 	
 	// 1 = Hours

@@ -60,6 +60,7 @@ $(document).ready(function(){
 })
 
 function initSingleDayCalendar($e){
+
 	$e.datepicker({
 		minDate: new Date(),
 		numberOfMonths: 1,
@@ -78,7 +79,7 @@ function initSingleDayCalendar($e){
         // This is run for every day visible in the datepicker.
         beforeShowDay: function (date) {
 
-        	date = date.getTime();   	
+       	date = date.getTime();   	
 
 			if(date == selectedDay){
         		return [true, "active111"]; 
@@ -91,14 +92,40 @@ function initSingleDayCalendar($e){
 	})
 }
 
+function initReadOnlyCalendar($e, minDate){
+	
+	var numberOfMonths = getNumberOfMonths($e);
+
+	$e.datepicker({
+//		dateFormat: 'yy-mm-dd',
+//		minDate: minDate, // new Date(2016, 11,30, 0,0,0, 0),
+		numberOfMonths: numberOfMonths,
+		selectOtherMonths:true,
+        beforeShowDay: function (date) {
+
+        	date = date.getTime();
+			
+        	if(isDateAlreadySelected(date)){
+        		return [true, "active111"]; 
+        	}
+        	else{
+        		return [true, ""];
+        	}
+
+        },
+
+	});
+	
+}
+
 function initMultiDayCalendar($e){
-	var numberOfMonths = getNumberOfMonths($("#calendar"));
+	var numberOfMonths = getNumberOfMonths($e);
 	
 	$e.datepicker({
 		minDate: new Date(),
 		numberOfMonths: numberOfMonths, 
 		onSelect: function(dateText, inst) {	
-			
+
 			//There's odd behavior when the user clicks, for example,
 			//the 1st then the 3rd, highlighting the 2nd as part of the range.
 			//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
@@ -239,7 +266,8 @@ function initMultiDayCalendar($e){
 		$.each(tds, function(){
 			a = $(this).find("a");
 			if($(a).html() == d){
-				$(this).addClass("active111");
+				//$(this).addClass("active111");
+				$(this).trigger("click");
 			}
 		})
 	}

@@ -1,0 +1,11 @@
+
+#map{
+	height:300px;
+/* 	width:300px; */
+	margin-top:10px;
+    border-right-style: inset;
+    border-bottom-style: inset;
+    border-top-style: outset;
+    border-left-style: outset;
+    overflow:hidden;
+}
