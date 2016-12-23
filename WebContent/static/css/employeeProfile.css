@@ -42,3 +42,65 @@ a{
 #activeJobs{
 	width:600px;
 }
+
+th#jobName{
+	width:25%;
+}
+
+/* th#wageProposal{ */
+/* 	width:67%; */
+/* } */
+
+th#amount-th{
+	width:15%;
+}
+
+th#status-th{
+	width:15%;
+}
+
+th#action-th{
+	width:35%;
+}
+
+
+
+
+
+
+div.sub-header-item{
+	display:inline-block;
+	padding: 0px 15px;
+	width:75px;
+}
+
+.sub-header{
+	padding-left:60px;
+	padding-bottom:20px;
+}
+
+.item-label{
+	padding-bottom:2.5px;
+	font-size:17px;
+	text-align:center;
+}
+
+.item-value{
+	padding:2.5px;
+	text-align: center;
+}
+
+.selcted-application-type{
+	background-color: #337ab7;
+	color: #ffffff;
+	border-radius: 2px;
+    font-size: 15px;
+    font-weight: bold;	
+    cursor:pointer; 
+}
+
+
+.wage-proposal-reponse-container{
+	padding:10px 0px;
+}
+

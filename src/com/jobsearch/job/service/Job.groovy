@@ -41,6 +41,10 @@ public class Job {
 	int newApplicationCount
 	Integer Duration
 	List<Integer> selectedQuestionIds
+	
+	//0 = not yet started;
+	//1 = started;
+	//2 = finished;
 	int status
 	
 	// Do away with work days from the job lass

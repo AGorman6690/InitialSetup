@@ -309,7 +309,7 @@ function showSectionContainer(sectionContainerId){
 function showContractorContent(request){
 	
 	$.each($("#sectionContainers").find(".contractor-content"), function(){
-		if(request)$(this).show();	
+		if(request) $(this).show();	
 		else $(this).hide();
 	})
 	

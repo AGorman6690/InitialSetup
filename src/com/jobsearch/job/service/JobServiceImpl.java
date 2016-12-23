@@ -967,6 +967,22 @@ public class JobServiceImpl {
 
 	}
 
+	public List<Job> getJobsByEmployee(int employeeUserId) {
+		
+		return repository.getJobsByEmployee(employeeUserId);
+	}
+
+	public int getJobCountByStatus(List<Job> jobs, int status) {
+		
+		if(jobs != null){
+			return (int) jobs.stream().filter(j -> j.getStatus() == status).count();
+		}
+		else{
+			return 0; 
+		}
+		
+	}
+
 
 
 

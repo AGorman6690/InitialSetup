@@ -23,7 +23,8 @@
 
 .re-counter-amount-container input{
 	display:block;	
-	margin:5px 0px;
+	margin:5px auto;
+	
 	
 }
 
@@ -34,4 +35,9 @@
     padding:3px 7px;
     margin:3px 3px;
     border:0;
+}
+
+.wage-proposal-response-container{
+	padding-top:10px;
+	display:none;
 }

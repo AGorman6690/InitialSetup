@@ -21,24 +21,32 @@
 
 	<div class="container">
 	
-		<div class="section">
+	
+	
+	
+	
+	
+	
+	
+	
+<!-- 		<div class="section"> -->
 		
-			<div id="availableDays">
-			<c:forEach items="${availableDays }" var="availableDay">
-				${availableDay }*
-			</c:forEach>
-			</div>
-			<div class="header">
-				<span data-toggle-id="availabilityContainer" class="glyphicon glyphicon-menu-down"></span>
-				<span class="header-text">Availability</span>
-			</div>		
-			<div class="section-body" id="availabilityContainer">	
-				<div id="calendar" class="calendar-multi-date-no-range" data-number-of-months="2"></div>
-				<div id="saveButtonContainer">
-					<button id="saveAvailability" class="square-button">Save</button>
-				</div>
-			</div>
-		</div>
+<!-- 			<div id="availableDays"> -->
+<%-- 			<c:forEach items="${availableDays }" var="availableDay"> --%>
+<%-- 				${availableDay }* --%>
+<%-- 			</c:forEach> --%>
+<!-- 			</div> -->
+<!-- 			<div class="header"> -->
+<!-- 				<span data-toggle-id="availabilityContainer" class="glyphicon glyphicon-menu-down"></span> -->
+<!-- 				<span class="header-text">Availability</span> -->
+<!-- 			</div>		 -->
+<!-- 			<div class="section-body" id="availabilityContainer">	 -->
+<!-- 				<div id="calendar" class="calendar-multi-date-no-range" data-number-of-months="2"></div> -->
+<!-- 				<div id="saveButtonContainer"> -->
+<!-- 					<button id="saveAvailability" class="square-button">Save</button> -->
+<!-- 				</div> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
 		<!-- ****** Failed Wage Negotiations -->
 		<c:choose>
 			<c:when test="${failedWageNegotiationDtos.size() > 0 }">
@@ -86,84 +94,112 @@
 		
 	
 	
-		<div id="openApplicationsContainer" class="section">
-			<div class="header">
-				<span class="header-text">Open Applications</span>
+		<div id="applicationsContainer" class="section">
+			<div class="header-container">
+				<div class="header">
+					<span class="header-text">Applications</span>
+				</div>
+				<div id="applicationSubHeader" class="sub-header">
+					<div class="sub-header-item">
+						<div class="item-label">
+							Open
+						</div>
+						<div data-value="0" class="item-value selcted-application-type">
+							${openApplicationCount }
+						</div>
+					</div>
+					<div class="sub-header-item">
+						<div class="item-label">
+							Failed
+						</div>
+						<div data-value="1" id="failedApplicationCount" class="item-value accent">
+							${failedApplicationCount }
+						</div>
+					</div>
+					<div class="sub-header-item">
+						<div class="item-label">
+							All
+						</div>
+						<div data-value="2" id="allApplications" class="item-value accent">					
+							${applicationDtos.size() }
+						</div>
+					</div>										
+				</div>
 			</div>
 			
 			<div class="section-body">
 			<c:choose>
-				<c:when test="${openApplicationResponseDtos.size() > 0 }">						
+				<c:when test="${applicationDtos.size() > 0 }">						
 					<table id="openApplications" class="main-table-style">
+					
 						<thead>
-							<tr>
-								<th>Job Name</th>
-								<th>Application Status</th>
-		<!-- 						<th>Desired Wage</th> -->
-								<th>Wage Status</th>
+							<tr class="header-1">		
+								<th id="jobName" class="left-edge" colspan="1"></th>
+								<th id="wageProposal" class="span left-edge right-edge" colspan="3">Wage Proposal</th>
 							</tr>
-						</thead>
+							
+							<tr class="header-2">
+								<th id="" class="left-edge">Job Name</th>
+								<th id="action-th" class="left-edge">Action</th>
+								<th id="amount-th" >Amount</th>
+								<th id="status-th" class="right-edge">Status</th>								
+							</tr>
+						</thead>					
+
 						<tbody>
 						
-							<c:forEach items="${openApplicationResponseDtos }" var="dto">
-							<tr class="static-row">
-								<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
-								<td>
-									<c:choose>
-										<c:when test="${dto.application.status == 0  }">Waiting for initial response</c:when>
-										<c:when test="${dto.application.status == 1  }">Declined</c:when>
-										<c:when test="${dto.application.status == 2  }">Being considered</c:when>
-										<c:when test="${dto.application.status == 3  }">Accepted</c:when>
-									</c:choose>							
-								</td>
-								
-		<!-- 						<td> -->
-		<%-- 							<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentDesiredWage}"/> --%>
-		<!-- 						</td> -->
-								
-								<!-- set the wage status -->
-								<td>
-									<c:choose>
-										<c:when test="${dto.currentWageProposal.status == 1 }">
-										<!-- ****** If the current wage proposal has been accepted-->
-											<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
-										</c:when>						
-										<c:when test="${dto.currentWageProposal.proposedByUserId != user.userId }">
-			<!-- 						******* If employer has made the last wage proposal -->
-											<div id="${dto.currentWageProposal.id}" class="counter-offer-container">
-												
-												<div class="offer-context">
-													Employer offered   
-													<span id="amount">
-														<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
-													</span>
-												</div>									
-												<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
-												<span class="toggle glyphicon glyphicon-menu-hamburger" data-toggle="${ toggleId}"></span>														
-												<div id="${ toggleId}" class="counter-offer-response">
-													<button class="accept-counter">Accept</button>
-													<button class="re-counter">Counter</button>		
-													<button class="decline-counter">Decline</button>							
-													<div class="re-counter-amount-container">
-														<input class="re-counter-amount"></input>
-														<button class="send-counter-offer">Send</button>
-														<button class="cancel-counter-offer">Cancel</button>
-													</div>										
-												</div>
-											</div>
-											<div class="sent-response-notification"></div>	
-										</c:when>
-										<c:otherwise>
-			<!-- 						******* Otherwise the applicant has made the last wage proposal -->							
-												<div class="offer-context">
-													Requested   
-													<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
-												</div>									
-										</c:otherwise>
-									</c:choose>
-								</td>					
-							</tr>
-						</c:forEach>
+							<c:forEach items="${applicationDtos }" var="dto">
+								<tr class="static-row application" data-application-status="${dto.application.status }">
+									<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
+									<td>
+										<c:choose>
+											<c:when test="${dto.currentWageProposal.status == 3 }">
+												<c:choose>
+													<c:when test="${dto.currentWageProposal.proposedToUserId == user.userId }">
+														You rejected
+													</c:when>
+													<c:otherwise>
+														Employer rejected
+													</c:otherwise>
+												</c:choose>												
+											</c:when>
+											<c:otherwise>
+												<c:choose>
+													<c:when test="${dto.currentWageProposal.proposedToUserId == user.userId }">
+														<c:set var="toggleId" value="${dto.application.applicationId }-wp-response"></c:set>
+														<span class="accent" data-toggle-id="${toggleId }">Waiting for you</span> 
+														<div id="${toggleId }" class="wage-proposal-response-container">
+															<div id="${dto.currentWageProposal.id}" class="counter-offer-container">
+																<button class="accept-counter">Accept</button>
+																<button class="re-counter">Counter</button>		
+																<button class="decline-counter">Decline</button>							
+																<div class="re-counter-amount-container">
+																	<input class="re-counter-amount"></input>
+																	<button class="send-counter-offer">Send</button>
+																	<button class="cancel-counter-offer">Cancel</button>
+																</div>										
+															</div>
+															<div class="sent-response-notification"></div>																
+														</div>
+													</c:when>
+													<c:otherwise>
+														Waiting for employer
+													</c:otherwise>
+												</c:choose>												
+											
+											</c:otherwise>
+										</c:choose>
+									</td>	
+									<td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/></td>										
+									<td>
+										<c:choose>
+											<c:when test="${dto.application.status == 0 }">Open</c:when>
+											<c:when test="${dto.application.status == 1 }">Failed</c:when>
+											<c:when test="${dto.application.status == 2 }">Open</c:when>
+										</c:choose>							
+									</td>														
+								</tr>
+							</c:forEach>
 													
 						</tbody>
 					</table>
@@ -178,127 +214,169 @@
 
 		</div> <!-- close open applications -->
 		
-		<c:if test="${yetToStartJobs.size() > 0 }">	
-			<div id="notYetStartedJobsContainer" class="section">
+		
+		
+		<div id="employmentContainer" class="section">
+			<div class="header-container">
 				<div class="header">
-					<span class="header-text">Jobs Waiting To Begin</span>
+					<span class="header-text">Employment</span>
 				</div>
-				
-				<div class="section-body">				
-					<table id="yetToStartJobs">
+				<div id="employmentSubHeader" class="sub-header">
+					<div class="sub-header-item">
+						<div class="item-label">
+							Past
+						</div>
+						<div data-job-status="2" class="item-value">
+							${pastEmploymentCount }
+						</div>
+					</div>
+					<div class="sub-header-item">
+						<div class="item-label">
+							Current
+						</div>
+						<div data-job-status="1" id="failedApplicationCount" class="item-value accent selcted-application-type">
+							${currentEmploymentCount }
+						</div>
+					</div>
+					<div class="sub-header-item">
+						<div class="item-label">
+							Future
+						</div>
+						<div data-job-status="0" id="allApplications" class="item-value accent">					
+							${futureEmploymentCount }
+						</div>
+					</div>										
+				</div>
+			</div>
+			
+			<div id="employment" class="section-body">
+			<c:choose>
+				<c:when test="${jobs_employment.size() > 0 }">						
+					<table id="" class="main-table-style">
+					
 						<thead>
-							<tr>
-								<th>Job Name</th>
-								<th>Start Date</th>
-								<th>End Date</th>
+							
+							<tr class="header-2">
+								<th id="jobName-e" class="left-edge">Job Name</th>
+								<th id="action-e" class="">Start Date</th>
+								<th id="status-e" class="right-edge">End Date</th>								
 							</tr>
-						</thead>
-						<tbody>		
-							<c:forEach items="${yetToStartJobs }" var="yetToStartJob">
-								<tr class="static-row">
-									<td><a class="accent" href="/JobSearch/job/${yetToStartJob.id }">${yetToStartJob.jobName }</a></td>
-									<td>${yetToStartJob.startDate }</td>
-									<td>${yetToStartJob.endDate }</td>
-								</tr>							
-							</c:forEach>
-						</tbody>
-					</table>		
-				</div>		
-			</div><!-- close active jobs container -->						
-		</c:if>
+						</thead>					
 
-		<div id="activeJobsContainer" class="section">
-			<div class="header">
-				<span class="header-text">Jobs In Process</span>
-			</div>
-			
-			<div class="section-body">
-			<c:choose>
-				<c:when test="${activeJobs.size() > 0 }">					
-					<table id="activeJobs" class="main-table-style">
-						<thead>
-							<tr>
-								<th>Job Name</th>
-								<th>Start Date</th>
-								<th>End Date</th>
-							</tr>
-						</thead>
 						<tbody>
-		
-							<c:forEach items="${activeJobs }" var="activeJob">
-								<tr class="static-row">
-									<td><a class="accent" href="/JobSearch/job/${activeJob.id }">${activeJob.jobName }</a></td>
-									<td>${activeJob.startDate }</td>
-									<td>${activeJob.endDate }</td>
-								</tr>							
+						
+							<c:forEach items="${jobs_employment }" var="job">
+								<tr class="static-row job" data-job-status="${job.status }">
+									<td><a class="accent" href="/JobSearch/job/${job.id }">${job.jobName }</a></td>
+									<td>${job.stringStartDate }</td>
+									<td>${job.stringEndDate }</td>													
+								</tr>
 							</c:forEach>
+													
 						</tbody>
-					</table>							
+					</table>
+									
 				</c:when>
 				<c:otherwise>
-					<div>You have no active jobs at this time.</div>
-				</c:otherwise>							
-			</c:choose>	
-			</div>	
-		</div><!-- close active jobs container -->		
-		
-		<div id="completedJobsContainer" class="section">
-			<div class="header">
-				<span class="header-text">Completed Jobs</span>
-			</div>
-			
-			<div class="section-body">
-			<c:choose>
-				<c:when test="${completedJobs.size() > 0 }">					
-					<table id="completedJobs" class="main-table-style">
-						<thead>
-							<tr>
-								<th>Job Name</th>
-								<th>End Date</th>
-							</tr>
-						</thead>
-						<tbody>		
-							<c:forEach items="${completedJobs }" var="completedJob">
-								<tr class="static-row">
-									<td><a class="accent" href="/JobSearch/job/${completedJob.id}">${completedJob.jobName }</a></td>
-									<td>${completedJob.endDate }</td>
-								</tr>							
-							</c:forEach>
-						</tbody>
-					</table>							
-				</c:when>
-				<c:otherwise>
-					<div>You have no completed jobs at this time.</div>
+					
+					Your employment record is non-existent.
 				</c:otherwise>
-			</c:choose>	
-			</div>		
-		</div><!-- close completed jobs container -->
+				
+			</c:choose>
+			</div>	
+
+		</div> <!-- close open applications -->		
+		
+		
+		
+		
 	</div>
 </body>
 
 <script>
 var availableDays = [];
 
-	$(document).ready(function(){
-
-		var dateToday = new Date();
-		var dateYesterday = new Date();
-		dateYesterday.setDate(dateToday.getDate() -1);
-		//Set the user's current availability
-		var availableDaysHTML = $("#availableDays").html();
-		var availableDays_string = availableDaysHTML.split("*");		
-		var formattedDateString;
-		$.each(availableDays_string, function(){
+	function toggleApplicationVisibility(value){
+		
+		var applicationStatus;
+		var applications = $("#openApplications").find(".application");
+		
+		$.each(applications, function(){
 			
-			//For whatever reason, "2016-10-31" does not work although
-			//this is javascript's preferred formatt...
-			//However, "2016/10/31" does work...
-			formattedDateString = this.replace("-", "/");			
-			var date = new Date(formattedDateString);			
-			if(!isNaN(date) & date > dateYesterday){
-				availableDays.push(date.getTime());	
-			}			
+			applicationStatus = $(this).attr("data-application-status");
+			
+			//Open was clicked
+			if(value == "0"){				
+				if(applicationStatus < 3) $(this).show();
+				else $(this).hide()				
+			}
+			
+			//Failed was clicked
+			else if(value == "1"){				
+				if(applicationStatus == 3) $(this).show();
+				else $(this).hide()				
+			}
+			
+			else $(this).show();
 		})
+
+	}
+	
+	function toggleEmploymentVisibility(clickedJobStatus){
+		
+		var jobStatus;
+		var jobs = $("#employment").find(".job");
+		var message;
+		
+		if(jobs.length == 0){
+			if(clickedJobStatus == "0") message = "You do not have future employment";
+			else if(clickedJobStatus == "1") message = "You do not have current employment";
+			else if(clickedJobStatus == "2") message = "You do not have past employment";
+			
+		}
+		else{			
+			$.each(jobs, function(){				
+				jobStatus = $(this).attr("data-job-status");				
+				if(jobStatus == clickedJobStatus) $(this).show();
+				else $(this).hide();								
+			})
+		}
+	}
+
+	$(document).ready(function(){
+		
+		$("#applicationSubHeader .item-value").click(function(){
+			var value = $(this).attr("data-value");
+			
+			toggleApplicationVisibility(value);
+			highlightArrayItem(this, $("#applicationSubHeader").find(".item-value"), "selcted-application-type");
+		})
+		
+		$("#employmentSubHeader .item-value").click(function(){
+			var clickedJobStatus = $(this).attr("data-job-status");
+			
+			toggleEmploymentVisibility(clickedJobStatus);
+			highlightArrayItem(this, $("#employmentSubHeader").find(".item-value"), "selcted-application-type");
+		})
+
+// 		var dateToday = new Date();
+// 		var dateYesterday = new Date();
+// 		dateYesterday.setDate(dateToday.getDate() -1);
+// 		//Set the user's current availability
+// 		var availableDaysHTML = $("#availableDays").html();
+// 		var availableDays_string = availableDaysHTML.split("*");		
+// 		var formattedDateString;
+// 		$.each(availableDays_string, function(){
+			
+// 			//For whatever reason, "2016-10-31" does not work although
+// 			//this is javascript's preferred formatt...
+// 			//However, "2016/10/31" does work...
+// 			formattedDateString = this.replace("-", "/");			
+// 			var date = new Date(formattedDateString);			
+// 			if(!isNaN(date) & date > dateYesterday){
+// 				availableDays.push(date.getTime());	
+// 			}			
+// 		})
 
 		
       

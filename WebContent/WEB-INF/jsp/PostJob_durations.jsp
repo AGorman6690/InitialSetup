@@ -417,7 +417,7 @@
 								<span class="add-list-item glyphicon glyphicon-plus"></span>
 							</div>					
 						</div>
-						<div id="contractorRequirements">
+						<div id="contractorRequirements" class="contractor-content">
 							<div class="section-body">
 							<h4>LLC</h4>
 								<div class="body-element-container">									

@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
@@ -547,6 +548,7 @@ public class UserServiceImpl {
 		// in
 		List<FailedWageNegotiationDTO> failedWageNegotiationDtos = applicationService
 				.getFailedWageNegotiationsDTOsByUser(employee.getUserId());
+		
 
 		// Set the model attributes
 		model.addAttribute("user", employee);
@@ -556,6 +558,31 @@ public class UserServiceImpl {
 		model.addAttribute("activeJobs", activeJobs);
 		model.addAttribute("completedJobs", completedJobs);
 		model.addAttribute("openApplicationResponseDtos", openApplicationResponseDtos);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtosByUser(employee.getUserId());
+		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
+		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
+		
+		List<Job> jobs_employment = jobService.getJobsByEmployee(employee.getUserId());
+		int pastEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 2);
+		int currentEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 1);
+		int futureEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 0);
+		
+		model.addAttribute("applicationDtos", applicationDtos);
+		model.addAttribute("openApplicationCount", openApplicationCount);
+		model.addAttribute("failedApplicationCount", failedApplicationCount);
+		model.addAttribute("jobs_employment", jobs_employment);
+		model.addAttribute("pastEmploymentCount", pastEmploymentCount);
+		model.addAttribute("currentEmploymentCount", currentEmploymentCount);
+		model.addAttribute("futureEmploymentCount", futureEmploymentCount);
 
 	}
 

@@ -306,8 +306,27 @@ public class ApplicationServiceImpl {
 		repository.addWageProposal(counter);
 
 	}
+	
+	public List<ApplicationDTO> getApplicationDtosByUser(int userId) {
+		
+		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
+		List<Application> applications = this.getApplicationsByUser(userId);		
+		
+		for(Application application : applications){
+			
+			ApplicationDTO applicationDto = new ApplicationDTO();
+			
+			applicationDto.setApplication(application);
+			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
+			
+			applicationDtos.add(applicationDto);
+		}
+		
+		return applicationDtos;
+	}
 
-	private List<ApplicationResponseDTO> getApplicationResponseDTOsByApplicant(List<Application> applications,
+	public List<ApplicationResponseDTO> getApplicationResponseDTOsByApplicant(List<Application> applications,
 			int applicantId) {
 
 		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
@@ -537,4 +556,26 @@ public class ApplicationServiceImpl {
 	public AnswerOption getAnswerOption(int answerOptionId) {
 		return repository.getAnswerOption(answerOptionId);
 	}
+
+	public int getFailedApplicationCount(List<ApplicationDTO> applicationDtos) {		
+		
+		if(applicationDtos != null){
+			return (int) applicationDtos.stream().filter(a -> a.getApplication().getStatus() == 1).count();
+		}else{
+			return 0;	
+		}
+		
+	}
+
+	public int getOpenApplicationCount(List<ApplicationDTO> applicationDtos) {
+		
+		if(applicationDtos != null){
+			return (int) applicationDtos.stream().filter(a -> a.getApplication().getStatus() == 0 || 
+																a.getApplication().getStatus() == 2).count();
+		}else{
+			return 0;	
+		}
+	}
+
+
 }

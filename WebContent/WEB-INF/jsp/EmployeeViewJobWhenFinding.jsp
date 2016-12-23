@@ -34,7 +34,7 @@
 <!-- ***************************************************************** -->
 
 		
-		<div class="container" >
+		<div class="container">
 			<div class="row">
 				<div id="sideBarContainer" class="col-sm-2">
 					<div id="jobInfo" class="first side-bar selected-blue" data-section-id="jobInfoContainer">Job Information</div>
@@ -47,11 +47,11 @@
 						<div class="section-body">
 							<h4>Job Information</h4>
 							<div class="body-element-container">
-								<%@ include file="./templates/JobInformation.jsp"%>
+								<%@include file="./templates/JobInformation.jsp"%>
 							</div>
 						</div>
 					</div>
-					
+
 <!-- 					<div id="questionsContainer" class="section-container"> -->
 <!-- 						<div class="section-body"> -->
 <!-- 							<h4>Questions</h4> -->
@@ -91,7 +91,10 @@
 									<div id="notLoggedIn-ApplicationWarning">
 										You must be logged in to apply for a job.
 									</div>
-								</c:if>									
+								</c:if>			
+								<div id="submitApplicationContainer">
+									<a id="submitApplication" class="accent">Submit</a>
+								</div>														
 							
 								<div class="info-container">
 									<div class="info-label">Desired Pay Per Hour</div>
@@ -100,11 +103,11 @@
 									</div>
 								</div>
 											
-								<div class="body-element-container info-container">
+								<div id="questions" class="body-element-container info-container">
 									<div class="info-label">Answers</div>
 									<div id="answersContainer" class="info-value">									
 										<c:forEach items="${jobDto.questions }" var="param_question">
-											<%@ include file="./templates/Questions_AnswerInput.jsp" %>
+											<%@include file="./templates/Questions_AnswerInput.jsp"%>
 										</c:forEach>																	
 									</div>
 								</div>		
@@ -115,6 +118,7 @@
 				</div> <!-- close sections container -->
 			</div>
 	
+		<input type="hidden" id="jobId" value="${jobDto.job.id }">
 		</div>
 
 <script>
@@ -172,7 +176,7 @@
 			toggleClass($(this), "selected");
 		})
 
-		$("#sendApplication").click(function(){
+		$("#submitApplication").click(function(){
 			apply();
 		})
 
@@ -254,7 +258,7 @@
 	function areAnswersValid(){
 		
 		var questionFormatId;
-		var answerContainers = $("#questionsContainer").find(".answer")
+		var answerContainers = $("#answersContainer").find(".answer-container")
 		var invalidCount = 0;
 		var answer;
 		
@@ -323,11 +327,11 @@
 		var selectedAnswer;		
 		var answers = [];
 		var answer = {};
-		var questionContainers = $("#questionsContainer").find(".question-container");
+		var questions = $("#questions").find(".question");
 		var questionId;
 		var questionFormatId
 		
-		$.each(questionContainers, function(){	
+		$.each(questions, function(){	
 
 			questionId = $(this).attr("data-question-id");
 			questionFormatId = $(this).attr("data-question-format-id");
@@ -422,9 +426,8 @@
 
 </script>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap">
 </script>
 
 
-<%@ include file="./includes/Footer.jsp"%>
+<%@include file="./includes/Footer.jsp"%></body>

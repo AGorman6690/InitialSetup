@@ -64,3 +64,7 @@
 .questions-container .info-container{
 	padding:15px 0px;
 }
+
+#submitApplicationContainer a{
+	font-size:18px;
+}

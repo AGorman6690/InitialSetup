@@ -573,6 +573,13 @@ public class JobRepository {
 
 		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
 	}
+	
+	public List<Job> getJobsByEmployee(int employeeUserId) {
+		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
+				+ "	AND employment.UserId = ?";
+
+		return this.JobRowMapper(sql, new Object[] { employeeUserId });
+	}
 
 //	public List<Job> getYetToStartJobsByEmployee(int userId) {
 //		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
@@ -701,6 +708,8 @@ public class JobRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, value }, Integer.class);
 
 	}
+
+
 
 
 }

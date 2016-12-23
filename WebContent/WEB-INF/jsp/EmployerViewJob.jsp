@@ -253,7 +253,7 @@
 			
 				<div id="jobInfoContainer" class="section-container">		
 <%-- 					<div class="">${vtJobInfo }</div> --%>
-					<
+					
 				</div>
 				
 				<div id="questionsContainer" class="section-container">
