@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -220,13 +221,11 @@ public class UserRepository {
 
 		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
 
-		if(list.size() >0 ){
+		if (list.size() > 0) {
 			return list.get(0);
-		}
-		else{
+		} else {
 			return null;
 		}
-
 
 	}
 
@@ -438,7 +437,6 @@ public class UserRepository {
 		String sql = "SELECT * FROM user WHERE user.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
 
-
 		int subQueryCount = 1; // 1 because the distance sub query is required
 
 		// Build sub query for availability.
@@ -477,30 +475,29 @@ public class UserRepository {
 
 		}
 
-/*
-		// Build the sub query for categories.
-		// This sub query has the same structure as the availability sub query.
-		// This returns all user ids that have ALL the requested categories.
-		String subQueryCategories = null;
-		if (findEmployeesDto.getCategoryIds() != null) {
-
-			subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
-
-			for (int categoryCount = 1; categoryCount < findEmployeesDto.getCategoryIds().size(); categoryCount++) {
-				int categoryCountMinus1 = categoryCount - 1;
-				subQueryCategories += " JOIN user_category uc" + categoryCount + " ON uc" + categoryCountMinus1
-						+ ".UserId" + " = uc" + categoryCount + ".UserId AND uc" + categoryCount + ".CategoryId = ?";
-				argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount));
-			}
-
-			subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
-			argsList.add(findEmployeesDto.getCategoryIds().get(0));
-
-			sql += subQueryCategories;
-			subQueryCount += 1;
-
-		}
-*/
+		/*
+		 * // Build the sub query for categories. // This sub query has the same
+		 * structure as the availability sub query. // This returns all user ids
+		 * that have ALL the requested categories. String subQueryCategories =
+		 * null; if (findEmployeesDto.getCategoryIds() != null) {
+		 *
+		 * subQueryCategories = " (SELECT uc0.UserId FROM user_category uc0";
+		 *
+		 * for (int categoryCount = 1; categoryCount <
+		 * findEmployeesDto.getCategoryIds().size(); categoryCount++) { int
+		 * categoryCountMinus1 = categoryCount - 1; subQueryCategories +=
+		 * " JOIN user_category uc" + categoryCount + " ON uc" +
+		 * categoryCountMinus1 + ".UserId" + " = uc" + categoryCount +
+		 * ".UserId AND uc" + categoryCount + ".CategoryId = ?";
+		 * argsList.add(findEmployeesDto.getCategoryIds().get(categoryCount)); }
+		 *
+		 * subQueryCategories += " WHERE uc0.CategoryId = ? AND uc0.UserId IN ";
+		 * argsList.add(findEmployeesDto.getCategoryIds().get(0));
+		 *
+		 * sql += subQueryCategories; subQueryCount += 1;
+		 *
+		 * }
+		 */
 
 		// Distance sub query.
 		// This returns all user ids with a home radius within the requested
@@ -517,12 +514,10 @@ public class UserRepository {
 		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
 		argsList.add(findEmployeesDto.getRadius());
 
-
 		// Need to close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {
 			sql += ")";
 		}
-
 
 		return this.JobSearchUserRowMapper(sql, argsList.toArray());
 	}
@@ -591,10 +586,10 @@ public class UserRepository {
 			cStmt.setString(4, dummyJob.getState());
 			cStmt.setFloat(5, dummyJob.getLat());
 			cStmt.setFloat(6, dummyJob.getLng());
-//			cStmt.setDate(7, dummyJob.getStartDate());
-//			cStmt.setDate(8, dummyJob.getEndDate());
-//			cStmt.setTime(9, dummyJob.getStartTime());
-//			cStmt.setTime(10, dummyJob.getEndTime());
+			// cStmt.setDate(7, dummyJob.getStartDate());
+			// cStmt.setDate(8, dummyJob.getEndDate());
+			// cStmt.setTime(9, dummyJob.getStartTime());
+			// cStmt.setTime(10, dummyJob.getEndTime());
 			cStmt.setInt(11, dummyCreationId);
 
 			// cStmt.addBatch();
@@ -655,11 +650,19 @@ public class UserRepository {
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
 				+ " HomeZipCode = ?, MaxWorkRadius = ?, MinimumPay = ? WHERE UserId = ?";
 
-	jdbcTemplate.update(sql,
+		jdbcTemplate.update(sql,
 				new Object[] { editProfileRequestDto.getHomeLat(), editProfileRequestDto.getHomeLng(),
 						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
 						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
 						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
 
 	}
+
+	public List<JobSearchUser> findSubscribers(Category category) {
+		StringBuilder sqlBuilder = new StringBuilder();
+		sqlBuilder.append("Select * from user a inner join user_category b on a.userID = b.userID where categoryID in (?)");
+
+		return JobSearchUserRowMapper(sqlBuilder.toString(), Arrays.asList(category.getId()).toArray());
+	}
+
 }

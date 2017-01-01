@@ -37,6 +37,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.session.SessionContext;
+import com.jobsearch.user.category.service.UserCategoryServiceImpl;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
@@ -66,6 +67,12 @@ public class UserServiceImpl {
 
 	@Autowired
 	Mailer mailer;
+
+	@Autowired
+	UserCategoryServiceImpl userCategoryServiceImpl;
+
+	@Autowired
+	GoogleClient googleClient;
 
 	@Value("${host.url}")
 	private String hostUrl;
@@ -361,8 +368,7 @@ public class UserServiceImpl {
 		editProfileRequestDto.setUserId(user.getUserId());
 
 		// Edit home location
-		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileRequestDto.getHomeCity() + " "
+		GeocodingResult[] results = googleClient.getLatAndLng(editProfileRequestDto.getHomeCity() + " "
 				+ editProfileRequestDto.getHomeState() + " " + editProfileRequestDto.getHomeZipCode());
 
 		if (results.length == 1) {
@@ -370,7 +376,7 @@ public class UserServiceImpl {
 			editProfileRequestDto.setHomeLng((float) results[0].geometry.location.lng);
 			// this.updateHomeLocation(editProfileRequest);
 			repository.updateEmployeeSettings(editProfileRequestDto);
-
+			userCategoryServiceImpl.addUserCategories(editProfileRequestDto.getCategoryIds(), user.getUserId());
 			this.updateSessionUser(session);
 
 		}
@@ -658,6 +664,10 @@ public class UserServiceImpl {
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.getCompletedJobResponseDtosByEmployee(userId);
 		model.addAttribute("completedJobDtos", completedJobDtos);
 
+	}
+
+	public List<JobSearchUser> findSubscribers(Category category) {
+		return repository.findSubscribers(category);
 	}
 
 }

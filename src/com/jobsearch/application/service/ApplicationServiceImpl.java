@@ -527,7 +527,7 @@ public class ApplicationServiceImpl {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	public void addAnswer(Answer answer) {
 		repository.addAnswer(answer);
 	}

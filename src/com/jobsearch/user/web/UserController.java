@@ -83,8 +83,6 @@ public class UserController {
 
 		}
 
-		// Get the user's profile
-		// user = userService.getProfile(user);
 		model.addAttribute("user", user);
 
 		// Update session user after they have logged in
@@ -152,6 +150,8 @@ public class UserController {
 		if (user.getProfileId() == 1) {
 			model.setViewName("EmployeeSettings");
 		}
+
+		model.addObject("categories", categoryService.getAllCategories());
 
 		return model;
 	}

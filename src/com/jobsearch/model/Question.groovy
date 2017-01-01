@@ -1,6 +1,7 @@
 package com.jobsearch.model
 
 import java.util.List
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Question {
 	//0: Yes/N0
@@ -8,6 +9,7 @@ public class Question {
 	//2: Single answer
 	//3: Multi answer
 	//Use an enum???????
+	@JsonProperty("id")
 	int questionId
 	String text
 	int formatId

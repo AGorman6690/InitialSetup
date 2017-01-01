@@ -1,12 +1,12 @@
 package com.jobsearch.job.service
 
-import java.sql.Date;
+import java.sql.Date
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty
 
 class WorkDay {
-	@JsonIgnore public String millisecondsDate
+	@JsonProperty("millisecondsDate")
+	String millisecondsDate
 
 	@JsonProperty("date")
 	Date date

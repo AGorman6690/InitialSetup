@@ -103,9 +103,13 @@ public class CategoryServiceImpl {
 		List<Category> categories = new ArrayList<Category>();
 
 		for(int categoryId : categoryIds){
-			categories.add(this.getCategory(categoryId));
+			categories.add(getCategory(categoryId));
 		}
 		return categories;
+	}
+
+	public List<Category> getAllCategories(){
+		return repository.getAllCategories();
 	}
 
 }

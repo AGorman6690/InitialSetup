@@ -54,20 +54,15 @@ public class WelcomeController {
 	public String welcome(Model model, HttpServletRequest request,
 			@RequestParam(name = "error", required = false) boolean error) {
 
-		// // Set session objects
-		// JobSearchUser user = new JobSearchUser();
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addAttribute("profiles", profiles);
-		// model.addAttribute("user", user);
 
 		model.addAttribute("url", hostUrl);
 
 		if (error) {
 			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
 		}
-
-		// model.setViewName("Welcome");
 
 		return "Welcome";
 	}

@@ -45,6 +45,7 @@ public class JobController {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		jobService.addPosting(postingDto, user);
+
 	}
 
 	@RequestMapping(value = "/jobs/sort", method = RequestMethod.GET)

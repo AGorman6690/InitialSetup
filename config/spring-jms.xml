@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+http://www.springframework.org/schema/jms http://www.springframework.org/schema/jms/spring-jms-4.2.xsd">
+
+	<!-- A JMS connection factory for ActiveMQ -->
+	<bean id="connectionFactory" class=" com.amazon.sqs.javamessaging.SQSConnectionFactory">
+		<property name="region" value="com.amazonaws.regions.Regions.US_EAST_1" />
+		<property name="endpoint" value="${amazon.sqs.url}"/>
+	</bean>
+
+	<!-- A POJO that implements the JMS message listener -->
+	<bean id="simpleMessageListener" class="com.jobsearch.jms.impl.JmsMessageListenerImpl" />
+
+	<!-- The Spring message listener container configuration -->
+	<jms:listener-container container-type="default"
+		connection-factory="connectionFactory" acknowledge="auto">
+		<jms:listener destination="TEST.FOO" ref="simpleMessageListener"
+			method="onMessage" />
+	</jms:listener-container>
+</beans>

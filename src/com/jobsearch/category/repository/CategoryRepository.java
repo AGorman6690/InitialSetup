@@ -89,4 +89,10 @@ public class CategoryRepository {
 		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
 	}
 
+	public List<Category> getAllCategories() {
+		String sql = "SELECT * FROM category";
+
+		return this.CategoryRowMapper(sql, new Object[] {});
+	}
+
 }
