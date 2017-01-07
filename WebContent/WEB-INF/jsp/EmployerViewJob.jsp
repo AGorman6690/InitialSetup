@@ -29,187 +29,185 @@
 			
 			<div class="col-sm-10" id="sectionContainers">
 				<div id="applicantsContainer" class="section-container">
-
-				<h4>Applicants</h4>
-					
-				<div id="applicantsContainer" class="section-body">
-				<c:choose>
-					
-					
-					<c:when test="${empty applications}">
-						<div>There are currently no applicants for this job</div>
-					</c:when>
-					
-					<c:otherwise>
-					
-						<table id="applicantsTable" class="main-table-style">
-							<thead>
-								<tr>
-									<th id="applicantName">Name</th>
-									<th id="wageNegotiation">Wage Negotiation</th>
-									<th id="rating">Rating</th>
-									<th id="endorsements">Endorsements</th>
-								<c:if test="${questions.size() > 0 }">
-									<th id="questions">
-									<span data-toggle-id="selectQuestionsContainer" >
-										<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
-									</span>					
-										<div id="selectQuestionsContainer">
-											
-											<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
-											<div id="questionsAllOrNoneContainer">
-												<div class="radio">
-												  <label><input id="selectAllQuestions" type="radio" name="questions-all-or-none">All</label>
-												</div>
-												<div class="radio">
-												  <label><input id="selectNoQuestions" type="radio" name="questions-all-or-none">None</label>
-												</div>								
-											</div>
-											<div id="questionListContainer">
-											<c:forEach items="${questions }" var="question">
-												<div class="checkbox">
-													<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
-												</div>
-											</c:forEach>
-											</div>
-										</div>
-									
-															
-									</th>
-								</c:if>							
-									<th id="status">
-										<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
-											<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
-										</span>					
-										<div id="selectStatusContainer">
-											
-											<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
-											<div id="statusAllContainer">
-												<div class="checkbox">
-												  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
-												</div>								
-											</div>									
-											<div id="statusListContainer">
-												<div class="checkbox">
-												  <label><input id="selectStatusSubmitted" type="checkbox" 
-												  		name="status-select" value="0">No Action Taken</label>
-												</div>									
-												<div class="checkbox">
-												  <label><input id="selectStatusDeclined" type="checkbox" 
-												  		name="status-select" value="1">Declined</label>
-												</div>
-												<div class="checkbox">
-												  <label><input id="selectStatusConsidering" type="checkbox"
-												  		name="status-select" value="2">Considering</label>
-												</div>
-											</div>
-										</div>
-									</th>
-								</tr>
-							</thead>
-								<tbody>
-								<c:forEach items="${applications }" var="application">
-									<tr class="" data-application-status="${application.status }"
-										data-application-id="${application.applicationId }">
-										<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
-										
-										<td>
-											<c:choose>
-												<c:when test="${application.currentWageProposal.status == 1 }">
-												<!-- ****** If the current wage proposal has been accepted-->
-													<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
-												</c:when>						
-												<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
-					<!-- 						******* If applicant has made the last wage proposal -->
-													<div id="${application.currentWageProposal.id}" class="counter-offer-container">
-														
-														<div class="offer-context">
-															Applicant asking for 
-															<span id="amount">
-																<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-															</span>
-														</div>									
-														<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
-														<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
-														<div id="${ toggleId}" class="counter-offer-response">
-															<button class="accept-counter">Hire</button>
-															<button class="re-counter">Counter</button>		
-															<button class="decline-counter">Decline</button>							
-															<div class="re-counter-amount-container">
-																<input class="re-counter-amount"></input>
-																<button class="send-counter-offer">Send</button>
-																<button class="cancel-counter-offer">Cancel</button>
-															</div>										
-														</div>
-													</div>
-													<div class="sent-response-notification"></div>	
-												</c:when>
-												<c:otherwise>
-					<!-- 						******* Otherwise the employer has made the last wage proposal -->							
-														<div class="offer-context">
-															You offered   
-															<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-														</div>									
-												</c:otherwise>
-											</c:choose>
-										</td>									
-										
-										<td> ${application.applicant.rating}</td>
-										<td>										
-											<c:forEach items="${application.applicant.endorsements }" var="endorsement">
-											
-												<div class="endorsement">													
-													${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
-												</div>
-											</c:forEach>
-		
-										</td>	
+					<div id="applicantsContainer" class="section-body">
+					<h4>Applicants</h4>
+					<c:choose>
+						
+						
+						<c:when test="${empty applications}">
+							<div>There are currently no applicants for this job</div>
+						</c:when>
+						
+						<c:otherwise>
+						
+							<table id="applicantsTable" class="main-table-style">
+								<thead>
+									<tr>
+										<th id="applicantName">Name</th>
+										<th id="wageNegotiation">Wage Negotiation</th>
+										<th id="rating">Rating</th>
+										<th id="endorsements">Endorsements</th>
 									<c:if test="${questions.size() > 0 }">
-										<td>
-										<c:forEach items="${application.questions }" var="question">
-											<div data-question-id="${question.questionId }" class="question-container">
-												<div class="question">${question.text }</div>										
-												<div class="answer">
-													<c:set var="answerCount" value="${question.answers.size() }"></c:set>
-													<c:set var="i" value="${0 }"></c:set>
-													<c:forEach items="${question.answers }" var="answer">
-														${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
-														<c:set var="i" value="${i +1 }"></c:set>
-													</c:forEach>
-													
+										<th id="questions">
+										<span data-toggle-id="selectQuestionsContainer" >
+											<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
+										</span>					
+											<div id="selectQuestionsContainer">
+												
+												<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
+												<div id="questionsAllOrNoneContainer">
+													<div class="radio">
+													  <label><input id="selectAllQuestions" type="radio" name="questions-all-or-none">All</label>
+													</div>
+													<div class="radio">
+													  <label><input id="selectNoQuestions" type="radio" name="questions-all-or-none">None</label>
+													</div>								
+												</div>
+												<div id="questionListContainer">
+												<c:forEach items="${questions }" var="question">
+													<div class="checkbox">
+														<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
+													</div>
+												</c:forEach>
 												</div>
 											</div>
-										</c:forEach>
-										</td>
-									</c:if>			
-		
-		<!-- 								Application Status						 -->
-										<td>
-											<div class="application-status-container">
+										
+																
+										</th>
+									</c:if>							
+										<th id="status">
+											<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
+												<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
+											</span>					
+											<div id="selectStatusContainer">
+												
+												<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
+												<div id="statusAllContainer">
+													<div class="checkbox">
+													  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
+													</div>								
+												</div>									
+												<div id="statusListContainer">
+													<div class="checkbox">
+													  <label><input id="selectStatusSubmitted" type="checkbox" 
+													  		name="status-select" value="0">No Action Taken</label>
+													</div>									
+													<div class="checkbox">
+													  <label><input id="selectStatusDeclined" type="checkbox" 
+													  		name="status-select" value="1">Declined</label>
+													</div>
+													<div class="checkbox">
+													  <label><input id="selectStatusConsidering" type="checkbox"
+													  		name="status-select" value="2">Considering</label>
+													</div>
+												</div>
+											</div>
+										</th>
+									</tr>
+								</thead>
+									<tbody>
+									<c:forEach items="${applications }" var="application">
+										<tr class="" data-application-status="${application.status }"
+											data-application-id="${application.applicationId }">
+											<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+											
+											<td>
 												<c:choose>
-													<c:when test="${application.status == 1 }">
-													<button id="" value="1" class="active">Decline</button>
+													<c:when test="${application.currentWageProposal.status == 1 }">
+													<!-- ****** If the current wage proposal has been accepted-->
+														<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
+													</c:when>						
+													<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
+						<!-- 						******* If applicant has made the last wage proposal -->
+														<div id="${application.currentWageProposal.id}" class="counter-offer-container">
+															
+															<div class="offer-context">
+																Applicant asking for 
+																<span id="amount">
+																	<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																</span>
+															</div>									
+															<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
+															<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
+															<div id="${ toggleId}" class="counter-offer-response">
+																<button class="accept-counter">Hire</button>
+																<button class="re-counter">Counter</button>		
+																<button class="decline-counter">Decline</button>							
+																<div class="re-counter-amount-container">
+																	<input class="re-counter-amount"></input>
+																	<button class="send-counter-offer">Send</button>
+																	<button class="cancel-counter-offer">Cancel</button>
+																</div>										
+															</div>
+														</div>
+														<div class="sent-response-notification"></div>	
 													</c:when>
 													<c:otherwise>
-													<button id="" value="1" class="">Decline</button>
+						<!-- 						******* Otherwise the employer has made the last wage proposal -->							
+															<div class="offer-context">
+																You offered   
+																<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+															</div>									
 													</c:otherwise>
 												</c:choose>
-												<c:choose>
-													<c:when test="${application.status == 2 }">
-													<button id="" value="2" class="active">Consider</button>
-													</c:when>
-													<c:otherwise>
-													<button id="" value="2" class="">Consider</button>
-													</c:otherwise>
-												</c:choose>										
-											</div>
-										</td>
-									</tr>
-								</c:forEach>						
-								</tbody>					
-							</table>			
-						</c:otherwise>			
-					</c:choose>
+											</td>									
+											
+											<td> ${application.applicant.rating}</td>
+											<td>										
+												<c:forEach items="${application.applicant.endorsements }" var="endorsement">
+												
+													<div class="endorsement">													
+														${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
+													</div>
+												</c:forEach>
+			
+											</td>	
+										<c:if test="${questions.size() > 0 }">
+											<td>
+											<c:forEach items="${application.questions }" var="question">
+												<div data-question-id="${question.questionId }" class="question-container">
+													<div class="question">${question.text }</div>										
+													<div class="answer">
+														<c:set var="answerCount" value="${question.answers.size() }"></c:set>
+														<c:set var="i" value="${0 }"></c:set>
+														<c:forEach items="${question.answers }" var="answer">
+															${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
+															<c:set var="i" value="${i +1 }"></c:set>
+														</c:forEach>
+														
+													</div>
+												</div>
+											</c:forEach>
+											</td>
+										</c:if>			
+			
+			<!-- 								Application Status						 -->
+											<td>
+												<div class="application-status-container">
+													<c:choose>
+														<c:when test="${application.status == 1 }">
+														<button id="" value="1" class="active">Decline</button>
+														</c:when>
+														<c:otherwise>
+														<button id="" value="1" class="">Decline</button>
+														</c:otherwise>
+													</c:choose>
+													<c:choose>
+														<c:when test="${application.status == 2 }">
+														<button id="" value="2" class="active">Consider</button>
+														</c:when>
+														<c:otherwise>
+														<button id="" value="2" class="">Consider</button>
+														</c:otherwise>
+													</c:choose>										
+												</div>
+											</td>
+										</tr>
+									</c:forEach>						
+									</tbody>					
+								</table>			
+							</c:otherwise>			
+						</c:choose>
 					</div>
 				</div> <!-- end applicants -->				
 
@@ -527,8 +525,8 @@ function getApplicationStatusButtonsByApplicationId(applicationId){
 
 </script>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-</script>
+<!-- <script async defer -->
+<!-- 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap"> -->
+<!-- </script> -->
 
 <%@ include file="./includes/Footer.jsp"%>

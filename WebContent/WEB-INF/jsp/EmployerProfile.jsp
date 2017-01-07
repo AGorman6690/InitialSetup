@@ -26,7 +26,7 @@
 		<div id="jobTypeSelectionBoard">
 			<div id="jobsWaitingToStart" class="job-type selected-blue">Waiting To Start</div>
 			<div id="jobsInProcess" class="job-type">In Process</div>
-			<div id="jobsCompleted" class="job-type">Completed</div>			
+			<div id="jobsCompleted" class="job-type">Complete</div>			
 		</div>
 		
 	
@@ -39,7 +39,7 @@
 		<c:choose>
 			<c:when test="${completedJobs.size() >0 }">			
 				<div id="complete" class="section completed-jobs-container job-type-section">
-					<div class="header"><h3>Completed Jobs</h3></div>
+					<div class="header"><h3>Jobs Complete</h3></div>
 					<div class="section-body">
 						<table id="" class="main-table-style">
 							<thead>

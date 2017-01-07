@@ -143,6 +143,7 @@ th.applicant-wage-negotiation{
     overflow:hidden;
 	width:150px;
 	display:inline-block;
+	text-align:center;
 }
 
 #jobTypeSelectionBoard{
