@@ -109,7 +109,7 @@
 									<c:forEach items="${applications }" var="application">
 										<tr class="" data-application-status="${application.status }"
 											data-application-id="${application.applicationId }">
-											<td><a class="accent" href="/JobSearch/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+											<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
 											
 											<td>
 												<c:choose>
@@ -124,19 +124,24 @@
 															<div class="offer-context">
 																Applicant asking for 
 																<span id="amount">
-																	<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+																	$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
 																</span>
 															</div>									
 															<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
-															<span class="glyphicon glyphicon-menu-hamburger" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
+															<span class="glyphicon glyphicon-menu-down" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
 															<div id="${ toggleId}" class="counter-offer-response">
-																<button class="accept-counter">Hire</button>
-																<button class="re-counter">Counter</button>		
-																<button class="decline-counter">Decline</button>							
-																<div class="re-counter-amount-container">
+																<a class="accent accept-counter">Hire</a>																	
+																<a class="accent decline-counter">Decline</a>	
+																
+																<c:set var="toggleIdCounter" value="${ application.currentWageProposal.id}-toggle-id-counter" />
+																<a class="accent re-counter" data-toggle-id="${toggleIdCounter }" data-toggle-speed="1">Counter</a>							
+																<div id="${toggleIdCounter }" class="re-counter-amount-container" >
+																	<div>Amount</div>
 																	<input class="re-counter-amount"></input>
-																	<button class="send-counter-offer">Send</button>
-																	<button class="cancel-counter-offer">Cancel</button>
+																	<div>
+																		<a class="accent send-counter-offer">Send</a>
+																		<a class="accent cancel-counter-offer">Cancel</a>
+																	</div>
 																</div>										
 															</div>
 														</div>
@@ -214,11 +219,10 @@
 				
 				<div id="employeesContainer" class="section-container">
 		
-					<h4>Employees</h4>
+					
 					<div id="employees" class="section-body">
-					<c:choose>
-						
-						
+					<h4>Employees</h4>
+					<c:choose>						
 						<c:when test="${empty employees}">
 							<div>There are currently no employees for this job</div>
 						</c:when>
@@ -236,7 +240,7 @@
 								<tbody>						
 								<c:forEach items="${employees }" var="employee">
 									<tr>
-										<td><a class="accent" href="/JobSearch/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
+										<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${employee.userId}/jobs/completed"> ${employee.firstName }</a></td>
 										<td>${employee.wage }</td>
 										<td>${employee.rating }</td>
 									</tr>	
@@ -248,17 +252,22 @@
 					</div>			
 				</div>	
 				
-			
-				<div id="jobInfoContainer" class="section-container">		
-<%-- 					<div class="">${vtJobInfo }</div> --%>
-					
-				</div>
+				
+				<div id="jobInfoContainer" class="section-container">
+					<div class="section-body">
+						<h4>Job Information</h4>
+						<div class="body-element-container">
+							<%@include file="./templates/JobInformation.jsp"%>
+						</div>
+					</div>
+				</div>				
 				
 				<div id="questionsContainer" class="section-container">
+					<div class="section-body">
+					<h4>Questions</h4>
 					<c:choose>
-						<c:when test="${questions.size() > 0 }">
-							<h4>Questions</h4>
-							<div id="questionsContainer" class="section-body">
+						<c:when test="${questions.size() > 0 }">		
+
 								<c:forEach items="${questions }" var="question">
 									<div class="question-container">
 										${question.text }
@@ -291,9 +300,10 @@
 										</div>
 									</div>
 								</c:forEach>
-							</div>						
+											
 						</c:when>
 					</c:choose>
+					</div>		
 				</div>
 
 				
@@ -525,8 +535,8 @@ function getApplicationStatusButtonsByApplicationId(applicationId){
 
 </script>
 
-<!-- <script async defer -->
-<!-- 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap"> -->
-<!-- </script> -->
+<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+</script>
 
 <%@ include file="./includes/Footer.jsp"%>

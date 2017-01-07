@@ -1,6 +1,7 @@
 .counter-offer-response{
 	display:none;
 	padding-top:7px;
+	padding-left:15px;
 }
 
 .offer-context{
@@ -19,13 +20,14 @@
 
 .re-counter-amount-container{
 	display:none;	
+	padding-left:15px;
 }
 
 .re-counter-amount-container input{
 	display:block;	
-	margin:5px auto;
-	
-	
+/* 	margin:5px auto; */
+/* 	margin-left:10px; */
+	width:75px;	
 }
 
 .counter-offer-response button{
@@ -33,11 +35,21 @@
     color:#ffffff;
     font-size: 15px;
     padding:3px 7px;
-    margin:3px 3px;
+    margin:5px 0px;
     border:0;
 }
 
 .wage-proposal-response-container{
 	padding-top:10px;
 	display:none;
+}
+
+.counter-offer-response a{
+	display:block;
+	text-align:left;
+	padding:2px 0px;
+}
+
+.re-counter-amount-container *{
+	text-align:left;
 }

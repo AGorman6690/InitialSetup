@@ -69,6 +69,10 @@ table#failedWageNegotiations{
 	width:500px;
 }
 
+tbody td.job-name{
+	text-align:left;
+}
+
 
 .jobs-table-container{
 	padding-top:25px;

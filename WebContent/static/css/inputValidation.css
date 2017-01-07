@@ -1,5 +1,6 @@
 .invalid{
 	border: 5px solid #b30000 !important;
+    border-radius: 5px;
 }
 
 .invalid-select-input{

@@ -747,7 +747,12 @@ public class JobServiceImpl {
 	//		//Get the failed wage negotiations
 			String vtFailedWageNegotiationsByJob = applicationService.
 					getFailedWageNegotiationsByJobVelocityTemplate(selectedJob);
-		
+			
+			
+			JobDTO jobDto = new JobDTO();
+			jobDto = this.getJobDTO(jobId);
+			
+			model.addAttribute("jobDto", jobDto);
 			model.addAttribute("applications", applications);
 			model.addAttribute("employees", employees);
 			model.addAttribute("vtFailedWageNegotiationsByJob", vtFailedWageNegotiationsByJob);
@@ -909,16 +914,8 @@ public class JobServiceImpl {
 		
 		
 		JobDTO jobDto = new JobDTO();
-		Job job = this.getJob(jobId);
-		jobDto.setJob(job);
-		jobDto.setWorkDays(this.getWorkDays(jobId));
-		jobDto.setQuestions(applicationService.getQuestions(jobId));
-		
-		this.setJobDtoDuration(jobDto);
-		
-		
-		
-		
+		jobDto = this.getJobDTO(jobId);
+
 		List<Category> categories = categoryService.getCategoriesByJobId(jobId);		
 		
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
@@ -930,6 +927,22 @@ public class JobServiceImpl {
 		
 		SessionContext.verifyLoggedInUser(session, model);
 
+	}
+	
+	
+
+	private JobDTO getJobDTO(int jobId) {
+		
+		JobDTO jobDto = new JobDTO();
+		
+		Job job = this.getJob(jobId);
+		jobDto.setJob(job);
+		jobDto.setWorkDays(this.getWorkDays(jobId));
+		jobDto.setQuestions(applicationService.getQuestions(jobId));
+		
+		this.setJobDtoDuration(jobDto);
+		
+		return jobDto;
 	}
 
 	public void setJobDtoDuration(JobDTO jobDto) {

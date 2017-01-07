@@ -104,7 +104,7 @@
 								</div>
 											
 								<div id="questions" class="body-element-container info-container">
-									<div class="info-label">Answers</div>
+									<div class="info-label">Questions</div>
 									<div id="answersContainer" class="info-value">									
 										<c:forEach items="${jobDto.questions }" var="param_question">
 											<%@include file="./templates/Questions_AnswerInput.jsp"%>

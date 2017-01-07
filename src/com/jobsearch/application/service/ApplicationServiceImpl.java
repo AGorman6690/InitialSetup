@@ -13,6 +13,7 @@ import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 
 import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.Category;
@@ -576,6 +577,8 @@ public class ApplicationServiceImpl {
 			return 0;	
 		}
 	}
+
+
 
 
 }

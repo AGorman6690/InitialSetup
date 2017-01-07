@@ -45,6 +45,7 @@ table.main-table-style{
 .main-table-style td{
 	padding:8px;
 	text-align:center;
+	font-size:15px;
 }
 
 .main-table-style th{

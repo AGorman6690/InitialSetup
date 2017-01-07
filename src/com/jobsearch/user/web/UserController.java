@@ -191,12 +191,14 @@ public class UserController {
 		model.setViewName("PostJob_without_cart");
 		return model;
 	}	
-
-	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
+		@RequestMapping(value = "/job/{jobId}/user/{userId}/jobs/completed", method = RequestMethod.GET)
 	// @ResponseBody
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId, Model model, HttpSession session) {
+	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
+									 @PathVariable(value="jobId") int jobId,
+									 Model model, HttpSession session) {
 
 		if (SessionContext.isLoggedIn(session)) {
+			userService.setModel_Applicants(model, jobId);
 			userService.setModel_WorkHistoryByUser(model, userId);
 			return "EmployerViewEmployee";
 		} else {

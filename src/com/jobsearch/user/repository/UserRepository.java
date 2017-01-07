@@ -255,8 +255,7 @@ public class UserRepository {
 	public ArrayList<JobSearchUser> getApplicants(int jobId) {
 
 		String sql = "SELECT *" + " FROM user" + " INNER JOIN application" + " ON user.UserId = application.UserId"
-				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?"
-				+ " AND job.IsActive = 1";
+				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}

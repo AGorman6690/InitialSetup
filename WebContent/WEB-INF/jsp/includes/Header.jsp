@@ -86,6 +86,12 @@
 
 <script src="<c:url value="/static/javascript/Layout.js" />"></script>	
 
+
+<link rel="stylesheet" type="text/css"
+      href="https://fonts.googleapis.com/css?family=Nunito">
+
+
+
 </head>
 
 

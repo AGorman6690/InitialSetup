@@ -107,8 +107,9 @@ span.accent{
     font-weight: bold;
 }
 
-html {
+body {
   overflow-y: scroll;
+  font-family: "Nunito", sans-serif !important;
 }
 
 
