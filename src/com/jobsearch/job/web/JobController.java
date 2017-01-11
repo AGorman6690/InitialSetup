@@ -152,7 +152,7 @@ public class JobController {
 
 		// If employee
 		if (user.getProfileId() == 1) {
-			jobService.setModelForEmployeeViewJobFromProfileJsp(model, jobId, user.getUserId());
+			jobService.setModel_EmployeeViewJobFromProfile(model, jobId, user.getUserId());
 			return "EmployeeViewJobFromProfile";
 			// Else if employer
 		} else if (user.getProfileId() == 2) {

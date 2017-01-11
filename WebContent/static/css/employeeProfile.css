@@ -44,7 +44,7 @@ a{
 }
 
 th#jobName{
-	width:25%;
+	width:40%;
 }
 
 /* th#wageProposal{ */
@@ -52,12 +52,9 @@ th#jobName{
 /* } */
 
 th#amount-th{
-	width:15%;
+	width:25%;
 }
 
-th#status-th{
-	width:15%;
-}
 
 th#action-th{
 	width:35%;
@@ -75,7 +72,7 @@ div.sub-header-item{
 }
 
 .sub-header{
-	padding-left:60px;
+/* 	padding-left:60px; */
 	padding-bottom:20px;
 }
 
@@ -104,3 +101,6 @@ div.sub-header-item{
 	padding:10px 0px;
 }
 
+#applicationContainer{
+	display:block;
+}

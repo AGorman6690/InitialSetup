@@ -34,10 +34,12 @@ import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.session.SessionContext;
+import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
@@ -588,48 +590,16 @@ public class UserServiceImpl {
 
 	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
 
-		//**************************************************************
-		//**************************************************************	
-		//Why is there a dto list?????
-		//Address this later.
-		
-		
-		// Get the employer's yet-to-start jobs
-		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployer(employer.getUserId());
-		List<JobDTO> yetToStartJobs_Dtos = jobService.getYetToStartJobsByEmployer_Dto(employer.getUserId());
-		//**************************************************************
-		//**************************************************************
-		
-		
-		// Get the employer's active jobs
-		List<Job> activeJobs = jobService.getActiveJobsByEmployer(employer.getUserId());
+		List<JobDTO> jobDtos_jobsWaitingToStart = jobService.getJobDtos_JobsWaitingToStart_Employer(employer.getUserId());
+
+		List<JobDTO> jobDtos_jobsInProcess = jobService.getJobDtos_JobsInProcess_Employer(employer.getUserId());
 
 		// Get the employer's completed jobs
 		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
 
-		// Get the failed wage negotiations that the employer has been involved
-		// in
-		List<JobDTO> activeJobsWithFailedWageNegotiations = jobService
-				.getJobsWithFailedWageNegotiations(employer.getUserId(), yetToStartJobs);
-
-		// //Run the failed wage negotiations velocity template
-		String vtFailedWageNegotiations = applicationService
-				.getFailedWageNegotiationsVelocityTemplate(activeJobsWithFailedWageNegotiations);
-
-		// Run a velocity template to render the yet-to-start-jobs table
-		// String vtYetToStartJobs =
-		// jobService.getEmployerProfileJobTableTemplate(employer,
-		// yetToStartJobs, false);
-		String vtYetToStartJobs = jobService.getEmployersJobsYetTemplate(employer, yetToStartJobs_Dtos, false);
-
-		// Run a velocity template to render the active-jobs table
-		String vtActiveJobs = jobService.getEmployerProfileJobTableTemplate(employer, activeJobs, true);
-
-		model.addAttribute("vtFailedWageNegotiations", vtFailedWageNegotiations);
-		model.addAttribute("vtYetToStartJobs", vtYetToStartJobs);
-		model.addAttribute("vtActiveJobs", vtActiveJobs);
-		// model.addAttribute("activeJobs", activeJobs);
+		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
 		model.addAttribute("completedJobs", completedJobs);
+		model.addAttribute("yetToStartJobs_Dtos", jobDtos_jobsWaitingToStart);
 
 		// When the profile is requested and presented to the user,
 		// all the applications' "HasBeenViewed" property, for the user's active
@@ -641,8 +611,8 @@ public class UserServiceImpl {
 		// On second thought, this should be set to zero when the user clicks
 		// and views
 		// the new applicants
-		applicationService.setJobsApplicationsHasBeenViewed(yetToStartJobs, 1);
-		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
+//		applicationService.setJobsApplicationsHasBeenViewed(yetToStartJobs, 1);
+//		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
 		// *********************************************************************
 		// *********************************************************************
 
@@ -674,9 +644,7 @@ public class UserServiceImpl {
 		List<CompletedJobResponseDTO> completedJobDtos = jobService.
 											getCompletedJobResponseDtosByEmployee(userId);
 		
-		
 		model.addAttribute("completedJobDtos", completedJobDtos);
-		model.addAttribute("userId_employee", userId);
 
 	}
 	
@@ -687,6 +655,51 @@ public class UserServiceImpl {
 		List<JobSearchUser> applicants = this.getApplicants(jobId);
 		model.addAttribute("applicants", applicants);
 		
+	}
+
+	public void setModel_WorkHistoryForAllApplicants(Model model, int userId, int jobId) {
+		this.setModel_Applicants(model, jobId);
+		this.setModel_WorkHistoryByUser(model, userId);
+		model.addAttribute("clickedUserId", userId);
+	}
+
+	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
+		
+		// Query the database
+		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
+		
+		// Create dtos
+		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();		
+		for(JobSearchUser employee : employees){
+			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
+			employeeDto.setUser(employee);
+			employeeDto.setRating(this.getRatingByUserAndJob(employee.getUserId(), jobId));
+			employeeDtos.add(employeeDto);
+		}
+		
+		return employeeDtos;
+	}
+
+	private RatingDTO getRatingByUserAndJob(int userId, int jobId) {
+		
+		RatingDTO ratingDto = new RatingDTO();
+		
+		ratingDto.setRateCriteria(this.getRatingCriteia());		
+		
+		for(RateCriterion rateCriterion : ratingDto.getRateCriteria()){
+			rateCriterion.setValue(this.getRatingValue_ByUserAndJob(rateCriterion.getRateCriterionId(),
+																		userId, jobId));
+		}
+		
+		ratingDto.setComment(this.getComment(jobId, userId));
+		ratingDto.setEndorsements(this.getUsersEndorsementsByJob(userId, jobId));
+		
+		return ratingDto;
+	}
+
+	private double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
+		
+		return repository.getRatingValue_ByUserAndJob(rateCriterionId, userId, jobId);
 	}
 
 }

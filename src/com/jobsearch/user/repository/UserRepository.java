@@ -370,6 +370,12 @@ public class UserRepository {
 		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ?";
 		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Double.class);
 	}
+	
+
+	public double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
+		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ? AND RateCriterionId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
+	}
 
 	public List<Integer> getEndorsementCategoryIds(int userId) {
 		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? GROUP BY CategoryId";
@@ -661,4 +667,5 @@ public class UserRepository {
 						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
 
 	}
+
 }

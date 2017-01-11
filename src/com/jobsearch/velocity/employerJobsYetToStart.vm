@@ -18,20 +18,20 @@
 				<col>
 				<tr class="header-1">
 
-					<td rowspan="1"></td>
-					<td rowspan="1"></td>
-					<th id="headerWageNegotiaions" class="span" colspan="3" scope="colgroup">Wage Negotiations</th>
-					<th id="headerApplications" class="span" colspan="2" scope="colgroup">Applications</th>
-					<td rowspan="1"></td>
+					<th rowspan="1" class="left-edge"></th>
+					<th rowspan="1"></th>
+					<th id="headerWageNegotiaions" class="span left-edge right-edge" colspan="3" scope="colgroup">Wage Negotiations</th>
+					<th id="headerApplications" class="span right-edge" colspan="2" scope="colgroup">Applications</th>
+					<th rowspan="1" class="right-edge"></th>
 					<tr class="header-2">
-						<th class="expand-job-header"></th>
+						<th class="expand-job-header left-edge"></th>
 						<th id="name">Job Name</th>
 						<th id="" class="left-edge">New</th>
 						<th id="">Waiting</th>
 						<th id="" class="right-edge">Failed</th>
 						<th id="newApplicantions" class="left-edge">New</th>
 						<th id="" class="right-edge">Total</th>
-						<th id="hires">Employees</th>									
+						<th id="hires" class="right-edge">Employees</th>									
 						<th id="markJobCompleteHeader"></th>
 						<th></th>
 					</tr>

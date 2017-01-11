@@ -29,12 +29,12 @@
 			<div id="jobsCompleted" class="job-type">Complete</div>			
 		</div>
 		
-	
-	
-	
-<%-- 		<div>${vtFailedWageNegotiations }</div> --%>
-		<div id="waiting" class="job-type-section">${vtYetToStartJobs }</div>
-		<div id="active" class="job-type-section">${vtActiveJobs }</div>
+		<div id="waiting" class="job-type-section">
+			<%@ include file="./employer_profile/JobsWaitingToStart_Employer.jsp" %>
+		</div>
+		<div id="active" class="job-type-section">
+			<%@ include file="./employer_profile/JobsInProcess_Employer.jsp" %>
+		</div>
 
 		<c:choose>
 			<c:when test="${completedJobs.size() >0 }">			

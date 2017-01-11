@@ -21,6 +21,7 @@
 .re-counter-amount-container{
 	display:none;	
 	padding-left:15px;
+	padding-top:5px;
 }
 
 .re-counter-amount-container input{
@@ -52,4 +53,9 @@
 
 .re-counter-amount-container *{
 	text-align:left;
+}
+
+
+.send-cancel-container{
+	padding-top: 4px;
 }

@@ -8,6 +8,7 @@
 
 .rating-container .caption{
 	padding-top:12px !important;
+	width:100px;
 }
 
 .rating-container .caption span{
@@ -27,6 +28,9 @@
 	color: #337ab7 !important;
 }
 
+#buttonsContainer{
+    padding-top: 25px;
+}
 
 .rate-criterion{
     padding: 5px 5px;
@@ -62,6 +66,7 @@ textarea.comment{
 .endorsement .glyphicon{
 	line-height:13px;
 	font-size:17px;
+	padding-right: 5px;
 }
 
 .glyphicon-remove{

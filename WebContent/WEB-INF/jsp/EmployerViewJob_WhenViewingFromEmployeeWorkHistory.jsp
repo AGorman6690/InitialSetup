@@ -1,20 +1,13 @@
 <%@ include file="./includes/Header.jsp"%>
 
-<%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/User.js" />"></script> --%>
-<%-- <script src="<c:url value="/static/javascript/AppendHtml.js" />"></script> --%>
+
 <script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employerViewJob.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" /> -->
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employerViewJob_WhenViewingEmployeeWorkHistory.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/questions.css" />
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 
 
-
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 
 <body>

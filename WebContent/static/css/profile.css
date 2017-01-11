@@ -28,25 +28,32 @@ th.expand-job-header{
 }
 
 th#name{
-	width:20%;
-	text-align:left;
+	width:25%;
+/* 	text-align:left; */
 }
 
-th#failedWageNegotiations{
+th#startsIn{
 	width:15%
 }
 
-th#newApplications{
-	width:20%;
-}
-
-th#totalApplications{
-	width:20%
-}
-
-th#hires{
+th.number{
 	width:10%;
 }
+/* th#failedWageNegotiations{ */
+/* 	width:15% */
+/* } */
+
+/* th#newApplications{ */
+/* 	width:20%; */
+/* } */
+
+/* th#totalApplications{ */
+/* 	width:20% */
+/* } */
+
+/* th#hires{ */
+/* 	width:10%; */
+/* } */
 
 th.applicant-name{
 	width:15%
@@ -73,6 +80,10 @@ tbody td.job-name{
 	text-align:left;
 }
 
+#table_jobsWaitingToStart{
+	width:1000px;
+}
+
 
 .jobs-table-container{
 	padding-top:25px;
@@ -95,9 +106,9 @@ tbody td.job-name{
 }
 
 
-td .pop{
+td.pop{
 	color: #A73854;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
 }
 

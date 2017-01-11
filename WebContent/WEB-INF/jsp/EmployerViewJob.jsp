@@ -1,5 +1,4 @@
 	<%@ include file="./includes/Header.jsp"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 	
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
@@ -28,6 +27,11 @@
 			</div>
 			
 			<div class="col-sm-10" id="sectionContainers">
+				
+				<div id="jobNameHeader" class="">
+					Job - ${jobDto.job.jobName }
+				</div>
+			
 				<div id="applicantsContainer" class="section-container">
 					<div id="applicantsContainer" class="section-body">
 					<h4>Applicants</h4>
@@ -43,16 +47,27 @@
 							<table id="applicantsTable" class="main-table-style">
 								<thead>
 									<tr>
+										<th id="" class="" colspan="1"></th>
+										<th id="" class="span" colspan="2">Wage Proposal</th>
+										<th id="" class="" colspan="1"></th>
+										<th id="" class="" colspan="1"></th>
+										<th id="" class="" colspan="1"></th>
+										<th id="" class="" colspan="1"></th>
+										<th id="" class="" colspan="1"></th>
+									</tr>
+								
+									<tr>
 										<th id="applicantName">Name</th>
-										<th id="wageNegotiation">Wage Negotiation</th>
+										<th id="wageNegotiation_status">Status</th>
+										<th id="wageNegotiation_current_offer">Current Offer</th>
 										<th id="rating">Rating</th>
 										<th id="endorsements">Endorsements</th>
 									<c:if test="${questions.size() > 0 }">
-										<th id="questions">
+										<th id="questions" class="left">
 										<span data-toggle-id="selectQuestionsContainer" >
 											<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
 										</span>					
-											<div id="selectQuestionsContainer">
+											<div id="selectQuestionsContainer" >
 												
 												<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
 												<div id="questionsAllOrNoneContainer">
@@ -75,7 +90,7 @@
 																
 										</th>
 									</c:if>							
-										<th id="status">
+										<th id="status" class="left">
 											<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
 												<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
 											</span>					
@@ -118,45 +133,18 @@
 														<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
 													</c:when>						
 													<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
-						<!-- 						******* If applicant has made the last wage proposal -->
-														<div id="${application.currentWageProposal.id}" class="counter-offer-container">
-															
-															<div class="offer-context">
-																Applicant asking for 
-																<span id="amount">
-																	$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-																</span>
-															</div>									
-															<c:set var="toggleId" value="${ application.currentWageProposal.id}-toggle-id" />
-															<span class="glyphicon glyphicon-menu-down" data-toggle-id="${ toggleId}" data-toggle-speed="1"></span>														
-															<div id="${ toggleId}" class="counter-offer-response">
-																<a class="accent accept-counter">Hire</a>																	
-																<a class="accent decline-counter">Decline</a>	
-																
-																<c:set var="toggleIdCounter" value="${ application.currentWageProposal.id}-toggle-id-counter" />
-																<a class="accent re-counter" data-toggle-id="${toggleIdCounter }" data-toggle-speed="1">Counter</a>							
-																<div id="${toggleIdCounter }" class="re-counter-amount-container" >
-																	<div>Amount</div>
-																	<input class="re-counter-amount"></input>
-																	<div>
-																		<a class="accent send-counter-offer">Send</a>
-																		<a class="accent cancel-counter-offer">Cancel</a>
-																	</div>
-																</div>										
-															</div>
-														</div>
-														<div class="sent-response-notification"></div>	
+														<c:set var="param_is_employer" value="1" />
+														<c:set var="param_wage_proposal" value="${application.currentWageProposal }" />
+														<%@ include file="./templates/WageNegotiation.jsp" %>												
 													</c:when>
-													<c:otherwise>
-						<!-- 						******* Otherwise the employer has made the last wage proposal -->							
-															<div class="offer-context">
-																You offered   
-																<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-															</div>									
+													<c:otherwise>					
+														<div class="offer-context">
+															Waiting for applicant															
+														</div>									
 													</c:otherwise>
 												</c:choose>
 											</td>									
-											
+											<td>$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/></td>
 											<td> ${application.applicant.rating}</td>
 											<td>										
 												<c:forEach items="${application.applicant.endorsements }" var="endorsement">
@@ -168,7 +156,7 @@
 			
 											</td>	
 										<c:if test="${questions.size() > 0 }">
-											<td>
+											<td class="left">
 											<c:forEach items="${application.questions }" var="question">
 												<div data-question-id="${question.questionId }" class="question-container">
 													<div class="question">${question.text }</div>										
@@ -187,7 +175,7 @@
 										</c:if>			
 			
 			<!-- 								Application Status						 -->
-											<td>
+											<td class="">
 												<div class="application-status-container">
 													<c:choose>
 														<c:when test="${application.status == 1 }">
@@ -535,8 +523,6 @@ function getApplicationStatusButtonsByApplicationId(applicationId){
 
 </script>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-</script>
+
 
 <%@ include file="./includes/Footer.jsp"%>

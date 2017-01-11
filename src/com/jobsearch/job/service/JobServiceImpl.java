@@ -2,6 +2,9 @@ package com.jobsearch.job.service;
 
 import java.io.StringWriter;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -15,6 +18,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.NumberTool;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -29,6 +33,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -164,33 +169,29 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getYetToStartJobsByEmployer(int userId) {
+//	public List<Job> getYetToStartJobsByEmployer(int userId) {
+//
+//		//Query the database
+//		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
+//
+//		//Set the jobs application summary (i.e. applicants and employees)
+//		setJobsApplicationSummary(yetToStartJobs);
+//
+//		return yetToStartJobs;
+//	}
 
-		//Query the database
-		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
-
-		//Set the jobs application summary (i.e. applicants and employees)
-		setJobsApplicationSummary(yetToStartJobs);
-
-		return yetToStartJobs;
-	}
-
-	public List<JobDTO> getYetToStartJobsByEmployer_Dto(int userId) {
+	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
 
 		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 
 		//Query the database
-		List<Job> yetToStartJobs = repository.getJobsByStatusAndByEmployer(userId, 0);
+		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, 0);
 
 		//Set the job Dtos
-		for(Job job : yetToStartJobs){
+		for(Job job : jobsWaitingToStart){
+			
 			JobDTO jobDto = new JobDTO();
-
-			setJobApplicationSummary(job);
-
-			jobDto.setJob(job);
-			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
-
+			jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId());
 			jobDtos.add(jobDto);
 		}
 
@@ -199,40 +200,33 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getActiveJobsByEmployer(int userId) {
+	public List<JobDTO> getJobDtos_JobsInProcess_Employer(int userId) {
+		
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 
 		//Query the database
-		List<Job> activeJobs = repository.getJobsByStatusAndByEmployer(userId, 1);
+		List<Job> jobsInProcess = repository.getJobsByStatusAndByEmployer(userId, 1);
+		
+		//Set the job Dtos
+		for(Job job : jobsInProcess){
+			
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(job);
+//			jobDto = this.getJobDTO_JobInProcess_Employer(job.getId());
+			jobDtos.add(jobDto);
+		}		
 
-		//Set the jobs application summary (i.e. applicants and employees)
-		setJobsApplicationSummary(activeJobs);
-
-		return activeJobs;
-
-	}
-
-
-	private void setJobsApplicationSummary(List<Job> jobs) {
-
-		for (Job job : jobs) {
-			this.setJobApplicationSummary(job);		}
+		return jobDtos;
 
 	}
 
-	public void setJobApplicationSummary(Job job) {
-		//*******************************************************
-		//*******************************************************
-		//I'm beginning to think these properties should not be apart of the Job class
-		//but rather they should be part of the JobDTO class...
-		//*******************************************************
-		//*******************************************************
 
-		job.setCategory(categoryService.getCategoryByJobId(job.getId()));
-		job.setApplications(applicationService.getApplicationsByJob(job.getId()));
-		job.setEmployees(userService.getEmployeesByJob(job.getId()));
-		job.setNewApplicationCount(this.getNewApplicationCount(job.getApplications()));
-
-	}
+//	private void setJobsApplicationSummary(List<Job> jobs) {
+//
+//		for (Job job : jobs) {
+//			this.setJobApplicationSummary(job);		}
+//
+//	}
 
 	public int getNewApplicationCount(List<Application> applications) {
 		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
@@ -595,28 +589,21 @@ public class JobServiceImpl {
 	public void setModel_EmployerViewCompletedJob(Model model, int jobId, HttpSession session) {
 		
 		//Get the job
-		Job completedJob = repository.getJob(jobId);
+		JobDTO completedJobDto = new JobDTO();
+		completedJobDto.setJob(this.getJob(jobId));
+
 	
 		//Verify the job is complete.
-		if(completedJob.getStatus() < 2){
+		if(completedJobDto.getJob().getStatus() == 2){
 
-		}else{
+			completedJobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
-			String vtJobInfo = getVelocityTemplate_JobInfo(completedJob.getId(), 1);
+			completedJobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 			
-			//Set the employees
-			completedJob.setEmployees(userService.getEmployeesByJob(jobId));
-			
-			//Set the categories
-			List<Category> categories = categoryService.getCategoriesByJobId(jobId);
-//			completedJob.setCategories(categoryService.getCategoriesByJobId(jobId));
-			
-			boolean haveJobRatingsBeenSubmitted = this.getHaveJobRatingsBeenSubmitted(jobId);
+			boolean haveJobRatingsBeenSubmitted = false ;// this.getHaveJobRatingsBeenSubmitted(jobId);
 			
 			//Add to model
-			model.addAttribute("vtJobInfo", vtJobInfo);
-			model.addAttribute("job", completedJob);
-			model.addAttribute("categories", categories);
+			model.addAttribute("jobDto", completedJobDto);
 			model.addAttribute("haveJobRatingsBeenSubmitted", haveJobRatingsBeenSubmitted);
 			
 		}
@@ -795,16 +782,26 @@ public class JobServiceImpl {
 		return repository.getJobByApplicationId(applicationId);
 	}
 
-	public void setModelForEmployeeViewJobFromProfileJsp(Model model, int jobId, int userId) {
+	public void setModel_EmployeeViewJobFromProfile(Model model, int jobId, int userId) {
 
-		//Velocity templates
-		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId, 0);
-		//String vtQuestions = this.getVelocityTemplate_Questions(jobId);
-		String vtAnswers = this.getVelocityTemplate_Answers(jobId, userId);
-
-		model.addAttribute("vtJobInformation", vtJobInformation_EmployeeViewJobFromProfile);
-		model.addAttribute("vtAnswers", vtAnswers);
+//		//Velocity templates
+//		String vtJobInformation_EmployeeViewJobFromProfile = this.getVelocityTemplate_JobInfo(jobId, 0);
+//		//String vtQuestions = this.getVelocityTemplate_Questions(jobId);
+//		String vtAnswers = this.getVelocityTemplate_Answers(jobId, userId);
+//
+//		model.addAttribute("vtJobInformation", vtJobInformation_EmployeeViewJobFromProfile);
+//		model.addAttribute("vtAnswers", vtAnswers);
 		//model.addAttribute("vtQuestions", vtQuestions);
+		
+		
+		JobDTO jobDto = new JobDTO();
+		jobDto.setJob(this.getJob(jobId));
+		
+		Application application = applicationService.getApplication(jobId, userId);
+		application.setQuestions(applicationService.getQuestionsByJobAndUser(jobId, userId));
+		
+		model.addAttribute("jobDto", jobDto);
+		model.addAttribute("questions", application.getQuestions());
 
 
 	}
@@ -898,6 +895,18 @@ public class JobServiceImpl {
 		return repository.getStartDate(jobId);
 	}
 
+	public LocalDate getStartLocalDate(int jobId) {
+		Date date = repository.getStartDate(jobId);
+		return DateUtility.getLocalDate(date);
+		
+		
+	}
+	
+	public LocalDate getEndLocalDate(int jobId) {
+		Date date = repository.getEndDate(jobId);
+		return DateUtility.getLocalDate(date);
+	}	
+	
 	public Time getStartTime(int jobId) {
 
 		return repository.getStartTime(jobId);
@@ -906,24 +915,27 @@ public class JobServiceImpl {
 	public Time getEndTime(int jobId) {
 		return repository.getEndTime(jobId);
 	}
+	
+	public LocalTime getStartLocalTime(int jobId) {
+		Time time = repository.getStartTime(jobId);
+		return DateUtility.getLocalTime(time);
+	}
+
+	public LocalTime getEndLocalTime(int jobId) {
+		Time time = repository.getEndTime(jobId);
+		return DateUtility.getLocalTime(time);
+	}	
 
 	public void setModel_ApplyForJob(Model model, int jobId, HttpSession session) {
 
-		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
-		String vtQuestionsToAnswer = this.getVelocityTemplate_QuestionsToAnswer(jobId);
-		
-		
+
 		JobDTO jobDto = new JobDTO();
 		jobDto = this.getJobDTO(jobId);
-
-		List<Category> categories = categoryService.getCategoriesByJobId(jobId);		
 		
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobId", jobId);
-		model.addAttribute("vtJobInfo", vtJobInfo);
-		model.addAttribute("vtQuestionsToAnswer", vtQuestionsToAnswer);
 		model.addAttribute("jobDto", jobDto);
-		model.addAttribute("categories", categories);
+
 		
 		SessionContext.verifyLoggedInUser(session, model);
 
@@ -939,11 +951,46 @@ public class JobServiceImpl {
 		jobDto.setJob(job);
 		jobDto.setWorkDays(this.getWorkDays(jobId));
 		jobDto.setQuestions(applicationService.getQuestions(jobId));
+		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 		
 		this.setJobDtoDuration(jobDto);
 		
+		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(job.getStartDate_local(),
+												job.getStartTime_local(),
+									job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
+		
 		return jobDto;
 	}
+	
+	private JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId) {
+		
+		JobDTO jobDto = new JobDTO();
+		
+		Job job = this.getJob(jobId);
+		jobDto.setJob(job);
+		
+		jobDto.setWorkDays(this.getWorkDays(jobId));
+		
+		jobDto.setQuestions(applicationService.getQuestions(jobId));
+		
+		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+		
+		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));	
+		
+		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
+		
+		List<Application> applications = applicationService.getApplicationsByJob(job.getId());
+		jobDto.setApplications(applications);
+		jobDto.setNewApplicationCount(this.getNewApplicationCount(applications));
+		
+		this.setJobDtoDuration(jobDto);
+		
+		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
+												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
+		
+		return jobDto;
+	}
+	
 
 	public void setJobDtoDuration(JobDTO jobDto) {
 

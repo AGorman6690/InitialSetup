@@ -9,58 +9,34 @@
 <body>
 
 	<div class="container">
-		<div class="section">
-			<div class="header2">
-				<span data-toggle-id="workHistoryContainer">
-					<span class="glyphicon glyphicon-menu-down"></span>
-					<span class="header-text">Work History</span>
-				</span>
-			</div>	
-			<div id="workHistoryContainer" class="section-body">
-<c:choose>
-	<c:when test="${completedJobDtos.size() > 0 }">		
-		<c:forEach items="${completedJobDtos }" var="dto">
-			<div class="job-container bottom-border-thinner">
-				<div class="job-categories info">
-					<div class="mock-row"><span class="accent mock-label">Job Name</span>
-					<a class="accent" href="/JobSearch/job/${dto.job.id}/user/${userId_employee}">${dto.job.jobName }</a></div>
-					<div class="mock-row"><span class="accent mock-label">Completion Date</span> ${dto.job.endDate }</div>
-					<div class="mock-row"><span class="accent mock-label">Categories</span> 
-					<c:forEach items="${dto.job.categories }" var="category">
-						<span>${category.name},</span>
+	
+<%-- 		<c:if test="${applicants.size() > 1 }"> --%>
+			<div class="row">
+				<div id="sideBarContainer" class="col-sm-2">
+					<c:forEach items="${applicants }" var="applicant">
+						<c:set var="selectedClassName" value="" />
+						<c:if test="${applicant.userId == clickedUserId }">
+							<c:set var="selectedClassName" value="selected-blue" />
+						</c:if>
+						<div data-user-id="${applicant.userId }" class="applicant side-bar ${selectedClassName }">${applicant.firstName }</div>
 					</c:forEach>
+										
+				</div>
+				
+			
+				<div class="col-sm-10">
+					<div id="workHistoryContainer" class="section-container">
+						<div class="section-body">
+							<h4>Work History</h4>
+								<div id="workHistory">
+									<%@include file="./templates/WorkHistory.jsp"%>
+								</div>					
+						</div>
 					</div>
 				</div>
-				<div class="job-endorsements info">
-					<div class="mock-row"><span class="accent mock-label">Endorsements</span> 
-					<c:choose>
-						<c:when test="${dto.endorsements.size() > 0 }">
-							
-							<c:forEach items="${dto.endorsements }" var="endorsement">
-								<span class="endorsement">${endorsement.categoryName},</span>
-							</c:forEach>
-							
-						</c:when>
-						<c:otherwise>
-							None
-						</c:otherwise>
-					</c:choose>
-					</div>					
-				</div>
-				<div class="mock-row"><span class="accent mock-label">Rating</span> ${dto.rating }</div>
 				
-				<c:if test="${dto.comment != ''}">
-					<div class="mock-row"><span class="accent mock-label">Comment</span> ${dto.comment }</div>
-				</c:if>
-			</div>
-		</c:forEach>
-	</c:when>
-	<c:otherwise>
-		No jobs have been completed.
-	</c:otherwise>
-</c:choose>
-		</div> <!-- end container -->
-	</div>
+			</div>	
+<%-- 		</c:if> --%>
 </div>
 	
 	
@@ -71,6 +47,33 @@
 $(document).ready(function(){
 
 
+	$(".applicant").click(function(){
+		
+		var applicantId = $(this).attr("data-user-id");
+		var clickedElement = this;
+		
+		$.ajax({
+			type : "GET",
+			url : '/JobSearch/user/' + applicantId + '/jobs/completed',
+			headers : getAjaxHeaders(),
+			contentType : "application/json",
+			success: _success,
+			error: _error
+		})
+		
+		function _success(response){		
+			
+			$("#workHistory").html(response);
+			highlightArrayItem(clickedElement, $("#sideBarContainer").find(".applicant"), "selected-blue");
+
+		}
+		
+		function _error(){
+//	 		alert("status error")
+		}		
+	})
+
+	
 })
 
 

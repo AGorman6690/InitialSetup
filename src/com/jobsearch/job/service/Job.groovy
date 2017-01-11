@@ -5,6 +5,9 @@ import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.Question
 import com.jobsearch.category.service.Category
 import java.sql.Time
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.Date
 import java.util.List
 
@@ -23,22 +26,37 @@ public class Job {
 	String zipCode
 	float lat
 	float lng
+	
+	//******************************************************
+	//******************************************************
+	//Note: It appears LocalDate should be used over Date since 
+	//Date is deprecated.
+	//I'm beginning to switch this over.
+	//Eventually delete all Date and Time properties
+	//******************************************************
+	//******************************************************
 	Date startDate
 	Date endDate
 	Time startTime
 	Time endTime
+	LocalDate startDate_local
+	LocalDate endDate_local
+	LocalTime startTime_local
+	LocalTime endTime_local
 	String stringStartTime
 	String stringEndTime
 	String stringStartDate
 	String stringEndDate
+	
+	
+	
 	Double distanceFromFilterLocation
 	List<Integer> categoryIds
 	List<Category> categories // do away with
 	List<JobSearchUser> employees
-	List<JobSearchUser> applicants
-	List<Application> applications
+//	List<JobSearchUser> applicants
+//	List<Application> applications
 	List<PostQuestionDTO> questions
-	int newApplicationCount
 	Integer Duration
 	List<Integer> selectedQuestionIds
 	

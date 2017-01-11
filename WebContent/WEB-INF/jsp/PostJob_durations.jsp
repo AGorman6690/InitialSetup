@@ -608,7 +608,7 @@
 		
 		$(".duration").click(function(){
 		
-			slideDown($("#durationFollowUp"), 500);
+			slideDown($("#durationFollowUp"), 750);
 			
 			var id = $(this).attr("id");			
 			var $eCalendarSelectionNote = $("#calendarSelectionNote");

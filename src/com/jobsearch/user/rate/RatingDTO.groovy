@@ -7,7 +7,7 @@ import com.jobsearch.model.CommentDTO
 import com.jobsearch.model.Endorsement
 import com.jobsearch.model.RateCriterion
 
-public class RatingRequestDTO {
+public class RatingDTO {
 	@JsonProperty("employeeId")
 	int employeeId
 
@@ -21,5 +21,6 @@ public class RatingRequestDTO {
 	List<Endorsement> endorsements
 
 	@JsonProperty("comment")
-	CommentDTO comment
+//	CommentDTO comment
+	String comment
 }

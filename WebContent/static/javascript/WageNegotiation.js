@@ -10,9 +10,7 @@ $(document).ready(function(){
 		//then their application will be withdrawn
 		//*******************************************************************
 		//*******************************************************************
-		
-		
-		
+				
 		//Read the DOM.
 		var counterOfferContainer = getCounterOfferContainer($(this));
 		var responseNotificationContainer = getResponseNotificationContainer($(counterOfferContainer));

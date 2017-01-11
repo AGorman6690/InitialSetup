@@ -32,6 +32,15 @@
 			
 			var sectionContainerId = $(this).attr("data-section-id");
 			selectSideBar(sectionContainerId);
+			
+			var urlPath = window.location.pathname;
+			var obj = {};
+			obj.urlPath = urlPath;
+			obj.sectionContainerId = sectionContainerId;
+			
+			
+			var newStringArray = addElementToStringArray(obj, sessionStorage.sectionContainerIds);
+			sessionStorage.sectionContainerIds = newStringArray;
 
 		})
 		

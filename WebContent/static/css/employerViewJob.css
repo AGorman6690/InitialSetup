@@ -63,8 +63,12 @@
 	
 }
 
-#wageNegotiation{
-	width:25%;
+#wageNegotiation_status{
+	width:15%;
+}
+
+#wageNegotiation_current_offer{
+	width:10%;
 }
 
 #status{
@@ -124,4 +128,12 @@
 
 .question-container .answer{
 	text-align:left;
+}
+
+#jobNameHeader{
+	padding-top: 25px;
+    font-size: 28px;
+    font-style: italic;
+    margin-bottom: -15px;
+    margin-left: -20px;
 }

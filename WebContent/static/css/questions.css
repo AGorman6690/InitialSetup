@@ -18,8 +18,14 @@
 }
 
 .question-container{
-	padding-bottom:15px;
+/* 	margin: 10px 0px; */
+	padding:10px 4px;
 }
+
+.question-container:first-child{
+	padding-top:0px;
+}
+
 
 .question-text{
 	font-weight: bold;

@@ -14,6 +14,10 @@ html.waiting * {
     color: #ffffff;
 }
 
+.selected-green{
+    background-color: #163B3D;
+    color: #ffffff;
+}
 
 
 .mock-anchor{
@@ -25,7 +29,6 @@ html.waiting * {
 .test111 a{
 	color: red;
 }
-
 
 .blue-btn{
     color: #337ab7;

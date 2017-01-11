@@ -13,7 +13,7 @@
 
 <body>
 
-	<input type="hidden" id="jobId" value="${job.id}"/>
+	<input type="hidden" id="jobId" value="${jobDto.job.id}"/>
 
 	<div class="container">
 		<div>${vtJobInfo }</div>
@@ -42,36 +42,61 @@
 					</tr>
 				</thead>
 				<tbody>
-				<c:forEach items="${job.employees }" var="employee">
+				<c:forEach items="${jobDto.employeeDtos }" var="employeeDto">
 					<tr class="employee-container">
-						<td class="employee" data-id="${employee.userId }">${employee.firstName }</td>
+						<td class="employee" data-id="${employeeDto.user.userId }">${employeeDto.user.firstName }</td>
 						<td class="rate-criteria-container">
-							<div class="rate-criterion" data-id="2" data-value="0">
-								<label for="timeliness" class="control-label">Timeliness</label>
-								<input name="timeliness" class="timeliness rating-loading" data-size="xs">
-							</div>
-							<div class="rate-criterion" data-id="1" data-value="0">
-								<label for="work-ethic" class="control-label">Work Ethic</label>
-								<input name="work-ethic" class="work-ethic rating-loading" data-size="xs">
-							</div>		
-							<div class="rate-criterion" data-id="3" data-value="0">
-								<label for="hire-again" class="control-label">Hire Again?</label>
-								<input name="hire-again" class="hire-again rating-loading" data-size="xs">
-							</div>	
+							<c:forEach items="${employeeDto.rating.rateCriteria }" var="rateCriterion">
+								<div class="rate-criterion" data-id="${rateCriterion.rateCriterionId }"
+										 data-value="${rateCriterion.value }">
+									
+									<c:set var="rateCriterionValue_modifed" value="${rateCriterion.value == -1 ? 0 : rateCriterion.value }" />
+									<c:choose>
+										
+										<c:when test="${rateCriterion.rateCriterionId == 1 }">											
+												<label for="work-ethic" class="control-label">Work Ethic</label>
+												<input name="work-ethic" class="work-ethic rating-loading"
+													value="${rateCriterionValue_modifed }" data-size="xs">																				
+										</c:when>
+										<c:when test="${rateCriterion.rateCriterionId == 2 }">
+<!-- 											<div class="rate-criterion" data-id="2" data-value="0"> -->
+												<label for="timeliness" class="control-label">Timeliness</label>
+												<input name="timeliness" class="timeliness rating-loading"
+													value="${rateCriterionValue_modifed }" data-size="xs">
+<!-- 											</div>										 -->
+										</c:when>
+										<c:when test="${rateCriterion.rateCriterionId == 3 }">
+<!-- 											<div class="rate-criterion" data-id="3" data-value="0"> -->
+												<label for="hire-again" class="control-label">Hire Again?</label>
+												<input name="hire-again" class="hire-again rating-loading"
+													value="${rateCriterionValue_modifed }" data-size="xs">
+<!-- 											</div>										 -->
+										</c:when>	
+		
+									</c:choose>
+								</div>																	
+	
+							</c:forEach>
 						</td>
-						
 						<td>
 							<div class="endorsementsContainer">
-							<c:forEach items="${categories }" var="category">
-								<div data-id="${category.id }" data-value="0" class="endorsement">
-									<span class="glyphicon glyphicon-remove"></span>
+							<c:forEach items="${jobDto.categories }" var="category">
+								
+								<c:set var="isCategoryEndorsed" value="0" />
+								<c:forEach items="${employeeDto.rating.endorsements }" var="endorsement">
+									<c:if test="${endorsement.categoryId == category.id}">
+										<c:set var="isCategoryEndorsed" value="1" />
+									</c:if>
+								</c:forEach>
+								
+								<div data-id="${category.id }" data-value="${isCategoryEndorsed }" class="endorsement">
+									<span class="glyphicon ${isCategoryEndorsed == 1 ? 'glyphicon-ok' : 'glyphicon-remove' }"></span>
 									${category.name }
 								</div>
 							</c:forEach>
 							</div>
-						</td>
-						
-						<td><textarea class="comment" rows="3"></textarea></td>
+						</td>						
+						<td><textarea class="comment" rows="3">${employeeDto.rating.comment }</textarea></td>
 						
 					</tr>
 				</c:forEach>				
@@ -136,6 +161,8 @@
 	    	setRateCriterionValue($(this), "0");
 	      });
 		
+	    
+// 	    $(".work-ethic").rating("update", 1);
 		
 		
 	    function setRateCriterionValue($rating, value){

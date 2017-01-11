@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +76,40 @@ public class JobRepository {
 					e.setEndDate(jobService.getEndDate(jobId));
 					e.setStartTime(jobService.getStartTime(jobId));
 					e.setEndTime(jobService.getEndTime(jobId));
+
+					//************************************************************************					
+					//Once the method of storing work days is decided,
+					//then remove these try blocks.
+					//************************************************************************
+					try {
+						e.setStartDate_local(jobService.getStartLocalDate(jobId));	
+					} catch (Exception e2) {
+						e.setStartDate_local(null);
+					}
+					
+					try {
+						e.setEndDate_local(jobService.getEndLocalDate(jobId));	
+					} catch (Exception e2) {
+						e.setEndDate_local(null);
+					}
+					try {
+						e.setStartTime_local(jobService.getStartLocalTime(jobId));	
+					} catch (Exception e2) {
+						e.setStartTime_local(null);
+					}
+					
+					try {
+						e.setEndTime_local(jobService.getEndLocalTime(jobId));	
+					} catch (Exception e2) {
+						e.setEndTime_local(null);
+					}
+					
+					
+					
+					
 					e.setStatus(rs.getInt("Status"));
+					
+					
 					
 					//The default **string** time format is, for example,: "3:30 PM"
 					if (e.getStartTime() != null){
@@ -654,6 +688,23 @@ public class JobRepository {
 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
 	}
+	
+//	public LocalDate getStartLocalDate(int jobId) {
+//		String sql = "SELECT MIN(Date)"
+//				+ " FROM work_day"
+//				+ " WHERE JobId = ?";
+//
+//		
+//		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
+//	}
+//	
+	public LocalDate getEndLocalDate(int jobId) {
+		String sql = "SELECT MAX(Date)"
+				+ " FROM work_day"
+				+ " WHERE JobId = ?";
+
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
+	}	
 
 	public Time getStartTime(int jobId) {
 		String sql = "SELECT MIN(StartTime)"

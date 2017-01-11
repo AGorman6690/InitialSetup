@@ -10,10 +10,10 @@
 		</div>	
 		<div class="info-container">
 			<div class="info-label">
-				Categories
+				${jobDto.categories.size() > 1 ? "Categories" : "Category" }	
 			</div>
 			<div class="info-value">
-				<c:forEach items="${categories }" var="category">
+				<c:forEach items="${jobDto.categories }" var="category">
 				<span class="category">${category.name}</span>
 				</c:forEach>					
 			</div>
@@ -131,4 +131,5 @@
 		</div>	 
 	</div>
 </div>
+
 		
