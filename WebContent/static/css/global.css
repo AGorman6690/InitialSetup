@@ -2,7 +2,9 @@ html.waiting * {
     cursor: progress;
 }
 
-
+input{
+	padding: 5px 10px;
+}
 .form-control-label{
 	font-size:15px;
 	font-weight:100;

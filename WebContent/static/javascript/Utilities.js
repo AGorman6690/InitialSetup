@@ -308,3 +308,16 @@ function removeElementFromDOM($container, attribute, value){
 	var e = $container.find("[" + attribute + "='" + value + "']")[0];
 	$(e).remove();
 }
+
+function buildStringFromArray(array){
+	
+	var string = "";
+	
+	$(array).each(function(i, e){
+		if(e != undefined && e != ""){
+			string += e + " ";
+		}
+	})
+	
+	return $.trim(string);
+}

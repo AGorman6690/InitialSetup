@@ -444,4 +444,21 @@ function getNumberOfMonths($e){
 		
 	}
 	
+	function getSelectedDate(calendarContainer){
+		var td = $(calendarContainer).find(".active111")[0];
+		var month;
+		var year;
+		var day;
+		if(td == undefined){
+			return null;
+		}
+		else{
+			year = $(td).attr("data-year");
+			month = parseInt($(td).attr("data-month"));
+			day = $(td).children().html();
+			return  new Date(year, month, day);
+		}
+		
+	}
+	
 

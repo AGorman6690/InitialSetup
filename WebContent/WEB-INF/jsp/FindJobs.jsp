@@ -5,7 +5,10 @@
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 	<script src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
-	<script src="<c:url value="/static/javascript/FindJobs.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/FindJobs.js" />"></script> --%>
+	<script src="<c:url value="/static/javascript/find_jobs/Filters.js" />"></script>
+	<script src="<c:url value="/static/javascript/find_jobs/AjaxParameters.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 	
 	<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/findJobs.css" />
@@ -19,6 +22,11 @@
 <body>
 
 	<div class="container">
+		<div>
+			<%@ include file="./find_jobs/Filters.jsp" %>
+		</div>
+	
+	
 <!-- 	<button id="clearSession">Clear Session Storage</button> -->
 		<div id="filterContainer">
 			<div class="row">
@@ -95,7 +103,8 @@
 												 </select>	
 									  		</div>	
 								  		</div>
-								  		<span class="glyphicon glyphicon-ok"></span>							  		
+								  		<span class="glyphicon glyphicon-ok"></span>	
+								  							  		
 									</div>
 									
 								</div>
@@ -501,15 +510,18 @@
 
 		
 <!-- 		<script async defer -->
-	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-	</script>
+<!-- 	<script -->
+<!-- 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap"> -->
+<!-- 	</script> -->
 
 <script>
 
 
 
 	$(document).ready(function(){
+		
+		setTimeOptions($("#startTimeOptions"), 60);
+		setTimeOptions($("#endTimeOptions"), 60);
 
 // 		$("#clearSession").click(function(){
 // 			sessionStorage.clear();

@@ -242,6 +242,7 @@ function appendTime(filterDropdownId, paramName1, paramName2_isBefore){
 	var endTime = $($("#" + filterDropdownId).find("option:checked")[0]).val();
 	var isBefore = $($("#" + filterDropdownId).find("input[type=radio]:checked")[0]).attr("data-filter-value");
 	var param = "";
+	
 	if(isValidInput(endTime) && isValidInput(isBefore)){
 		param += "&" + paramName1 + "=" + formatTime(endTime);
 		
