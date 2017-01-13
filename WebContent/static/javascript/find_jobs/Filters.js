@@ -1,5 +1,5 @@
 var $filterContainer;
-
+var slideSpeed_filterDropdowns = 350;
 
 $(document).ready(function(){
 	$(".approve-filter").click(function(){
@@ -7,12 +7,18 @@ $(document).ready(function(){
 		
 	})
 	
-//	$(".trigger-dropdown").click(function(e){		
-//		e.stopPropagation();
-//		if(isDropdownVisible(this))	showDropdown(this, false);
-//		else showDropdown(this, true);
-//	
-//	})
+	$(".trigger-dropdown").click(function(e){		
+		e.stopPropagation();
+		$filterContainer = getParent_FilterContainer($(this));
+		
+		var dropdownId = $(this).attr("data-trigger-dropdown-id");
+		
+		if(isDropdownVisible(this))	showDropdown($filterContainer, false);
+		else showDropdown($filterContainer, true);
+		
+		closeOtherDropdowns(dropdownId);
+	
+	})
 	
 	$(".remove-filter").click(function(){
 		removeFilter(this);
@@ -26,20 +32,26 @@ $(document).ready(function(){
 	})
 	
 	$("#getJobs").click(function(){
-		getJobs();
+		getJobs(1);
 	})
+	
 	
 	
 })
 
-function getJobs(){
+function closeOtherDropdowns(dropdownIdToExclude){
 	
-	var ajaxParams = getAjaxParameters();
-	executeAjaxCall(ajaxParams);
+	$.each($("#additionalFiltersContainer").find(".dropdown"), function(){
+		if($(this).attr("id") != dropdownIdToExclude) slideUp($(this), slideSpeed_filterDropdowns);
+	})
 	
 }
 
-function getAjaxParams(){
+function getJobs(){
+	
+	var urlParams = getUrlParameters();
+	
+	if(urlParams != "?") executeAjaxCall_getFilteredJobs(urlParams, 1);
 	
 }
 
@@ -65,18 +77,18 @@ function resetText(clickedIcon){
 
 function isDropdownVisible(clickedTriggerDropdown){
 	
-	filterContainer = getParent_FilterContainer($(clickedTriggerDropdown));
+	$filterContainer = getParent_FilterContainer($(clickedTriggerDropdown));
 	var dropdown = $filterContainer.find(".dropdown")[0];
 	
 	return $(dropdown).is(":visible");
 }
 
-function showDropdown(clickedTriggerDropdown, request){
-	filterContainer = getParent_FilterContainer($(clickedTriggerDropdown));
+function showDropdown($filterContainer, request){
+//	$filterContainer = getParent_FilterContainer($(clickedTriggerDropdown));
 	var dropdown = $filterContainer.find(".dropdown")[0];
 	
-	if(request) $(dropdown).show();
-	else $(dropdown).hide();
+	if(request) slideDown($(dropdown), slideSpeed_filterDropdowns);
+	else slideUp($(dropdown), slideSpeed_filterDropdowns);
 }
 
 function getParent_FilterContainer($e){
@@ -94,7 +106,7 @@ function approveFilter(clickedGlyphicon){
 		
 		showApprovedFilterText(textToShow, clickedGlyphicon);		
 		showRemoveFilterIcon(clickedGlyphicon, true);		
-		showDropdown(this, false);
+		showDropdown($filterContainer, false);
 		addApprovedFilterClass($filterContainer, true);
 		
 	}	

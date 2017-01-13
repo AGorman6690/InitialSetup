@@ -48,27 +48,19 @@ public class JobController {
 		jobService.addPosting(postingDto, user);
 	}
 
-	@RequestMapping(value = "/jobs/sort", method = RequestMethod.GET)
-	@ResponseBody
+	@RequestMapping(value = "/jobs/filtered/sort", method = RequestMethod.GET)
 	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,
-			@RequestParam(name = "isAscending") boolean isAscending, @RequestParam(name = "lat") float lat,
-			@RequestParam(name = "lng") float lng, HttpSession session) {
-
-		// Set the request object
-		FilterJobRequestDTO request = new FilterJobRequestDTO();
-		request.setIsSortingJobs(true);
-		request.setSortBy(sortBy);
-		request.setIsAscending(isAscending);
-		request.setLat(lat);
-		request.setLng(lng);
+			@RequestParam(name = "isAscending") boolean isAscending, HttpSession session, Model model) {
+		
+		jobService.SetModel_SortFilteredJobs(session, model, sortBy, isAscending);
 
 		// Get the html to display the already-rendered jobs in the requested
 		// order
-		return jobService.getSortedJobsHTML(request, session);
+		return "/find_jobs/RenderFilteredJobs";
 	}
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
-	@ResponseBody
+//	@ResponseBody
 	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
 			@RequestParam(name = "fromAddress", required = true) String fromAddress,
 			@RequestParam(name = "categoryId", value = "categoryId", required = false) int[] categoryIds,
@@ -89,7 +81,8 @@ public class JobController {
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
 			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
-			HttpSession session
+			HttpSession session,
+			Model model
 			){
 
 		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
@@ -97,8 +90,11 @@ public class JobController {
 				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds);
 	
 		
-			return jobService.getVelocityTemplate_FilterJobs(request, session);
-
+//			return jobService.getVelocityTemplate_FilterJobs(request, session);
+			
+			jobService.setModel_FilterJobs(model, request, session);
+			
+			return "/find_jobs/RenderFilteredJobs";
 
 	}
 

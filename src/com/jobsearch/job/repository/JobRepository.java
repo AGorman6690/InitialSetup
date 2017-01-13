@@ -333,10 +333,16 @@ public class JobRepository {
 		
 		//Distance
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
-		String sql = "SELECT *, "
-					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
-					+ " FROM job j";
+		String sqlSelect = "SELECT *, "
+				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance";
+		
+//		String sql = "SELECT *, "
+//					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
+//					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
+//					+ " FROM job j";
+
+		String sql = " FROM job j";
 		
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
@@ -464,10 +470,10 @@ public class JobRepository {
 			nextTableToJoin = subTable;
 		}	
 		
-		//Start date
+		//Start date	
 		if(filter.getStartDate() != null){
 			sql += " JOIN (";
-			sql += " SELECT DISTINCT jobId";
+			sql += " SELECT DISTINCT jobId, Date as StartDate ";
 			sql += " FROM work_day";
 			sql += " GROUP BY jobId";
 			sql += " HAVING MIN(Date)";
@@ -487,7 +493,15 @@ public class JobRepository {
 			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
 			
 			nextTableToJoin = subTable;
-		}		
+			
+			sqlSelect += ", " + subTable + ".StartDate AS StartDate";
+		}			
+		
+//		if(filter.getSortBy() != null){
+//			if(filter.getSortBy().matches("StartDate))
+//		}
+
+		
 
 		//End date
 		if(filter.getEndDate() != null){
@@ -556,17 +570,17 @@ public class JobRepository {
 		
 		//Order by
 		sql += " ORDER BY ";
-		if(filter.getSortBy() != null){
-			sql += filter.getSortBy() + " ";
-			if(filter.getIsAscending()){
-				sql += "ASC";
-			}else{
-				sql += "DESC";
-			}
-		}else{
-			//If user did not sort, the sort by ascending distance as a default
+//		if(filter.getSortBy() != null){
+//			sql += filter.getSortBy() + " ";
+//			if(filter.getIsAscending()){
+//				sql += "ASC";
+//			}else{
+//				sql += "DESC";
+//			}
+//		}else{
+			//If user did not sort, then sort by ascending distance as a default
 			sql += " distance ASC";
-		}
+//		}
 		
 		
 		
@@ -574,6 +588,10 @@ public class JobRepository {
 		//argsList.add(filter.getReturnJobCount());
 		sql += " LIMIT 0 , 25";
 
+		
+		sql = sqlSelect + sql;
+		
+		
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 	

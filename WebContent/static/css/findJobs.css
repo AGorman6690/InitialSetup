@@ -61,7 +61,7 @@
 	height:1000px;	
 }
 
-#map, #filteredJobs{
+#map, #filteredJobsContainer{
 	border-right-style:outset;
 	border-bottom-style:inset;
 	border-top-style:inset;

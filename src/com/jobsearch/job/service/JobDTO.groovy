@@ -35,4 +35,5 @@ public class JobDTO {
 	 List<JobSearchUser> applicants
 	 List<Application> applications
 	 List<JobSearchUserDTO> employeeDtos
+	 Double distanceFromFilterLocation
 }

@@ -5,6 +5,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -18,6 +19,7 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.tools.generic.ComparisonDateTool;
 import org.apache.velocity.tools.generic.DateTool;
 import org.apache.velocity.tools.generic.NumberTool;
+import org.hibernate.mapping.Collection;
 import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -40,6 +42,7 @@ import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
 
 @Service
 public class JobServiceImpl {
@@ -424,42 +427,45 @@ public class JobServiceImpl {
 
 		// For each filtered job, calculate the distance between the user's
 		// specified filter lat/lng
-		if (filteredJobs != null) {
-			this.setJobsCategories(filteredJobs);
-			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
-			this.setDurationForJobs(filteredJobs);
-		}
+//		if (filteredJobs != null) {
+//			this.setJobsCategories(filteredJobs);
+//			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
+//			this.setDurationForJobs(filteredJobs);
+//		}
 		return filteredJobs;
 
 	}
 
 
-	public void setDurationForJobs(List<Job> jobs) {
-		for (Job job : jobs){
-			job.setDuration(this.getDuration(job.getId()));
-		}
-		
-	}
+//	public void setDurationForJobs(List<Job> jobs) {
+//		for (Job job : jobs){
+//			job.setDuration(this.getDuration(job.getId()));
+//		}
+//		
+//	}
 
 	public Integer getDuration(int jobId) {
 		return repository.getDuration(jobId);
 	}
 
-	public void setJobsCategories(List<Job> jobs){
-		for (Job job : jobs) {
-			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-		}
-	}
+//	public void setJobsCategories(List<Job> jobs){
+//		for (Job job : jobs) {
+//			job.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+//		}
+//	}
 
-	public void setJobsDistanceFromRequest(List<Job> jobs, float fromLat, float fromLng) {
-		for (Job job : jobs) {
+//	public void setJobsDistanceFromRequest(List<Job> jobs, float fromLat, float fromLng) {
+//		for (Job job : jobs) {
+//
+//			double distance = GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
+//			job.setDistanceFromFilterLocation(distance);
+//		}
+//	}
 
-			double distance = GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
-			job.setDistanceFromFilterLocation(distance);
-		}
-	}
-
-	
+//		
+	public double getDistanceFromRequest(Job job, float fromLat, float fromLng) {
+			return GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
+	}	
 	
 
 	public String getVelocityTemplate_FilterJobs(FilterJobRequestDTO request, HttpSession session) {
@@ -1043,11 +1049,165 @@ public class JobServiceImpl {
 		
 	}
 
+	public void setModel_FilterJobs(Model model, FilterJobRequestDTO filter, HttpSession session) {
+		
+		List<Job> filteredJobs = this.getFilteredJobs(filter, session);
 
+		
+		
+		if(filter.getSortBy() != null){
+			this.sortJobs(filteredJobs, filter);
+		}
 
+		
+		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(filteredJobs, filter);
+		double maxDistance = this.getMaxDistanceJobFromFilterRequest(jobDtos, filter);
+		
+		model.addAttribute("jobDtos", jobDtos);
+		model.addAttribute("filterRequest", filter);
+		model.addAttribute("maxDistance", maxDistance);
+		
+		session.setAttribute("lastFilterRequest", filter);
+	}
 
+	private void sortJobs(List<Job> filteredJobs, FilterJobRequestDTO filter) {
+		
+		// Sort by start date
+		if(filter.getSortBy().matches("StartDate")){
+			
+			// Ascending
+			if (filter.getIsAscending()) {
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job1.getStartDate_local().compareTo(job2.getStartDate_local());
+					}
+				});			
+			}		
+			// Descending
+			else{
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job2.getStartDate_local().compareTo(job1.getStartDate_local());
+					}
+				});			
+			}			
+		}
+		
+		// Sort by end date
+		else if(filter.getSortBy().matches("EndDate")){		
+			
+				
+				// Ascending
+				if (filter.getIsAscending()) {
+					java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+						public int compare(Job job1, Job job2){
+							return job1.getEndDate_local().compareTo(job2.getEndDate_local());
+						}
+					});			
+				}		
+				// Descending
+				else{
+					java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+						public int compare(Job job1, Job job2){
+							return job2.getEndDate_local().compareTo(job1.getEndDate_local());
+						}
+					});			
+				}			
+			}
 
+		// Sort by start time
+		if(filter.getSortBy().matches("StartTime")){
+			
+			// Ascending
+			if (filter.getIsAscending()) {
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job1.getStartTime_local().compareTo(job2.getStartTime_local());
+					}
+				});			
+			}		
+			// Descending
+			else{
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job2.getStartTime_local().compareTo(job1.getStartTime_local());
+					}
+				});			
+			}			
+		}
+		
+		// Sort by end time
+		if(filter.getSortBy().matches("EndTime")){
+			
+			// Ascending
+			if (filter.getIsAscending()) {
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job1.getEndTime_local().compareTo(job2.getEndTime_local());
+					}
+				});			
+			}		
+			// Descending
+			else{
+				java.util.Collections.sort(filteredJobs, new Comparator<Job>(){			
+					public int compare(Job job1, Job job2){
+						return job2.getEndTime_local().compareTo(job1.getEndTime_local());
+					}
+				});			
+			}			
+		}
+		
+	}
 
+	private double getMaxDistanceJobFromFilterRequest(List<JobDTO> jobDtos, FilterJobRequestDTO filter) {
+
+		// Get the farthest job from the users requested located.
+		if(jobDtos != null) {
+			if(jobDtos.size() > 0){
+				return jobDtos.stream().max(Comparator.comparing(JobDTO::getDistanceFromFilterLocation))
+						.get().getDistanceFromFilterLocation();				
+			}
+		}
+		
+		return 0;
+		
+	}
+
+	private List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FilterJobRequestDTO filter) {
+		
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+		
+		for(Job job : jobs){			
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(job);
+			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
+			jobDto.setDurationDays(this.getDuration(job.getId()));
+			
+			double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
+			distance = MathUtility.round(distance, 1, 0);
+			jobDto.setDistanceFromFilterLocation(distance);			
+			
+			jobDtos.add(jobDto);
+		}
+
+		return jobDtos;
+		
+	}
+
+	public void SetModel_SortFilteredJobs(HttpSession session, Model model, String sortBy, boolean isAscending) {
+
+		FilterJobRequestDTO lastFilterRequest = (FilterJobRequestDTO) session.getAttribute("lastFilterRequest");
+		
+		lastFilterRequest.setIsAscending(isAscending);
+		lastFilterRequest.setSortBy(sortBy);
+		
+//		List<Job> filteredJobs_Sorted = this.getFilteredJobs(lastFilterRequest, session);
+//		List<JobDTO> filteredJobDtos_Sorted = this.getJobDtos_FilteredJobs(filteredJobs_Sorted, lastFilterRequest);
+		this.setModel_FilterJobs(model, lastFilterRequest, session);
+		
+
+		
+	}
 
 
 //	public void verifyJobStatusForUsersYetToStartJobs(int userId) {

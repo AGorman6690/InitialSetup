@@ -250,7 +250,9 @@ function appendTime(filterDropdownId, paramName1, paramName2_isBefore){
 		
 		param += "&" + paramName2_isBefore + "=" + parseInt(isBefore);
 	}
+	
 	return param;
+	
 }
 
 function appendDate(filterDropdownId, paramName1, paramName2_isBefore){
