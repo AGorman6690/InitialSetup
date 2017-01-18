@@ -38,9 +38,15 @@
 		<!-- access denied page -->
 		<access-denied-handler error-page="/error/LoginError.jsp" />
 
+<!-- 		<form-login login-page="/signIn" login-processing-url="/login.do" -->
+<!-- 			default-target-url="/user/login" authentication-failure-url="/?error=true" -->
+<!-- 			username-parameter="username" password-parameter="password" /> -->
+			
 		<form-login login-page="/signIn" login-processing-url="/login.do"
-			default-target-url="/user/login" authentication-failure-url="/?error=true"
-			username-parameter="username" password-parameter="password" />
+			default-target-url="/user/profile" authentication-failure-url="/?error=true"
+			username-parameter="username" password-parameter="password" />			
+			
+			
 		<logout logout-success-url="/login?logout" />
 		<!-- enable csrf protection -->
 		<!-- <csrf/> -->

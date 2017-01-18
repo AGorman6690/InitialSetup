@@ -117,17 +117,67 @@
 								<a id="nav_profile" class="logo selected-green" href="/JobSearch/user/profile">Profile</a>	
 							</c:when>
 							<c:otherwise>
-								<a id="nav_login" data-toggle-mod-id="loginContainer">Login</a>
+<!-- 								<a id="nav_login" data-toggle-mod-id="loginContainer">Login</a> -->
+								<a data-toggle="modal" data-target="#loginContainer">Login</a>
 								<a id="nav_signUp" data-toggle-mod-id="signUpContainer">Sign Up</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
 				</div>
 			</nav>
+	
+	
+	
+			<div id="loginContainer" class="modal fade login-signup bottom-border-thin" role="dialog">
+				
+				<div class="modal-dialog">
+				
+				    <div class="modal-content" >
+				      <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal">&times;</button>
+				        <h4 class="modal-title">Login</h4>
+				      </div>
+				      <div class="modal-body">
+						<form:form class="form-signin" modelAttribute="user"
+							action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
+				
+							<form:input type="text" class="form-control" placeholder="Email"
+								path="username" id="userName" />
+							<form:password class="form-control" placeholder="Password"
+								path="password" id="password" />
+							<div class="forgot-password">
+								<a href="./user/password/reset">Forgot Password?</a>
+							</div>
+							<input class="square-button" type="submit" value="Login"/>
+						</form:form>
+						
+						
+				      </div>
+		<!-- 		      <div class="modal-footer"> -->
+		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+		<!-- 		      </div> -->
+				    </div>		
+		
+		
+				</div>	
+			</div>
+	
+	
+	
+	
+	
+	
+	
+	
 			
 			<c:choose>
 				<c:when test="${empty sessionScope.user }">				
-					<%@ include file="../nav_bar/Login.jsp" %>
+<%-- 					<%@ include file="../nav_bar/Login.jsp" %> --%>
+
+
+
+
+
 					<%@ include file="../nav_bar/SignUp.jsp" %>						
 				</c:when>	
 			</c:choose>

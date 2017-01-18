@@ -717,7 +717,7 @@ public class UserServiceImpl {
 		
 	}
 
-	public boolean verifyUserLoginCredentials(JobSearchUser user, HttpSession session, Model model) {
+	public boolean verifyUserLoginCredentials(JobSearchUser user, HttpSession session) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		user = this.getUserByEmail(auth.getName());
