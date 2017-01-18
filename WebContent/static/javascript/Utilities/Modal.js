@@ -8,6 +8,12 @@ $(document).ready(function(){
 	$(".mod-header .glyphicon-remove").click(function(){
 		closeModal($(".mod"));
 	})
+	
+	$("[data-toggle-mod-id]").click(function(){
+		var id = $(this).attr("data-toggle-mod-id");
+		$("html").find("#" + id).eq(0).show();
+		
+	})
 })
 
 function closeModal($modal){

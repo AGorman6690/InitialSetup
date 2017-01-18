@@ -22,13 +22,16 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.welcome.service.WelcomeServiceImpl;
 
 @Controller
-@SessionAttributes({ "user" }) //, "loadedFilteredJobIds", "loadedFilteredJobs" })
 public class WelcomeController {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	WelcomeServiceImpl welcomeService;	
 
 	@Value("${host.url}")
 	private String hostUrl;
@@ -39,66 +42,20 @@ public class WelcomeController {
 		return sessionUser;
 	}
 
-//	@ModelAttribute("loadedFilteredJobIds")
-//	public List<Integer> getSessionLoadedFilteredJobIds() {
-//		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
-//		return loadedFilteredJobIds;
-//	}
-//
-//	@ModelAttribute("loadedFilteredJobs")
-//	public List<Job> getSessionLoadedFilteredJobs() {
-//		List<Job> loadedFilteredJobs = new ArrayList<Job>();
-//		return loadedFilteredJobs;
-//	}
-
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String welcome(Model model, HttpServletRequest request,
-			@RequestParam(name = "error", required = false) boolean error) {
+	public String welcome(Model model, HttpSession session,
+					@RequestParam(name = "error", required = false) boolean error) {
 
-		// // Set session objects
-//		 JobSearchUser user = new JobSearchUser();
-
-		List<Profile> profiles = userService.getProfiles();
-		model.addAttribute("profiles", profiles);
-//		 model.addAttribute("user", user);
-
-		model.addAttribute("url", hostUrl);
-
-		if (error) {
-			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
-		}
-
-		// model.setViewName("Welcome");
+		welcomeService.setModel_Welcome(model, session);
 
 		return "Welcome";
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ModelAndView logout(ModelAndView model, HttpSession session, 
-							@ModelAttribute("user") JobSearchUser user) {
-		// *******************************************
-		// *******************************************
-		// Need to figure this out
-		// *******************************************
-		// *******************************************
-
-		// Set the session complete
-		// status.setComplete();
-
-		// Return to welcome page
-		model.setViewName("Welcome");
-		model.addObject("user", new JobSearchUser());
-
-		List<Profile> profiles = userService.getProfiles();
-		model.addObject("profiles", profiles);
+	public String logout(Model model, HttpSession session) {
 		
-//		session.invalidate();
-		
-//		session.geta
-//		for(String attributeName : session.getAttributeNames()){
-//			
-//		}
-
-		return model;
+		welcomeService.Logout(session);
+	
+		return "redirect:/";
 	}
 }

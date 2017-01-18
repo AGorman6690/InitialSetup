@@ -53,85 +53,38 @@ public class UserController {
 	public String validate(@RequestParam(name = "userId") int userId, ModelAndView model,
 			@ModelAttribute("user") JobSearchUser user) {
 
-		user = userService.validateUser(userId);
-
-		// model.addObject("user", user);
-		String view = null;
-		if (user.getProfile().getName().equals("Employee")) {
-			model.setViewName("EmployeeProfile");
-			view = "EmployeeProfile";
-		} else if (user.getProfile().getName().equals("Employer")) {
-			model.setViewName("EmployerProfile");
-			view = "EmployerProfile";
-		}
-
-		// model.addAttribute("user", user);
-		model.addObject("user", user);
-		return view;
+		return "redirect:/user/profile";
 	}
+	
+	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
+	public String login(Model model, HttpSession session, @ModelAttribute("user") JobSearchUser user) {
+		
+		if(userService.verifyUserLoginCredentials(user, session, model)){
+			return "redirect:/user/profile";
+		}
+		else{
+			return ""; // Send a failed alert
+		}
+	}	
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpSession session, JobSearchUser user) {
-
-		// Why is there a try/catch here????
-		// Can the user session object checked whether it's null???
-		// Or is there something special about the authentication process?
-
-//		JobSearchUser user = new JobSearchUser();
-		
-		if (user.getUserId() == 0) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			user = userService.getUserByEmail(auth.getName());
-
-		}
-
-		// Get the user's profile
-		// user = userService.getProfile(user);
-		model.addAttribute("user", user);
-
-		// Update session user after they have logged in
-		session.setAttribute("user", user);
-
-		// If not creating new password
-		String viewName = null;
-		if (user.getCreateNewPassword() == 0) {
-
-			// Per the profile type, set the model attributes and view name
-			if (user.getProfile().getName().equals("Employee")) {
-
-				// Set model attributes
-				userService.setModel_EmployeeProfile(user, model);
-
-				viewName = "EmployeeProfile";
-
-			} else if (user.getProfile().getName().equals("Employer")) {
-
-				// Set model attributes
-				userService.setModel_EmployerProfile(user, model);
-
-				viewName = "EmployerProfile";
-
-			}
-		} else {
-			viewName = "NewPassword";
-			model.addAttribute("newPassword", new JobSearchUser());
-		}
-
-		return viewName;
-
+	public String getProfile(Model model, HttpSession session) {				
+		userService.setModel_Profile(model, session);		
+		return userService.getProfileJspName(session);
 	}
 
-	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
-	public ModelAndView registerUser(ModelAndView model, @ModelAttribute("user") JobSearchUser user) {
+	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
+	public String signUp(Model model, @ModelAttribute("user") JobSearchUser user) {
 
 		user = userService.createUser(user);
+		
 		if (user != null) {
-			model.addObject("user", user);
-			model.setViewName("EmailValidateMessage");
+			model.addAttribute("user", user);
+			return "EmailValidateMessage";
 		} else {
-			model.setViewName("Invalid Login");
+			return "Invalid Login";
 		}
-		return model;
+
 	}
 
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
@@ -192,6 +145,7 @@ public class UserController {
 		model.setViewName("PostJob_without_cart");
 		return model;
 	}	
+	
 		@RequestMapping(value = "/job/{jobId}/user/{userId}/jobs/completed", method = RequestMethod.GET)
 	// @ResponseBody
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,

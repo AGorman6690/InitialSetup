@@ -14,6 +14,8 @@ import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -702,4 +704,42 @@ public class UserServiceImpl {
 		return repository.getRatingValue_ByUserAndJob(rateCriterionId, userId, jobId);
 	}
 
+	public void setModel_Profile(Model model, HttpSession session) {
+	
+		JobSearchUser sessionUser = SessionContext.getSessionUser(session);
+
+		if (sessionUser.getProfile().getName().equals("Employee")) {
+			this.setModel_EmployeeProfile(sessionUser, model);
+		}
+		else{
+			this.setModel_EmployerProfile(sessionUser, model);
+		}
+		
+	}
+
+	public boolean verifyUserLoginCredentials(JobSearchUser user, HttpSession session, Model model) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		user = this.getUserByEmail(auth.getName());
+		
+		if(user != null){
+//			model.addAttribute("user", user);
+			session.setAttribute("user", user);
+			
+			return true;
+		}
+		else{
+			return false;
+		}
+		
+	}
+
+	public String getProfileJspName(HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getSessionUser(session);
+			
+		if (sessionUser.getProfile().getName().equals("Employee")) return "EmployeeProfile";
+		else return "EmployerProfile";
+
+	}
 }

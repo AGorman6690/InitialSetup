@@ -42,7 +42,7 @@ import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 
 @Service
 public class JobServiceImpl {

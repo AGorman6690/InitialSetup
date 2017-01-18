@@ -74,7 +74,7 @@
 			$("#nav_logOut").trigger("click");
 			$("#password").val('2');
 			$("#userName").val('2');
-			$("#loginContainer input[type=submit]")[0].click();
+			$("#loginContainer input[type=submit]").eq(0).click();
 
 		})
 		

@@ -8,6 +8,9 @@
 
 <html>
 	<head>
+	
+
+<!-- 		Global Scripts - External -->
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
 			type="text/javascript"></script>
@@ -15,6 +18,11 @@
 			src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
 		<script
 			src="/JobSearch/static/External/underscore-min.js"></script>
+	
+
+
+	
+
 		
 		<!-- 	   Bootstrap -->
 		<!-- 	   	********************************************************* -->
@@ -55,37 +63,33 @@
 		<script
 			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 		
-		
 		<!-- 	   	********************************************************* -->
 		
+					
+<!-- 		Google Font -->
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito">
+	
+			
 		
+<!-- 		Global Links -->
+		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />		
+		<link href="/JobSearch/static/css/layout.css" rel="stylesheet" />			
+		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/LoginSignup.css" />	
+		
+<!-- 		Global Scripts -->
+		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
+		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	
+		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
+		<script src="<c:url value="/static/javascript/SideBar.js" />"></script>	
+		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
+						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Insert title here</title>
 		
 		<meta name="_csrf" content="${_csrf.token}" />
 		<meta name="_csrf_header" content="${_csrf.headerName}" />
-		
-		
-		<link href="/JobSearch/static/css/global.css"
-			rel="stylesheet" />
-		
-		<link href="/JobSearch/static/css/layout.css"
-			rel="stylesheet" />
-			
-		<link href="/JobSearch/static/css/navBar.css"
-			rel="stylesheet" />
-		
-		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
-		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	
-		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
-		<script src="<c:url value="/static/javascript/SideBar.js" />"></script>	
-		
-		
-		<link rel="stylesheet" type="text/css"
-		      href="https://fonts.googleapis.com/css?family=Nunito">
-		
-		
-		
 	</head>
 
 	<body>
@@ -95,26 +99,17 @@
 		
 			<nav id="navBar" class="">
 				<div class="nav-container nav-border">
-					<c:choose>
-						<c:when test="${user.profileId > 0 }">
-					
-							<a id="home" class="logo" href="/JobSearch/user/profile">Labor Vault</a>
-						</c:when>
-						<c:otherwise>
-						
-							<a id="home" class="logo" href="/JobSearch/">Labor Vault</a>	
-						</c:otherwise>
-					</c:choose>
+					<a id="home" class="logo" href="/JobSearch/${!empty sessionScope.user ? 'user/profile' : '' }">Labor Vault</a>
 					<div class="nav-items">					
 						<c:choose>
-							<c:when test="${user.profileId > 0 }">
+							<c:when test="${!empty sessionScope.user }">
 									<a id="nav_logOut" href="/JobSearch/logout">Log out</a>
 								<c:choose>
-									<c:when test="${user.profileId == 1}">
+									<c:when test="${sessionScope.user.profileId == 1}">
 										<a id="nav_settings" href="/JobSearch/settings">Settings</a>
 										<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>								
 									</c:when>
-									<c:when test="${user.profileId == 2}">
+									<c:when test="${sessionScope.user.profileId == 2}">
 										<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
 										<a id="nav_postJob" href="/JobSearch/viewPostJob">Post Job</a>
 									</c:when>
@@ -122,8 +117,8 @@
 								<a id="nav_profile" class="logo selected-green" href="/JobSearch/user/profile">Profile</a>	
 							</c:when>
 							<c:otherwise>
-								<a id="nav_login" data-toggle="modal" data-target="#loginContainer">Login</a>
-								<a id="nav_signUp" data-toggle="modal" data-target="#signupContainer">Sign Up</a>
+								<a id="nav_login" data-toggle-mod-id="loginContainer">Login</a>
+								<a id="nav_signUp" data-toggle-mod-id="signUpContainer">Sign Up</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
@@ -131,114 +126,9 @@
 			</nav>
 			
 			<c:choose>
-			
-			
-			
-				<c:when test="${user.profileId == 0 }">
-					<div id="loginContainer" class="modal fade login-signup bottom-border-thin" role="dialog">
-						
-						<div class="modal-dialog">
-						
-						    <div class="modal-content">
-						      <div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal">&times;</button>
-						        <h4 class="modal-title">Login</h4>
-						      </div>
-						      <div class="modal-body">
-								<form:form class="form-signin" commandName="user"
-									action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
-						
-									<form:input type="text" class="form-control" placeholder="Email"
-										path="username" id="userName" />
-									<form:password class="form-control" placeholder="Password"
-										path="password" id="password" />
-									<div class="forgot-password">
-										<a href="./user/password/reset">Forgot Password?</a>
-									</div>
-									<input class="square-button" type="submit" value="Login"/>
-								</form:form>
-								
-								
-						      </div>
-				<!-- 		      <div class="modal-footer"> -->
-				<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-				<!-- 		      </div> -->
-						    </div>		
-				
-				
-						</div>	
-					</div>
-					
-					
-					<div id="signupContainer" class="modal fade login-signup" role="dialog">
-						
-						<div class="modal-dialog">
-						
-						    <div class="modal-content">
-						      <div class="modal-header">
-						        <button type="button" class="close" data-dismiss="modal">&times;</button>
-						        <h4 class="modal-title">Sign Up</h4>
-						      </div>
-						      <div class="modal-body">
-								<!-- Original code found here -->
-								<!-- https://gist.github.com/bMinaise/7329874#file-bs3-login-form-html -->	
-								<div class="input-container sign-up">
-									<form:form action="/JobSearch/registerUser" method="POST" commandName="user">
-										<table>
-											<tr>
-												<td class="">First Name:</td>
-												<td><form:input id='co_firstName' path="firstName"
-														class="form-control" /></td>
-											</tr>
-											<tr>
-												<td>Last Name:</td>
-												<td><form:input id='co_lastName' path="lastName"
-														class="form-control" /></td>
-											</tr>
-											<tr>
-												<td>Email:</td>
-												<td><form:input id='co_emailAddress' path="emailAddress"
-														class="form-control" /></td>
-											</tr>
-											<tr>
-												<td>Password:</td>
-												<td><form:password id='co_password' path="password"
-														class="form-control" /></td>
-											</tr>
-											<tr>
-												<td>Confirm Password:</td>
-												<td><form:password id='co_matchingPassword'
-														path="matchingPassword" class="form-control" /></td>
-											</tr>
-											<tr>
-												<td>Profile Type:</td>
-												<td><form:select path="profileId" class="form-control">
-														<form:option value="-1" label="Select a profile type" />
-														<form:options items="${profiles}" itemValue="id"
-															itemLabel="name" ></form:options>
-													</form:select></td>
-											</tr>
-											<tr>
-												<td></td>
-												<td id="createAccount"><input id='co_registerUser' type="submit"
-													value="Create Account" class="square-button" /></td>
-											</tr>
-											<tr>
-												<td><input type="hidden" name="${_csrf.parameterName}"
-													value="${_csrf.token}" /></td>
-											</tr>
-										</table>
-									</form:form>	
-								</div>	
-						      </div>
-				<!-- 		      <div class="modal-footer"> -->
-				<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-				<!-- 		      </div> -->
-						    </div>		
-				
-				
-						</div>	
-					</div>
+				<c:when test="${empty sessionScope.user }">				
+					<%@ include file="../nav_bar/Login.jsp" %>
+					<%@ include file="../nav_bar/SignUp.jsp" %>						
 				</c:when>	
 			</c:choose>
 
@@ -249,7 +139,7 @@
 
 
 	
-	var environmentVariables ={
+	var environmentVariables = {
 			LaborVaultHost: "${url}"
 	};
 
