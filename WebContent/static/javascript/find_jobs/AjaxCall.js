@@ -66,7 +66,7 @@ function getJsonObject_findJobFilterDTO(){
 	
 	if(isFilterApplied($("#duration"))){
 		dto.duration = getFilterValue2($("#duration"));
-		dto.isLessThanDuration = getSelectedRadioValue($("#duration"));	
+		dto.isShorterThanDuration = getSelectedRadioValue($("#duration"));	
 	}
 	return dto;
 	
@@ -95,6 +95,12 @@ function getFullAddress(){
 }
 
 function getUrlParameters(initialUrlParameterString){
+	
+	// *****************************************************
+	// *****************************************************
+	// Tidy this up
+	// *****************************************************	
+	// *****************************************************
 	
 	var urlParameter = initialUrlParameterString;
 	var filterValue = "";
@@ -194,8 +200,8 @@ function getUrlParameters(initialUrlParameterString){
 				filterValue = getFilterValue($dropdown);
 				urlParameter += "&" + parameterName + "=" + filterValue;		
 				
-				parameterName = "isLessThanDuration";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-shorter-than");	
+				parameterName = "isShorterThanDuration";
+				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");	
 				urlParameter += "&" + parameterName + "=" + filterValue;
 			}
 			
@@ -305,6 +311,8 @@ function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 	function _success(response) {
 		$("html").removeClass("waiting");	
 		$("#filtersContainer").html(response);
+		
+		initializeSingeDateCalendars();
 		attachEventHandles_Filters();
 		triggerGetJobs();
 	}	

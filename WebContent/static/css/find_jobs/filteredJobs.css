@@ -1,0 +1,86 @@
+
+#map{
+	width:auto;
+	height:1000px;	
+}
+
+
+#filteredJobsContainer{
+/* 	height:1000px */
+}
+
+#mapContainer, #filteredJobsContainer{
+	border-bottom-style:inset;
+	border-top-style:inset;
+	padding: 0px;
+}
+
+#filteredJobs{
+	overflow-y:auto;
+	height:950px;
+    padding-top: 5px;
+   	padding-left: 15px;
+    padding-right: 15px;
+}
+
+.selected-job{
+	border:3px #163B3D solid !important;
+	border-radius:10px;
+}
+
+.glyphicon-move{
+	float:right;
+	cursor:pointer;
+	font-size:16px;
+}
+
+#mainBottom{
+	padding-top:50px;
+	display:none;
+}
+
+.job-header,
+.job-body,
+.job-footer{
+	padding: 0px 20px 15px 20px;
+}
+
+.show-desc{
+    padding: 5px;
+	font-size:12px;
+	cursor:pointer;
+}
+
+.show-desc .glyphicon{
+	margin-right:6px;
+}
+
+.less-description{
+	height:60px;
+	overflow: hidden;
+}
+
+.bold{
+	font-weight:bold;
+}
+
+
+.more-description{
+	overflow:scroll;
+	max-height:180px;
+	overflow-x:hidden;
+}
+
+.job{
+	margin-bottom: 5px;	
+	padding-top: 10px;
+	border-bottom: 1px solid gray;    
+}
+
+.job:last-child{
+	border-bottom:0;
+}
+
+.show-less{
+	display:none;
+}

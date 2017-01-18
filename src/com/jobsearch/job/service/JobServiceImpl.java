@@ -1227,7 +1227,7 @@ public class JobServiceImpl {
 		
 		JobSearchUserDTO userDto = this.getUserDTO_FindJobs(session);
 		
-		model.addAttribute("userDto", userDto);
+		session.setAttribute("userDto", userDto);
 		model.addAttribute("filterDto", session.getAttribute("lastFilterRequest"));
 		
 	}

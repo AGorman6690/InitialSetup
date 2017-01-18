@@ -188,6 +188,8 @@ public class JobRepository {
 				public FindJobFilterDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
 					
 					FindJobFilterDTO e = new FindJobFilterDTO();
+					
+					e.setId(rs.getInt("Id"));
 										
 					e.setStartDate(rs.getDate("StartDate"));					
 					e.setBeforeStartDate(rs.getBoolean("IsBeforeStartDate"));
@@ -203,7 +205,7 @@ public class JobRepository {
 					
 					e.setDuration(rs.getDouble("Duration"));
 					if(e.getDuration() <= 0) e.setDuration(null);
-					e.setIsLessThanDuration(rs.getBoolean("IsShorterThanDuration"));
+					e.setIsShorterThanDuration(rs.getBoolean("IsShorterThanDuration"));
 
 					e.setSavedName(rs.getString("Name"));
 					e.setCity(rs.getString("City"));
@@ -609,7 +611,7 @@ public class JobRepository {
 			sql += " GROUP BY jobId";
 			sql += " HAVING COUNT(jobId)";
 			
-			if(filter.getIsLessThanDuration()){
+			if(filter.getIsShorterThanDuration()){
 				sql += " <= ?";
 			}
 			else{
@@ -916,7 +918,7 @@ public class JobRepository {
 			columnNames.add("Duration");
 			columnNames.add("IsShorterThanDuration");
 			args.add(filter.getDuration());
-			args.add(filter.getIsLessThanDuration());
+			args.add(filter.getIsShorterThanDuration());
 		}
 		
 		boolean isFirst = true;

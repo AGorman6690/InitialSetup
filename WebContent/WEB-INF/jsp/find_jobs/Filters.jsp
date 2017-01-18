@@ -1,6 +1,6 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
-<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filters.css" />
+
 
 
 	<div id="headerRow" class="row">
@@ -11,14 +11,15 @@
 			<div class="group"> 
 				<button id="getJobs" class="square-button-green" data-click-on-load="${!empty filterDto ? 1 : 0}">Get Jobs</button>
 			</div>	
-			<div class="group">
-				<span id="loadSaveFilter" data-toggle-id="savedFindJobFiltersContainer" class="accent">Load</span>
-				<div id="savedFindJobFiltersContainer" class="dropdown">
-					<div class="saved-find-job-filter">
-						<span class="accent" data-id="12">1</span>
-					</div>
-					<div class="saved-find-job-filter">
-						<span class="accent" data-id="">2</span>
+			<div class="group filter-container">
+				<div data-trigger-dropdown-id="savedFindJobFiltersContainer" class="trigger-dropdown">
+					<span id="loadSaveFilter" class="accent">Load</span>
+					<div id="savedFindJobFiltersContainer" class="dropdown">
+						<c:forEach items="${userDto.savedFindJobFilters }" var="filter">
+							<div class="saved-find-job-filter">
+								<span class="accent" data-id="${filter.id }">${filter.savedName }</span>
+							</div>
+						</c:forEach>
 					</div>
 				</div>
 			</div>					
@@ -76,7 +77,7 @@
 					</div>
 					<div class="select-container filter-value-container">								
 						<select id="startTimeOptions" data-default-scroll-value="7:00am"
-							name="startTime" class="filter-value form-control size" 
+							name="startTime" class="filter-value form-control size time" 
 							data-init-time="${!empty filterDto.startTime_local ? filterDto.startTime_local : '' }">
 						 </select>	
 			  		</div>	
@@ -110,7 +111,7 @@
 					</div>
 					<div class="select-container filter-value-container">								
 						<select id="endTimeOptions" data-default-scroll-value="7:00am"
-							name="endTime" class="filter-value form-control size" 
+							name="endTime" class="filter-value form-control size time" 
 							data-init-time="${!empty filterDto.endTime_local ? filterDto.endTime_local : '' }">
 						 </select>	
 			  		</div>	
@@ -133,12 +134,12 @@
 						<div class="radio">
 						  <label><input type="radio" name="duration"
 						  	data-text-radio-selection="Shorter than"
-						  	data-is-before="1" ${filterDto.isLessThanDuration && !empty filterDto.duration ? 'checked' : '' }>Shorter than</label>
+						  	data-is-before="1" ${filterDto.isShorterThanDuration && !empty filterDto.duration ? 'checked' : '' }>Shorter than</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="duration"
 						  	data-text-radio-selection="Longer than"
-						  	data-is-before="0" ${!filterDto.isLessThanDuration && !empty filterDto.duration ? 'checked' : '' }>Longer than</label>
+						  	data-is-before="0" ${!filterDto.isShorterThanDuration && !empty filterDto.duration ? 'checked' : '' }>Longer than</label>
 						</div>										
 					</div>
 					<div class="filter-value-container">	

@@ -22,8 +22,16 @@ $(document).ready(function(){
 	})
 	
 
-	initDat = $(".calendar-single-date").attr("data-init-date");
-	selectedDay = new Date(selectedDay);
+	
+	initializeCalendar();
+	
+	initializeSingeDateCalendars();
+	
+	
+})
+
+function initializeSingeDateCalendars(){
+	
 	$(".calendar-single-date").datepicker({
 		minDate: new Date(),
 		numberOfMonths: 1,
@@ -63,11 +71,8 @@ $(document).ready(function(){
         	}
         },
 	
-	})
-	
-	initializeCalendar();
-	
-})
+	})	
+}
 
 function areDatesEqual_year_month_date(date1, date2){
 	// Dates are considered equal if the year, month and date are equal;

@@ -9,12 +9,12 @@ $(document).ready(function(){
 
 function attachEventHandles_Filters(){
 	
-	$("#filtersContainer").on("click", ".approve-filter", function(){
+	$(".approve-filter").click(function(){
 		approveFilter(this);
 		
 	})
 	
-	$("#filtersContainer").on("click", ".trigger-dropdown", function(e){		
+	$(".trigger-dropdown").click(function(e){		
 		e.stopPropagation();
 		$filterContainer = getParent_FilterContainer($(this));
 		
@@ -68,7 +68,12 @@ function attachEventHandles_Filters(){
 		loadFindJobFilter($(this).attr("data-id"));
 	})
 	
-	initializeFilterControls(approveFiltersOnLoad);
+//	$("#loadSaveFilter").hover(function(){
+//		$(this).click();
+//	})
+	
+	initializeTimeAndDateControls();
+	setInitialValues_TimeAndDates(approveFiltersOnLoad);
 }
 
 function loadFindJobFilter(savedFindJobFilterId){
@@ -127,11 +132,15 @@ function approveFiltersOnLoad(){
 	})	
 }
 
-function initializeFilterControls(callback1){
+function setInitialValues_TimeAndDates(callback){
 	
-	// Populate time select boxes
-	setTimeOptions($("#startTimeOptions"), 60);
-	setTimeOptions($("#endTimeOptions"), 60);
+	
+	// Set the initial values for the time dropdowns
+	$("select.time").each(function(){
+		var initTime = $(this).attr("data-init-time") + ":00";
+		var option = $(this).find("option[data-filter-value='" + initTime + "']")[0];
+		$(option).prop("selected", true);
+	})
 	
 	// Set calendars' initial date
 	$(".calendar-single-date").each(function(){
@@ -143,13 +152,13 @@ function initializeFilterControls(callback1){
 	})
 	
 	// Once the controls are set, approve the specified filters
-	if(typeof callback1 === "function") callback1();
+	if(typeof callback === "function") callback();
 
 }
 
 function closeOtherDropdowns(dropdownIdToExclude){
 	
-	$.each($("#additionalFiltersContainer").find(".dropdown"), function(){
+	$.each($("#filtersContainer").find(".dropdown"), function(){
 		if($(this).attr("id") != dropdownIdToExclude) slideUp($(this), slideSpeed_filterDropdowns);
 	})
 	
@@ -304,11 +313,21 @@ function getFilterValue($dropdown){
 	return filterValue;
 }
 
+function initializeTimeAndDateControls(){
+	
+	// Populate time select boxes
+	setTimeOptions($("#startTimeOptions"), 60);
+	setTimeOptions($("#endTimeOptions"), 60);
+	
+	// Date pickers
+	initializeSingeDateCalendars();
+}
+
 function setTimeOptions($eSelect, increment){
 	
 	// For whatever reason the Local Time object will not apped
 	// the seconds if the seconds are zero...
-	var initTime = $eSelect.attr("data-init-time") + ":00";
+//	var initTime = $eSelect.attr("data-init-time") + ":00";
 	var selected = "";
 	var formattedTime = "";
 	
@@ -331,12 +350,11 @@ function setTimeOptions($eSelect, increment){
 			if(hourCount <= 12){
 				amPm = "am";
 			}else{
-				amPm = "pm"
+				amPm = "pm";
 			}
 			
 			//Minute
 			for(minute = 0; minute < 60; minute += increment){
-// 					alert("minute: " + minute + " " + increment)
 				if(minute < 10){
 					modifiedMinute = "0" + minute;	
 				}else{
@@ -346,10 +364,10 @@ function setTimeOptions($eSelect, increment){
 				time = hour + ":" + modifiedMinute + amPm;
 				formattedTime = formatTime(time);
 				
-				if(formattedTime == initTime) selected = "selected";
-				else selected = "";
+//				if(formattedTime == initTime) selected = "selected";
+//				else selected = "";
 				
-				$eSelect.append("<option data-filter-value='" + formattedTime + "' " + selected + ">"
+				$eSelect.append("<option data-filter-value='" + formattedTime + "'>"
 									+ time + "</option>");
 			}
 			

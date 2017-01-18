@@ -17,6 +17,7 @@ import  com.jobsearch.utilities.DateUtility
 
 public class FindJobFilterDTO {
 
+	int id
 	String savedName
 	int userId
 	
@@ -51,7 +52,7 @@ public class FindJobFilterDTO {
 	List<String> workingDays
 	
 	Double duration	
-	boolean isLessThanDuration
+	boolean isShorterThanDuration
 	Integer[] durationTypeIds
 	
 	int returnJobCount
@@ -90,7 +91,7 @@ public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, Strin
 		this.setReturnJobCount(returnJobCount);
 
 		this.setDuration(duration2);
-		this.setIsLessThanDuration(lessThanDuration2);
+		this.setIsShorterThanDuration(lessThanDuration2);
 
 		this.setFromAddress(fromAddress);
 		this.setCategoryIds(categoryIds);

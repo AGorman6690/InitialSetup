@@ -29,9 +29,12 @@
 					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 					Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 				</div>
-				<div class="show-more-less"><span class="plus-minus glyphicon glyphicon-plus"></span>
-					<span class="show-more-less-text"> Show more</span>
+				<div class="show-more show-desc">
+					<span class="glyphicon glyphicon-plus"></span><span>Show More</span>
 				</div>
+				<div class="show-less show-desc">
+					<span class="glyphicon glyphicon-minus"></span><span>Show Less</span>
+				</div>				
 				<div class="job-dates-times">
 					<div class="start-date-time">
 						<span class="bold">Start</span> - ${jobDto.job.stringStartDate }, ${jobDto.job.stringStartTime }						 

@@ -88,15 +88,13 @@ public class JobController {
 //			HttpSession session
 //			){
 	public String saveFindJobFilter(@RequestBody FindJobFilterDTO savedFilter,
-			HttpSession session
-			){	
+											HttpSession session){	
 
 		if(SessionContext.isLoggedIn(session)){
 //			FindJobFilterDTO savedFilter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 //					beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
 //					isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
-//					city, state, zipCode, savedName);
-	//				
+//					city, state, zipCode, savedName);			
 				jobService.saveFindJobFilter(savedFilter, session);
 		}	
 		
@@ -122,7 +120,7 @@ public class JobController {
 			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
 			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
 			@RequestParam(name = "duration", required = false) Double duration,
-			@RequestParam(name = "isLessThanDuration", required = false) boolean isLessThanDuration,
+			@RequestParam(name = "isShorterThanDuration", required = false) boolean isShorterThanDuration,
 			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
 			@RequestParam(name = "sortBy", required = false) String sortBy,
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
@@ -136,7 +134,7 @@ public class JobController {
 
 		FindJobFilterDTO request = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
+				isShorterThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
 				city, state, zipCode, savedName);
 				
 			jobService.setModel_FilterJobs(model, request, session);

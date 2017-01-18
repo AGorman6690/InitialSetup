@@ -20,6 +20,7 @@
 
 .dropdown-header .trigger-dropdown{
 /* 	display:inline-block; */
+	cursor: pointer;
 }
 
 .remove-filter{
@@ -27,6 +28,7 @@
 	float:left;
 /* 	padding:5px; */	
 	margin-right:5px;
+	display:none;
 }
 
 .dropdown-header .glyphicon{
@@ -56,6 +58,7 @@
 #headerRow .group{
 	display:inline-block;
 	padding: 10px 7px;
+	width:auto;
 }
 
 .approved-filter{
@@ -91,5 +94,58 @@
 .saved-find-job-filter{
 	text-align:left;
 	padding:3px 0px;
+}
+
+#city {
+    width: 150px;
+}
+
+#radius, #state, #zipCode {
+    width: 100px;
+}
+
+#milesFromContainer{
+	padding:0px 10px;
+}
+
+.dropdown{
+	position:absolute;
+	z-index: 1000;
+    border: 3px solid rgb(192,192,192);
+    padding: 10px 20px;
+    background-color: #ffffff;
+	width:100%;
+	display:none;
+}
+
+.trigger-dropdown .glyphicon-menu-up,
+.trigger-dropdown .glyphicon-menu-down{
+	float: right;
+}
+
+.filter-text{
+    padding: 0px 3px;
+    font-size: 16px;
+}
+
+#work-days-dropdown{
+	width:520px;
+}
+
+#additionalFiltersContainer{
+	width:702px;
+	margin:auto;
+}
+
+#getJobs{
+	padding: 13px 20px;
+	font-size:16px;
+	width:110px;
+}
+
+.filter-container{
+	position:relative;
+	width: 230px;
+	
 }
 
