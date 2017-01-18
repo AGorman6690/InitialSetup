@@ -2,6 +2,8 @@ package com.jobsearch.job.service
 
 import java.sql.Date
 import java.sql.Time
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.List
 
 import org.springframework.format.annotation.DateTimeFormat
@@ -13,14 +15,22 @@ import com.jobsearch.google.GoogleClient
 
 import  com.jobsearch.utilities.DateUtility
 
-public class FilterJobRequestDTO {
+public class FindJobFilterDTO {
 
+	String savedName
+	int userId
+	
 	String fromAddress
+	String city
+	String state
+	String zipCode
 	float lat
 	float lng
 	int radius
+	
 	int[] categoryIds
 	List<Category> categories
+	
 	Date startDate
 	Date endDate
 	Time startTime
@@ -29,29 +39,50 @@ public class FilterJobRequestDTO {
 	String stringEndDate
 	String stringStartTime
 	String stringEndTime
+	LocalDate endDate_local
+	LocalTime startTime_local
+	LocalDate startDate_local
+	LocalTime endTime_local
 	boolean beforeStartTime
 	boolean beforeEndTime
 	boolean beforeStartDate
 	boolean beforeEndDate
+	
 	List<String> workingDays
-	Double duration
+	
+	Double duration	
 	boolean isLessThanDuration
+	Integer[] durationTypeIds
+	
 	int returnJobCount
 	String sortBy
 	boolean isAscending
 	int[] loadedJobIds
 	boolean isAppendingJobs
 	boolean isSortingJobs
-	Integer[] durationTypeIds
 
-	public static final String ZERO_TIME = "00:00:00"
+	// 0 = never
+	// 1 = daily
+	int emailFrequencyId;
+	
 
-public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
+public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
 			boolean beforeEndDate2, List<String> workingDays2, Double duration2, boolean lessThanDuration2,
-			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2, Integer[] durationTypeIds) {
+			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2, Integer[] durationTypeIds,
+			String city2, String state2, String zipCode2, String savedName) {
 		// TODO Auto-generated constructor stub
 
+			
+		if(startTime != null) this.setStartTime_local(LocalTime.parse(startTime));
+		if(endTime != null) this.setEndTime_local(LocalTime.parse(endTime));
+		if(startDate != null) this.setStartDate_local(LocalDate.parse(startDate));
+		if(endDate != null) this.setEndDate_local(LocalDate.parse(endDate));
+		
+		this.setSavedName(savedName);
+		this.setCity(city2);
+		this.setState(state2);
+		this.setZipCode(zipCode2);
 		this.setRadius(radius);
 		
 		this.setDurationTypeIds(durationTypeIds);
@@ -130,7 +161,7 @@ public FilterJobRequestDTO(int radius, String fromAddress, int[] categoryIds, St
 		
 	}
 			
-	public FilterJobRequestDTO() {
+	public FindJobFilterDTO() {
 		// TODO Auto-generated constructor stub
 	}
 

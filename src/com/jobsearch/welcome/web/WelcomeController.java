@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
-@SessionAttributes({ "user", "loadedFilteredJobIds", "loadedFilteredJobs" })
+@SessionAttributes({ "user" }) //, "loadedFilteredJobIds", "loadedFilteredJobs" })
 public class WelcomeController {
 
 	@Autowired
@@ -38,17 +39,17 @@ public class WelcomeController {
 		return sessionUser;
 	}
 
-	@ModelAttribute("loadedFilteredJobIds")
-	public List<Integer> getSessionLoadedFilteredJobIds() {
-		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
-		return loadedFilteredJobIds;
-	}
-
-	@ModelAttribute("loadedFilteredJobs")
-	public List<Job> getSessionLoadedFilteredJobs() {
-		List<Job> loadedFilteredJobs = new ArrayList<Job>();
-		return loadedFilteredJobs;
-	}
+//	@ModelAttribute("loadedFilteredJobIds")
+//	public List<Integer> getSessionLoadedFilteredJobIds() {
+//		List<Integer> loadedFilteredJobIds = new ArrayList<Integer>();
+//		return loadedFilteredJobIds;
+//	}
+//
+//	@ModelAttribute("loadedFilteredJobs")
+//	public List<Job> getSessionLoadedFilteredJobs() {
+//		List<Job> loadedFilteredJobs = new ArrayList<Job>();
+//		return loadedFilteredJobs;
+//	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome(Model model, HttpServletRequest request,
@@ -73,7 +74,8 @@ public class WelcomeController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
-	public ModelAndView logout(ModelAndView model, SessionStatus status, @ModelAttribute("user") JobSearchUser user) {
+	public ModelAndView logout(ModelAndView model, HttpSession session, 
+							@ModelAttribute("user") JobSearchUser user) {
 		// *******************************************
 		// *******************************************
 		// Need to figure this out
@@ -89,6 +91,13 @@ public class WelcomeController {
 
 		List<Profile> profiles = userService.getProfiles();
 		model.addObject("profiles", profiles);
+		
+//		session.invalidate();
+		
+//		session.geta
+//		for(String attributeName : session.getAttributeNames()){
+//			
+//		}
 
 		return model;
 	}

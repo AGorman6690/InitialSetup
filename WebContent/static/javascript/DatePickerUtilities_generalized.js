@@ -1,6 +1,7 @@
 
 var selectedDays = [];
 var selectedDay;
+var initDate;
 
 
 //var firstworkDay = {};
@@ -21,12 +22,14 @@ $(document).ready(function(){
 	})
 	
 
-	
-
+	initDat = $(".calendar-single-date").attr("data-init-date");
+	selectedDay = new Date(selectedDay);
 	$(".calendar-single-date").datepicker({
 		minDate: new Date(),
 		numberOfMonths: 1,
+		// defaultDate: new Date($(this).attr("data-init-date").replace("-", "/")),
 		onSelect: function(dateText, inst) {			
+			
 			var temp = (new Date(dateText)).getTime();
 			
 			if(temp == selectedDay){
@@ -37,17 +40,24 @@ $(document).ready(function(){
 			}
 			
 		
-			 
+			
 		},
 	        
         // This is run for every day visible in the datepicker.
         beforeShowDay: function (date) {
+        	
+        	var dateTime = date.getTime();   	
 
-        	date = date.getTime();   	
+        	// this data attribute holds a date that the calendar should initially select 
+        	var initDate = $(this).attr("data-init-date");
+        	initDate = initDate.replace("-", "/");
 
-			if(date == selectedDay){
+			if(dateTime == selectedDay){
         		return [true, "active111"]; 
         	}
+			else if(areDatesEqual_year_month_date(date, new Date(initDate))){
+				return [true, "active111"]; 
+			}
         	else{
         		return [true, ""];
         	}
@@ -58,6 +68,21 @@ $(document).ready(function(){
 	initializeCalendar();
 	
 })
+
+function areDatesEqual_year_month_date(date1, date2){
+	// Dates are considered equal if the year, month and date are equal;
+
+	var y1 = date1.getFullYear();
+	var m1 = date1.getMonth();
+	var d1 = date1.getDate();
+	
+	var y2 = date2.getFullYear();
+	var m2 = date2.getMonth();
+	var d2 = date2.getDate();
+	
+	if(y1 == y2 && m1 == m2 && d1 == d2) return true;
+	else return false;
+}
 
 function initSingleDayCalendar($e){
 

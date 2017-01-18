@@ -40,13 +40,22 @@
 }
 
 .center{
-	margin:auto;
-	width:600px;
+/* 	margin:auto; */
+/* 	width:600px; */
 }
 
 .filter-container{
 	padding:0px;
 	margin:2px;
+}
+#headerRow{
+	text-align:center;
+    padding-top: 15px;
+}
+
+#headerRow .group{
+	display:inline-block;
+	padding: 10px 7px;
 }
 
 .approved-filter{
@@ -54,3 +63,33 @@
 	background-color:#9a7601;
 	color:#ffffff;
 }
+
+#showSaveFilter, #clearAllFilters{
+	text-align: center;
+/*     font-size: 16px; */
+    margin-bottom: -7px;
+    padding-bottom: 5px;
+/*     color:#163B3D; */
+/*     font-weight:bold; */
+}
+
+#showSaveFilter span{
+
+    font-size: 16px;
+    color:#163B3D;
+    font-weight:bold;
+}
+
+#approveSaveFilter{
+	margin-top:-15px;
+}
+
+#savedFindJobFiltersContainer{
+	width:200px;
+}
+
+.saved-find-job-filter{
+	text-align:left;
+	padding:3px 0px;
+}
+

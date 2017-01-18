@@ -55,3 +55,9 @@ function areInputsValid_Container($container){
 	if(isInvalid > 0 ) return false;
 	else return true;
 }
+
+function removeInvalidCss($container){
+	$container.find(".invalid").each(function(){
+		$(this).removeClass("invalid");
+	})
+}

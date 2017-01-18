@@ -71,13 +71,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpServletRequest request, @ModelAttribute("user") JobSearchUser user,
-			HttpSession session) {
+	public String getProfile(Model model, HttpSession session, JobSearchUser user) {
 
 		// Why is there a try/catch here????
 		// Can the user session object checked whether it's null???
 		// Or is there something special about the authentication process?
 
+//		JobSearchUser user = new JobSearchUser();
+		
 		if (user.getUserId() == 0) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 			user = userService.getUserByEmail(auth.getName());

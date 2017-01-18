@@ -5,8 +5,13 @@
 #sortByHeader{
 	height:50px;
     line-height: 50px;
-    padding: 2px 10px;
-    border-bottom: 5px solid #5B7BA3;
+    padding: 2px 30px;
+/*     border-bottom: 3px solid #5B7BA3; */
+    border-bottom: 1px solid #000000;
+/*     background-color: #e7e7df; */
+/*     background-color: #5b7ba3; */
+	background-color:#163B3D;
+    color: #ffffff;
 }
 
 #sortByHeader p{

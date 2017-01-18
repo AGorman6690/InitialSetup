@@ -1,12 +1,42 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
-<link rel="stylesheet" type="text/css"	href="../static/css/filters_findJobs.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filters.css" />
+
+
+	<div id="headerRow" class="row">
+		<div class="col-sm-12">
+			<div class="group">
+				<span id="clearAllFilters" class="accent">Clear All</span>
+			</div>	
+			<div class="group"> 
+				<button id="getJobs" class="square-button-green" data-click-on-load="${!empty filterDto ? 1 : 0}">Get Jobs</button>
+			</div>	
+			<div class="group">
+				<span id="loadSaveFilter" data-toggle-id="savedFindJobFiltersContainer" class="accent">Load</span>
+				<div id="savedFindJobFiltersContainer" class="dropdown">
+					<div class="saved-find-job-filter">
+						<span class="accent" data-id="12">1</span>
+					</div>
+					<div class="saved-find-job-filter">
+						<span class="accent" data-id="">2</span>
+					</div>
+				</div>
+			</div>					
+			<div class="group">
+				<span id="showSaveFilter" class="accent">Save</span>
+			</div>
+		</div>
+	</div>
+
+
+
+
 
 <!-- <div id="filtersContainer"> -->
 	<div class="row">
 		<div id="distanceContainer" class="col-sm-12">
 			<div id="distanceErrorMessage" class="error-message-container">
-				<div id="radiusErrorMessage" class="error-message">The number of miles must be a positive number</div>
+				<div id="radiusErrorMessage" class="error-message">The number of miles must be a positive number.</div>
 				<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
 			</div>							
 			<input name="radius" type="text"
@@ -36,21 +66,22 @@
 						<div class="radio">
 						  <label><input type="radio" name="startTime"
 						  	data-text-radio-selection="Before"
-						  	data-is-before="1">Before</label>
+						  	data-is-before="1" ${filterDto.beforeStartTime && !empty filterDto.startTime_local ? 'checked' : '' }>Before</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="startTime"
 						  	data-text-radio-selection="After"
-						  	data-is-before="0">After</label>
+						  	data-is-before="0" ${!filterDto.beforeStartTime && !empty filterDto.startTime_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
 					<div class="select-container filter-value-container">								
 						<select id="startTimeOptions" data-default-scroll-value="7:00am"
-							name="startTime"
-							class="filter-value form-control size">
+							name="startTime" class="filter-value form-control size" 
+							data-init-time="${!empty filterDto.startTime_local ? filterDto.startTime_local : '' }">
 						 </select>	
 			  		</div>	
-			  		<span class="glyphicon glyphicon-ok approve-filter"></span>		
+			  		<span class="approve-filter glyphicon glyphicon-ok"
+			  			data-click-on-load="${!empty filterDto.startTime_local ? 1 : 0}" ></span>	
 			  		<div class="error-message-container error-message"></div>					  		
 				</div>
 				
@@ -69,21 +100,22 @@
 						<div class="radio">
 						  <label><input type="radio" name="endTime"
 						  	data-text-radio-selection="Before"
-						  	data-is-before="1">Before</label>
+						  	data-is-before="1" ${filterDto.beforeEndTime && !empty filterDto.endTime_local ? 'checked' : '' }>Before</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="endTime"
 						  	data-text-radio-selection="After"
-						  	data-is-before="0">After</label>
+						  	data-is-before="0" ${!filterDto.beforeEndTime && !empty filterDto.endTime_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
 					<div class="select-container filter-value-container">								
 						<select id="endTimeOptions" data-default-scroll-value="7:00am"
-							name="endTime"
-							class="filter-value form-control size">
+							name="endTime" class="filter-value form-control size" 
+							data-init-time="${!empty filterDto.endTime_local ? filterDto.endTime_local : '' }">
 						 </select>	
 			  		</div>	
-			  		<span class="glyphicon glyphicon-ok approve-filter"></span>		
+			  		<span class="approve-filter glyphicon glyphicon-ok"
+			  			data-click-on-load="${!empty filterDto.endTime_local ? 1 : 0}" ></span>		
 			  		<div class="error-message-container error-message"></div>					  		
 				</div>						
 			</div>
@@ -101,19 +133,21 @@
 						<div class="radio">
 						  <label><input type="radio" name="duration"
 						  	data-text-radio-selection="Shorter than"
-						  	data-is-shorter-than="1">Shorter than</label>
+						  	data-is-before="1" ${filterDto.isLessThanDuration && !empty filterDto.duration ? 'checked' : '' }>Shorter than</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="duration"
 						  	data-text-radio-selection="Longer than"
-						  	data-is-shorter-than="0">Longer than</label>
+						  	data-is-before="0" ${!filterDto.isLessThanDuration && !empty filterDto.duration ? 'checked' : '' }>Longer than</label>
 						</div>										
 					</div>
 					<div class="filter-value-container">	
 						<span>Number of days</span>							
-						<input class="filter-value" type="text" data-text-order="1">	
+						<input class="filter-value" type="text" data-text-order="1"
+							value="${!empty filterDto.duration ? filterDto.duration : '' }">	
 			  		</div>	
-			  		<span class="glyphicon glyphicon-ok approve-filter"></span>		
+			  		<span class="approve-filter glyphicon glyphicon-ok"
+			  			data-click-on-load="${!empty filterDto.duration ? 1 : 0}" ></span>		
 			  		<div class="error-message-container error-message"></div>					  		
 				</div>						
 			</div>
@@ -133,18 +167,20 @@
 						<div class="radio">
 						  <label><input type="radio" name="startDate"
 						  	data-text-radio-selection="Before"
-						  	data-is-before="1">Before</label>
+						  	data-is-before="1" ${filterDto.beforeStartDate && !empty filterDto.startDate_local ? 'checked' : '' }>Before</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="startDate"
 						  	data-text-radio-selection="After"
-						  	data-is-before="0">After</label>
+						  	data-is-before="0" ${!filterDto.beforeStartDate && !empty filterDto.startDate_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
-					<div class="select-container filter-value-container">		
-						<div class="calendar-single-date filter-value" data-number-of-months="1"></div>
+					<div class="select-container filter-value-container" >		
+						<div class="calendar-single-date filter-value" data-number-of-months="1"
+							data-init-date="${!empty filterDto.startDate_local ? filterDto.startDate_local : '-1'}"></div>
 					</div>
-			  		<span class="approve-filter glyphicon glyphicon-ok"></span>
+			  		<span class="approve-filter glyphicon glyphicon-ok"
+			  			data-click-on-load="${!empty filterDto.startDate_local ? 1 : 0}" ></span>
 					<div class="error-message-container error-message"></div>	
 				</div>
 					
@@ -163,18 +199,24 @@
 						<div class="radio">
 						  <label><input type="radio" name="endDate"
 						  	data-text-radio-selection="Before"
-						  	data-is-before="1">Before</label>
+						  	data-is-before="1" ${filterDto.beforeEndDate && !empty filterDto.endDate_local ? 'checked' : '' }>Before</label>
 						</div>
 						<div class="radio">
 						  <label><input type="radio" name="endDate"
 						  	data-text-radio-selection="After"
-						  	data-is-before="0">After</label>
+						  	data-is-before="0" ${!filterDto.beforeEndDate && !empty filterDto.endDate_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
 					<div class="select-container filter-value-container">		
-						<div class="calendar-single-date filter-value" data-number-of-months="1"></div>
+						<div class="calendar-single-date filter-value" data-number-of-months="1"
+						data-init-date="${!empty filterDto.endDate_local ? filterDto.endDate_local : '-1'}" 
+<%-- 							data-init-year="${!empty filterDto.endDate_local ? filterDto.endDate_local.year : '-1'}"  --%>
+<%-- 							data-init-month="${!empty filterDto.endDate_local ? filterDto.endDate_local.month : '-1'}"  --%>
+<%-- 							data-init-date="${!empty filterDto.endDate_local ? filterDto.endDate_local.day : '-1'}" --%>
+							></div>
 					</div>
-			  		<span class="approve-filter glyphicon glyphicon-ok"></span>
+			  		<span class="approve-filter glyphicon glyphicon-ok"
+			  			data-click-on-load="${!empty filterDto.endDate_local ? 1 : 0}" ></span>
 					<div class="error-message-container error-message"></div>	
 				</div>
 					
@@ -183,7 +225,7 @@
 				<div class="dropdown-header">	
 					<span class="remove-filter glyphicon glyphicon-remove"></span>
 					<div data-trigger-dropdown-id="work-days-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
-						<span class="filter-text" data-reset-text="Work Days">Work Days</span>
+						<span class="filter-text" data-reset-text="Work Days">Work Days (not built)</span>
 						<span class="glyphicon glyphicon-menu-down"></span>		
 					</div>			
 				</div>
@@ -213,12 +255,36 @@
 	</div>		
 <!-- </div>  end filters container -->
 
-<div class="row">
-	<div class="col-sm-12">
-		<div id="getJobsContainer"> 
-			<div class="input-container">
-				<button id="getJobs" class="square-button-green">Get Jobs</button>
-			</div>
+
+<div id="saveModal" class="mod">
+	<div class="mod-content">
+		<div class="mod-header">
+			<span class="glyphicon glyphicon-remove"></span>
+			<h3>Save Filter</h3>
+			
 		</div>
+		<div class="mod-body">
+			<div class="mod-item">
+				<label class="lbl">Name</label>
+				<input id="saveFilterName" class="mod-input"/>
+			</div>
+			<div class="mod-item">
+				<label class="lbl">Email Frequency</label>
+				<div id="emailFrequencyContainer" class="radio-container" class="mod-input">
+					<div class="radio">
+					  <label><input type="radio" name="setupEmailAlert" value="1" checked>Daily</label>
+					</div>
+					<div class="radio">
+						<label><input type="radio" name="setupEmailAlert" value="0">Never</label>
+					</div>																			
+				</div>
+			</div>
+			<div class="mod-item center">
+				<button id="approveSaveFilter" class="square-button blue-button">Save</button>
+			</div>					
+		</div>
+		
 	</div>
 </div>
+
+	

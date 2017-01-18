@@ -11,7 +11,7 @@
 	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
 	<script	src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 	<script	src="<c:url value="/static/javascript/PostJob_durations.js" />"></script>
-	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script>
+<%-- 	<script	src="<c:url value="/static/javascript/Calendar.js" />"></script> --%>
 	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>

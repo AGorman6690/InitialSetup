@@ -1,0 +1,108 @@
+.mod{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.mod-content{
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.6s	;
+    
+    
+   	width:350px;
+	height:250px;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin:-125px 0 0 -175px;
+	border-radius: 8px;
+}
+
+/* Modal Header */
+.mod-header {
+    padding: 2px 16px;
+    background-color: #5B7BA3;
+    color: white;
+}
+
+.mod-header .glyphicon-remove{
+    float: right;
+    padding: 5px;
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+.mod-item{
+	padding:10px 0px;
+	position:relative;
+}
+
+.mod-item .radio-container{
+	display:inline-block;
+}
+
+.mod-item span{
+	vertical-align:top;
+}
+
+.mod-item.center{
+	text-align: center;
+}
+
+.mod-item .lbl{
+	width:125px;
+	display:inline-block;
+	line-height:30px;
+	text-align:right;
+	vertical-align: top;
+	padding-right:15px;
+}
+
+.radio-container .radio:first-child{
+	margin-top:0px;
+}
+
+/* Modal Body */
+.mod-body {padding: 2px 16px;}
+
+/* Modal Footer */
+.mod-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/* @-webkit-keyframes animatetop { */
+/*     from {top:-300px; opacity:0}  */
+/*     to {top:0; opacity:1} */
+/* } */
+
+@keyframes animatetop {
+/*     from {top:-300px; opacity:0} */
+/*     to {top:0; opacity:1} */
+	0% {
+		margin:0 0 0 0;
+		opacity:0
+	}
+	100% {
+		margin:-100px 0 0 -150;
+		opacity:1;
+	}
+}

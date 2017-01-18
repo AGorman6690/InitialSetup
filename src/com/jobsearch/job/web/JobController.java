@@ -18,9 +18,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.FilterJobRequestDTO;
+import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.job.service.test;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -58,11 +59,58 @@ public class JobController {
 		// order
 		return "/find_jobs/RenderFilteredJobs";
 	}
+	
+	@RequestMapping(value = "/jobs/save-find-job-filter", method = RequestMethod.POST)
+	@ResponseBody
+//	public void saveFindJobFilter(@RequestParam(name = "radius", required = true) int radius,
+//			@RequestParam(name = "fromAddress", required = true) String fromAddress,
+//			@RequestParam(name = "city", required = false) String city,
+//			@RequestParam(name = "state", required = false) String state,
+//			@RequestParam(name = "zipCode", required = false) String zipCode,
+//			@RequestParam(name = "categoryId", value = "categoryId", required = false) int[] categoryIds,
+//			@RequestParam(name = "startTime", required = false) String startTime,
+//			@RequestParam(name = "endTime", required = false) String endTime,
+//			@RequestParam(name = "beforeStartTime", required = false) boolean beforeStartTime,
+//			@RequestParam(name = "beforeEndTime", required = false) boolean beforeEndTime,
+//			@RequestParam(name = "startDate", required = false) String startDate,
+//			@RequestParam(name = "endDate", required = false) String endDate,
+//			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
+//			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
+//			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
+//			@RequestParam(name = "duration", required = false) Double duration,
+//			@RequestParam(name = "isLessThanDuration", required = false) boolean isLessThanDuration,
+//			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
+//			@RequestParam(name = "sortBy", required = false) String sortBy,
+//			@RequestParam(name = "isAscending", required = false) boolean isAscending,
+//			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
+//			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
+//			@RequestParam(name = "savedName", required = true) String savedName,
+//			HttpSession session
+//			){
+	public String saveFindJobFilter(@RequestBody FindJobFilterDTO savedFilter,
+			HttpSession session
+			){	
+
+		if(SessionContext.isLoggedIn(session)){
+//			FindJobFilterDTO savedFilter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+//					beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
+//					isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
+//					city, state, zipCode, savedName);
+	//				
+				jobService.saveFindJobFilter(savedFilter, session);
+		}	
+		
+		return "";
+	}
+
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 //	@ResponseBody
 	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
 			@RequestParam(name = "fromAddress", required = true) String fromAddress,
+			@RequestParam(name = "city", required = false) String city,
+			@RequestParam(name = "state", required = false) String state,
+			@RequestParam(name = "zipCode", required = false) String zipCode,
 			@RequestParam(name = "categoryId", value = "categoryId", required = false) int[] categoryIds,
 			@RequestParam(name = "startTime", required = false) String startTime,
 			@RequestParam(name = "endTime", required = false) String endTime,
@@ -80,18 +128,17 @@ public class JobController {
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
 			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
+			@RequestParam(name = "savedName", required = false) String savedName,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
 			HttpSession session,
 			Model model
 			){
 
-		FilterJobRequestDTO request = new FilterJobRequestDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+		FindJobFilterDTO request = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds);
-	
-		
-//			return jobService.getVelocityTemplate_FilterJobs(request, session);
-			
+				isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
+				city, state, zipCode, savedName);
+				
 			jobService.setModel_FilterJobs(model, request, session);
 			
 			return "/find_jobs/RenderFilteredJobs";
@@ -114,10 +161,19 @@ public class JobController {
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
 
-		model.addAttribute("user", session.getAttribute("user"));
-		return "FindJobs";
+		jobService.setModel_FindJobs_PageLoad(model, session);
+		
+		return "/find_jobs/FindJobs";
 	}
+	
+	@RequestMapping(value = "/jobs/find/load-filter", method = RequestMethod.GET)
+	public String loadFindJobFilter(@RequestParam (name="savedFindJobFilterId") int savedFindJobFilterId,
+										Model model, HttpSession session) {
 
+		jobService.setModel_LoadFindJobsFilter(savedFindJobFilterId, model, session);
+		
+		return "/find_jobs/Filters";
+	}
 
 	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
 	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {

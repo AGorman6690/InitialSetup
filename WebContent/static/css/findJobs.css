@@ -3,7 +3,7 @@
 }
 
 #radius, #state, #zipCode {
-    width: 95px;
+    width: 100px;
 }
 
 .selected-job{
@@ -13,7 +13,7 @@
 
 .container{
 	width:100%;
-	padding:0px 25px 50px 25px;
+	padding:0px 0px 50px 0px;
 }
 
 #distance input {
@@ -26,14 +26,14 @@
 .note{
 	padding: 20px;
 }
-#filterContainer .col-sm-4{
-	padding: 0px 2px 4px 2px;
-}
+
 
 #filteredJobs{
 	overflow-y:auto;
-/* 	max-height:915px; */
-	height:1000px;
+	height:944px;
+    padding-top: 5px;
+   	padding-left: 15px;
+    padding-right: 15px;
 }
 
 .glyphicon-move{
@@ -56,16 +56,29 @@
 
 #map{
 	width:auto;
-	margin-left:5px;
+/* 	margin-left:5px; */
 /* 	height:auto; */
 	height:1000px;	
 }
 
+#mapContainer{
+	padding-left:0px;
+	padding-right:0px;
+	height:1000px;
+}
+
+#filteredJobsContainer{
+/* 	height:1000px */
+}
+
 #map, #filteredJobsContainer{
-	border-right-style:outset;
+/* 	border-right-style:outset; */
 	border-bottom-style:inset;
 	border-top-style:inset;
-	border-left-style:outset;
+/* 	border-left-style:outset; */
+	padding: 0px;
+/*     height: 1000px; */
+/*     overflow: hidden; */
 }
 
 .glyphicon-remove{
@@ -189,7 +202,7 @@ div[data-scroll-to]{
 }
 
 #mainBottom{
-	padding-top:25px;
+	padding-top:50px;
 	display:none;
 }
 

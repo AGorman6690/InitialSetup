@@ -86,9 +86,9 @@
 		
 		
 		
-		</head>
+	</head>
 
-		<body style="height: 100%; width: 95%; margin: auto">
+	<body>
 		
 		<c:set var="LaborVaultHost" scope="session" value="${url}"/>
 		

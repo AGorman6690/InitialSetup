@@ -10,7 +10,7 @@
 		
 <%-- 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
-	<script src="<c:url value="/static/javascript/Calendar.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/Calendar.js" />"></script> --%>
 <%-- 	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>	 --%>
 
 </head>

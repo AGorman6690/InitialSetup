@@ -1,13 +1,20 @@
 var $filterContainer;
-var slideSpeed_filterDropdowns = 350;
+var slideSpeed_filterDropdowns = 500;
+var initialUrlParameterString = "?";
 
 $(document).ready(function(){
-	$(".approve-filter").click(function(){
+	attachEventHandles_Filters();
+	triggerGetJobs();
+})
+
+function attachEventHandles_Filters(){
+	
+	$("#filtersContainer").on("click", ".approve-filter", function(){
 		approveFilter(this);
 		
 	})
 	
-	$(".trigger-dropdown").click(function(e){		
+	$("#filtersContainer").on("click", ".trigger-dropdown", function(e){		
 		e.stopPropagation();
 		$filterContainer = getParent_FilterContainer($(this));
 		
@@ -30,14 +37,115 @@ $(document).ready(function(){
 			areFilterInputsValid($filterContainer);
 		}
 	})
+		
 	
 	$("#getJobs").click(function(){
 		getJobs(1);
 	})
+		
 	
+	$("html").click(function(e){
+		if($(e.target).closest(".dropdown").length == 0 && !$(e.target).hasClass("dropdown")){
+			closeOtherDropdowns("");
+		}
+	})
+
+	$("#showSaveFilter").click(function(){
+		showSaveFilterModal();
+
+		
+	})
 	
+	$("#approveSaveFilter").click(function(){
+		approveSaveFilter();
+	})
 	
-})
+	$("#clearAllFilters").click(function(){
+		clearAllFilters();
+	})
+	
+	$(".saved-find-job-filter span").click(function(){
+		loadFindJobFilter($(this).attr("data-id"));
+	})
+	
+	initializeFilterControls(approveFiltersOnLoad);
+}
+
+function loadFindJobFilter(savedFindJobFilterId){
+	executeAjaxCall_loadFindJobFilter(savedFindJobFilterId)
+}
+
+function showSaveFilterModal(){
+	if(areAddressAndRadiusValid(getFullAddress(), $("#radius").val())){
+		$("#saveModal").show();	
+		$("#saveFilterName").focus();
+	}	
+}
+
+function clearAllFilters(){
+	var activeFilters = $("#filtersContainer").find(".remove-filter");
+	
+	$.each(activeFilters, function(){
+		$(this).click();
+	})
+}
+
+function approveSaveFilter(){
+	
+	var findJobFilterDto = getJsonObject_findJobFilterDTO();
+	if(areInputsValid_ApproveSaveFilter(findJobFilterDto)){		
+		executeAjaxCall_saveFindJobFilter(findJobFilterDto)
+	}
+}
+
+function areInputsValid_ApproveSaveFilter(findJobFilterDto){
+
+	var invalidCount = 0;
+	
+	if(findJobFilterDto.savedName == ""){
+		setInvalidCss($("#saveFilterName"));
+		invalidCount += 1;
+	}
+	else if(getEmailFrequencyId() == undefined){
+		invalidCount += 1;
+	}
+
+	if(invalidCount == 0) return true;
+	else return false;
+}
+
+function triggerGetJobs(){
+	// On page load, attempt to trigger "Get Jobs".
+	// If the page loaded with a filterDto not equal to null, then
+	// this attribute will equal 1.
+	$("#getJobs[data-click-on-load=1]").click();
+}
+
+function approveFiltersOnLoad(){
+	$("span.approve-filter[data-click-on-load=1]").each(function(){
+		$(this).click();
+	})	
+}
+
+function initializeFilterControls(callback1){
+	
+	// Populate time select boxes
+	setTimeOptions($("#startTimeOptions"), 60);
+	setTimeOptions($("#endTimeOptions"), 60);
+	
+	// Set calendars' initial date
+	$(".calendar-single-date").each(function(){
+		var initDate = $(this).attr("data-init-date");
+		var date = new Date(initDate.replace("-", "/"));
+		if(initDate != undefined){
+			$(this).datepicker("setDate", date);
+		}
+	})
+	
+	// Once the controls are set, approve the specified filters
+	if(typeof callback1 === "function") callback1();
+
+}
 
 function closeOtherDropdowns(dropdownIdToExclude){
 	
@@ -49,10 +157,10 @@ function closeOtherDropdowns(dropdownIdToExclude){
 
 function getJobs(){
 	
-	var urlParams = getUrlParameters();
+	var urlParams = getUrlParameters(initialUrlParameterString);
 	
-	if(urlParams != "?") executeAjaxCall_getFilteredJobs(urlParams, 1);
-	
+	if(urlParams != initialUrlParameterString) executeAjaxCall_getFilteredJobs(urlParams, 1);
+
 }
 
 function isErrorMessageDisplayed($container){
@@ -194,4 +302,63 @@ function getFilterValue($dropdown){
 	}
 	
 	return filterValue;
+}
+
+function setTimeOptions($eSelect, increment){
+	
+	// For whatever reason the Local Time object will not apped
+	// the seconds if the seconds are zero...
+	var initTime = $eSelect.attr("data-init-time") + ":00";
+	var selected = "";
+	var formattedTime = "";
+	
+	if(increment > 0){
+			
+		$eSelect.empty();
+		$eSelect.append('<option value="" selected style="display: none"></option>');
+		
+		var hourCount;
+		var hour;
+		var minute;
+		var modifiedMinute;
+		var amPm;
+		var time;
+		//Hour
+		hour = 12;
+		for(hourCount = 1; hourCount < 25; hourCount++){
+
+			//Am or pm
+			if(hourCount <= 12){
+				amPm = "am";
+			}else{
+				amPm = "pm"
+			}
+			
+			//Minute
+			for(minute = 0; minute < 60; minute += increment){
+// 					alert("minute: " + minute + " " + increment)
+				if(minute < 10){
+					modifiedMinute = "0" + minute;	
+				}else{
+					modifiedMinute = minute;
+				}	
+				
+				time = hour + ":" + modifiedMinute + amPm;
+				formattedTime = formatTime(time);
+				
+				if(formattedTime == initTime) selected = "selected";
+				else selected = "";
+				
+				$eSelect.append("<option data-filter-value='" + formattedTime + "' " + selected + ">"
+									+ time + "</option>");
+			}
+			
+			//Incerment the hour
+			if(hour == 12){
+				hour = 1;
+			}else{
+				hour ++;
+			}				 
+		}
+	}
 }
