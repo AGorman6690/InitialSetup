@@ -33,82 +33,11 @@
 	<br>
 	<br>
 	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>	
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
-	<br>
 
-						<button id="debug1">Sign in as employer (UserId = 1)</button>
-						<button id="debug2">Sign in as employee 1</button>
-						<button id="debug3">Sign in as employee 2</button>
 	
 
 </div>
 
-<script>
-	$(document).ready(function() {
-		$("#debug1").click(function() {
-			
-			
-// 			$("#nav_logOut").trigger("click");
-// 			$("#password").val('jg');
-// 			$("#userName").val('gorma080@d.umn.edu');
-// 			$("#loginContainer input[type=submit]")[0].click();
-			
-			
-			$("#nav_logOut").trigger("click");
-			$("#password").val('jg');
-			$("#userName").val('gorma080@d.umn.edu');
-			$("#loginContainer input[type=submit]").click();
-			
-			
 
-		})
-
-		$("#debug2").click(function() {
-			
-			$("#nav_logOut").trigger("click");
-			$("#password").val('2');
-			$("#userName").val('2');
-			$("#loginContainer input[type=submit]").click();
-
-		})
-		
-		$("#debug3").click(function() {
-			
-			$("#nav_logOut").trigger("click");
-			$("#password").val('jg');
-			$("#userName").val('justin.gorman@wilsontool.com');
-			$("#loginContainer input[type=submit]")[0].click();
-
-		})		
-		
-		$("#login").click(function(){
-			$("div.login").show();
-			$("div.sign-up").hide();
-		})
-		
-		$("#signUp").click(function(){
-			$("div.login").hide();
-			$("div.sign-up").show();
-		})
-
-	})
-
-	function createAccount() {
-		$("#createAccountContainer").toggle();
-
-	}
-</script>
 
 <%@ include file="./includes/Footer.jsp"%>

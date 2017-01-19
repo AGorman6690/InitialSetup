@@ -717,20 +717,22 @@ public class UserServiceImpl {
 		
 	}
 
-	public boolean verifyUserLoginCredentials(JobSearchUser user, HttpSession session) {
+	public void setSession_Login(JobSearchUser user, HttpSession session) {
 		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		user = this.getUserByEmail(auth.getName());
 		
-		if(user != null){
-//			model.addAttribute("user", user);
-			session.setAttribute("user", user);
-			
-			return true;
-		}
-		else{
-			return false;
-		}
+		session.setAttribute("user", user);
+		
+//		if(user != null){
+////			model.addAttribute("user", user);
+//			session.setAttribute("user", user);
+//			
+//			return true;
+//		}
+//		else{
+//			return false;
+//		}
 		
 	}
 

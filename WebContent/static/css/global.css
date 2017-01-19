@@ -2,7 +2,13 @@ html.waiting * {
     cursor: progress;
 }
 
-input{
+
+.do-show{
+	display:inline-block !important;
+}
+
+
+input, select{
 	padding: 5px 10px;
 }
 .form-control-label{

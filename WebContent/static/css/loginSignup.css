@@ -1,0 +1,73 @@
+
+#loginContainer {
+	width:380px;
+}
+
+#signUpContainer {
+	width:380px;
+}
+
+.group-container{
+	padding:20px 0px;
+}
+
+.group{
+	margin:0 auto;
+    padding-top: 15px;	
+}
+
+.do-hide{
+	display:none;
+}
+
+.a-header{
+    color: #ffffff;
+    text-align: center;
+    background-color: #2980B9;
+    height:60px;
+    width:1200px;
+    margin:auto;
+    cursor:pointer;
+    
+}
+
+.a-header h3{
+    line-height:60px;
+}
+
+.group .item{
+	padding:8px 0px;
+}
+
+.group label{
+	width:150px;
+	text-align:right;
+	padding-right:10px;
+}
+
+.group input[type=text],
+.group input[type=password]{
+	width:225px;
+}
+
+input[type=submit]{
+	width:125px;
+}
+
+#loginContainer .checkboxLabel{
+	text-align:left;
+	width:225px;
+}
+
+.checkboxLabel{
+    font-weight: 100;
+}
+
+#loginContainer .checkbox{
+	margin:0px;
+	padding-bottom:5px;
+}
+
+.forgot-password{
+	padding-top:5px;
+}

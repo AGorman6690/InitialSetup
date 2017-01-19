@@ -13,6 +13,10 @@
 	display: none;
 }
 
+.invalid-message-show{
+	color: #b30000;
+	margin-bottom: 5px;
+}
 /* .valid-input-existence{ */
 /* 	border: 0px solid #b30000; */
 /* } */

@@ -52,5 +52,27 @@ public class WelcomeServiceImpl {
 //		}
 	}
 
+	public void setModel_Login_SignUp(boolean error, Boolean login, Model model) {
+
+		int requestedLogin = -1;
+		
+		if(error){
+			String errorMessage = "Email and/or password are incorrect";
+			model.addAttribute("errorMessage", errorMessage);
+			requestedLogin = 1;
+		}
+		
+		
+		if(login != null){
+			
+			if(login == true) requestedLogin = 1;
+			else requestedLogin = 0;			
+		}
+		
+		
+		model.addAttribute("requestedLogin", requestedLogin);
+		
+	}
+
 
 }

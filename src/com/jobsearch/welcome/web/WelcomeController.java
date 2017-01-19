@@ -50,12 +50,25 @@ public class WelcomeController {
 
 		return "Welcome";
 	}
-
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	
+	
+	@RequestMapping(value = "/login-signup", method = RequestMethod.GET)
+	public String login_signUp(Model model,
+					@RequestParam(name = "error", required = false) boolean error,
+					@RequestParam(name = "login", required = false) Boolean login) {
+		
+		welcomeService.setModel_Login_SignUp(error, login, model);
+		
+		
+		return "Login_SignUp";
+	}
+	
+	
+	@RequestMapping(value = "/logout.do", method = RequestMethod.GET)
 	public String logout(Model model, HttpSession session) {
 		
 		welcomeService.Logout(session);
-	
+
 		return "redirect:/";
 	}
 }

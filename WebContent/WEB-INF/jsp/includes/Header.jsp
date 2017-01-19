@@ -76,7 +76,7 @@
 		<link href="/JobSearch/static/css/layout.css" rel="stylesheet" />			
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	
-		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/LoginSignup.css" />	
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
 		
 <!-- 		Global Scripts -->
 		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
@@ -103,7 +103,7 @@
 					<div class="nav-items">					
 						<c:choose>
 							<c:when test="${!empty sessionScope.user }">
-									<a id="nav_logOut" href="/JobSearch/logout">Log out</a>
+									<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>
 								<c:choose>
 									<c:when test="${sessionScope.user.profileId == 1}">
 										<a id="nav_settings" href="/JobSearch/settings">Settings</a>
@@ -118,52 +118,13 @@
 							</c:when>
 							<c:otherwise>
 <!-- 								<a id="nav_login" data-toggle-mod-id="loginContainer">Login</a> -->
-								<a data-toggle="modal" data-target="#loginContainer">Login</a>
-								<a id="nav_signUp" data-toggle-mod-id="signUpContainer">Sign Up</a>
+								<a href="/JobSearch/login-signup?login=true">Login</a>
+								<a href="/JobSearch/login-signup?login=false">Sign Up</a>
 							</c:otherwise>
 						</c:choose>
 					</div>
 				</div>
 			</nav>
-	
-	
-	
-			<div id="loginContainer" class="modal fade login-signup bottom-border-thin" role="dialog">
-				
-				<div class="modal-dialog">
-				
-				    <div class="modal-content" >
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal">&times;</button>
-				        <h4 class="modal-title">Login</h4>
-				      </div>
-				      <div class="modal-body">
-						<form:form class="form-signin" modelAttribute="user"
-							action="/JobSearch/login.do?redirectUrl=${redirectUrl}" method="POST"> 
-				
-							<form:input type="text" class="form-control" placeholder="Email"
-								path="username" id="userName" />
-							<form:password class="form-control" placeholder="Password"
-								path="password" id="password" />
-							<div class="forgot-password">
-								<a href="./user/password/reset">Forgot Password?</a>
-							</div>
-							<input class="square-button" type="submit" value="Login"/>
-						</form:form>
-						
-						
-				      </div>
-		<!-- 		      <div class="modal-footer"> -->
-		<!-- 		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
-		<!-- 		      </div> -->
-				    </div>		
-		
-		
-				</div>	
-			</div>
-	
-	
-	
 	
 	
 	
@@ -178,7 +139,7 @@
 
 
 
-					<%@ include file="../nav_bar/SignUp.jsp" %>						
+										
 				</c:when>	
 			</c:choose>
 
