@@ -17,7 +17,7 @@ public class SessionContext {
 	
 	public static String SESSION_ATTRIBUTE_FILTERED_JOB_IDS = "loadedFilteredJobIds";
 	
-	public static JobSearchUser getSessionUser(HttpSession session) {
+	public static JobSearchUser getUser(HttpSession session) {
 		return (JobSearchUser) session.getAttribute("user");
 	}
 
@@ -42,7 +42,7 @@ public class SessionContext {
 		// Once the session attributes mature, revisit this.
 		// *************************************
 		// *************************************
-		JobSearchUser user = SessionContext.getSessionUser(session);
+		JobSearchUser user = SessionContext.getUser(session);
 		if (user == null) {
 			return false;
 		}

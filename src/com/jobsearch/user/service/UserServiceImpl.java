@@ -382,7 +382,7 @@ public class UserServiceImpl {
 	}
 
 	public void updateSessionUser(HttpSession session) {
-		JobSearchUser user = getUser(SessionContext.getSessionUser(session).getUserId());
+		JobSearchUser user = getUser(SessionContext.getUser(session).getUserId());
 		session.setAttribute("user", user);
 	}
 
@@ -675,14 +675,14 @@ public class UserServiceImpl {
 		for(JobSearchUser employee : employees){
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
 			employeeDto.setUser(employee);
-			employeeDto.setRating(this.getRatingByUserAndJob(employee.getUserId(), jobId));
+			employeeDto.setRating(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
 			employeeDtos.add(employeeDto);
 		}
 		
 		return employeeDtos;
 	}
 
-	private RatingDTO getRatingByUserAndJob(int userId, int jobId) {
+	public RatingDTO getRatingDtoByUserAndJob(int userId, int jobId) {
 		
 		RatingDTO ratingDto = new RatingDTO();
 		
@@ -706,7 +706,7 @@ public class UserServiceImpl {
 
 	public void setModel_Profile(Model model, HttpSession session) {
 	
-		JobSearchUser sessionUser = SessionContext.getSessionUser(session);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfile().getName().equals("Employee")) {
 			this.setModel_EmployeeProfile(sessionUser, model);
@@ -738,10 +738,10 @@ public class UserServiceImpl {
 
 	public String getProfileJspName(HttpSession session) {
 		
-		JobSearchUser sessionUser = SessionContext.getSessionUser(session);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
 			
-		if (sessionUser.getProfile().getName().equals("Employee")) return "EmployeeProfile";
-		else return "EmployerProfile";
+		if (sessionUser.getProfile().getName().equals("Employee")) return "/employee_profile/EmployeeProfile";
+		else return "/employer_profile/EmployerProfile";
 
 	}
 }

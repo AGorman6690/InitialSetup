@@ -1,4 +1,4 @@
-	<%@ include file="./includes/Header.jsp"%>
+	<%@ include file="../includes/Header.jsp"%>
 	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 	
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
@@ -30,12 +30,12 @@
 			<div class="col-sm-10" id="sectionContainers">
 				<div id="applicationContainer" class="section-container">
 					<div class="section-body">
-						<%@ include file="./employee_profile/Applications_Employee.jsp" %>
+						<%@ include file="./Applications_Employee.jsp" %>
 					</div>
 				</div>
 				<div id="employmentContainer" class="section-container">
 					<div class="section-body">
-						<%@ include file="./employee_profile/Employment_Employee.jsp" %>
+						<%@ include file="./Employment_Employee.jsp" %>
 					</div>
 				</div>				
 			</div>
@@ -233,5 +233,5 @@ var availableDays = [];
 
 
 
-<%@ include file="./includes/Footer.jsp"%>
+<%@ include file="../includes/Footer.jsp"%>
 

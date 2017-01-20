@@ -63,56 +63,6 @@ public class UserController {
 		return "redirect:/user/profile";
 
 	}	
-	
-//	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-//	public String getProfile(Model model, HttpServletRequest request, @ModelAttribute("user") JobSearchUser user,
-//			HttpSession session) {
-//
-//		// Why is there a try/catch here????
-//		// Can the user session object checked whether it's null???
-//		// Or is there something special about the authentication process?
-//
-//		if (user.getUserId() == 0) {
-//			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//			user = userService.getUserByEmail(auth.getName());
-//
-//		}
-//
-//		// Get the user's profile
-//		// user = userService.getProfile(user);
-//		model.addAttribute("user", user);
-//
-//		// Update session user after they have logged in
-//		session.setAttribute("user", user);
-//
-//		// If not creating new password
-//		String viewName = null;
-//		if (user.getCreateNewPassword() == 0) {
-//
-//			// Per the profile type, set the model attributes and view name
-//			if (user.getProfile().getName().equals("Employee")) {
-//
-//				// Set model attributes
-//				userService.setModel_EmployeeProfile(user, model);
-//
-//				viewName = "EmployeeProfile";
-//
-//			} else if (user.getProfile().getName().equals("Employer")) {
-//
-//				// Set model attributes
-//				userService.setModel_EmployerProfile(user, model);
-//
-//				viewName = "EmployerProfile";
-//
-//			}
-//		} else {
-//			viewName = "NewPassword";
-//			model.addAttribute("newPassword", new JobSearchUser());
-//		}
-//
-//		return viewName;
-//
-//	}
 
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)

@@ -53,7 +53,7 @@
 					<c:forEach items="${applicationDtos }" var="dto">
 						<c:if test="${dto.application.status < 3 }">
 							<tr class="static-row application" data-application-status="${dto.application.status }">
-								<td><a class="accent" href="/JobSearch/job/${dto.job.id }">${dto.job.jobName }</a></td>
+								<td><a class="accent" href="/JobSearch/job/${dto.job.id }?c=profile-incomplete">${dto.job.jobName }</a></td>
 								<td>
 									<c:choose>
 										<c:when test="${dto.currentWageProposal.status == 2 }">

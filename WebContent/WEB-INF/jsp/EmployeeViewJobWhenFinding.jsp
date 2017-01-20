@@ -51,27 +51,6 @@
 							</div>
 						</div>
 					</div>
-
-<!-- 					<div id="questionsContainer" class="section-container"> -->
-<!-- 						<div class="section-body"> -->
-<!-- 							<h4>Questions</h4> -->
-							
-<%-- 							<c:set var="param_questions" value="${jobDto.questions }"/>		 --%>
-<!-- 							<div id="questionsContainer" class="body-element-container">					 -->
-<%-- 								<c:forEach items="${param_questions }" var="question"> --%>
-<!-- 									<div class="question body-element info-container"> -->
-<%-- 										<div class="question-text">${question.text }</div>			 --%>
-<!-- 										<div class="answer-options-container"> -->
-<%-- 											<c:forEach items="${question.answerOptions }" var="answerOption"> --%>
-<%-- 											<div class="answer-option"><span class="glyphicon glyphicon-menu-right"></span>${answerOption.text }</div> --%>
-<%-- 											</c:forEach> --%>
-<!-- 										</div> -->
-<!-- 									</div> -->
-<%-- 								</c:forEach>	 --%>
-<!-- 							</div> -->
-										
-<!-- 						</div> -->
-<!-- 					</div> -->
 					
 					<c:choose>				
 						<c:when test="${isLoggedIn == false }">					

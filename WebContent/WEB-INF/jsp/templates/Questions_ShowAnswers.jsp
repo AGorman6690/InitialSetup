@@ -3,7 +3,7 @@
 <c:choose>
 	<c:when test="${questions.size() > 0 }">
 		<div id="questionsContainer" class="section">
-			<c:forEach items="${questions }" var="question">
+			<c:forEach items="${jobDto.questions }" var="question">
 				<div class="question-container">
 					<span class="question-text">${question.text }</span>
 					<div class="answer-container">

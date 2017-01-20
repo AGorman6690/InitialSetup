@@ -199,7 +199,7 @@ public class JobController {
 		
 	}
 
-	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/old/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
@@ -217,6 +217,21 @@ public class JobController {
 		return null;
 
 	}
+	
+	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
+	public String getJob(Model model, HttpSession session,
+						@RequestParam(name = "c", required = true) String c,
+						@PathVariable(value = "jobId") int jobId) {
+		
+		// c is the context in which the job was clicked
+		
+		jobService.setModel_ViewJob_Employee(model, session, c, jobId);
+		
+		
+		return "/view_job_employee/ViewJob_Employee";
+		
+	}
+
 
 	
 	@RequestMapping(value = "/completed/job/{jobId}", method = RequestMethod.GET)

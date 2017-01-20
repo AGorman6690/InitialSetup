@@ -1,4 +1,4 @@
-<%@ include file="./includes/Header.jsp"%>
+<%@ include file="../includes/Header.jsp"%>
 
 <head>
 <%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
@@ -30,10 +30,10 @@
 		</div>
 		
 		<div id="waiting" class="job-type-section">
-			<%@ include file="./employer_profile/JobsWaitingToStart_Employer.jsp" %>
+			<%@ include file="./JobsWaitingToStart_Employer.jsp" %>
 		</div>
 		<div id="active" class="job-type-section">
-			<%@ include file="./employer_profile/JobsInProcess_Employer.jsp" %>
+			<%@ include file="./JobsInProcess_Employer.jsp" %>
 		</div>
 
 		<c:choose>
@@ -134,5 +134,5 @@ $(document).ready(function(){
 
 </script>
 
-<%@ include file="./includes/Footer.jsp"%>
+<%@ include file="../includes/Footer.jsp"%>
 

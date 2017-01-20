@@ -84,6 +84,8 @@
 		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
 		<script src="<c:url value="/static/javascript/SideBar.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
+		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
+		
 						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<title>Insert title here</title>

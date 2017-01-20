@@ -50,6 +50,8 @@
 	</div>	
 </div>	
 	
+		
+	
 	
 <div class="group-container">
 	<div id="loginHeader" class="a-header">
@@ -68,7 +70,7 @@
 				</div>
 				<div class="item">
 					<label>Password</label>
-					<form:password class="" path="password" id="password"/>
+					<form:password class="" path="password" id="login-password"/>
 										
 						
 					<div class="forgot-password">
@@ -130,7 +132,7 @@
 		$("#debug1").click(function() {
 			
 			$("#nav_logOut").trigger("click");
-			$("#password").val('jg');
+			$("#login-password").val('jg');
 			$("#userName").val('gorma080@d.umn.edu');
 			$("#login").click();
 			
@@ -141,7 +143,7 @@
 		$("#debug2").click(function() {
 			
 			$("#nav_logOut").trigger("click");
-			$("#password").val('2');
+			$("#login-password").val('2');
 			$("#userName").val('2');
 			$("#login").click();
 
@@ -150,7 +152,7 @@
 		$("#debug3").click(function() {
 			
 			$("#nav_logOut").trigger("click");
-			$("#password").val('jg');
+			$("#login-password").val('jg');
 			$("#userName").val('justin.gorman@wilsontool.com');
 			$("#login")[0].click();
 

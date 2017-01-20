@@ -1,5 +1,5 @@
 
-	<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
+<%-- 	<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	 --%>
 
 </body>
 </html>

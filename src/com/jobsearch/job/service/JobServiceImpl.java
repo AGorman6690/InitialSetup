@@ -578,14 +578,14 @@ public class JobServiceImpl {
 
 	public void setModel_EmployerViewJob(Model model, int jobId, HttpSession session) {
 
-		JobSearchUser user = SessionContext.getSessionUser(session);
+		JobSearchUser user = SessionContext.getUser(session);
 		
 		
 		//Get the job
 		Job selectedJob = this.getEmployersJobProfile(jobId);
 		int hideJobInfoOnLoad;
 
-		if(SessionContext.getSessionUser(session).getUserId() == selectedJob.getUserId()){
+		if(SessionContext.getUser(session).getUserId() == selectedJob.getUserId()){
 
 			//Get the employees
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
@@ -608,7 +608,7 @@ public class JobServiceImpl {
 			
 			
 			JobDTO jobDto = new JobDTO();
-			jobDto = this.getJobDTO(jobId);
+			jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 			
 			model.addAttribute("jobDto", jobDto);
 			model.addAttribute("applications", applications);
@@ -640,7 +640,7 @@ public class JobServiceImpl {
 		
 		String vtJobInfo = this.getVelocityTemplate_JobInfo(jobId, 0);
 		Application application = applicationService.getApplication(jobId, employeeId);
-		application.setQuestions(applicationService.getQuestionsByJobAndUser(jobId, employeeId));
+		application.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(jobId, employeeId));
 		
 		model.addAttribute("vtJobInfo", vtJobInfo);
 		model.addAttribute("questions", application.getQuestions());
@@ -669,7 +669,7 @@ public class JobServiceImpl {
 		jobDto.setJob(this.getJob(jobId));
 		
 		Application application = applicationService.getApplication(jobId, userId);
-		application.setQuestions(applicationService.getQuestionsByJobAndUser(jobId, userId));
+		application.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(jobId, userId));
 		
 		model.addAttribute("jobDto", jobDto);
 		model.addAttribute("questions", application.getQuestions());
@@ -753,7 +753,7 @@ public class JobServiceImpl {
 
 
 		JobDTO jobDto = new JobDTO();
-		jobDto = this.getJobDTO(jobId);
+		jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobId", jobId);
@@ -766,14 +766,13 @@ public class JobServiceImpl {
 	
 	
 
-	private JobDTO getJobDTO(int jobId) {
+	private JobDTO getJobDTO_DisplayJobInfo(int jobId) {
 		
 		JobDTO jobDto = new JobDTO();
 		
 		Job job = this.getJob(jobId);
 		jobDto.setJob(job);
 		jobDto.setWorkDays(this.getWorkDays(jobId));
-		jobDto.setQuestions(applicationService.getQuestions(jobId));
 		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 		
 		this.setJobDtoDuration(jobDto);
@@ -1238,7 +1237,7 @@ public class JobServiceImpl {
 		
 		if(filter != null){
 			
-			JobSearchUser sessionUser = SessionContext.getSessionUser(session);
+			JobSearchUser sessionUser = SessionContext.getUser(session);
 			
 			if(filter.getUserId() == sessionUser.getUserId()){
 				return filter;
@@ -1249,6 +1248,48 @@ public class JobServiceImpl {
 		}
 		else return null;
 	}
+
+	public void setModel_ViewJob_Employee(Model model, HttpSession session, String context, int jobId) {
+
+		// **************************************************
+		// **************************************************
+		// Need to add verification for all contexts
+		// **************************************************
+		// **************************************************
+
+		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+
+		switch (context) {
+		case "find":
+			
+			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
+			break;
+
+		case "profile-incomplete":
+		
+			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
+														jobId, sessionUser.getUserId()));			
+			break;
+			
+		
+		case "completed":
+			
+			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
+					jobId, sessionUser.getUserId()));
+
+			userDto.setRating(userService.getRatingDtoByUserAndJob(sessionUser.getUserId(), jobId));
+			break;			
+		}	
+		
+		model.addAttribute("context", context);
+		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
+		model.addAttribute("jobDto", jobDto);
+		model.addAttribute("userDto", userDto);
+				
+	}
+
 
 
 

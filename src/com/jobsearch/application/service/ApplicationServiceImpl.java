@@ -95,7 +95,7 @@ public class ApplicationServiceImpl {
 			// Set the application's questions and answers
 			// application.setQuestions(this.getQuestionsWithAnswers(jobId,
 			// applicant.getUserId()));
-			application.setQuestions(this.getQuestionsByJobAndUser(jobId, applicant.getUserId()));
+			application.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
 
 			// application.setAnswers(this.getAnswersByJobAndUser(jobId,
 			// applicant.getUserId()));
@@ -215,7 +215,7 @@ public class ApplicationServiceImpl {
 		return questions;
 	}
 
-	public List<Question> getQuestionsByJobAndUser(int jobId, int userId) {
+	public List<Question> getQuestionsWithAnswersByJobAndUser(int jobId, int userId) {
 
 		List<Question> questions = repository.getQuestions(jobId);
 		
@@ -226,22 +226,7 @@ public class ApplicationServiceImpl {
 		return questions;
 	}
 
-	// **************************************
-	// **************************************
-	// Phase this out. It is replaced with "SetAnswers(List<Question>
-	// questions)"
-	// **************************************
-	// **************************************
-	public List<Question> getQuestionsWithAnswers(int jobId, int userId) {
-		// This will set the user's answers
 
-		List<Question> questions = repository.getQuestions(jobId);
-		// for(PostQuestionDTO q : questions){
-		// q.setAnswerOptions(this.getAnswerOptions(q.Id()));
-		// q.setAnswers(this.getAnswers(q.Id(), userId));
-		// }
-		return questions;
-	}
 
 	//
 	public List<AnswerOption> getAnswerOptions(int questionId) {
@@ -545,11 +530,6 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public void setAnswers(List<Question> questions) {
-		// TODO Auto-generated method stub
-
-	}
-	
 	public void addAnswer(Answer answer) {
 		repository.addAnswer(answer);
 	}
