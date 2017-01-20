@@ -55,9 +55,7 @@ public class JobController {
 		
 		jobService.SetModel_SortFilteredJobs(session, model, sortBy, isAscending);
 
-		// Get the html to display the already-rendered jobs in the requested
-		// order
-		return "/find_jobs/RenderFilteredJobs";
+		return "/find_jobs/Render_GetJobs_InitialRequest";
 	}
 	
 	@RequestMapping(value = "/jobs/save-find-job-filter", method = RequestMethod.POST)
@@ -132,14 +130,20 @@ public class JobController {
 			Model model
 			){
 
-		FindJobFilterDTO request = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
+		FindJobFilterDTO filter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
 				isShorterThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
 				city, state, zipCode, savedName);
 				
-			jobService.setModel_FilterJobs(model, request, session);
 			
-			return "/find_jobs/RenderFilteredJobs";
+			if(filter.getIsAppendingJobs()){
+				jobService.setModel_GetMoreJobs(model, filter, session);
+				return "/find_jobs/Render_FilteredJobsList";
+			}
+			else{
+				jobService.setModel_GetJobs(model, filter, session);
+				return "/find_jobs/Render_GetJobs_InitialRequest";
+			}
 
 	}
 

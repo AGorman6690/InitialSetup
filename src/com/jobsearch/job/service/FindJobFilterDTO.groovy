@@ -61,7 +61,8 @@ public class FindJobFilterDTO {
 	int[] loadedJobIds
 	boolean isAppendingJobs
 	boolean isSortingJobs
-
+	List<Integer> jobIdsToExclude
+	
 	// 0 = never
 	// 1 = daily
 	int emailFrequencyId;

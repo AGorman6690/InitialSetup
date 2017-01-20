@@ -40,7 +40,7 @@ function attachEventHandles_Filters(){
 		
 	
 	$("#getJobs").click(function(){
-		getJobs(1);
+		getJobs(0);
 	})
 		
 	
@@ -81,7 +81,7 @@ function loadFindJobFilter(savedFindJobFilterId){
 }
 
 function showSaveFilterModal(){
-	if(areAddressAndRadiusValid(getFullAddress(), $("#radius").val())){
+	if(areAddressAndRadiusValid()){
 		$("#saveModal").show();	
 		$("#saveFilterName").focus();
 	}	
@@ -164,11 +164,18 @@ function closeOtherDropdowns(dropdownIdToExclude){
 	
 }
 
-function getJobs(){
+function getJobs(isAppendingJobs){
 	
-	var urlParams = getUrlParameters(initialUrlParameterString);
-	
-	if(urlParams != initialUrlParameterString) executeAjaxCall_getFilteredJobs(urlParams, 1);
+	if(areAddressAndRadiusValid()){
+		
+		var urlParams = getUrlParameters(initialUrlParameterString, isAppendingJobs);
+		executeAjaxCall_getFilteredJobs(urlParams, 1, isAppendingJobs);
+		
+//		// Verify the user set at least one filter parameter
+//		if(urlParams != initialUrlParameterString) {
+//			
+//		}
+	}
 
 }
 

@@ -17,7 +17,7 @@
 
 #filteredJobs{
 	overflow-y:auto;
-	height:950px;
+	height:919px;
     padding-top: 5px;
    	padding-left: 15px;
     padding-right: 15px;
@@ -79,6 +79,26 @@
 
 .job:last-child{
 	border-bottom:0;
+}
+
+#getMoreJobsContainer{
+	height:50px;
+	line-height: 50px;
+    font-size: 18px;
+}
+
+#getMoreJobsContainer-top{
+	height:30px;	
+	line-height: 30px;
+    font-size: 16px;
+}
+
+.get-more-jobs{
+	text-align: center;
+    background-color: #337ab7;;
+    color: #ffffff;
+    cursor:pointer;	
+    margin-top: 1px;
 }
 
 .show-less{

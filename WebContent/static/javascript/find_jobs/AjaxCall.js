@@ -94,7 +94,7 @@ function getFullAddress(){
 	return buildStringFromArray(arr);
 }
 
-function getUrlParameters(initialUrlParameterString){
+function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 	
 	// *****************************************************
 	// *****************************************************
@@ -117,11 +117,11 @@ function getUrlParameters(initialUrlParameterString){
 
 
 	address = getFullAddress();
-	
-
 	radius = $("#radius").val();
-
-	if(areAddressAndRadiusValid(address, radius)){
+	city = $("#city").val();
+	state = $("#state").val()
+	zipCode = $("#zipCode").val()
+	
 //		if(isAtleastOneFilterApplied()){
 			
 			// Full Address			
@@ -157,7 +157,7 @@ function getUrlParameters(initialUrlParameterString){
 			
 			// Appending jobs flag		
 			parameterName = "isAppendingJobs";
-			filterValue = 0;		
+			filterValue = isAppendingJobs;		
 			urlParameter += "&" + parameterName + "=" + filterValue;			
 			
 			// Start time
@@ -237,17 +237,30 @@ function getUrlParameters(initialUrlParameterString){
 				urlParameter += "&" + parameterName + "=" + filterValue;
 			}			
 //		}
-	}
+
 	
 	return urlParameter;
 	
 }
 
-function areAddressAndRadiusValid(address, radius){
+function areAddressAndRadiusValid(){
 
 	var validAddress = 1;
 	var validRadius = 1;
 	var errorMessage;
+	
+	var address = "";
+	var radius = "";
+	var city = "";
+	var state = "";
+	var zipCode = "";
+
+	address = getFullAddress();	
+	city = $("#city").val();
+	state = $("#state").val()
+	zipCode = $("#zipCode").val()
+	
+	radius = $("#radius").val();
 	
 	// Address
 	if(address == "" || address == undefined) validAddress = 0;	
@@ -352,23 +365,28 @@ function executeAjaxCall_saveFindJobFilter(findJobFilterDto){
 }
 
 
-function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap){
+function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJobs){
 	
 	$("html").addClass("waiting");
 	$.ajax({
 		type : "GET",
-			url: '/JobSearch/jobs/filter' + urlParameters,
-			headers : getAjaxHeaders(),
-			success : _success,
-			error : _error,
-			cache: true
-		});
+		url: '/JobSearch/jobs/filter' + urlParameters,
+		headers : getAjaxHeaders(),
+		success : _success,
+		error : _error,
+		cache: true
+	});
 
 	function _success(response) {
-		$("html").removeClass("waiting");
 		
-		$("#filteredJobs").html(response);		
+		$("html").removeClass("waiting");		
+		
+		if(isAppendingJobs){
+			$("#getMoreJobsContainer").before(response)
+		}
+		else $("#filteredJobs").html(response);		
 
+		
 		//Show the jobs and map container if this is the first job request
 		if(!$("#mainBottom").is("visible")){
 			$("#mainBottom").show();
@@ -387,7 +405,7 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap){
 //		sessionStorage.clear();
 //		sessionStorage.setItem("doStoreFilteredJobs", doStoreFilteredJobs(response));			
 //		if(sessionStorage.doStoreFilteredJobs == 1){
-			sessionStorage.setItem("filteredJobs", response);
+//			sessionStorage.setItem("filteredJobs", response);
 //			sessionStorage.setItem("map", $("#map").html());
 //			sessionStorage.setItem("filters", $("#filterContainer").html());
 //		}

@@ -24,7 +24,7 @@ public class JobDTO {
 	 Job job
 	 
 	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
-	 int durationDays
+	 Integer durationDays
 	 double durationHours
 	 List<WorkDay> workDays
 	 List<Question> questions

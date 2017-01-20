@@ -28,7 +28,7 @@
     width:1200px;
     margin:auto;
     cursor:pointer;
-    
+    border-radius: 30px;
 }
 
 .a-header h3{

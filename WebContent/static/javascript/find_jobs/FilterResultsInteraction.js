@@ -1,4 +1,5 @@
 $(document).ready(function(){
+	
 	$("#filteredJobsContainer").on("click", ".job .show-desc", function(){
 		
 		var jobDescription = $(this).siblings(".job-description")[0];				
@@ -8,14 +9,18 @@ $(document).ready(function(){
 		
 		$(this).hide();
 		$(siblingShow).show();
-		
-		
-//		if($(jobDescription).hasClass("more-description")) $(text_showMoreLess).html("Show Less");
-//		else $(text_showMoreLess).html("Show More");
 	})
+	
+	$("#filteredJobsContainer").on("click", ".get-more-jobs", function(){
+		getMoreJobs();
+	})
+	
 })
 
 
+function getMoreJobs(){
+	getJobs(1);
+}
 
 
 function addBorderToJob(jobId){	

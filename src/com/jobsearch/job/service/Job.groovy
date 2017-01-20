@@ -13,7 +13,7 @@ import java.util.List
 
 
 public class Job {
-	int id
+	Integer id
 	int isActive
 	int userId
 	int openings

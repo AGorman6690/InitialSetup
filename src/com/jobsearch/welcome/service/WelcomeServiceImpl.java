@@ -57,7 +57,7 @@ public class WelcomeServiceImpl {
 		int requestedLogin = -1;
 		
 		if(error){
-			String errorMessage = "Email and/or password are incorrect";
+			String errorMessage = "Email and password do not match";
 			model.addAttribute("errorMessage", errorMessage);
 			requestedLogin = 1;
 		}

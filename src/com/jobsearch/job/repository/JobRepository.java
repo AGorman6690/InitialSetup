@@ -341,7 +341,7 @@ public class JobRepository {
 		}
 	}
 
-	public List<Job> getFilteredJobs(FindJobFilterDTO filter, List<Integer> alreadyLoadedFilteredJobIds) {
+	public List<Job> getFilteredJobs(FindJobFilterDTO filter) {
 
 
 //SQL example for filtering jobs.
@@ -401,7 +401,7 @@ public class JobRepository {
 
 		//Arguments for distance filter
 
-		
+		String originalJobTableName = "j";
 		String nextTableToJoin;
 		String subTable;
 		
@@ -416,7 +416,7 @@ public class JobRepository {
 //					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
 //					+ " FROM job j";
 
-		String sql = " FROM job j";
+		String sql = " FROM job " + originalJobTableName;
 		
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
@@ -634,10 +634,10 @@ public class JobRepository {
 		argsList.add(filter.getRadius());	
 		
 		//Skip already-loaded jobs
-		if(alreadyLoadedFilteredJobIds != null){
+		if(filter.getJobIdsToExclude() != null){
 			
-			for(Integer id : alreadyLoadedFilteredJobIds){
-				sql += " AND job.jobId <> ?";
+			for(Integer id : filter.getJobIdsToExclude()){
+				sql += " AND " + originalJobTableName + ".jobId <> ?";
 				argsList.add(id);
 			}
 		}
@@ -660,7 +660,7 @@ public class JobRepository {
 		
 		//Number of jobs to return
 		//argsList.add(filter.getReturnJobCount());
-		sql += " LIMIT 0 , 25";
+		sql += " LIMIT 0 , 2";
 
 		
 		sql = sqlSelect + sql;
@@ -954,6 +954,25 @@ public class JobRepository {
 			return null;
 		}
 		
+	}
+
+	public List<Job> getJobsByIds(List<Integer> jobIds) {
+		
+		
+		String sql = "SELECT * FROM job j WHERE";
+		List<Object> args = new ArrayList<Object>();
+		
+		boolean isFirst = true;
+		for(Integer jobId : jobIds){
+			
+			if(!isFirst) sql += " OR";
+			sql += " j.JobId = ?";
+			args.add(jobId);
+			
+			isFirst = false;
+		}
+
+		return this.JobRowMapper(sql, args.toArray());
 	}
 
 

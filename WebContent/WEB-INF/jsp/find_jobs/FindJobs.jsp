@@ -36,7 +36,8 @@
 			<div class="row" >
 				<div id="filteredJobsContainer" class="col-sm-3">
 					<div id="sortByContainer"><%@ include file="./SortBy.jsp" %></div>
-					<div id="filteredJobs"></div>					
+			 		<div id="getMoreJobsContainer-top" class="get-more-jobs">Get More Jobs</div> 	
+					<div id="filteredJobs"></div>				
 				</div>
 				<div id="mapContainer" class="col-sm-9">				
 					<div id="map" class="right-border"></div>				

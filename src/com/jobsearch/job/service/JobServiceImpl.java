@@ -404,34 +404,22 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getFilteredJobs(FindJobFilterDTO filter, HttpSession session) {
+	public List<Job> getJobsByFindJobFilter(FindJobFilterDTO filter, HttpSession session) {
 
 
 
 		//******************************************************
-		//******************************************************
+		//************************ ******************************
 		//Need to validate location.
 		//Can it be done client side?
 		//Currently the lat and lng are being set in the filter request Dto's constructor
 		//******************************************************
 		//******************************************************
-		
-		
-		//If appending jobs, get the job ids that have already been rendered to the user.
-		//The already-rendered-job ids are held in the session.
-		List<Integer> alreadyLoadedFilteredJobIds = getAlreadyLoadedFilteredJobsIds(filter, session);
-
-
 		// Get the filtered jobs		
-		List<Job> filteredJobs = repository.getFilteredJobs(filter, alreadyLoadedFilteredJobIds);
+		List<Job> filteredJobs = repository.getFilteredJobs(filter);
+		
+//		SessionContext.updateFilteredJobIds(filteredJobs, session);
 
-		// For each filtered job, calculate the distance between the user's
-		// specified filter lat/lng
-//		if (filteredJobs != null) {
-//			this.setJobsCategories(filteredJobs);
-//			this.setJobsDistanceFromRequest(filteredJobs, filter.getLat(), filter.getLng());
-//			this.setDurationForJobs(filteredJobs);
-//		}
 		return filteredJobs;
 
 	}
@@ -468,130 +456,7 @@ public class JobServiceImpl {
 	}	
 	
 
-	public String getVelocityTemplate_FilterJobs(FindJobFilterDTO request, HttpSession session) {
-		
-		//Query the database
-		List<Job> filteredJobs = new ArrayList<Job>();
-		filteredJobs = this.getFilteredJobs(request, session);
 
-
-		StringWriter writer = new StringWriter();
-
-		// Set the context
-		final VelocityContext context = new VelocityContext();
-		context.put("request", request);
-		context.put("jobs", filteredJobs);
-		context.put("date", new DateTool());
-		context.put("dateCompare", new ComparisonDateTool());
-		context.put("mathUtility", MathUtility.class);
-		
-
-		// If the request is to GET filtered jobs, not SORT already-filtered
-		// jobs.
-		// The max-distance job is used to set the map zoom level.
-		// Since the map is not reloaded on sort, this is skipped if the user is
-		// sorting.
-		if (!request.getIsSortingJobs()) {
-			double maxDistance;
-
-			// If any jobs matched the user's filter(s)
-			if (filteredJobs.size() > 0) {
-
-				// Get the farthest job from the users requested located.
-				Job maxDistanceJob = filteredJobs.stream().max(Comparator.comparing(Job::getDistanceFromFilterLocation))
-						.get();
-				maxDistance = maxDistanceJob.getDistanceFromFilterLocation();
-
-			} else {
-				maxDistance = -1;
-			}
-
-			context.put("maxDistance", maxDistance);
-		}
-
-		filterJobsTemplate.merge(context, writer);
-
-		return writer.toString();
-	}
-	
-
-	@SuppressWarnings("unchecked")
-
-	private List<Integer> getAlreadyLoadedFilteredJobsIds(FindJobFilterDTO request, HttpSession session) {
-		
-		if(request.getIsAppendingJobs()){				
-			return (List<Integer>) session.getAttribute("loadedFilteredJobIds");
-		}else{
-			return null;
-		}
-	}
-
-
-	public String getSortedJobsHTML(FindJobFilterDTO request, HttpSession session) {
-
-		// Get the filtered job objects that have already been rendered to the
-		// user
-		@SuppressWarnings("unchecked")
-		// List<Integer> filteredJobIds = (List<Integer>)
-		// session.getAttribute("loadedFilteredJobIds");
-		List<Job> filteredJobs = (List<Job>) session.getAttribute("loadedFilteredJobs");
-
-		// **************************************************
-		// For usage of Comparator<T>, refer to:
-		// https://www.mkyong.com/java8/java-8-lambda-comparator-example/
-		// **************************************************
-		Comparator<Job> c = null;
-
-		// The sortBy String is the data-col attribute in the
-		// div.sort-jobs-by-container on the FindJobs.jsp
-		switch (request.getSortBy()) {
-		case "Distance":
-			c = (Job j1, Job j2) -> j1.getDistanceFromFilterLocation().compareTo(j2.getDistanceFromFilterLocation());
-			break;
-
-		case "StartDate":
-			c = (Job j1, Job j2) -> j1.getStartDate().compareTo(j2.getStartDate());
-			break;
-
-		case "EndDate":
-			c = (Job j1, Job j2) -> j1.getEndDate().compareTo(j2.getEndDate());
-			break;
-
-		case "StartTime":
-			c = (Job j1, Job j2) -> j1.getStartTime().compareTo(j2.getStartTime());
-			break;
-
-		case "EndTime":
-			c = (Job j1, Job j2) -> j1.getEndTime().compareTo(j2.getEndTime());
-			break;
-
-		case "Duration":
-			c = (Job j1, Job j2) -> j1.getDuration().compareTo(j2.getDuration());
-			break;
-		}
-
-		// If not sorting in ascending order, then reverse the sort.
-		if (request.getIsAscending()) {
-			filteredJobs.sort(c);
-		} else {
-			filteredJobs.sort(c.reversed());
-		}
-
-			 
-		 
-//		//From the jobs already rendered to the user, sort them
-//		List<Job> sortedJobs = repository.sortJobs(filteredJobIds, request.getSortBy(), 
-//				request.getIsAscending());
-//		
-//		//Set jobs' attributes
-//		this.setJobsDistanceFromRequest(sortedJobs, request.getLat(), request.getLng());
-//		this.setJobsCategories(sortedJobs);
-		
-		
-		return "";
-//		return this.getVelocityTemplate_FilterJobs(filteredJobs, request);
-	}
-	
 	public void setModel_EmployerViewCompletedJob(Model model, int jobId, HttpSession session) {
 		
 		//Get the job
@@ -812,55 +677,7 @@ public class JobServiceImpl {
 
 	}
 
-	private String getVelocityTemplate_Answers(int jobId, int userId) {
-		List<Answer> answers = applicationService.getAnswersByJobAndUser(jobId, userId);
 
-		if(answers.size() >0){
-
-
-
-			StringWriter writer = new StringWriter();
-
-			//Set the context
-			final VelocityContext context = new VelocityContext();
-			context.put("answers", answers);
-
-			//Run the template
-			questionsTemplate.merge(context, writer);
-
-			//Return the html
-			return writer.toString();
-		}
-		else{
-			return "";
-		}
-	}
-
-	private String getVelocityTemplate_Questions(int jobId){
-
-		List<Question> questions = applicationService.getQuestions(jobId);
-
-		if(questions.size() >0){
-
-			applicationService.setAnswers(questions);
-
-			StringWriter writer = new StringWriter();
-
-			//Set the context
-			final VelocityContext context = new VelocityContext();
-			context.put("questions", questions);
-
-			//Run the template
-			questionsTemplate.merge(context, writer);
-
-			//Return the html
-			return writer.toString();
-		}
-		else{
-			return "";
-		}
-
-	}
 
 	private String getVelocityTemplate_JobInfo(int jobId, int hideOnOpen) {
 		//Job properties
@@ -1015,18 +832,6 @@ public class JobServiceImpl {
 		
 	}
 
-	private String getVelocityTemplate_QuestionsToAnswer(int jobId) {
-
-		StringWriter writer = new StringWriter();
-		final VelocityContext context = new VelocityContext();
-
-		List<Question> questions = applicationService.getQuestions(jobId);
-
-		context.put("questions", questions);
-		questionsToAnswer.merge(context, writer);
-
-		return writer.toString();
-	}
 
 	public void UpdateJobStatus(int status, int jobId) {
 		repository.updateJobStatus(status, jobId);
@@ -1048,33 +853,194 @@ public class JobServiceImpl {
 		}
 		
 	}
-
-	public void setModel_FilterJobs(Model model, FindJobFilterDTO filter, HttpSession session) {
-		
-		List<Job> filteredJobs = this.getFilteredJobs(filter, session);
-
-		
-		
-		if(filter.getSortBy() != null){
-			this.sortJobs(filteredJobs, filter);
-		}
-
-		
-		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(filteredJobs, filter);
-		double maxDistance = this.getMaxDistanceJobFromFilterRequest(jobDtos, filter);
-
-		JobSearchUserDTO userDto = this.getUserDTO_FindJobs(session);
-		
-		
-		model.addAttribute("jobDtos", jobDtos);
-		model.addAttribute("filterRequest", filter);
-		model.addAttribute("maxDistance", maxDistance);
 	
+	
+
+	public void setModel_GetMoreJobs(Model model, FindJobFilterDTO filter, HttpSession session) {
+	
+		// If getting more jobs, exclude the already-loaded job ids
+		if(filter.getIsAppendingJobs()){
+			filter.setJobIdsToExclude(SessionContext.getFilteredJobIds(session));
+		}
+		else{
+			SessionContext.setFilteredJobIds(session, null);
+			filter.setJobIdsToExclude(null);
+		}
 		
-		session.setAttribute("lastFilterRequest", filter);
+		// Per the filter request, get the jobs
+		List<Job> jobs = this.getJobsByFindJobFilter(filter, session);
+
+		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(jobs, filter, session);
+			
+		model.addAttribute("jobDtos", jobDtos);
+		
+		SessionContext.updateFilteredJobIds(session, this.getJobIdsFromJobDTOs(jobDtos));
+
+	}
+	
+	
+
+	private List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter, HttpSession session) {
+	
+		// For each job, set its:
+		// a) categories
+		// b) duration
+		// c) distance from requested filter location
+		
+		if(jobs != null){
+
+			
+			List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+			
+			for(Job job : jobs){			
+			
+				JobDTO jobDto = new JobDTO(); 
+				jobDto.setJob(job);
+				jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
+				jobDto.setDurationDays(this.getDuration(job.getId()));
+				
+				double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
+				distance = MathUtility.round(distance, 1, 0);
+				jobDto.setDistanceFromFilterLocation(distance);			
+				
+				jobDtos.add(jobDto);
+			}
+
+			return jobDtos;			
+		}
+		else return null;
+
+	
 	}
 
-	private void sortJobs(List<Job> filteredJobs, FindJobFilterDTO filter) {
+	public void setModel_GetJobs(Model model, FindJobFilterDTO filter, HttpSession session) {
+		
+		// Per the filter request, get the jobs
+		List<Job> jobs = this.getJobsByFindJobFilter(filter, session);
+		
+		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(jobs, filter, session);
+		
+		this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, filter);
+				
+		session.setAttribute("lastFilterRequest", filter);
+		
+		SessionContext.setFilteredJobIds(session, this.getJobIdsFromJobDTOs(jobDtos));
+	}
+	
+	public void SetModel_SortFilteredJobs(HttpSession session, Model model, String sortBy, boolean isAscending) {
+
+		
+		List<Job> jobs = this.getJobsByIds(SessionContext.getFilteredJobIds(session));
+
+		// *************************************
+		// Currently, distance is a property of the job dto
+		// One could argue that all these filter properties can be part
+		// of the job dto and not the job.
+		// As things mature, this can be modified
+		// *************************************
+		FindJobFilterDTO lastFilterRequest = (FindJobFilterDTO) session.getAttribute("lastFilterRequest");
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+		if(sortBy.matches("Distance") || sortBy.matches("Duration")){
+			jobDtos = this.getJobDtos_FilteredJobs(jobs, lastFilterRequest, session);
+			this.sortJobDtos(jobDtos, sortBy, isAscending);
+		}
+		else{
+			this.sortJobs(jobs, sortBy, isAscending);	
+			jobDtos = this.getJobDtos_FilteredJobs(jobs, lastFilterRequest, session);
+		}
+	
+		this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, lastFilterRequest);
+		
+	}
+	
+	private void setModel_Render_GetJobs_InitialRequest(Model model, List<JobDTO> jobDtos,
+		FindJobFilterDTO lastFilterRequest) {
+
+		double maxDistance = this.getMaxDistanceJobFromFilterRequest(jobDtos);
+		
+		model.addAttribute("filterRequest", lastFilterRequest);
+		model.addAttribute("jobDtos", jobDtos);
+		model.addAttribute("maxDistance", maxDistance);		
+		
+	}
+
+	private List<Integer> getJobIdsFromJobDTOs(List<JobDTO> jobDtos) {
+		
+		// Get jobs from job dtos
+		List<Job> jobs = jobDtos.stream().map(JobDTO::getJob).collect(Collectors.toList());
+		
+		// Get just-filtered job ids from jobs
+		List<Integer> jobIds = jobs.stream().map(Job::getId).collect(Collectors.toList());
+
+		return jobIds;
+	}
+
+	public void sortJobs(List<Job> filteredJobs, String sortBy, boolean isAscending) {
+
+		// **************************************************
+		// For usage of Comparator<T>, refer to:
+		// https://www.mkyong.com/java8/java-8-lambda-comparator-example/
+		// **************************************************
+		Comparator<Job> c = null;
+
+		switch (sortBy) {
+	
+			case "StartDate":
+				c = (Job j1, Job j2) -> j1.getStartDate().compareTo(j2.getStartDate());
+				break;
+	
+			case "EndDate":
+				c = (Job j1, Job j2) -> j1.getEndDate().compareTo(j2.getEndDate());
+				break;
+	
+			case "StartTime":
+				c = (Job j1, Job j2) -> j1.getStartTime().compareTo(j2.getStartTime());
+				break;
+	
+			case "EndTime":
+				c = (Job j1, Job j2) -> j1.getEndTime().compareTo(j2.getEndTime());
+				break;
+
+		}
+
+		if (isAscending) {
+			filteredJobs.sort(c);
+		} else {
+			filteredJobs.sort(c.reversed());
+		}
+
+	}
+
+	public void sortJobDtos(List<JobDTO> jobDtos, String sortBy, boolean isAscending) {
+
+		// **************************************************
+		// For usage of Comparator<T>, refer to:
+		// https://www.mkyong.com/java8/java-8-lambda-comparator-example/
+		// **************************************************
+		Comparator<JobDTO> c = null;
+
+		switch (sortBy) {
+		
+			case "Distance":
+				c = (JobDTO j1, JobDTO j2) -> j1.getDistanceFromFilterLocation().compareTo(j2.getDistanceFromFilterLocation());
+				break;
+				
+				
+			case "Duration":
+				c = (JobDTO j1, JobDTO j2) -> j1.getDurationDays().compareTo(j2.getDurationDays());
+				break;				
+			}
+
+		if (isAscending) {
+			jobDtos.sort(c);
+		} else {
+			jobDtos.sort(c.reversed());
+		}
+
+	}
+
+
+	private void sortJobs2(List<Job> filteredJobs, FindJobFilterDTO filter) {
 		
 		// Sort by start date
 		if(filter.getSortBy().matches("StartDate")){
@@ -1163,7 +1129,7 @@ public class JobServiceImpl {
 		
 	}
 
-	private double getMaxDistanceJobFromFilterRequest(List<JobDTO> jobDtos, FindJobFilterDTO filter) {
+	private double getMaxDistanceJobFromFilterRequest(List<JobDTO> jobDtos) {
 
 		// Get the farthest job from the users requested located.
 		if(jobDtos != null) {
@@ -1177,59 +1143,71 @@ public class JobServiceImpl {
 		
 	}
 
-	private List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter) {
-		
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-		
-		for(Job job : jobs){			
-			JobDTO jobDto = new JobDTO();
-			jobDto.setJob(job);
-			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
-			jobDto.setDurationDays(this.getDuration(job.getId()));
-			
-			double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
-			distance = MathUtility.round(distance, 1, 0);
-			jobDto.setDistanceFromFilterLocation(distance);			
-			
-			jobDtos.add(jobDto);
-		}
+//	private List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter) {
+//		
+//		// For each job, set its:
+//		// a) categories
+//		// b) duration
+//		// c) distance from requested filter location
+//		
+//		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+//		
+//		for(Job job : jobs){			
+//		
+//			JobDTO jobDto = new JobDTO();
+//			jobDto.setJob(job);
+//			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
+//			jobDto.setDurationDays(this.getDuration(job.getId()));
+//			
+//			double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
+//			distance = MathUtility.round(distance, 1, 0);
+//			jobDto.setDistanceFromFilterLocation(distance);			
+//			
+//			jobDtos.add(jobDto);
+//		}
+//
+//		return jobDtos;
+//		
+//	}
 
-		return jobDtos;
-		
-	}
 
-	public void SetModel_SortFilteredJobs(HttpSession session, Model model, String sortBy, boolean isAscending) {
-
-		FindJobFilterDTO lastFilterRequest = (FindJobFilterDTO) session.getAttribute("lastFilterRequest");
-		
-		lastFilterRequest.setIsAscending(isAscending);
-		lastFilterRequest.setSortBy(sortBy);
-		
-//		List<Job> filteredJobs_Sorted = this.getFilteredJobs(lastFilterRequest, session);
-//		List<JobDTO> filteredJobDtos_Sorted = this.getJobDtos_FilteredJobs(filteredJobs_Sorted, lastFilterRequest);
-		this.setModel_FilterJobs(model, lastFilterRequest, session);
-		
-	}
 	
 
-	private JobSearchUserDTO getUserDTO_FindJobs(HttpSession session) {
+	private List<Job> getJobsByIds(List<Integer> jobIds) {
 		
-		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		if(jobIds != null) return repository.getJobsByIds(jobIds);
+		else return null;
 		
-		userDto.setUser((JobSearchUser) session.getAttribute("user"));
-		userDto.setSavedFindJobFilters(this.getSavedFindJobFilters(userDto.getUser().getUserId()));
+	}
 
-		return userDto;
+	private JobSearchUserDTO getUserDTO_FindJobs_PageLoad(HttpSession session) {
+		
+		if(SessionContext.isLoggedIn(session)){
+			JobSearchUserDTO userDto = new JobSearchUserDTO();
+			
+			userDto.setUser((JobSearchUser) session.getAttribute("user"));
+			userDto.setSavedFindJobFilters(this.getSavedFindJobFilters(userDto.getUser().getUserId()));
+
+			return userDto;
+	
+		}
+		else return null;
+		
 	}
 
 
 	public void setModel_FindJobs_PageLoad(Model model, HttpSession session) {
+			
 		
-		JobSearchUserDTO userDto = this.getUserDTO_FindJobs(session);
+		// ****************************************
+		// The user does not need to be logged-in in order to search for jobs
+		// ****************************************
+		if(SessionContext.isLoggedIn(session)){
+			JobSearchUserDTO userDto = this.getUserDTO_FindJobs_PageLoad(session);
+			session.setAttribute("userDto", userDto);			
+		}
 		
-		session.setAttribute("userDto", userDto);
-		model.addAttribute("filterDto", session.getAttribute("lastFilterRequest"));
-		
+		model.addAttribute("filterDto", session.getAttribute("lastFilterRequest"));	
 	}
 
 	private List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
@@ -1271,6 +1249,7 @@ public class JobServiceImpl {
 		}
 		else return null;
 	}
+
 
 
 

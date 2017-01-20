@@ -1,8 +1,12 @@
 .dropdown-header{
 	padding: 10px;
     width: 230px;
-    border: 1px solid rgb(192,192,192);
     height:44px;
+}
+
+.dropdown-header,
+#distanceContainer input{
+	border: 1px solid rgb(192,192,192);
 }
 
 #distanceContainer input{
