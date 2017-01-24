@@ -21,7 +21,6 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
-import com.jobsearch.job.service.test;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -60,39 +59,10 @@ public class JobController {
 	
 	@RequestMapping(value = "/jobs/save-find-job-filter", method = RequestMethod.POST)
 	@ResponseBody
-//	public void saveFindJobFilter(@RequestParam(name = "radius", required = true) int radius,
-//			@RequestParam(name = "fromAddress", required = true) String fromAddress,
-//			@RequestParam(name = "city", required = false) String city,
-//			@RequestParam(name = "state", required = false) String state,
-//			@RequestParam(name = "zipCode", required = false) String zipCode,
-//			@RequestParam(name = "categoryId", value = "categoryId", required = false) int[] categoryIds,
-//			@RequestParam(name = "startTime", required = false) String startTime,
-//			@RequestParam(name = "endTime", required = false) String endTime,
-//			@RequestParam(name = "beforeStartTime", required = false) boolean beforeStartTime,
-//			@RequestParam(name = "beforeEndTime", required = false) boolean beforeEndTime,
-//			@RequestParam(name = "startDate", required = false) String startDate,
-//			@RequestParam(name = "endDate", required = false) String endDate,
-//			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
-//			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
-//			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
-//			@RequestParam(name = "duration", required = false) Double duration,
-//			@RequestParam(name = "isLessThanDuration", required = false) boolean isLessThanDuration,
-//			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
-//			@RequestParam(name = "sortBy", required = false) String sortBy,
-//			@RequestParam(name = "isAscending", required = false) boolean isAscending,
-//			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
-//			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
-//			@RequestParam(name = "savedName", required = true) String savedName,
-//			HttpSession session
-//			){
 	public String saveFindJobFilter(@RequestBody FindJobFilterDTO savedFilter,
 											HttpSession session){	
 
 		if(SessionContext.isLoggedIn(session)){
-//			FindJobFilterDTO savedFilter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
-//					beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-//					isLessThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
-//					city, state, zipCode, savedName);			
 				jobService.saveFindJobFilter(savedFilter, session);
 		}	
 		
@@ -176,79 +146,53 @@ public class JobController {
 		
 		return "/find_jobs/Filters";
 	}
-
-	@RequestMapping(value = "/jobs/find/job/{jobId}", method = RequestMethod.GET)
-	public String employeeViewJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
-
-		jobService.setModel_ApplyForJob(model, jobId, session);
-
-		return "EmployeeViewJobWhenFinding";
-	}
-
-	@RequestMapping(value = "/job/{jobId}/user/{employeeId}", method = RequestMethod.GET)
-	public String getJobInfoAndAnswers_ByEmployee(@PathVariable(value = "jobId") int jobId,
-													@PathVariable(value = "employeeId") int employeeId,
-													Model model, HttpSession session) {
-		
-		
-		
-		jobService.setModel_EmployerViewJob_WhenViewingFromEmployeeWorkHistory(model, session, jobId, employeeId);
-
-		
-		return "EmployerViewJob_WhenViewingFromEmployeeWorkHistory";
-		
-	}
-
-	@RequestMapping(value = "/old/job/{jobId}", method = RequestMethod.GET)
-	public String getJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
-
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		// If employee
-		if (user.getProfileId() == 1) {
-			jobService.setModel_EmployeeViewJobFromProfile(model, jobId, user.getUserId());
-			return "EmployeeViewJobFromProfile";
-			// Else if employer
-		} else if (user.getProfileId() == 2) {
-			jobService.setModel_EmployerViewJob(model, jobId, session);
-			return "EmployerViewJob";
+	
+	
+	@RequestMapping(value = "/job/{jobId}/user/{userId}/jobs/completed", method = RequestMethod.GET)
+	// @ResponseBody
+	public String viewApplicant(@PathVariable(value = "userId") int userId,
+									 @PathVariable(value="jobId") int jobId,
+									 Model model, HttpSession session) {
+	
+		if (SessionContext.isLoggedIn(session)) {
+			userService.setModel_WorkHistoryForAllApplicants(model, userId, jobId);
+			return "EmployerViewEmployee";
+		} else {
+			return "NotLoggedIn";
 		}
-
-		return null;
-
+	
 	}
+
 	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(Model model, HttpSession session,
 						@RequestParam(name = "c", required = true) String c,
-						@PathVariable(value = "jobId") int jobId) {
-		
+						@RequestParam(name = "p", required = true) Integer p,
+						@PathVariable(value = "jobId") int jobId) {		
 		// c is the context in which the job was clicked
 		
-		jobService.setModel_ViewJob_Employee(model, session, c, jobId);
-		
-		
-		return "/view_job_employee/ViewJob_Employee";
+		if(p == 1){
+			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
+			return  "/view_job_employee/ViewJob_Employee";
+		}
+		else if(p == 2){
+			jobService.setModel_ViewJob_Employer(model, session, c, jobId);	
+			return  "/view_job_employer/ViewJob_Employer";
+		}
+		else{		
+			return SessionContext.get404Page();
+		}
+			
 		
 	}
 
-
-	
-	@RequestMapping(value = "/completed/job/{jobId}", method = RequestMethod.GET)
-	public String getCompletedJob(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
-		
-		jobService.setModel_EmployerViewCompletedJob(model, jobId, session);
-		return "EmployerViewCompletedJob";	
-		
-		
-	}
 	
 
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
 	public String updateJobStatus(@PathVariable(value = "status") int status,
 			@PathVariable(value = "jobId") int jobId) {
 
-		jobService.UpdateJobStatus(status, jobId);
+		jobService.updateJobStatus(status, jobId);
 
 		return "redirect:/user/profile";
 	}

@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 
-<div id="requestOrigin" data-lat="${filterRequest.lat }" data-lng="${filterRequest.lng }" data-max-dist="${maxDistance }"></div>
+<div id="requestOrigin" data-lat="${filterDto.lat }" data-lng="${filterDto.lng }" data-max-dist="${maxDistance }"></div>
 <c:choose>
 	<c:when test="${jobDtos.size() == 0 }">
  	<div id="noJobs">Sorry, no jobs match your search.</div>	 	

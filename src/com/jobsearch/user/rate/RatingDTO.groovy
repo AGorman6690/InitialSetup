@@ -19,6 +19,9 @@ public class RatingDTO {
 
 	@JsonProperty("endorsements")
 	List<Endorsement> endorsements
+	
+	@JsonProperty("value")
+	double value
 
 	@JsonProperty("comment")
 //	CommentDTO comment

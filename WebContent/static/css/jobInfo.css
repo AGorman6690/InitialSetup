@@ -7,3 +7,34 @@
     border-top-style: outset;
     border-left-style: outset;
 }
+
+
+
+/* #applicants h4{ */
+/*     content: ""; */
+/*     display: block; */
+/*     margin: 1.5em 0; */
+/*     width: 3em; */
+/*     height: 1px; */
+/*     background-color: currentColor; */
+/* } */
+
+#jobNameHeader{
+	text-align: center;
+/*     background-color: #91843b; */
+/*     color: white; */
+    font-size: 31px;
+    font-style: italic;
+    line-height:50px;
+    color: #337ab7;
+    background-color: white;   
+/*     background-color: #337ab7; */
+/*     color: white; */
+    border-radius: 5px;
+    padding:4px 0px;
+    margin-top:15px;
+}
+
+#jobNameHeader h3{
+	
+    font-size: 31px;

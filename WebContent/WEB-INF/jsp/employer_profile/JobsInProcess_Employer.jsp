@@ -23,7 +23,7 @@
 						<c:forEach items="${jobDtos_jobsInProcess }" var="jobDto">
 							<tr class="" id="${jobDto.job.id }">
 							
-								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id }" >${jobDto.job.jobName }</a></td>
+								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id}?c=in-process&p=2" >${jobDto.job.jobName }</a></td>
 								<td><span class="">${jobDto.job.stringStartDate }</span></td>
 								<td><span class="">${jobDto.job.stringEndDate }</span></td>								
 								<td>														

@@ -48,14 +48,6 @@ public class ApplicationServiceImpl {
 	@Autowired
 	JobServiceImpl jobService;
 
-	@Autowired
-	@Qualifier("FailedWageNegotiationsVM")
-	Template vmTemplate_failedWageNegotiations;
-
-	@Autowired
-	@Qualifier("FailedWageNegotiationsByJobVM")
-	Template vmTemplate_failedWageNegotiationsByJob;
-
 	public List<Application> getApplicationsByJob(int jobId) {
 
 		// Query the application table
@@ -413,23 +405,7 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public String getFailedWageNegotiationsVelocityTemplate(List<JobDTO> activeJobsWithFailedWageNegotiations) {
 
-		StringWriter writer = new StringWriter();
-
-		// Set the context
-		final VelocityContext context = new VelocityContext();
-		context.put("activeJobsWithFailedWageNegotiations", activeJobsWithFailedWageNegotiations);
-		context.put("mathUtility", MathUtility.class);
-		context.put("numberTool", new NumberTool());
-
-		// Run the template
-		vmTemplate_failedWageNegotiations.merge(context, writer);
-
-		// Return the html
-		return writer.toString();
-
-	}
 
 	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDTOsByJob(Job job) {
 
@@ -505,30 +481,6 @@ public class ApplicationServiceImpl {
 		return repository.getWage(application.getApplicationId());
 	}
 
-	public String getFailedWageNegotiationsByJobVelocityTemplate(Job job) {
-
-		// Get the failed wage negotiation dtos
-		List<FailedWageNegotiationDTO> failedWageNegotiationDtos = this.getFailedWageNegotiationDTOsByJob(job);
-
-		if (failedWageNegotiationDtos.size() == 0) {
-			return null;
-		} else {
-			StringWriter writer = new StringWriter();
-
-			// Set the context
-			final VelocityContext context = new VelocityContext();
-			context.put("failedWageNegotiationDtos", failedWageNegotiationDtos);
-			context.put("mathUtility", MathUtility.class);
-			context.put("numberTool", new NumberTool());
-
-			// Run the template
-			vmTemplate_failedWageNegotiationsByJob.merge(context, writer);
-
-			// Return the html
-			return writer.toString();
-		}
-
-	}
 
 	public void addAnswer(Answer answer) {
 		repository.addAnswer(answer);

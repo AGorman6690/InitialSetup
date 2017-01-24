@@ -4,8 +4,16 @@ var initialUrlParameterString = "?";
 
 $(document).ready(function(){
 	attachEventHandles_Filters();
-	triggerGetJobs();
+	// triggerGetJobs();
+	
+	if($("#mapContainer").attr("data-init-map-on-load") == "1"){
+		$("#mainBottom").show();
+		setMap();
+
+	}
 })
+
+
 
 function attachEventHandles_Filters(){
 	

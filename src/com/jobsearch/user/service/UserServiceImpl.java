@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -28,7 +29,6 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.CompletedJobResponseDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
@@ -127,8 +127,8 @@ public class UserServiceImpl {
 		return repository.getUser(userId);
 	}
 
-	public List<JobSearchUser> getApplicants(int jobId) {
-		return repository.getApplicants(jobId);
+	public List<JobSearchUser> getApplicantsByJob_SubmittedOrConsidered(int jobId) {
+		return repository.getApplicantsByJob_SubmittedOrConsidered(jobId);
 	}
 
 	public List<JobSearchUser> getEmployeesByJob(int jobId) {
@@ -330,10 +330,27 @@ public class UserServiceImpl {
 		return repository.getComment(jobId, userId);
 	}
 
-	public double getRatingForJob(int userId, int jobId) {
+//	public double getRatingForJob(int userId, int jobId) {
+//
+//		List<Double> ratingValues = repository.getRatingForJob(userId, jobId);
+//
+//		return calculateRatingForJob(ratingValues);
+//
+//	}
+	
+	public double getRatingValueForJob(RatingDTO ratingDto) {
 
-		List<Double> ratingValues = repository.getRatingForJob(userId, jobId);
+		List<Double> ratingValues = ratingDto.getRateCriteria()
+															.stream()
+															.map(rc -> rc.getValue())
+															.collect(Collectors.toList());
 
+		return calculateRatingForJob(ratingValues);
+
+	}
+	
+	public double calculateRatingForJob(List<Double> ratingValues){
+	
 		double total = 0;
 		int count = 0;
 		for (Double ratingValue : ratingValues) {
@@ -344,7 +361,6 @@ public class UserServiceImpl {
 		}
 
 		return MathUtility.round(total / count, 1, 0);
-
 	}
 
 	public void updateAvailability(AvailabilityDTO availabilityDTO) {
@@ -527,49 +543,6 @@ public class UserServiceImpl {
 	}
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
-
-		// Availability
-		List<String> availableDays = this.getAvailableDays(employee.getUserId());
-
-		// Get the employee's open job applications
-		List<ApplicationResponseDTO> openApplicationResponseDtos = applicationService
-				.getOpenApplicationResponseDtosByApplicant(employee.getUserId());
-
-		// //Verify the start date for the not-yet-started-jobs is still in the
-		// future.
-		// jobService.verifyJobStatusForUsersYetToStartJobs(employee.getUserId());
-
-		// Get the employee's hired-for, but not-yet-started jobs
-		List<Job> yetToStartJobs = jobService.getYetToStartJobsByEmployee(employee.getUserId());
-
-		// Get the employee's completed jobs
-		List<Job> completedJobs = jobService.getCompletedJobsByEmployee(employee.getUserId());
-
-		// Get the employee's active jobs
-		List<Job> activeJobs = jobService.getActiveJobsByEmployee(employee.getUserId());
-
-		// Get the failed wage negotiations that the employee has been involved
-		// in
-		List<FailedWageNegotiationDTO> failedWageNegotiationDtos = applicationService
-				.getFailedWageNegotiationsDTOsByUser(employee.getUserId());
-		
-
-		// Set the model attributes
-		model.addAttribute("user", employee);
-		model.addAttribute("availableDays", availableDays);
-		model.addAttribute("failedWageNegotiationDtos", failedWageNegotiationDtos);
-		model.addAttribute("yetToStartJobs", yetToStartJobs);
-		model.addAttribute("activeJobs", activeJobs);
-		model.addAttribute("completedJobs", completedJobs);
-		model.addAttribute("openApplicationResponseDtos", openApplicationResponseDtos);
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtosByUser(employee.getUserId());
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
@@ -596,12 +569,12 @@ public class UserServiceImpl {
 
 		List<JobDTO> jobDtos_jobsInProcess = jobService.getJobDtos_JobsInProcess_Employer(employer.getUserId());
 
-		// Get the employer's completed jobs
-		List<CompletedJobResponseDTO> completedJobs = jobService.getCompletedJobsByEmployer(employer.getUserId());
+		List<JobDTO> jobDtos_jobsCompleted = jobService.getJobDtos_JobsCompleted_Employer(employer.getUserId());
 
-		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
-		model.addAttribute("completedJobs", completedJobs);
 		model.addAttribute("yetToStartJobs_Dtos", jobDtos_jobsWaitingToStart);
+		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
+		model.addAttribute("jobDtos_jobsCompleted", jobDtos_jobsCompleted);
+		
 
 		// When the profile is requested and presented to the user,
 		// all the applications' "HasBeenViewed" property, for the user's active
@@ -642,11 +615,12 @@ public class UserServiceImpl {
 
 	public void setModel_WorkHistoryByUser(Model model, int userId) {
 		
-	
-		List<CompletedJobResponseDTO> completedJobDtos = jobService.
-											getCompletedJobResponseDtosByEmployee(userId);
 		
-		model.addAttribute("completedJobDtos", completedJobDtos);
+		
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userId));
+		
+		model.addAttribute("userDto", userDto);
 
 	}
 	
@@ -654,7 +628,7 @@ public class UserServiceImpl {
 
 	public void setModel_Applicants(Model model, int jobId) {
 		
-		List<JobSearchUser> applicants = this.getApplicants(jobId);
+		List<JobSearchUser> applicants = this.getApplicantsByJob_SubmittedOrConsidered(jobId);
 		model.addAttribute("applicants", applicants);
 		
 	}
@@ -670,13 +644,15 @@ public class UserServiceImpl {
 		// Query the database
 		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
 		
-		// Create dtos
+		// Create user dtos
 		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();		
 		for(JobSearchUser employee : employees){
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
 			employeeDto.setUser(employee);
 			employeeDto.setRating(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
-			employeeDtos.add(employeeDto);
+			employeeDto.setWage(applicationService.getWage(employee.getUserId(), jobId));
+			
+			employeeDtos.add(employeeDto);			
 		}
 		
 		return employeeDtos;
@@ -693,6 +669,7 @@ public class UserServiceImpl {
 																		userId, jobId));
 		}
 		
+		ratingDto.setValue(this.getRatingValueForJob(ratingDto));
 		ratingDto.setComment(this.getComment(jobId, userId));
 		ratingDto.setEndorsements(this.getUsersEndorsementsByJob(userId, jobId));
 		

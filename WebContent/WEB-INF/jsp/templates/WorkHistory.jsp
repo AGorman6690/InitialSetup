@@ -1,15 +1,15 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 <c:choose>
-	<c:when test="${completedJobDtos.size() > 0 }">		
-		<c:forEach items="${completedJobDtos }" var="dto">
+	<c:when test="${userDto.jobDtos_jobsCompleted.size() > 0 }">		
+		<c:forEach items="${userDto.jobDtos_jobsCompleted }" var="dto">
 			<div class="job-container bottom-border-thinner">
 				<div class="job-categories info">
 					<div class="mock-row"><span class="accent mock-label">Job Name</span>
-					<a class="accent" href="/JobSearch/job/${dto.job.id}/user/${clickedUserId}">${dto.job.jobName }</a></div>
+					<a class="accent" href="/JobSearch/job/${dto.job.id}?c=work-history&p=2">${dto.job.jobName }</a></div>
 					<div class="mock-row"><span class="accent mock-label">Completion Date</span> ${dto.job.endDate }</div>
 					<div class="mock-row"><span class="accent mock-label">Categories</span> 
-					<c:forEach items="${dto.job.categories }" var="category" varStatus="status">
+					<c:forEach items="${dto.categories }" var="category" varStatus="status">
 								<c:set var="html" value="${category.name }"></c:set>
 								<c:if test="${not status.last }">
 									<c:set var="html" value="${html },"></c:set>
@@ -21,9 +21,9 @@
 				<div class="job-endorsements info">
 					<div class="mock-row"><span class="accent mock-label">Endorsements</span> 
 					<c:choose>
-						<c:when test="${dto.endorsements.size() > 0 }">
+						<c:when test="${dto.ratingDto.endorsements.size() > 0 }">
 							
-							<c:forEach items="${dto.endorsements }" var="endorsement" varStatus="status">
+							<c:forEach items="${dto.ratingDto.endorsements }" var="endorsement" varStatus="status">
 								<c:set var="html" value="${endorsement.categoryName }"></c:set>
 								<c:if test="${not status.last }">
 									<c:set var="html" value="${html },"></c:set>
@@ -38,10 +38,10 @@
 					</c:choose>
 					</div>					
 				</div>
-				<div class="mock-row"><span class="accent mock-label">Rating</span> ${dto.rating }</div>
+				<div class="mock-row"><span class="accent mock-label">Rating</span> ${dto.ratingDto.value }</div>
 				
-				<c:if test="${dto.comment != ''}">
-					<div class="mock-row"><span class="accent mock-label">Comment</span> ${dto.comment }</div>
+				<c:if test="${dto.ratingDto.comment != ''}">
+					<div class="mock-row"><span class="accent mock-label">Comment</span> ${dto.ratingDto.comment }</div>
 				</c:if>
 			</div>
 		</c:forEach>

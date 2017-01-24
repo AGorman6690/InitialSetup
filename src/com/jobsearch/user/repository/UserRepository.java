@@ -12,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.PostJobDTO;
@@ -252,12 +253,14 @@ public class UserRepository {
 
 	}
 
-	public ArrayList<JobSearchUser> getApplicants(int jobId) {
+	public ArrayList<JobSearchUser> getApplicantsByJob_SubmittedOrConsidered(int jobId) {
 
 		String sql = "SELECT *" + " FROM user" + " INNER JOIN application" + " ON user.UserId = application.UserId"
-				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?";
+				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?"
+				+ " WHERE application.Status = ? or application.Status = ?";
 
-		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
+		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId, 
+												Application.STATUS_SUBMITTED, Application.STATUS_CONSIDERED });
 	}
 
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {

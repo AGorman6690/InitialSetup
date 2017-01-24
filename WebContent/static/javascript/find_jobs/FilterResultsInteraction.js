@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	
-	$("#filteredJobsContainer").on("click", ".job .show-desc", function(){
+
+	$("#mainBottom").on("click", ".job .show-desc", function(){
 		
 		var jobDescription = $(this).siblings(".job-description")[0];				
 		toggleClasses($(jobDescription), "less-description", "more-description");
@@ -11,11 +12,11 @@ $(document).ready(function(){
 		$(siblingShow).show();
 	})
 	
-	$("#filteredJobsContainer").on("click", ".get-more-jobs", function(){
+	$("#mainBottom").on("click", ".get-more-jobs", function(){
 		getMoreJobs();
 	})
-	
 })
+
 
 
 function getMoreJobs(){

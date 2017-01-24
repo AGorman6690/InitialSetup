@@ -2,12 +2,15 @@
 
 <div class="section-body">
 	<h4>Apply</h4>
-	<div class="body-element-container">
+		<a id="notLoggedIn-ApplicationWarning"
+		class="${!isLoggedIn ? 'show-warning' : ''}"
+		href="/JobSearch/login-signup?login=true">
+		You must be logged in to apply for a job.
+			</a>	
+	<div class="body-element-container ${!isLoggedIn ? 'not-logged-in' : '' }">
 	
-			<div id="notLoggedIn-ApplicationWarning"
-				class="${!isLoggedIn  ? 'show-warning' : ''}">
-				You must be logged in to apply for a job.
-			</div>		
+
+			
 		<div id="submitApplicationContainer">
 			<a id="submitApplication" class="accent">Submit</a>
 		</div>														

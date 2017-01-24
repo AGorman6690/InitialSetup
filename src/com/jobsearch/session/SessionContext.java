@@ -8,6 +8,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
+import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -59,7 +60,7 @@ public class SessionContext {
 		}
 	}
 
-	public static void updateFilteredJobIds(HttpSession session, List<Integer> jobIdsToAdd) {
+	public static void appendToFilteredJobIds(HttpSession session, List<Integer> jobIdsToAdd) {
 		
 		if(jobIdsToAdd != null){			
 			
@@ -87,4 +88,16 @@ public class SessionContext {
 	public static List<Integer> getFilteredJobIds(HttpSession session) {
 		return (List<Integer>) session.getAttribute(SessionContext.SESSION_ATTRIBUTE_FILTERED_JOB_IDS);
 	}
+
+	public static String get404Page() {
+		
+		return "/error/404";
+	}
+
+	public static FindJobFilterDTO getLastFilterRequest(HttpSession session) {
+		
+		return (FindJobFilterDTO) session.getAttribute("lastFilterRequest");
+	}
+
+
 }

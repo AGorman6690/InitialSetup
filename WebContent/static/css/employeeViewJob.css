@@ -11,8 +11,20 @@
 }
 
 #notLoggedIn-ApplicationWarning{
-	font-size:17px;
+	font-size:19px;
     color: #b30000;
+    display:none;
+    padding: 15px 0px;
+    cursor:pointer;
+    padding-left:40px
+}
+
+#notLoggedIn-ApplicationWarning.show-warning{
+    display:block;
+}
+
+#notLoggedIn-ApplicationWarning.show-warning:hover{
+    text-decoration:none;
 }
 
 .not-logged-in *{

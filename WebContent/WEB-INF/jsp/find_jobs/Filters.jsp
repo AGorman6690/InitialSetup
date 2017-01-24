@@ -9,7 +9,7 @@
 				<span id="clearAllFilters" class="accent">Clear All</span>
 			</div>	
 			<div class="group"> 
-				<button id="getJobs" class="square-button-green" data-click-on-load="${!empty filterDto ? 1 : 0}">Get Jobs</button>
+				<button id="getJobs" class="square-button-green">Get Jobs</button>
 			</div>	
 			<div class="group filter-container">
 				<div data-trigger-dropdown-id="savedFindJobFiltersContainer" class="trigger-dropdown">

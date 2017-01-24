@@ -30,4 +30,9 @@ public class Application {
 	//2: considered
 	//3: accepted
 	int status
+	
+	public static Integer STATUS_SUBMITTED = 0;
+	public static Integer STATUS_DECLINED = 1;
+	public static Integer STATUS_CONSIDERED = 2;
+	public static Integer STATUS_ACCEPTED = 3;
 }

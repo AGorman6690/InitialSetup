@@ -47,7 +47,7 @@
 						
 							<tr id="${jobDto.job.id }">
 								
-								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id }" >${jobDto.job.jobName }</a></td>
+								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2" >${jobDto.job.jobName }</a></td>
 								<td>${jobDto.daysUntilStart } days</td>
 								
 								<td class="data">-</td>

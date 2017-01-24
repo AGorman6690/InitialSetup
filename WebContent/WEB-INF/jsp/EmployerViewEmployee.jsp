@@ -15,13 +15,13 @@
 				<div id="sideBarContainer" class="col-sm-2">
 					<c:forEach items="${applicants }" var="applicant">
 <%-- 						<c:set var="selectedClassName" value="" /> --%>
-<%-- 						<c:if test="${applicant.userId == clickedUserId }"> --%>
+						<c:if test="${applicant.userId == clickedUserId }">
 <%-- 							<c:set var="selectedClassName" value="selected-blue" /> --%>
-<%-- 						</c:if> --%>
-						<div data-user-id="${applicant.userId }"
-							 class="applicant side-bar ${applicant.userId == clickedUserId ? 'selected-blue' : '' }">
-							 ${applicant.firstName }</div>						 
-							 
+	
+							<div data-user-id="${applicant.userId }"
+								 class="applicant side-bar ${applicant.userId == clickedUserId ? 'selected-blue' : '' }">
+								 ${applicant.firstName }</div>						 
+ 						</c:if>
 					</c:forEach>
 										
 				</div>

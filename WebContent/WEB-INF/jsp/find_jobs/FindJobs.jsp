@@ -37,24 +37,30 @@
 				<div id="filteredJobsContainer" class="col-sm-3">
 					<div id="sortByContainer"><%@ include file="./SortBy.jsp" %></div>
 			 		<div id="getMoreJobsContainer-top" class="get-more-jobs">Get More Jobs</div> 	
-					<div id="filteredJobs"></div>				
+					<div id="filteredJobs">
+						<c:if test="${!empty jobDtos }">
+							<%@ include file="./Render_GetJobs_InitialRequest.jsp" %>
+						</c:if>
+					</div>				
 				</div>
-				<div id="mapContainer" class="col-sm-9">				
+				<div id="mapContainer" class="col-sm-9" data-init-map-on-load="${!empty jobDtos ? 1 : 0 }">				
 					<div id="map" class="right-border"></div>				
 				</div>		
 			</div>
 		</div>
 	</div>
 
-<!-- 		<script async defer -->
+<!-- // ******************************************** -->
+<!-- The "async" an "defer" attributes cannot be included -->
+<!-- Since the map can be set with jobs on page load, the map needs be be set -->
+<!-- BEFORE the $(document).ready() function is called -->
+<!-- These two attributes allow the $(document).ready() to run BEFROE the map is initialized.
+<!-- This sequence obviously cannot be allowed to happen  -->
+<!-- // ******************************************** -->
+<!-- 	<script async defer  -->
 	<script
 		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
 	</script>
 	
-	<script>
-		$(document).ready(function(){
-// 			$("#filteredJobs").append(sessionStorage.getItem("filteredJobs"));
-		})
 
-	</script>
 <%@ include file="../includes/Footer.jsp"%>

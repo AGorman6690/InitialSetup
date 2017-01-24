@@ -144,20 +144,7 @@ public class UserController {
 		return model;
 	}	
 	
-		@RequestMapping(value = "/job/{jobId}/user/{userId}/jobs/completed", method = RequestMethod.GET)
-	// @ResponseBody
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
-									 @PathVariable(value="jobId") int jobId,
-									 Model model, HttpSession session) {
 
-		if (SessionContext.isLoggedIn(session)) {
-			userService.setModel_WorkHistoryForAllApplicants(model, userId, jobId);
-			return "EmployerViewEmployee";
-		} else {
-			return "NotLoggedIn";
-		}
-
-	}
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,

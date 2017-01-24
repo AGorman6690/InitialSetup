@@ -8,16 +8,24 @@
 	<script src="<c:url value="/static/javascript/SideBar.js"/>"></script>
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
+	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />
+	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob2.css " />	
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/questions.css " />	
+	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css " />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/datepicker.css " />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/map.css" />
-		
+	
+	<c:if test="${context == 'find' }">
+		<script src="<c:url value="/static/javascript/view_job_employee/SubmitApplication.js"/>"></script>
+	</c:if>
+	
 	
 	<!-- Time picker -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
@@ -33,10 +41,8 @@
 			<div id="jobInfoContainer" class="section-container">
 				<div class="section-body">
 					<h4>Job Information</h4>
-					<div class="body-element-container">
-				
-<%-- 						<%@include file="../templates/JobInformation.jsp"%> --%>
-						
+					<div class="body-element-container">				
+						<%@include file="../templates/JobInformation.jsp"%>						
 					</div>
 				</div>
 			</div>
@@ -44,9 +50,7 @@
 		<c:choose>
 		
 			<c:when test="${context == 'find'}">
-			1
-				<div id="applyContainer" class="section-container ${!isLoggedIn ? 'not-logged-in' : '' }">
-					2
+				<div id="applyContainer" class="section-container ">
 					<%@ include file="./ApplyContainer.jsp" %>
 				</div>
 			</c:when>

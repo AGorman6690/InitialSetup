@@ -8,6 +8,7 @@ import com.jobsearch.model.FailedWageNegotiationDTO
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
+import com.jobsearch.user.rate.RatingDTO
 
 public class JobDTO {
 	//**********************************************
@@ -30,10 +31,11 @@ public class JobDTO {
 	 List<Question> questions
 	 int newApplicationCount
 	 double daysUntilStart
-	 List<Category> categories // do away with
+	 List<Category> categories
 	 List<JobSearchUser> employees
 	 List<JobSearchUser> applicants
 	 List<Application> applications
 	 List<JobSearchUserDTO> employeeDtos
 	 Double distanceFromFilterLocation
+	 RatingDTO ratingDto;
 }

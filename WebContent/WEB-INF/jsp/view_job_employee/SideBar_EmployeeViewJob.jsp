@@ -1,3 +1,6 @@
+<%@ include file="../includes/TagLibs.jsp" %>
+
+
 <div id="jobInfo" class="first side-bar selected-blue" data-section-id="jobInfoContainer">Job Information</div>
 <c:choose>
 	<c:when test="${context == 'find' }">

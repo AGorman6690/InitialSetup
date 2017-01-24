@@ -46,7 +46,7 @@
 				
 					<c:forEach items="${jobs_employment }" var="job">
 						<tr class="static-row job" data-job-status="${job.status }">
-							<td><a class="accent" href="/JobSearch/job/${job.id }">${job.jobName }</a></td>
+							<td><a class="accent" href="/JobSearch/job/${job.id }?c=profile-complete">${job.jobName }</a></td>
 							<td>${job.stringStartDate }</td>
 							<td>${job.stringEndDate }</td>													
 						</tr>

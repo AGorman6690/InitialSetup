@@ -1,7 +1,6 @@
 package com.jobsearch.model
 
 import com.jobsearch.application.service.Application
-import com.jobsearch.job.service.CompletedJobResponseDTO
 import com.jobsearch.job.service.Job
 import com.jobsearch.category.service.Category
 import java.util.List
@@ -22,7 +21,6 @@ class JobSearchUser {
 	List<Job> activeJobs
 	List<Job> jobsAppliedTo
 	List<Job> jobsHiredFor
-	List<CompletedJobResponseDTO> completedJobs
 	List<RateCriterion> ratings
 	List<Endorsement> endorsements
 	Application application
@@ -36,6 +34,6 @@ class JobSearchUser {
 	int maxWorkRadius //Units = miles
 	double distanceFromJob
 	int createNewPassword
-	double wage
+//	double wage
 	double minimumDesiredPay
 }

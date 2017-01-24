@@ -11,25 +11,27 @@
 	function showSectionContainer(sectionContainerId){
 		var sectionContainer = $("#sectionContainers").find("#" + sectionContainerId)[0];
 		
-		//slideDown($(sectionContainer), 500);
 		$(sectionContainer).show();
 		
 	}
 	
 	function selectSideBar(sectionContainerId){
+		
 		hideSectionContainers(sectionContainerId);
 		showSectionContainer(sectionContainerId);
 		
 		highlightArrayItemByAttributeValue("data-section-id", sectionContainerId, $("#sideBarContainer").find(".side-bar"), "selected-blue");
-//		highlightArrayItem($("#" + sectionContainerId)
+
 	}
 	
 
 	$(document).ready(function() {
 		
+		$("#sideBarContainer").find(".selected-blue").eq(0).click();
 		
 		$(".side-bar").click(function(){
 			
+		
 			var sectionContainerId = $(this).attr("data-section-id");
 			selectSideBar(sectionContainerId);
 			

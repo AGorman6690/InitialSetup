@@ -15,6 +15,19 @@ function initMap() {
 	    }
 
 	});
+	
+	
+	// This is hackish.
+	// Its for the Find Jobs' page on-load.
+	// This code needs to be ran AFTER the above code.
+	// Placing this code within the
+//	if($("#mapContainer").attr("data-init-map-on-load") == "1"){
+//		$("#mainBottom").show();
+//		setMap();
+//
+//	}
+	
+	
 }
 
 function getZoom(radius){

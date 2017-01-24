@@ -43,8 +43,8 @@ public class WelcomeServiceImpl {
 //		List<Profile> profiles = userService.getProfiles();
 //		model.addAttribute("profiles", profiles);
 		
-//		session.invalidate();
-		session.removeAttribute("user");
+		session.invalidate();
+//		session.removeAttribute("user");
 		
 //		session.geta
 //		for(String attributeName : session.getAttributeNames()){
