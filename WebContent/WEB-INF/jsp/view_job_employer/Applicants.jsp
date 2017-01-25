@@ -82,57 +82,74 @@
 					</th>
 				</tr>
 			</thead>
-			<tbody>
+			<tbody class="vertical-lines">
 			<c:forEach items="${jobDto.applications }" var="application">
 				<tr class="" data-application-status="${application.status }"
 					data-application-id="${application.applicationId }">
-					<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a></td>
+					<td>
+						<div class="vert-border">
+							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a>
+						</div>
+					</td>
 					
 					<td>
-						<c:choose>
-							<c:when test="${application.currentWageProposal.status == 1 }">
-							<!-- ****** If the current wage proposal has been accepted-->
-								<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
-							</c:when>						
-							<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
-								<c:set var="param_is_employer" value="1" />
-								<c:set var="param_wage_proposal" value="${application.currentWageProposal }" />
-								<%@ include file="../templates/WageNegotiation.jsp" %>												
-							</c:when>
-							<c:otherwise>					
-								<div class="offer-context">
-									Waiting for applicant															
-								</div>									
-							</c:otherwise>
-						</c:choose>
+						<div class="vert-border">
+							<c:choose>
+								<c:when test="${application.currentWageProposal.status == 1 }">
+								<!-- ****** If the current wage proposal has been accepted-->
+									<div><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/> has been accepted</div>
+								</c:when>						
+								<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
+									<c:set var="param_is_employer" value="1" />
+									<c:set var="param_wage_proposal" value="${application.currentWageProposal }" />
+									<%@ include file="../templates/WageNegotiation.jsp" %>												
+								</c:when>
+								<c:otherwise>					
+									<div class="offer-context">
+										Waiting for applicant															
+									</div>									
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</td>									
-					<td>$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/></td>
-					<td> ${application.applicant.rating}</td>
-					<td>										
+					<td>
+						<div class="vert-border">
+							$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+						</div>
+					</td>
+					<td>
+						<div class="vert-border">
+						 	${application.applicant.rating}
+						 </div>
+					</td>
+					<td>		
+						<div class="vert-border">						
 						<c:forEach items="${application.applicant.endorsements }" var="endorsement">
 						
 							<div class="endorsement">													
 								${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
 							</div>
 						</c:forEach>
-	
+						</div>
 					</td>	
 				<c:if test="${jobDto.questions.size() > 0 }">
 					<td class="left">
-					<c:forEach items="${application.questions }" var="question">
-						<div data-question-id="${question.questionId }" class="question-container">
-							<div class="question">${question.text }</div>										
-							<div class="answer">
-								<c:set var="answerCount" value="${question.answers.size() }"></c:set>
-								<c:set var="i" value="${0 }"></c:set>
-								<c:forEach items="${question.answers }" var="answer">
-									${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
-									<c:set var="i" value="${i +1 }"></c:set>
-								</c:forEach>
-								
+						<div class="vert-border">
+						<c:forEach items="${application.questions }" var="question">
+							<div data-question-id="${question.questionId }" class="question-container">
+								<div class="question">${question.text }</div>										
+								<div class="answer">
+									<c:set var="answerCount" value="${question.answers.size() }"></c:set>
+									<c:set var="i" value="${0 }"></c:set>
+									<c:forEach items="${question.answers }" var="answer">
+										${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
+										<c:set var="i" value="${i +1 }"></c:set>
+									</c:forEach>
+									
+								</div>
 							</div>
+						</c:forEach>
 						</div>
-					</c:forEach>
 					</td>
 				</c:if>			
 	

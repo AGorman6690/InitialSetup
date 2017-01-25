@@ -304,55 +304,6 @@ public class ApplicationServiceImpl {
 		return applicationDtos;
 	}
 
-	public List<ApplicationResponseDTO> getApplicationResponseDTOsByApplicant(List<Application> applications,
-			int applicantId) {
-
-		List<ApplicationResponseDTO> result = new ArrayList<ApplicationResponseDTO>();
-
-		// Set application response dtos
-		for (Application application : applications) {
-
-			ApplicationResponseDTO dto = new ApplicationResponseDTO();
-			dto.setApplication(application);
-			dto.setCurrentDesiredWage(this.getCurrentWageProposedBy(application.getApplicationId(), applicantId));
-			dto.setCurrentWageProposal(this.getCurrentWageProposal(application));
-			dto.setJob(jobService.getJob(application.getJobId()));
-
-			// *****************************************************
-			// *****************************************************
-			// This shouldn't need to be here.
-			// In reality, all open applications at the time a job is ended
-			// should be
-			// closed by default.
-			// Thus, as long as an application's status is 0 or 2, then the job
-			// by definition is still open.
-			// Leave this here for now.
-			// *****************************************************
-			// *****************************************************
-			// Add the dto if the job is still active
-			if (dto.getJob().getStatus() < 2) {
-				result.add(dto);
-			}
-			// }
-
-		}
-
-		return result;
-
-	}
-
-	public List<ApplicationResponseDTO> getOpenApplicationResponseDtosByApplicant(int userId) {
-		// Return only applications with a status of "submitted" (0) or
-		// "considered" (2)
-		List<Application> openApplications = getApplicationsByUserAndStatuses(userId,
-				new ArrayList<Integer>(Arrays.asList(0, 2)));
-
-		// Get application response DTOs
-		if (openApplications.size() > 0) {
-			return getApplicationResponseDTOsByApplicant(openApplications, userId);
-		}
-		return null;
-	}
 
 	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
 

@@ -5,6 +5,14 @@ import java.util.List
 
 
 public class ApplicationRequestDTO {
+	
+	// ************************************************
+	// ************************************************
+	// Do away with this class
+	// ************************************************
+	// ************************************************
+	
+	
 	int jobId
 	int userId
 	List<Answer> answers

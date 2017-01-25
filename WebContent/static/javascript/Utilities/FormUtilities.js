@@ -1,10 +1,6 @@
 function clearAllInputs($container){
 	
-	$container.find("input[type=text]").each(function(){		
-		$(this).val("");
-	})
-	
-	$container.find("select").each(function(){
+	$container.find("input[type=text], textarea, select").each(function(){		
 		$(this).val("");
 	})
 	
@@ -15,6 +11,36 @@ function clearAllInputs($container){
 	$container.find(".calendar-single-date .active111").each(function(){		
 		$(this).removeClass("active111");
 	})	
+}
+
+function disableAllInputFields($container){
+	
+	
+	$container.find("input, textarea, select").each(function(){		
+		$(this).prop("disabled", true);
+	})
+
+	//Set the date picker's "enabledness"
+	$container.find("#calendar").each(function(){
+		$(this).datepicker("disable");
+	})
+
+
+}
+
+function enableAllInputFields($container){
+	
+	
+	$container.find("input, textarea, select").each(function(){		
+		$(this).prop("disabled", false);
+	})
+
+	//Set the date picker's "enabledness"
+	$container.find("#calendar").each(function(){
+		$(this).datepicker("enable");
+	})
+
+
 }
 
 function areInputsValid_Container($container){
@@ -60,4 +86,62 @@ function removeInvalidCss($container){
 	$container.find(".invalid").each(function(){
 		$(this).removeClass("invalid");
 	})
+}
+
+function setTimeOptions($eSelect, increment){
+	
+	// For whatever reason the Local Time object will not apped
+	// the seconds if the seconds are zero...
+//	var initTime = $eSelect.attr("data-init-time") + ":00";
+	var selected = "";
+	var formattedTime = "";
+	
+	if(increment > 0){
+			
+		$eSelect.empty();
+		$eSelect.append('<option value="" selected style="display: none"></option>');
+		
+		var hourCount;
+		var hour;
+		var minute;
+		var modifiedMinute;
+		var amPm;
+		var time;
+		//Hour
+		hour = 12;
+		for(hourCount = 1; hourCount < 25; hourCount++){
+
+			//Am or pm
+			if(hourCount <= 12){
+				amPm = "am";
+			}else{
+				amPm = "pm";
+			}
+			
+			//Minute
+			for(minute = 0; minute < 60; minute += increment){
+				if(minute < 10){
+					modifiedMinute = "0" + minute;	
+				}else{
+					modifiedMinute = minute;
+				}	
+				
+				time = hour + ":" + modifiedMinute + amPm;
+				formattedTime = formatTime(time);
+				
+//				if(formattedTime == initTime) selected = "selected";
+//				else selected = "";
+				
+				$eSelect.append("<option data-filter-value='" + formattedTime + "'>"
+									+ time + "</option>");
+			}
+			
+			//Incerment the hour
+			if(hour == 12){
+				hour = 1;
+			}else{
+				hour ++;
+			}				 
+		}
+	}
 }

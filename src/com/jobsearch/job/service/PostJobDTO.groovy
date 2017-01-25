@@ -52,4 +52,7 @@ class PostJobDTO {
 	
 	@JsonProperty("durationUnitLength")
 	Integer durationUnitLength
+	
+	@JsonProperty("postQuestionDtos")
+	List<PostQuestionDTO> postQuestionDtos
 }

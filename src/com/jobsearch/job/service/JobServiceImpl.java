@@ -638,7 +638,7 @@ public class JobServiceImpl {
 		SessionContext.setFilteredJobIds(session, this.getJobIdsFromJobDTOs(jobDtos));
 	}
 	
-	public void SetModel_SortFilteredJobs(HttpSession session, Model model, String sortBy, boolean isAscending) {
+	public void setModel_SortFilteredJobs(HttpSession session, Model model, String sortBy, boolean isAscending) {
 
 		FindJobFilterDTO lastFilterRequest =  SessionContext.getLastFilterRequest(session);
 		

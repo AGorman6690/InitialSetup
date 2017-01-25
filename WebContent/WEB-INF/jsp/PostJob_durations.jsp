@@ -15,14 +15,13 @@
 	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-	<script src="<c:url value="/static/javascript/TimePickerUtilities.js"/>"></script>			
+	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>		
 	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 		
 </head>
 
 <body>
-						
+			
 
 	<div class="container">	
 <!-- 	<a href="/JobSearch/postJob-with-cart">Post Job - Method 2 - With Cart</a> -->

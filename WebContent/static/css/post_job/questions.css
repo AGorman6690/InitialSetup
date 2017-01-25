@@ -1,0 +1,62 @@
+#answerListContainer{
+	display:none;
+}
+
+.delete-answer, #addAnswer{
+	cursor:pointer;
+	font-size:15px;
+	padding:5px;
+}
+
+.answer-container{
+	padding-bottom:8px;
+}
+
+#addedQuestions{
+	padding:5px 0px;
+}
+#addedQuestions a{
+	display:block;
+	padding:4px 0px;
+	height:35px;
+}
+
+#addedQuestions a.selected{
+	color:#163B3D;
+	font-size:18px;
+}
+
+#questionActions button{
+	background-color:rgb(192,192,192);
+	color:#000000;
+	cursor:default;
+	outline:none;	
+}
+
+#questionActions button.clickable{
+	background-color:#337ab7;;
+	color:#ffffff;
+	cursor:pointer;
+}
+
+#questionsContainer :disabled{
+	cursor:default;
+}
+
+#editQuestionResponses{
+	display:none;
+}
+
+#editQuestionResponses .glyphicon{
+	font-size:17px;
+	padding: 5px;
+	cursor:pointer;
+}
+
+#invalidAddQuestion{
+	padding-top:4px;
+}
+
+#questionsContainer .header.row{
+	padding-bottom:0px;
+}

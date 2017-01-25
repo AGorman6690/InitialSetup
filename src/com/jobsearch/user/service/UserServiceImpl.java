@@ -23,7 +23,6 @@ import org.springframework.ui.Model;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
-import com.jobsearch.application.service.ApplicationResponseDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;

@@ -1,5 +1,6 @@
 package com.jobsearch.job.web;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -20,7 +21,9 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -41,18 +44,23 @@ public class JobController {
 	ApplicationServiceImpl applicationService;
 
 	@ResponseBody
-	@RequestMapping(value = "/jobs/post", method = RequestMethod.POST)
-	public void postJobs(@RequestBody SubmitJobPostingRequestDTO postingDto, HttpSession session, ModelAndView model) {
+	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
+	public String postJobs(@RequestBody PostJobDTO postJobDto,
+							HttpSession session, ModelAndView model) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		jobService.addPosting(postingDto, user);
+//		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		
+//		jobService.addPosting(postingDto, user);
+		return "";
+//		return "redirect:/user/profile";
+
 	}
 
 	@RequestMapping(value = "/jobs/filtered/sort", method = RequestMethod.GET)
 	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,
 			@RequestParam(name = "isAscending") boolean isAscending, HttpSession session, Model model) {
 		
-		jobService.SetModel_SortFilteredJobs(session, model, sortBy, isAscending);
+		jobService.setModel_SortFilteredJobs(session, model, sortBy, isAscending);
 
 		return "/find_jobs/Render_GetJobs_InitialRequest";
 	}
@@ -71,7 +79,7 @@ public class JobController {
 
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
-//	@ResponseBody
+	@ResponseBody
 	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
 			@RequestParam(name = "fromAddress", required = true) String fromAddress,
 			@RequestParam(name = "city", required = false) String city,

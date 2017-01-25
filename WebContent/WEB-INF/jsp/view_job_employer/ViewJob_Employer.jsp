@@ -19,43 +19,29 @@
 	</c:if>
 	
 	<div class="container">	
-		<div class="row section-container"  >
+		<div class="row"  >
+
+			<div id="contentBarContainer" class="header-container">
 			<div id="jobNameHeader" id="tempRow1">
 				<h3>${jobDto.job.jobName }</h3>
-			</div>
-			<div class="header-container">
-				<h4>Job Information</h4>
+			</div>			
+				<p class="content-bar selected-lines" data-section-id="jobInfoContainer">Job Information</p>
 				<span class="glyphicon glyphicon-unchecked"></span>
-				<h4 class="first-child">Applicants</h4>
+				<p class="content-bar" data-section-id="questionsContainer">Questions</p>
+				<span class="glyphicon glyphicon-unchecked"></span>				
+				<p class="content-bar" data-section-id="applicantsContainer">Applicants</p>
 				<span class=" glyphicon glyphicon-unchecked"></span>
-<!-- 				<span class="glyphicon glyphicon-menu-left"></span> -->
-
-				<h4>Employees</h4>
-<!-- 				<span class=" glyphicon glyphicon-unchecked"></span> -->
-				
+				<p class="content-bar" data-section-id="employeesContainer">Employees</p>				
 			</div>			
 			
 			
 		</div>
 		<div class="row">
-<!-- 			<div id="sideBarContainer" class="col-sm-2"> -->
-<%-- 				<%@ include file="./SideBar_EmployerViewJob.jsp" %> --%>
-<!-- 			</div>		 -->
-			
+
 			<div class="col-sm-12" id="sectionContainers">
-				
-<!-- 				<div id="jobNameHeader" class=""> -->
-<%-- 					${jobDto.job.jobName } --%>
-<!-- 				</div> -->
-			
 				<c:if test="${context == 'waiting' }">
 				<div id="applicantsContainer" class="section-container">
-					<div id="applicants" class="section-body">
-<!-- 						<div class="header-container"> -->
-<!-- 							<span class="glyphicon glyphicon-menu-left"></span> -->
-<!-- 							<h4>Applicants</h4> -->
-<!-- 							<span class="glyphicon glyphicon-menu-right"></span> -->
-<!-- 						</div> -->
+					<div id="applicants" class="">
 						<%@ include file="./Applicants.jsp" %>
 					</div>
 				</div>	
@@ -64,22 +50,12 @@
 				
 				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
 				<div id="employeesContainer" class="section-container">				
-					<div id="employees" class="section-body">
+					<div id="employees" class="">
 					<c:choose>
 						<c:when test="${context == 'complete' }">
-							<div class="header-container">
-								<span class="glyphicon glyphicon-menu-left"></span>
-								<h4>Employee Ratings</h4>
-								<span class="glyphicon glyphicon-menu-right"></span>
-							</div>
 							<%@ include file="./Employee_Ratings.jsp" %>
 						</c:when>
 						<c:otherwise>	
-							<div class="header-container">
-								<span class="glyphicon glyphicon-menu-left"></span>
-								<h4>Employees</h4>
-								<span class="glyphicon glyphicon-menu-right"></span>
-							</div>
 							<%@ include file="./Employees.jsp" %>					
 						</c:otherwise>
 					</c:choose>
@@ -88,30 +64,12 @@
 				</c:if>
 				
 				<div id="jobInfoContainer" class="section-container">
-					<div class="section-body">
-						<div class="header-container">
-							<span class="glyphicon glyphicon-menu-left"></span>
-							<h4>Job Information</h4>
-							<span class="glyphicon glyphicon-menu-right"></span>
-						</div>
-						<div class="body-element-container">
-							<%@include file="../templates/JobInformation.jsp"%>
-						</div>
-					</div>
+					<%@include file="../templates/JobInformation.jsp"%>
 				</div>				
 				
 				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
 				<div id="questionsContainer" class="section-container">
-					<div class="section-body">
-						<div class="header-container">
-							<span class="glyphicon glyphicon-menu-left"></span>
-							<h4>Questions</h4>
-							<span class="glyphicon glyphicon-menu-right"></span>
-						</div>
-						<div class="body-element-container">
-							<%@include file="./Questions.jsp"%>
-						</div>		
-					</div>
+					<%@include file="./Questions.jsp"%>	
 				</div>
 				</c:if>
 				
@@ -167,9 +125,9 @@ $(document).ready(function(){
 	$(".application-status-container button").click(function(){
 		
 		
-		var updateApplicationStatusDto = getUpdateApplicationStatusDto(this);
+		var applicationDto = getApplicationDto_UpdateStatus(this);
 
-		updateApplicationStatus(updateApplicationStatusDto);
+		updateApplicationStatus(applicationDto);
 
 	})
 	
@@ -209,20 +167,20 @@ function getStatusValuesToShow(){
 }
 
 
-function getUpdateApplicationStatusDto(clickedStatusButton){
+function getApplicationDto_UpdateStatus(clickedStatusButton){
 	
-	var updateApplicationStatusDto = {}
+	var applicationDto = {}
 	
-	updateApplicationStatusDto.applicationId = $($(clickedStatusButton).closest("[data-application-id]")[0]).attr("data-application-id");
+	applicationDto.application.applicationId = $($(clickedStatusButton).closest("[data-application-id]")[0]).attr("data-application-id");
 	
 	if(isAddingApplicationStatus(clickedStatusButton)){
-		updateApplicationStatusDto.newStatus = $(clickedStatusButton).val();
+		applicationDto.newStatus = $(clickedStatusButton).val();
 	}
 	else{
-		updateApplicationStatusDto.newStatus = 0;
+		applicationDto.newStatus = 0;
 	}
 
-	return updateApplicationStatusDto;
+	return applicationDto;
 }
 
 function showApplicantRowsByStatus(statusValuesToShow){
@@ -266,7 +224,7 @@ function getQuestionIdsToShow(){
 
 }
 
-function updateApplicationStatus(updateApplicationStatusDto){
+function updateApplicationStatus(applicationDto){
 
 	
 	$.ajax({
@@ -274,24 +232,24 @@ function updateApplicationStatus(updateApplicationStatusDto){
 		url : '/JobSearch/application/status/update',
 		headers : getAjaxHeaders(),
 		contentType : "application/json",
-		data: JSON.stringify(updateApplicationStatusDto),
+		data: JSON.stringify(applicationDto),
 		success: _success,
 		error: _error
 	})
 	
 	function _success(){		
 		
-		upateRowsApplicationStatus(updateApplicationStatusDto.applicationId,
-									updateApplicationStatusDto.newStatus);
+		upateRowsApplicationStatus(applicationDto.application.applicationId,
+										applicationDto.newStatus);
 
-		applicationStatusButtons = getApplicationStatusButtonsByApplicationId(updateApplicationStatusDto.applicationId)
+		applicationStatusButtons = getApplicationStatusButtonsByApplicationId(applicationDto.application.applicationId)
 		
 
-		if(updateApplicationStatusDto.newStatus == 0){
+		if(applicationDto.newStatus == 0){
 			removeClassFromArrayItems(applicationStatusButtons, "active");
 		}
 		else{
-			highlightArrayItemByAttributeValue("value", updateApplicationStatusDto.newStatus,
+			highlightArrayItemByAttributeValue("value", applicationDto.newStatus,
 					applicationStatusButtons, "active");	
 		}
 		

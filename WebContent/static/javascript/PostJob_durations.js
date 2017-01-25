@@ -66,6 +66,7 @@ function buttonIsCurrentlySelected(button){
 }
 
 function getSelectedQuestion(){
+	
 	var selectedQuestionId = $($("#questionCart").find("a.selected")[0]).attr("data-question-id");
 	selectedQuestionId = parseInt(selectedQuestionId);
 	

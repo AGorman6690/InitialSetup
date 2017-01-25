@@ -74,6 +74,7 @@ function initializeSingeDateCalendars(){
 	})	
 }
 
+
 function areDatesEqual_year_month_date(date1, date2){
 	// Dates are considered equal if the year, month and date are equal;
 
@@ -475,6 +476,11 @@ function getNumberOfMonths($e){
 	}
 	
 	function getSelectedDate(calendarContainer){
+		
+		// *************************************************
+		// Update this to use getDateFromTdElement
+		// *************************************************		
+		
 		var td = $(calendarContainer).find(".active111")[0];
 		var month;
 		var year;
@@ -489,6 +495,29 @@ function getNumberOfMonths($e){
 			return  new Date(year, month, day);
 		}
 		
+	}
+	
+
+	function getSelectedDates($calendar, format){
+		
+		var selectedTds = $calendar.find(".active111");
+		var selectedDates = [];
+		var date;
+
+		selectedTds.each(function(){
+			date = getDateFromTdElement(this);
+			if(format != undefined) date = $.datepicker.formatDate(format, date);
+			selectedDates.push(date);
+		})
+		
+		return selectedDates;
+	}
+	
+	function getDateFromTdElement(td){
+		var year = $(td).attr("data-year");
+		var month = parseInt($(td).attr("data-month"));
+		var day = $(td).children().html();
+		return  new Date(year, month, day);
 	}
 	
 

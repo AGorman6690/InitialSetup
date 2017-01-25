@@ -1,0 +1,64 @@
+.label-text{
+	font-weight:bold;
+	text-align:right;
+}
+
+.section-container .row{
+	padding-bottom:20px;
+	font-size:16px;
+}
+
+/* Override Bootstrap */
+.row{
+	margin-right:0px;
+	margin-left:0px;
+}
+
+.section-container .header.row{
+	font-size:28px;
+	height:auto;
+/* 	font-weight:bold; */
+}
+.section-container{
+	display:none;
+}
+
+.section-container.first{
+	display:block;
+}
+
+#clearCalendar{
+	margin-top:15px;
+}
+
+#payRangeContainer{
+	padding-left:30px;
+}
+
+#payRangeContainer label{
+	width:30px;
+}
+
+#payRangeContainer input{
+	width:100px;
+}
+
+#minPayContainer{
+	margin-bottom:10px;
+}
+
+.first.row{
+	padding-top:25px;
+}
+
+#submitJobContainer{
+	background-color: #163B3D;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid rgb(192,192,192);
+    margin-bottom: 15px;
+    width: 155px;
+    font-size: 16px;
+    overflow: hidden;    
+}

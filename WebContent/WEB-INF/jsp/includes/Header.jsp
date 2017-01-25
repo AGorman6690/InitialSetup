@@ -113,7 +113,7 @@
 									</c:when>
 									<c:when test="${sessionScope.user.profileId == 2}">
 										<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
-										<a id="nav_postJob" href="/JobSearch/viewPostJob">Post Job</a>
+										<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>
 									</c:when>
 								</c:choose>				
 								<a id="nav_profile" class="logo selected-green" href="/JobSearch/user/profile">Profile</a>	

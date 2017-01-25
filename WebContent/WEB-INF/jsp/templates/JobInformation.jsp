@@ -1,36 +1,34 @@
 <%@ include file="../includes/TagLibs.jsp"%>	
 <div class="row">					
-	<div class="col-sm-8">
-		<div class="info-container">
-			<div class="info-label">Name
+	<div class="col-sm-8 container">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">Name
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				${jobDto.job.jobName }
 			</div>
 		</div>	
-		<div class="info-container">
-			<div class="info-label">
-				${jobDto.categories.size() > 1 ? "Categories" : "Category" }	
-			</div>
-			<div class="info-value">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">${jobDto.categories.size() > 1 ? "Categories" : "Category"}</div>
+			<div class="info-value col-sm-8">
 				<c:forEach items="${jobDto.categories }" var="category">
 				<span class="category">${category.name}</span>
 				</c:forEach>					
 			</div>
 		</div>
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				Description
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 			</div>
 		</div>		
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				Employment Type
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				<div class="checkbox">
 					<label><input type="checkbox" checked disabled>Employee</label>					
 				</div>
@@ -39,11 +37,11 @@
 				</div>
 			</div>
 		</div>					
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				Compensation
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				<div class="checkbox">
 					<label><input type="checkbox" disabled checked>Accepting all offers</label>					
 				</div>
@@ -72,28 +70,28 @@
 	
 				
 	<%-- 					<c:if test="${job.durationTypeId == 1 || job.durationTypeId == 2 }"> --%>
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				Start Time
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				${jobDto.job.stringStartTime }
 			</div>
 		</div>
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				End Time
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				${jobDto.job.stringEndTime }
 			</div>
 		</div>				
 		
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				Duration
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				${durationValue }
 			</div>
 		</div>
@@ -101,11 +99,11 @@
 																	
 	<%-- 					</c:if> --%>
 					
-		<div class="info-container">
-			<div class="info-label">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
 				${dateLabel }
 			</div>
-			<div class="info-value">
+			<div class="info-value col-sm-8">
 				<div id="workDays">
 					<c:forEach items="${jobDto.workDays }" var="workDay">
 						<div data-date="${workDay.date }"></div>

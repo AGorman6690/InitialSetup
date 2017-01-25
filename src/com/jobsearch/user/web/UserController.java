@@ -109,7 +109,7 @@ public class UserController {
 		return model;
 	}
 
-	@RequestMapping(value = "/viewPostJob", method = RequestMethod.GET)
+	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
 	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
 
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
@@ -119,7 +119,7 @@ public class UserController {
 		Job job = new Job();
 		model.addObject("job", job);
 
-		model.setViewName("PostJob_durations");
+		model.setViewName("/post_job/PostJob");
 		return model;
 	}
 	

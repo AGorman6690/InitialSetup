@@ -3,7 +3,6 @@ package com.jobsearch.user.rate
 import java.util.List
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.jobsearch.model.CommentDTO
 import com.jobsearch.model.Endorsement
 import com.jobsearch.model.RateCriterion
 
@@ -24,6 +23,5 @@ public class RatingDTO {
 	double value
 
 	@JsonProperty("comment")
-//	CommentDTO comment
 	String comment
 }
