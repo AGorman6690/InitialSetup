@@ -21,6 +21,11 @@
 	height:35px;
 }
 
+#addedQuestions a:hover{
+	text-decoration:none;
+	text-shadow: none;
+}
+
 #addedQuestions a.selected{
 	color:#163B3D;
 	font-size:18px;

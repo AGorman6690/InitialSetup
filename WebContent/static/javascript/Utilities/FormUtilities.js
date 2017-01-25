@@ -13,6 +13,12 @@ function clearAllInputs($container){
 	})	
 }
 
+function removeAllInvalidStyles($container){
+	$container.find(".invalid").each(function(){
+		$(this).removeClass("invalid");
+	})
+}
+
 function disableAllInputFields($container){
 	
 	

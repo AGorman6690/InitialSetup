@@ -45,12 +45,10 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
-	public String postJobs(@RequestBody PostJobDTO postJobDto,
-							HttpSession session, ModelAndView model) {
+	public String postJobs(@RequestBody PostJobDTO postJobDto, HttpSession session) {
 
-//		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
 		
-//		jobService.addPosting(postingDto, user);
+		jobService.addPosting(postJobDto, session);
 		return "";
 //		return "redirect:/user/profile";
 

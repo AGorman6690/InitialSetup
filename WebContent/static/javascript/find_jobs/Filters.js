@@ -7,6 +7,7 @@ $(document).ready(function(){
 	// triggerGetJobs();
 	
 	if($("#mapContainer").attr("data-init-map-on-load") == "1"){
+		
 		$("#mainBottom").show();
 		setMap();
 

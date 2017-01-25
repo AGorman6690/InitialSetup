@@ -1,11 +1,8 @@
 package com.jobsearch.job.service;
 
-import java.io.StringWriter;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
@@ -14,15 +11,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.tools.generic.ComparisonDateTool;
-import org.apache.velocity.tools.generic.DateTool;
-import org.apache.velocity.tools.generic.NumberTool;
-import org.hibernate.mapping.Collection;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -33,15 +22,13 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
-import com.jobsearch.model.Answer;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
-import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
+import com.jobsearch.utilities.MathUtility;
 
 
 @Service
@@ -62,41 +49,9 @@ public class JobServiceImpl {
 	@Autowired
 	GoogleClient googleClient;
 
-//	@Autowired
-//	@Qualifier("FilterJobsVM")
-//	Template filterJobsTemplate;
-//
-//	@Autowired
-//	@Qualifier("EmployerProfileJobTableVM")
-//	Template vmTemplate_employerProfileJobTable;
-//
-//	@Autowired
-//	@Qualifier("JobInformationVM")
-//	Template vtJobInfo;
-//
-//	@Autowired
-//	@Qualifier("EmployerJobsYetToStartVM")
-//	Template employerJobsYetToStartTemplate;
-//
-//	@Autowired
-//	@Qualifier("EmployerJobsInProcessVM")
-//	Template employerJobsInProcessTemplate;
-//
-//	@Autowired
-//	@Qualifier("QuestionsVM")
-//	Template questionsTemplate;
-//
-//	@Autowired
-//	@Qualifier("AnswersVM")
-//	Template answersTemplate;
-//
-//	@Autowired
-//	@Qualifier("QuestionsToAnswerVM")
-//	Template questionsToAnswer;
+	public void addPosting(PostJobDTO postJobDto, HttpSession session) {
 
-	public void addPosting(SubmitJobPostingRequestDTO postingDto, JobSearchUser user) {
-
-		for (Job job : postingDto.getJobs()) {
+		
 			// ***********************************************************************************
 			// Should we verify the address on the client side? I'm thinking
 			// so...
@@ -105,23 +60,18 @@ public class JobServiceImpl {
 			// ***********************************************************************************
 
 			// Build the job's full address
-			String address = job.getStreetAddress() + " " + job.getCity() + " " + job.getState() + " "
-					+ job.getZipCode();
+			String address = postJobDto.getStreetAddress() + " " 
+							+ postJobDto.getCity() + " " 
+							+ postJobDto.getState() + " "
+							+ postJobDto.getZipCode();
 
 			GeocodingResult[] results = googleClient.getLatAndLng(address);
 
-			if (results.length == 1) {
+			if(areGeocodingResultsValid(results)){
 
-
-
-//				// Convert strings to sql Date objects
-//				jobDto.setStartDate(DateUtility.getSqlDate(jobDto.getStringStartDate()));
-//				jobDto.setEndDate(DateUtility.getSqlDate(jobDto.getStringEndDate()));
-//
-//				// Convert strings to sql Time objects
-//				jobDto.setStartTime(java.sql.Time.valueOf(jobDto.getStringStartTime()));
-//				jobDto.setEndTime(java.sql.Time.valueOf(jobDto.getStringEndTime()));
-
+				JobSearchUser user = SessionContext.getUser(session);
+	
+				// ***************************************************************
 				// Address this idea later.
 				// Should we format the user's address and city per the data
 				// from Google maps?
@@ -132,18 +82,24 @@ public class JobServiceImpl {
 				// "POSTAL_CODE"));
 				// ***************************************************************
 
-				job.setLat((float) results[0].geometry.location.lat);
-				job.setLng((float) results[0].geometry.location.lng);
+				postJobDto.setLat((float) results[0].geometry.location.lat);
+				postJobDto.setLng((float) results[0].geometry.location.lng);
 
-				job.setQuestions(getQuestionsFromPosting(job.getSelectedQuestionIds(), postingDto.getQuestions()));
+				repository.addJob(postJobDto, user);
 
-				repository.addJob(job, user);
+			} 
+	
+	}
 
-			} else if (results.length == 0) {
-				// invalid address
-			} else if (results.length > 1) {
-				// ambiguous address
-			}
+	public boolean areGeocodingResultsValid(GeocodingResult[] results) {
+		if (results.length == 1) {
+			return true;
+		} else if (results.length == 0) {
+			// invalid address
+			return false;
+		} else { // if (results.length > 1) {
+			// ambiguous address
+			return false;
 		}
 	}
 
@@ -154,21 +110,6 @@ public class JobServiceImpl {
 			repository.addWorkDay(jobId, workDay);
 		}
 
-	}
-
-	private List<PostQuestionDTO> getQuestionsFromPosting(List<Integer> selectedQuestionIds, List<PostQuestionDTO> postingDtoQuestions) {
-
-		List<PostQuestionDTO> questions = new ArrayList<PostQuestionDTO>();
-
-		for(int selectedQuestionId : selectedQuestionIds){
-			//Get question
-			for(PostQuestionDTO postingDtoQuestion : postingDtoQuestions){
-				if(postingDtoQuestion.getId() == selectedQuestionId){
-					questions.add(postingDtoQuestion);
-				}
-			}
-		}
-		return questions;
 	}
 
 	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
@@ -230,14 +171,6 @@ public class JobServiceImpl {
 		return jobDtos;
 
 	}
-
-
-//	private void setJobsApplicationSummary(List<Job> jobs) {
-//
-//		for (Job job : jobs) {
-//			this.setJobApplicationSummary(job);		}
-//
-//	}
 
 	public int getNewApplicationCount(List<Application> applications) {
 		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
@@ -332,34 +265,6 @@ public class JobServiceImpl {
 	public double getDistanceFromRequest(Job job, float fromLat, float fromLng) {
 			return GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
 	}	
-	
-
-
-	public void setModel_EmployerViewCompletedJob(Model model, int jobId, HttpSession session) {
-		
-		//Get the job
-		JobDTO completedJobDto = new JobDTO();
-		completedJobDto.setJob(this.getJob(jobId));
-
-	
-		//Verify the job is complete.
-		if(completedJobDto.getJob().getStatus() == 2){
-
-			completedJobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-			
-			completedJobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
-			
-			boolean haveJobRatingsBeenSubmitted = false ;// this.getHaveJobRatingsBeenSubmitted(jobId);
-			
-			//Add to model
-			model.addAttribute("jobDto", completedJobDto);
-			model.addAttribute("haveJobRatingsBeenSubmitted", haveJobRatingsBeenSubmitted);
-			
-		}
-		
-	}
-
-
 
 	public boolean getHaveJobRatingsBeenSubmitted(int jobId) {
 		
@@ -407,24 +312,6 @@ public class JobServiceImpl {
 		return result;
 	}
 
-
-
-
-
-	
-
-	public void setModel_EmployerViewJob_WhenViewingFromEmployeeWorkHistory(Model model,
-											HttpSession session, int jobId, int employeeId) {
-		
-
-		Application application = applicationService.getApplication(jobId, employeeId);
-		application.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(jobId, employeeId));
-		
-
-		model.addAttribute("questions", application.getQuestions());
-		
-		
-	}
 
 	public Job getJobByApplicationId(int applicationId) {
 
@@ -759,21 +646,6 @@ public class JobServiceImpl {
 		
 	}
 
-	private JobSearchUserDTO getUserDTO_FindJobs_PageLoad(HttpSession session) {
-		
-		if(SessionContext.isLoggedIn(session)){
-			JobSearchUserDTO userDto = new JobSearchUserDTO();
-			
-			userDto.setUser((JobSearchUser) session.getAttribute("user"));
-			userDto.setSavedFindJobFilters(this.getSavedFindJobFilters(userDto.getUser().getUserId()));
-
-			return userDto;
-	
-		}
-		else return null;
-		
-	}
-
 
 	public void setModel_FindJobs_PageLoad(Model model, HttpSession session) {
 			
@@ -784,7 +656,7 @@ public class JobServiceImpl {
 		
 		// If logged in, set user account details
 		if(SessionContext.isLoggedIn(session)){
-			JobSearchUserDTO userDto = this.getUserDTO_FindJobs_PageLoad(session);
+			JobSearchUserDTO userDto = userService.getUserDTO_FindJobs_PageLoad(session);
 			session.setAttribute("userDto", userDto);			
 		}
 		
@@ -839,7 +711,7 @@ public class JobServiceImpl {
 		else return null;
 	}
 
-	private List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
+	public List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
 		
 		return repository.getSavedFindJobFilters(userId);
 	}

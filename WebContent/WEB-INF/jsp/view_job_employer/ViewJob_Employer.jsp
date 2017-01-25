@@ -1,4 +1,5 @@
 	<%@ include file="../includes/Header.jsp"%>
+	<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
 	
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
@@ -6,11 +7,13 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
+	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
 	
+		
 	<c:if test="${context == 'complete' }">	
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" />
@@ -24,14 +27,15 @@
 			<div id="contentBarContainer" class="header-container">
 			<div id="jobNameHeader" id="tempRow1">
 				<h3>${jobDto.job.jobName }</h3>
-			</div>			
-				<p class="content-bar selected-lines" data-section-id="jobInfoContainer">Job Information</p>
-				<span class="glyphicon glyphicon-unchecked"></span>
-				<p class="content-bar" data-section-id="questionsContainer">Questions</p>
-				<span class="glyphicon glyphicon-unchecked"></span>				
-				<p class="content-bar" data-section-id="applicantsContainer">Applicants</p>
-				<span class=" glyphicon glyphicon-unchecked"></span>
-				<p class="content-bar" data-section-id="employeesContainer">Employees</p>				
+			</div>		
+				<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
+<!-- 				<p class="content-bar selected-lines" data-section-id="jobInfoContainer">Job Information</p> -->
+<!-- 				<span class="glyphicon glyphicon-unchecked"></span> -->
+<!-- 				<p class="content-bar" data-section-id="questionsContainer">Questions</p> -->
+<!-- 				<span class="glyphicon glyphicon-unchecked"></span>				 -->
+<!-- 				<p class="content-bar" data-section-id="applicantsContainer">Applicants</p> -->
+<!-- 				<span class=" glyphicon glyphicon-unchecked"></span> -->
+<!-- 				<p class="content-bar" data-section-id="employeesContainer">Employees</p>				 -->
 			</div>			
 			
 			

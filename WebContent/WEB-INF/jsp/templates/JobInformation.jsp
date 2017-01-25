@@ -71,33 +71,22 @@
 				
 	<%-- 					<c:if test="${job.durationTypeId == 1 || job.durationTypeId == 2 }"> --%>
 		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Start Time
-			</div>
-			<div class="info-value col-sm-8">
-				${jobDto.job.stringStartTime }
-			</div>
+			<div class="info-label col-sm-4">Start Time</div>
+			<div class="info-value col-sm-8">${jobDto.job.stringStartTime }</div>
 		</div>
 		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				End Time
-			</div>
-			<div class="info-value col-sm-8">
-				${jobDto.job.stringEndTime }
-			</div>
+			<div class="info-label col-sm-4">End Time</div>
+			<div class="info-value col-sm-8">${jobDto.job.stringEndTime }</div>
 		</div>				
 		
 		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Duration
-			</div>
-			<div class="info-value col-sm-8">
-				${durationValue }
-			</div>
+			<div class="info-label col-sm-4">Duration</div>
+			<div class="info-value col-sm-8">${durationValue }</div>
 		</div>
 	
 																	
 	<%-- 					</c:if> --%>
+
 					
 		<div class="info-container row">
 			<div class="info-label col-sm-4">

@@ -32,7 +32,6 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Endorsement;
-import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
@@ -720,4 +719,21 @@ public class UserServiceImpl {
 		else return "/employer_profile/EmployerProfile";
 
 	}
+	
+
+	public JobSearchUserDTO getUserDTO_FindJobs_PageLoad(HttpSession session) {
+		
+		if(SessionContext.isLoggedIn(session)){
+			JobSearchUserDTO userDto = new JobSearchUserDTO();
+			
+			userDto.setUser((JobSearchUser) session.getAttribute("user"));
+			userDto.setSavedFindJobFilters(jobService.getSavedFindJobFilters(userDto.getUser().getUserId()));
+
+			return userDto;
+	
+		}
+		else return null;
+		
+	}
+
 }

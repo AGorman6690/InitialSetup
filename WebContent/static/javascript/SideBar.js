@@ -54,7 +54,7 @@
 		
 		$("#sideBarContainer").find(".selected-blue").eq(0).click();
 		
-		//$("#contentBarContainer").find(".selected-lines").eq(0).click();
+		$("#contentBarContainer").find(".selected-lines").eq(0).click();
 		
 		$(".side-bar").click(function(){
 			
@@ -80,10 +80,10 @@
 			var sectionContainerId = $(this).attr("data-section-id");
 			selectContentBar(sectionContainerId);
 			
-//			var urlPath = window.location.pathname;
-//			var obj = {};
-//			obj.urlPath = urlPath;
-//			obj.sectionContainerId = sectionContainerId;
+			var urlPath = window.location.pathname;
+			var obj = {};
+			obj.urlPath = urlPath;
+			obj.sectionContainerId = sectionContainerId;
 			
 			
 			var newStringArray = addElementToStringArray(obj, sessionStorage.sectionContainerIds);

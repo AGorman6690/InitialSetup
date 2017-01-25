@@ -11,4 +11,18 @@ $(document).ready(function() {
 		var win = window.open("https://www.google.com/maps/place/" + lat + "+" + lng + "/@" + lat + "," + lng + ",15z", "_blank");
 		win.focus();
 	})
+	
+//	setSelectedDays();
+	initMultiDayCalendar($("#workDaysCalendar"));
 })
+
+function setSelectedDays(){
+	
+	var dateStrings = [];
+	
+	$("#workDays").find("div").each(function(){
+		dateStrings.push($(this).attr("data-date"));
+	})
+	
+	addSelectedDays(dateStrings);
+}

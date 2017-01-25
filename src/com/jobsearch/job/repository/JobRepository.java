@@ -292,22 +292,22 @@ public class JobRepository {
 		}
 	}
 
-	public void addJob(Job job, JobSearchUser user) {
+	public void addJob(PostJobDTO postJobDto, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
 					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, job.getJobName());
+			 cStmt.setString(1, postJobDto.getJobName());
 			 cStmt.setInt(2, user.getUserId());
-			 cStmt.setString(3, job.getDescription());
-			 cStmt.setString(4, job.getStreetAddress());
-			 cStmt.setString(5, job.getCity());
-			 cStmt.setString(6, job.getState());
-			 cStmt.setString(7, job.getZipCode());
-			 cStmt.setFloat(8,  job.getLat());
-			 cStmt.setFloat(9,  job.getLng());
-			 cStmt.setInt(10, job.getDurationTypeId());
+			 cStmt.setString(3, postJobDto.getDescription());
+			 cStmt.setString(4, postJobDto.getStreetAddress());
+			 cStmt.setString(5, postJobDto.getCity());
+			 cStmt.setString(6, postJobDto.getState());
+			 cStmt.setString(7, postJobDto.getZipCode());
+			 cStmt.setFloat(8,  postJobDto.getLat());
+			 cStmt.setFloat(9,  postJobDto.getLng());
+			 cStmt.setInt(10, postJobDto.getDurationTypeId());
 
 			 ResultSet result = cStmt.executeQuery();
 
@@ -317,7 +317,7 @@ public class JobRepository {
 			 createdJob.setId(result.getInt("JobId"));
 
 			 //Add the job's categories to the database
-			 for(Integer categoryId: job.getCategoryIds()){
+			 for(Integer categoryId: postJobDto.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
 
@@ -327,13 +327,13 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(PostQuestionDTO question : job.getQuestions()){
+			for(PostQuestionDTO question : postJobDto.getQuestions()){
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
 
 			//Set the work days
-			jobService.addWorkDays(createdJob.getId(), job.getWorkDays());
+			jobService.addWorkDays(createdJob.getId(), postJobDto.getWorkDays());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -38,4 +38,5 @@ public class JobDTO {
 	 List<JobSearchUserDTO> employeeDtos
 	 Double distanceFromFilterLocation
 	 RatingDTO ratingDto;
+
 }

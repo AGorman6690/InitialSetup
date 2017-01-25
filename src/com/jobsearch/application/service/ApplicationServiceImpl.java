@@ -234,18 +234,6 @@ public class ApplicationServiceImpl {
 		repository.addQuestion(question);
 	}
 
-//	public void setJobsApplicationsHasBeenViewed(List<Job> jobs, int value) {
-//
-//		for (Job job : jobs) {
-//
-//			// If there are applications, set all jobs' applications'
-//			// HasBeenViewed property
-//			if (job.getApplications().size() > 0) {
-//				repository.setHasBeenViewed(job.getId(), value);
-//			}
-//		}
-//
-//	}
 
 	public WageProposal getWageProposal(int wageProposalId) {
 		return repository.getWageProposal(wageProposalId);
@@ -256,7 +244,7 @@ public class ApplicationServiceImpl {
 		// Get the wage proposal to counter
 		WageProposal wagePropasalToCounter = this.getWageProposal(dto.getWageProposalIdToCounter());
 
-		// Set the proposal-to-counter's status to countered
+		// Set the proposal-to-counter's status to "countered"
 		this.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
 
 		// Update the application's status to considering.

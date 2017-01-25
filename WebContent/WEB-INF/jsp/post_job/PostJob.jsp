@@ -1,17 +1,14 @@
 <%@ include file="../includes/Header.jsp"%>
+<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
 
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />		
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" />		
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 
 <script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
-<script	src="<c:url value="/static/javascript/DatePickerUtilities_generalized.js" />"></script>
 <script src="<c:url value="/static/javascript/Category.js" />"></script>
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>		
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 			
 			
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/post_job/questions.css" />			
@@ -114,7 +111,7 @@
 						<p>Street Address</p>
 					</div>
 					<div class="col-sm-9">							
-						<input id="street" type="text" class=""	value=""></input>						
+						<input id="street" type="text" class=""	value="2217 Bonnie Lane"></input>						
 					</div> 
 				</div>
 				<div class="row">
@@ -122,7 +119,7 @@
 						<p>City</p>
 					</div>
 					<div class="col-sm-9">							
-						<input id="city" type="text" class=""	value=""></input>						
+						<input id="city" type="text" class=""	value="St. Paul"></input>						
 					</div> 
 				</div>
 				<div class="row">
@@ -138,7 +135,7 @@
 						<p>Zip Code</p>
 					</div>
 					<div class="col-sm-9">							
-						<input id="zipCode" type="text" class=""	value=""></input>						
+						<input id="zipCode" type="text" value="55119"></input>						
 					</div> 
 				</div>						
 			</div>	

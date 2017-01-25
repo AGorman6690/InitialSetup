@@ -2,6 +2,7 @@
 var selectedDays = [];
 var selectedDay;
 var initDate;
+var selectedDates_DateObjs = []
 
 
 //var firstworkDay = {};
@@ -29,6 +30,58 @@ $(document).ready(function(){
 	
 	
 })
+
+
+function initMultiDayCalendar($e){
+	var numberOfMonths = getNumberOfMonths($e);
+	var milliseconds;
+	var date;
+	$e.datepicker({
+		minDate: new Date(),
+		numberOfMonths: numberOfMonths, 
+		onSelect: function(dateText, inst) {	
+
+			//There's odd behavior when the user clicks, for example,
+			//the 1st then the 3rd, highlighting the 2nd as part of the range.
+			//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
+			//because the
+            if(selectedDays.length == 3){
+            	rangeIsSet = 1;
+            }
+            
+			selectDate(new Date(dateText));
+		},
+	        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date1) {
+
+//        	milliseconds = date.getTime();
+        	var date = new Date(date1.getTime());
+        	// Is the date already selected?
+			if(isDateAlreadySelected(date)) return [true, "active111"];
+			
+			// Else is the "range" attempting to be set?
+        	else if(isSecondDaySelected() && !rangeIsSet){
+        		
+        		//Add the dates in between the first and second days
+        		if(isDateInRange(date)){
+        			
+					if(!isDateAlreadySelected(date)){
+						addDay(date);
+//						addDate(date);
+					}
+        			return [true, "active111"];
+        		}
+        		else return [true, ""];
+
+        	}else return [true, ""];
+        	
+ 
+        }
+    });
+}
+
+
 
 function initializeSingeDateCalendars(){
 	
@@ -123,6 +176,7 @@ function initSingleDayCalendar($e){
 	})
 }
 
+
 function initReadOnlyCalendar($e, minDate){
 	
 	var numberOfMonths = getNumberOfMonths($e);
@@ -147,59 +201,6 @@ function initReadOnlyCalendar($e, minDate){
 
 	});
 	
-}
-
-function initMultiDayCalendar($e){
-	var numberOfMonths = getNumberOfMonths($e);
-	
-	$e.datepicker({
-		minDate: new Date(),
-		numberOfMonths: numberOfMonths, 
-		onSelect: function(dateText, inst) {	
-
-			//There's odd behavior when the user clicks, for example,
-			//the 1st then the 3rd, highlighting the 2nd as part of the range.
-			//If the user clicks the 1st, 2nd, or 3rd, the dates will not toggle off
-			//because the
-            if(selectedDays.length == 3){
-            	rangeIsSet = 1;
-            }
-            
-			selectDate(dateText);
-		},
-	        
-	        // This is run for every day visible in the datepicker.
-	        beforeShowDay: function (date) {
-
-	        	date = date.getTime();
-					if(isDateAlreadySelected(date)){
-		        		return [true, "active111"]; 
-		        	}
-
-//	        	}
-	        	else if(isSecondDaySelected() && !rangeIsSet){
-	        		
-	        		//Add the dates in between the first and second days
-	        		if(isDateInRange(date)){
-	        			
-						if(!isDateAlreadySelected(date)){
-
-	        				addDay(date);
-	        			}
-	        			
-	        			return [true, "active111"];
-	        		}
-	        		else{
-
-	        			return [true, ""];
-	        		}	  
-
-	        	}else{
-	        		return [true, ""];
-	        	}
-
-	        }
-    });
 }
 
 
@@ -269,12 +270,33 @@ function initMultiDayCalendar($e){
 		selectedDays.push(dateToAdd);
 	}
 	
+	function addDate(date){
+		selectedDates_DateObjs.push(date);
+	}
+	
 	function isDateAlreadySelected(dateToCheck){
 		
 		var arr = [];
 		
 		arr = $.grep(selectedDays, function(date){
-			return date == dateToCheck;
+			return date.getTime() == dateToCheck.getTime();
+		})
+		
+		if(arr.length > 0){
+			return true;
+		}
+		else{
+			return false;
+		}		
+		
+	}
+	
+	function isDateAlreadySelected_DateObj(date){
+		
+		var arr = [];
+		
+		arr = $.grep(selectedDates_DateObjs, function(d){
+			return d == date;
 		})
 		
 		if(arr.length > 0){
@@ -352,7 +374,7 @@ function initMultiDayCalendar($e){
 	
 	function attemptToAddDate(dateText, callback){
 		
-		dateText = getDate(dateText);
+//		dateText = getDate(dateText);
 		
 		if(isDateAlreadySelected(dateText)){        	
         	selectedDays = removeDay(dateText);        	
@@ -366,7 +388,7 @@ function initMultiDayCalendar($e){
 	}
 
 function isDateInRange(dateText){
-	if(dateText >= selectedDays[0] && dateText <= selectedDays[1]){
+	if(dateText.getTime() >= selectedDays[0].getTime() && dateText.getTime() <= selectedDays[1].getTime()){
 		return true;
 	}
 	else{
@@ -520,4 +542,15 @@ function getNumberOfMonths($e){
 		return  new Date(year, month, day);
 	}
 	
+	
+	function addSelectedDays(dateStrings){
+		
+		var date;
+		
+		$(dateStrings).each(function(){
+			date = new Date(this);
+			addDay(date.getTime());
+		})
+		
+	}
 
