@@ -77,7 +77,6 @@ public class JobController {
 
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
-	@ResponseBody
 	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
 			@RequestParam(name = "fromAddress", required = true) String fromAddress,
 			@RequestParam(name = "city", required = false) String city,
