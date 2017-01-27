@@ -1,0 +1,46 @@
+button.selected-blue{
+    background-color: #337ab7;
+    color: #ffffff;
+}
+
+input, select, textarea{
+	padding: 5px 10px;
+    border-radius: 3px;
+    border: 2px solid #c8c5c5;	
+}
+
+.square-button,
+.sqr-btn{
+    border-radius: 0;
+/*     background-color: #ffffff; */
+/*     color: #000000; */
+    border: 1px solid rgb(192,192,192);
+    padding:5px 10px;
+}
+
+
+.accent{
+    font-size: 15px;
+    font-weight: bold;
+/*     color: #5B7BA3; */
+    color:#24599a;
+    cursor:pointer;
+}
+
+a.accent.no-hover:hover{
+	text-decoration: none;
+	color: #5B7BA3;
+}
+
+.accent.disabled{
+	color:#656c71;
+	
+	cursor:default;
+    font-weight: normal;
+}
+
+/* span.accent{ */
+/*     color: #337ab7; */
+/*     font-size: 15px; */
+/*     font-weight: bold; */
+/* } */

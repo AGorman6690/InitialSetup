@@ -1,0 +1,19 @@
+input[type=checkbox],
+input[type=radio]{
+    margin-right: 7px;
+    margin-top:0px;
+    vertical-align: middle;
+	cursor:pointer;    
+}
+
+.checkbox-container label{
+	cursor:pointer;
+}
+
+.checkbox-container.not-checkable input[type=checkbox]{
+	cursor:default;
+}
+.checkbox-container.not-checkable label{
+	font-weight:normal;
+	cursor:default;
+}

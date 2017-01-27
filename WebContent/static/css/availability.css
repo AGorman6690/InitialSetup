@@ -1,0 +1,137 @@
+
+
+/* New calendar.css styles */
+/* ******************************************* */
+/* ******************************************* */
+.calendar-container{
+	width:300px;
+}
+
+.calendar-container .calendar td{
+	padding:3px 9px;
+}
+
+.calendar{
+	padding:10px;
+}
+
+.calendar-container.read-only td,
+.calendar-container.read-only a{
+	cursor:default !important;
+}
+
+.calendar-container.read-only td a:hover{
+	cursor:default !important;
+}
+
+
+
+
+/* ******************************************* */
+/* ******************************************* */
+
+
+#availableDays{
+	display:none;
+}
+
+#availabilityCont{
+	display:none;
+}
+
+.container{
+	padding-top:25px;	
+}
+
+#setSaveCont{
+	padding-top:20px;
+	text-align:center;
+}
+
+#setSaveCont button{
+	margin:0px 5px;
+	width:130px;
+}
+
+#setSaveCont span{
+	margin:0px 15px;
+    font-size: 18px;
+}
+
+.row.options:first-child{
+	padding-top:10px;
+	
+}
+
+#daysContainer .row.options div{
+	display:inline-block;
+    padding: 0px 15px;
+}
+
+
+/* #daysContainer, */
+#monthsContainer{
+	width: 500px;	
+}
+
+#daysContainer{
+	width:810px;
+	padding-bottom:0px;
+	
+}
+
+.calendar-container{
+/* 	display:inline-block; */
+	display:none;
+	margin:20px;
+	border:2px solid #163B3D;
+	border-radius:6px;
+}
+
+#calendarContainers{
+	width: 1060px;
+    margin: auto;
+    text-align: center;
+}
+
+.ui-datepicker-year,
+.ui-datepicker-month{
+	color: #337ab7;
+    font-size: 15px;
+    font-weight: bold;	
+}
+
+h5{
+    text-align: center;
+    font-size: 21px;
+    padding-bottom: 15px;
+    color: #337ab7;
+    font-weight: bold;
+}
+
+#calendarContainers td.active111{
+	background-color:#337ab7;
+
+}
+
+#calendarContainers td.active111.saved{
+	background-color:#929ea7;
+
+}
+
+.calendar-container{
+	min-height:230px;
+}
+
+.ui-datepicker-next,
+.ui-datepicker-prev{
+	display:none
+}
+
+.ui-datepicker-calendar{
+	margin: auto;
+}
+
+/* .calendar{ */
+/* 	margin:auto; */
+/* } */
