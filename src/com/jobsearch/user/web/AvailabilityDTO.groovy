@@ -9,8 +9,8 @@ class AvailabilityDTO {
 	int userId
 
 	@JsonProperty
-	String[] stringDays
+	List<String> stringDays
 
-	@JsonProperty
-	List<Date> days
+//	@JsonProperty
+//	List<Date> days
 }

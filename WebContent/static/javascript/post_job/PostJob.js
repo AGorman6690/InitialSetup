@@ -1,7 +1,6 @@
 $(document).ready(function(){
 
 	$("#submitJobContainer").click(function(){
-		
 		submitJobPost();
 	})
 	
@@ -17,7 +16,7 @@ function submitJobPost(){
 	var postJobDto = {}
 	postJobDto = getPostJobDto();
 	
-	executeAjaxCall_postJob(postJobDto);
+	if(isPostJobDtoValid(postJobDto)) executeAjaxCall_postJob(postJobDto);
 }
 
 function getPostJobDto(){
@@ -76,8 +75,9 @@ function executeAjaxCall_postJob(postJobDto){
 	});
 
 	function _success() {
-		$("html").removeClass("waiting");			
-//		window.location.replace("/JobSearch/user/profile");
+				
+		window.location.replace("/JobSearch/user/profile");
+		$("html").removeClass("waiting");	
 	}	
 
 	function _error() {

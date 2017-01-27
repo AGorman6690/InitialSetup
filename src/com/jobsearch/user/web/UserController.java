@@ -107,6 +107,25 @@ public class UserController {
 		}
 
 		return model;
+	
+	}
+	
+	@RequestMapping(value = "/availability/update", method = RequestMethod.POST)
+	public String updateAvailability(@RequestBody AvailabilityDTO availabilityDto,
+										Model model, HttpSession session) {
+
+		userService.updateAvailability(session, availabilityDto);
+		userService.setModel_Availability(model, session);
+		
+		return "settings_employee/AvailableDays_CurrentlySet";
+	}
+	
+	@RequestMapping(value = "/availability", method = RequestMethod.GET)
+	public String viewAvailability(Model model, HttpSession session) {
+
+		userService.setModel_Availability(model, session);
+
+		return "settings_employee/Availability";
 	}
 
 	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
@@ -173,15 +192,6 @@ public class UserController {
 
 		return model;
 
-	}
-
-	@RequestMapping(value = "/user/availability/update", method = RequestMethod.POST)
-	@ResponseBody
-	public void updateAvailability(HttpSession session, @RequestBody AvailabilityDTO availabityDto) {
-
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		availabityDto.setUserId(user.getUserId());
-		userService.updateAvailability(availabityDto);
 	}
 
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)

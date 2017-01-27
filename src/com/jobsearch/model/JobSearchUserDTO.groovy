@@ -15,5 +15,6 @@ class JobSearchUserDTO {
 	RatingDTO rating
 	List<FindJobFilterDTO> savedFindJobFilters;
 	List<JobDTO> jobDtos_jobsCompleted;
+	List<String> availableDays;
 	double wage
 }

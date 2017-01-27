@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.tools.ant.taskdefs.Exit;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
@@ -361,13 +363,26 @@ public class UserServiceImpl {
 		return MathUtility.round(total / count, 1, 0);
 	}
 
-	public void updateAvailability(AvailabilityDTO availabilityDTO) {
-
-		repository.deleteAvailability(availabilityDTO.getUserId());
-
-		for (String date : availabilityDTO.getStringDays()) {
-			repository.addAvailability(availabilityDTO.getUserId(), DateUtility.getSqlDate(date));
+	public void updateAvailability(HttpSession session, AvailabilityDTO availabilityDto) {
+		
+		// *********************************************************************
+		// This process is inefficient. Deleting ALL records for the user, regardless
+		// if the succeeding insert statement includes these records.
+		// Records are deleted only to be re-inserted...
+		// This original post could be a potential solution:
+		// http://stackoverflow.com/questions/32922038/insert-data-to-table-with-existing-data-then-delete-data-that-was-not-touched-d
+		// Revisit this.
+		// *********************************************************************		
+					
+		availabilityDto.setUserId(SessionContext.getUser(session).getUserId());				
+		repository.deleteAvailability(availabilityDto.getUserId());	
+		
+		if(availabilityDto.getStringDays() != null){
+			if(availabilityDto.getStringDays().size() > 0){		
+				repository.addAvailability(availabilityDto);
+			}		
 		}
+
 
 	}
 
@@ -735,5 +750,16 @@ public class UserServiceImpl {
 		else return null;
 		
 	}
+
+	public void setModel_Availability(Model model, HttpSession session) {
+
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setUser(SessionContext.getUser(session));
+		userDto.setAvailableDays(this.getAvailableDays(userDto.getUser().getUserId()));
+		
+		model.addAttribute("userDto", userDto);
+		
+	}
+
 
 }

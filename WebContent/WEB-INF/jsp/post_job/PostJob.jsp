@@ -14,13 +14,16 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/post_job/questions.css" />			
 <script	src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
+<script	src="<c:url value="/static/javascript/post_job/SubmitValidation.js" />"></script>
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
 <div class="container">
 	<div class="row first">
 		<div class="col-sm-2">
 			<div id="submitJobContainer" class="">Submit Job</div>
-			<div id="general" class="side-bar selected-blue" data-section-id="generalContainer">General</div>
+			<div id="general" class="side-bar selected-blue" data-section-id="generalContainer">General
+				<div class="red"></div>
+			</div>
 			<div id="date" class="side-bar" data-section-id="datesContainer">Dates and Times</div>
 			<div id="location" class="side-bar" data-section-id="locationContainer">Location</div>
 			<div id="compensation" class="side-bar" data-section-id="compensationContainer">Compensation</div>
@@ -76,7 +79,7 @@
 						<p>Work Days</p>
 					</div>
 					<div class="col-sm-9">							
-						<div id="calendarContainer">
+						<div id="calendarContainer" class="calendar">
 							<div id="calendar-multi-day" data-number-of-months="2" data-is-showing-job="0">
 							</div>											
 							<button class="square-button" id="clearCalendar">Clear</button>

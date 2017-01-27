@@ -660,7 +660,7 @@ public class JobRepository {
 		
 		//Number of jobs to return
 		//argsList.add(filter.getReturnJobCount());
-		sql += " LIMIT 0 , 2";
+		sql += " LIMIT 0 , 25";
 
 		
 		sql = sqlSelect + sql;

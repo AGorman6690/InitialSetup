@@ -154,7 +154,7 @@ function setInitialValues_TimeAndDates(callback){
 	// Set calendars' initial date
 	$(".calendar-single-date").each(function(){
 		var initDate = $(this).attr("data-init-date");
-		var date = new Date(initDate.replace("-", "/"));
+		var date = new Date(initDate.replace(/-/g, "/"));
 		if(initDate != undefined){
 			$(this).datepicker("setDate", date);
 		}

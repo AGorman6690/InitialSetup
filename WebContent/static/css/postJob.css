@@ -51,6 +51,10 @@
 	padding-top:25px;
 }
 
+#calendarContainer{
+	padding:5px;
+}
+
 #submitJobContainer{
 	background-color: #163B3D;
     color: #ffffff;

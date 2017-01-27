@@ -368,6 +368,8 @@ function executeAjaxCall_saveFindJobFilter(findJobFilterDto){
 function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJobs){
 	
 	$("html").addClass("waiting");
+	if(!$("#mainBottom").is("visible"))	$("#mainBottom").show();
+	
 	$.ajax({
 		type : "GET",
 		url: '/JobSearch/jobs/filter' + urlParameters,
@@ -381,16 +383,14 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJob
 		
 		$("html").removeClass("waiting");		
 		
-		if(isAppendingJobs){
-			$("#getMoreJobsContainer").before(response)
-		}
+		if(isAppendingJobs)	$("#getMoreJobsContainer").before(response);
 		else $("#filteredJobs").html(response);		
 
 		
 		//Show the jobs and map container if this is the first job request
-		if(!$("#mainBottom").is("visible")){
-			$("#mainBottom").show();
-		}
+//		if(!$("#mainBottom").is("visible")){
+//			$("#mainBottom").show();
+//		}
 		
 //		if(doSetMap == 1){
 			setMap();	

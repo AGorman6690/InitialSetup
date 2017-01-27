@@ -22,6 +22,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 
 @Repository
@@ -406,9 +407,26 @@ public class UserRepository {
 
 	}
 
-	public void addAvailability(int userId, Date sqlDate) {
-		String sql = "INSERT INTO availability (UserId, Day) VALUES(?, ?)";
-		jdbcTemplate.update(sql, new Object[] { userId, sqlDate });
+	public void addAvailability(AvailabilityDTO availabilityDto){ //Date sqlDate) {
+		
+		String sql = "INSERT INTO availability (UserId, Day) VALUES";
+		ArrayList<Object> args = new ArrayList<Object>();
+		
+		boolean isFirst = true;
+		for(String date : availabilityDto.getStringDays()){
+			
+			if(isFirst)	sql += " (?, ?)";			
+			else sql += ", (?, ?)";
+
+			
+			isFirst = false;
+			args.add(availabilityDto.getUserId());
+			args.add(date);
+		}
+		
+		sql += " ON DUPLICATE KEY UPDATE UserId = UserId";
+		
+		jdbcTemplate.update(sql, args.toArray());
 
 	}
 

@@ -10,6 +10,9 @@
 	<context:property-placeholder
 		location="classpath:properties/application.properties,file:./localresources/local.properties"
 		ignore-resource-not-found="true" />
+<!-- 	<context:property-placeholder -->
+<!-- 		location="classpath:./localresources/local.properties,file:properties/application.properties" -->
+<!-- 		ignore-resource-not-found="true" /> -->
 
 
 	<beans:bean id="GeoApiContext" class="com.google.maps.GeoApiContext">

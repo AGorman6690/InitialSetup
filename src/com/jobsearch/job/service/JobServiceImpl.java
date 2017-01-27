@@ -415,7 +415,11 @@ public class JobServiceImpl {
 
 	public void setJobDtoDuration(JobDTO jobDto) {
 
-		if(jobDto.getJob() != null){
+		if(jobDto.getJob() != null &&
+			jobDto.getJob().getStartDate() != null &&
+			jobDto.getJob().getEndDate() != null &&
+			jobDto.getJob().getStartTime() != null &&
+			jobDto.getJob().getEndTime() != null){
 			
 			jobDto.setDurationHours(DateUtility.getTimeSpan(jobDto.getJob().getStartDate(), 
 												jobDto.getJob().getStartTime(),

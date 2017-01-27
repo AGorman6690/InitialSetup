@@ -72,11 +72,13 @@
 			
 		
 <!-- 		Global Links -->
-		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />		
+		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />	
+		<link href="/JobSearch/static/css/global_new.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/layout.css" rel="stylesheet" />			
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 		
 <!-- 		Global Scripts -->
 		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
@@ -84,6 +86,7 @@
 		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
 		<script src="<c:url value="/static/javascript/SideBar.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
+		<script src="<c:url value="/static/javascript/Utilities/Arrays.js" />"></script>
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
 		
 						
@@ -108,6 +111,7 @@
 									<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>
 								<c:choose>
 									<c:when test="${sessionScope.user.profileId == 1}">
+										<a id="nav_availability" href="/JobSearch/availability">Availability</a>
 										<a id="nav_settings" href="/JobSearch/settings">Settings</a>
 										<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>								
 									</c:when>

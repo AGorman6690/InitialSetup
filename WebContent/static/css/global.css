@@ -1,5 +1,5 @@
 html.waiting * {
-    cursor: progress;
+    cursor: progress !important;
 }
 
 
@@ -8,21 +8,14 @@ html.waiting * {
 }
 
 
-input, select, textarea{
-	padding: 5px 10px;
-    border-radius: 3px;
-    border: 2px solid #c8c5c5;	
-}
+
 .form-control-label{
 	font-size:15px;
 	font-weight:100;
 	margin-right:8px;
 }
 
-.selected-blue{
-    background-color: #337ab7;
-    color: #ffffff;
-}
+
 
 .selected-green{
     background-color: #163B3D;
@@ -74,13 +67,12 @@ input, select, textarea{
 	padding:5px 10px;
 }
 
-.square-button{
-    border-radius: 0;
-/*     background-color: #ffffff; */
-/*     color: #000000; */
-    border: 1px solid rgb(192,192,192);
-    padding:5px 10px;
+button.not-clickable{
+    cursor: default;
+    outline: none;
 }
+
+
 
 .blue-button{
     background-color: #337ab7;
@@ -109,23 +101,7 @@ input, select, textarea{
 }
 
 
-.accent{
-    font-size: 15px;
-    font-weight: bold;
-    color: #5B7BA3;
-    cursor:pointer;
-}
 
-a.accent.no-hover:hover{
-	text-decoration: none;
-	color: #5B7BA3;
-}
-
-span.accent{
-    color: #337ab7;
-    font-size: 15px;
-    font-weight: bold;
-}
 
 body {
   overflow-y: scroll;

@@ -16,6 +16,16 @@ $(document).ready(function(){
 
 	})
 	
+//	$("body").on("mousedown", ".invalid.calendar *", function(){
+//		
+//			var $calendar = $($(this).closest(".calendar"));
+//			var e = $(this).closest(".calendar").attr("data-selected-days-count");
+//			if($calendar.attr("data-selected-days-count") > 0){
+//				setValidCss($calendar);
+//			}
+//
+//	})
+	
 	$("body").on("change", ".invalid.invalid-positive-number", function(){
 		
 		var value = "";
