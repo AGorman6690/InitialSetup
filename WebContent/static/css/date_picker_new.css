@@ -1,0 +1,26 @@
+
+
+
+.calendar-container{
+	width:300px;
+}
+
+.calendar-container .calendar td{
+	padding:3px 9px;
+}
+
+.calendar{
+	padding:10px;
+}
+
+.calendar-container.read-only td,
+.calendar-container.read-only a{
+	cursor:default !important;
+}
+
+.calendar-container.read-only td a:hover{
+	cursor:default !important;
+}
+
+
+

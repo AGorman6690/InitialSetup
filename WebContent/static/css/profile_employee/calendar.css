@@ -1,0 +1,36 @@
+
+
+
+td div.job{
+    height: 10px;
+    position: absolute;
+    width: 100%;    
+    left: 0px;   
+    cursor: pointer;
+}
+
+td div.job.one{
+	bottom: 10px;
+	background-color: #337ab7;
+}
+
+td div.job.two{
+	bottom: 20px;
+	background-color: #163B3D;
+}
+
+
+td div.job.three{
+	bottom: 30px;
+	background-color: #cc6868;
+}
+
+.calendar td{
+    position: relative;
+    height:70px;
+    width:50px;
+    vertical-align: top;
+    margin-bottom:3px;
+    text-align: center;
+    border-top: 1px solid black;
+}
