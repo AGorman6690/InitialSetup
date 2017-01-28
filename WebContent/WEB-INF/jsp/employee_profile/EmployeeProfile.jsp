@@ -1,5 +1,5 @@
 	<%@ include file="../includes/Header.jsp"%>
-	<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+	<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
+	
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/calendar.css" />
 		
 <%-- 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
@@ -27,7 +29,28 @@
 				<div id="date" class="side-bar" data-section-id="employmentContainer">Employment</div>
 			</div>
 			
+
+					
+			
 			<div class="col-sm-10" id="sectionContainers">
+			
+				<div id="calendarContainer">
+					<div class="calendar"></div>
+				</div>
+			
+				<div id="jobDetails_applications">
+				<c:forEach items="${applicationDtos }" var="applicationDto">
+				
+					<div class="job" data-id="${applicationDto.job.id }" data-name="${applicationDto.job.jobName }">
+					<c:forEach items="${applicationDto.job.workDays }" var="workDay">
+						<div class="work-day" data-date="${workDay.stringDate }"></div>
+					</c:forEach>
+						
+					</div>
+						
+				</c:forEach>				
+				</div>		
+				
 				<div id="applicationContainer" class="section-container">
 					<div class="section-body">
 						<%@ include file="./Applications_Employee.jsp" %>
@@ -45,6 +68,79 @@
 
 <script>
 var availableDays = [];
+
+function setJob
+
+
+function test(){
+	
+	
+	var td = getTdByDayMonthYear($(".calendar"), "1", "0", "2017");	
+	var div = "<div class='job one'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "2", "0", "2017");	
+	var div = "<div class='job one'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "3", "0", "2017");	
+	var div = "<div class='job one'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "4", "0", "2017");	
+	var div = "<div class='job one'></div>";	
+	$(td).append(div);
+	
+	
+	
+	
+	
+	var td = getTdByDayMonthYear($(".calendar"), "2", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "3", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);	
+	
+	var td = getTdByDayMonthYear($(".calendar"), "4", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);	
+	
+	var td = getTdByDayMonthYear($(".calendar"), "5", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "6", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "7", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "8", "0", "2017");	
+	var div = "<div class='job two'></div>";	
+	$(td).append(div);	
+	
+	
+	
+	var td = getTdByDayMonthYear($(".calendar"), "3", "0", "2017");	
+	var div = "<div class='job three'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "4", "0", "2017");	
+	var div = "<div class='job three'></div>";	
+	$(td).append(div);
+	
+	var td = getTdByDayMonthYear($(".calendar"), "5", "0", "2017");	
+	var div = "<div class='job three'></div>";	
+	$(td).append(div);	
+	
+	
+	
+}
+
 
 	function toggleApplicationVisibility(clickedStatus){
 		
@@ -99,8 +195,22 @@ var availableDays = [];
 			})
 		}
 	}
+	
+
 
 	$(document).ready(function(){
+		
+
+		var options = {};
+		options.hideIfNoPrevNext = false;
+		
+		initReadOnlyCalendar($(".calendar"));		
+		
+		test();
+		
+		
+		
+		
 		
 		$("#applicationSubHeader .item-value").click(function(){
 			var value = $(this).attr("data-value");

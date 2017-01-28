@@ -1,5 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 
+
 <head>
 <%-- <script src="<c:url value="/static/javascript/Jobs.js" />"></script> --%>
 <%-- <script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
@@ -13,7 +14,6 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 
 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 </head>
 
 
@@ -29,12 +29,15 @@
 			<div id="jobsCompleted" class="job-type">Complete</div>			
 		</div>
 		
+
 		<div id="waiting" class="job-type-section">
 			<%@ include file="./JobsWaitingToStart_Employer.jsp" %>
 		</div>
 		<div id="active" class="job-type-section">
 			<%@ include file="./JobsInProcess_Employer.jsp" %>
 		</div>
+		
+		
 
 		<c:choose>
 			<c:when test="${jobDtos_jobsCompleted.size() >0 }">			
@@ -129,7 +132,9 @@ $(document).ready(function(){
 	
 
 
+
 })
+
 
 
 </script>

@@ -11,6 +11,8 @@
 <script src="<c:url value="/static/javascript/availability_employee/AjaxCall.js" />"></script>
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/availability.css" />	
 
+<script src="<c:url value="/static/javascript/date_picker/CalendarEvents.js" />"></script>
+
 
 <div class="container">
 	<div id="availableDays">

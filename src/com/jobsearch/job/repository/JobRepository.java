@@ -167,7 +167,7 @@ public class JobRepository {
 					e.setDate(rs.getDate("Date"));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
-										
+					e.setStringDate(rs.getString("Date").replace("-", "/"));			
 					return e;
 				}
 			});

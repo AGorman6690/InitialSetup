@@ -285,7 +285,7 @@ public class ApplicationServiceImpl {
 			applicationDto.setApplication(application);
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
-			
+			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
 			applicationDtos.add(applicationDto);
 		}
 		

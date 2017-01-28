@@ -147,7 +147,11 @@ $(document).ready(function(){
 //	$("#m").click();
 //	$("#monthsContainer").find(".select-all").eq(0).prop("checked", true).change();
 	
+	
+	
 })
+
+
 
 function setState_AfterAvailabilityAlterations(){
 
