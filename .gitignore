@@ -16,3 +16,4 @@
 .*\.log(\.\d+)?
 .*\.jpage
 .*\.tmp
+velocity.log
