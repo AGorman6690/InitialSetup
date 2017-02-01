@@ -4,6 +4,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -123,16 +124,20 @@ public class JobServiceImpl {
 
 		//Query the database
 		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, 0);
+		
+		if(jobsWaitingToStart != null){
+			//Set the job Dtos
+			for(Job job : jobsWaitingToStart){
+				
+				JobDTO jobDto = new JobDTO();
+				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId());
+				jobDtos.add(jobDto);
+			}
 
-		//Set the job Dtos
-		for(Job job : jobsWaitingToStart){
-			
-			JobDTO jobDto = new JobDTO();
-			jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId());
-			jobDtos.add(jobDto);
+			return jobDtos;		
 		}
 
-		return jobDtos;
+		return null;
 
 	}
 
@@ -467,6 +472,16 @@ public class JobServiceImpl {
 	
 
 	public void setModel_GetMoreJobs(Model model, FindJobFilterDTO filter, HttpSession session) {
+		
+		// ************************************************************
+		// ************************************************************
+		// On "Get more jobs", if jobs were previously sorted, should the same
+		// sort request be reapplied???
+		// I don't see why not...
+		// On further inspection, the Sort logic needs to be tidied up.
+		// Address this later
+		// ************************************************************
+		// ************************************************************
 	
 		// If getting more jobs, exclude the already-loaded job ids
 		if(filter.getIsAppendingJobs()){
@@ -481,7 +496,7 @@ public class JobServiceImpl {
 		List<Job> jobs = this.getJobsByFindJobFilter(filter, session);
 
 		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(jobs, filter);
-			
+					
 		model.addAttribute("jobDtos", jobDtos);
 		
 		SessionContext.appendToFilteredJobIds(session, this.getJobIdsFromJobDTOs(jobDtos));
@@ -532,8 +547,10 @@ public class JobServiceImpl {
 		List<JobDTO> jobDtos = this.getJobDtos_FilteredJobs(jobs, filter);
 		
 		// Set model and session
-		this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, filter);				
-		session.setAttribute("lastFilterRequest", filter);		
+		this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, filter);	
+		
+		// Update the session variables
+		SessionContext.setLastFilterRequest(session, filter);	
 		SessionContext.setFilteredJobIds(session, this.getJobIdsFromJobDTOs(jobDtos));
 	}
 	
@@ -541,10 +558,15 @@ public class JobServiceImpl {
 
 		FindJobFilterDTO lastFilterRequest =  SessionContext.getLastFilterRequest(session);
 		
+		lastFilterRequest.setSortBy(sortBy);
+		lastFilterRequest.setIsAscending(isAscending);
+		
 		List<Job> jobs = this.getJobsByJobIds(SessionContext.getFilteredJobIds(session));
 		List<JobDTO> jobDtos = this.getJobDtos_Sorted(jobs, lastFilterRequest);
 	
 		this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, lastFilterRequest);
+		
+//		SessionContext.setLastFilterRequest(session, lastFilterRequest);
 		
 	}
 	
@@ -865,6 +887,38 @@ public class JobServiceImpl {
 		model.addAttribute("jobDto", jobDto);
 //		model.addAttribute("userDto", userDto);
 				
+	}
+
+	public List<JobDTO> getJobDtos_Employment_CurrentAndFuture(int userId_employee) {
+
+		List<Job> jobs = this.getJobs_ByEmployeeAndJobStatuses(userId_employee, 
+													Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
+		
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+		
+		for(Job job : jobs){
+			
+			JobDTO jobDto = new JobDTO();
+			
+			jobDto.setJob(job);
+			jobDto.setWorkDays(this.getWorkDays(job.getId()));
+			
+			jobDtos.add(jobDto);
+		}
+		
+		return jobDtos;
+	}
+
+	private List<Job> getJobs_ByEmployeeAndJobStatuses(int userId_employee, List<Integer> jobStatuses) {
+		
+		if(jobStatuses != null){
+			if(jobStatuses.size() > 0){
+				return repository.getJobs_ByEmplyeeAndStatuses(userId_employee, jobStatuses);
+			}
+		}
+
+		return null;
+		
 	}
 
 

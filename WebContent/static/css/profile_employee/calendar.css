@@ -1,3 +1,7 @@
+td div.hide{
+	display:none;
+}
+
 
 td div.job.hover{
 	background-color:#c18585 !important;
@@ -20,6 +24,17 @@ td div.job.two{
 	bottom: 20px;
 	background-color: #163B3D;
 }
+
+td div.job.employment{
+	bottom:10px;
+	background-color: #886a00;
+}
+
+td div.job.application{
+	bottom:10px;
+	background-color: #85b0d4;
+}
+
 
 
 td div.job.three{
@@ -62,3 +77,28 @@ table#openApplications{
     font-weight: bold;
 }
 
+#calendarDetails_applications{
+/* 	text-align:center; */
+	width:360px;
+	margin:auto;
+	padding:10px;
+	border-radius:5px;
+}
+
+#calendarDetails_applications .header{
+	font-size:17px;
+}
+
+#calendarDetails_applications .content{
+	padding-left:25px;
+}
+
+#calendarDetails_applications.disabled a.accent{
+	color: #565656;
+}
+
+#calendarDetails_applications.disabled {
+	background-color: #d4d4d4;
+}
+	
+	

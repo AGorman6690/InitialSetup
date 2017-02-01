@@ -561,11 +561,20 @@ public class UserServiceImpl {
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		
+
+		
 		List<Job> jobs_employment = jobService.getJobsByEmployee(employee.getUserId());
 		int pastEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 2);
 		int currentEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 1);
 		int futureEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 0);
 		
+		
+		// *************************************************************
+		// Replace getJobsByEmplyee() with this
+		// *************************************************************
+		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(employee.getUserId());
+		
+		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("openApplicationCount", openApplicationCount);
 		model.addAttribute("failedApplicationCount", failedApplicationCount);

@@ -97,6 +97,22 @@ function removeInvalidCss($container){
 
 function setTimeOptions($eSelect, increment){
 	
+	
+	//***********************************************************
+	//***********************************************************
+	// Obsolete this.
+	// This thing is ridiculous.
+	//***********************************************************
+	//***********************************************************
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// For whatever reason the Local Time object will not apped
 	// the seconds if the seconds are zero...
 //	var initTime = $eSelect.attr("data-init-time") + ":00";
@@ -116,14 +132,17 @@ function setTimeOptions($eSelect, increment){
 		var time;
 		//Hour
 		hour = 12;
-		for(hourCount = 1; hourCount < 25; hourCount++){
+		for(hourCount = 0; hourCount < 24; hourCount++){
 
 			//Am or pm
 			if(hourCount <= 12){
-				amPm = "am";
+				amPm = " am";
 			}else{
-				amPm = "pm";
+				amPm = " pm";
 			}
+			
+			if(hourCount < 10) hourCount = "0" + hourCount;
+			
 			
 			//Minute
 			for(minute = 0; minute < 60; minute += increment){
@@ -133,8 +152,12 @@ function setTimeOptions($eSelect, increment){
 					modifiedMinute = minute;
 				}	
 				
+				
+				
 				time = hour + ":" + modifiedMinute + amPm;
-				formattedTime = formatTime(time);
+				
+				formattedTime = hourCount + ":" + modifiedMinute;
+//				formattedTime = formatTime(time);
 				
 //				if(formattedTime == initTime) selected = "selected";
 //				else selected = "";

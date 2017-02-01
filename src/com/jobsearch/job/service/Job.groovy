@@ -64,6 +64,9 @@ public class Job {
 	//1 = started;
 	//2 = finished;
 	int status
+	public static Integer STATUS_FUTURE = 0;
+	public static Integer STATUS_PRESENT = 1;
+	public static Integer STATUS_PAST = 2;
 	
 	// Do away with work days from the job lass
 	List<WorkDay> workDays;

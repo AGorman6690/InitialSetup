@@ -34,8 +34,6 @@
 				<span class="content-link" data-section-id="employmentContainer">Employment</span>
 				<span>/</span>
 				<span class="content-link" data-section-id="bothContainer">Both</span>
-<!-- 				<div id="general" class="first side-bar selected-blue" data-section-id="applicationContainer">Applications</div> -->
-<!-- 				<div id="date" class="side-bar" data-section-id="employmentContainer">Employment</div> -->
 			</div>
 		</div>
 
@@ -55,15 +53,26 @@
 						<div class="work-day" data-date="${workDay.stringDate }"></div>
 					</c:forEach>
 					
-<!-- 					<div class="application" data-id="1" data-job-name="3"> -->
-					
-<!-- 						<div class="work-day" data-date="2017/01/30"></div> -->
-<!-- 						<div class="work-day" data-date="2017/01/31"></div> -->
-
 					</div>
 						
 				</c:forEach>				
-				</div>		
+				</div>	
+				
+				<div id="employmentDetails">
+				<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">
+				
+					<div class="job" data-job-id="${jobDto.job.id}"
+									data-job-name="${jobDto.job.jobName }">
+											 
+					<c:forEach items="${jobDto.workDays }" var="workDay">
+						<div class="work-day" data-date="${workDay.stringDate }"></div>
+					</c:forEach>
+					
+					</div>
+						
+				</c:forEach>				
+				</div>	
+								
 				
 				<div id="applicationContainer" class="section-container">
 					<div class="section-body">
@@ -74,7 +83,26 @@
 					<div class="section-body">
 						<%@ include file="./Employment_Employee.jsp" %>
 					</div>
-				</div>				
+				</div>	
+				<div id="bothContainer" class="section-container">
+					<div class="section-body">
+						<div id="" class="section">	
+							<div id="calendarContainer_both">
+								<div id="calendar_both" class="calendar" data-min-date="10/01/2016"></div>
+								<div id="jobDetails" >
+									<p class="">Job Name: <span class="job-name"></span>
+									</p>
+								</div>
+							</div>	
+							<div id="calendarDetails_applications">
+								<div class="header">Jobs applied for with work day on <span id="date_detail"></span></div>
+								<div id="applications_on_day_hover" class="disabled"></div>									
+								<div id="applications_on_day_clicked" class="disabled"></div>													
+							</div>
+						</div>
+<%-- 						<%@ include file="./Applications_Employee.jsp" %> --%>
+					</div>
+				</div>							
 			</div>
 		</div>
 	</div>
@@ -104,7 +132,7 @@ function selectSideBar(sectionContainerId){
 
 	$(document).ready(function(){
 	
-
+		
 		
 		$("#employmentSubHeader .item-value").click(function(){
 			var clickedJobStatus = $(this).attr("data-job-status");

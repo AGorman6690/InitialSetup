@@ -99,6 +99,12 @@ public class SessionContext {
 		return (FindJobFilterDTO) session.getAttribute("lastFilterRequest");
 	}
 
+	public static void setLastFilterRequest(HttpSession session, FindJobFilterDTO filter) {
+		
+		session.setAttribute("lastFilterRequest", filter);	
+		
+	}
+
 
 
 }
