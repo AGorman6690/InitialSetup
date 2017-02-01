@@ -164,7 +164,7 @@ public class JobRepository {
 					
 					WorkDay e = new WorkDay();
 										
-					e.setDate(rs.getDate("Date"));
+					e.setDate(LocalDate.parse(rs.getDate("Date").toString()));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
 					e.setStringDate(rs.getString("Date").replace("-", "/"));			
@@ -758,10 +758,14 @@ public class JobRepository {
 	}
 
 	public void addWorkDay(int jobId, WorkDay workDay) {
-		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date)"
-						+ "  VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date, DateId)"
+						+ "  VALUES (?, ?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql, new Object[]{ jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDate() });
+		jdbcTemplate.update(sql, new Object[]{ jobId,
+												workDay.getStringStartTime(),
+												workDay.getStringEndTime(),
+												DateUtility.getSqlDate(workDay.getDate().toString()),
+												workDay.getDateId()});
 
 	}
 
@@ -973,6 +977,12 @@ public class JobRepository {
 		}
 
 		return this.JobRowMapper(sql, args.toArray());
+	}
+
+	public int getDateId(String date) {
+		
+		String sql = "SELECT Id FROM date where Date = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ date }, Integer.class);
 	}
 
 

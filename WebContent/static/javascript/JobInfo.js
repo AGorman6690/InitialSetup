@@ -1,4 +1,6 @@
-		
+	
+var workDays = [];
+
 $(document).ready(function() {
 	
 	
@@ -12,17 +14,41 @@ $(document).ready(function() {
 		win.focus();
 	})
 	
-//	setSelectedDays();
-	initMultiDayCalendar($("#workDaysCalendar"));
+	setWorkDays();
+	initCalendar_JobInfo();
 })
 
-function setSelectedDays(){
+function setWorkDays(){
 	
-	var dateStrings = [];
+	var dates = [];
 	
 	$("#workDays").find("div").each(function(){
-		dateStrings.push($(this).attr("data-date"));
+		var dateString = $(this).attr("data-date").replace(/-/g, "/");
+		workDays.push(new Date(dateString));
 	})
 	
-	addSelectedDays(dateStrings);
+	
 }
+
+function initCalendar_JobInfo(){
+	
+	var $calendar = $("#workDaysCalendar");
+		
+	var numberOfMonths = getNumberOfMonths($calendar);
+	var milliseconds;
+	var date;
+	
+	var minDate = $calendar.attr("data-min-date").replace(/-/g, "/");
+
+	$calendar.datepicker({
+		minDate: new Date(minDate),
+		numberOfMonths: numberOfMonths, 
+        beforeShowDay: function (date) {
+
+			if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
+			else return [true, ""];
+        	
+        }
+    });
+}
+

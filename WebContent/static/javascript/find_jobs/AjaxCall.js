@@ -68,6 +68,17 @@ function getJsonObject_findJobFilterDTO(){
 		dto.duration = getFilterValue2($("#duration"));
 		dto.isShorterThanDuration = getSelectedRadioValue($("#duration"));	
 	}
+	
+//	if(isFilterApplied($("#workDays"))){
+//		
+//		var selectedDates = getSelectedDates($("#workDaysCalendar"), "yy-mm-dd");
+//		$(selectedDates).each(function(){
+//			
+//		})
+//		dto.duration = getFilterValue2($("#duration"));
+//		dto.isShorterThanDuration = getSelectedRadioValue($("#duration"));	
+//	}
+	
 	return dto;
 	
 }
@@ -122,122 +133,127 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 	state = $("#state").val()
 	zipCode = $("#zipCode").val()
 	
-//		if(isAtleastOneFilterApplied()){
-			
-			// Full Address			
-			parameterName = "fromAddress";
-			filterValue = address;	
-			urlParameter += "&" + parameterName + "=" + filterValue;
-			
-			// City
-			if(city != ""){
-				parameterName = "city";
-				filterValue = city;	
-				urlParameter += "&" + parameterName + "=" + filterValue;	
-			}
-			
-			// State
-			if(state != ""){
-				parameterName = "state";
-				filterValue = state;	
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}
-			
-			// Zip Code
-			if(zipCode != ""){
-				parameterName = "zipCode";
-				filterValue = zipCode;	
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}
-			
-			// Radius
-			parameterName = "radius";
-			filterValue = radius;	
-			urlParameter += "&" + parameterName + "=" + filterValue;	
-			
-			// Appending jobs flag		
-			parameterName = "isAppendingJobs";
-			filterValue = isAppendingJobs;		
-			urlParameter += "&" + parameterName + "=" + filterValue;			
-			
-			// Start time
-			$filterContainer = $("#startTime");
-			if(isFilterApplied($filterContainer)){
-				
-				$dropdown = $($filterContainer.find(".dropdown").eq(0));
-				
-				parameterName = "startTime";
-				filterValue = $dropdown.find("option:selected").eq(0).attr("data-filter-value");
-				urlParameter += "&" + parameterName + "=" + filterValue;		
-				
-				parameterName = "beforeStartTime";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}
-			
-			// End time
-			$filterContainer = $("#endTime");
-			if(isFilterApplied($filterContainer)){
-				
-				$dropdown = $($filterContainer.find(".dropdown").eq(0));
-				
-				parameterName = "endTime";
-				filterValue = $dropdown.find("option:selected").eq(0).attr("data-filter-value");
-				urlParameter += "&" + parameterName + "=" + filterValue;		
-				
-				parameterName = "beforeEndTime";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}
-				
-			// Duration
-			$filterContainer = $("#duration");
-			if(isFilterApplied($filterContainer)){
+	// Full Address			
+	parameterName = "fromAddress";
+	filterValue = address;	
+	urlParameter += "&" + parameterName + "=" + filterValue;
+	
+	// City
+	if(city != ""){
+		parameterName = "city";
+		filterValue = city;	
+		urlParameter += "&" + parameterName + "=" + filterValue;	
+	}
+	
+	// State
+	if(state != ""){
+		parameterName = "state";
+		filterValue = state;	
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}
+	
+	// Zip Code
+	if(zipCode != ""){
+		parameterName = "zipCode";
+		filterValue = zipCode;	
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}
+	
+	// Radius
+	parameterName = "radius";
+	filterValue = radius;	
+	urlParameter += "&" + parameterName + "=" + filterValue;	
+	
+	// Appending jobs flag		
+	parameterName = "isAppendingJobs";
+	filterValue = isAppendingJobs;		
+	urlParameter += "&" + parameterName + "=" + filterValue;			
+	
+	// Start time
+	$filterContainer = $("#startTime");
+	if(isFilterApplied($filterContainer)){
 		
-				$dropdown = $($filterContainer.find(".dropdown").eq(0));
-				
-				parameterName = "duration";
-				filterValue = getFilterValue($dropdown);
-				urlParameter += "&" + parameterName + "=" + filterValue;		
-				
-				parameterName = "isShorterThanDuration";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");	
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}
-			
-			// Start date
-			$filterContainer = $("#startDate");
-			if(isFilterApplied($filterContainer)){
-				
-				$dropdown = $($filterContainer.find(".dropdown").eq(0));
-				
-				parameterName = "startDate";
-				filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
-				filterValue = $.datepicker.formatDate(dateformatString, filterValue);
-				urlParameter += "&" + parameterName + "=" + filterValue;		
-				
-				parameterName = "beforeStartDate";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}	
-			
-			// End date
-			$filterContainer = $("#endDate");
-			if(isFilterApplied($filterContainer)){
-				
-				$dropdown = $($filterContainer.find(".dropdown").eq(0));
-				
-				parameterName = "endDate";
-				filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
-				filterValue = $.datepicker.formatDate(dateformatString, filterValue);
-				urlParameter += "&" + parameterName + "=" + filterValue;		
-				
-				parameterName = "beforeEndDate";
-				filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
-				urlParameter += "&" + parameterName + "=" + filterValue;
-			}			
-//		}
+		$dropdown = $($filterContainer.find(".dropdown").eq(0));
+		
+		parameterName = "startTime";
+		filterValue = $dropdown.find("option:selected").eq(0).attr("data-filter-value");
+		urlParameter += "&" + parameterName + "=" + filterValue;		
+		
+		parameterName = "beforeStartTime";
+		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}
+	
+	// End time
+	$filterContainer = $("#endTime");
+	if(isFilterApplied($filterContainer)){
+		
+		$dropdown = $($filterContainer.find(".dropdown").eq(0));
+		
+		parameterName = "endTime";
+		filterValue = $dropdown.find("option:selected").eq(0).attr("data-filter-value");
+		urlParameter += "&" + parameterName + "=" + filterValue;		
+		
+		parameterName = "beforeEndTime";
+		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}
+		
+	// Duration
+	$filterContainer = $("#duration");
+	if(isFilterApplied($filterContainer)){
 
+		$dropdown = $($filterContainer.find(".dropdown").eq(0));
+		
+		parameterName = "duration";
+		filterValue = getFilterValue($dropdown);
+		urlParameter += "&" + parameterName + "=" + filterValue;		
+		
+		parameterName = "isShorterThanDuration";
+		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");	
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}
+	
+	// Start date
+	$filterContainer = $("#startDate");
+	if(isFilterApplied($filterContainer)){
+		
+		$dropdown = $($filterContainer.find(".dropdown").eq(0));
+		
+		parameterName = "startDate";
+		filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
+		filterValue = $.datepicker.formatDate(dateformatString, filterValue);
+		urlParameter += "&" + parameterName + "=" + filterValue;		
+		
+		parameterName = "beforeStartDate";
+		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}	
+	
+	// End date
+	$filterContainer = $("#endDate");
+	if(isFilterApplied($filterContainer)){
+		
+		$dropdown = $($filterContainer.find(".dropdown").eq(0));
+		
+		parameterName = "endDate";
+		filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
+		filterValue = $.datepicker.formatDate(dateformatString, filterValue);
+		urlParameter += "&" + parameterName + "=" + filterValue;		
+		
+		parameterName = "beforeEndDate";
+		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
+		urlParameter += "&" + parameterName + "=" + filterValue;
+	}			
+	
+	if(isFilterApplied($("#workDays"))){
+		
+		var selectedDates = getSelectedDates($("#workDaysCalendar"), "yy-mm-dd");
+		$(selectedDates).each(function(){			
+			urlParameter += "&d=" + this;			
+		})
+
+	}
 	
 	return urlParameter;
 	
@@ -324,8 +340,7 @@ function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 	function _success(response) {
 		$("html").removeClass("waiting");	
 		$("#filtersContainer").html(response);
-		
-		initializeSingeDateCalendars();
+
 		attachEventHandles_Filters();
 		triggerGetJobs();
 	}	

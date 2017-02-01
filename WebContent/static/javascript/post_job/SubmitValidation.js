@@ -77,9 +77,10 @@ function validate_DatesAndTimes(){
 		invalidCount += 1;
 	}
 	
-	$input = $("#datesContainer #calendarContainer");
-	selectedDates = $input.attr("data-selected-days-count");
-	if(selectedDates < 1){
+
+	$input = $("#workDaysCalendar");
+	selectedDates = getSelectedDates($input);
+	if(selectedDates.length == 0 ){
 		setInvalidCss($input);
 		invalidCount += 1;
 	}

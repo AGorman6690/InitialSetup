@@ -14,7 +14,7 @@
 			</c:when>
 			
 			<c:otherwise>
-					<table id="table_jobsWaitingToStart" class="main-table-style">
+				<table id="table_jobsWaitingToStart" class="main-table-style">
 						<col>
 						<col>
 						<colgroup span="3"></colgroup>
@@ -40,6 +40,7 @@
 								<th></th>
 							</tr>
 						</tr>
+				
 					<tbody>
 		
 						

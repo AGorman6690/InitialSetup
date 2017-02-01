@@ -101,7 +101,9 @@
 				</div>
 				<c:choose>
 					<c:when test="${jobDto.job.durationTypeId == 2 }">		
-						<div id="workDaysCalendar" class="calendar-container read-only"></div>
+						<div id="workDaysCalendar" class="calendar-container read-only"
+							 data-min-date="${jobDto.date_firstWorkDay }"
+							 data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 					</c:when>
 					<c:otherwise>${jobDto.job.stringStartDate }</c:otherwise>				
 				</c:choose>

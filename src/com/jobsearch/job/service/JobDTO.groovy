@@ -24,19 +24,25 @@ public class JobDTO {
 
 	 Job job
 	 
-	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
 	 Integer durationDays
 	 double durationHours
 	 List<WorkDay> workDays
+	 String date_firstWorkDay
+	 int months_workDaysSpan
+	 double daysUntilStart
+	 
+	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
 	 List<Question> questions
 	 int newApplicationCount
-	 double daysUntilStart
-	 List<Category> categories
-	 List<JobSearchUser> employees
 	 List<JobSearchUser> applicants
 	 List<Application> applications
+	
+	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
+	 RatingDTO ratingDto
+	 
+	 List<Category> categories
+	 
 	 Double distanceFromFilterLocation
-	 RatingDTO ratingDto;
 
 }

@@ -275,8 +275,11 @@ public class ApplicationServiceImpl {
 	
 	public List<ApplicationDTO> getApplicationDtosByUser(int userId) {
 		
+		// This only returns applications that are submitted or being considered.
+		// Applications that are declined or accepted are not returned.
+		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
-		List<Application> applications = this.getApplicationsByUser(userId);		
+		List<Application> applications = this.getApplicationsByUserAndStatuses(userId, Arrays.asList(0, 2));		
 		
 		for(Application application : applications){
 			
@@ -293,7 +296,7 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
+	public List<Application> getApplicationsByUserAndStatuses(int userId, List<Integer> statuses) {
 
 		if (statuses.size() > 0) {
 			return repository.getApplicationsByUserAndStatuses(userId, statuses);

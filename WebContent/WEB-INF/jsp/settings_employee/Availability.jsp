@@ -11,7 +11,6 @@
 <script src="<c:url value="/static/javascript/availability_employee/AjaxCall.js" />"></script>
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/availability.css" />	
 
-<script src="<c:url value="/static/javascript/date_picker/CalendarEvents.js" />"></script>
 
 
 <div class="container">
@@ -25,7 +24,7 @@
 		</div>		
 		<div>		
 			<div class="row options">
-				<div class="col-sm-3"><label><input id="j" type="checkbox" data-month="0" data-cal-id="januaryCal">January</label></div>	
+				<div class="col-sm-3"><label><input id="j" type="checkbox" data-month="0" data-cal-id="januaryCal-TempDisabled">January</label></div>	
 				<div class="col-sm-3"><label><input id="" type="checkbox" data-month="3" data-cal-id="aprilCal" >April</label></div>	
 				<div class="col-sm-3"><label><input id="" type="checkbox" data-month="6" data-cal-id="julyCal">July</label></div>
 				<div class="col-sm-3"><label><input id="" type="checkbox" data-month="9" data-cal-id="octoberCal">October</label></div>
@@ -50,8 +49,8 @@
 <!-- 					<button id="saveAvailability" class="sqr-btn not-clickable">Save Availability</button> -->
 <!-- 					<button id="cancel" class="sqr-btn not-clickable">Cancel</button> -->
 					<span id="setAvailability" class="accent not-clickable disabled">Set Availability</span>
-					<span id="saveAvailability" class="accent not-clickable disabled">Save</span>
-					<span id="cancel" class="accent not-clickable disabled">Cancel</span>
+<!-- 					<span id="saveAvailability" class="accent not-clickable disabled">Save</span> -->
+<!-- 					<span id="cancel" class="accent not-clickable disabled">Cancel</span> -->
 
 				</div>
 			</div>
@@ -61,6 +60,10 @@
 	<div id="availabilityCont">
 		<div id="daysContainer" class="container checkbox-container">
 			<h5>(this is set by the month checkbox change event)</h5>
+			<div id="saveCancel">
+				<span id="saveAvailability" class="accent not-clickable disabled">Save</span>
+				<span id="cancel" class="accent not-clickable disabled">Cancel</span>
+			</div> 
 			<div class="row">
 				<div class="col-sm-12"><label><input id="removeCurrentAvailability" class="" type="checkbox" value="">Remove saved availability</label></div>	
 			</div>				
@@ -96,10 +99,9 @@
 		</div>			
 		
 		<div id="calendarContainers" class="container">
-		<!-- 	<h5>Or Select the Date on the Calendar</h5> -->
-			<div id="januaryCal" class="calendar-container" >
-				<div class="calendar" data-min-date="01/01/2017"></div>
-			</div>
+<!-- 			<div id="januaryCal" class="calendar-container" > -->
+<!-- 				<div class="calendar" data-min-date="01/01/2017"></div> -->
+<!-- 			</div> -->
 			<div id="februaryCal" class="calendar-container" >
 				<div class="calendar" data-min-date="02/01/2017"></div>
 			</div>	

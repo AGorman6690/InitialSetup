@@ -1,5 +1,6 @@
 var daysOfWeekToSelect = [];
 var monthsToSelect = [];
+var selectedDays = [];
 
 $(document).ready(function(){
 
@@ -7,19 +8,26 @@ $(document).ready(function(){
 	
 	$("#calendarContainers").find(".calendar").each(function(){
 
-		var options = {};
-		options.hideIfNoPrevNext = true;
+		var minDate = new Date($(this).attr("data-min-date"));
+		var month = minDate.getMonth();
 		
-		initCalendar($(this),
-				onselect,
-				function_beforeShowDay_selectMultipleSingleDays,
-				options);
+		$(this).datepicker({
+			minDate: minDate,
+			numberOfMonths: 1, 
+			changeMonth: false,
+			hideIfNoPrevNext: true,
+			onSelect: function(dateText, inst) {	    
+				onSelect_Availability(dateText);
+			},		        
+	        beforeShowDay: function (date) {        	
+	        	return beforeShowDay_Availability(month, date, daysOfWeekToSelect);	
+	     	}
+	    });	
 	})
 	
 	$("#monthsContainer .options input[type=checkbox]").change(function(){
-		// FYI: the "select all" option triggers this event from the Checkboxes.js
+		// *** FYI: *** the "select all months" option triggers this event from the Checkboxes.js
 		
-//		if($("#monthsContainer").hasClass("not-checkable") == 0){
 			
 			var calendarId = $(this).attr("data-cal-id");
 			var $calendar = $("#" + calendarId);
@@ -73,7 +81,6 @@ $(document).ready(function(){
 		// when in reality they only need to be called only once.
 		// Revisit this once this logic matures.
 		// *****************************************		
-//		updateSelectedDates();
 		
 		updateSelectedDates_ByWeekDay(isDaySelected, dayOfWeek);
 		refreshCalendars_Visible();
@@ -83,11 +90,7 @@ $(document).ready(function(){
 	$("body").on("click" , "#setAvailability", function(){
 		
 		if($(this).hasClass("disabled") == 0){
-			
-			toggleClasses($("#saveAvailability"), "selected-blue", "not-clickable");
-			toggleClasses($(this), "selected-blue", "not-clickable");
-			toggleClasses($("#cancel"), "selected-blue", "not-clickable");
-			
+	
 			$("#setAvailability").addClass("disabled");
 			$("#saveAvailability").removeClass("disabled");
 			$("#cancel").removeClass("disabled");
@@ -128,21 +131,9 @@ $(document).ready(function(){
 		
 	})
 	
+
 	
-	
-	// if the
-	$(".calendar td").click(function(){
-		
-//		var clickedDate = getDateFromTdElement(this);
-//		
-//		var dayOfWeek = clickedDate.getDay();
-//		
-//		if(isdate)
-		
-	})
-		
-	
-	$("#j").click();
+//	$("#j").click();
 //	$("#f").click();
 //	$("#m").click();
 //	$("#monthsContainer").find(".select-all").eq(0).prop("checked", true).change();
@@ -163,10 +154,6 @@ function setState_AfterAvailabilityAlterations(){
 	
 
 function allowMonthSelection(){
-	toggleClasses($("#setAvailability"), "selected-blue", "not-clickable");
-	toggleClasses($(this), "selected-blue", "not-clickable");
-	toggleClasses($("#cancel"), "selected-blue", "not-clickable");
-	
 	
 	$("#setAvailability").removeClass("disabled");
 	$("#saveAvailability").addClass("disabled");
@@ -175,7 +162,6 @@ function allowMonthSelection(){
 	$("#monthsContainer").removeClass("not-checkable");
 	enableCheckboxes($("#monthsContainer"));
 
-	//		slideUp($("#availabilityCont"), 1000);
 	$("#availabilityCont").hide();	
 }
 
@@ -192,57 +178,55 @@ function setSelectedDays_OnLoad(){
 }
 
 function updateSelectedDates_ByWeekDay(isDaySelected, dayOfWeek){
+	
 	$(monthsToSelect).each(function(){		
 		selectDatesBy_Month_Year_And_WeekDay(this, 2017, isDaySelected, dayOfWeek);		
 	})		
 }
 
-function updateSelectedDates(){
-	
-//	$("html").addClass("waiting");	
-
-	var month;
-	
-	$(monthsToSelect).each(function(){		
-		selectDatesBy_Month_Year_And_WeekDays(this, 2017, daysOfWeekToSelect);		
-	})	
-	
-//	$("html").removeClass("waiting");
-}
-
-function selectDatesBy_Month_Year_And_WeekDays(month, year, weekdays){
-	
-	var iWeekday
-	var day = 1;
-	var iDate = new Date(year, month, day);
-	
-	while(iDate.getMonth() == month){
-		iDate = new Date(year, month, day);
-		iWeekDay = iDate.getDay().toString();
-		
-		if(doesArrayContainValue(iWeekDay, weekdays)){
-		
-			// If the date is already added to the database
-			// and it is currently flagged to be removed from the database,
-			// the set the flag back to 0 (i.e. do not remove from database)
-			if(isDateAlreadySavedAsAvailable(iDate)){
-				if(isDateSetToBeRemovedFromDatabase(iDate)){
-					setDateToBeRemovedFromDatabase(iDate, 0);
-				}
-			}
-			else{
-				attemptToAddDate2(iDate);	
-			}
-			
-			
-		}
-//		else selectedDays = removeDay(iDate);
-		
-
-		
-		day += 1;
-	}
-}
+//function updateSelectedDates(){
+//	
+////	$("html").addClass("waiting");	
+//
+//	var month;
+//	
+//	$(monthsToSelect).each(function(){		
+//		selectDatesBy_Month_Year_And_WeekDays(this, 2017, daysOfWeekToSelect);		
+//	})	
+//	
+////	$("html").removeClass("waiting");
+//}
+//
+//function selectDatesBy_Month_Year_And_WeekDays(month, year, weekdays){
+//	
+//	var iWeekday
+//	var day = 1;
+//	var iDate = new Date(year, month, day);
+//	
+//	// For each day in month
+//	while(iDate.getMonth() == month){
+//		iDate = new Date(year, month, day);
+//		iWeekDay = iDate.getDay().toString();
+//		
+//		// Is the date's weekday selected 
+//		if(doesArrayContainValue(iWeekDay, weekdays)){
+//		
+//			// If the date is already added to the database
+//			// and it is currently flagged to be removed from the database,
+//			// then set the flag back to 0 (i.e. do not remove from database)
+//			if(isDateAlreadySavedAsAvailable(iDate)){
+//				if(isDateSetToBeRemovedFromDatabase(iDate)){
+//					setDateToBeRemovedFromDatabase(iDate, 0);
+//				}
+//			}
+//			else{
+//				attemptToAddDate(iDate, selectedDays);	
+//			}						
+//		}
+//		
+//		day += 1;
+//	}
+//}
 
 function selectDatesBy_Month_Year_And_WeekDay(month, year, isDaySelected, weekday){
 	
@@ -257,28 +241,24 @@ function selectDatesBy_Month_Year_And_WeekDay(month, year, isDaySelected, weekda
 		
 		if(iWeekDay == weekday){
 		
-			if(isDaySelected){
-				
+			if(isDaySelected){				
 		
 				// If the date is already added to the database
 				// and it is currently flagged to be removed from the database,
-				// the set the flag back to 0 (i.e. do not remove from database)
+				// then set the flag back to 0 (i.e. do not remove from database)
 				if(isDateAlreadySavedAsAvailable(iDate)){
 					if(isDateSetToBeRemovedFromDatabase(iDate)){
 						setDateToBeRemovedFromDatabase(iDate, 0);
 					}
 				}
 				else{
-					attemptToAddDate2(iDate);	
+					attemptToAddDate(iDate, selectedDays);	
 				}
 			}
 			else selectedDays = removeDay(iDate, selectedDays);
 			
 		}
-//		else selectedDays = removeDay(iDate);
-		
 
-		
 		day += 1;
 	}
 }

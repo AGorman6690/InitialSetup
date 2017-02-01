@@ -1,6 +1,16 @@
+
+#workDaysCalendar{
+	width:600px;
+}
+
+#contentBarContainer{
+/* 	padding-bottom:25px; */
+   	padding-top: 40px;
+}
+
 #map{
-	width:250px;
-	height:250px;
+    width: 350px;
+    height: 350px;
     margin-top: 10px;
     border-right-style: inset;
     border-bottom-style: inset;
@@ -9,8 +19,8 @@
 }
 
 .selected-lines{
-    border-bottom: 3px solid black;
-    border-top: 3px solid black;
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
     /* border-bottom-right-radius: 10px; */
     /* border-top-left-radius: 10px; */
     /* border-top-right-radius: 10px; */
@@ -19,13 +29,14 @@
 
 
 #contentBarContainer p{
-	font-size:22px;
-	text-align: center;
-	padding:10px;
+    font-size: 19px;
+    text-align: center;
+    padding: 3px 15px;
 	display:inline-block;
 }
 
 #jobNameHeader{
+	display:none;
 	text-align: center;
 /*     background-color: #91843b; */
 /*     color: white; */
@@ -70,3 +81,19 @@ table#employeesTable{
 tbody.vertical-lines td div.vert-border{
 	    border-right: 2px solid #ddd;
 }
+
+
+#workDaysCalendar .ui-datepicker .ui-datepicker-group{
+	width:300px;
+}
+
+
+#workDaysCalendar .ui-datepicker{
+	width:300px;
+}
+
+
+/* /*  Single calendar */ */
+/* #workDaysCalendar .ui-datepicker-inline :not(.ui-datepicker-group){ */
+/* 	width:300px; */
+/* }  */

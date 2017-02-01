@@ -102,62 +102,39 @@
 		<c:set var="LaborVaultHost" scope="session" value="${url}"/>
 		
 		
-			<nav id="navBar" class="">
-				<div class="nav-container nav-border">
-					<a id="home" class="logo" href="/JobSearch/${!empty sessionScope.user ? 'user/profile' : '' }">Labor Vault</a>
-					<div class="nav-items">					
+		<nav id="navBar" class="">
+			<div>
+				<a id="home" class="logo" href="/JobSearch/${!empty sessionScope.user ? 'user/profile' : '' }">Labor Vault</a>
+			</div>
+			<div class="nav-items">					
+				<c:choose>
+					<c:when test="${!empty sessionScope.user }">
+							<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>
 						<c:choose>
-							<c:when test="${!empty sessionScope.user }">
-									<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>
-								<c:choose>
-									<c:when test="${sessionScope.user.profileId == 1}">
-										<a id="nav_availability" href="/JobSearch/availability">Availability</a>
-										<a id="nav_settings" href="/JobSearch/settings">Settings</a>
-										<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>								
-									</c:when>
-									<c:when test="${sessionScope.user.profileId == 2}">
-										<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
-										<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>
-									</c:when>
-								</c:choose>				
-								<a id="nav_profile" class="logo selected-green" href="/JobSearch/user/profile">Profile</a>	
+							<c:when test="${sessionScope.user.profileId == 1}">
+								<a id="nav_availability" href="/JobSearch/availability">Availability</a>
+								<a id="nav_settings" href="/JobSearch/settings">Settings</a>
+								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>								
 							</c:when>
-							<c:otherwise>
-<!-- 								<a id="nav_login" data-toggle-mod-id="loginContainer">Login</a> -->
-								<a href="/JobSearch/login-signup?login=true">Login</a>
-								<a href="/JobSearch/login-signup?login=false">Sign Up</a>
-							</c:otherwise>
-						</c:choose>
-					</div>
-				</div>
-			</nav>
-	
-	
-	
-	
-	
-			
-			<c:choose>
-				<c:when test="${empty sessionScope.user }">				
-<%-- 					<%@ include file="../nav_bar/Login.jsp" %> --%>
+							<c:when test="${sessionScope.user.profileId == 2}">
+								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
+								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>
+							</c:when>
+						</c:choose>				
+						<a id="nav_profile" class="logo" href="/JobSearch/user/profile">Profile</a>	
+					</c:when>
+					<c:otherwise>
+						<a href="/JobSearch/login-signup?login=true">Login</a>
+						<a href="/JobSearch/login-signup?login=false">Sign Up</a>
+					</c:otherwise>
+				</c:choose>
+			</div>
+		</nav>
 
 
 
-
-
-										
-				</c:when>	
-			</c:choose>
-
-
-
-
-<script type="text/javascript">
-
-
-	
+<script type="text/javascript">	
 	var environmentVariables = {
 			LaborVaultHost: "${url}"
 	};
-
 </script>

@@ -1,3 +1,5 @@
+var selectedDays = [];
+
 $(document).ready(function(){
 
 	$("#submitJobContainer").click(function(){
@@ -7,8 +9,26 @@ $(document).ready(function(){
 	setStates();
 	setTimeOptions($("#startTime-singleDate"), 30);
 	setTimeOptions($("#endTime-singleDate"), 30);
+
+	
+	initWorkDaysCalendar();
+
 	
 })
+
+function initWorkDaysCalendar(){
+	$("#workDaysCalendar").datepicker({
+		minDate: new Date(),
+		numberOfMonths: 2, 
+		onSelect: function(dateText, inst) {	    
+			selectedDays = onSelect_multiDaySelect_withRange(dateText, selectedDays);
+		},		        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date) {        	
+        	return beforeShowDay_ifSelected(date, selectedDays);        	
+     	}
+    });	
+}
 
 
 
@@ -43,7 +63,7 @@ function getPostJobDto(){
 }
 
 function getWorkDays(){
-	var dates = getSelectedDates($("#calendar-multi-day"), "yy-mm-dd");
+	var dates = getSelectedDates($("#workDaysCalendar"), "yy-mm-dd");
 	var workDays = [];
 	var stringStartTime = $("#startTime-singleDate").find("option:selected").eq(0).attr("data-filter-value");
 	var stringEndTime = $("#endTime-singleDate").find("option:selected").eq(0).attr("data-filter-value");

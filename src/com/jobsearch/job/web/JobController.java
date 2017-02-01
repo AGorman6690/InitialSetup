@@ -104,6 +104,15 @@ public class JobController {
 			HttpSession session,
 			Model model
 			){
+		// *********************************************************
+		// *********************************************************
+		// look into making this a POST method and pass a dto object like /save-find-job-filter.
+		// then then client side code for "gathering the filter data" can
+		// be shared between the get jobs (this end point)
+		// and save filter action
+		// *********************************************************
+		// *********************************************************
+		
 
 		FindJobFilterDTO filter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
 				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,

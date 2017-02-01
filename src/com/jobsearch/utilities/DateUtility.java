@@ -8,11 +8,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
+
+import com.fasterxml.jackson.datatype.joda.ser.PeriodSerializer;
+import com.jobsearch.job.service.WorkDay;
 
 public final class DateUtility {
 	
@@ -166,5 +173,79 @@ public final class DateUtility {
 		return null;
 		
 		}
+
+	public static int getMinimumMonth(List<WorkDay> workDays) {
+		
+		List<LocalDate> dates = getLocalDates(workDays);		
+		
+		int minMonth = 12;
+		
+		for(LocalDate date : dates){
+			if(date.getMonthValue() < minMonth) minMonth = date.getMonthValue();
+		}
+		
+		return minMonth;
+	}
+	
+	public static int getMaximumMonth(List<WorkDay> workDays) {
+		
+		List<LocalDate> dates = getLocalDates(workDays);
+		
+		int maxMonth = 1;
+		
+		for(LocalDate date : dates){
+			if(date.getMonthValue() > maxMonth) maxMonth = date.getMonthValue();
+		}
+		
+		return maxMonth;
+	}
+
+	public static LocalDate getMinimumDate(List<WorkDay> workDays) {
+	
+		LocalDate minDate = LocalDate.MAX;
+		List<LocalDate> dates = getLocalDates(workDays);
+		
+		for(LocalDate date : dates){
+			if(date.isBefore(minDate)) minDate = date;
+		}
+		
+		return minDate;
+	}
+	
+	public static LocalDate getMaximumDate(List<WorkDay> workDays) {
+		
+		LocalDate maxDate = LocalDate.MIN;
+		List<LocalDate> dates = getLocalDates(workDays);
+		
+		for(LocalDate date : dates){
+			if(date.isAfter(maxDate)) maxDate = date;
+		}
+		
+		return maxDate;
+	}
+
+	private static List<LocalDate> getLocalDates(List<WorkDay> workDays) {
+		
+		return workDays.stream()
+						.map(WorkDay::getDate)
+						.collect(Collectors.toList());
+	}
+
+	public static int getMonthSpan(List<WorkDay> workDays) {
+
+		LocalDate minDate = getMinimumDate(workDays);
+		LocalDate maxDate = getMaximumDate(workDays);
+		
+		// Get total months since year 0.
+		// This handles jobs where more than one year is spanned.
+		// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
+		long months_minDate = minDate.getYear() * 12 + minDate.getMonthValue();
+		long months_maxDate = maxDate.getYear() * 12 + maxDate.getMonthValue();
+		
+		return (int) (months_maxDate - months_minDate + 1);
+	}
+
+	
+	
 	
 }

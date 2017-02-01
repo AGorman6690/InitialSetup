@@ -1,9 +1,9 @@
 	
 $(document).ready(function(){
 	$(".nav-items a").click(function(){
-		highlightArrayItem(this, $("#navBar").find(".nav-items a"), "selected-green");
+//		highlightArrayItem(this, $("#navBar").find(".nav-items a"), "selected-green");
 		
-	  sessionStorage.clickedNavItemId = $(this).attr("id");
+//	  sessionStorage.clickedNavItemId = $(this).attr("id");
 	  
 	})
 	

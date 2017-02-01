@@ -1,5 +1,7 @@
 
-
+td div.job.hover{
+	background-color:#c18585 !important;
+}
 
 td div.job{
     height: 10px;
@@ -32,5 +34,31 @@ td div.job.three{
     vertical-align: top;
     margin-bottom:3px;
     text-align: center;
-    border-top: 1px solid black;
+    border-top: 1px solid #cecece;
 }
+
+#calendarContainer_applications{
+/* 	width:500px; */
+}
+
+.ui-datepicker{
+	width:100% !important;
+}
+
+.ui-datepicker-group:first-child{
+    border-right: 2px solid #d4cfcf;
+}
+
+.calendar{
+	text-align:center;
+}
+
+table#openApplications{
+	margin:auto;
+}
+
+.ui-datepicker-header{
+    font-size: 18px;
+    font-weight: bold;
+}
+

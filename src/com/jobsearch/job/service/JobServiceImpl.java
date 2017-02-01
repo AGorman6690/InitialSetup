@@ -106,10 +106,15 @@ public class JobServiceImpl {
 	public void addWorkDays(int jobId, List<WorkDay> workDays) {
 
 		for(WorkDay workDay : workDays){
-			workDay.setDate(DateUtility.getSqlDate(workDay.getStringDate()));
+			workDay.setDate(LocalDate.parse(workDay.getStringDate()));
+			workDay.setDateId(this.getDateId(workDay.getDate().toString()));
 			repository.addWorkDay(jobId, workDay);
 		}
 
+	}
+
+	private int getDateId(String date) {
+		return repository.getDateId(date);
 	}
 
 	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
@@ -379,6 +384,9 @@ public class JobServiceImpl {
 		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(job.getStartDate_local(),
 												job.getStartTime_local(),
 									job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
+		
+		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
+		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
 		
 		return jobDto;
 	}
@@ -772,6 +780,7 @@ public class JobServiceImpl {
 		case "find":
 			
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
+
 			
 			break;
 

@@ -2,6 +2,10 @@ var $filterContainer;
 var slideSpeed_filterDropdowns = 500;
 var initialUrlParameterString = "?";
 
+var selectedDays_workDaysFilter = []
+var selectedDay_endDate = [];
+var selectedDay_startDate = [];
+
 $(document).ready(function(){
 	attachEventHandles_Filters();
 	// triggerGetJobs();
@@ -54,8 +58,22 @@ function attachEventHandles_Filters(){
 		
 	
 	$("html").click(function(e){
+		
+		// Close all dropdowns if user clicked outside of a dropdown		
 		if($(e.target).closest(".dropdown").length == 0 && !$(e.target).hasClass("dropdown")){
-			closeOtherDropdowns("");
+			
+			// For some reason, if a datepicker's "prev" or "next" buttons are clicked,
+			// the ".closest(".dropdown").length" will return 0 even though this element
+			// has a .dropdown element as an ancestor...
+			if($(e.target).parent().hasClass("ui-datepicker-prev") == 0 &&
+				$(e.target).parent().hasClass("ui-datepicker-next") == 0 &&
+				
+				$(e.target).hasClass("ui-datepicker-prev") == 0 &&
+				$(e.target).hasClass("ui-datepicker-next") == 0){
+				
+				closeOtherDropdowns("");
+			}
+			
 		}
 	})
 
@@ -77,6 +95,16 @@ function attachEventHandles_Filters(){
 		loadFindJobFilter($(this).attr("data-id"));
 	})
 	
+	$("#clearWorkDays").click(function(){
+		selectedDays_workDaysFilter = [];
+		$("#workDaysCalendar").datepicker("refresh");
+	})
+//	
+//	$("#okFilterWorkingDays").click(function(){	
+//		approveWorkDays();
+//	})
+	
+	
 //	$("#loadSaveFilter").hover(function(){
 //		$(this).click();
 //	})
@@ -84,6 +112,8 @@ function attachEventHandles_Filters(){
 	initializeTimeAndDateControls();
 	setInitialValues_TimeAndDates(approveFiltersOnLoad);
 }
+
+
 
 function loadFindJobFilter(savedFindJobFilterId){
 	executeAjaxCall_loadFindJobFilter(savedFindJobFilterId)
@@ -153,11 +183,20 @@ function setInitialValues_TimeAndDates(callback){
 	
 	// Set calendars' initial date
 	$(".calendar-single-date").each(function(){
+		
 		var initDate = $(this).attr("data-init-date");
-		var date = new Date(initDate.replace(/-/g, "/"));
-		if(initDate != undefined){
-			$(this).datepicker("setDate", date);
+		var td;
+		if(initDate != -1){
+		
+			initDate = new Date(initDate.replace(/-/g, "/"));
+			td = getTdByDayMonthYear($(this), initDate.getDate(),
+										initDate.getMonth(), initDate.getFullYear());
+			
+			$(td).addClass("active111");
+
+			
 		}
+		
 	})
 	
 	// Once the controls are set, approve the specified filters
@@ -197,6 +236,16 @@ function removeFilter(clickedIcon){
 	clearAllInputs(getParent_FilterContainer($(clickedIcon)));
 	showRemoveFilterIcon(clickedIcon, false);
 	addApprovedFilterClass($filterContainer, false);
+	resetGlobalVars(clickedIcon);
+}
+
+function resetGlobalVars(clickedIcon){
+	$filterContainer = getParent_FilterContainer($(clickedIcon));
+	var id = $filterContainer.attr("id"); 
+	
+	if(id == "workDays") selectedDays_workDaysFilter = [];
+	else if(id == "startDate") selectedDay_startDate = [];
+	else if(id == "endDate") selectedDay_endDate = [];
 }
 
 
@@ -301,6 +350,9 @@ function getTextToShow($dropdown){
 	filterValue = getFilterValue($dropdown);
 	units = $dropdown.attr("data-units");
 	
+	
+	if(filterValue == 1 && units == "days selected") units = "day selected";
+	
 	arr.push(root);
 	arr.push(radioSelection);
 	arr.push(filterValue);
@@ -316,8 +368,11 @@ function getFilterValue($dropdown){
 	var slectedDate;
 	
 	if($(filterValueElement).hasClass("calendar-single-date")){
-		slectedDate = getSelectedDate(filterValueElement);
+		slectedDate = getSelectedDate($(filterValueElement));
 		filterValue = $.datepicker.formatDate("D m/d", slectedDate);
+	}
+	if($(filterValueElement).hasClass("calendar-multi-date")){
+		filterValue = $(filterValueElement).find("td.active111").length;
 	}
 	else if($(filterValueElement).is("select")){
 		filterValue = $(filterValueElement).find("option:selected").eq(0).html();
@@ -336,6 +391,69 @@ function initializeTimeAndDateControls(){
 	setTimeOptions($("#endTimeOptions"), 60);
 	
 	// Date pickers
-	initializeSingeDateCalendars();
+	initWorkDaysCalendar();
+	initStartAndEndDateCalendars();
+}
+
+function initStartAndEndDateCalendars(){
+	
+	$("#endDateCalendar").datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1, 
+		onSelect: function(dateText, inst) {	    
+            var date = new Date(dateText);            
+            selectedDay_endDate = addOrRemoveDate_SingeDateCalendar(date, selectedDay_endDate);	 
+		},		        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date) {
+        	if(isDateAlreadySelected(date, selectedDay_endDate)) return [true, "active111"];
+        	else return [true, ""];	        	
+        }
+    });	
+	
+	$("#startDateCalendar").datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1, 
+		onSelect: function(dateText, inst) {	    
+            var date = new Date(dateText);            
+            selectedDay_startDate = addOrRemoveDate_SingeDateCalendar(date, selectedDay_startDate);	 
+            
+		},		        
+        // This is run for every day visible in the datepicker.
+        beforeShowDay: function (date) {
+        	if(isDateAlreadySelected(date, selectedDay_startDate)) return [true, "active111"];
+        	else return [true, ""];	        	
+        }
+    });	
+	
+	
+	
+	
+}
+
+function initWorkDaysCalendar(){
+	
+	$("#workDaysCalendar").datepicker({
+			minDate: new Date(),
+			numberOfMonths: 2, 
+			onSelect: function(dateText, inst) {	
+        
+	            var date = new Date(dateText);
+	            
+	            if(selectedDays_workDaysFilter.length == 1){
+	            	attemptToAddDateRange(date, selectedDays_workDaysFilter);
+	            }
+	            else {
+	            	selectedDays_workDaysFilter = addOrRemoveDate(date, selectedDays_workDaysFilter);	            	
+	            }
+	            				
+//				$($e.closest(".calendar")).attr("data-selected-days-count", selectedDays.length);
+			},		        
+	        // This is run for every day visible in the datepicker.
+	        beforeShowDay: function (date) {
+	        	if(isDateAlreadySelected(date, selectedDays_workDaysFilter)) return [true, "active111"];
+	        	else return [true, ""];	        	
+	        }
+	    });	
 }
 

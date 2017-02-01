@@ -9,24 +9,6 @@
 	$(document).ready(function() {
 
 		
-		setAllDatesAsUnselectable($("#calendar"), true);
-		
-		var $calendar = $("#workDaysCalendar")
-		
-		
-		var firstDate;
-		$.each($("#workDays").find("[data-date]"), function(i){
-			var workDay_date = $(this).attr("data-date");
-			var date = $.datepicker.parseDate("yy-mm-dd", workDay_date)
-			
-			if(i == 0) firstDate = date;
-			
-			selectedDays.push(date.getTime());
-		})
-		
-		initReadOnlyCalendar($calendar, firstDate);		
-		$calendar.datepicker("setDate", firstDate);
-		
 		$(".single").click(function(){
 			var container = $(this).closest(".answer");
 			var answers = $(container).find(".single")

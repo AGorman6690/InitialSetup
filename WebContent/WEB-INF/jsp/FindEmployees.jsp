@@ -1,14 +1,13 @@
 <%@ include file="./includes/Header.jsp" %>
 <head>
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/findEmployees.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" /> -->
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />
 		
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<%-- 	<script src="<c:url value="/static/javascript/Calendar.js" />"></script> --%>
 	<script   src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"   integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
 </head>
 

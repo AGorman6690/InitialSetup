@@ -1,4 +1,5 @@
 <%@ include file="../includes/Header.jsp"%>
+
 <%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
@@ -79,8 +80,8 @@
 						<p>Work Days</p>
 					</div>
 					<div class="col-sm-9">							
-						<div id="calendarContainer" class="calendar">
-							<div id="calendar-multi-day" data-number-of-months="2" data-is-showing-job="0">
+						<div class="calendar-container wide">
+							<div id="workDaysCalendar" class="calendar" data-is-showing-job="0">
 							</div>											
 							<button class="square-button" id="clearCalendar">Clear</button>
 						</div>
@@ -303,12 +304,3 @@
 		</div>
 	</div>
 </div>
-
-<script>
-
-	$(document).ready(function(){
-		initMultiDayCalendar($("#datesContainer #calendar-multi-day"));
-	})
-	
-	
-</script>

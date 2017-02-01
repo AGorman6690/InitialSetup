@@ -8,7 +8,7 @@ function clearAllInputs($container){
 		$(this).prop("checked", false);
 	})	
 	
-	$container.find(".calendar-single-date .active111").each(function(){		
+	$container.find(".calendar .active111").each(function(){		
 		$(this).removeClass("active111");
 	})	
 }
@@ -79,10 +79,11 @@ function areInputsValid_Container($container){
 		if($(this).find("option:selected").length == 0) isInvalid += 1;
 	})
 	
-	// Single date calendar
-	$container.find(".calendar-single-date").each(function(){	
+	// Calendar
+	$container.find(".calendar").each(function(){	
 		if($(this).find(".active111").length == 0) isInvalid += 1;		
 	})	
+	
 	
 	if(isInvalid > 0 ) return false;
 	else return true;

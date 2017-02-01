@@ -176,8 +176,8 @@
 						  	data-is-before="0" ${!filterDto.beforeStartDate && !empty filterDto.startDate_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
-					<div class="select-container filter-value-container" >		
-						<div class="calendar-single-date filter-value" data-number-of-months="1"
+					<div class="select-container filter-value-container calendar-container" >		
+						<div id="startDateCalendar" class="calendar-single-date filter-value calendar" data-number-of-months="1"
 							data-init-date="${!empty filterDto.startDate_local ? filterDto.startDate_local : '-1'}"></div>
 					</div>
 			  		<span class="approve-filter glyphicon glyphicon-ok"
@@ -208,13 +208,10 @@
 						  	data-is-before="0" ${!filterDto.beforeEndDate && !empty filterDto.endDate_local ? 'checked' : '' }>After</label>
 						</div>										
 					</div>
-					<div class="select-container filter-value-container">		
-						<div class="calendar-single-date filter-value" data-number-of-months="1"
-						data-init-date="${!empty filterDto.endDate_local ? filterDto.endDate_local : '-1'}" 
-<%-- 							data-init-year="${!empty filterDto.endDate_local ? filterDto.endDate_local.year : '-1'}"  --%>
-<%-- 							data-init-month="${!empty filterDto.endDate_local ? filterDto.endDate_local.month : '-1'}"  --%>
-<%-- 							data-init-date="${!empty filterDto.endDate_local ? filterDto.endDate_local.day : '-1'}" --%>
-							></div>
+					<div class="select-container filter-value-container calendar-container">		
+						<div id="endDateCalendar" class="calendar calendar-single-date filter-value" data-number-of-months="1"
+							data-init-date="${!empty filterDto.endDate_local ? filterDto.endDate_local : '-1'}">
+						</div>
 					</div>
 			  		<span class="approve-filter glyphicon glyphicon-ok"
 			  			data-click-on-load="${!empty filterDto.endDate_local ? 1 : 0}" ></span>
@@ -222,23 +219,23 @@
 				</div>
 					
 			</div>								
-			<div class="col-sm-4 filter-container" >								
+			<div id="workDays" class="col-sm-4 filter-container" >								
 				<div class="dropdown-header">	
 					<span class="remove-filter glyphicon glyphicon-remove"></span>
 					<div data-trigger-dropdown-id="work-days-dropdown" data-toggle-speed="2" class="trigger-dropdown">	
-						<span class="filter-text" data-reset-text="Work Days">Work Days (not built)</span>
+						<span class="filter-text" data-reset-text="Work Days">Work Days</span>
 						<span class="glyphicon glyphicon-menu-down"></span>		
 					</div>			
 				</div>
 				
-				<div id="work-days-dropdown" class="dropdown">
+				<div id="work-days-dropdown" class="dropdown" data-units="days selected">
 					<div class="note">Jobs having at least one work day in the selected date range will be returned</div>
-					<div class="filter-value-container">
-						<div id="calendar" class="calendar-multi-date" data-number-of-months="2">
+					<div class="filter-value calendar-container calendar-multi-date">
+						<div id="workDaysCalendar" class="calendar">
 						</div>
 					</div>
-					<button class="square-button" id="clearCalendar">Clear</button>
-					<span id="okFilterWorkingDays" class="glyphicon glyphicon-ok"></span>
+					<button id="clearWorkDays" class="square-button clear-calendar">Clear</button>
+					<span id="okFilterWorkingDays" class="approve-filter glyphicon glyphicon-ok"></span>
 				</div>															  									
 			</div>
 		</div>

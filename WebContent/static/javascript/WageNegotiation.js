@@ -113,11 +113,13 @@ $(document).ready(function(){
 	
 	function updateDOM($hide, $show, response){
 		//After the response has been made, hide the re-counter controls.			
-		$hide.slideUp(500);
+//		$hide.slideUp(500);
+		$hide.hide();
 		
 		//Inform the user that the response has been sent.
 		$show.html(response);
-		$show.slideDown(500);
+//		$show.slideDown(500);
+		$show.show();
 	}
 
 	function sendCounterOffer(wageProposalCounterDTO, callback){

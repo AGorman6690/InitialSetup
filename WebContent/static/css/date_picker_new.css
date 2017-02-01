@@ -5,6 +5,10 @@
 	width:300px;
 }
 
+.calendar-container.wide{
+	width:650px;
+}
+
 .calendar-container .calendar td{
 	padding:3px 9px;
 }
@@ -16,11 +20,40 @@
 .calendar-container.read-only td,
 .calendar-container.read-only a{
 	cursor:default !important;
+	color:#777171;
+	
 }
 
 .calendar-container.read-only td a:hover{
 	cursor:default !important;
+	color:#777171;
+	text-decoration: none;
 }
 
+
+td.active111,
+td.active111{
+	background-color: #25705A;
+	border-radius:4px;
+}
+
+td.active111 a:hover{
+	color: #ffffff; 
+}
+
+td.active111 a{
+	color: #ffffff !important; 
+
+}
+
+.calendar-container.read-only .ui-datepicker-prev,
+.calendar-container.read-only .ui-datepicker-next{
+	display:none;
+}
+
+
+.calendar-container .ui-datepicker-multi{
+	width:100% !important;
+}
 
 

@@ -1,11 +1,21 @@
 .counter-offer-response{
 	display:none;
+	position:absolute;
+	background-color:#ffffff;
+	z-index:1000;
+	border:2px solid #9c9696;
 	padding-top:7px;
-	padding-left:15px;
+/* 	padding-left:15px; */
+    width: 200px;
+    margin-bottom: 40px;
 }
 
 .offer-context{
 	display:inline-block;
+}
+
+.counter-offer-container{
+	position:relative;
 }
 
 .counter-offer-container .glyphicon-menu-hamburger{
@@ -20,14 +30,13 @@
 
 .re-counter-amount-container{
 	display:none;	
-	padding-left:15px;
-	padding-top:5px;
+/* 	padding-left:15px; */
+	padding-top:13px;
 }
 
 .re-counter-amount-container input{
 	display:block;	
-/* 	margin:5px auto; */
-/* 	margin-left:10px; */
+	margin:4px auto;
 	width:75px;	
 }
 
@@ -46,16 +55,24 @@
 }
 
 .counter-offer-response a{
-	display:block;
-	text-align:left;
+	display:inline;
+	text-align:center;
 	padding:2px 0px;
 }
 
 .re-counter-amount-container *{
-	text-align:left;
+/* 	text-align:left; */
 }
 
 
 .send-cancel-container{
 	padding-top: 4px;
+}
+
+.send-cancel-container{
+	text-align:center;
+}
+
+.send-cancel-container a{
+	margin:0px 3px;
 }

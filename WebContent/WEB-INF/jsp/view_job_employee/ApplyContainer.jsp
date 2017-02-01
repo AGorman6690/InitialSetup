@@ -8,9 +8,7 @@
 		You must be logged in to apply for a job.
 			</a>	
 	<div class="body-element-container ${!isLoggedIn ? 'not-logged-in' : '' }">
-	
 
-			
 		<div id="submitApplicationContainer">
 			<a id="submitApplication" class="accent">Submit</a>
 		</div>														

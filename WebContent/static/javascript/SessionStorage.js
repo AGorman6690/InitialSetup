@@ -5,7 +5,7 @@ $(document).ready(function(){
 
 	//Select the nav item
 	if(sessionStorage.clickedNavItemId != undefined){
-		selectNavItem(sessionStorage.clickedNavItemId);	
+//		selectNavItem(sessionStorage.clickedNavItemId);	
 	}
 
 	// Initialize section container ids

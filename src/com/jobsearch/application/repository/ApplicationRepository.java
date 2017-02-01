@@ -111,7 +111,7 @@ public class ApplicationRepository {
 		return this.ApplicationRowMapper(sql, new Object[] { userId });
 	}
 
-	public List<Application> getApplicationsByUserAndStatuses(int userId, ArrayList<Integer> statuses) {
+	public List<Application> getApplicationsByUserAndStatuses(int userId, List<Integer> statuses) {
 
 		List<Object> argsList = new ArrayList<Object>();
 

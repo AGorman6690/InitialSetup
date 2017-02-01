@@ -1,21 +1,11 @@
 
 
-
-
-
-
-
-
-
-/* // ********************************************************* */
-/* // ********************************************************* */
-
 #availableDays{
 	display:none;
 }
 
 #availabilityCont{
-/* 	display:none; */
+	display:none;
 }
 
 .container{
@@ -32,9 +22,15 @@
 	width:130px;
 }
 
-#setSaveCont span{
+span.accent{
 	margin:0px 15px;
     font-size: 18px;
+}
+
+#saveCancel{
+    text-align: center;
+    padding-bottom: 20px;
+    margin-top: -15px;
 }
 
 .row.options:first-child{
@@ -102,6 +98,9 @@ h5{
 	min-height:230px;
 }
 
+
+
+
 .ui-datepicker-next,
 .ui-datepicker-prev{
 	display:none
@@ -111,6 +110,3 @@ h5{
 	margin: auto;
 }
 
-/* .calendar{ */
-/* 	margin:auto; */
-/* } */

@@ -13,7 +13,7 @@
 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
 	
-		
+		 
 	<c:if test="${context == 'complete' }">	
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" />
