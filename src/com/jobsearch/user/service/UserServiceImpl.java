@@ -88,7 +88,7 @@ public class UserServiceImpl {
 
 			if (newUser.getEmailAddress() != null) {
 				mailer.sendMail(user.getEmailAddress(), "email verification",
-						"please click the link to verify your email " + hostUrl + "/JobSearch/validateEmail?userId="
+						"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
 								+ newUser.getUserId());
 			}
 			return newUser;
@@ -721,7 +721,7 @@ public class UserServiceImpl {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		user = this.getUserByEmail(auth.getName());
 		
-		session.setAttribute("user", user);
+		SessionContext.setUser(session, user);
 		
 //		if(user != null){
 ////			model.addAttribute("user", user);
@@ -732,6 +732,14 @@ public class UserServiceImpl {
 //		else{
 //			return false;
 //		}
+		
+	}
+	
+
+	public void setSession_EmailValidation(int userId, HttpSession session) {
+
+		JobSearchUser user = this.getUser(userId);
+		SessionContext.setUser(session, user);
 		
 	}
 
@@ -769,6 +777,7 @@ public class UserServiceImpl {
 		model.addAttribute("userDto", userDto);
 		
 	}
+
 
 
 }

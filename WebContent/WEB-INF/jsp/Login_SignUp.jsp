@@ -34,8 +34,8 @@
 				<label>Profile Type</label>
 				<form:select path="profileId" class="">
 						<form:option value="-1" label="Select a profile type" />
-						<form:options items="${sessionScope.profiles}" itemValue="id"
-							itemLabel="name" ></form:options>
+						<form:options items="${profiles}" itemValue="id"
+							itemLabel="altName1" ></form:options>
 					</form:select>
 			</div>
 			<div class="item">

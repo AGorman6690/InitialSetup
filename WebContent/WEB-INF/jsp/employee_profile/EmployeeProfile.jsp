@@ -75,12 +75,8 @@
 					<div id="" class="section">	
 						<div id="calendarContainer_both" class="calendar-container">
 							<div id="calendar_both" class="calendar" data-min-date="10/01/2016"></div>
-							<div id="jobDetails" >
-								<p class="">Job Name: <span class="job-name"></span>
-								</p>
-							</div>
 						</div>	
-						<div id="calendarDetails_applications">
+						<div id="calendarDetails_applications" class="disabled">
 							<div class="header">Jobs applied for with work day on <span id="date_detail">...</span></div>
 							<div id="applications_on_day_hover" class="disabled"></div>									
 							<div id="applications_on_day_clicked" class="disabled"></div>													

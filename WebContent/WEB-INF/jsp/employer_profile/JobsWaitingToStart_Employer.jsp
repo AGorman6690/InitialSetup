@@ -3,7 +3,7 @@
 <div class="section">
 	<div class="section-body">
 		<c:choose>
-			<c:when test="${jobDtos.size() == 0 }">
+			<c:when test="${yetToStartJobs_Dtos.size() == 0 }">
 				<div>You have no jobs waiting to start</div>	
 			</c:when>
 			
@@ -46,10 +46,14 @@
 								<td>${jobDto.daysUntilStart } days</td>
 								
 								<td class="data">-</td>
-								<td class="data">-</td>
-	
-								<c:set var="tdValue" value="${jobDto.failedWageNegotiationDtos.size() }" /> 
-								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	
+								
+								<td class="data ${jobDto.countWageProposals_sent == 0 ? '' : 'pop'}">
+									${jobDto.countWageProposals_sent == 0 ? '-' : jobDto.countWageProposals_sent }
+								</td>
+									
+								<td class="data ${jobDto.countWageProposals_received == 0 ? '' : 'pop'}">
+									${jobDto.countWageProposals_received == 0 ? '-' : jobDto.countWageProposals_received }
+								</td>	
 		
 								<c:set var="tdValue" value="${jobDto.newApplicationCount }" /> 
 								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	

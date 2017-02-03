@@ -58,14 +58,18 @@
 				<div id="locationErrorMessage" class="error-message">At a minimum, a city, state, or zip code is required.</div>
 			</div>							
 			<input name="radius" type="text"
-				class="" id="radius" placeholder="Number Of" value="50"></input>	
+				class="" id="radius" placeholder="Number Of"
+				value="${!empty filterDto.radius ? filterDto.radius : 50 }"></input>	
 			<span id="milesFromContainer">Miles From</span>					
 			<input name="radius" type="text"
-				class="" id="city" placeholder="City"></input>				
+				class="" id="city" placeholder="City"
+				value="${!empty filterDto.city ? filterDto.city : '' }"></input>				
 			<input name="radius" type="text"
-				class="" id="state" placeholder="State"></input>					
+				class="" id="state" placeholder="State"
+				value="${!empty filterDto.state ? filterDto.state: '' }"></input>					
 			<input name="radius" type="text"
-				class="" id="zipCode" placeholder="Zip Code" value="55119"></input>
+				class="" id="zipCode" placeholder="Zip Code"
+				value="${!empty filterDto.zipCode ? filterDto.zipCode: '55119' }"></input>
 		</div>
 	</div>
 	<div id="additionalFiltersContainer" class="">

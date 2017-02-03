@@ -83,6 +83,21 @@
 	font-size:20px;
 }
 
+#selectStatusContainer{
+    width: 230px;
+}
+
+#selectStatusContainer label,
+#selectQuestionsContainer label{
+	font-size: 16px;
+    font-weight: 100;
+    color: #000000;
+}
+
+#statusAllContainer{
+	margin-bottom:10px;
+}
+
 #selectQuestionsContainer,
 #selectStatusContainer{
 	position:absolute;
@@ -113,7 +128,7 @@
 	padding: 4px 10px;
 	display:block;
 	margin:5px auto;
-	width:75px;
+	width:150px;
 }
 .active{
     background-color: #337ab7;

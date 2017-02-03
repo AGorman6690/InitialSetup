@@ -101,9 +101,13 @@ table#openApplications{
 
 #calendarDetails_applications.disabled:not(.still-hovering) {
 	background-color: rgb(235, 235, 228);
-	border: 2px solid rgb(200, 197, 197);
-}
 	
+}
+
+#calendarDetails_applications{
+	margin-top: 30px;
+	border: 2px solid rgb(200, 197, 197);
+}	
 	
 	
 #date_detail{

@@ -24,10 +24,6 @@
 	cursor:pointer;
 }
 
-#sectionContainers{
-	padding-top:15px;
-}
-
 .content-link.selected{
 	border-bottom: 2px solid #163B3D;
 }

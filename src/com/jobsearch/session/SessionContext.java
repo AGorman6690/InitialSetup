@@ -105,6 +105,12 @@ public class SessionContext {
 		
 	}
 
+	public static void setUser(HttpSession session, JobSearchUser user) {
+		
+		session.setAttribute("user", user);
+		
+	}
+
 
 
 }

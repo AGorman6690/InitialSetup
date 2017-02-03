@@ -49,10 +49,10 @@ public class UserController {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public String validate(@RequestParam(name = "userId") int userId, ModelAndView model,
-			@ModelAttribute("user") JobSearchUser user) {
-
+	@RequestMapping(value = "/email/validate", method = RequestMethod.GET)
+	public String validateEmail(@RequestParam(name = "userId") int userId, HttpSession session){
+		
+		userService.setSession_EmailValidation(userId, session);
 		return "redirect:/user/profile";
 	}
 	
@@ -74,6 +74,15 @@ public class UserController {
 	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
 	public String signUp(Model model, @ModelAttribute("user") JobSearchUser user) {
 
+		
+		
+		// **********************************************************
+		// **********************************************************
+		// For security reasons, do you think we should pass an encrypted userId
+		// in the email-validation url?
+		// **********************************************************
+		// **********************************************************		
+		
 		user = userService.createUser(user);
 		
 		if (user != null) {

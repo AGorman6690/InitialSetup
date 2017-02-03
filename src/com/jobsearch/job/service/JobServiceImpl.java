@@ -130,7 +130,7 @@ public class JobServiceImpl {
 			for(Job job : jobsWaitingToStart){
 				
 				JobDTO jobDto = new JobDTO();
-				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId());
+				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId(), userId);
 				jobDtos.add(jobDto);
 			}
 
@@ -396,20 +396,36 @@ public class JobServiceImpl {
 		return jobDto;
 	}
 	
-	private JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId) {
+	private JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
 		
+		// ***************************************************
+		// ***************************************************
+		// If only the counts are going to be displayed, and not specific details,
+		// then set an integer variable on the jobDto.
+		// There's no need to pass a list of objects (wage negotiations, applications, employees)
+		// ***************************************************
+		// ***************************************************
+		
+
 		JobDTO jobDto = new JobDTO();
 		
 		Job job = this.getJob(jobId);
 		jobDto.setJob(job);
 		
-		jobDto.setWorkDays(this.getWorkDays(jobId));
+//		jobDto.setWorkDays(this.getWorkDays(jobId));
 		
-		jobDto.setQuestions(applicationService.getQuestions(jobId));
+//		jobDto.setQuestions(applicationService.getQuestions(jobId));
 		
-		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+//		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+
+//		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 		
-		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));	
+		jobDto.setCountWageProposals_sent(
+				applicationService.getCountWageProposal_Sent(job.getId(), userId));
+		
+		jobDto.setCountWageProposals_received(
+				applicationService.getCountWageProposal_Received(job.getId(), userId));
+
 		
 		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
 		
@@ -697,14 +713,16 @@ public class JobServiceImpl {
 		// Check if the user had previously loaded jobs
 		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
 		
-		if(jobIds_previouslyLoaded != null){
+		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
+
+		
+		if(jobIds_previouslyLoaded != null && lastFilterRequest != null){
 			
 			// Query the database
 			List<Job> jobs = this.getJobsByJobIds(SessionContext.getFilteredJobIds(session));
 
 			// Create job dtos.
 			// If necessary, filter the jobs
-			FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
 			List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 			if(lastFilterRequest.getSortBy() != null){
 				jobDtos = getJobDtos_Sorted(jobs, lastFilterRequest);	

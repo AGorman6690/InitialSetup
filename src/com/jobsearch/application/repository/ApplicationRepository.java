@@ -455,4 +455,26 @@ public class ApplicationRepository {
 		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
+
+	public int getCountWageProposal_Sent(Integer jobId, int userId) {
+
+		String sql = "SELECT COUNT(*) FROM wage_proposal w"
+					+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+					+ " INNER JOIN job j ON j.jobId = a.JobId"
+					+ " WHERE j.JobId = ? AND w.ProposedByUserId = ? AND w.Status = ?";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
+												WageProposal.STATUS_NO_ACTION_TAKEN }, Integer.class);				
+	}
+
+	public int getCountWageProposal_Received(Integer jobId, int userId) {
+	
+		String sql = "SELECT COUNT(*) FROM wage_proposal w"
+				+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+				+ " INNER JOIN job j ON j.jobId = a.JobId"
+				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ? AND w.Status = ?";
+	
+	return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
+											WageProposal.STATUS_NO_ACTION_TAKEN }, Integer.class);
+	}
 }

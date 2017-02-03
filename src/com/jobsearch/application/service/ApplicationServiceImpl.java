@@ -457,6 +457,16 @@ public class ApplicationServiceImpl {
 		
 	}
 
+	public int getCountWageProposal_Sent(Integer jobId, int userId) {
+
+		return repository.getCountWageProposal_Sent(jobId, userId);
+	}
+
+	public int getCountWageProposal_Received(Integer jobId, int userId) {
+	
+		return repository.getCountWageProposal_Received(jobId, userId);
+	}
+
 
 
 

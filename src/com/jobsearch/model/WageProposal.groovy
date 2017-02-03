@@ -12,4 +12,6 @@ class WageProposal {
 	//1: Accepted;
 	//2: Declined;
 	int status
+	
+	public static Integer STATUS_NO_ACTION_TAKEN = -1
 }

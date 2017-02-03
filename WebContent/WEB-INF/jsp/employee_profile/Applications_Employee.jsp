@@ -8,7 +8,7 @@
 		<div id="calendarContainer_applications" class="calendar-container">
 			<div id="calendar_applications" class="calendar" data-min-date="10/01/2016"></div>
 			<div id="jobDetails" >
-				<p class="">Job Name: <span class="job-name"></span>
+				<p class=""><span class="job-name"></span>
 				</p>
 			</div>
 		</div>	

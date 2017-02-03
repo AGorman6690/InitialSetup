@@ -174,6 +174,7 @@ public class UserRepository {
 				Profile e = new Profile();
 				e.setId(rs.getInt("ProfileId"));
 				e.setName(rs.getString("ProfileType"));
+				e.setAltName1(rs.getString("AltName1"));
 				return e;
 			}
 		});

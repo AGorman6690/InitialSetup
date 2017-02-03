@@ -18,19 +18,6 @@ public class WelcomeServiceImpl {
 	@Autowired
 	UserServiceImpl userService;
 
-	public void setModel_Welcome(Model model, HttpSession session) {
-
-
-		session.setAttribute("profiles", userService.getProfiles());
-
-//		model.addAttribute("url", hostUrl);
-
-//		if (error) {
-//			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
-//		}
-
-	}
-
 	public void Logout(HttpSession session) {
 
 		// Set the session complete
@@ -69,8 +56,15 @@ public class WelcomeServiceImpl {
 			else requestedLogin = 0;			
 		}
 		
-		
+
 		model.addAttribute("requestedLogin", requestedLogin);
+		model.addAttribute("profiles", userService.getProfiles());
+
+//		model.addAttribute("url", hostUrl);
+
+//		if (error) {
+//			model.addAttribute("errorMessage", "Username and/or Password is incorrect");
+//		}
 		
 	}
 

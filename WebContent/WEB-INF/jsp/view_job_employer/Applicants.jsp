@@ -44,7 +44,7 @@
 							</div>
 							<div id="questionListContainer">
 							<c:forEach items="${jobDto.questions }" var="question">
-								<div class="checkbox">
+								<div class="">
 									<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
 								</div>
 							</c:forEach>
@@ -60,20 +60,20 @@
 							
 							<span id="selectStatusOK" class="glyphicon glyphicon-ok"></span>
 							<div id="statusAllContainer">
-								<div class="checkbox">
+								<div class="">
 								  <label><input id="selectAllStatuses" type="checkbox" name="statuses-all">All</label>
 								</div>								
 							</div>									
 							<div id="statusListContainer">
-								<div class="checkbox">
+								<div class="">
 								  <label><input id="selectStatusSubmitted" type="checkbox" 
 								  		name="status-select" value="0">No Action Taken</label>
 								</div>									
-								<div class="checkbox">
+								<div class="">
 								  <label><input id="selectStatusDeclined" type="checkbox" 
-								  		name="status-select" value="1">Declined</label>
+								  		name="status-select" value="1">Not Considering</label>
 								</div>
-								<div class="checkbox">
+								<div class="">
 								  <label><input id="selectStatusConsidering" type="checkbox"
 								  		name="status-select" value="2">Considering</label>
 								</div>
@@ -158,18 +158,18 @@
 						<div class="application-status-container">
 							<c:choose>
 								<c:when test="${application.status == 1 }">
-								<button id="" value="1" class="active">Decline</button>
+								<button id="" value="1" class="active">Not Considering</button>
 								</c:when>
 								<c:otherwise>
-								<button id="" value="1" class="">Decline</button>
+								<button id="" value="1" class="">Not Considering</button>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${application.status == 2 }">
-								<button id="" value="2" class="active">Consider</button>
+								<button id="" value="2" class="active">Considering</button>
 								</c:when>
 								<c:otherwise>
-								<button id="" value="2" class="">Consider</button>
+								<button id="" value="2" class="">Considering</button>
 								</c:otherwise>
 							</c:choose>										
 						</div>
