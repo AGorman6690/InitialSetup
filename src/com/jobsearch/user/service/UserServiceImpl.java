@@ -598,16 +598,16 @@ public class UserServiceImpl {
 		model.addAttribute("jobDtos_jobsCompleted", jobDtos_jobsCompleted);
 		
 
-		// When the profile is requested and presented to the user,
-		// all the applications' "HasBeenViewed" property, for the user's active
-		// jobs,
-		// will be set to true.
+
 
 		// *********************************************************************
 		// *********************************************************************
-		// On second thought, this should be set to zero when the user clicks
-		// and views
-		// the new applicants
+		// When the profile is requested and presented to the user,
+		// all the applications' "HasBeenViewed" property, for the user's active
+		// jobs, will be set to true.
+		// On second thought, this should be set to true when the user clicks
+		// and views the new applicants...
+		// Review this.
 //		applicationService.setJobsApplicationsHasBeenViewed(yetToStartJobs, 1);
 //		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
 		// *********************************************************************

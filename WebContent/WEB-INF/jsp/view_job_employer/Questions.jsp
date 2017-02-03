@@ -38,6 +38,6 @@
 						
 	</c:when>
 	<c:otherwise>
-		<div>This job does not have any questions.</div>
+		<div class="no-data">There are no questions for this job.</div>
 	</c:otherwise>
 </c:choose>

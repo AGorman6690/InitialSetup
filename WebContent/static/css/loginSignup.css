@@ -24,15 +24,15 @@
     color: #ffffff;
     text-align: center;
     background-color: #337ab7;
-    height:60px;
-    width:500px;
+    height:40px;
+    width:400px;
     margin:auto;
     cursor:pointer;
     border-radius: 5px;
 }
 
 .a-header h3{
-    line-height:60px;
+    line-height:40px;
 }
 
 .group .item{

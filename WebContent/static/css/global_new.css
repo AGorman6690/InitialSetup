@@ -23,8 +23,10 @@ input, select, textarea{
     font-size: 15px;
     font-weight: bold;
 /*     color: #5B7BA3; */
-    color:#24599a;
+	color:#6d8aaf;
+/*     color:#24599a; */
     cursor:pointer;
+    letter-spacing: 0.5px;
 }
 
 a.accent.no-hover:hover{

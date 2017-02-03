@@ -10,7 +10,7 @@
 
 		
 		$(".single").click(function(){
-			var container = $(this).closest(".answer");
+			var container = $(this).closest(".answer-container");
 			var answers = $(container).find(".single")
 			highlightArrayItemByAttribute(this, answers, "selected");
 		})
@@ -226,9 +226,9 @@
 				contentType : "application/json",
 				data : JSON.stringify(applicationRequestDTO),
 			}).done(function() {
-				$('#home')[0].click();
+				redirectToProfile();
 			}).error(function() {
-				$('#home')[0].click();
+				redirectToProfile();
 			});
 		}
 	}

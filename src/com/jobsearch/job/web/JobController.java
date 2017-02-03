@@ -1,6 +1,5 @@
 package com.jobsearch.job.web;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -22,9 +21,6 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
-import com.jobsearch.job.service.SubmitJobPostingRequestDTO;
-import com.jobsearch.json.JSON;
-import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 

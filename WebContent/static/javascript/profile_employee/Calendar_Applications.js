@@ -69,10 +69,7 @@ $(document).ready(function(){
 			var applicationId;
 			var jobId;
 			
-			var td = $(this).parent();
-			var date = getDateFromTdElement(td);
-			date = $.datepicker.formatDate("D m/dd", date);
-			$("#date_detail").html(date);
+			$("#date_detail").html(getDateText($(this).parent()));
 			
 			html = "<div class='content'>";
 			
@@ -99,18 +96,23 @@ $(document).ready(function(){
 			
 
 			if($("#applications_on_day_clicked").html() == ""){
-				$("#calendarDetails_applications").hide();
+//				$("#calendarDetails_applications").hide();
+				$("#date_detail").html("...");
 			}
 			else{
+				$("#date_detail").html(clickedDate);
 				$("#calendarDetails_applications").removeClass("disabled");
 			}
 
 			
 			$("#applications_on_day_clicked").show();
 			$("#applications_on_day_hover").hide();
+			
+			$("#calendarDetails_applications").removeClass("still-hovering");
 						
 		})
 		
+		var clickedDate;
 		
 		$("#calendarContainer_both").on("mousedown", "td div.job", function(event){
 			
@@ -124,7 +126,11 @@ $(document).ready(function(){
 				
 				$("#applications_on_day_clicked").html(html_hover);
 				$("#calendarDetails_applications").removeClass("disabled");
+				$("#calendarDetails_applications").addClass("still-hovering");
 //				toggleClasses($("#application_on_day"), "disabled", "enabled");	
+				
+				clickedDate = getDateText($(this).parent());
+
 			}
 			
 		})		
@@ -144,6 +150,11 @@ $(document).ready(function(){
 })
 
 
+function getDateText(td){
+	var date = getDateFromTdElement(td);
+	return $.datepicker.formatDate("D m/dd", date);
+	
+}
 
 function highlightApplicationWorkDays(applicationId, doHightlight){
 		
@@ -163,6 +174,7 @@ function highlightApplicationWorkDays(applicationId, doHightlight){
 function getWorkDaysByApplicationId(applicationId){
 	var application = $("#applicationDetails").find(".application[data-id=" + applicationId + "]");
 	var workDays = [];
+	
 	$(application).find(".work-day").each(function(){
 		var date = new Date($(this).attr("data-date").replace(/-/g, "/"));
 		workDays.push(date);
@@ -173,7 +185,7 @@ function getWorkDaysByApplicationId(applicationId){
 
 function addClassToDivWithAttr(className, attrName, attrValue){
 	
-	$("#calendarContainer_applications").find("td div[" + attrName + "=" + attrValue + "]").each(function(){
+	$("#calendarContainer_applications").find("td div[" + attrName + "='" + attrValue + "']").each(function(){
 		
 		$(this).addClass(className);
 	})
@@ -182,7 +194,7 @@ function addClassToDivWithAttr(className, attrName, attrValue){
 
 function removeClassToDivWithAttr(className, attrName, attrValue){
 	
-	$("#calendarContainer_applications").find("td div[" + attrName + "=" + attrValue + "]").each(function(){
+	$("#calendarContainer_applications").find("td div[" + attrName + "='" + attrValue + "']").each(function(){
 		
 		$(this).removeClass(className);
 	})

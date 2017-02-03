@@ -109,7 +109,9 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 	
 	// *****************************************************
 	// *****************************************************
-	// Tidy this up
+	// Tidy this up.
+	// This might be able to be combined with getJsonObject_findJobFilterDTO().
+	// See the note in the job controller.
 	// *****************************************************	
 	// *****************************************************
 	
@@ -192,7 +194,7 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 		
 		parameterName = "endTime";
 		filterValue = $dropdown.find("option:selected").eq(0).attr("data-filter-value");
-		urlParameter += "&" + parameterName + "=" + filterValue;		
+		urlParameter += "&" + parameterName + "=" + filterValue.toString();		
 		
 		parameterName = "beforeEndTime";
 		filterValue = $dropdown.find("input[type=radio]:checked").eq(0).attr("data-is-before");		
@@ -221,7 +223,7 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 		$dropdown = $($filterContainer.find(".dropdown").eq(0));
 		
 		parameterName = "startDate";
-		filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
+		filterValue = getSelectedDate($($dropdown.find(".calendar-single-date")[0]));
 		filterValue = $.datepicker.formatDate(dateformatString, filterValue);
 		urlParameter += "&" + parameterName + "=" + filterValue;		
 		
@@ -237,7 +239,7 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 		$dropdown = $($filterContainer.find(".dropdown").eq(0));
 		
 		parameterName = "endDate";
-		filterValue = getSelectedDate($dropdown.find(".calendar-single-date")[0]);
+		filterValue = getSelectedDate($($dropdown.find(".calendar-single-date")[0]));
 		filterValue = $.datepicker.formatDate(dateformatString, filterValue);
 		urlParameter += "&" + parameterName + "=" + filterValue;		
 		

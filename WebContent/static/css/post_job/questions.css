@@ -65,3 +65,7 @@
 #questionsContainer .header.row{
 	padding-bottom:0px;
 }
+
+#question{
+	width:300px;
+}

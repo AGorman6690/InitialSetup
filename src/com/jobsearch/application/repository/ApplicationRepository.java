@@ -309,11 +309,6 @@ public class ApplicationRepository {
 
 	}
 
-	public void setHasBeenViewed(int jobId, int value) {
-		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
-		jdbcTemplate.update(sql, new Object[] { value, jobId });
-
-	}
 
 	public void addWageProposal(WageProposal wageProposal) {
 		String sql = "INSERT INTO wage_proposal (ApplicationId, ProposedByUserId, ProposedToUserId, Amount, Status)"
@@ -454,5 +449,10 @@ public class ApplicationRepository {
 	public AnswerOption getAnswerOption(int answerOptionId) {
 		String sql = "SELECT * FROM answer_option WHERE AnswerOptionId = ?";
 		return AnswerOptionRowMapper(sql, new Object[] { answerOptionId }).get(0);
+	}
+
+	public void updateHasBeenViewed(Integer jobId, int value) {
+		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
+		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 }

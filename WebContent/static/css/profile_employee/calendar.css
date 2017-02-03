@@ -53,7 +53,7 @@ td div.job.three{
 }
 
 #calendarContainer_applications{
-/* 	width:500px; */
+/* 	width:1000px; */
 }
 
 .ui-datepicker{
@@ -79,10 +79,11 @@ table#openApplications{
 
 #calendarDetails_applications{
 /* 	text-align:center; */
-	width:360px;
+	width:400px;
 	margin:auto;
 	padding:10px;
 	border-radius:5px;
+	min-height:100px;
 }
 
 #calendarDetails_applications .header{
@@ -91,14 +92,23 @@ table#openApplications{
 
 #calendarDetails_applications .content{
 	padding-left:25px;
+	text-align:left;
 }
 
 #calendarDetails_applications.disabled a.accent{
 	color: #565656;
 }
 
-#calendarDetails_applications.disabled {
-	background-color: #d4d4d4;
+#calendarDetails_applications.disabled:not(.still-hovering) {
+	background-color: rgb(235, 235, 228);
+	border: 2px solid rgb(200, 197, 197);
 }
 	
+	
+	
+#date_detail{
+	width:100px;
+	display:inline-block;
+	text-align:left;
+}
 	

@@ -83,14 +83,17 @@ $(document).ready(function(){
 	})
 	
 	$("#saveEditQuestionChanges").click(function(){
-		saveEditQuestionChanges();
 		
-		setClickableness_ForQuestionActions(true, true, true, true);
-		setClickableness_ForQuestionActions(false, true, false, false);
-		setClickableness_ForAddedQuestions(true);
-		
-		$("#editQuestionResponses").hide();
-		disableAllInputFields($("#questionsContainer"));
+		if(areQuestionInputsValid){
+			saveEditQuestionChanges();
+			
+			setClickableness_ForQuestionActions(true, true, true, true);
+			setClickableness_ForQuestionActions(false, true, false, false);
+			setClickableness_ForAddedQuestions(true);
+			
+			$("#editQuestionResponses").hide();
+			disableAllInputFields($("#questionsContainer"));
+		}
 	})
 	
 	
@@ -253,6 +256,7 @@ function addQuestion(){
 		postQuestionDtos.push(postQuestionDto);
 		addQuestionToDOM(postQuestionDto);
 		clearAllInputs($("#questionsContainer"));
+		slideUp($("#answerListContainer"), 400);
 	}
 }
 function getPostQuestionDto(){

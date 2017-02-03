@@ -17,3 +17,7 @@ input[type=radio]{
 	font-weight:normal;
 	cursor:default;
 }
+
+select:disabled{
+	background-color: rgb(235, 235, 228);
+}

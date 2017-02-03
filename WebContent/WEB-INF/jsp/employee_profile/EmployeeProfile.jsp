@@ -1,112 +1,97 @@
-	<%@ include file="../includes/Header.jsp"%>
-	<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
-	
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />
-<!-- 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calendar.css" /> -->
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
-	
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/calendar.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee.css" />
-	<script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script>
+<%@ include file="../includes/Header.jsp"%>
+<%@ include file="../includes/resources/DatePicker.jsp" %>
+<%@ include file="../includes/resources/PageContentManager.jsp" %>
 
-<%-- 	<script src="<c:url value="/JobSearch/WebContent/static/javascript/profile_employee/Calendar_Applications.js" />"></script> --%>
-												 
-		
-<%-- 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script> --%>
-	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
-<%-- 	<script	src="<c:url value="/static/javascript/SideBar.js" />"></script>	 --%>
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/calendar.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee.css" />
 
-</head>
+<script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script>							
+<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="   crossorigin="anonymous"></script>
-	
-<body>
-
-	<div class="container">
-		<div class="row">
-			<div id="contentLinksContainer" class="col-sm-12">
-				<span class="content-link selected" data-section-id="applicationContainer">Applications</span>
-				<span>/</span>
-				<span class="content-link" data-section-id="employmentContainer">Employment</span>
-				<span>/</span>
-				<span class="content-link" data-section-id="bothContainer">Both</span>
-			</div>
-		</div>
-
-					
-		<div class="row">
-			<div class="col-sm-12" id="sectionContainers">			
-
-			
-				<div id="applicationDetails">
-				<c:forEach items="${applicationDtos }" var="applicationDto">
-				
-					<div class="application" data-id="${applicationDto.job.id }"
-											 data-job-name="${applicationDto.job.jobName }"
-											 data-job-id="${applicationDto.job.id}">
-											 
-					<c:forEach items="${applicationDto.job.workDays }" var="workDay">
-						<div class="work-day" data-date="${workDay.stringDate }"></div>
-					</c:forEach>
-					
-					</div>
-						
-				</c:forEach>				
-				</div>	
-				
-				<div id="employmentDetails">
-				<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">
-				
-					<div class="job" data-job-id="${jobDto.job.id}"
-									data-job-name="${jobDto.job.jobName }">
-											 
-					<c:forEach items="${jobDto.workDays }" var="workDay">
-						<div class="work-day" data-date="${workDay.stringDate }"></div>
-					</c:forEach>
-					
-					</div>
-						
-				</c:forEach>				
-				</div>	
-								
-				
-				<div id="applicationContainer" class="section-container">
-					<div class="section-body">
-						<%@ include file="./Applications_Employee.jsp" %>
-					</div>
-				</div>
-				<div id="employmentContainer" class="section-container">
-					<div class="section-body">
-						<%@ include file="./Employment_Employee.jsp" %>
-					</div>
-				</div>	
-				<div id="bothContainer" class="section-container">
-					<div class="section-body">
-						<div id="" class="section">	
-							<div id="calendarContainer_both">
-								<div id="calendar_both" class="calendar" data-min-date="10/01/2016"></div>
-								<div id="jobDetails" >
-									<p class="">Job Name: <span class="job-name"></span>
-									</p>
-								</div>
-							</div>	
-							<div id="calendarDetails_applications">
-								<div class="header">Jobs applied for with work day on <span id="date_detail"></span></div>
-								<div id="applications_on_day_hover" class="disabled"></div>									
-								<div id="applications_on_day_clicked" class="disabled"></div>													
-							</div>
-						</div>
-<%-- 						<%@ include file="./Applications_Employee.jsp" %> --%>
-					</div>
-				</div>							
-			</div>
+<div class="container">
+	<div class="row">
+		<div id="pageContentLinksContainer" class="col-sm-12">
+			<span class="page-content-link selected" data-section-id="applicationContainer">Applications</span>
+			<span>/</span>
+			<span class="page-content-link" data-section-id="employmentContainer">Employment</span>
+			<span>/</span>
+			<span class="page-content-link" data-section-id="bothContainer">Both</span>
 		</div>
 	</div>
-</body>
+
+				
+	<div class="row">
+		<div class="col-sm-12" id="sectionContainers">			
+
+		
+			<div id="applicationDetails">
+			<c:forEach items="${applicationDtos }" var="applicationDto">
+			
+				<div class="application" data-id="${applicationDto.job.id }"
+										 data-job-name="${applicationDto.job.jobName }"
+										 data-job-id="${applicationDto.job.id}">
+										 
+				<c:forEach items="${applicationDto.job.workDays }" var="workDay">
+					<div class="work-day" data-date="${workDay.stringDate }"></div>
+				</c:forEach>
+				
+				</div>
+					
+			</c:forEach>				
+			</div>	
+			
+			<div id="employmentDetails">
+			<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">
+			
+				<div class="job" data-job-id="${jobDto.job.id}"
+								data-job-name="${jobDto.job.jobName }">
+										 
+				<c:forEach items="${jobDto.workDays }" var="workDay">
+					<div class="work-day" data-date="${workDay.stringDate }"></div>
+				</c:forEach>
+				
+				</div>
+					
+			</c:forEach>				
+			</div>	
+							
+			
+			<div id="applicationContainer" class="section-container">
+				<div class="section-body">
+					<%@ include file="./Applications_Employee.jsp" %>
+				</div>
+			</div>
+			<div id="employmentContainer" class="section-container">
+				<div class="section-body">
+					<%@ include file="./Employment_Employee.jsp" %>
+				</div>
+			</div>	
+			<div id="bothContainer" class="section-container">
+				<div class="section-body">
+					<div id="" class="section">	
+						<div id="calendarContainer_both" class="calendar-container">
+							<div id="calendar_both" class="calendar" data-min-date="10/01/2016"></div>
+							<div id="jobDetails" >
+								<p class="">Job Name: <span class="job-name"></span>
+								</p>
+							</div>
+						</div>	
+						<div id="calendarDetails_applications">
+							<div class="header">Jobs applied for with work day on <span id="date_detail">...</span></div>
+							<div id="applications_on_day_hover" class="disabled"></div>									
+							<div id="applications_on_day_clicked" class="disabled"></div>													
+						</div>
+					</div>
+<%-- 						<%@ include file="./Applications_Employee.jsp" %> --%>
+				</div>
+			</div>							
+		</div>
+	</div>
+</div>
 
 <script>
 

@@ -11,7 +11,7 @@ function initMap() {
 			zoom : 11,
 			center : center,
 			scrollwheel: false,
-			streetViewControl: false,
+			streetViewControl: false,			
 //				disableDefaultUI: true,
 		    mapTypeControlOptions: {
 		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
@@ -28,6 +28,7 @@ function initMap() {
 			position : center,
 			map : map,
 			icon: icon,
+			clickable: false,
 		});
 	}
 

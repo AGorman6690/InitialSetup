@@ -77,11 +77,7 @@ function attachEventHandles_Filters(){
 		}
 	})
 
-	$("#showSaveFilter").click(function(){
-		showSaveFilterModal();
 
-		
-	})
 	
 	$("#approveSaveFilter").click(function(){
 		approveSaveFilter();
@@ -99,6 +95,35 @@ function attachEventHandles_Filters(){
 		selectedDays_workDaysFilter = [];
 		$("#workDaysCalendar").datepicker("refresh");
 	})
+	
+	
+	
+	
+	$("#showSaveFilter").click(function(){
+		
+		if($(this).hasClass("not-logged-in") == 1){
+			showErrorMessage_NotLoggedIn("You must be logged in to save " +
+											"a find-job filter");
+		}
+		else{
+			showSaveFilterModal();	
+		}
+				
+	})
+
+
+	
+	$("#loadSavedFilterContainer.not-logged-in").click(function(){
+		
+		showErrorMessage_NotLoggedIn("You must be logged in to load a " +
+									"previously saved find-job filter");
+
+	})
+	
+	$("#mustBeLoggedIn .error-message").click(function(){
+		
+	})
+	
 //	
 //	$("#okFilterWorkingDays").click(function(){	
 //		approveWorkDays();
@@ -113,6 +138,16 @@ function attachEventHandles_Filters(){
 	setInitialValues_TimeAndDates(approveFiltersOnLoad);
 }
 
+function showErrorMessage_NotLoggedIn(errMessage){
+	
+	$error = $("#mustBeLoggedIn .error-message");
+	$error.html(errMessage);
+	$error.show();
+	
+	$("#mustBeLogeedIn").show();
+
+	$("#load_save").css("visibility", "hidden");
+}
 
 
 function loadFindJobFilter(savedFindJobFilterId){

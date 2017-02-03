@@ -1,5 +1,5 @@
 <%@ include file="../includes/Header.jsp" %>
-<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
+<%@ include file="../includes/resources/DatePicker.jsp" %>
 
 
 <!-- Order is specific -->

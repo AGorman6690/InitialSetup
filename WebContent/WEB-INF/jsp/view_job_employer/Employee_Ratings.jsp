@@ -1,5 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp" %>		
 
+<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
+
 <c:choose>         
 	<c:when test="${haveJobRatingsBeenSubmitted == true }">
 		<div>Job ratings have already been submitted</div>

@@ -55,13 +55,17 @@
 	padding:5px;
 }
 
+#description{
+	width:500px;
+}
+
 #submitJobContainer{
 	background-color: #163B3D;
     color: #ffffff;
     cursor: pointer;
     padding: 10px;
     border: 1px solid rgb(192,192,192);
-    margin-bottom: 15px;
+    margin-top: 20px;
     width: 155px;
     font-size: 16px;
     overflow: hidden;    

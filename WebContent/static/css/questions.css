@@ -2,9 +2,10 @@
 	display:none;
 }
 
-.selected {
-    background-color: #337ab7;
-    color: #ffffff;
+.answer-option.selected {
+    color: #337ab7;
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .answer-container{
@@ -15,6 +16,7 @@
 	margin:3px 0px;
     padding: 2px 4px;
     border-radius: 2px;
+    height:30px;
 }
 
 .question-container{

@@ -1,22 +1,18 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 <div class="section">
-	<div class="header">
-		<h3>Jobs In Process</h3>
-	</div>
 	<div class="section-body">
 		<c:choose>
 			<c:when test="${jobDtos_jobsInProcess.size() == 0 }">
 				<div>You have no active jobs at this time</div>
 			</c:when>
 			<c:otherwise>
-				<table id="jobsInProgress" class="main-table-style">
+				<table id="table_jobsInProgress" class="main-table-style">
 					<thead>
 						<tr>
 							<th id="name">Job Name</th>
 							<th id="newApplicantions">Start Date</th>
 							<th id="totalApplications">End Date</th>								
-							<th id="markJobCompleteHeader"></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -25,10 +21,8 @@
 							
 								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id}?c=in-process&p=2" >${jobDto.job.jobName }</a></td>
 								<td><span class="">${jobDto.job.stringStartDate }</span></td>
-								<td><span class="">${jobDto.job.stringEndDate }</span></td>								
-								<td>														
-									<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>
-								</td>
+								<td><span class="">${jobDto.job.stringEndDate }</span></td>							
+
 							</tr>
 		
 						</c:forEach>

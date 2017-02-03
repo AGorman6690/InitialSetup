@@ -4,7 +4,7 @@
 <c:choose>			
 
 	<c:when test="${empty jobDto.applications}">
-		<div>There are currently no applicants for this job</div>
+		<div class="no-data">There are currently no applicants for this job</div>
 	</c:when>
 
 	<c:otherwise>
@@ -53,7 +53,7 @@
 					</th>
 				</c:if>							
 					<th id="status" class="left">
-						<span data-toggle-id="selectStatusContainer" data-toggle-speed="2">
+						<span data-toggle-id="selectStatusContainer" data-toggle-speed="1">
 							<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Status
 						</span>					
 						<div id="selectStatusContainer">
@@ -93,7 +93,7 @@
 					</td>
 					
 					<td>
-						<div class="vert-border">
+						<div class="">
 							<c:choose>
 								<c:when test="${application.currentWageProposal.status == 1 }">
 								<!-- ****** If the current wage proposal has been accepted-->

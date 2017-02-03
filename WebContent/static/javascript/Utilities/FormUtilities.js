@@ -156,7 +156,7 @@ function setTimeOptions($eSelect, increment){
 				
 				time = hour + ":" + modifiedMinute + amPm;
 				
-				formattedTime = hourCount + ":" + modifiedMinute;
+				formattedTime = hourCount + ":" + modifiedMinute + ":00";
 //				formattedTime = formatTime(time);
 				
 //				if(formattedTime == initTime) selected = "selected";

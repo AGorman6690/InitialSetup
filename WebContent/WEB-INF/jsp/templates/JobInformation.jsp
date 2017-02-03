@@ -108,7 +108,21 @@
 					<c:otherwise>${jobDto.job.stringStartDate }</c:otherwise>				
 				</c:choose>
 			</div>
-		</div>										
+		</div>	
+		
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		
+		<a class="square-button-green" href="/JobSearch/job/${jobDto.job.id }/update/status/1">Start Job (for debugging)</a>	
+		<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
 	</div>
 	<div class="col-sm-4">
 		<div id="jobAddress">

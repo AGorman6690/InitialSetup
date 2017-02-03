@@ -1,5 +1,5 @@
 	<%@ include file="../includes/Header.jsp"%>
-	<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
+	<%@ include file="../includes/resources/DatePicker.jsp" %>
 	
 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
@@ -7,6 +7,8 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
+	
+		<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
@@ -22,6 +24,7 @@
 	</c:if>
 	
 	<div class="container">	
+		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 		<div class="row"  >
 
 			<div id="contentBarContainer" class="header-container">
@@ -29,13 +32,6 @@
 				<h3>${jobDto.job.jobName }</h3>
 			</div>		
 				<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
-<!-- 				<p class="content-bar selected-lines" data-section-id="jobInfoContainer">Job Information</p> -->
-<!-- 				<span class="glyphicon glyphicon-unchecked"></span> -->
-<!-- 				<p class="content-bar" data-section-id="questionsContainer">Questions</p> -->
-<!-- 				<span class="glyphicon glyphicon-unchecked"></span>				 -->
-<!-- 				<p class="content-bar" data-section-id="applicantsContainer">Applicants</p> -->
-<!-- 				<span class=" glyphicon glyphicon-unchecked"></span> -->
-<!-- 				<p class="content-bar" data-section-id="employeesContainer">Employees</p>				 -->
 			</div>			
 			
 			
@@ -82,8 +78,12 @@
 		</div>		
 	</div>	
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap">
+<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap"> -->
+<!-- </script> -->
+
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">
 </script>
+
 
 <script type="text/javascript">
 
@@ -174,8 +174,11 @@ function getStatusValuesToShow(){
 function getApplicationDto_UpdateStatus(clickedStatusButton){
 	
 	var applicationDto = {}
+	applicationDto.application = {};
 	
-	applicationDto.application.applicationId = $($(clickedStatusButton).closest("[data-application-id]")[0]).attr("data-application-id");
+	applicationDto.application.applicationId = $(clickedStatusButton).closest("[data-application-id]")
+																	.eq(0)
+																	.attr("data-application-id");
 	
 	if(isAddingApplicationStatus(clickedStatusButton)){
 		applicationDto.newStatus = $(clickedStatusButton).val();

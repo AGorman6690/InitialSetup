@@ -14,6 +14,16 @@ $(document).ready(function() {
 		win.focus();
 	})
 	
+	
+	$("#content_jobInfo").click(function(){
+		
+		if($("#map").attr("data-is-init") != 1){
+			initMap();
+			$("#map").attr("data-is-init", "1");	
+		}
+		
+	})
+	
 	setWorkDays();
 	initCalendar_JobInfo();
 })

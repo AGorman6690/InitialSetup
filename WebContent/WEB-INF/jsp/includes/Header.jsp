@@ -88,6 +88,7 @@
 		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
 		<script src="<c:url value="/static/javascript/Utilities/Arrays.js" />"></script>
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
+		<script src="<c:url value="/static/javascript/Global.js" />"></script>	
 		
 						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -103,29 +104,30 @@
 		
 		
 		<nav id="navBar" class="">
-			<div>
-				<a id="home" class="logo" href="/JobSearch/${!empty sessionScope.user ? 'user/profile' : '' }">Labor Vault</a>
+			<div id="logoContainer">
+				<a id="nav_logo" href="/JobSearch/${!empty sessionScope.user ? 'user/profile' : '' }">Labor Vault</a>
 			</div>
-			<div class="nav-items">					
+			<div id="navItemsContainer">					
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
-							<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>
+						<a id="nav_profile" class="" href="/JobSearch/user/profile">Profile</a>								
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
-								<a id="nav_availability" href="/JobSearch/availability">Availability</a>
+								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 								<a id="nav_settings" href="/JobSearch/settings">Settings</a>
-								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>								
+								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
+								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
 								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
-								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>
+
 							</c:when>
 						</c:choose>				
-						<a id="nav_profile" class="logo" href="/JobSearch/user/profile">Profile</a>	
+						<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>		
 					</c:when>
 					<c:otherwise>
+						<a href="/JobSearch/login-signup?login=false">Sign Up</a>					
 						<a href="/JobSearch/login-signup?login=true">Login</a>
-						<a href="/JobSearch/login-signup?login=false">Sign Up</a>
 					</c:otherwise>
 				</c:choose>
 			</div>

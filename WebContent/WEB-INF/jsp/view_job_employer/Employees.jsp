@@ -2,7 +2,7 @@
 			
 <c:choose>						
 	<c:when test="${empty jobDto.employeeDtos}">
-		<div>There are currently no employees for this job</div>
+		<div class="no-data">There are currently no employees for this job</div>
 	</c:when>
 	
 	<c:otherwise>

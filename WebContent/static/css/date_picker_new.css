@@ -2,8 +2,13 @@
 
 
 .calendar-container{
-	width:300px;
+/* 	width:300px; */
 }
+
+/* .calendar-container a{ */
+/* 	color:#000000; */
+/* 	font-size:13px; */
+/* } */
 
 .calendar-container.wide{
 	width:650px;
@@ -19,7 +24,7 @@
 
 .calendar-container.read-only td,
 .calendar-container.read-only a{
-	cursor:default !important;
+/* 	cursor:default !important; */
 	color:#777171;
 	
 }
@@ -27,7 +32,12 @@
 .calendar-container.read-only td a:hover{
 	cursor:default !important;
 	color:#777171;
+/* 	text-decoration: none; */
+}
+
+.calendar-container td a{
 	text-decoration: none;
+	color:#000000;
 }
 
 

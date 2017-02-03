@@ -1,6 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 
-<%@ include file="../includes/ScriptsAndLinks_DatePicker.jsp" %>
+<%@ include file="../includes/resources/DatePicker.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
@@ -21,9 +21,8 @@
 <div class="container">
 	<div class="row first">
 		<div class="col-sm-2">
-			<div id="submitJobContainer" class="">Submit Job</div>
+			
 			<div id="general" class="side-bar selected-blue" data-section-id="generalContainer">General
-				<div class="red"></div>
 			</div>
 			<div id="date" class="side-bar" data-section-id="datesContainer">Dates and Times</div>
 			<div id="location" class="side-bar" data-section-id="locationContainer">Location</div>
@@ -31,7 +30,7 @@
 			<div id="categories" class="side-bar" data-section-id="categoriesContainer">Categories</div>
 			<div id="questions" class="side-bar" data-section-id="questionsContainer">Questions</div>
 			<div id="employeeSkills" class="side-bar" data-section-id="employeeSkillsContainer">Employee Skills</div>					
-		
+			<div id="submitJobContainer" class="">Submit Job</div>
 		</div>
 		<div class="col-sm-10">
 			<div id="generalContainer" class="first section-container">
@@ -224,7 +223,7 @@
 						<p>Question Format</p>
 					</div>
 					<div class="col-sm-9">							
-						<select id="questionFormat" class="question-formats form-control">
+						<select id="questionFormat" class="question-formats">
 						  <option class="answer-format-item" data-format-id="0">Yes or No</option>
 						  <option class="answer-format-item" data-format-id="1">Short Answer</option>
 						  <option class="answer-format-item" data-format-id="2">Single Answer</option>
@@ -238,7 +237,7 @@
 						<p>Question</p>
 					</div>
 					<div class="col-sm-9">							
-						<textarea id="question" class="" rows="2"></textarea>				
+						<textarea id="question" class="" rows="3"></textarea>				
 					</div> 
 				</div>		
 				

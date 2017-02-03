@@ -11,20 +11,37 @@
 			<div class="group"> 
 				<button id="getJobs" class="square-button-green">Get Jobs</button>
 			</div>	
-			<div class="group filter-container">
-				<div data-trigger-dropdown-id="savedFindJobFiltersContainer" class="trigger-dropdown">
-					<span id="loadSaveFilter" class="accent">Load</span>
-					<div id="savedFindJobFiltersContainer" class="dropdown">
-						<c:forEach items="${userDto.savedFindJobFilters }" var="filter">
-							<div class="saved-find-job-filter">
-								<span class="accent" data-id="${filter.id }">${filter.savedName }</span>
+		
+
+			
+			<div id="load_save_container">
+				<c:if test="${empty sessionScope.user }">
+					<div id="mustBeLoggedIn" class="group"> 
+						<a href="/JobSearch/login-signup?login=true" class="error-message"></a>
+					</div>		
+				</c:if>
+			
+		
+				
+				<div id="load_save">
+					<div class="group filter-container">
+						<div id="loadSavedFilterContainer" data-trigger-dropdown-id="savedFindJobFiltersContainer"
+							 class="${empty sessionScope.user ? 'not-logged-in' : 'trigger-dropdown'}">
+							 
+							<span id="loadSaveFilter" class="accent">Load</span>
+							<div id="savedFindJobFiltersContainer" class="dropdown">
+								<c:forEach items="${userDto.savedFindJobFilters }" var="filter">
+									<div class="saved-find-job-filter">
+										<span class="accent" data-id="${filter.id }">${filter.savedName }</span>
+									</div>
+								</c:forEach>
 							</div>
-						</c:forEach>
+						</div>
+					</div>					
+					<div class="group">
+						<span id="showSaveFilter" class="accent ${empty sessionScope.user ? 'not-logged-in' : '' }">Save</span>
 					</div>
 				</div>
-			</div>					
-			<div class="group">
-				<span id="showSaveFilter" class="accent">Save</span>
 			</div>
 		</div>
 	</div>

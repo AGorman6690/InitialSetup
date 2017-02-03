@@ -5,7 +5,7 @@
 	<div id="" class="section">	
 	<c:choose>
 		<c:when test="${applicationDtos.size() > 0 }">		
-		<div id="calendarContainer_applications">
+		<div id="calendarContainer_applications" class="calendar-container">
 			<div id="calendar_applications" class="calendar" data-min-date="10/01/2016"></div>
 			<div id="jobDetails" >
 				<p class="">Job Name: <span class="job-name"></span>

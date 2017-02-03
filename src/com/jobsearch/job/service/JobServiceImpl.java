@@ -853,6 +853,8 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
+			
+			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
 			break;
 
 		case "in-process":
@@ -860,6 +862,7 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 														jobId, sessionUser.getUserId()));		
 			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
+			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			break;
 			
 		

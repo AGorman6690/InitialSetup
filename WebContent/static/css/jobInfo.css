@@ -19,8 +19,8 @@
 }
 
 .selected-lines{
-    border-bottom: 2px solid black;
-    border-top: 2px solid black;
+    border-bottom: 2px solid #163b3d;
+    border-top: 2px solid #163b3d;
     /* border-bottom-right-radius: 10px; */
     /* border-top-left-radius: 10px; */
     /* border-top-right-radius: 10px; */
@@ -70,12 +70,16 @@ table#employeesTable{
    	font-size: 8px;
 }
 
+.no-data{
+	text-align:center;
+}
 
 .section-container{
 /*     border-top: 4px solid #ddd; */
 /*     border-top-left-radius: 30px; */
 /*     border-top-right-radius: 30px; */
 /*     padding-top: 20px; */
+
 }
 
 tbody.vertical-lines td div.vert-border{

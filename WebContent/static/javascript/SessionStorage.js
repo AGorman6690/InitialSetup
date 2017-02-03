@@ -18,7 +18,7 @@ $(document).ready(function(){
 	// Set the section container
 	sectionContainerId = getSectionContainerIdByUrlPath(urlPath)
 	if(sectionContainerId != undefined){		
-		selectSideBar(sectionContainerId);
+//		selectSideBar(sectionContainerId);
 	}
 	
 	

@@ -1,0 +1,27 @@
+#pageContentLinksContainer{
+    text-align: center;
+    font-size: 19px;
+    color: #337ab7;
+    padding:40px 0px 25px 0px;
+}
+
+#pageContentLinksContainer span{
+	padding:2px; 
+}
+
+.page-content-link{
+	cursor:pointer;
+}
+
+.page-content-link.selected{
+	border-bottom: 2px solid #163B3D;
+}
+
+
+#sectionContainers{
+	text-align:center;
+}
+
+.section-body table{
+	margin:auto;
+}

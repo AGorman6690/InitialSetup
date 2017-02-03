@@ -67,8 +67,10 @@
 
 .approved-filter{
 /* 	background-color:#F6C627; */
-	background-color:#9a7601;
-	color:#ffffff;
+/* 	background-color:#9a7601; */
+	background-color:#c1c1c1;
+/* 	color:#ffffff; */
+	color:#000000;
 }
 
 #showSaveFilter, #clearAllFilters{
@@ -151,6 +153,22 @@
 	position:relative;
 	width: 230px;
 	
+}
+
+#load_save_container,
+#load_save{
+	display:inline;
+}
+
+#load_save_container{
+	position:relative;
+}
+
+#mustBeLoggedIn.group{
+	position:absolute;
+	width:225px;
+	font-size:15px;
+/* 	cursor:pointer; */
 }
 
 #startDateCalendar td,

@@ -1,99 +1,47 @@
-
-.login-signup .form-control{
-/*     padding: 15px; */
-    margin: 10px auto;	
+#navItemsContainer a{
+	padding-left: 13px;
+	padding-right: 13px;
+	font-size:20px;	
 }
 
+#navBar{
+	color:#337ab7;
+    max-width: 1200px;
+    margin: 5px auto;	
+	position: relative;
+	border-bottom: 3px solid #337ab7;
+	border-top: 3px solid #337ab7;	
+	height:80px;
+	line-height:74px;
+}
 
+#logoContainer{
+	position:absolute;
+	bottom:0px;
+	left:0px;
+    padding-left: 35px;
+}
 
-.nav-items{
-/* 	float:right; */
-/* 	margin-top:12px; */
+#navBar a{
+	color:#163B3D;
+	cursor:pointer;
+	padding-top:6px;
+	padding-bottom:6px;
+}
+
+#navItemsContainer{
     position: absolute;
     right: 0px;
     bottom: 0px;
     padding-right: 35px;
-    margin-bottom: 2px;
 }
 
-.logo{
-/* 	float:left; */
-/* 	border: 1px solid rgb(192,192,192); */
-	padding:10px 10px 10px 10px;
+#nav_logo{
 	font-size:36px;	
-/* 	color:#ffffff; */
 }
-
-.nav-items a{
-/* 	border: 1px solid rgb(192,192,192); */
-	display:inline-block;
-	list-style: none;
-	padding:7px 13px;
-	border-left-width: 0;
-	font-size:20px;	
-	float:right;
-	cursor:pointer;
-/* 	color:#ffffff; */
-}
-
-.nav-items a, .logo {
-/* 	border-bottom: 4px solid #163B3D; */
-/* 	border-top: 4px solid #163B3D;	 */
-/* 	border-bottom: 4px solid #337ab7; */
-/* 	border-top: 4px solid #337ab7;	 */
-	border-bottom: 4px solid #ffffff;
-	border-top: 4px solid #ffffff;	
-	color: #163B3D;
-}
-
-.nav-items a:last-child{
-/* 	border-left: 1px solid rgb(192,192,192); */
-}
-
 
 #navBar a:hover{
 	text-decoration: none;
-/* 	background-color: #163B3D; */
-/* 	color:#ffffff; */
-/* 	font-weight:bold; */
-/* 	font-size:20px; */
-/* 	border-bottom: 4px solid #337ab7; */
-/* 	border-top: 4px solid #337ab7; */
-	border-bottom: 4px solid #163B3D;
-	border-top: 4px solid #163B3D;
-/* 	font-size:18px; */
-
+	border-bottom: 3px solid #163B3D;
+	border-top: 3px solid #163B3D;
 }
-
-.logo:hover{
-	
-}
-
-a{
-	color:#000000;
-}
-
-#navBar{
-
-/*     border-radius: 7px; */
-	padding:14px 45px;
-/* 	color:#163B3D;  */
-	color:#337ab7;
-/* 	background-color:#163B3D; */
-/* 	position:fixed; */
-/* 	top:0px; */
-	overflow:auto;
-    max-width: 1200px;
-    margin: 5px auto;	
-/*    	border-bottom: 2px outset #F0F0F0; */
-	overflow:auto;
-/* 	padding-bottom:10px; */
-	position: relative;
-
-	border-bottom: 4px solid #337ab7;
-	border-top: 4px solid #337ab7;	
-
-}
-
-
-
