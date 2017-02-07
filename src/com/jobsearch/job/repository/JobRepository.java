@@ -989,6 +989,12 @@ public class JobRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ date }, Integer.class);
 	}
 
+	public List<Job> getJobs_ByEmployer(int userId) {
+		
+		String sql = "SELECT * FROM job WHERE UserId = ?";
+		return JobRowMapper(sql, new Object[]{ userId });
+	}
+
 
 
 

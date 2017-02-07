@@ -87,6 +87,10 @@ table#openApplications_oneLine thead{
 	border-top:0;	
 }
 
+table#openApplications_oneLine tr:hover{
+	background-color: #eaeaea;
+}
+
 
 #toggleCalendar{
 	background-color: #163b3d;
@@ -152,3 +156,4 @@ table#openApplications_oneLine thead{
 #tableColumn.with-calendar th{
 	width: 33%;
 }
+

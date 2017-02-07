@@ -50,3 +50,14 @@ span.dollar-sign{
 /*     font-size: 15px; */
 /*     font-weight: bold; */
 /* } */
+
+
+.dropdown-style{
+	position:absolute;
+	background-color:#ffffff;
+	z-index: 10000;
+	display:none;
+	border: 2px solid #163b3d;
+	border-radius:3px;
+	padding:20px;
+}

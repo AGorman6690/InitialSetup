@@ -501,6 +501,16 @@ public class ApplicationServiceImpl {
 		
 	}
 
+	public List<Question> getQuestions_ByEmployer(int userId) {
+		
+		return repository.getQuestions_ByEmployer(userId);
+	}
+
+	public Question getQuestion(int questionId) {
+		
+		return repository.getQuestion(questionId);
+	}
+
 
 
 

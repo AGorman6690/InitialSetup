@@ -24,7 +24,8 @@ function isPostJobDtoValid(postJobDto){
 	var input;
 
 	invalidCount += validate_General();
-	invalidCount += validate_DatesAndTimes();
+	invalidCount += validate_Dates();
+	invalidCount += validate_Times();
 	invalidCount += validate_Location();
 	
 	if(invalidCount > 0) return false;
@@ -60,23 +61,10 @@ function validate_General(){
 		
 }
 
-function validate_DatesAndTimes(){
+function validate_Dates(){
 	
 	var selectedDates = [];
 	var invalidCount = 0;
-
-	$input = $("#endTime-singleDate");	
-	if($input.val() == ""){
-		setInvalidCss($input);
-		invalidCount += 1;
-	}
-	
-	$input = $("#startTime-singleDate");	
-	if($input.val() == ""){
-		setInvalidCss($input);
-		invalidCount += 1;
-	}
-	
 
 	$input = $("#workDaysCalendar");
 	selectedDates = getSelectedDates($input);
@@ -94,6 +82,56 @@ function validate_DatesAndTimes(){
 		return 0;
 	}
 		
+}
+
+function validate_Times(){
+	
+	var invalidCount = 0;
+	var $startTime;
+	var $endTime;
+	
+	
+	// If no days have been selected, also show "Times" as invalid
+	if(selectedDays.length == 0) invalidCount += 1;
+	
+	$("#timesTable").find("tbody tr.work-day-row").each(function(){
+
+		
+		$startTime = $(this).find("select.start-time").eq(0);
+		$endTime = $(this).find("select.end-time").eq(0);
+		
+		if($startTime.val() == ""){
+			setInvalidCss($startTime);
+			invalidCount += 1;
+		}
+		else{
+			setValidCss($startTime);
+		}
+		
+		
+		
+		if($endTime.val() == ""){
+			setInvalidCss($endTime);
+			invalidCount += 1;
+		}
+		else{
+			setValidCss($endTime);
+		}
+		
+				
+	})
+	
+	if(invalidCount > 0){
+		setInvalidCss($("#times"));
+		return 1;
+	}
+	else{
+		setValidCss($("#times"));
+		return 0;
+	}
+	
+	return invalidCount;
+	
 }
 
 

@@ -242,6 +242,9 @@ public class ApplicationRepository {
 					e.setQuestionId(rs.getInt("QuestionId"));
 					e.setFormatId(rs.getInt("FormatId"));
 					e.setText(rs.getString("Question"));
+					e.setJobId(rs.getInt("JobId"));
+					
+					e.setAnswerOptions(applicationService.getAnswerOptions(e.getQuestionId()));
 
 					return e;
 				}
@@ -300,8 +303,8 @@ public class ApplicationRepository {
 
 			if (question.getAnswerOptions() != null) {
 				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
-				for (String answerOption : question.getAnswerOptions()) {
-					jdbcTemplate.update(sql, new Object[] { createdQuestionId, answerOption });
+				for (AnswerOption answerOption : question.getAnswerOptions()) {
+					jdbcTemplate.update(sql, new Object[] { createdQuestionId, answerOption.getText() });
 				}
 			}
 
@@ -526,6 +529,23 @@ public class ApplicationRepository {
 
 
 		
+	}
+
+	public List<Question> getQuestions_ByEmployer(int userId) {
+		
+		String sql = "SELECT * FROM question q"
+						+ " INNER JOIN job j ON j.JobId = q.JobId"
+						+ " WHERE j.UserId = ?";
+		
+		return QuestionRowMapper(sql, new Object[]{ userId });
+
+		
+	}
+
+	public Question getQuestion(int questionId) {
+		
+		String sql = "SELECT * FROM question WHERE QuestionId = ?";
+		return QuestionRowMapper(sql, new Object[] { questionId }).get(0);
 	}
 
 }

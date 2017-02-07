@@ -1,4 +1,5 @@
 
+
 function getTdByDayMonthYear($calendar, day, month, year){
 	
 //	var a = $calendar.find("td[data-year=" + year + "][data-month=" + month + "] a:contains(" + day + ")");

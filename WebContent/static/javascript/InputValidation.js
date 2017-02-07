@@ -40,6 +40,11 @@ $(document).ready(function(){
 //		validatePositiveNumber($(this), value);
 
 	})
+	
+	
+	$("body").on("mousedown", ".invalid.calendar.hasDatepicker td ", function(){
+		$(this).closest(".invalid.calendar.hasDatepicker").removeClass("invalid");
+	})
 
 })
 

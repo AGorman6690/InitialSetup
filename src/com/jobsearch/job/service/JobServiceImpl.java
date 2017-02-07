@@ -25,6 +25,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
+import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -438,6 +439,7 @@ public class JobServiceImpl {
 		
 		this.setJobDtoDuration(jobDto);
 		
+		System.err.println(jobDto.getJob().getUserId());
 		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
 												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
 		
@@ -948,6 +950,58 @@ public class JobServiceImpl {
 
 		return null;
 		
+	}
+
+	public void setModel_ViewPostJob(Model model, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+
+		List<Job> postedJobs = this.getJobs_ByEmployer(sessionUser.getUserId());
+		List<Question> postedQuestions = applicationService.getQuestions_ByEmployer(sessionUser.getUserId());
+		
+		model.addAttribute("postedJobs", postedJobs);
+		model.addAttribute("postedQuestions", postedQuestions);
+		
+	}
+
+	private List<Job> getJobs_ByEmployer(int userId) {
+		
+		return repository.getJobs_ByEmployer(userId);
+	}
+
+	public JobDTO getJobDto_PreviousPostedJob(HttpSession session, int jobId) {
+		
+		JobDTO jobDto =getJobDTO_DisplayJobInfo(jobId);
+				
+		if(jobDto.getJob().getUserId() == SessionContext.getUser(session).getUserId()){
+			
+			jobDto.setQuestions(applicationService.getQuestions(jobId));
+			
+			return jobDto;		
+		}		
+		else return null;
+	}
+
+	public Question getQuestion_PreviousPostedQuestion(HttpSession session, int questionId) {
+		
+		Question postedQuestion = applicationService.getQuestion(questionId);
+		
+		
+		
+		if(didSessionUserPostJob(session, postedQuestion.getJobId())){
+			return postedQuestion;
+		}
+		else return null;
+	}
+
+	private boolean didSessionUserPostJob(HttpSession session, int jobId) {
+		
+		Job job = this.getJob(jobId);
+		
+		if( SessionContext.getUser(session).getUserId() == job.getUserId()){
+			return true;
+		}
+		else return false;
 	}
 
 

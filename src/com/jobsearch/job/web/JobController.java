@@ -19,8 +19,12 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.service.PostJobDTO;
+import com.jobsearch.json.JSON;
+import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -202,6 +206,7 @@ public class JobController {
 
 	
 
+	
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
 	public String updateJobStatus(@PathVariable(value = "status") int status,
 			@PathVariable(value = "jobId") int jobId) {
@@ -210,6 +215,37 @@ public class JobController {
 
 		return "redirect:/user/profile";
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/post-job/previous-question/load", method = RequestMethod.GET)
+	public String loadPreviousPostedQuestion(@RequestParam(name = "questionId", required = true) int questionId,
+												HttpSession session) {
+
+		Question postedQuestion = jobService.getQuestion_PreviousPostedQuestion(session, questionId);
+		
+		return JSON.stringify(postedQuestion);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/post-job/previous-post/load", method = RequestMethod.GET)
+	public String loadPreviousJobPost(@RequestParam(name = "jobId", required = true) int jobId,
+										HttpSession session) {
+
+		JobDTO jobDto = jobService.getJobDto_PreviousPostedJob(session, jobId);
+		
+		return JSON.stringify(jobDto);
+	}
+	
+	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
+	public String viewPostJob(Model model, HttpSession session) {
+
+		
+		jobService.setModel_ViewPostJob(model, session);
+		
+		return "/post_job/PostJob";
+	}
+	
+	
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {

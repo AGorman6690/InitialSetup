@@ -1,10 +1,11 @@
 <%@ include file="../includes/Header.jsp"%>
-
+<%-- <%@ include file="../includes/resources/PageContentManager.jsp" %> --%>
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 
 <script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
@@ -19,18 +20,39 @@
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
 <div class="container">
+	<div class="row">
+		<div id="headerLinksContainer" class="col-sm-12">
+			<c:if test="${!empty postedJobs }">
+				<div id="postedJobsContainer">
+					<span id="copyPreviousPost1" class="page-content-link selected"
+						 data-toggle-id="postedJobs">Copy a previous posting</span>
+					<div id="postedJobs" class="dropdown-style">
+						<c:forEach items="${postedJobs }" var="job">
+							<div data-posted-job-id="${job.id }">${job.jobName }</div>
+						</c:forEach>
+					</div>
+				</div>
+				<span>/</span>
+			</c:if>
+			
+			<span id="submitJobContainer1" class="page-content-link" data-section-id="employmentContainer">Submit posting</span>
+
+		</div>
+	</div>
 	<div class="row first">
 		<div class="col-sm-2">
 			
+<!-- 			<div id="copyPreviousPost"><span class="accent">Copy a previous job post</span></div> -->
 			<div id="general" class="side-bar selected-blue" data-section-id="generalContainer">General
 			</div>
-			<div id="date" class="side-bar" data-section-id="datesContainer">Dates and Times</div>
+			<div id="date" class="side-bar" data-section-id="datesContainer">Dates</div>
+			<div id="times" class="side-bar" data-section-id="timesContainer">Times</div>
 			<div id="location" class="side-bar" data-section-id="locationContainer">Location</div>
 			<div id="compensation" class="side-bar" data-section-id="compensationContainer">Compensation</div>
 			<div id="categories" class="side-bar" data-section-id="categoriesContainer">Categories</div>
 			<div id="questions" class="side-bar" data-section-id="questionsContainer">Questions</div>
 			<div id="employeeSkills" class="side-bar" data-section-id="employeeSkillsContainer">Employee Skills</div>					
-			<div id="submitJobContainer" class="">Submit Job</div>
+<!-- 			<div id="submitJobContainer" class="">Submit Job</div> -->
 		</div>
 		<div class="col-sm-10">
 			<div id="generalContainer" class="first section-container">
@@ -72,7 +94,7 @@
 			
 			<div id="datesContainer" class="section-container">
 				<div class="header row">
-					<p>Dates and Times</p>
+					<p>Dates</p>
 				</div>
 				<div class="row">
 					<div class="label-text col-sm-3">
@@ -85,26 +107,62 @@
 							<button class="square-button" id="clearCalendar">Clear</button>
 						</div>
 					</div> 
-				</div>
-				<div class="row">
-					<div class="label-text col-sm-3">
-						<p>Start Time</p>
-					</div>
-					<div class="col-sm-9">							
-						<select id="startTime-singleDate"></select>
-					</div> 
-				</div>
-				<div class="row">
-					<div class="label-text col-sm-3">
-						<p>End Time</p>
-					</div>
-					<div class="col-sm-9">							
-						<select id="endTime-singleDate"></select>
-					</div> 
-				</div>				
+				</div>			
 			</div>		
 			
-			
+			<div id="timesContainer" class="section-container">
+				<div class="header row">
+					<p>Times</p>
+				</div>
+				<div id="timesTableContainer">
+					<table id="timesTable" class="main-table-style">
+						<thead>
+							<tr>
+								<th>Dates</th>
+								<th>Selection</th>
+								<th>Start Time</th>
+								<th>End Time</th>
+							</tr>
+							
+							<tr class="master-row-multi-select">
+								<td></td>
+								<td><label><input class="select-all" type="checkbox" name="time">Select All</label></td>
+								<td><select class="time start-time select-all"></select></td>
+								<td><select class="time end-time select-all"></select></td>							
+							</tr>
+							<tr class="master-row work-day-row">
+								<td class="date"></td>
+								<td><input type="checkbox" name="time"></td>
+								<td><select class="time start-time"></select></td>
+								<td><select class="time end-time"></select></td>
+							</tr>
+						</thead>
+						
+						<tbody>
+
+						</tbody>				
+					</table>
+				
+				</div>
+				
+<!-- 				<div class="row"> -->
+<!-- 					<div class="label-text col-sm-3"> -->
+<!-- 						<p>Start Time</p> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-9">							 -->
+<!-- 						<select id="startTime-singleDate"></select> -->
+<!-- 					</div>  -->
+<!-- 				</div> -->
+<!-- 				<div class="row"> -->
+<!-- 					<div class="label-text col-sm-3"> -->
+<!-- 						<p>End Time</p> -->
+<!-- 					</div> -->
+<!-- 					<div class="col-sm-9">							 -->
+<!-- 						<select id="endTime-singleDate"></select> -->
+<!-- 					</div>  -->
+<!-- 				</div>				 -->
+			</div>	
+						
 			<div id="locationContainer" class="section-container">
 				<div class="header row">
 					<p>Location</p>
@@ -206,11 +264,20 @@
 						<div id="questionActions">
 							<button id="addQuestion" class="clickable btn-sqr">Add</button>
 							<button id="deleteQuestion" class="btn-sqr">Delete</button>
-							<button id="editQuestion" class="btn-sqr">Edit</button>
+							<button id="editQuestion" class="btn-sqr">Edit</button>							
 							<span id="editQuestionResponses">
 								<span id="saveEditQuestionChanges" class="glyphicon glyphicon-ok"></span>
 								<span id="cancelEditQuestionChanges" class="glyphicon glyphicon-remove"></span>
 							</span>
+							<div id="postedQuestionsContainer">
+								<span id="copyPreviousQuestion" data-toggle-id="postedQuestions">
+									Copy a previous question</span>
+								<div id="postedQuestions" class="dropdown-style">
+									<c:forEach items="${postedQuestions }" var="question">
+										<div data-question-id="${question.questionId }">${question.text }</div>
+									</c:forEach>
+								</div>
+							</div>
 							<div id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</div>
 						</div>
 						<div id="addedQuestions"></div>

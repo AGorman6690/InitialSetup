@@ -137,20 +137,7 @@ public class UserController {
 		return "settings_employee/Availability";
 	}
 
-	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
-	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		model.addObject("user", user);
-
-		Job job = new Job();
-		model.addObject("job", job);
-
-		model.setViewName("/post_job/PostJob");
-		return model;
-	}
-	
 
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)

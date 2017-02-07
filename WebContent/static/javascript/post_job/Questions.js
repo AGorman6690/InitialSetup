@@ -99,6 +99,18 @@ $(document).ready(function(){
 	
 })
 
+function resetEntireQuestionSection(){
+	
+	postQuestionDtos = [];	
+	$("#addedQuestions").empty();	
+	clearAllInputs($("#questionsContainer"));
+	enableAllInputFields($("#questionsContainer"));
+	$("#answerListContainer").hide();
+	setClickableness_ForQuestionActions(true, true, false, false);
+	setClickableness_ForQuestionActions(false, false, true, true);
+	
+}
+
 function clearInvalidContentAndStyle(){
 	removeAllInvalidStyles($("#questionsContainer"));
 	$("#invalidAddQuestion").hide();
@@ -178,32 +190,35 @@ function showSelectedPostQuestionDto(){
 	
 	var selectedPostQuestionDto = getSelectedPostQuestionDto();
 	
+	showQuestionDto(selectedPostQuestionDto);
+
 	
-	$("#question").val(selectedPostQuestionDto.text);
+	disableAllInputFields($("#questionsContainer"));			
+	
+}
+
+function showQuestionDto(questionDto){
+	$("#question").val(questionDto.text);
 	
 	// Select the question format
-	$("#questionFormat option[data-format-id='" + parseInt(selectedPostQuestionDto.formatId) + "']").prop("selected", "selected");
+	$("#questionFormat option[data-format-id='" + parseInt(questionDto.formatId) + "']").prop("selected", "selected");
 	$("#questionFormat").trigger("click");
 	
 	
-	if(selectedPostQuestionDto.answerOptions.length > 0){
+	if(questionDto.answerOptions.length > 0){
 		
 		resetAnswerListContainer();
 		
 		// Add an answer option for every answer option other than the first 2 
-		for(i=0; i<selectedPostQuestionDto.answerOptions.length - 2; i++){
+		for(i=0; i<questionDto.answerOptions.length - 2; i++){
 			$("#addAnswer").trigger("click");
 		}
 		
 		// Populate the answer option inputs
 		$("#answerList").find(".answer-container input").each(function(i, e){
-			$(this).val(selectedPostQuestionDto.answerOptions[i]);
+			$(this).val(questionDto.answerOptions[i].text);
 		})
 	}
-	
-	
-	disableAllInputFields($("#questionsContainer"));			
-	
 }
 
 function resetAnswerListContainer(){
@@ -264,7 +279,7 @@ function getPostQuestionDto(){
 	var postQuestionDto = {};
 	var answerOptionsInputs = []
 	var answerOptions = [];
-	
+	var answerOption = {};
 	
 	postQuestionDto.text = $("#question").val();
 	postQuestionDto.formatId = $("#questionFormat").find("option:selected").eq(0).attr("data-format-id");
@@ -273,7 +288,9 @@ function getPostQuestionDto(){
 	if(doesQuestionHaveAnAnswerList(postQuestionDto)){
 
 		$.each($("#answerList").find(".answer-container input"), function(){
-			answerOptions.push($(this).val());
+			answerOption = {};
+			answerOption.text = $(this).val();
+			answerOptions.push(answerOption);
 		})
 		
 		postQuestionDto.answerOptions = answerOptions;

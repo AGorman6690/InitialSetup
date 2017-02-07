@@ -8,6 +8,7 @@
 					<th id="wageProposal" class="span left-edge right-edge" colspan="2">Wage Proposal</th>
 					<th id="startDate" class="left-edge hide-with-calendar" colspan="1"></th>
 					<th id="endDate" class="left-edge hide-with-calendar" colspan="1"></th>	
+					<th id="location" class="left-edge hide-with-calendar" colspan="1"></th>	
 					<th id="location" class="left-edge hide-with-calendar" colspan="1"></th>					
 				</tr>
 				
@@ -16,8 +17,10 @@
 					<th id="action-th" class="left-edge">Status</th>
 					<th id="amount-th" class="right-edge">Offer Amount</th>
 					<th id="" class="left-edge hide-with-calendar">Start Date</th>
-					<th id="" class="left-edge hide-with-calendar">End Date</th>	
-					<th id="" class="left-edge hide-with-calendar">Location</th>												 
+					<th id="" class="left-edge hide-with-calendar">End Date</th>
+					<th id="" class="left-edge hide-with-calendar">Duration</th>	
+					<th id="" class="left-edge hide-with-calendar">Location</th>		
+																	 
 				</tr>
 			</thead>					
 
@@ -69,7 +72,9 @@
 						
 							<td class="hide-with-calendar">${dto.job.stringStartDate }</td>
 							<td class="hide-with-calendar">${dto.job.stringEndDate }</td>	
-							<td class="hide-with-calendar">${dto.job.city }, ${dto.job.state }</td>						
+							<td class="hide-with-calendar">${dto.job.workDays.size() } ${dto.job.workDays.size() <= 1 ? 'day' : 'days' }</td>	
+							<td class="hide-with-calendar">${dto.job.city }, ${dto.job.state }</td>
+												
 						</tr>
 					</c:if>
 				</c:forEach>

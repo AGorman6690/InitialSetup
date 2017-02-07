@@ -65,8 +65,85 @@
     cursor: pointer;
     padding: 10px;
     border: 1px solid rgb(192,192,192);
-    margin-top: 20px;
+
     width: 155px;
     font-size: 16px;
     overflow: hidden;    
+}
+
+#copyPreviousPost{
+	margin-bottom: 20px;
+}
+
+#submitJobContainer{
+	margin-top: 20px;
+}
+
+#datesContainer #clearCalendar{
+	margin-left:40px;
+}
+
+#timesTableContainer{
+	padding-left: 100px;
+}
+
+#timesTable thead .master-row,
+#timesTable thead .master-row-multi-select{
+	display:none;
+}
+
+#timesTable select.time{
+	width:125px;
+}
+
+#timesTable tbody td{
+    padding: 7px;
+}
+
+#headerLinksContainer{
+    text-align: left;
+    font-size: 15px;
+    color: #337ab7;
+    padding: 50px 0px 10px 0px;
+    padding-left: 200px;
+}
+
+#copyPreviousQuestion{
+    font-size: 15px;
+    color: #337ab7;
+    cursor:pointer;
+}
+
+#headerLinksContainer span{
+	padding: 2px;
+	cursor:pointer;
+}
+
+#postedJobsContainer{
+	position:relative;
+	display: inline-block;
+	
+}
+
+#postedJobs{
+	width:225px;
+	
+}
+
+#postedJobs div[data-posted-job-id],
+#postedQuestions div[data-question-id]{
+	padding: 5px 0px;	
+	color: #163b3d;
+	cursor: pointer;
+}
+
+#postedQuestionsContainer{
+	display:inline-block;
+	position: relative;
+}
+
+#postedQuestions{
+	width:350px;
+/* 	height:500px; */
+/* 	overflow: scroll;  */
 }
