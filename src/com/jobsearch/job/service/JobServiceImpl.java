@@ -400,7 +400,7 @@ public class JobServiceImpl {
 		
 		// ***************************************************
 		// ***************************************************
-		// If only the counts are going to be displayed, and not specific details,
+		// If only the counts are going to be displayed, and not specific job details,
 		// then set an integer variable on the jobDto.
 		// There's no need to pass a list of objects (wage negotiations, applications, employees)
 		// ***************************************************
@@ -425,6 +425,9 @@ public class JobServiceImpl {
 		
 		jobDto.setCountWageProposals_received(
 				applicationService.getCountWageProposal_Received(job.getId(), userId));
+		
+		jobDto.setCountWageProposals_received_new(
+				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
 
 		
 		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
@@ -803,7 +806,8 @@ public class JobServiceImpl {
 		else return null;
 	}
 
-	public void setModel_ViewJob_Employee(Model model, HttpSession session, String context, int jobId) {
+	public void setModel_ViewJob_Employee(Model model, HttpSession session,
+						String context, int jobId) {
 
 		// **************************************************
 		// **************************************************
@@ -811,7 +815,6 @@ public class JobServiceImpl {
 		// **************************************************
 		// **************************************************
 
-		String viewName = null;
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
@@ -853,7 +856,8 @@ public class JobServiceImpl {
 				
 	}
 
-	public void setModel_ViewJob_Employer(Model model, HttpSession session, String context, int jobId) {
+	public void setModel_ViewJob_Employer(Model model, HttpSession session,
+						String context, int jobId, String data_pageInit) {
 
 		// **************************************************
 		// **************************************************
@@ -872,7 +876,11 @@ public class JobServiceImpl {
 			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
+			model.addAttribute("data_pageInit", data_pageInit);
+			
 			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
+			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
+			
 			break;
 
 		case "in-process":

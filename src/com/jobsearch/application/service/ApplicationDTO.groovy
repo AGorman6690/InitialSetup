@@ -9,4 +9,5 @@ class ApplicationDTO {
 	WageProposal currentWageProposal
 	Job job
 	int newStatus
+
 }

@@ -110,6 +110,53 @@
 			</div>
 		</div>	
 		
+	<c:if test="${jobDto.questions.size() > 0 }">	
+		<div class="info-container row">	
+			<div class="info-label col-sm-4">Questions</div>
+			<div class="info-value col-sm-8">
+					
+				<c:forEach items="${jobDto.questions }" var="question">
+					<div class="question-container">
+						${question.text }
+						<div class="answer-container">
+							<div class="question-format">
+	<%-- 						<c:choose> --%>
+	<%-- 							<c:when test="${question.formatId == 0}"> --%>
+	<!-- 								(Yes or No) -->
+	<%-- 							</c:when> --%>
+	<%-- 							<c:when test="${question.formatId == 1}"> --%>
+	<!-- 								(Short Answer) -->
+	<%-- 							</c:when> --%>
+	<%-- 							<c:when test="${question.formatId == 2}"> --%>
+	<!-- 								(Select One Answer) -->
+	<%-- 							</c:when> --%>
+	<%-- 							<c:when test="${question.formatId == 3}"> --%>
+	<!-- 								(Select One or Multiple Answers) -->
+	<%-- 							</c:when> --%>
+	<%-- 						</c:choose> --%>
+							</div>
+							<c:choose>
+								<c:when test="${question.formatId == 2 || question.formatId == 3}">
+									<div class="answer-options-container">
+									<c:forEach items="${question.answerOptions }" var="answerOption">
+										<div>${answerOption.text }
+<!-- 											<label> -->
+<%-- 												<input type="${question.formatId == 2 ? 'radio' : 'checkbox' }" --%>
+<%-- 													name="answer-options-${param_question.questionId }">${answerOption.text } --%>
+<!-- 											</label> -->
+										</div>
+									</c:forEach>
+									</div>
+								</c:when>
+							</c:choose>
+						</div>
+					</div>
+				</c:forEach>		
+					
+			</div>
+		</div>
+	</c:if>
+		
 		<br>
 		<br>
 		<br>

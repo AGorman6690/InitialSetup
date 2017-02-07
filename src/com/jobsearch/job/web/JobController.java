@@ -178,15 +178,19 @@ public class JobController {
 	public String getJob(Model model, HttpSession session,
 						@RequestParam(name = "c", required = true) String c,
 						@RequestParam(name = "p", required = true) Integer p,
+						@RequestParam(name = "d", required = false) String d,
 						@PathVariable(value = "jobId") int jobId) {		
 		// c is the context in which the job was clicked
+		// p is the user's profile id
+		// data is whether the employer clicked a data point for the job
+		// (i.e. wage negotiations, applicants, or employees)
 		
 		if(p == 1){
 			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
 			return  "/view_job_employee/ViewJob_Employee";
 		}
 		else if(p == 2){
-			jobService.setModel_ViewJob_Employer(model, session, c, jobId);	
+			jobService.setModel_ViewJob_Employer(model, session, c, jobId, d);	
 			return  "/view_job_employer/ViewJob_Employer";
 		}
 		else{		

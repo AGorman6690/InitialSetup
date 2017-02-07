@@ -156,7 +156,7 @@
 		
 		var wageProposal = {}
 		wageProposal.amount = $("#amount").val();
-		wageProposal.status = -1;
+		wageProposal.status = -2;
 		
 		return wageProposal;
 	}

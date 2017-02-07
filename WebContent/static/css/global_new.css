@@ -41,6 +41,10 @@ a.accent.no-hover:hover{
     font-weight: normal;
 }
 
+span.dollar-sign{
+    margin-right: 3px;
+}
+
 /* span.accent{ */
 /*     color: #337ab7; */
 /*     font-size: 15px; */

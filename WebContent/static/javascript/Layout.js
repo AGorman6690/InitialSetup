@@ -20,6 +20,7 @@ $(document).ready(function(){
 			$e.slideToggle(300);	
 		}else{
 			$e.slideToggle(500);	
+			$e.show();
 		}
 		
 //		var $eToToggle = $("#" + toggleId);
@@ -47,6 +48,6 @@ $(document).ready(function(){
 	
 })
 
-function triggerToggle(dataToggleId){
-	$("span[data-toggle-id='" + dataToggleId + "']").click();
-}
+//function triggerToggle(dataToggleId){
+//	$("span[data-toggle-id='" + dataToggleId + "']").click();
+//}

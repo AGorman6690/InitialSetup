@@ -1,12 +1,14 @@
 	<%@ include file="../includes/Header.jsp"%>
 	<%@ include file="../includes/resources/DatePicker.jsp" %>
 	
-	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+	
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/Templates/tableFilter.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/Templates/forms.css" />
 	
 		<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	
@@ -14,8 +16,16 @@
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities/FilterTable.js" />"></script>
 	
-		 
+<!-- 	Currently the "WageNegotiation.js" has to be loaded AFTER the "FilterTable.js". -->
+<!-- 	If it is not, then the "html" click event in the FilterTable.js will take precedence -->
+<!-- 	over the "send counter offer" click event in the WageNegotiation.js -->
+<!-- 	This seems hackish. -->
+<!-- 	Address the logic later -->
+	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+	
 	<c:if test="${context == 'complete' }">	
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" />
@@ -25,6 +35,7 @@
 	
 	<div class="container">	
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
+		<input id="data_pageInit" type="hidden" value="${data_pageInit }">
 		<div class="row"  >
 
 			<div id="contentBarContainer" class="header-container">
@@ -37,6 +48,10 @@
 			
 		</div>
 		<div class="row">
+		
+			<c:if test="${data_pageInit != 'all-apps' }">
+				<button id="showAllApplicants" class="sqr-btn">Show All Applicants</button>			
+			</c:if>
 
 			<div class="col-sm-12" id="sectionContainers">
 				<c:if test="${context == 'waiting' }">
@@ -67,11 +82,11 @@
 					<%@include file="../templates/JobInformation.jsp"%>
 				</div>				
 				
-				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-				<div id="questionsContainer" class="section-container">
-					<%@include file="./Questions.jsp"%>	
-				</div>
-				</c:if>
+<%-- 				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }"> --%>
+<!-- 				<div id="questionsContainer" class="section-container"> -->
+<%-- 					<%@include file="./Questions.jsp"%>	 --%>
+<!-- 				</div> -->
+<%-- 				</c:if> --%>
 				
 			</div> <!-- end column -->
 
@@ -88,6 +103,8 @@
 <script type="text/javascript">
 
 $(document).ready(function(){
+	
+	initPage();
 
 	$("#selectQuestionsOK").click(function(){
 	
@@ -100,15 +117,15 @@ $(document).ready(function(){
 		
 	})
 	
-	$("#selectStatusOK").click(function(){
+// 	$("#selectStatusOK").click(function(){
 	
-		var statusValuesToShow = getStatusValuesToShow();
-		showApplicantRowsByStatus(statusValuesToShow);
+// 		var statusValuesToShow = getStatusValuesToShow();
+// 		showApplicantRowsByStatus(statusValuesToShow);
 		
-		triggerToggle("selectStatusContainer");
+// 		triggerToggle("selectStatusContainer");
 
 		
-	})
+// 	})
 	
 	$("#selectAllQuestions").click(function(){
 		selectAllCheckboxes($("#questionListContainer"), true);
@@ -140,7 +157,74 @@ $(document).ready(function(){
 		$("#selectNoQuestions").prop("checked", false);
 	})
 	
+	$("#showAllApplicants").click(function(){{
+
+		showAllApplications();
+		$(this).hide();
+	}})
+	
 })
+
+function showAllApplications(){
+	
+	var filters = [];
+	var filter = {};
+	
+	filter.attr = "data-is-sent-proposal";
+	filter.values = [];
+	filter.values.push("0");
+	filter.values.push("1");
+	
+	filters.push(filter);
+	
+	filterTableRows(filters, $("#applicantsTable"));
+}
+
+function initPage(){
+	
+	var data_initPage = $("#data_pageInit").val();
+
+	if(data_initPage != "all-apps"){
+	
+		var filters = [];
+		var filter = {};
+		filter.values = [];
+	
+		switch(data_initPage){
+		case "new-apps":
+			filter.attr = "data-is-old";
+			filter.values.push("0");
+			break;
+		
+	// 	case "all-apps":
+	// 		showApplications(true, true, false, false );
+	// 		break;
+		
+		case "sent-proposals":
+			filter.attr = "data-is-sent-proposal";
+			filter.values.push("1");
+			break;
+		
+		case "received-proposals":
+			filter.attr = "data-is-sent-proposal";
+			filter.values.push("0");
+			break;
+			
+		case "received-proposals-new":
+			filter.attr = "data-wage-proposal-status";
+			filter.values.push("-2");
+			break;		
+		}
+		
+		
+		filters.push(filter);
+		filterTableRows(filters, $("#applicantsTable"));
+		
+	}	
+}
+
+
+
 
 function isAddingApplicationStatus(clickedStatusButton){
 	
@@ -158,17 +242,17 @@ function isAddingApplicationStatus(clickedStatusButton){
 }
 
 
-function getStatusValuesToShow(){
+// function getStatusValuesToShow(){
 	
-	var values = [];
-	$.each($("#statusListContainer").find("input:checked"), function(){
-		values.push($(this).val());
-	})
+// 	var values = [];
+// 	$.each($("#statusListContainer").find("input:checked"), function(){
+// 		values.push($(this).val());
+// 	})
 	
-	return values;	
+// 	return values;	
 	
 	
-}
+// }
 
 
 function getApplicationDto_UpdateStatus(clickedStatusButton){
@@ -190,20 +274,20 @@ function getApplicationDto_UpdateStatus(clickedStatusButton){
 	return applicationDto;
 }
 
-function showApplicantRowsByStatus(statusValuesToShow){
+// function showApplicantRowsByStatus(statusValuesToShow){
 	
-	var applicantRows = $("#applicantsTable").find("tr[data-application-status]");
-	var applicationStatus;
-	$.each(applicantRows, function(){
-		applicationStatus = $(this).attr("data-application-status");
-		if($.inArray(applicationStatus, statusValuesToShow) > -1){
-			$(this).show();
-		}
-		else{
-			$(this).hide();
-		}
-	})
-}
+// 	var applicantRows = $("#applicantsTable").find("tr[data-application-status]");
+// 	var applicationStatus;
+// 	$.each(applicantRows, function(){
+// 		applicationStatus = $(this).attr("data-application-status");
+// 		if($.inArray(applicationStatus, statusValuesToShow) > -1){
+// 			$(this).show();
+// 		}
+// 		else{
+// 			$(this).hide();
+// 		}
+// 	})
+// }
 
 function showQuestions(idsToShow){
 	var questionContainers = $("#applicantsTable").find(".question-container");
@@ -233,6 +317,22 @@ function getQuestionIdsToShow(){
 
 function updateApplicationStatus(applicationDto){
 
+	// For user experience, change the button color before the AJAX call
+	// in case the AJAX call lags
+	upateRowsApplicationStatus(applicationDto.application.applicationId,
+									applicationDto.newStatus);
+
+	applicationStatusButtons = getApplicationStatusButtonsByApplicationId(applicationDto.application.applicationId)
+
+		
+	if(applicationDto.newStatus == 0){
+		removeClassFromArrayItems(applicationStatusButtons, "active");
+	}
+	else{
+		highlightArrayItemByAttributeValue("value", applicationDto.newStatus,
+				applicationStatusButtons, "active");	
+	}
+	
 	
 	$.ajax({
 		type : "POST",
@@ -246,21 +346,7 @@ function updateApplicationStatus(applicationDto){
 	
 	function _success(){		
 		
-		upateRowsApplicationStatus(applicationDto.application.applicationId,
-										applicationDto.newStatus);
-
-		applicationStatusButtons = getApplicationStatusButtonsByApplicationId(applicationDto.application.applicationId)
 		
-
-		if(applicationDto.newStatus == 0){
-			removeClassFromArrayItems(applicationStatusButtons, "active");
-		}
-		else{
-			highlightArrayItemByAttributeValue("value", applicationDto.newStatus,
-					applicationStatusButtons, "active");	
-		}
-		
-
 	}
 	
 	function _error(){

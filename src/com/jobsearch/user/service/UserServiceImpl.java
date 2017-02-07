@@ -3,6 +3,7 @@ package com.jobsearch.user.service;
 import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -49,6 +50,7 @@ import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 @Service
 public class UserServiceImpl {
@@ -557,7 +559,12 @@ public class UserServiceImpl {
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
 		
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtosByUser(employee.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.
+												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(employee.getUserId(), 
+															Arrays.asList(Application.STATUS_SUBMITTED,
+																		Application.STATUS_CONSIDERED,
+																		Application.STATUS_ACCEPTED));
+		
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		

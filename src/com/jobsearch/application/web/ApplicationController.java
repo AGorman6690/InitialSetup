@@ -1,5 +1,7 @@
 package com.jobsearch.application.web;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,9 +48,9 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/desired-pay/counter", method = RequestMethod.POST)
 	@ResponseBody
-	public void counterOffer(@RequestBody WageProposalCounterDTO dto) {
+	public void counterOffer(@RequestBody WageProposalCounterDTO dto, HttpSession session) {
 
-		applicationService.insertCounterOffer(dto);
+		applicationService.insertCounterOffer(dto, session);
 	}
 
 	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)

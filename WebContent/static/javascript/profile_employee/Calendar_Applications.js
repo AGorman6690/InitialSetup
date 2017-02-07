@@ -18,13 +18,11 @@ $(function() {
 
 $(document).ready(function(){
 		setCalendarDays();
-		setCalendarDays_employment();
+//		setCalendarDays_employment();
 		
 		initCalendar_Employee_Profile($("#calendar_applications"));	
 		
 		initCalendar_Both();
-
-// 		test();	
 
 		$("#calendarContainer_applications").on("mouseover", "td div[data-job-name]", function(){
 			
@@ -68,6 +66,8 @@ $(document).ready(function(){
 			var jobName;
 			var applicationId;
 			var jobId;
+			var applicationIds = [];
+			
 			
 			$("#date_detail").html(getDateText($(this).parent()));
 			
@@ -78,14 +78,19 @@ $(document).ready(function(){
 				jobName = $(this).attr("data-job-name");
 				applicationId = $(this).attr("data-id");
 				
+							
 				html  += "<div><a class='accent' href=# data-application-id='" + applicationId + "'>" 
 								+ jobName + "</a></div>";
+				
+				applicationIds.push(applicationId);
 			})
 
 			html += "</div>";
 			
 			$("#applications_on_day_hover").empty();
 			$("#applications_on_day_hover").html(html);
+			
+			showApplications_onHover(applicationIds);
 			
 			
 
@@ -109,6 +114,8 @@ $(document).ready(function(){
 			$("#applications_on_day_hover").hide();
 			
 			$("#calendarDetails_applications").removeClass("still-hovering");
+			
+			showAllApplications();
 						
 		})
 		
@@ -135,6 +142,16 @@ $(document).ready(function(){
 			
 		})		
 		
+		$("table#openApplications_oneLine tr").on("mouseover", "*", function(){
+			var applicationId = $(this).closest("tr").attr("data-application-id");
+			highlightApplicationWorkDays(applicationId, true);		
+		})
+		
+		$("table#openApplications_oneLine tr").on("mouseout", "*", function(){
+			var applicationId = $(this).closest("tr").attr("data-application-id");
+			highlightApplicationWorkDays(applicationId, false);		
+		})
+		
 		$("#applications_on_day_clicked").on("mouseover", "a", function(){
 			
 			var applicationId = $(this).attr("data-application-id");
@@ -149,6 +166,28 @@ $(document).ready(function(){
 		})
 })
 
+function showAllApplications(){
+	$("#openApplications_oneLine").find("tr.application").each(function(){
+		
+		$(this).show();
+		
+	})	
+}
+
+function showApplications_onHover(applicationIds){
+	
+	var iApplicationId;
+	
+	$("#openApplications_oneLine").find("tr.application").each(function(){
+		
+		iApplicationId = $(this).attr("data-application-id");
+		
+		if(doesArrayContainValue(iApplicationId, applicationIds)) $(this).show();
+		else $(this).hide();
+		
+	})
+	
+}
 
 function getDateText(td){
 	var date = getDateFromTdElement(td);
@@ -264,6 +303,7 @@ function setCalendarDays(){
 		application.lineClassName = getLineClassForApplication(calendarDays_toAddTo);
 		application.jobName = $(this).attr("data-job-name");
 		application.jobId = $(this).attr("data-job-id");
+		application.jobStatus = $(this).attr("data-job-status");
 		application.id = $(this).attr("data-id");
 		
 		application.isEmployment = false;
@@ -282,7 +322,7 @@ function initCalendar_Both(){
 
 	$("#calendar_both").datepicker({
 //		minDate: minDate,
-		numberOfMonths: 2, 
+		numberOfMonths: 1, 
 		hideIfNoPrevNext: true,
 		afterShow: showApplications_both,
 	});
@@ -303,24 +343,35 @@ function initCalendar_Employee_Profile($e){
 
 
 function showApplications_both(){
-		
+	
+	var colorClass;
+	var divHtml;
+	var td; 
+	var appCount;
 	
 	$(calendarDays).each(function(){
 		
-		if(this.applications.length > 0){
-			var divHtml;
+		appCount = this.applications.length;
+		
+		if(appCount > 0){
+			
 			
 			date_calendarDay = new Date(this.date);
-			var td = getTdByDayMonthYear($(".calendar"), date_calendarDay.getDate().toString(),
+			td = getTdByDayMonthYear($(".calendar"), date_calendarDay.getDate().toString(),
 														 date_calendarDay.getMonth().toString(),				
 														 date_calendarDay.getFullYear().toString());	
 			
 			
-			if(this.applications[0].isEmployment){
+			if(this.applications[0].jobStatus == 1){
 				divHtml = "<div class='job employment'>";
 			}
 			else{
-				divHtml = "<div class='job application'>";	
+				
+				if(appCount == 1) colorClass = "lgt";
+				else if(appCount == 2) colorClass = "med";
+				else colorClass = "drk";
+				
+				divHtml = "<div class='job application " + colorClass + "'><span class='app-count'>" + appCount + "</span>";	
 			}
 			
 			

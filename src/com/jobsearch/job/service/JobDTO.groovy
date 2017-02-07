@@ -34,6 +34,7 @@ public class JobDTO {
 	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
 	 int countWageProposals_sent
 	 int countWageProposals_received
+	 int countWageProposals_received_new
 	 
 	 List<Question> questions
 	 int newApplicationCount

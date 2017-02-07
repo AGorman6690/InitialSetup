@@ -111,11 +111,13 @@ public class ApplicationRepository {
 		return this.ApplicationRowMapper(sql, new Object[] { userId });
 	}
 
-	public List<Application> getApplicationsByUserAndStatuses(int userId, List<Integer> statuses) {
+	public List<Application> getApplications_ByUserAndStatuses_OpenJobs(int userId, List<Integer> statuses) {
 
 		List<Object> argsList = new ArrayList<Object>();
 
-		String sql = "SELECT * FROM application WHERE UserId = ?";
+		String sql = "SELECT * FROM application a"
+				+ " INNER JOIN job j ON j.JobId = a.JobId"
+				+ " WHERE a.UserId = ? AND j.Status < 2";
 
 		argsList.add(userId);
 
@@ -124,10 +126,10 @@ public class ApplicationRepository {
 		boolean isFirst = true;
 		for (int status : statuses) {
 			if (isFirst) {
-				sql += " AND (Status = ?";
+				sql += " AND (a.Status = ?";
 				isFirst = false;
 			} else {
-				sql += " OR Status = ?";
+				sql += " OR a.Status = ?";
 			}
 
 			argsList.add(status);
@@ -314,8 +316,11 @@ public class ApplicationRepository {
 		String sql = "INSERT INTO wage_proposal (ApplicationId, ProposedByUserId, ProposedToUserId, Amount, Status)"
 				+ " VALUES (?, ?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql, new Object[] { wageProposal.getApplicationId(), wageProposal.getProposedByUserId(),
-				wageProposal.getProposedToUserId(), wageProposal.getAmount(), wageProposal.getStatus() });
+		jdbcTemplate.update(sql, new Object[] { wageProposal.getApplicationId(),
+													wageProposal.getProposedByUserId(),
+													wageProposal.getProposedToUserId(),
+													wageProposal.getAmount(),
+													WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED });
 
 	}
 
@@ -423,7 +428,13 @@ public class ApplicationRepository {
 
 	public double getWage(int applicationId) {
 		String sql = "SELECT Amount FROM Wage_Proposal WHERE ApplicationId = ? AND Status = 1";
-		return jdbcTemplate.queryForObject(sql, new Object[] { applicationId }, Double.class);
+		
+		try {
+			return jdbcTemplate.queryForObject(sql, new Object[] { applicationId }, Double.class);	
+		} catch (Exception e) {
+			return -1;
+		}
+		
 	}
 
 	public List<WageProposal> getFailedWageProposalsByUser(int userId) {
@@ -461,20 +472,60 @@ public class ApplicationRepository {
 		String sql = "SELECT COUNT(*) FROM wage_proposal w"
 					+ " INNER JOIN application a ON a.applicationId = w.applicationId"
 					+ " INNER JOIN job j ON j.jobId = a.JobId"
-					+ " WHERE j.JobId = ? AND w.ProposedByUserId = ? AND w.Status = ?";
+					+ " WHERE j.JobId = ? AND w.ProposedByUserId = ?"
+					+ " AND ( w.Status = ? OR w.Status = ? )";
 		
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
-												WageProposal.STATUS_NO_ACTION_TAKEN }, Integer.class);				
+											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED,
+											WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN },
+											Integer.class);
 	}
 
 	public int getCountWageProposal_Received(Integer jobId, int userId) {
 	
+		// This includes the "New" wage proposals
+		
 		String sql = "SELECT COUNT(*) FROM wage_proposal w"
 				+ " INNER JOIN application a ON a.applicationId = w.applicationId"
 				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ? AND w.Status = ?";
+				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ?"
+				+ " AND ( w.Status = ? OR w.status = ? )";
 	
-	return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
-											WageProposal.STATUS_NO_ACTION_TAKEN }, Integer.class);
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
+											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED,
+											WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN },
+											Integer.class);
 	}
+	
+
+	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
+	
+		String sql = "SELECT COUNT(*) FROM wage_proposal w"
+				+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+				+ " INNER JOIN job j ON j.jobId = a.JobId"
+				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ?"
+				+ " AND w.Status = ?";
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
+											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
+											Integer.class);
+
+	}
+
+	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
+		
+		String sql = "UPDATE wage_proposal w"
+						 + " INNER JOIN application a ON w.ApplicationId = a.ApplicationId"
+						 + " INNER JOIN job j on j.JobId = a.JobId"
+						 + " SET w.Status = ?"
+						 + " WHERE j.jobid = ?"
+						 + " AND w.status = ?";
+		 
+		 jdbcTemplate.update(sql, new Object[]{ WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN,
+				 								jobId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED });
+
+
+		
+	}
+
 }
