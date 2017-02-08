@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.tools.ant.taskdefs.Exit;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -21,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
@@ -48,9 +46,8 @@ import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
-import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 
 @Service
 public class UserServiceImpl {
