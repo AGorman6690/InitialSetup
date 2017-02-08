@@ -581,6 +581,10 @@ public class UserServiceImpl {
 		// *************************************************************
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(employee.getUserId());
 		
+		List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(employee.getUserId());
+		
+		model.addAttribute("jobs_needRating", jobs_needRating);
+		model.addAttribute("userId", employee.getUserId());
 		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("openApplicationCount", openApplicationCount);
@@ -600,6 +604,7 @@ public class UserServiceImpl {
 
 		List<JobDTO> jobDtos_jobsCompleted = jobService.getJobDtos_JobsCompleted_Employer(employer.getUserId());
 
+		
 		model.addAttribute("yetToStartJobs_Dtos", jobDtos_jobsWaitingToStart);
 		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
 		model.addAttribute("jobDtos_jobsCompleted", jobDtos_jobsCompleted);

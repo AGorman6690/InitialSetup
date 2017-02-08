@@ -187,7 +187,7 @@ function filterTableRows(filters, $table){
 	var filterValue_currentRow;
 	var doShowRow;
 	
-	$table.find("tbody tr").each(function(i, row){
+	$table.find("tbody tr:not(.no-filter)").each(function(i, row){
 		
 		doShowRow = true;
 		$(filters).each(function(j, filter){

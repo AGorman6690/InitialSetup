@@ -17,153 +17,153 @@ $(function() {
 });
 
 $(document).ready(function(){
-		setCalendarDays();
+	setCalendarDays();
 //		setCalendarDays_employment();
-		
-		initCalendar_Employee_Profile($("#calendar_applications"));	
-		
-		initCalendar_Both();
+	
+	initCalendar_Employee_Profile($("#calendar_applications"));	
+	
+	initCalendar_Both();
 
-		$("#calendarContainer_applications").on("mouseover", "td div[data-job-name]", function(){
-			
-			var jobName = $(this).attr("data-job-name");
-			
-			$("#jobDetails p").show();
-			$("#jobDetails .job-name").html(jobName);
-			
-			addClassToDivWithAttr("hover", "data-job-name", jobName); 
-			
-		})
+	$("#calendarContainer_applications").on("mouseover", "td div[data-job-name]", function(){
 		
-		$("#calendarContainer_applications").on("mousedown", "td div[data-job-name]", function(event){
-			
-			// Only left click
-			if(event.which == 1){
-				window.location = "/JobSearch/job/" + $(this).attr("data-job-id") + "?c=profile-incomplete&p=1";	
-			}
-			
-		})
+		var jobName = $(this).attr("data-job-name");
 		
-		$("#calendarContainer_applications").on("mouseout", "td div[data-job-name]", function(){
-			$("#jobDetails p").hide();
-			
-			var jobName = $(this).attr("data-job-name");
-			removeClassToDivWithAttr("hover", "data-job-name", jobName); 
-		})
+		$("#jobDetails p").show();
+		$("#jobDetails .job-name").html(jobName);
+		
+		addClassToDivWithAttr("hover", "data-job-name", jobName); 
+		
+	})
+	
+	$("#calendarContainer_applications").on("mousedown", "td div[data-job-name]", function(event){
+		
+		// Only left click
+		if(event.which == 1){
+			window.location = "/JobSearch/job/" + $(this).attr("data-job-id") + "?c=profile-incomplete&p=1";	
+		}
+		
+	})
+	
+	$("#calendarContainer_applications").on("mouseout", "td div[data-job-name]", function(){
+		$("#jobDetails p").hide();
+		
+		var jobName = $(this).attr("data-job-name");
+		removeClassToDivWithAttr("hover", "data-job-name", jobName); 
+	})
+	
+	
+	$("#calendarContainer_both").on("mouseover", "td div.job", function(){
+	
+		$("#calendarDetails_applications").addClass("disabled");
+		$("#calendarDetails_applications").show();
+		
+		$("#applications_on_day_clicked").hide();
+		$("#applications_on_day_hover").show();
 		
 		
-		$("#calendarContainer_both").on("mouseover", "td div.job", function(){
 		
-			$("#calendarDetails_applications").addClass("disabled");
-			$("#calendarDetails_applications").show();
-			
-			$("#applications_on_day_clicked").hide();
-			$("#applications_on_day_hover").show();
-			
-			
-			
-			var html = "";
-			var jobName;
-			var applicationId;
-			var jobId;
-			var applicationIds = [];
-			
-			
-			$("#date_detail").html(getDateText($(this).parent()));
-			
-			html = "<div class='content'>";
-			
-			$(this).find("div").each(function(){
-				
-				jobName = $(this).attr("data-job-name");
-				applicationId = $(this).attr("data-id");
-				
-							
-				html  += "<div><a class='accent' href=# data-application-id='" + applicationId + "'>" 
-								+ jobName + "</a></div>";
-				
-				applicationIds.push(applicationId);
-			})
-
-			html += "</div>";
-			
-			$("#applications_on_day_hover").empty();
-			$("#applications_on_day_hover").html(html);
-			
-			showApplications_onHover(applicationIds);
-			
-			
-
-			
-		})
+		var html = "";
+		var jobName;
+		var applicationId;
+		var jobId;
+		var applicationIds = [];
 		
-		$("#calendarContainer_both").on("mouseout", "td div.job", function(){
+		
+		$("#date_detail").html(getDateText($(this).parent()));
+		
+		html = "<div class='content'>";
+		
+		$(this).find("div").each(function(){
 			
-
-			if($("#applications_on_day_clicked").html() == ""){
-//				$("#calendarDetails_applications").hide();
-				$("#date_detail").html("...");
-			}
-			else{
-				$("#date_detail").html(clickedDate);
-				$("#calendarDetails_applications").removeClass("disabled");
-			}
-
+			jobName = $(this).attr("data-job-name");
+			applicationId = $(this).attr("data-id");
 			
-			$("#applications_on_day_clicked").show();
-			$("#applications_on_day_hover").hide();
-			
-			$("#calendarDetails_applications").removeClass("still-hovering");
-			
-			showAllApplications();
 						
-		})
-		
-		var clickedDate;
-		
-		$("#calendarContainer_both").on("mousedown", "td div.job", function(event){
+			html  += "<div><a class='accent' href=# data-application-id='" + applicationId + "'>" 
+							+ jobName + "</a></div>";
 			
-			// Only left click
-			if(event.which == 1){
-				
-				var html_hover;
-				var html_click;
-				
-				html_hover = $("#applications_on_day_hover .content").clone();
-				
-				$("#applications_on_day_clicked").html(html_hover);
-				$("#calendarDetails_applications").removeClass("disabled");
-				$("#calendarDetails_applications").addClass("still-hovering");
-//				toggleClasses($("#application_on_day"), "disabled", "enabled");	
-				
-				clickedDate = getDateText($(this).parent());
+			applicationIds.push(applicationId);
+		})
 
-			}
-			
-		})		
+		html += "</div>";
 		
-		$("table#openApplications_oneLine tr").on("mouseover", "*", function(){
-			var applicationId = $(this).closest("tr").attr("data-application-id");
-			highlightApplicationWorkDays(applicationId, true);		
-		})
+		$("#applications_on_day_hover").empty();
+		$("#applications_on_day_hover").html(html);
 		
-		$("table#openApplications_oneLine tr").on("mouseout", "*", function(){
-			var applicationId = $(this).closest("tr").attr("data-application-id");
-			highlightApplicationWorkDays(applicationId, false);		
-		})
+		showApplications_onHover(applicationIds);
 		
-		$("#applications_on_day_clicked").on("mouseover", "a", function(){
-			
-			var applicationId = $(this).attr("data-application-id");
-			highlightApplicationWorkDays(applicationId, true);
-			
-		})
 		
-		$("#applications_on_day_clicked").on("mouseout", "a", function(){
+
+		
+	})
+	
+	$("#calendarContainer_both").on("mouseout", "td div.job", function(){
+		
+
+		if($("#applications_on_day_clicked").html() == ""){
+//				$("#calendarDetails_applications").hide();
+			$("#date_detail").html("...");
+		}
+		else{
+			$("#date_detail").html(clickedDate);
+			$("#calendarDetails_applications").removeClass("disabled");
+		}
+
+		
+		$("#applications_on_day_clicked").show();
+		$("#applications_on_day_hover").hide();
+		
+		$("#calendarDetails_applications").removeClass("still-hovering");
+		
+		showAllApplications();
+					
+	})
+	
+	var clickedDate;
+	
+	$("#calendarContainer_both").on("mousedown", "td div.job", function(event){
+		
+		// Only left click
+		if(event.which == 1){
 			
-			var applicationId = $(this).attr("data-application-id");
-			highlightApplicationWorkDays(applicationId, false);
-		})
+			var html_hover;
+			var html_click;
+			
+			html_hover = $("#applications_on_day_hover .content").clone();
+			
+			$("#applications_on_day_clicked").html(html_hover);
+			$("#calendarDetails_applications").removeClass("disabled");
+			$("#calendarDetails_applications").addClass("still-hovering");
+//				toggleClasses($("#application_on_day"), "disabled", "enabled");	
+			
+			clickedDate = getDateText($(this).parent());
+
+		}
+		
+	})		
+	
+	$("table#openApplications_oneLine tr").on("mouseover", "*", function(){
+		var applicationId = $(this).closest("tr").attr("data-application-id");
+		highlightApplicationWorkDays(applicationId, true);		
+	})
+	
+	$("table#openApplications_oneLine tr").on("mouseout", "*", function(){
+		var applicationId = $(this).closest("tr").attr("data-application-id");
+		highlightApplicationWorkDays(applicationId, false);		
+	})
+	
+	$("#applications_on_day_clicked").on("mouseover", "a", function(){
+		
+		var applicationId = $(this).attr("data-application-id");
+		highlightApplicationWorkDays(applicationId, true);
+		
+	})
+	
+	$("#applications_on_day_clicked").on("mouseout", "a", function(){
+		
+		var applicationId = $(this).attr("data-application-id");
+		highlightApplicationWorkDays(applicationId, false);
+	})
 })
 
 function showAllApplications(){
@@ -199,15 +199,21 @@ function highlightApplicationWorkDays(applicationId, doHightlight){
 		
 	var workDays = getWorkDaysByApplicationId(applicationId);
 	var td;
+	var month_firstWorkDay;
 	
-	$(workDays).each(function(){
+	
+	$("#calendar_both").datepicker("setDate",
+			$.datepicker.formatDate("mm/dd/yy", workDays[0])); 
+	
+	$(workDays).each(function(i, workDay){
+		
 		td = getTdByDayMonthYear($("#calendarContainer_both"), this.getDate(), this.getMonth(),
 									this.getFullYear());
 		
 		if(doHightlight) $(td).find("div.job").addClass("hover");
 		else $(td).find("div.job").removeClass("hover");
-	})			
-		
+	})	
+	
 }
 
 function getWorkDaysByApplicationId(applicationId){

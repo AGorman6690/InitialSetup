@@ -9,6 +9,7 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee.css" />
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/oneLine.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
 
 <script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script>
 <script src="<c:url value="/static/javascript/profile_employee/ToggleCalendar.js" />"></script>							
@@ -26,8 +27,39 @@
 <!-- 		</div> -->
 <!-- 	</div> -->
 
+
+<c:if test="${jobs_needRating.size() > 0 }">
+	
+	<div id="completedJobs_needRating_Container" class="row">
+		<div id="completedJobs_needRating">
+			<p>Completed Jobs Requiring Your Rating</p>
+			<table class="main-table-style">
+				<thead>
+					<tr>
+						<th>Job Name</th>
+						<th>Completion Date</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach items="${jobs_needRating }" var="job">
+						<td><a class="accent"
+							   href="/JobSearch/job/${job.id }?c=profile-complete&p=1">
+								${job.jobName }</a>
+						</td>
+						<td>${job.stringEndDate }</td>
+						<td><a href="/JobSearch/job/${job.id }/rate-employer">Rate Employer</a>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</c:if>
 				
 	<div class="row">
+	
+	
+	
 		<div class="col-sm-12" id="sectionContainers">			
 
 		

@@ -197,7 +197,36 @@
 					</td>									
 					<td>
 						<div class="vert-border">
-							$<fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+							<span class="dollar-sign">$</span>
+							<fmt:formatNumber type="number" minFractionDigits="2" 
+								maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
+							
+							<c:if test="${application.wageProposals.size() > 1 }">
+								<span data-toggle-id="wp-history-${application.applicationId }" 
+									class="show-wage-proposal-history glyphicon glyphicon-menu-down"></span>
+								<div id="wp-history-${application.applicationId }" class="dropdown-style">
+									<table class="wage-proposal-history-table">
+										<thead>
+											<tr>
+												<th>Proposed By</th>
+												<th>Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach items="${application.wageProposals }" var="wageProposal">
+												<tr class="no-filter ${wageProposal.proposedByUserId == userId ? 'you' : 'not-you' }">
+													<td>${wageProposal.proposedByUserId == userId ? 'You' : 'Applicant' }</td>
+													<td>
+														<span class="dollar-sign">$</span>
+														<fmt:formatNumber type="number" minFractionDigits="2" 
+															maxFractionDigits="2" value="${wageProposal.amount}"/>
+													</td>
+												</tr>
+											</c:forEach>	
+										</tbody>
+									</table>
+								</div>
+							</c:if>
 						</div>
 					</td>
 					<td>

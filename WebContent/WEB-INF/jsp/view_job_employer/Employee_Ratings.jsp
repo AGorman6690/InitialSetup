@@ -1,5 +1,6 @@
 <%@ include file="../includes/TagLibs.jsp" %>		
 
+
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 
 <c:choose>         

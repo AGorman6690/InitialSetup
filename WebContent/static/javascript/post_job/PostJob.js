@@ -81,7 +81,14 @@ function importPreviousQuestion(questionId){
 	function _success(questionDto) {			
 		
 		$("html").removeClass("waiting");
-		resetEntireQuestionSection();
+		
+		// Reset the question section
+		clearAllInputs($("#questionsContainer"));
+		enableAllInputFields($("#questionsContainer"));
+		$("#answerListContainer").hide();
+		
+		setClickableness_ForQuestionActions(true, true, false, false);
+		
 		showQuestionDto(questionDto);
 	}	
 

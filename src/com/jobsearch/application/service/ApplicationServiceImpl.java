@@ -312,6 +312,7 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setApplication(application);
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
 			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
 			applicationDtos.add(applicationDto);
@@ -509,6 +510,15 @@ public class ApplicationServiceImpl {
 	public Question getQuestion(int questionId) {
 		
 		return repository.getQuestion(questionId);
+	}
+
+	public boolean wasUserEmployedForJob(int userId, int jobId) {
+			
+		int countEmploymentRecord = repository.getCount_Employment_ByUserAndJob(userId, jobId);
+		
+		if(countEmploymentRecord  == 1) return true;
+		else return false;
+	
 	}
 
 

@@ -29,29 +29,33 @@ $(document).ready(function(){
 		
 		if(isAQuestionSelected()){
 //			var selectedPostQuestionDto = getSelectedPostQuestionDto();
-			showSelectedPostQuestionDto();			
+			showSelectedPostQuestionDto();		
 			
-			// Turn "Delete" and "Edit" to clickable
 			setClickableness_ForQuestionActions(true, false, true, true);
-			
-			// Turn "Add" to un-clickable
-			setClickableness_ForQuestionActions(false, true, false, false);
 		}
 		else{
 			clearAllInputs($("#questionsContainer"));
-			setClickableness_ForQuestionActions(false, false, true, true);			
+			
 			setClickableness_ForQuestionActions(true, true, false, false);
 			enableAllInputFields($("#questionsContainer"));
 		}
 
 		clearInvalidContentAndStyle();
 		
+	})
+	
+	$("body").on("click", "#newQuestion.clickable", function(){
+		
+		clearAllInputs($("#questionsContainer"));
+		enableAllInputFields($("#questionsContainer"));
+		$("#answerListContainer").hide();
+		setClickableness_ForQuestionActions(true, true, false, false);
+		deselectAddedQuestion();
 
 	})
 	
 	$("body").on("click", "#addQuestion.clickable", function(){
-		addQuestion();
-	
+		addQuestion();	
 	})
 	
 	
@@ -59,7 +63,7 @@ $(document).ready(function(){
 		deleteQuestion();
 		clearAllInputs($("#questionsContainer"));
 		enableAllInputFields($("#questionsContainer"));
-		setClickableness_ForQuestionActions(false, false, true, true);
+		setClickableness_ForQuestionActions(true, true, false, false);
 		
 	})
 	
@@ -68,16 +72,15 @@ $(document).ready(function(){
 		
 		enableAllInputFields($("#questionsContainer"));
 		$("#editQuestionResponses").show();
-		setClickableness_ForQuestionActions(false, true, true, true);
 		setClickableness_ForAddedQuestions(false);
+		setClickableness_ForQuestionActions(false, false, false, false);
 	})	
 	
 	$("#cancelEditQuestionChanges").click(function(){
 		
 		showSelectedPostQuestionDto();	
 			
-		setClickableness_ForQuestionActions(true, true, true, true);
-		setClickableness_ForQuestionActions(false, true, false, false);
+		setClickableness_ForQuestionActions(true, false, true, true);
 		setClickableness_ForAddedQuestions(true);
 		$("#editQuestionResponses").hide();
 	})
@@ -87,8 +90,7 @@ $(document).ready(function(){
 		if(areQuestionInputsValid){
 			saveEditQuestionChanges();
 			
-			setClickableness_ForQuestionActions(true, true, true, true);
-			setClickableness_ForQuestionActions(false, true, false, false);
+			setClickableness_ForQuestionActions(true, false, true, true);
 			setClickableness_ForAddedQuestions(true);
 			
 			$("#editQuestionResponses").hide();
@@ -99,15 +101,19 @@ $(document).ready(function(){
 	
 })
 
+function deselectAddedQuestion(){
+	$("#addedQuestions").find("a.selected").eq(0).removeClass("selected");
+}
+
 function resetEntireQuestionSection(){
 	
-	postQuestionDtos = [];	
+	postQuestionDtos = [];		
 	$("#addedQuestions").empty();	
+	
 	clearAllInputs($("#questionsContainer"));
 	enableAllInputFields($("#questionsContainer"));
 	$("#answerListContainer").hide();
 	setClickableness_ForQuestionActions(true, true, false, false);
-	setClickableness_ForQuestionActions(false, false, true, true);
 	
 }
 
@@ -161,18 +167,21 @@ function setClickableness_ForAddedQuestions(doSetAsClickable){
 	
 }
 
-function setClickableness_ForQuestionActions(doSetAsClickable, doSetAdd, doSetDelete, doSetEdit){
+
+function setClickableness_ForQuestionActions(doSetNew_asClickable, doSetAdd_asClickable,
+												doSetDelete_asClickable, doSetEdit_asClickable){
 	
-	if(doSetAsClickable){
-		if(doSetEdit) $("#editQuestion").addClass("clickable");
-		if(doSetDelete) $("#deleteQuestion").addClass("clickable");
-		if(doSetAdd) $("#addQuestion").addClass("clickable");
-	}
-	else{
-		if(doSetEdit) $("#editQuestion").removeClass("clickable");
-		if(doSetDelete) $("#deleteQuestion").removeClass("clickable");	
-		if(doSetAdd) $("#addQuestion").removeClass("clickable");
-	}
+	if(doSetEdit_asClickable) $("#editQuestion").addClass("clickable");
+	else $("#editQuestion").removeClass("clickable");
+	
+	if(doSetDelete_asClickable) $("#deleteQuestion").addClass("clickable");
+	else $("#deleteQuestion").removeClass("clickable");	
+	
+	if(doSetAdd_asClickable) $("#addQuestion").addClass("clickable");
+	else $("#addQuestion").removeClass("clickable");
+	
+	if(doSetNew_asClickable) $("#newQuestion").addClass("clickable");
+	else $("#newQuestion").removeClass("clickable");
 	
 }
 

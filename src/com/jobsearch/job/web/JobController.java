@@ -183,10 +183,11 @@ public class JobController {
 						@RequestParam(name = "c", required = true) String c,
 						@RequestParam(name = "p", required = true) Integer p,
 						@RequestParam(name = "d", required = false) String d,
-						@PathVariable(value = "jobId") int jobId) {		
+						@PathVariable(value = "jobId") int jobId) {	
+		
 		// c is the context in which the job was clicked
 		// p is the user's profile id
-		// data is whether the employer clicked a data point for the job
+		// data is whether the **employer** clicked a data point for the job
 		// (i.e. wage negotiations, applicants, or employees)
 		
 		if(p == 1){
@@ -245,7 +246,13 @@ public class JobController {
 		return "/post_job/PostJob";
 	}
 	
-	
+	@RequestMapping(value = "/job/{jobId}/rate-employer", method = RequestMethod.GET)
+	public String viewRateEmployer(@PathVariable(value= "jobId") int jobId,
+									Model model, HttpSession session) {
+
+		if(jobService.setModel_ViewRateEmployer(jobId, model, session)) return "/ratings/RateEmployer";
+		else return SessionContext.get404Page();
+	}	
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {

@@ -262,6 +262,7 @@
 					</div>
 					<div class="col-sm-9">
 						<div id="questionActions">
+							<button id="newQuestion" class="clickable btn-sqr">Clear</button>
 							<button id="addQuestion" class="clickable btn-sqr">Add</button>
 							<button id="deleteQuestion" class="btn-sqr">Delete</button>
 							<button id="editQuestion" class="btn-sqr">Edit</button>							

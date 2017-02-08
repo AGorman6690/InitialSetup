@@ -68,7 +68,39 @@
 									</c:otherwise>
 								</c:choose>
 							</td>	
-							<td><span class="dollar-sign">$</span><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/></td>										
+							<td>
+								<span class="dollar-sign">$</span>
+								<fmt:formatNumber type="number" minFractionDigits="2" 
+									maxFractionDigits="2" value="${dto.currentWageProposal.amount}"/>
+								
+								<c:if test="${dto.wageProposals.size() > 1 }">
+									<span data-toggle-id="wp-history-${dto.application.applicationId }"
+										data-toggle-speed="-2" 
+										class="show-wage-proposal-history glyphicon glyphicon-menu-down"></span>
+									<div id="wp-history-${dto.application.applicationId }" class="dropdown-style">
+										<table class="wage-proposal-history-table">
+											<thead>
+												<tr>
+													<th>Proposed By</th>
+													<th>Amount</th>
+												</tr>
+											</thead>
+											<tbody>
+												<c:forEach items="${dto.wageProposals }" var="wageProposal">
+													<tr class="${wageProposal.proposedByUserId == userId ? 'you' : 'not-you' }">
+														<td>${wageProposal.proposedByUserId == userId ? 'You' : 'Employer' }</td>
+														<td>
+															<span class="dollar-sign">$</span>
+															<fmt:formatNumber type="number" minFractionDigits="2" 
+																maxFractionDigits="2" value="${wageProposal.amount}"/>
+														</td>
+													</tr>
+												</c:forEach>	
+											</tbody>
+										</table>
+									</div>
+								</c:if>
+							</td>										
 						
 							<td class="hide-with-calendar">${dto.job.stringStartDate }</td>
 							<td class="hide-with-calendar">${dto.job.stringEndDate }</td>	

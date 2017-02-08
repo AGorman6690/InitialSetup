@@ -878,7 +878,7 @@ public class JobServiceImpl {
 			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
-			model.addAttribute("data_pageInit", data_pageInit);
+			
 			
 			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
 			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
@@ -913,9 +913,11 @@ public class JobServiceImpl {
 			break;
 		}	
 		
+		model.addAttribute("data_pageInit", data_pageInit);
 		model.addAttribute("context", context);
 //		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
+		model.addAttribute("userId", sessionUser.getUserId());
 //		model.addAttribute("userDto", userDto);
 				
 	}
@@ -1003,6 +1005,28 @@ public class JobServiceImpl {
 		}
 		else return false;
 	}
+
+	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
+		
+		return repository.getJobs_NeedRating_FromEmployee(userId);
+	}
+
+	public boolean setModel_ViewRateEmployer(int jobId, Model model, HttpSession session) {
+		
+		JobSearchUser user = SessionContext.getUser(session);
+		
+		if(applicationService.wasUserEmployedForJob(user.getUserId(), jobId)){
+			
+			JobSearchUser employer = userService.getUser(this.getJob(jobId).getUserId());
+			
+			model.addAttribute("employer", employer);
+			
+			return true;
+		}
+		else return false;
+		
+	}
+
 
 
 

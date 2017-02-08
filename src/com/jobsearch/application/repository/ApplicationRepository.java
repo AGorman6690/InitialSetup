@@ -548,4 +548,10 @@ public class ApplicationRepository {
 		return QuestionRowMapper(sql, new Object[] { questionId }).get(0);
 	}
 
+	public Integer getCount_Employment_ByUserAndJob(int userId, int jobId) {
+
+		String sql = "SELECT COUNT(*) FROM employment WHERE UserId = ? AND JobId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId ,  jobId }, Integer.class);
+	}
+
 }

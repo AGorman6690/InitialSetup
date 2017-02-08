@@ -995,6 +995,22 @@ public class JobRepository {
 		return JobRowMapper(sql, new Object[]{ userId });
 	}
 
+	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
+		
+		// *******************************************************
+		// *******************************************************
+		// Once the back end is built for employer ratings,
+		// update the sql statement
+		// *******************************************************
+		// *******************************************************
+
+		String sql = "SELECT * FROM job j"
+						+ " INNER JOIN application a ON a.JobId = j.JobId "
+						+ " WHERE a.UserId = ? AND j.Status = ?";
+		
+		return JobRowMapper(sql, new Object[]{ userId, Job.STATUS_PAST });
+	}
+
 
 
 

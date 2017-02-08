@@ -9,6 +9,7 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/Templates/tableFilter.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/Templates/forms.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
 	
 		<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	
@@ -49,7 +50,7 @@
 		</div>
 		<div class="row">
 		
-			<c:if test="${data_pageInit != 'all-apps' }">
+			<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
 				<button id="showAllApplicants" class="sqr-btn">Show All Applicants</button>			
 			</c:if>
 

@@ -4,7 +4,7 @@ table.main-table-style{
 
 .main-table-style thead{
     border-bottom: 1px solid #ddd;
-    border-top: 1px solid #ddd;
+/*     border-top: 1px solid #ddd; */
 }
 
 .main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
@@ -52,6 +52,8 @@ table.main-table-style{
 .main-table-style th{
 	padding:4px 8px;
     color: #163b3d;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 td .accent{
