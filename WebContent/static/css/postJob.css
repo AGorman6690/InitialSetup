@@ -102,10 +102,15 @@
 
 #headerLinksContainer{
     text-align: left;
-    font-size: 17px;
     color: #337ab7;
     padding: 50px 0px 10px 0px;
     padding-left: 200px;
+    
+    font-size: 20px;
+    color: #163b3d;
+    display: inline-block;
+    /* border-bottom: 2px solid black; */
+    margin-bottom: 20px;
 }
 
 #copyPreviousQuestion{
@@ -135,6 +140,7 @@
 	padding: 5px 0px;	
 	color: #163b3d;
 	cursor: pointer;
+	font-size:16px;
 }
 
 #postedQuestionsContainer{
@@ -146,4 +152,45 @@
 	width:350px;
 /* 	height:500px; */
 /* 	overflow: scroll;  */
+}
+
+
+.list-item{
+	padding: 5px 0px;
+}
+
+.delete-list-item, .add-list-item{
+	cursor:pointer;
+	font-size:15px;
+	padding:5px;
+}
+
+#employeeSkillsContainer .list-item input{
+	width: 600px;
+}
+
+#timesTableContainer{
+	display:none;
+}
+
+
+
+#headerLinksContainer #previewJobPosting_Label{
+	font-size: 24px;
+	color: #337ab7;
+	padding-right:40px;
+/* 	margin-left: -200px; */
+}
+
+
+#submitPosting_preview_container,
+#submitPosting_final_container{
+    display: inline-block;
+    padding: 7px 0px;
+    border-top: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
+#headerLinksContainer #submitPosting_final_container{
+	display:none;
 }

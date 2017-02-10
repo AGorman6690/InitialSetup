@@ -1,4 +1,4 @@
-var postQuestionDtos = [];
+var questions = [];
 var ongoingQuestionCount = 0;
 
 
@@ -28,8 +28,8 @@ $(document).ready(function(){
 		else highlightArrayItem(this, $("#addedQuestions").find("a"), "selected");
 		
 		if(isAQuestionSelected()){
-//			var selectedPostQuestionDto = getSelectedPostQuestionDto();
-			showSelectedPostQuestionDto();		
+
+			showSelectedQuestion();		
 			
 			setClickableness_ForQuestionActions(true, false, true, true);
 		}
@@ -78,7 +78,7 @@ $(document).ready(function(){
 	
 	$("#cancelEditQuestionChanges").click(function(){
 		
-		showSelectedPostQuestionDto();	
+		showSelectedQuestion();	
 			
 		setClickableness_ForQuestionActions(true, false, true, true);
 		setClickableness_ForAddedQuestions(true);
@@ -107,7 +107,7 @@ function deselectAddedQuestion(){
 
 function resetEntireQuestionSection(){
 	
-	postQuestionDtos = [];		
+	questions = [];		
 	$("#addedQuestions").empty();	
 	
 	clearAllInputs($("#questionsContainer"));
@@ -125,22 +125,22 @@ function clearInvalidContentAndStyle(){
 function saveEditQuestionChanges(){
 	
 	var newlyEditedQuestion = {};
-	var selectedPostQuestionDto = {};
+	var selectedQuestion = {};
 	
-	selectedPostQuestionDto = getSelectedPostQuestionDto();
-	newlyEditedQuestion = getPostQuestionDto();
+	selectedQuestion = getSelectedQuestion();
+	newlyEditedQuestion = getQuestion();
 	
 	// When editing a question, the id must remain the same.
 	// Otherwise the anchor's [data-question-id] needs to be updated.
-	newlyEditedQuestion.id = selectedPostQuestionDto.id;
+	newlyEditedQuestion.questionId = selectedQuestion.questionId;
 	
 	// Remove the old selected question
-	postQuestionDtos = removeArrayElementByIdProp(selectedPostQuestionDto.id, postQuestionDtos);
+	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
 	
 	// Add the new edited question
-	postQuestionDtos.push(newlyEditedQuestion);
+	questions.push(newlyEditedQuestion);
 	
-	updateAddedQuestionText(newlyEditedQuestion.id, newlyEditedQuestion.text);
+	updateAddedQuestionText(newlyEditedQuestion.questionId, newlyEditedQuestion.text);
 }
 
 function updateAddedQuestionText(questionId, questionText){
@@ -187,19 +187,19 @@ function setClickableness_ForQuestionActions(doSetNew_asClickable, doSetAdd_asCl
 
 function deleteQuestion(){
 
-	var selectedPostQuestionDto = getSelectedPostQuestionDto();
-	postQuestionDtos = removeArrayElementByIdProp(selectedPostQuestionDto.id, postQuestionDtos);
+	var selectedQuestion = getSelectedQuestion();
+	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
 	
 	//Remove the question from the cart
-	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedPostQuestionDto.id);
+	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedQuestion.questionId);
 	
 }
 
-function showSelectedPostQuestionDto(){
+function showSelectedQuestion(){
 	
-	var selectedPostQuestionDto = getSelectedPostQuestionDto();
+	var selectedQuestion = getSelectedQuestion();
 	
-	showQuestionDto(selectedPostQuestionDto);
+	showQuestionDto(selectedQuestion);
 
 	
 	disableAllInputFields($("#questionsContainer"));			
@@ -236,14 +236,14 @@ function resetAnswerListContainer(){
 	})
 }
 
-function getSelectedPostQuestionDto(){
+function getSelectedQuestion(){
 	
 	var selectedQuestionId = $("#addedQuestions").find("a.selected").attr("data-question-id");
 	selectedQuestionId = parseInt(selectedQuestionId);
 	
 	var selectedQuestion = {};
-	$.each(postQuestionDtos, function(){
-		if(this.id == selectedQuestionId){
+	$.each(questions, function(){
+		if(this.questionId == selectedQuestionId){
 			selectedQuestion = this;		
 		}
 	})
@@ -268,33 +268,36 @@ function deleteAnswerOption(clickedAnswerOption){
 	if($("#answerList").find(".answer-container").length > 2){
 		$(clickedAnswerOption).closest(".answer-container").remove();
 	}
+	else{
+		$(clickedAnswerOption).siblings("input").eq(0).val("");
+	}
 }
 
 
 function addQuestion(){
-	var postQuestionDto = {};
+	var question = {};
 	if(areQuestionInputsValid()){
-		postQuestionDto = getPostQuestionDto();
+		question = getQuestion();
 		ongoingQuestionCount += 1;
-		postQuestionDto.id = ongoingQuestionCount;
-		postQuestionDtos.push(postQuestionDto);
-		addQuestionToDOM(postQuestionDto);
+		question.questionId = ongoingQuestionCount;
+		questions.push(question);
+		addQuestionToDOM(question);
 		clearAllInputs($("#questionsContainer"));
 		slideUp($("#answerListContainer"), 400);
 	}
 }
-function getPostQuestionDto(){
+function getQuestion(){
 	
-	var postQuestionDto = {};
+	var question = {};
 	var answerOptionsInputs = []
 	var answerOptions = [];
 	var answerOption = {};
 	
-	postQuestionDto.text = $("#question").val();
-	postQuestionDto.formatId = $("#questionFormat").find("option:selected").eq(0).attr("data-format-id");
+	question.text = $("#question").val();
+	question.formatId = $("#questionFormat").find("option:selected").eq(0).attr("data-format-id");
 
 	//If necessary, set the answer options
-	if(doesQuestionHaveAnAnswerList(postQuestionDto)){
+	if(doesQuestionHaveAnAnswerList(question)){
 
 		$.each($("#answerList").find(".answer-container input"), function(){
 			answerOption = {};
@@ -302,28 +305,28 @@ function getPostQuestionDto(){
 			answerOptions.push(answerOption);
 		})
 		
-		postQuestionDto.answerOptions = answerOptions;
+		question.answerOptions = answerOptions;
 	
 	}else{
-		postQuestionDto.answerOptions = [];
+		question.answerOptions = [];
 	}
 	
-	return postQuestionDto;
+	return question;
 }
 
-function doesQuestionHaveAnAnswerList(postQuestionDto){
-	if(postQuestionDto.formatId == 2 || postQuestionDto.formatId == 3){
+function doesQuestionHaveAnAnswerList(question){
+	if(question.formatId == 2 || question.formatId == 3){
 		return true;
 	}else{
 		return false;
 	}
 }
 
-function addQuestionToDOM(postQuestionDto){
+function addQuestionToDOM(question){
 	
-	var html = "<a data-question-id='" + postQuestionDto.id + "' class='accent no-hover clickable'>";
+	var html = "<a data-question-id='" + question.questionId + "' class='accent no-hover clickable'>";
 	
-	var buttonText = getAddedQuestionText(postQuestionDto.text);
+	var buttonText = getAddedQuestionText(question.text);
 	html += buttonText;			
 	html += "</a>";
 				

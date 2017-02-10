@@ -19,14 +19,14 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Controller
 public class JobController {
@@ -45,10 +45,10 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
-	public String postJobs(@RequestBody PostJobDTO postJobDto, HttpSession session) {
+	public String postJobs(@RequestBody JobDTO jobDto, HttpSession session) {
 
 		
-		jobService.addPosting(postJobDto, session);
+		jobService.addPosting(jobDto, session);
 		return "";
 //		return "redirect:/user/profile";
 
@@ -130,6 +130,8 @@ public class JobController {
 			}
 
 	}
+	
+	
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
@@ -142,6 +144,14 @@ public class JobController {
 			return "NotLoggedIn";
 		}
 
+	}
+	
+	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
+	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
+
+		jobService.setModel_PreviewJobPost(model, jobDto);
+		
+		return "/templates/JobInformation";
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)

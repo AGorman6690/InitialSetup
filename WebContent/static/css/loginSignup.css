@@ -1,11 +1,9 @@
 
-#loginContainer {
-	width:380px;
+#loginContainer,
+#signUpContainer  {
+	width:400px;
 }
 
-#signUpContainer {
-	width:380px;
-}
 
 .group-container{
 	padding:20px 0px;
@@ -40,13 +38,14 @@
 }
 
 .group label{
-	width:150px;
+	width:160px;
 	text-align:right;
 	padding-right:10px;
 }
 
-.group input[type=text],
-.group input[type=password]{
+.group input[type=input],
+.group input[type=password],
+.group input[type=email]{
 	width:225px;
 }
 
@@ -70,4 +69,23 @@ input[type=submit]{
 
 .forgot-password{
 	padding-top:5px;
+}
+
+.input-container{
+	display: inline-block;
+}
+
+.error-message{
+	text-align: right;
+	padding-bottom: 8px;
+	margin-top: -4px;
+    padding-right: 10px;
+}
+
+.error-message.do-show{
+	display:inline-block;
+}
+
+#verifyEmail{
+	display: none;
 }

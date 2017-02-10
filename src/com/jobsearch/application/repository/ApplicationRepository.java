@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.PostQuestionDTO;
+
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
@@ -287,7 +287,7 @@ public class ApplicationRepository {
 
 	}
 
-	public void addQuestion(PostQuestionDTO question) {
+	public void addQuestion(Question question) {
 
 		CallableStatement cStmt;
 		try {

@@ -10,7 +10,7 @@
 		<div class="action"><a class="accent decline-counter">Decline</a></div>
 		
 		<c:set var="toggleIdCounter" value="${param_wage_proposal.id }-toggle-id-counter" />
-		<div class="action"><a class="accent re-counter" data-toggle-id="${toggleIdCounter }" data-toggle-speed="1">Counter</a></div>							
+		<div class="action re-counter-container"><a class="accent re-counter" >Counter</a></div>							
 		<div id="${toggleIdCounter }" class="re-counter-amount-container" >
 			<div>Amount</div>
 			<input class="re-counter-amount"></input>

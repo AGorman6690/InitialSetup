@@ -207,7 +207,7 @@
 								<div id="wp-history-${application.applicationId }" class="dropdown-style">
 									<table class="wage-proposal-history-table">
 										<thead>
-											<tr>
+											<tr class="no-filter">
 												<th>Proposed By</th>
 												<th>Amount</th>
 											</tr>

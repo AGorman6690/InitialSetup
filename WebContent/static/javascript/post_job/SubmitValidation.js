@@ -18,7 +18,7 @@ $(document).ready(function(){
 
 
 
-function isPostJobDtoValid(postJobDto){
+function arePostJobInputsValid(){
 	
 	var invalidCount = 0;
 	var input;
@@ -66,7 +66,7 @@ function validate_Dates(){
 	var selectedDates = [];
 	var invalidCount = 0;
 
-	$input = $("#workDaysCalendar");
+	$input = $("#workDaysCalendar_postJob");
 	selectedDates = getSelectedDates($input);
 	if(selectedDates.length == 0 ){
 		setInvalidCss($input);

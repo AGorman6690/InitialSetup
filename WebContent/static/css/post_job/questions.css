@@ -2,15 +2,15 @@
 	display:none;
 }
 
-.delete-answer, #addAnswer{
-	cursor:pointer;
-	font-size:15px;
-	padding:5px;
-}
+/* .delete-answer, #addAnswer{ */
+/* 	cursor:pointer; */
+/* 	font-size:15px; */
+/* 	padding:5px; */
+/* } */
 
-.answer-container{
-	padding-bottom:8px;
-}
+/* .answer-container{ */
+/* 	padding-bottom:8px; */
+/* } */
 
 #addedQuestions{
 	padding:5px 0px;

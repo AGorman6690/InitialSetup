@@ -26,11 +26,15 @@ import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.Skill;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
 import com.jobsearch.utilities.MathUtility;
+
+import groovyjarjarasm.asm.tree.TryCatchBlockNode;
 
 
 @Service
@@ -51,7 +55,7 @@ public class JobServiceImpl {
 	@Autowired
 	GoogleClient googleClient;
 
-	public void addPosting(PostJobDTO postJobDto, HttpSession session) {
+	public void addPosting(JobDTO jobDto, HttpSession session) {
 
 		
 			// ***********************************************************************************
@@ -61,15 +65,13 @@ public class JobServiceImpl {
 			// when the same logic can be handled in the browser?
 			// ***********************************************************************************
 
-			// Build the job's full address
-			String address = postJobDto.getStreetAddress() + " " 
-							+ postJobDto.getCity() + " " 
-							+ postJobDto.getState() + " "
-							+ postJobDto.getZipCode();
+		
+			this.setLatAndLag(jobDto);
 
-			GeocodingResult[] results = googleClient.getLatAndLng(address);
 
-			if(areGeocodingResultsValid(results)){
+			if( jobDto.getJob().getLat() != null &&
+				jobDto.getJob().getLng() != null &&
+				areValidWorkDays(jobDto.getWorkDays())){
 
 				JobSearchUser user = SessionContext.getUser(session);
 	
@@ -84,13 +86,59 @@ public class JobServiceImpl {
 				// "POSTAL_CODE"));
 				// ***************************************************************
 
-				postJobDto.setLat((float) results[0].geometry.location.lat);
-				postJobDto.setLng((float) results[0].geometry.location.lng);
 
-				repository.addJob(postJobDto, user);
+
+				repository.addJob(jobDto, user);
 
 			} 
 	
+	}
+
+	public void setLatAndLag(JobDTO jobDto) {
+		
+		// Build the job's full address
+		String address = jobDto.getJob().getStreetAddress() + " " 
+						+ jobDto.getJob().getCity() + " " 
+						+ jobDto.getJob().getState() + " "
+						+ jobDto.getJob().getZipCode();
+
+		GeocodingResult[] results = googleClient.getLatAndLng(address);
+		
+		if(areGeocodingResultsValid(results)){
+			jobDto.getJob().setLat((float) results[0].geometry.location.lat);
+			jobDto.getJob().setLng((float) results[0].geometry.location.lng);	
+		}
+		else{
+			jobDto.getJob().setLat(null);
+			jobDto.getJob().setLng(null);
+		}
+		
+		
+	}
+
+	private boolean areValidWorkDays(List<WorkDay> workDays) {
+
+
+		
+		if(workDays == null) return false;
+		else if(workDays.size() == 0) return false;
+		else{		
+			
+			// Validate the string date and times can be parsed to
+			// LocalDate and LocalTime objects
+			for(WorkDay workDay : workDays){
+				try {
+					LocalDate.parse(workDay.getStringDate());
+					LocalTime.parse(workDay.getStringStartTime());
+					LocalTime.parse(workDay.getStringEndTime());
+				} catch (Exception e) {
+					return false;
+				}
+				
+			}
+		}
+		
+		return true;
 	}
 
 	public boolean areGeocodingResultsValid(GeocodingResult[] results) {
@@ -100,7 +148,7 @@ public class JobServiceImpl {
 			// invalid address
 			return false;
 		} else { // if (results.length > 1) {
-			// ambiguous address
+			// if greater than 1, then ambiguous address
 			return false;
 		}
 	}
@@ -384,6 +432,8 @@ public class JobServiceImpl {
 		jobDto.setJob(job);
 		jobDto.setWorkDays(this.getWorkDays(jobId));
 		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
+		jobDto.setSkillsRequired(this.getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
+		jobDto.setSkillsDesired(this.getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
 		
 		this.setJobDtoDuration(jobDto);
 		
@@ -397,6 +447,13 @@ public class JobServiceImpl {
 		return jobDto;
 	}
 	
+	
+	private List<Skill> getSkills_ByType(int jobId, Integer type) {
+		return repository.getSkills_ByType(jobId, type);
+	}
+
+
+
 	private JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
 		
 		// ***************************************************
@@ -1024,6 +1081,48 @@ public class JobServiceImpl {
 			return true;
 		}
 		else return false;
+		
+	}
+
+	public void addSkills(Integer jobId, List<Skill> skills) {
+		
+		for(Skill skill : skills){
+			
+			if(skill.getText() != null){
+				if(skill.getText() != ""){
+					if(skill.getType() == Skill.TYPE_DESIRED_JOB_POSTING ||
+							skill.getType() == Skill.TYPE_REQUIRED_JOB_POSTING){
+						
+						repository.addSkill(jobId, skill);
+						
+					}
+				}
+
+			}
+
+				
+			
+		}
+		
+	}
+
+	public void setWorkDayDates(List<WorkDay> workDays) {
+
+		for(WorkDay workDay : workDays){
+			workDay.setDate(LocalDate.parse(workDay.getStringDate()));
+		}
+		
+	}
+
+	public void setModel_PreviewJobPost(Model model, JobDTO jobDto) {
+		
+		this.setLatAndLag(jobDto);
+		
+		this.setWorkDayDates(jobDto.getWorkDays());
+		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
+		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+				
+		model.addAttribute("jobDto", jobDto);
 		
 	}
 

@@ -8,6 +8,8 @@ import com.jobsearch.model.FailedWageNegotiationDTO
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
+import com.jobsearch.model.Skill
+import com.jobsearch.model.WorkDay
 import com.jobsearch.user.rate.RatingDTO
 
 public class JobDTO {
@@ -26,6 +28,7 @@ public class JobDTO {
 	 
 	 Integer durationDays
 	 double durationHours
+	 
 	 List<WorkDay> workDays
 	 String date_firstWorkDay
 	 int months_workDaysSpan
@@ -46,7 +49,12 @@ public class JobDTO {
 	 RatingDTO ratingDto
 	 
 	 List<Category> categories
+	 List<Integer> categoryIds
 	 
 	 Double distanceFromFilterLocation
+	 
+	 List<Skill> skills
+	 List<Skill> skillsDesired
+	 List<Skill> skillsRequired
 
 }

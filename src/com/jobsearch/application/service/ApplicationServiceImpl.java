@@ -1,27 +1,18 @@
 package com.jobsearch.application.service;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
@@ -32,7 +23,6 @@ import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class ApplicationServiceImpl {
@@ -231,7 +221,7 @@ public class ApplicationServiceImpl {
 		return repository.getAnswer(questionId, userId);
 	}
 
-	public void addQuestion(PostQuestionDTO question) {
+	public void addQuestion(Question question) {
 		repository.addQuestion(question);
 	}
 

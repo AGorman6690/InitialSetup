@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpSession;
 
 import org.apache.velocity.Template;
@@ -78,32 +80,123 @@ public class UserServiceImpl {
 	@Qualifier("FindEmployeesResponseVM")
 	Template findEmployeesResponseTemplate;
 
-	public JobSearchUser createUser(JobSearchUser user) {
+	public JobSearchUserDTO createUser(JobSearchUser proposedUser) {
 
-		if (this.isValidEmailRequest(user.getEmailAddress())) {
-			user.setPassword(encryptPassword(user.getPassword()));
+//		proposedUser = new JobSearchUser();
+		
+		JobSearchUserDTO newUserDto = getNewUserDto(proposedUser);
+		newUserDto.setUser(proposedUser);
+		
+		if(!newUserDto.getIsInvalidNewUser()){			
+			
+			proposedUser.setPassword(encryptPassword(proposedUser.getPassword()));
 
-			JobSearchUser newUser = repository.createUser(user);
+			JobSearchUser newUser = repository.createUser(proposedUser);
 
-			if (newUser.getEmailAddress() != null) {
-				mailer.sendMail(user.getEmailAddress(), "email verification",
-						"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
-								+ newUser.getUserId());
-			}
-			return newUser;
-		} else {
-			return null;
-		}
+		
+			mailer.sendMail(proposedUser.getEmailAddress(), "email verification",
+					"please click the link to verify your email " + hostUrl
+					+ "/JobSearch/email/validate?userId=" + newUser.getUserId());
+										
+		} 
+		
+		return newUserDto;
 	}
 
-	private boolean isValidEmailRequest(String email) {
+	private JobSearchUserDTO getNewUserDto(JobSearchUser proposedUser) {
+		
+		JobSearchUserDTO newUserDto = new JobSearchUserDTO();
+		newUserDto.setIsInvalidEmail_duplicate(false);
+		newUserDto.setIsInvalidEmail_format(false);
+		newUserDto.setIsInvalidMatchingEmail(false);
+		newUserDto.setIsInvalidFirstName(false);
+		newUserDto.setIsInvalidLastName(false);
+		newUserDto.setIsInvalidMatchingPassword(false);
+		newUserDto.setIsInvalidNewUser(false);
+		newUserDto.setIsInvalidPassword(false);
+		newUserDto.setIsInvalidProfile(false);
+		
+		// Email address
+		if(proposedUser.getEmailAddress() == null || proposedUser.getEmailAddress().matches("")){
 
-		JobSearchUser user = repository.getUserByEmail(email);
-		if (user == null) {
-			return true;
-		} else {
-			return false;
+			newUserDto.setIsInvalidEmail_format(true);
+			newUserDto.setIsInvalidNewUser(true);
 		}
+		else{
+			try {
+				
+				  // Validate the email is the correct format
+			      InternetAddress emailAddr = new InternetAddress(proposedUser.getEmailAddress());
+			      emailAddr.validate();
+			      
+			      
+					// Validate the email is not used by another user
+					JobSearchUser user = repository.getUserByEmail(proposedUser.getEmailAddress());
+					if (user != null) {
+	
+						newUserDto.setIsInvalidEmail_duplicate(true);
+						newUserDto.setIsInvalidNewUser(true);
+					}
+			      
+		    }
+			catch (AddressException ex) {
+
+				newUserDto.setIsInvalidEmail_format(true);
+			    newUserDto.setIsInvalidNewUser(true);
+		    }			
+		}
+		
+		// Matching email
+		if(proposedUser.getMatchingEmailAddress() == null ||
+				!proposedUser.getEmailAddress().matches(proposedUser.getMatchingEmailAddress())){
+			
+			newUserDto.setIsInvalidMatchingEmail(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}		
+		
+
+		
+		// Password
+		if(proposedUser.getPassword() == null ||
+				(proposedUser.getPassword().length() < 6 || proposedUser.getPassword().length() > 20)){
+
+			newUserDto.setIsInvalidPassword(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+		
+		// Matching password
+		if(proposedUser.getMatchingPassword() == null ||
+				!proposedUser.getPassword().matches(proposedUser.getMatchingPassword())){
+			
+			newUserDto.setIsInvalidMatchingPassword(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+		
+		// First name
+		if(proposedUser.getFirstName() == null || proposedUser.getFirstName().matches("")){
+			newUserDto.setIsInvalidFirstName(true);
+			newUserDto.setIsInvalidNewUser(true);
+		}
+		
+		// Last name
+		if(proposedUser.getLastName() == null || proposedUser.getLastName().matches("")){
+			newUserDto.setIsInvalidLastName(true);
+			newUserDto.setIsInvalidNewUser(true);
+		}
+		
+		// Profile Id
+		if(proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYEE &&
+			proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYER){
+			
+			newUserDto.setIsInvalidProfile(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+	      
+		return newUserDto;
 
 	}
 
