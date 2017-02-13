@@ -80,6 +80,11 @@ public class ApplicationServiceImpl {
 			// applicant.getUserId()));
 			application.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
 
+			// These are the answers options selected by the applicant
+			application.setAnswerOptionIds_Selected(
+						this.getAnswerOptionIds_Selected_ByApplicantAndJob(
+									application.getApplicant().getUserId(), jobId));
+			
 			// application.setAnswers(this.getAnswersByJobAndUser(jobId,
 			// applicant.getUserId()));
 			// application.setAnswers(this.getAnswers(application.getQuestions(),
@@ -107,6 +112,12 @@ public class ApplicationServiceImpl {
 
 		return applications;
 	}
+
+
+	private List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
+		return repository.getAnswerOptionIds_Selected_ByApplicantAndJob(userId, jobId);
+	}
+
 
 	public float getCurrentWageProposedTo(int applicationId, int proposedToUserId) {
 		repository.getCurrentWageProposedTo(applicationId, proposedToUserId);
@@ -222,6 +233,22 @@ public class ApplicationServiceImpl {
 	}
 
 	public void addQuestion(Question question) {
+		
+		if(question.getFormatId() == Question.FORMAT_ID_YES_NO){
+			
+			question.setAnswerOptions(new ArrayList<AnswerOption>());
+			
+			AnswerOption answerOption = new AnswerOption();
+			answerOption.setQuestionId(question.getQuestionId());
+			answerOption.setText("Yes");			
+			question.getAnswerOptions().add(answerOption);
+			
+			answerOption = new AnswerOption();
+			answerOption.setQuestionId(question.getQuestionId());
+			answerOption.setText("No");			
+			question.getAnswerOptions().add(answerOption);
+		}
+		
 		repository.addQuestion(question);
 	}
 

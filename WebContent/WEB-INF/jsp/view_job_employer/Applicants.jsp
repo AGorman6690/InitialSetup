@@ -94,30 +94,47 @@
 					</th>
 					<th id="endorsements">Endorsements</th>
 				<c:if test="${jobDto.questions.size() > 0 }">
-					<th id="questions" class="left">
-						<span data-toggle-id="selectQuestionsContainer" >
+					<th id="questions" class="header-dropdown" data-filter-attr="data-answer-option-ids-seleted">
+						<span data-toggle-id="filterAnswersContainer" >
 							<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
 						</span>					
-						<div id="selectQuestionsContainer" >
+						<div id="filterAnswersContainer" class="dropdown-container dropdown-style filter-container" >
 							
-							<span id="selectQuestionsOK" class="glyphicon glyphicon-ok"></span>
-							<div id="questionsAllOrNoneContainer">
-								<div class="radio">
-								  <label><input id="selectAllQuestions" type="radio" name="questions-all-or-none">All</label>
-								</div>
-								<div class="radio">
-								  <label><input id="selectNoQuestions" type="radio" name="questions-all-or-none">None</label>
-								</div>								
-							</div>
-							<div id="questionListContainer">
-							<c:forEach items="${jobDto.questions }" var="question">
-								<div class="">
-									<label><input type="checkbox" name="questions-select" value="${question.questionId }">${question.text }</label> 
-								</div>
-							</c:forEach>
-							</div>
+							<span id="selectQuestionsOK" class="approve-filter glyphicon glyphicon-ok"></span>
+							
+							<table id="table_headerAnswers" class="main-table-style">
+								<thead>
+									<tr class="no-filter">
+										<th>Question</th>
+										<th>Answer</th>												
+									</tr>
+								</thead>
+								<tbody>
+									<c:forEach items="${jobDto.questions }" var="question">
+										<tr class="no-filter">
+											<td>${question.text }</td>
+											<td class="answers-container">
+												<div class="checkbox-container">
+													<c:forEach items="${question.answerOptions }"
+															var="answerOption">													
+														<div>
+															<label>
+																<input type="checkbox" checked
+																	name="header-question-${question.questionId }"
+																	data-filter-attr-value="${answerOption.answerOptionId }">
+																	<span>${answerOption.text }</span>
+															</label>														
+														</div>																														
+													</c:forEach>
+												</div>
+											</td>
+										</tr>
+									</c:forEach>
+								</tbody>
+							</table>
 						</div>					
-					</th>
+					</th>						
+
 				</c:if>							
 					<th id="status" class="left header-dropdown" data-filter-attr="data-application-status">
 					
@@ -164,7 +181,9 @@
 					data-wage-proposal-amount="${application.currentWageProposal.amount }"
 					data-wage-proposal-status="${application.currentWageProposal.status }"
 					data-is-sent-proposal="${application.currentWageProposal.proposedToUserId ==
-												 application.applicant.userId ? '1' : '0'}">
+												 application.applicant.userId ? '1' : '0'}"
+					data-answer-option-ids-seleted="${application.answerOptionIds_Selected }">
+					
 					<td>
 						<div class="vert-border">
 							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a>

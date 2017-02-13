@@ -312,6 +312,7 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
+			// Add the questions
 			for(Question question : jobDto.getQuestions()){
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);

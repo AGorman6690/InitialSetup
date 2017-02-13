@@ -11,7 +11,8 @@
 	<link rel="stylesheet" type="text/css" href="../static/css/Templates/forms.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
 	
-		<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Map.js" />"></script>
@@ -107,16 +108,16 @@ $(document).ready(function(){
 	
 	initPage();
 
-	$("#selectQuestionsOK").click(function(){
+// 	$("#selectQuestionsOK").click(function(){
 	
-		var questionIdsToShow = getQuestionIdsToShow();
-		showQuestions(questionIdsToShow);
+// 		var questionIdsToShow = getQuestionIdsToShow();
+// 		showQuestions(questionIdsToShow);
 		
-		triggerToggle("selectQuestionsContainer");
+// 		triggerToggle("selectQuestionsContainer");
 		
 // 		slideUp($("#selectQuestionsContainer"));
 		
-	})
+// 	})
 	
 // 	$("#selectStatusOK").click(function(){
 	
@@ -128,21 +129,21 @@ $(document).ready(function(){
 		
 // 	})
 	
-	$("#selectAllQuestions").click(function(){
-		selectAllCheckboxes($("#questionListContainer"), true);
-	})
+// 	$("#selectAllQuestions").click(function(){
+// 		selectAllCheckboxes($("#questionListContainer"), true);
+// 	})
 	
-	$("#selectNoQuestions").click(function(){
-		selectAllCheckboxes($("#questionListContainer"), false);
-	})
+// 	$("#selectNoQuestions").click(function(){
+// 		selectAllCheckboxes($("#questionListContainer"), false);
+// 	})
 	
-	$("#statusListContainer input[type=checkbox]").click(function(){
-		$("#selectAllStatuses").prop("checked", false);
-	})
+// 	$("#statusListContainer input[type=checkbox]").click(function(){
+// 		$("#selectAllStatuses").prop("checked", false);
+// 	})
 	
-	$("#selectAllStatuses").click(function(){
-		selectAllCheckboxes($("#statusListContainer"), $(this).prop("checked"));
-	})
+// 	$("#selectAllStatuses").click(function(){
+// 		selectAllCheckboxes($("#statusListContainer"), $(this).prop("checked"));
+// 	})
 	
 	$(".application-status-container button").click(function(){
 		
@@ -290,31 +291,31 @@ function getApplicationDto_UpdateStatus(clickedStatusButton){
 // 	})
 // }
 
-function showQuestions(idsToShow){
-	var questionContainers = $("#applicantsTable").find(".question-container");
-	var questionId;
-	$.each(questionContainers, function(){
-		questionId = $(this).attr("data-question-id");
-		if($.inArray(questionId, idsToShow) > -1){
-			$(this).show();
-		}
-		else{
-			$(this).hide();
-		}
-	})
-}
+// function showQuestions(idsToShow){
+// 	var questionContainers = $("#applicantsTable").find(".question-container");
+// 	var questionId;
+// 	$.each(questionContainers, function(){
+// 		questionId = $(this).attr("data-question-id");
+// 		if($.inArray(questionId, idsToShow) > -1){
+// 			$(this).show();
+// 		}
+// 		else{
+// 			$(this).hide();
+// 		}
+// 	})
+// }
  
 
-function getQuestionIdsToShow(){
+// function getQuestionIdsToShow(){
 
-	var ids = [];
-	$.each($("#questionListContainer").find("input:checked"), function(){
-		ids.push($(this).val());
-	})
+// 	var ids = [];
+// 	$.each($("#questionListContainer").find("input:checked"), function(){
+// 		ids.push($(this).val());
+// 	})
 	
-	return ids;
+// 	return ids;
 
-}
+// }
 
 function updateApplicationStatus(applicationDto){
 

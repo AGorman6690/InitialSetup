@@ -22,6 +22,7 @@
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
 <div class="container">
+
 	<div class="row">
 		<div id="headerLinksContainer" class="col-sm-12">
 			<div id="submitPosting_preview_container">
@@ -39,7 +40,7 @@
 				</c:if>
 				
 				<span id="submitPosting_preview" class="page-content-link"
-					 data-section-id="employmentContainer">Submit posting</span>
+					 data-section-id="employmentContainer">Preview job posting</span>
 			</div>
 			<div id="submitPosting_final_container">
 				<span id="previewJobPosting_Label" class=""
@@ -144,12 +145,13 @@
 								<th>Start Time</th>
 								<th>End Time</th>
 							</tr>
-							
+<!-- 							These elements are only to be cloned -->
+<!-- 					************************************ -->
 							<tr class="master-row-multi-select">
 								<td></td>
 								<td><label><input class="select-all" type="checkbox" name="time">Select All</label></td>
-								<td><select class="time start-time select-all"></select></td>
-								<td><select class="time end-time select-all"></select></td>							
+								<td><select   class="time start-time select-all"></select></td>
+								<td><select  class="time end-time select-all"></select></td>							
 							</tr>
 							<tr class="master-row work-day-row">
 								<td class="date"></td>
@@ -157,6 +159,7 @@
 								<td><select class="time start-time"></select></td>
 								<td><select class="time end-time"></select></td>
 							</tr>
+<!-- 					************************************ -->							
 						</thead>
 						
 						<tbody>

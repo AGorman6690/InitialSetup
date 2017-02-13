@@ -554,4 +554,13 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ userId ,  jobId }, Integer.class);
 	}
 
+	public List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
+		String sql = "SELECT AnswerOptionId FROM answer a"
+					+ " INNER JOIN question q ON q.QuestionId = a.QuestionId"
+					+ " WHERE q.JobId = ? AND a.UserId = ?";
+		
+		return jdbcTemplate.queryForList(sql, new Object[]{ jobId, userId }, Integer.class);
+	}
+
+
 }

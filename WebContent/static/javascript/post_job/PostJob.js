@@ -3,10 +3,13 @@ var selectedDays = [];
 $(document).ready(function(){
 
 	$("#submitPosting_preview").click(function(){
-		 executeAjaxCall_previewJobPosting( getJobDto());
-//		if(arePostJobInputsValid()) executeAjaxCall_previewJobPosting( getJobDto());
-		$("#submitPosting_final_container").show();
-		$("#submitPosting_preview_container").hide();
+//		 executeAjaxCall_previewJobPosting( getJobDto());
+		if(arePostJobInputsValid()){
+			executeAjaxCall_previewJobPosting( getJobDto());
+			
+			$("#submitPosting_final_container").show();
+			$("#submitPosting_preview_container").hide();
+		}
 	})
 	
 	$("#editPosting").click(function(){
@@ -34,35 +37,47 @@ $(document).ready(function(){
 		$("#noDatesSelected").show();
 	})
 	
-	$("#timesTable").on("change", "select.select-all.start-time", function(){
+	$("#timesTable tbody").on("change", "select.select-all.start-time", function(){
 		
 		var time = $(this).val();
-		$("#timesTable").find("tr.selected select.start-time:not(.select-all)").each(function(){
+		$("#timesTable tbody").find("tr.selected select.start-time:not(.select-all)").each(function(){
 			$(this).val(time);
 		})
 	})
 	
-	$("#timesTable").on("change", "select.select-all.end-time", function(){
+	$("#timesTable tbody").on("change", "select.select-all.end-time", function(){
 		
 		var time = $(this).val();
-		$("#timesTable").find("tr.selected select.end-time:not(.select-all)").each(function(){
+		$("#timesTable tbody").find("tr.selected select.end-time:not(.select-all)").each(function(){
 			$(this).val(time);
 		})
+
 	})
 	
-	$("#timesTable").on("change", "input[type=checkbox]", function(){
+	$("#timesTable tbody").on("change", "input[type=checkbox]", function(){
 		
 		if($(this).is(":checked")) $(this).closest("tr").addClass("selected");
 		else $(this).closest("tr").removeClass("selected");
+		
+		if($("#timesTable tbody").find("input[type=checkbox][name=time]:checked").length > 1){
+			var k = $("#timesTable tbody").find(".start-time.select-all").eq(0);
+			$("#timesTable tbody").find(".start-time.select-all").eq(0).prop("disabled", false);
+			$("#timesTable tbody").find(".end-time.select-all").eq(0).prop("disabled", false);
+		}
+		else{
+			$("#timesTable tbody").find(".start-time.select-all").eq(0).prop("disabled", true);
+			$("#timesTable tbody").find(".end-time.select-all").eq(0).prop("disabled", true);
+		}
 	})
 	
-	$("#timesTable").on("change", "input[type=checkbox].select-all", function(){
+	$("#timesTable tbody").on("change", "input[type=checkbox].select-all", function(){
 		
 		var doCheck = $(this).is(":checked");
 
-		$("#timesTable").find("tbody input[type=checkbox]:not(.select-all)").each(function(){
+		$("#timesTable tbody").find("input[type=checkbox]:not(.select-all)").each(function(){
 			$(this).prop("checked", doCheck).change();			
 		})
+		
 		
 	})
 	
@@ -93,6 +108,7 @@ $(document).ready(function(){
 	setTimeOptions($("#endTime-singleDate"), 30);
 	
 	initWorkDaysCalendar();
+	
 	
 })
 
@@ -234,6 +250,8 @@ function initWorkDaysCalendar(){
 			else{
 				$("#timesTableContainer").show();
 				$("#noDatesSelected").hide();
+				
+				$("#timesTable tbody input.select-all").prop("checked", true).change();
 			}
 
 		},		        
