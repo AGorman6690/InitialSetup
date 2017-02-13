@@ -1,10 +1,8 @@
-package com.jobsearch.job.service
+package com.jobsearch.model
 
-import java.sql.Date;
 import java.time.LocalDate
 
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonProperty;
+import org.codehaus.jackson.annotate.JsonProperty
 
 public class WorkDay {
 	

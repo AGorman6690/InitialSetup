@@ -3,13 +3,15 @@ package com.jobsearch.user.service;
 import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tools.ant.taskdefs.Exit;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -20,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
@@ -47,8 +48,8 @@ import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
-import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+
 
 @Service
 public class UserServiceImpl {
@@ -79,32 +80,123 @@ public class UserServiceImpl {
 	@Qualifier("FindEmployeesResponseVM")
 	Template findEmployeesResponseTemplate;
 
-	public JobSearchUser createUser(JobSearchUser user) {
+	public JobSearchUserDTO createUser(JobSearchUser proposedUser) {
 
-		if (this.isValidEmailRequest(user.getEmailAddress())) {
-			user.setPassword(encryptPassword(user.getPassword()));
+//		proposedUser = new JobSearchUser();
+		
+		JobSearchUserDTO newUserDto = getNewUserDto(proposedUser);
+		newUserDto.setUser(proposedUser);
+		
+		if(!newUserDto.getIsInvalidNewUser()){			
+			
+			proposedUser.setPassword(encryptPassword(proposedUser.getPassword()));
 
-			JobSearchUser newUser = repository.createUser(user);
+			JobSearchUser newUser = repository.createUser(proposedUser);
 
-			if (newUser.getEmailAddress() != null) {
-				mailer.sendMail(user.getEmailAddress(), "email verification",
-						"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
-								+ newUser.getUserId());
-			}
-			return newUser;
-		} else {
-			return null;
-		}
+		
+			mailer.sendMail(proposedUser.getEmailAddress(), "email verification",
+					"please click the link to verify your email " + hostUrl
+					+ "/JobSearch/email/validate?userId=" + newUser.getUserId());
+										
+		} 
+		
+		return newUserDto;
 	}
 
-	private boolean isValidEmailRequest(String email) {
+	private JobSearchUserDTO getNewUserDto(JobSearchUser proposedUser) {
+		
+		JobSearchUserDTO newUserDto = new JobSearchUserDTO();
+		newUserDto.setIsInvalidEmail_duplicate(false);
+		newUserDto.setIsInvalidEmail_format(false);
+		newUserDto.setIsInvalidMatchingEmail(false);
+		newUserDto.setIsInvalidFirstName(false);
+		newUserDto.setIsInvalidLastName(false);
+		newUserDto.setIsInvalidMatchingPassword(false);
+		newUserDto.setIsInvalidNewUser(false);
+		newUserDto.setIsInvalidPassword(false);
+		newUserDto.setIsInvalidProfile(false);
+		
+		// Email address
+		if(proposedUser.getEmailAddress() == null || proposedUser.getEmailAddress().matches("")){
 
-		JobSearchUser user = repository.getUserByEmail(email);
-		if (user == null) {
-			return true;
-		} else {
-			return false;
+			newUserDto.setIsInvalidEmail_format(true);
+			newUserDto.setIsInvalidNewUser(true);
 		}
+		else{
+			try {
+				
+				  // Validate the email is the correct format
+			      InternetAddress emailAddr = new InternetAddress(proposedUser.getEmailAddress());
+			      emailAddr.validate();
+			      
+			      
+					// Validate the email is not used by another user
+					JobSearchUser user = repository.getUserByEmail(proposedUser.getEmailAddress());
+					if (user != null) {
+	
+						newUserDto.setIsInvalidEmail_duplicate(true);
+						newUserDto.setIsInvalidNewUser(true);
+					}
+			      
+		    }
+			catch (AddressException ex) {
+
+				newUserDto.setIsInvalidEmail_format(true);
+			    newUserDto.setIsInvalidNewUser(true);
+		    }			
+		}
+		
+		// Matching email
+		if(proposedUser.getMatchingEmailAddress() == null ||
+				!proposedUser.getEmailAddress().matches(proposedUser.getMatchingEmailAddress())){
+			
+			newUserDto.setIsInvalidMatchingEmail(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}		
+		
+
+		
+		// Password
+		if(proposedUser.getPassword() == null ||
+				(proposedUser.getPassword().length() < 6 || proposedUser.getPassword().length() > 20)){
+
+			newUserDto.setIsInvalidPassword(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+		
+		// Matching password
+		if(proposedUser.getMatchingPassword() == null ||
+				!proposedUser.getPassword().matches(proposedUser.getMatchingPassword())){
+			
+			newUserDto.setIsInvalidMatchingPassword(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+		
+		// First name
+		if(proposedUser.getFirstName() == null || proposedUser.getFirstName().matches("")){
+			newUserDto.setIsInvalidFirstName(true);
+			newUserDto.setIsInvalidNewUser(true);
+		}
+		
+		// Last name
+		if(proposedUser.getLastName() == null || proposedUser.getLastName().matches("")){
+			newUserDto.setIsInvalidLastName(true);
+			newUserDto.setIsInvalidNewUser(true);
+		}
+		
+		// Profile Id
+		if(proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYEE &&
+			proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYER){
+			
+			newUserDto.setIsInvalidProfile(true);
+			newUserDto.setIsInvalidNewUser(true);
+			
+		}
+	      
+		return newUserDto;
 
 	}
 
@@ -557,7 +649,12 @@ public class UserServiceImpl {
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
 		
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtosByUser(employee.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.
+												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(employee.getUserId(), 
+															Arrays.asList(Application.STATUS_SUBMITTED,
+																		Application.STATUS_CONSIDERED,
+																		Application.STATUS_ACCEPTED));
+		
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		
@@ -574,6 +671,10 @@ public class UserServiceImpl {
 		// *************************************************************
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(employee.getUserId());
 		
+		List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(employee.getUserId());
+		
+		model.addAttribute("jobs_needRating", jobs_needRating);
+		model.addAttribute("userId", employee.getUserId());
 		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("openApplicationCount", openApplicationCount);
@@ -593,6 +694,7 @@ public class UserServiceImpl {
 
 		List<JobDTO> jobDtos_jobsCompleted = jobService.getJobDtos_JobsCompleted_Employer(employer.getUserId());
 
+		
 		model.addAttribute("yetToStartJobs_Dtos", jobDtos_jobsWaitingToStart);
 		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
 		model.addAttribute("jobDtos_jobsCompleted", jobDtos_jobsCompleted);

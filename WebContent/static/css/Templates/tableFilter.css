@@ -1,0 +1,37 @@
+.filter-container,
+.sort-container{
+	position:absolute;
+	z-index: 1000;
+	background-color: #ffffff;
+	border: 2px solid #163b3d;
+	width: 200px;
+	font-size:15px;
+	padding:20px;
+	border-radius:5px;
+	text-align:left;
+	display:none;
+}
+
+.filter-container label,
+.sort-container label{
+	display:block;
+	text-align:left;
+	font-weight: 100;
+}
+
+th[data-filter-attr]{
+	position:relative;
+}
+
+span[data-toggle-id] .glyphicon-menu-up,
+span[data-toggle-id] .glyphicon-menu-down{
+	font-size:14px;
+}
+
+
+.approve-filter{
+	font-size:16px;
+	padding:5px;
+	margin-bottom:15px;
+	cursor:pointer;
+}

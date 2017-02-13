@@ -10,10 +10,10 @@ public class Question {
 	List<AnswerOption> answerOptions
 	List<Answer> answers
 	
-	//0: Yes/N0
-	//1: Short answer
-	//2: Single answer
-	//3: Multi answer
-	//Use an enum???????
 	int formatId
+	
+	public static int FORMAT_ID_YES_NO = 0
+	public static int FORMAT_ID_SHORT_ANSWER = 1
+	public static int FORMAT_ID_SINGLE_ANSWER = 2
+	public static int FORMAT_ID_MULTI_ANSWER = 3
 }

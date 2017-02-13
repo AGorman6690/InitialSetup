@@ -27,8 +27,10 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -71,8 +73,9 @@ public class UserController {
 		return userService.getProfileJspName(session);
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
-	public String signUp(Model model, @ModelAttribute("user") JobSearchUser user) {
+	public String signUp(@RequestBody JobSearchUser user) {
 
 		
 		
@@ -83,14 +86,13 @@ public class UserController {
 		// **********************************************************
 		// **********************************************************		
 		
-		user = userService.createUser(user);
-		
-		if (user != null) {
-			model.addAttribute("user", user);
-			return "EmailValidateMessage";
-		} else {
-			return "Invalid Login";
-		}
+
+//		if (user != null) {
+//			model.addAttribute("user", user);
+//			return "EmailValidateMessage";
+//		} else {
+			return JSON.stringify(userService.createUser(user));
+//		}
 
 	}
 
@@ -137,20 +139,7 @@ public class UserController {
 		return "settings_employee/Availability";
 	}
 
-	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
-	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		model.addObject("user", user);
-
-		Job job = new Job();
-		model.addObject("job", job);
-
-		model.setViewName("/post_job/PostJob");
-		return model;
-	}
-	
 
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)

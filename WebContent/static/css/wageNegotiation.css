@@ -33,9 +33,9 @@
 }
 
 .re-counter-amount-container{
-	display:none;	
+/* 	display:none;	 */
 /* 	padding-left:15px; */
-	padding-top:13px;
+	padding-top:5px;
 }
 
 .re-counter-amount-container input{
@@ -64,10 +64,6 @@
 	padding:2px 0px;
 }
 
-.re-counter-amount-container *{
-/* 	text-align:left; */
-}
-
 
 .send-cancel-container{
 	padding-top: 4px;
@@ -79,4 +75,10 @@
 
 .send-cancel-container a{
 	margin:0px 3px;
+}
+
+div.re-counter-container{
+    border-top: 1px solid;
+    margin: 0px 25px;
+    padding-top: 10px;
 }

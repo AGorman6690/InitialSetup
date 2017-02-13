@@ -9,6 +9,7 @@ import com.jobsearch.model.Question
 import com.jobsearch.model.WageProposal
 
 public class Application {
+	
 	int applicationId
 	int userId
 	int jobId
@@ -17,18 +18,16 @@ public class Application {
 	Job job
 	JobSearchUser applicant
 	List<Question> questions
+	List<Integer> answerOptionIds_Selected
 	List<WageProposal> wageProposals
 	WageProposal wageProposal
 	WageProposal currentWageProposal
 	float currentDesiredWage
 	List<Answer> answers
+	
+	
 
 
-	//Status values:
-	//0: submitted
-	//1: declined
-	//2: considered
-	//3: accepted
 	int status
 	
 	public static Integer STATUS_SUBMITTED = 0;

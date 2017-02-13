@@ -1,0 +1,163 @@
+#calendarContainer_both{
+	border-left: 2px solid rgba(0, 0, 0, 0.35);
+	padding-left:30px;
+/* 	padding-top: 50px; */
+}
+
+#calendarContainer_both .ui-datepicker-calendar{
+	width: 450px;
+	height: 525px;
+}
+
+#calendarContainer_both.calendar-container{
+	width:600px;
+	margin:auto;
+	margin-left: 25px;
+}
+
+table#openApplications_oneLine{
+	border-top:0;
+}
+
+table#openApplications_oneLine tr{
+	height:30px;
+	overflow:scroll;	
+}
+
+table#openApplications_oneLine th{
+	font-size:16px;
+	font-weight:bold;
+}
+
+#oneLineContainer.section{
+/* 	height:500px; */
+}
+
+div.application .app-count{
+	line-height:40px;
+	color:#000000;
+	font-weight:bold;
+	display:none;
+}
+
+td .accent.accepted{
+	color: #5e8c5e;
+}
+
+
+td div.job.application{
+
+/* 	background-color: #85b0d4; */
+}
+
+td div.job.employment,
+td div.job.application{
+	bottom:15px;
+	height:40px;
+}
+
+td div.job.employment{
+
+	background-color: #76a977;
+}
+
+td div.job.application.drk{
+/* 	background-color: #337ab7; */
+/* 	background-color: #125792; */
+	background-color: #3f6e96;
+}
+
+td div.job.application.med{
+	background-color: #7dabd4;
+/* 	background-color: #4c90cc; */
+	
+}
+
+td div.job.application.lgt{
+	background-color: #cde2f5;
+}
+
+table#openApplications_{
+/* 	margin:auto; */
+	border-top:0;
+	width:500px;
+}
+
+table#openApplications_oneLine thead{
+	border-top:0;	
+}
+
+table#openApplications_oneLine tbody tr:hover{
+	background-color: #eaeaea;
+}
+
+table#openApplications_oneLine table.wage-proposal-history-table tbody tr:hover{
+	background-color: #ffffff;
+}
+
+
+#toggleCalendar{
+	background-color: #163b3d;
+    color: #ffffff;
+    padding: 5px 15px;	
+	font-size:17px;
+	vertical-align: middle;
+	cursor:pointer;
+	margin-bottom:25px;
+	display:inline-block;
+	border-radius:5px;
+}
+
+#toggleCalendar.do-show{
+    width: 500px;
+    text-align: left;
+}
+
+#toggleCalendar.do-show .glyphicon-menu-right{
+	display: inline-block;
+}
+
+#toggleCalendar.do-show .glyphicon-menu-left{
+	display: none;
+}
+
+#toggleCalendar.do-hide .glyphicon-menu-right{
+	display: none;
+}
+
+#toggleCalendar.do-hide .glyphicon-menu-left{
+	display: inline-block;
+}
+
+#toggleCalendar.do-hide{
+/*     width: 100px; */
+    text-align: right;
+}
+
+#toggleCalendar span{
+	margin-right:7px;
+	line-height:26px;
+	display:inline-block;
+	vertical-align:middle;
+}
+
+#calendarColumn{
+	display:none;
+}
+
+#tableColumn.with-calendar .hide-with-calendar{
+	display:none;
+}
+
+#toggleCalendarColumn{
+	text-align:right;
+}
+
+#toggleCalendar .glyphicon{
+    font-size: 14px;
+}
+
+#tableColumn.with-calendar th{
+	width: 33%;
+}
+

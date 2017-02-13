@@ -1,7 +1,6 @@
 package com.jobsearch.user.repository;
 
 import java.sql.CallableStatement;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.PostJobDTO;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -606,59 +603,7 @@ public class UserRepository {
 		return this.JobSearchUserRowMapper(sql, new Object[] {});
 	}
 
-	public void createJob_DummyData(PostJobDTO dummyJob, int dummyCreationId) {
-		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call create_job_DummyData(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			// for(CreateJobDTO job : dummyJobs){
-			cStmt.setString(1, dummyJob.getJobName());
-			cStmt.setInt(2, dummyJob.getUserId());
-			cStmt.setString(3, dummyJob.getCity());
-			cStmt.setString(4, dummyJob.getState());
-			cStmt.setFloat(5, dummyJob.getLat());
-			cStmt.setFloat(6, dummyJob.getLng());
-//			cStmt.setDate(7, dummyJob.getStartDate());
-//			cStmt.setDate(8, dummyJob.getEndDate());
-//			cStmt.setTime(9, dummyJob.getStartTime());
-//			cStmt.setTime(10, dummyJob.getEndTime());
-			cStmt.setInt(11, dummyCreationId);
-
-			// cStmt.addBatch();
-			// }
-
-			// cStmt.executeBatch();
-			ResultSet result = cStmt.executeQuery();
-
-			Job createdJob = new Job();
-			result.next();
-			createdJob.setId(result.getInt("JobId"));
-
-			// for(Integer categoryId: jobDto.getCategoryIds()){
-			// cStmt = jdbcTemplate.getDataSource().getConnection()
-			// .prepareCall("{call insertJobCategories(?, ?)}");
-			//
-			// cStmt.setInt(1, createdJob.getId());
-			// cStmt.setInt(2, categoryId);
-			//
-			// cStmt.executeQuery();
-			// }
-
-			cStmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-
-			try {
-				jdbcTemplate.getDataSource().getConnection().close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
 
 	public boolean resetPassword(String username, String newPassword) {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 1 WHERE email = ?";

@@ -19,10 +19,14 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostJobDTO;
+import com.jobsearch.json.JSON;
+import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Controller
 public class JobController {
@@ -41,10 +45,10 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
-	public String postJobs(@RequestBody PostJobDTO postJobDto, HttpSession session) {
+	public String postJobs(@RequestBody JobDTO jobDto, HttpSession session) {
 
 		
-		jobService.addPosting(postJobDto, session);
+		jobService.addPosting(jobDto, session);
 		return "";
 //		return "redirect:/user/profile";
 
@@ -126,6 +130,8 @@ public class JobController {
 			}
 
 	}
+	
+	
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
@@ -138,6 +144,14 @@ public class JobController {
 			return "NotLoggedIn";
 		}
 
+	}
+	
+	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
+	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
+
+		jobService.setModel_PreviewJobPost(model, jobDto);
+		
+		return "/templates/JobInformation";
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
@@ -178,15 +192,20 @@ public class JobController {
 	public String getJob(Model model, HttpSession session,
 						@RequestParam(name = "c", required = true) String c,
 						@RequestParam(name = "p", required = true) Integer p,
-						@PathVariable(value = "jobId") int jobId) {		
+						@RequestParam(name = "d", required = false) String d,
+						@PathVariable(value = "jobId") int jobId) {	
+		
 		// c is the context in which the job was clicked
+		// p is the user's profile id
+		// data is whether the **employer** clicked a data point for the job
+		// (i.e. wage negotiations, applicants, or employees)
 		
 		if(p == 1){
 			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
 			return  "/view_job_employee/ViewJob_Employee";
 		}
 		else if(p == 2){
-			jobService.setModel_ViewJob_Employer(model, session, c, jobId);	
+			jobService.setModel_ViewJob_Employer(model, session, c, jobId, d);	
 			return  "/view_job_employer/ViewJob_Employer";
 		}
 		else{		
@@ -198,6 +217,7 @@ public class JobController {
 
 	
 
+	
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
 	public String updateJobStatus(@PathVariable(value = "status") int status,
 			@PathVariable(value = "jobId") int jobId) {
@@ -206,6 +226,43 @@ public class JobController {
 
 		return "redirect:/user/profile";
 	}
+
+	@ResponseBody
+	@RequestMapping(value = "/post-job/previous-question/load", method = RequestMethod.GET)
+	public String loadPreviousPostedQuestion(@RequestParam(name = "questionId", required = true) int questionId,
+												HttpSession session) {
+
+		Question postedQuestion = jobService.getQuestion_PreviousPostedQuestion(session, questionId);
+		
+		return JSON.stringify(postedQuestion);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/post-job/previous-post/load", method = RequestMethod.GET)
+	public String loadPreviousJobPost(@RequestParam(name = "jobId", required = true) int jobId,
+										HttpSession session) {
+
+		JobDTO jobDto = jobService.getJobDto_PreviousPostedJob(session, jobId);
+		
+		return JSON.stringify(jobDto);
+	}
+	
+	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
+	public String viewPostJob(Model model, HttpSession session) {
+
+		
+		jobService.setModel_ViewPostJob(model, session);
+		
+		return "/post_job/PostJob";
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/rate-employer", method = RequestMethod.GET)
+	public String viewRateEmployer(@PathVariable(value= "jobId") int jobId,
+									Model model, HttpSession session) {
+
+		if(jobService.setModel_ViewRateEmployer(jobId, model, session)) return "/ratings/RateEmployer";
+		else return SessionContext.get404Page();
+	}	
 
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {

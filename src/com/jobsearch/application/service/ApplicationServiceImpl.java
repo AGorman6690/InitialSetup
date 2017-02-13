@@ -1,27 +1,18 @@
 package com.jobsearch.application.service;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.tools.generic.NumberTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostQuestionDTO;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Endorsement;
@@ -30,8 +21,8 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class ApplicationServiceImpl {
@@ -89,6 +80,11 @@ public class ApplicationServiceImpl {
 			// applicant.getUserId()));
 			application.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
 
+			// These are the answers options selected by the applicant
+			application.setAnswerOptionIds_Selected(
+						this.getAnswerOptionIds_Selected_ByApplicantAndJob(
+									application.getApplicant().getUserId(), jobId));
+			
 			// application.setAnswers(this.getAnswersByJobAndUser(jobId,
 			// applicant.getUserId()));
 			// application.setAnswers(this.getAnswers(application.getQuestions(),
@@ -116,6 +112,12 @@ public class ApplicationServiceImpl {
 
 		return applications;
 	}
+
+
+	private List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
+		return repository.getAnswerOptionIds_Selected_ByApplicantAndJob(userId, jobId);
+	}
+
 
 	public float getCurrentWageProposedTo(int applicationId, int proposedToUserId) {
 		repository.getCurrentWageProposedTo(applicationId, proposedToUserId);
@@ -230,7 +232,23 @@ public class ApplicationServiceImpl {
 		return repository.getAnswer(questionId, userId);
 	}
 
-	public void addQuestion(PostQuestionDTO question) {
+	public void addQuestion(Question question) {
+		
+		if(question.getFormatId() == Question.FORMAT_ID_YES_NO){
+			
+			question.setAnswerOptions(new ArrayList<AnswerOption>());
+			
+			AnswerOption answerOption = new AnswerOption();
+			answerOption.setQuestionId(question.getQuestionId());
+			answerOption.setText("Yes");			
+			question.getAnswerOptions().add(answerOption);
+			
+			answerOption = new AnswerOption();
+			answerOption.setQuestionId(question.getQuestionId());
+			answerOption.setText("No");			
+			question.getAnswerOptions().add(answerOption);
+		}
+		
 		repository.addQuestion(question);
 	}
 
@@ -239,47 +257,71 @@ public class ApplicationServiceImpl {
 		return repository.getWageProposal(wageProposalId);
 	}
 
-	public void insertCounterOffer(WageProposalCounterDTO dto) {
+	public void insertCounterOffer(WageProposalCounterDTO dto, HttpSession session) {
+	
 
-		// Get the wage proposal to counter
+		// As received from the browser, get the wage proposal to counter
 		WageProposal wagePropasalToCounter = this.getWageProposal(dto.getWageProposalIdToCounter());
-
-		// Set the proposal-to-counter's status to "countered"
-		this.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
-
-		// Update the application's status to considering.
-		// The employer's action of making a counter offer implies the employer
-		// is considering the applicant.
-		// Because the employer does not need to explicitly set the applicant's
-		// status to "considering"
-		// before making a counter offer, this ensures the application is set to
-		// the correct status.
+		
+		// Get the application that pertains to the requested counter offer
 		Application application = this.getApplication(wagePropasalToCounter.getApplicationId());
-		this.updateApplicationStatus(application.getApplicationId(), 2);
-
-		// Create a new wage proposal for the counter offer
-		WageProposal counter = new WageProposal();
-		counter.setAmount(dto.getCounterAmount());
-
-		// This counter offer is being proposed BY the user whom the
-		// wage-proposal-to-counter was proposed TO,
-		// and vice versa.
-		counter.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
-		counter.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
-		counter.setApplicationId(wagePropasalToCounter.getApplicationId());
-		counter.setStatus(-1);
-
-		repository.addWageProposal(counter);
+		
+		// Get the current wage proposal in the database that pertains to this application
+		WageProposal currentWageProposalInDatabase = this.getCurrentWageProposal(application);
+		
+		
+		// Verify:
+		// 1) The wage proposal id received from the browser was indeed proposed TO the session user
+		//		Reason: the user can edit the wage proposal id in the browser.
+		// 2) The current wage proposal pertaining to this application is currently
+		//			proposed TO the session user.
+		//		Reason: Because this is initiated by an Ajax call, the browser can lag and the user
+		//					might click "send counter offer" more than once.
+		if(wagePropasalToCounter.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
+			currentWageProposalInDatabase.getProposedToUserId() == SessionContext.getUser(session).getUserId()){
+				
+		
+			// Set the proposal-to-counter's status to "countered"
+			this.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
+	
+			// Update the application's status to considering.
+			// The employer's action of making a counter offer implies the employer
+			// is considering the applicant.
+			// Because the employer does not need to explicitly set the applicant's
+			// status to "considering"
+			// before making a counter offer, this ensures the application is set to
+			// the correct status.		
+			this.updateApplicationStatus(application.getApplicationId(), 2);
+	
+			// Create a new wage proposal for the counter offer
+			WageProposal counter = new WageProposal();
+			counter.setAmount(dto.getCounterAmount());
+	
+			// This counter offer is being proposed BY the user whom the
+			// wage-proposal-to-counter was proposed TO,
+			// and vice versa.
+			counter.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
+			counter.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
+			counter.setApplicationId(wagePropasalToCounter.getApplicationId());
+								
+			repository.addWageProposal(counter);
+		}	
 
 	}
-	
-	public List<ApplicationDTO> getApplicationDtosByUser(int userId) {
+
+	public List<ApplicationDTO> getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(int userId, List<Integer> applicationStatuses){
 		
-		// This only returns applications that are submitted or being considered.
-		// Applications that are declined or accepted are not returned.
+		List<Application> applications = this.getApplications_ByUserAndStatuses_OpenJobs(userId, applicationStatuses);		
+
+		List<ApplicationDTO> applicationDtos = getApplicationDtos_ByApplications(applications);
+		
+		return applicationDtos;
+	}
+
+
+	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications) {
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
-		List<Application> applications = this.getApplicationsByUserAndStatuses(userId, Arrays.asList(0, 2));		
 		
 		for(Application application : applications){
 			
@@ -287,6 +329,7 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setApplication(application);
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
 			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
 			applicationDtos.add(applicationDto);
@@ -295,11 +338,10 @@ public class ApplicationServiceImpl {
 		return applicationDtos;
 	}
 
-
-	public List<Application> getApplicationsByUserAndStatuses(int userId, List<Integer> statuses) {
+	public List<Application> getApplications_ByUserAndStatuses_OpenJobs(int userId, List<Integer> statuses) {
 
 		if (statuses.size() > 0) {
-			return repository.getApplicationsByUserAndStatuses(userId, statuses);
+			return repository.getApplications_ByUserAndStatuses_OpenJobs(userId, statuses);
 		} else {
 			return null;
 		}
@@ -466,6 +508,37 @@ public class ApplicationServiceImpl {
 	
 		return repository.getCountWageProposal_Received(jobId, userId);
 	}
+	
+	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
+		return repository.getCountWageProposal_Received_New(jobId, userId);
+	}
+
+	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
+
+		repository.updateWageProposalsStatus_ToViewedButNoActionTaken(jobId);
+		
+	}
+
+	public List<Question> getQuestions_ByEmployer(int userId) {
+		
+		return repository.getQuestions_ByEmployer(userId);
+	}
+
+	public Question getQuestion(int questionId) {
+		
+		return repository.getQuestion(questionId);
+	}
+
+	public boolean wasUserEmployedForJob(int userId, int jobId) {
+			
+		int countEmploymentRecord = repository.getCount_Employment_ByUserAndJob(userId, jobId);
+		
+		if(countEmploymentRecord  == 1) return true;
+		else return false;
+	
+	}
+
+
 
 
 

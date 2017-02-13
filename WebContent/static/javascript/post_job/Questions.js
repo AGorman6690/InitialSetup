@@ -1,4 +1,4 @@
-var postQuestionDtos = [];
+var questions = [];
 var ongoingQuestionCount = 0;
 
 
@@ -28,30 +28,34 @@ $(document).ready(function(){
 		else highlightArrayItem(this, $("#addedQuestions").find("a"), "selected");
 		
 		if(isAQuestionSelected()){
-//			var selectedPostQuestionDto = getSelectedPostQuestionDto();
-			showSelectedPostQuestionDto();			
+
+			showSelectedQuestion();		
 			
-			// Turn "Delete" and "Edit" to clickable
 			setClickableness_ForQuestionActions(true, false, true, true);
-			
-			// Turn "Add" to un-clickable
-			setClickableness_ForQuestionActions(false, true, false, false);
 		}
 		else{
 			clearAllInputs($("#questionsContainer"));
-			setClickableness_ForQuestionActions(false, false, true, true);			
+			
 			setClickableness_ForQuestionActions(true, true, false, false);
 			enableAllInputFields($("#questionsContainer"));
 		}
 
 		clearInvalidContentAndStyle();
 		
+	})
+	
+	$("body").on("click", "#newQuestion.clickable", function(){
+		
+		clearAllInputs($("#questionsContainer"));
+		enableAllInputFields($("#questionsContainer"));
+		$("#answerListContainer").hide();
+		setClickableness_ForQuestionActions(true, true, false, false);
+		deselectAddedQuestion();
 
 	})
 	
 	$("body").on("click", "#addQuestion.clickable", function(){
-		addQuestion();
-	
+		addQuestion();	
 	})
 	
 	
@@ -59,7 +63,7 @@ $(document).ready(function(){
 		deleteQuestion();
 		clearAllInputs($("#questionsContainer"));
 		enableAllInputFields($("#questionsContainer"));
-		setClickableness_ForQuestionActions(false, false, true, true);
+		setClickableness_ForQuestionActions(true, true, false, false);
 		
 	})
 	
@@ -68,16 +72,15 @@ $(document).ready(function(){
 		
 		enableAllInputFields($("#questionsContainer"));
 		$("#editQuestionResponses").show();
-		setClickableness_ForQuestionActions(false, true, true, true);
 		setClickableness_ForAddedQuestions(false);
+		setClickableness_ForQuestionActions(false, false, false, false);
 	})	
 	
 	$("#cancelEditQuestionChanges").click(function(){
 		
-		showSelectedPostQuestionDto();	
+		showSelectedQuestion();	
 			
-		setClickableness_ForQuestionActions(true, true, true, true);
-		setClickableness_ForQuestionActions(false, true, false, false);
+		setClickableness_ForQuestionActions(true, false, true, true);
 		setClickableness_ForAddedQuestions(true);
 		$("#editQuestionResponses").hide();
 	})
@@ -87,8 +90,7 @@ $(document).ready(function(){
 		if(areQuestionInputsValid){
 			saveEditQuestionChanges();
 			
-			setClickableness_ForQuestionActions(true, true, true, true);
-			setClickableness_ForQuestionActions(false, true, false, false);
+			setClickableness_ForQuestionActions(true, false, true, true);
 			setClickableness_ForAddedQuestions(true);
 			
 			$("#editQuestionResponses").hide();
@@ -99,6 +101,22 @@ $(document).ready(function(){
 	
 })
 
+function deselectAddedQuestion(){
+	$("#addedQuestions").find("a.selected").eq(0).removeClass("selected");
+}
+
+function resetEntireQuestionSection(){
+	
+	questions = [];		
+	$("#addedQuestions").empty();	
+	
+	clearAllInputs($("#questionsContainer"));
+	enableAllInputFields($("#questionsContainer"));
+	$("#answerListContainer").hide();
+	setClickableness_ForQuestionActions(true, true, false, false);
+	
+}
+
 function clearInvalidContentAndStyle(){
 	removeAllInvalidStyles($("#questionsContainer"));
 	$("#invalidAddQuestion").hide();
@@ -107,22 +125,22 @@ function clearInvalidContentAndStyle(){
 function saveEditQuestionChanges(){
 	
 	var newlyEditedQuestion = {};
-	var selectedPostQuestionDto = {};
+	var selectedQuestion = {};
 	
-	selectedPostQuestionDto = getSelectedPostQuestionDto();
-	newlyEditedQuestion = getPostQuestionDto();
+	selectedQuestion = getSelectedQuestion();
+	newlyEditedQuestion = getQuestion();
 	
 	// When editing a question, the id must remain the same.
 	// Otherwise the anchor's [data-question-id] needs to be updated.
-	newlyEditedQuestion.id = selectedPostQuestionDto.id;
+	newlyEditedQuestion.questionId = selectedQuestion.questionId;
 	
 	// Remove the old selected question
-	postQuestionDtos = removeArrayElementByIdProp(selectedPostQuestionDto.id, postQuestionDtos);
+	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
 	
 	// Add the new edited question
-	postQuestionDtos.push(newlyEditedQuestion);
+	questions.push(newlyEditedQuestion);
 	
-	updateAddedQuestionText(newlyEditedQuestion.id, newlyEditedQuestion.text);
+	updateAddedQuestionText(newlyEditedQuestion.questionId, newlyEditedQuestion.text);
 }
 
 function updateAddedQuestionText(questionId, questionText){
@@ -149,61 +167,67 @@ function setClickableness_ForAddedQuestions(doSetAsClickable){
 	
 }
 
-function setClickableness_ForQuestionActions(doSetAsClickable, doSetAdd, doSetDelete, doSetEdit){
+
+function setClickableness_ForQuestionActions(doSetNew_asClickable, doSetAdd_asClickable,
+												doSetDelete_asClickable, doSetEdit_asClickable){
 	
-	if(doSetAsClickable){
-		if(doSetEdit) $("#editQuestion").addClass("clickable");
-		if(doSetDelete) $("#deleteQuestion").addClass("clickable");
-		if(doSetAdd) $("#addQuestion").addClass("clickable");
-	}
-	else{
-		if(doSetEdit) $("#editQuestion").removeClass("clickable");
-		if(doSetDelete) $("#deleteQuestion").removeClass("clickable");	
-		if(doSetAdd) $("#addQuestion").removeClass("clickable");
-	}
+	if(doSetEdit_asClickable) $("#editQuestion").addClass("clickable");
+	else $("#editQuestion").removeClass("clickable");
+	
+	if(doSetDelete_asClickable) $("#deleteQuestion").addClass("clickable");
+	else $("#deleteQuestion").removeClass("clickable");	
+	
+	if(doSetAdd_asClickable) $("#addQuestion").addClass("clickable");
+	else $("#addQuestion").removeClass("clickable");
+	
+	if(doSetNew_asClickable) $("#newQuestion").addClass("clickable");
+	else $("#newQuestion").removeClass("clickable");
 	
 }
 
 function deleteQuestion(){
 
-	var selectedPostQuestionDto = getSelectedPostQuestionDto();
-	postQuestionDtos = removeArrayElementByIdProp(selectedPostQuestionDto.id, postQuestionDtos);
+	var selectedQuestion = getSelectedQuestion();
+	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
 	
 	//Remove the question from the cart
-	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedPostQuestionDto.id);
+	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedQuestion.questionId);
 	
 }
 
-function showSelectedPostQuestionDto(){
+function showSelectedQuestion(){
 	
-	var selectedPostQuestionDto = getSelectedPostQuestionDto();
+	var selectedQuestion = getSelectedQuestion();
 	
+	showQuestionDto(selectedQuestion);
+
 	
-	$("#question").val(selectedPostQuestionDto.text);
+	disableAllInputFields($("#questionsContainer"));			
+	
+}
+
+function showQuestionDto(questionDto){
+	$("#question").val(questionDto.text);
 	
 	// Select the question format
-	$("#questionFormat option[data-format-id='" + parseInt(selectedPostQuestionDto.formatId) + "']").prop("selected", "selected");
+	$("#questionFormat option[data-format-id='" + parseInt(questionDto.formatId) + "']").prop("selected", "selected");
 	$("#questionFormat").trigger("click");
 	
 	
-	if(selectedPostQuestionDto.answerOptions.length > 0){
+	if(questionDto.answerOptions.length > 0){
 		
 		resetAnswerListContainer();
 		
 		// Add an answer option for every answer option other than the first 2 
-		for(i=0; i<selectedPostQuestionDto.answerOptions.length - 2; i++){
+		for(i=0; i<questionDto.answerOptions.length - 2; i++){
 			$("#addAnswer").trigger("click");
 		}
 		
 		// Populate the answer option inputs
 		$("#answerList").find(".answer-container input").each(function(i, e){
-			$(this).val(selectedPostQuestionDto.answerOptions[i]);
+			$(this).val(questionDto.answerOptions[i].text);
 		})
 	}
-	
-	
-	disableAllInputFields($("#questionsContainer"));			
-	
 }
 
 function resetAnswerListContainer(){
@@ -212,14 +236,14 @@ function resetAnswerListContainer(){
 	})
 }
 
-function getSelectedPostQuestionDto(){
+function getSelectedQuestion(){
 	
 	var selectedQuestionId = $("#addedQuestions").find("a.selected").attr("data-question-id");
 	selectedQuestionId = parseInt(selectedQuestionId);
 	
 	var selectedQuestion = {};
-	$.each(postQuestionDtos, function(){
-		if(this.id == selectedQuestionId){
+	$.each(questions, function(){
+		if(this.questionId == selectedQuestionId){
 			selectedQuestion = this;		
 		}
 	})
@@ -244,60 +268,65 @@ function deleteAnswerOption(clickedAnswerOption){
 	if($("#answerList").find(".answer-container").length > 2){
 		$(clickedAnswerOption).closest(".answer-container").remove();
 	}
+	else{
+		$(clickedAnswerOption).siblings("input").eq(0).val("");
+	}
 }
 
 
 function addQuestion(){
-	var postQuestionDto = {};
+	var question = {};
 	if(areQuestionInputsValid()){
-		postQuestionDto = getPostQuestionDto();
+		question = getQuestion();
 		ongoingQuestionCount += 1;
-		postQuestionDto.id = ongoingQuestionCount;
-		postQuestionDtos.push(postQuestionDto);
-		addQuestionToDOM(postQuestionDto);
+		question.questionId = ongoingQuestionCount;
+		questions.push(question);
+		addQuestionToDOM(question);
 		clearAllInputs($("#questionsContainer"));
 		slideUp($("#answerListContainer"), 400);
 	}
 }
-function getPostQuestionDto(){
+function getQuestion(){
 	
-	var postQuestionDto = {};
+	var question = {};
 	var answerOptionsInputs = []
 	var answerOptions = [];
+	var answerOption = {};
 	
-	
-	postQuestionDto.text = $("#question").val();
-	postQuestionDto.formatId = $("#questionFormat").find("option:selected").eq(0).attr("data-format-id");
+	question.text = $("#question").val();
+	question.formatId = $("#questionFormat").find("option:selected").eq(0).attr("data-format-id");
 
 	//If necessary, set the answer options
-	if(doesQuestionHaveAnAnswerList(postQuestionDto)){
+	if(doesQuestionHaveAnAnswerList(question)){
 
 		$.each($("#answerList").find(".answer-container input"), function(){
-			answerOptions.push($(this).val());
+			answerOption = {};
+			answerOption.text = $(this).val();
+			answerOptions.push(answerOption);
 		})
 		
-		postQuestionDto.answerOptions = answerOptions;
+		question.answerOptions = answerOptions;
 	
 	}else{
-		postQuestionDto.answerOptions = [];
+		question.answerOptions = [];
 	}
 	
-	return postQuestionDto;
+	return question;
 }
 
-function doesQuestionHaveAnAnswerList(postQuestionDto){
-	if(postQuestionDto.formatId == 2 || postQuestionDto.formatId == 3){
+function doesQuestionHaveAnAnswerList(question){
+	if(question.formatId == 2 || question.formatId == 3){
 		return true;
 	}else{
 		return false;
 	}
 }
 
-function addQuestionToDOM(postQuestionDto){
+function addQuestionToDOM(question){
 	
-	var html = "<a data-question-id='" + postQuestionDto.id + "' class='accent no-hover clickable'>";
+	var html = "<a data-question-id='" + question.questionId + "' class='accent no-hover clickable'>";
 	
-	var buttonText = getAddedQuestionText(postQuestionDto.text);
+	var buttonText = getAddedQuestionText(question.text);
 	html += buttonText;			
 	html += "</a>";
 				

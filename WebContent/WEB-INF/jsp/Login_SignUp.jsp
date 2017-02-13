@@ -1,42 +1,72 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />	
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 	
+<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>			
+<script src="<c:url value="/static/javascript/Signup.js" />"></script>		
 	
-<div class="group-container">
+	<div id="verifyEmail">
+		A verification link has been sent to your email, please login and verify.
+	</div>
+<div id="signUpGroup" class="group-container">
 	<div id="setupHeader" class="a-header">
 		<h3>Sign Up</h3>
-	</div>	    
+	</div>
+
+    
 	<div id="signUpContainer" class="group ${requestedLogin == 1 ? 'do-hide' : '' }">						
-		<form:form action="/JobSearch/user/sign-up" method="POST" modelAttribute="user">
-			<div class="item">
+			<div class="item" >
 				<label>First Name</label>
-				<form:input path="firstName"/>
+				<input id="signup-firstName" type="text" class="${invalidFirstName ? 'invalid' : '' }"/>
 			</div>
 			<div class="item">
 				<label>Last Name</label>
-				<form:input path="lastName"/>
+				<input id="signup-lastName" type="text" class="${invalidLastName ? 'invalid' : '' }"/>
 			</div>										
 				
 			<div class="item">
 				<label>Email Address</label>
-				<form:input path="emailAddress"/>
+				<input id="signup-email" type="email"
+					 class="${invalidEmail || invalidEmail_alreadyInUse ? 'invalid' : '' }"/>
 			</div>
+			<div id="invalidEmail_format" class="error-message ${invalidEmail ? 'do-show' : '' }">
+				Invalid email address
+			</div>		
+			<div id="invalidEmail_duplicate" class="error-message ${invalidEmail_alreadyInUse ? 'do-show' : '' }">
+				Email address already in use
+			</div>	
+			<div class="item">
+				<label>Confirm Email Address</label>
+				<input id="signup-confirm-email" type="email"/>
+			</div>		
+			<div id="invalidConfirmEmail" class="error-message">
+				Email addresses do not match
+			</div>					
 			<div class="item">
 				<label>Password</label>
-				<form:password path="password"/>
+				<div class="input-container">
+					<input id="signup-password" type="password" class="${invalidPassword ? 'invalid' : '' }"/>					
+				</div>
+			</div>
+			<div id="invalidPassword" class="error-message ${invalidPassword ? 'do-show' : '' }">
+				Password must be between 6 and 20 characters
 			</div>
 			<div class="item">
 				<label>Confirm Password</label>
-				<form:password path="matchingPassword" class="" />
+				<input id="signup-confirm-password" type="password" class="${invalidMatchingPassword ? 'invalid' : '' }"/>
+			</div>
+			<div id="invalidConfirmPassword" class="error-message ${invalidMatchingPassword ? 'do-show' : '' }">
+				Passwords do not match
 			</div>
 			<div class="item">
 				<label>Profile Type</label>
-				<form:select path="profileId" class="">
-						<form:option value="-1" label="Select a profile type" />
-						<form:options items="${profiles}" itemValue="id"
-							itemLabel="altName1" ></form:options>
-					</form:select>
+				<select id="signup-profiles" class="${invalidProfile ? 'invalid' : '' }">
+					<option value="-1" selected disabled>Select a profile type</option>
+					<c:forEach items="${profiles }" var="profile">
+						<option value="${profile.id }">${profile.altName1 }</option>
+					</c:forEach>				
+				</select>
 			</div>
 			<div class="item">
 				<label></label>
@@ -46,14 +76,13 @@
 				<label><input type="hidden" name="${_csrf.parameterName}"
 					value="${_csrf.token}" /></label>
 			</div>
-		</form:form>	
 	</div>	
 </div>	
 	
 		
 	
 	
-<div class="group-container">
+<div id="loginGroup" class="group-container">
 	<div id="loginHeader" class="a-header">
 		<h3>Login</h3>
 	</div>

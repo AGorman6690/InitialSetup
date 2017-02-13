@@ -93,9 +93,13 @@ $(document).ready(function(){
 		wageProposalCounterDTO.wageProposalIdToCounter = $(counterOfferContainer).attr("id");
 		wageProposalCounterDTO.counterAmount = counterAmount;
 
+		// Update the table's row attribute
+		$(this).closest("tr").attr("data-is-sent-proposal", "1");
+		
 		//Make ajax call
 		sendCounterOffer(wageProposalCounterDTO, function(){
 			updateDOM($(counterOfferContainer), $(responseNotification), twoDecimalPlaces(counterAmount) + " counter offer has been sent");
+			
 		})
 	})		
 
@@ -124,13 +128,16 @@ $(document).ready(function(){
 
 	function sendCounterOffer(wageProposalCounterDTO, callback){
 		
+		broswerIsWaiting(true)
 		$.ajax({
 			type : "POST",
 			url :"/JobSearch/desired-pay/counter",
 			headers : getAjaxHeaders(),
 			contentType : "application/json",
 			data : JSON.stringify(wageProposalCounterDTO)			
-		}).done(function() {		
+		}).done(function() {	
+			
+			broswerIsWaiting(false);
 			callback();		
 			
 		}).error(function() {

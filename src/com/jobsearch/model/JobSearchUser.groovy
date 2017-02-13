@@ -13,6 +13,7 @@ class JobSearchUser {
 	String lastName
 	String username
 	String emailAddress
+	String matchingEmailAddress
 	String password
 	String matchingPassword
 	Profile profile

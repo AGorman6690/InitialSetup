@@ -6,20 +6,13 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.joda.time.DateTime;
-import org.joda.time.Hours;
-
-import com.fasterxml.jackson.datatype.joda.ser.PeriodSerializer;
-import com.jobsearch.job.service.WorkDay;
+import com.jobsearch.model.WorkDay;
 
 public final class DateUtility {
 	

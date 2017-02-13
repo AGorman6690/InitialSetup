@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -20,12 +18,12 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.service.PostJobDTO;
-import com.jobsearch.job.service.PostQuestionDTO;
-import com.jobsearch.job.service.WorkDay;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.Skill;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 
@@ -178,6 +176,31 @@ public class JobRepository {
 
 	}
 	
+	public List<Skill> SkillRowMapper(String sql, Object[] args) {
+
+		try{
+
+			return jdbcTemplate.query(sql, args, new RowMapper<Skill>() {
+
+				@Override
+				public Skill mapRow(ResultSet rs, int rownumber) throws SQLException {
+					
+					Skill e = new Skill();
+										
+					e.setSkillId(rs.getInt("SkillId"));
+					e.setText(rs.getString("Text"));
+					e.setType(rs.getInt("Type"));
+					e.setJobId(rs.getInt("JobId"));
+					return e;
+				}
+			});
+
+		}catch(Exception e){
+			return null;
+		}
+
+	}
+	
 	public List<FindJobFilterDTO> FindJobFilterDtoMapper(String sql, Object[] args) {
 
 		try{
@@ -252,72 +275,34 @@ public class JobRepository {
 
 	}
 	
-	public void addJob(List<PostJobDTO> jobDtos) {
-		try {
+	
 
-			ResultSet result = null;
-			for (PostJobDTO job : jobDtos) {
-					CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-							.prepareCall("{call create_Job(?, ?, ?, ?, ?)}");
-
-					cStmt.setString(1, job.getJobName());
-					cStmt.setInt(2, job.getUserId());
-					cStmt.setString(3, job.getDescription());
-					cStmt.setInt(5, job.getOpenings());
-
-					result = cStmt.executeQuery();
-
-					Job createdJob = new Job();
-					while (result.next()) {
-						createdJob.setId(result.getInt("JobId"));
-						createdJob.setJobName(result.getString("JobName"));
-						createdJob.setUserId(result.getInt("UserId"));
-						createdJob.setDescription(result.getString("Description"));
-						createdJob.setOpenings(result.getInt("Openings"));
-					}
-					for(Integer categoryId: job.getCategoryIds()){
-						 cStmt = jdbcTemplate.getDataSource().getConnection()
-								.prepareCall("{call insertJobCategories(?, ?)}");
-
-						cStmt.setInt(1, createdJob.getId());
-						cStmt.setInt(2, categoryId);
-
-						cStmt.executeQuery();
-					}
-				}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public void addJob(PostJobDTO postJobDto, JobSearchUser user) {
+	public void addJob(JobDTO jobDto, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
 					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, postJobDto.getJobName());
+			 cStmt.setString(1, jobDto.getJob().getJobName());
 			 cStmt.setInt(2, user.getUserId());
-			 cStmt.setString(3, postJobDto.getDescription());
-			 cStmt.setString(4, postJobDto.getStreetAddress());
-			 cStmt.setString(5, postJobDto.getCity());
-			 cStmt.setString(6, postJobDto.getState());
-			 cStmt.setString(7, postJobDto.getZipCode());
-			 cStmt.setFloat(8,  postJobDto.getLat());
-			 cStmt.setFloat(9,  postJobDto.getLng());
-			 cStmt.setInt(10, postJobDto.getDurationTypeId());
+			 cStmt.setString(3, jobDto.getJob().getDescription());
+			 cStmt.setString(4, jobDto.getJob().getStreetAddress());
+			 cStmt.setString(5, jobDto.getJob().getCity());
+			 cStmt.setString(6, jobDto.getJob().getState());
+			 cStmt.setString(7, jobDto.getJob().getZipCode());
+			 cStmt.setFloat(8,  jobDto.getJob().getLat());
+			 cStmt.setFloat(9,  jobDto.getJob().getLng());
+			 cStmt.setInt(10, jobDto.getJob().getDurationTypeId());
 
 			 ResultSet result = cStmt.executeQuery();
 
-			 //Set the newly created job
+			 // Set the newly created job
 			 Job createdJob = new Job();
 			 result.next();
 			 createdJob.setId(result.getInt("JobId"));
 
-			 //Add the job's categories to the database
-			 for(Integer categoryId: postJobDto.getCategoryIds()){
+			 // Add the job's categories to the database
+			 for(Integer categoryId: jobDto.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
 
@@ -327,13 +312,17 @@ public class JobRepository {
 					cStmt.executeQuery();
 			}
 
-			for(PostQuestionDTO question : postJobDto.getQuestions()){
+			// Add the questions
+			for(Question question : jobDto.getQuestions()){
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
 
-			//Set the work days
-			jobService.addWorkDays(createdJob.getId(), postJobDto.getWorkDays());
+			// Add the work days
+			jobService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
+			
+			// Add the skills
+			jobService.addSkills(createdJob.getId(), jobDto.getSkills());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -762,6 +751,16 @@ public class JobRepository {
 	}
 
 	public void addWorkDay(int jobId, WorkDay workDay) {
+		
+		
+		// *******************************************************
+		// *******************************************************
+		// If the date is in yyyy-mm-dd format, does it need to be
+		// converted to a Sql Date object????
+		// Review this.
+		// *******************************************************
+		// *******************************************************
+		
 		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date, DateId)"
 						+ "  VALUES (?, ?, ?, ?, ?)";
 
@@ -987,6 +986,40 @@ public class JobRepository {
 		
 		String sql = "SELECT Id FROM date where Date = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[]{ date }, Integer.class);
+	}
+
+	public List<Job> getJobs_ByEmployer(int userId) {
+		
+		String sql = "SELECT * FROM job WHERE UserId = ?";
+		return JobRowMapper(sql, new Object[]{ userId });
+	}
+
+	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
+		
+		// *******************************************************
+		// *******************************************************
+		// Once the back end is built for employer ratings,
+		// update the sql statement
+		// *******************************************************
+		// *******************************************************
+
+		String sql = "SELECT * FROM job j"
+						+ " INNER JOIN application a ON a.JobId = j.JobId "
+						+ " WHERE a.UserId = ? AND j.Status = ?";
+		
+		return JobRowMapper(sql, new Object[]{ userId, Job.STATUS_PAST });
+	}
+
+	public void addSkill(Integer jobId, Skill skill) {
+		
+		String sql = "INSERT INTO skill (Text, Type, JobId) VALUES (?, ?, ?)";		
+		jdbcTemplate.update(sql, new Object[]{ skill.getText(), skill.getType(), jobId });
+		
+	}
+
+	public List<Skill> getSkills_ByType(int jobId, int type) {
+		String sql = "SELECT * FROM skill WHERE JobId = ? AND Type = ?";
+		return SkillRowMapper(sql, new Object[]{ jobId, type });
 	}
 
 
