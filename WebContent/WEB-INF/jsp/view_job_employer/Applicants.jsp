@@ -94,7 +94,9 @@
 					</th>
 					<th id="endorsements">Endorsements</th>
 				<c:if test="${jobDto.questions.size() > 0 }">
-					<th id="questions" class="header-dropdown" data-filter-attr="data-answer-option-ids-seleted">
+					<th id="questions" class="header-dropdown"
+						 data-filter-attr="data-answer-option-ids-seleted"
+						 data-must-match-all-filter-values="1">
 						<span data-toggle-id="filterAnswersContainer" >
 							<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
 						</span>					
@@ -105,15 +107,24 @@
 							<table id="table_headerAnswers" class="main-table-style">
 								<thead>
 									<tr class="no-filter">
-										<th>Question</th>
-										<th>Answer</th>												
+										<th id="filterAnswers"></th>
+										<th id="header_question">Question</th>
+										<th id="header_answers">Answer</th>												
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach items="${jobDto.questions }" var="question">
 										<tr class="no-filter">
-											<td>${question.text }</td>
-											<td class="answers-container">
+											<td>															
+												<label>
+													<input type="checkbox" checked
+														name="show-question-${question.questionId }"
+														class="filter-answers">
+														<span>Filter Answers</span>
+												</label>
+											</td>
+											<td class="question">${question.text }</td>
+											<td class="answers answers-container">
 												<div class="checkbox-container">
 													<c:forEach items="${question.answerOptions }"
 															var="answerOption">													

@@ -1,7 +1,8 @@
 .counter-offer-response{
 	display:none;
 	position:absolute;
-	background-color:#ffffff;
+/* 	background-color: #dadada; */
+	background-color: #ffffff;
 	z-index:1000;
 	border:2px solid #9c9696;
 	padding:7px 0px;
@@ -11,11 +12,16 @@
 }
 
 .counter-offer-container .action{
-	padding: 4px 0px;
+	padding: 6px 0px;
 }
 
 .offer-context{
 	display:inline-block;
+}
+
+.re-counter-container .re-counter{
+	color: #000000;
+	font-weight: bold;
 }
 
 .counter-offer-container{
@@ -81,4 +87,44 @@ div.re-counter-container{
     border-top: 1px solid;
     margin: 0px 25px;
     padding-top: 10px;
+}
+
+.decline-counter-container{
+	padding-bottom: 7px;
+}
+
+
+.post-hire-action{
+	display: none;
+    border-bottom: 1px solid black;
+/*     padding-bottom: 15px; */
+    margin: 0px 25px;
+}
+
+.post-hire-action .time-container span{
+	width: 80px;
+	display: inline-block;
+    text-align: right;
+    padding-right: 15px;
+}
+
+.post-hire-action div{
+	padding: 3px 0px;
+}
+
+.post-hire-action select{
+	width: 60px;
+}
+
+.post-hire-action .lbl{
+	font-weight: bold;
+}
+
+.post-hire-action .send-cancel{
+	text-align: center;
+	padding: 10px 0px;
+}
+
+.post-hire-action .send-cancel span{
+	padding: 0px 5px;
 }

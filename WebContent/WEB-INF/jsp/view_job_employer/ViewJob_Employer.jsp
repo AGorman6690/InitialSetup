@@ -21,6 +21,8 @@
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/FilterTable.js" />"></script>
 	
+		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
+	
 <!-- 	Currently the "WageNegotiation.js" has to be loaded AFTER the "FilterTable.js". -->
 <!-- 	If it is not, then the "html" click event in the FilterTable.js will take precedence -->
 <!-- 	over the "send counter offer" click event in the WageNegotiation.js -->

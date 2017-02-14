@@ -46,9 +46,6 @@ $(document).ready(function(){
 
 		//Get the wage proposal id and proposal amount
 		var wageProposalId = $(counterOfferContainer).attr("id");
-//		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
-		
-//		updateDOM($(counterOfferContainer), $(responseNotification),"Accepted " + twoDecimalPlaces(proposalAmount) + " offer");
 		
 		$.ajax({
 			type : "POST",
@@ -63,6 +60,11 @@ $(document).ready(function(){
 		}).error(function() {
 			$('#home')[0].click();
 		});		
+	})
+	
+	$(".show-post-hire-action").click(function(){
+		$(this).closest(".counter-offer-response").find(".post-hire-action").eq(0).toggle();
+	
 	})
 	
 //	$(".re-counter").click(function(){

@@ -43,7 +43,8 @@ public class JobDTO {
 	 int newApplicationCount
 	 List<JobSearchUser> applicants
 	 List<Application> applications
-	
+	 Application application
+	 
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
 	 RatingDTO ratingDto

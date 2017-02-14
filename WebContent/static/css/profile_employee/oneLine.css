@@ -91,7 +91,7 @@ table#openApplications_oneLine tbody tr:hover{
 	background-color: #eaeaea;
 }
 
-table#openApplications_oneLine table.wage-proposal-history-table tbody tr:hover{
+table#openApplications_oneLine table.wage-proposal-history-table tr:hover{
 	background-color: #ffffff;
 }
 

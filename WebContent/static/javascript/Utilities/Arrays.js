@@ -38,6 +38,21 @@ function doesArrayContainAtLeastOneValue(values, array){
 	
 }
 
+function doesArrayContainAllValues(values, array){
+	
+	var doesContainAllValues = true;
+	
+	$(values).each(function(i, value){
+		if(!doesArrayContainValue(value, array)){
+			doesContainAllValues = false;
+			return false;
+		}
+	})
+	
+	return doesContainAllValues;
+	
+	
+}
 
 function isStringACommaSeperatedArray(string){
 	

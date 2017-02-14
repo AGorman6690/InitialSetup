@@ -17,6 +17,7 @@
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employee/viewJob_Employee.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/jobInfo.css" />
 
 		
@@ -36,8 +37,16 @@
 		</div>
 		
 		<div class="col-sm-10" id="sectionContainers">
+			<c:if test="${context == 'find' && !empty jobDto.application}">
+				<div id="applicationStatus">						
+					${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
+						jobDto.application.status == 1 ? "Application has been declined" :
+						"Application has been accepted" }						
+				</div>
+			</c:if>
 			<div id="jobInfoContainer" class="section-container">
 				<div class="section-body">
+
 					<h4>Job Information</h4>
 					<div class="body-element-container">				
 						<%@include file="../templates/JobInformation.jsp"%>						
@@ -45,9 +54,8 @@
 				</div>
 			</div>
 
-		<c:choose>
-		
-			<c:when test="${context == 'find'}">
+		<c:choose>		
+			<c:when test="${context == 'find' && empty jobDto.application}">
 				<div id="applyContainer" class="section-container ">
 					<%@ include file="./ApplyContainer.jsp" %>
 				</div>

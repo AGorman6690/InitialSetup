@@ -601,7 +601,7 @@ public class JobServiceImpl {
 				jobDto.setJob(job);
 				jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
 				jobDto.setDurationDays(this.getDuration(job.getId()));
-				
+								
 				double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
 				distance = MathUtility.round(distance, 1, 0);
 				jobDto.setDistanceFromFilterLocation(distance);			
@@ -882,7 +882,7 @@ public class JobServiceImpl {
 		case "find":
 			
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
-
+			jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
 			
 			break;
 

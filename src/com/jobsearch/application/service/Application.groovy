@@ -10,10 +10,18 @@ import com.jobsearch.model.WageProposal
 
 public class Application {
 	
+	// ********************************************
+	// ********************************************
+	// Can most of these properties be moved to the ApplicationDTO???
+	// Consider removing "hasBeenViewed" and adding another status.
+	// ********************************************
+	// ********************************************
+	
 	int applicationId
 	int userId
 	int jobId
 	int hasBeenViewed
+	
 	String jobName
 	Job job
 	JobSearchUser applicant
@@ -25,13 +33,10 @@ public class Application {
 	float currentDesiredWage
 	List<Answer> answers
 	
-	
-
-
-	int status
-	
+	int status	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;
 	public static Integer STATUS_CONSIDERED = 2;
+	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 2.5;
 	public static Integer STATUS_ACCEPTED = 3;
 }
