@@ -197,7 +197,9 @@
 					
 					<td>
 						<div class="vert-border">
-							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a>
+							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/
+										user/${application.applicant.userId}/jobs/completed">
+										 ${application.applicant.firstName }</a>
 						</div>
 					</td>
 					
@@ -211,7 +213,14 @@
 										 maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
 										 has been accepted
 									</div>
-								</c:when>						
+								</c:when>	
+								<c:when test="${application.currentWageProposal.status == 3 }">
+								<!-- ****** If the current wage proposal has been accepted-->
+									<div>
+										<div>Waiting for applicant's approval.</div>
+										<div class="expiration-time">Expires in ${application.time_untilEmployerApprovalExpires }</div>
+									</div>
+								</c:when>													
 								<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
 									<c:set var="param_is_employer" value="1" />
 									<c:set var="param_wage_proposal" value="${application.currentWageProposal }" />

@@ -52,6 +52,10 @@ span.dollar-sign{
 /* } */
 
 
+.dropdown-container{
+	position: relative;
+}
+
 .dropdown-style{
 	position:absolute;
 	background-color:#ffffff;

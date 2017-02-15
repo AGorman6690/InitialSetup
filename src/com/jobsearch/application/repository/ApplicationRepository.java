@@ -3,9 +3,13 @@ package com.jobsearch.application.repository;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -13,13 +17,14 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Repository
 public class ApplicationRepository {
@@ -47,7 +52,17 @@ public class ApplicationRepository {
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setStatus(rs.getInt("Status"));
-
+				
+				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
+				if(ts_employerAcceptedDate != null)
+					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
+				
+				
+				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
+				if(ts_expirationDate != null)
+					application.setExpirationDate(ts_expirationDate.toLocalDateTime());
+				
+			
 				// Set the applicant
 				JobSearchUser user = new JobSearchUser();
 				user.setUserId(rs.getInt("UserId"));
@@ -81,6 +96,16 @@ public class ApplicationRepository {
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setStatus(rs.getInt("Status"));
+				
+				
+				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
+				if(ts_employerAcceptedDate != null)
+					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
+				
+				
+				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
+				if(ts_expirationDate != null)
+					application.setExpirationDate(ts_expirationDate.toLocalDateTime());
 
 				return application;
 			}
@@ -145,8 +170,8 @@ public class ApplicationRepository {
 		// Get all non-accepted applications for job.
 		// Status less than 3 is anything but accepted
 		String sql = "SELECT a.*, u.* " + "FROM application a " + "inner join user u " + "on u.userid = a.userid "
-				+ "WHERE JobId = ? AND Status < 3";
-		return ApplicationWithUserRowMapper(sql, new Object[] { jobId });
+				+ "WHERE JobId = ? AND Status != ?";
+		return ApplicationWithUserRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED });
 
 	}
 
@@ -167,6 +192,24 @@ public class ApplicationRepository {
 		String sql = "UPDATE application SET Status = ? WHERE ApplicationId = ?";
 		jdbcTemplate.update(sql, new Object[] { status, applicationId });
 
+	}
+	
+
+	@SuppressWarnings("static-access")
+	public void updateApplication_PendingApplicantApproval(int wageProposalId,
+																LocalDateTime employerAcceptedDate,
+																LocalDateTime expirationDate) {
+	
+		String sql = "UPDATE application a"
+					+ " INNER JOIN wage_proposal wp on wp.ApplicationId = a.ApplicationId"
+					+ " SET a.Status = ?, a.EmployerAcceptedDate = ?, a.ExpirationDate = ?"
+					+ " WHERE wp.WageProposalId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{ Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL,
+												employerAcceptedDate.toString(),
+												expirationDate.toString(),
+												wageProposalId });
+		
 	}
 
 	public Application getApplication(int applicationId) {
@@ -561,6 +604,39 @@ public class ApplicationRepository {
 		
 		return jdbcTemplate.queryForList(sql, new Object[]{ jobId, userId }, Integer.class);
 	}
+
+	public List<Application> getApplications_WithAtLeastOneWorkDay(int userId, int reference_applicationId,
+			List<WorkDay> workDays) {
+		
+		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
+					+ " SELECT DISTINCT a.ApplicationId FROM application a"
+					+ " INNER JOIN job j on j.JobId = a.JobId"
+					+ " INNER JOIN work_day wd on wd.JobId = j.JobId"
+					+ " WHERE a.UserId = ? AND a.ApplicationId != ?"
+					+ " AND (";
+			
+		List<Object> args = new ArrayList<Object>();
+		args.add(userId);
+		args.add(reference_applicationId);
+		
+		boolean isFirst = true;
+		for(WorkDay wd : workDays){
+			
+			if(!isFirst) sql += " OR ";			
+			sql += " ( wd.Date = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
+			
+			args.add(wd.getDate().toString());
+			args.add(wd.getStringEndTime());
+			args.add(wd.getStringStartTime());
+			
+			isFirst = false;					
+		}
+		
+		sql += "))";
+		
+		return ApplicationRowMapper(sql, args.toArray());
+	}
+
 
 
 }

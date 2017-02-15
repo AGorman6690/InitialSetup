@@ -53,6 +53,21 @@ public class ApplicationController {
 		applicationService.insertCounterOffer(dto, session);
 	}
 
+	@RequestMapping(value = "/employer/accept", method = RequestMethod.POST)
+	@ResponseBody
+	public String acceptOffer_Employer(@RequestParam(name = "wageProposalId", required = true) int wageProposalId,
+										@RequestParam(name = "days", required = false) Integer days,
+										@RequestParam(name = "hours", required = false) Integer hours,
+										@RequestParam(name = "minutes", required = false) Integer minutes,
+										HttpSession session) {
+
+		applicationService.acceptWageProposal_Employer(wageProposalId, session, days, hours, minutes);
+
+		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
+		return JSON.stringify(wageProposal);
+
+	}
+
 	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
 	@ResponseBody
 	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
@@ -63,7 +78,7 @@ public class ApplicationController {
 		return JSON.stringify(wageProposal);
 
 	}
-
+	
 	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
 	@ResponseBody
 	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {

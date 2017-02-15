@@ -1,6 +1,5 @@
 #table_headerAnswers td.answers-container{
-	width:150px;
-	
+	width:150px;	
 }
 
 #filterAnswersContainer{
@@ -24,4 +23,8 @@
 
 #table_headerAnswers tbody td.answers{
 	border-left: 0;
+}
+
+.expiration-time{
+	padding-top: 8px;
 }

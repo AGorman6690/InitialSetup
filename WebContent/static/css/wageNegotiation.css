@@ -1,14 +1,14 @@
 .counter-offer-response{
-	display:none;
-	position:absolute;
+/* 	display:none; */
+/* 	position:absolute; */
 /* 	background-color: #dadada; */
-	background-color: #ffffff;
-	z-index:1000;
-	border:2px solid #9c9696;
+/* 	background-color: #ffffff; */
+/* 	z-index:1000; */
+/* 	border:2px solid #9c9696; */
 	padding:7px 0px;
 /* 	padding-left:15px; */
     width: 200px;
-    margin-bottom: 40px;
+/*     margin-bottom: 40px; */
 }
 
 .counter-offer-container .action{
@@ -19,10 +19,6 @@
 	display:inline-block;
 }
 
-.re-counter-container .re-counter{
-	color: #000000;
-	font-weight: bold;
-}
 
 .counter-offer-container{
 	position:relative;
@@ -39,7 +35,7 @@
 }
 
 .re-counter-amount-container{
-/* 	display:none;	 */
+	display:none;	
 /* 	padding-left:15px; */
 	padding-top:5px;
 }
@@ -83,11 +79,17 @@
 	margin:0px 3px;
 }
 
-div.re-counter-container{
-    border-top: 1px solid;
-    margin: 0px 25px;
-    padding-top: 10px;
-}
+/* div.re-counter-container{ */
+/*     border-top: 1px solid; */
+/*     margin: 0px 25px; */
+/*     padding-top: 10px; */
+/* } */
+
+/* .re-counter-container .re-counter{ */
+/* 	color: #000000; */
+/* 	font-weight: bold; */
+/* } */
+
 
 .decline-counter-container{
 	padding-bottom: 7px;
@@ -96,7 +98,7 @@ div.re-counter-container{
 
 .post-hire-action{
 	display: none;
-    border-bottom: 1px solid black;
+/*     border-bottom: 1px solid black; */
 /*     padding-bottom: 15px; */
     margin: 0px 25px;
 }
@@ -112,7 +114,7 @@ div.re-counter-container{
 	padding: 3px 0px;
 }
 
-.post-hire-action select{
+.post-hire-action input{
 	width: 60px;
 }
 
@@ -127,4 +129,10 @@ div.re-counter-container{
 
 .post-hire-action .send-cancel span{
 	padding: 0px 5px;
+}
+
+.sub-section{
+    border-bottom: 1px solid black;
+    margin: 0px 10px;
+    padding: 10px 0px;
 }

@@ -25,4 +25,5 @@ class WageProposal {
 	public static Integer STATUS_COUNTERED = 0
 	public static Integer STATUS_ACCEPTED = 1
 	public static Integer STATUS_DECLINED = 2
+	public static Integer STATUS_PENDING_APPLICANT_APPROVAL = 3;
 }

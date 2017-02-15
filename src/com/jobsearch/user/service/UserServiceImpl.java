@@ -653,7 +653,8 @@ public class UserServiceImpl {
 												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(employee.getUserId(), 
 															Arrays.asList(Application.STATUS_SUBMITTED,
 																		Application.STATUS_CONSIDERED,
-																		Application.STATUS_ACCEPTED));
+																		Application.STATUS_ACCEPTED,
+																		Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
 		
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);

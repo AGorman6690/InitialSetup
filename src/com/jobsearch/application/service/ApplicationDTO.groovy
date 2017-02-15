@@ -12,6 +12,10 @@ class ApplicationDTO {
 	
 	Job job
 	
+	List<Application> conflictingApplications
+	
+	String time_untilEmployerApprovalExpires
+	
 	int newStatus
 
 }

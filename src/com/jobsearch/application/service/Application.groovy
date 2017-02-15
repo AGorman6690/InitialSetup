@@ -1,5 +1,7 @@
 package com.jobsearch.application.service
 
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.List
 
 import com.jobsearch.job.service.Job
@@ -21,6 +23,8 @@ public class Application {
 	int userId
 	int jobId
 	int hasBeenViewed
+	LocalDateTime employerAcceptedDate
+	LocalDateTime expirationDate
 	
 	String jobName
 	Job job
@@ -33,10 +37,12 @@ public class Application {
 	float currentDesiredWage
 	List<Answer> answers
 	
+	String time_untilEmployerApprovalExpires
+	
 	int status	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;
 	public static Integer STATUS_CONSIDERED = 2;
-	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 2.5;
 	public static Integer STATUS_ACCEPTED = 3;
+	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 4;
 }

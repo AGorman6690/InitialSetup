@@ -1,6 +1,12 @@
 package com.jobsearch.application.service;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -21,6 +27,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalCounterDTO;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -59,6 +66,10 @@ public class ApplicationServiceImpl {
 			// If applicable, get the application's current wage proposal,
 			// whether proposed by the employer or applicant
 			application.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			
+			application.setTime_untilEmployerApprovalExpires(
+							this.getTime_untilEmployerApprovalExpires(
+									application.getExpirationDate()));
 
 			// Set the current wage proposed BY the applicant.
 			// Since the desired pay can be countered several times,
@@ -111,6 +122,37 @@ public class ApplicationServiceImpl {
 		}
 
 		return applications;
+	}
+
+
+	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
+		
+		// This will subtract the current time from the expiration date.
+		// The result will be in the form 2 days 15:45 hrs
+		
+		if(expirationDate != null){
+			LocalDateTime now = LocalDateTime.now();
+//			LocalDateTime ldt_expirationDate = LocalDateTime.ofInstant(expirationDate.toInstant(), ZoneId.systemDefault());
+			long days = ChronoUnit.DAYS.between(now, expirationDate);
+			long hours =  ChronoUnit.HOURS.between(now, expirationDate) - 24 * days;
+			long minutes =  ChronoUnit.MINUTES.between(now, expirationDate) - 60 * hours;
+
+
+			String result = "";
+			
+			if(days == 1) result += " day";
+			else if(days > 1) result += " days";
+			
+			result += " " + hours + ":";
+			
+			if(minutes < 10) result += "0";
+			
+			result += minutes + " hrs";
+
+			return result;
+		
+		}
+		return null;
 	}
 
 
@@ -313,13 +355,13 @@ public class ApplicationServiceImpl {
 		
 		List<Application> applications = this.getApplications_ByUserAndStatuses_OpenJobs(userId, applicationStatuses);		
 
-		List<ApplicationDTO> applicationDtos = getApplicationDtos_ByApplications(applications);
+		List<ApplicationDTO> applicationDtos = getApplicationDtos_ByApplications(applications, userId);
 		
 		return applicationDtos;
 	}
 
 
-	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications) {
+	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications, int userId) {
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 		
@@ -332,11 +374,34 @@ public class ApplicationServiceImpl {
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
 			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
+			applicationDto.setTime_untilEmployerApprovalExpires(
+					this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
+			applicationDto.setConflictingApplications(
+					this.getConflictingApplications(userId, application.getApplicationId(), applicationDto.getJob().getWorkDays()));
+			
 			applicationDtos.add(applicationDto);
 		}
 		
 		return applicationDtos;
 	}
+
+	private List<Application> getConflictingApplications(int userId, int reference_applicationId, List<WorkDay> workDays) {
+		
+		List<Application> conflictingApplications = null;
+		
+		if(workDays != null && workDays.size() > 0){
+			
+			conflictingApplications = repository.getApplications_WithAtLeastOneWorkDay(userId, reference_applicationId, workDays);
+			
+			for(Application application : conflictingApplications){
+				application.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
+			}
+			
+			return conflictingApplications;
+		}
+		else return null;
+	}
+
 
 	public List<Application> getApplications_ByUserAndStatuses_OpenJobs(int userId, List<Integer> statuses) {
 
@@ -348,16 +413,6 @@ public class ApplicationServiceImpl {
 
 	}
 
-	private boolean isApplicationOpen(int status) {
-
-		// If submitted or considered
-		if (status == 0 || status == 2) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
 
 	public List<Application> getApplicationsByUser(int userId) {
 		return repository.getApplicationsByUser(userId);
@@ -370,6 +425,56 @@ public class ApplicationServiceImpl {
 		userService.hireApplicant(wageProposalId);
 
 	}
+	
+
+
+	public void acceptWageProposal_Employer(int wageProposalId, HttpSession session,
+										Integer days, Integer hours, Integer minutes) {
+				
+		JobSearchUser user = SessionContext.getUser(session);
+		
+		if(isWageProposalCurrentlyProposedToUser(wageProposalId, user.getUserId()) && (
+				days != null || hours != null || minutes != null)){
+			
+			LocalDateTime employerAcceptedDate = LocalDateTime.now();
+			LocalDateTime expirationDate = employerAcceptedDate;
+			
+			if(days != null) expirationDate = expirationDate.plusDays(days);
+			if(hours != null) expirationDate = expirationDate.plusHours(hours);
+			if(minutes != null) expirationDate = expirationDate.plusMinutes(minutes);
+						
+			repository.updateWageProposalStatus(wageProposalId, WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+			repository.updateApplication_PendingApplicantApproval(wageProposalId, employerAcceptedDate,
+																expirationDate);
+				
+		
+		}		
+	}
+
+
+	private boolean isWageProposalCurrentlyProposedToUser(int wageProposalId, int userId) {
+		
+		WageProposal wp = this.getWageProposal(wageProposalId);
+		
+		// Verify the wage proposal has not yet been acted upon
+		if(!this.hasActionBeenTakenOnWageProposal(wp)){
+			
+			if(wp.getProposedToUserId() == userId) return true;
+			else return false;
+		}
+		else return false;
+	}
+	
+	private boolean hasActionBeenTakenOnWageProposal(WageProposal wp) {
+		
+		if(wp.getStatus() == WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED ||
+				wp.getStatus() == WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN){
+			
+			return false;
+		}
+		else return false;
+	}
+
 
 	public void updateWageProposalStatus(int wageProposalId, int status) {
 		repository.updateWageProposalStatus(wageProposalId, status);

@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.joda.time.DateTime;
+
 import com.jobsearch.model.WorkDay;
 
 public final class DateUtility {
@@ -32,6 +34,10 @@ public final class DateUtility {
 		}
 		return null;
 	}
+	
+
+
+
 
 	public static java.sql.Date getSqlDate(String input, String inputFormat) {
 
@@ -47,6 +53,7 @@ public final class DateUtility {
 		}
 		return null;
 	}
+
 	
 	public static String formatSqlTime(java.sql.Time time, String format){
 		// For all formats:
@@ -238,7 +245,10 @@ public final class DateUtility {
 		return (int) (months_maxDate - months_minDate + 1);
 	}
 
-	
-	
+
+
+
+
+
 	
 }

@@ -27,7 +27,7 @@
 			<tbody>
 			
 				<c:forEach items="${applicationDtos }" var="dto">
-					<c:if test="${dto.application.status <= 3 }">
+<%-- 					<c:if test="${dto.application.status <= 3 }"> --%>
 						<tr class="static-row application" data-application-status="${dto.application.status }"
 							data-application-id="${dto.application.applicationId }">
 							<td>
@@ -39,6 +39,18 @@
 
 							<td>
 								<c:choose>
+									<c:when test="${dto.application.status == 4 }">
+										<div class="accepted">Employer accepted</div>
+										<div>Waiting for your approval</div>
+										<div>You have ${dto.time_untilEmployerApprovalExpires } to respond</div>
+										<div class="dropdown-container">
+											<span data-toggle-id="approval-${dto.application.applicationId }" class="glyphicon glyphicon-menu-up"></span>
+											<div id="approval-${dto.application.applicationId }" class=" dropdown-style response-for-approval-container">
+												<span class="accent accept-employment">Accept</span>
+												<span class="accent decline-employment">Decline</span>
+											</div>
+										</div>
+									</c:when>								
 									<c:when test="${dto.application.status == 3 }">
 										<span class="accepted">Accepted</span>
 									</c:when>
@@ -108,7 +120,7 @@
 							<td class="hide-with-calendar">${dto.job.city }, ${dto.job.state }</td>
 												
 						</tr>
-					</c:if>
+<%-- 					</c:if> --%>
 				</c:forEach>
 										
 			</tbody>
