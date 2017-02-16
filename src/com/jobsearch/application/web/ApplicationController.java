@@ -70,9 +70,10 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
 	@ResponseBody
-	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
+								HttpSession session) {
 
-		applicationService.acceptWageProposal(wageProposalId);
+		applicationService.acceptWageProposal_Employee(wageProposalId, session);
 
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
@@ -81,9 +82,10 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
 	@ResponseBody
-	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
+								HttpSession session) {
 
-		applicationService.declineWageProposalStatus(wageProposalId);
+		applicationService.declineWageProposalStatus(wageProposalId, session);
 
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);

@@ -27,6 +27,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.Skill;
+import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -381,6 +382,15 @@ public class JobServiceImpl {
 	public List<WorkDay> getWorkDays(int jobId) {
 		return repository.getWorkDays(jobId);
 	}
+	
+
+	public List<WorkDay> getWorkDays(WageProposal wageProposal) {
+		
+		Application application = applicationService.getApplication(wageProposal.getApplicationId());
+		return getWorkDays(application.getJobId());
+	}
+
+
 
 	public Date getEndDate(int jobId) {
 
@@ -1126,6 +1136,10 @@ public class JobServiceImpl {
 		
 	}
 
+	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
+		
+		return repository.getCount_JobsCompleted_ByCategory(userId, categoryId);
+	}
 
 
 

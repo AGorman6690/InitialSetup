@@ -110,7 +110,8 @@
 			<div id="navItemsContainer">					
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
-						<a id="nav_profile" class="" href="/JobSearch/user/profile">Profile</a>								
+						<a id="nav_profile" class="" href="/JobSearch/user/profile">Profile</a>	
+						<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Credentials</a>								
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	

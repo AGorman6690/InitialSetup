@@ -45,4 +45,5 @@ public class Application {
 	public static Integer STATUS_CONSIDERED = 2;
 	public static Integer STATUS_ACCEPTED = 3;
 	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 4;
+	public static Integer STATUS_CANCELLED_DUE_TO_TIME_CONFLICT = 5;
 }

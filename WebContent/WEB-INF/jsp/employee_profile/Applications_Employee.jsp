@@ -40,16 +40,35 @@
 							<td>
 								<c:choose>
 									<c:when test="${dto.application.status == 4 }">
-										<div class="accepted">Employer accepted</div>
-										<div>Waiting for your approval</div>
-										<div>You have ${dto.time_untilEmployerApprovalExpires } to respond</div>
-										<div class="dropdown-container">
-											<span data-toggle-id="approval-${dto.application.applicationId }" class="glyphicon glyphicon-menu-up"></span>
-											<div id="approval-${dto.application.applicationId }" class=" dropdown-style response-for-approval-container">
-												<span class="accent accept-employment">Accept</span>
-												<span class="accent decline-employment">Decline</span>
-											</div>
-										</div>
+										<c:choose>
+										 	<c:when test="${dto.time_untilEmployerApprovalExpires == '-1'}">
+										 		<div>Your time has expired</div>
+										 	</c:when>
+										 	<c:otherwise>
+												<div class="accepted">Employer accepted</div>
+												<div>Waiting for your approval</div>
+												<div>You have ${dto.time_untilEmployerApprovalExpires } to respond</div>
+												<div id="${dto.currentWageProposal.id}" class="dropdown-container counter-offer-container">
+													<span data-toggle-id="approval-${dto.application.applicationId }"
+														 class="glyphicon glyphicon-menu-down"></span>
+													<div id="approval-${dto.application.applicationId }"
+														 class=" dropdown-style response-for-approval-container">
+														<c:if test="${!empty dto.conflictingApplications }">
+															<div class="conflicting-apps-container sub-section">
+																Conflicting Applications:
+																By accepting this proposal, your following applications will be removed.
+																<c:forEach items="${dto.conflictingApplications }" var="application">
+																	<div><a class="accent" href="/JobSearch/job/${application.job.id }
+																			?c=profile-incomplete&p=1">${application.job.jobName }</a></div>
+																</c:forEach>
+															</div>
+														</c:if>														 
+														<span class="accent accept-counter">Accept</span>
+														<span class="accent decline-counter">Decline</span>
+													</div>
+												</div>										 	
+										 	</c:otherwise>
+										</c:choose>
 									</c:when>								
 									<c:when test="${dto.application.status == 3 }">
 										<span class="accepted">Accepted</span>

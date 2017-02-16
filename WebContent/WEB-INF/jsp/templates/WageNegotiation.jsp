@@ -9,14 +9,16 @@
 		<div class="pre-hire action">
 			<a data-toggle-id="conflicting-apps-${param_wage_proposal.id }" class="accent ${param_is_employer == 1 ? 'show-post-hire-action' : 'accept-counter ' }">
 				${param_is_employer == 1 ? 'Hire (almost)' : 'Accept' }</a>
-			<div class="conflicting-apps-container sub-section">
-				Conflicting Applications:
-				By accepting this proposal, your following applications will be removed.
-				<c:forEach items="${dto.conflictingApplications }" var="application">
-					<div><a class="accent" href="/JobSearch/job/${application.job.id }
-							?c=profile-incomplete&p=1">${application.job.jobName }</a></div>
-				</c:forEach>
-			</div>
+			<c:if test="${!empty dto.conflictingApplications }">
+				<div class="conflicting-apps-container sub-section">
+					Conflicting Applications:
+					By accepting this proposal, your following applications will be removed.
+					<c:forEach items="${dto.conflictingApplications }" var="application">
+						<div><a class="accent" href="/JobSearch/job/${application.job.id }
+								?c=profile-incomplete&p=1">${application.job.jobName }</a></div>
+					</c:forEach>
+				</div>
+			</c:if>
 		</div>																	
 		<div class="post-hire-action">
 			

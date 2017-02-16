@@ -10,6 +10,7 @@ import com.jobsearch.category.repository.CategoryRepository;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.MathUtility;
 
 @Service
 public class CategoryServiceImpl {
@@ -107,5 +108,33 @@ public class CategoryServiceImpl {
 		}
 		return categories;
 	}
+
+	public List<Category> getCategories_ForCompletedJobs(int userId) {
+		
+		return repository.getCategories_ForCompletedJobs(userId);
+	}
+	
+
+	public List<CategoryDTO> getCategoryDtos_JobsCompleted(int userId) {
+
+		List<Category> categories_jobsCompleted = this.getCategories_ForCompletedJobs(userId);
+		
+		List<CategoryDTO> categoryDtos = new ArrayList<CategoryDTO>();
+		
+		for(Category category : categories_jobsCompleted){
+			
+			CategoryDTO categoryDto = new CategoryDTO();
+			categoryDto.setCategory(category);
+			categoryDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByCategory(userId, category.getId()));;
+			categoryDto.setRatingValue_jobsCompleted(
+					MathUtility.round(userService.getRatingValue_ByCategory(userId, category.getId()), 1, 0));
+	
+			
+			categoryDtos.add(categoryDto);
+		}
+		
+		return categoryDtos;
+	}
+
 
 }

@@ -217,8 +217,16 @@
 								<c:when test="${application.currentWageProposal.status == 3 }">
 								<!-- ****** If the current wage proposal has been accepted-->
 									<div>
-										<div>Waiting for applicant's approval.</div>
-										<div class="expiration-time">Expires in ${application.time_untilEmployerApprovalExpires }</div>
+										<c:choose>
+											<c:when test="${application.time_untilEmployerApprovalExpires == '-1' }">
+												<div>The applicant's time has expired</div>
+											</c:when>
+											<c:otherwise>
+												<div>Waiting for applicant's approval.</div>
+												<div class="expiration-time">Expires in ${application.time_untilEmployerApprovalExpires }</div>	
+											</c:otherwise>										
+										</c:choose>
+										
 									</div>
 								</c:when>													
 								<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">

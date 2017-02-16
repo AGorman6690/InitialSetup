@@ -57,8 +57,15 @@ $(document).ready(function(){
 			updateDOM($(counterOfferContainer), $(responseNotification),
 						"Accepted " + twoDecimalPlaces(wageProposal.amount) + " offer");
 			
+			
+			// This is hackish.
+			// Consider using hyperlinks for the wage proposal actions and not ajax.
+			// Ajax is not necessary.
+			// Then the page can be reloaded and show the effects of accepting.
+			$("#nav_profile").click();
+			
 		}).error(function() {
-			$('#home')[0].click();
+			
 		});		
 	})
 	
@@ -153,7 +160,7 @@ $(document).ready(function(){
 		var counterOfferContainer = $(this).parents(".counter-offer-container")[0];
 		var responseNotification = $(counterOfferContainer).siblings(".sent-response-notification")[0];
 		
-		var counterAmount = $($(counterOfferContainer).find("input")[0]).val();	
+		var counterAmount = $(counterOfferContainer).find(".re-counter-amount-container input").eq(0).val();	
 		
 		//Create dto
 		var wageProposalCounterDTO = {};

@@ -139,7 +139,14 @@ public class UserController {
 		return "settings_employee/Availability";
 	}
 
+	
+	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
+	public String viewCredentials(Model model, HttpSession session) {
 
+		userService.setModel_Credentials_Employee(model, session);
+
+		return "credentials_employee/Credentials_Employee";
+	}
 
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)

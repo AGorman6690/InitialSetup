@@ -28,6 +28,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.CategoryDTO;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.GoogleClient;
@@ -631,16 +632,17 @@ public class UserServiceImpl {
 		repository.updatePassword(encryptedPassword, email);
 	}
 
-	public void hireApplicant(int wageProposalId) {
+	public void hireApplicant(WageProposal wageProposal) {
+	
 
-		// Get the wage proposal
-		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
+		// Update the wage proposal's status to accepted
+		applicationService.updateWageProposalStatus(wageProposal.getId(), WageProposal.STATUS_ACCEPTED);
 
 		// Get the application
 		Application application = applicationService.getApplication(wageProposal.getApplicationId());
 
 		// Update the application's status to hired
-		applicationService.updateApplicationStatus(application.getApplicationId(), 3);
+		applicationService.updateApplicationStatus(application.getApplicationId(), Application.STATUS_ACCEPTED);
 
 		// Hire the applicant
 		this.hireApplicant(application.getUserId(), application.getJobId());
@@ -650,7 +652,8 @@ public class UserServiceImpl {
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
 		
 		List<ApplicationDTO> applicationDtos = applicationService.
-												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(employee.getUserId(), 
+												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+															employee.getUserId(), 
 															Arrays.asList(Application.STATUS_SUBMITTED,
 																		Application.STATUS_CONSIDERED,
 																		Application.STATUS_ACCEPTED,
@@ -659,13 +662,10 @@ public class UserServiceImpl {
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		
-
-		
 		List<Job> jobs_employment = jobService.getJobsByEmployee(employee.getUserId());
 		int pastEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 2);
 		int currentEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 1);
 		int futureEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 0);
-		
 		
 		// *************************************************************
 		// Replace getJobsByEmplyee() with this
@@ -676,11 +676,13 @@ public class UserServiceImpl {
 		
 		model.addAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("userId", employee.getUserId());
-		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
+		
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("openApplicationCount", openApplicationCount);
 		model.addAttribute("failedApplicationCount", failedApplicationCount);
-		model.addAttribute("jobs_employment", jobs_employment);
+		
+		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
+		model.addAttribute("jobs_employment", jobs_employment);		
 		model.addAttribute("pastEmploymentCount", pastEmploymentCount);
 		model.addAttribute("currentEmploymentCount", currentEmploymentCount);
 		model.addAttribute("futureEmploymentCount", futureEmploymentCount);
@@ -880,6 +882,23 @@ public class UserServiceImpl {
 		model.addAttribute("userDto", userDto);
 		
 	}
+
+	public void setModel_Credentials_Employee(Model model, HttpSession session) {
+
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setUser(SessionContext.getUser(session));
+		
+		userDto.setCategoryDtos_jobsCompleted(categoryService.getCategoryDtos_JobsCompleted(userDto.getUser().getUserId()));
+		
+		model.addAttribute("userDto", userDto);
+		
+	}
+
+	public double getRatingValue_ByCategory(int userId, int categoryId) {
+		
+		return repository.getRatingValue_ByCategory(userId, categoryId);
+	}
+
 
 
 

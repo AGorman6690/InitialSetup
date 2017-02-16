@@ -1,5 +1,6 @@
 package com.jobsearch.application.service;
 
+import java.nio.file.Watchable;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -128,29 +129,34 @@ public class ApplicationServiceImpl {
 	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
 		
 		// This will subtract the current time from the expiration date.
-		// The result will be in the form 2 days 15:45 hrs
+		
 		
 		if(expirationDate != null){
 			LocalDateTime now = LocalDateTime.now();
-//			LocalDateTime ldt_expirationDate = LocalDateTime.ofInstant(expirationDate.toInstant(), ZoneId.systemDefault());
-			long days = ChronoUnit.DAYS.between(now, expirationDate);
-			long hours =  ChronoUnit.HOURS.between(now, expirationDate) - 24 * days;
-			long minutes =  ChronoUnit.MINUTES.between(now, expirationDate) - 60 * hours;
+			
+			// If expired
+			if(ChronoUnit.MINUTES.between(now, expirationDate) < 0){
+				return "-1";
+			}
+			else{
+				long days = ChronoUnit.DAYS.between(now, expirationDate);
+				long hours =  ChronoUnit.HOURS.between(now, expirationDate) - days * 24 ;
+				long minutes =  ChronoUnit.MINUTES.between(now, expirationDate) - ( days * 24 * 60 ) - ( hours * 60 );
+				String result = "";
+				
+				if(days == 1) result += days + " day";
+				else if(days > 1) result += days + " days";
+				
+				result += " " + hours + ":";
+				
+				if(minutes < 10) result += "0";
+				
+				result += minutes + " hrs";
 
-
-			String result = "";
-			
-			if(days == 1) result += " day";
-			else if(days > 1) result += " days";
-			
-			result += " " + hours + ":";
-			
-			if(minutes < 10) result += "0";
-			
-			result += minutes + " hrs";
-
-			return result;
-		
+				// For example, the result will be in the form "2 days 15:45 hrs"
+				return result;				
+			}
+	
 		}
 		return null;
 	}
@@ -370,12 +376,16 @@ public class ApplicationServiceImpl {
 			ApplicationDTO applicationDto = new ApplicationDTO();
 			
 			applicationDto.setApplication(application);
+			
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			
 			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
 			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
+			
 			applicationDto.setTime_untilEmployerApprovalExpires(
 					this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
+			
 			applicationDto.setConflictingApplications(
 					this.getConflictingApplications(userId, application.getApplicationId(), applicationDto.getJob().getWorkDays()));
 			
@@ -418,23 +428,58 @@ public class ApplicationServiceImpl {
 		return repository.getApplicationsByUser(userId);
 	}
 
-	public void acceptWageProposal(int wageProposalId) {
-		// Update the wage proposal's status to accepted
-		updateWageProposalStatus(wageProposalId, 1);
-		// Hire the applicant
-		userService.hireApplicant(wageProposalId);
+	public void acceptWageProposal_Employee(int wageProposalId, HttpSession session) {
+		
+		// Get the wage proposal
+		WageProposal wageProposal = this.getWageProposal(wageProposalId);	
+		
+		
+		// Verify:
+		// 1) the proposal is proposed TO the session user
+		// OR
+		// 2) a)the proposal is pending the session user's approval
+			// AND
+			// b) the  the employer's acceptance is not expired
+		if( isWageProposalCurrentlyProposedToUser(wageProposalId, session) || 
+				(isWageProposalCurrentlyPendingApplicantsApproval(wageProposalId, session) &&
+				!isEmployerAcceptanceExpired(wageProposal.getApplicationId()) )){
+
+			JobSearchUser user = SessionContext.getUser(session);
+			
+			// Hire the applicant
+			userService.hireApplicant(wageProposal);	
+			
+			// If necessary, cancel the applicant's conflicting applications
+			List<Application> conflictingApplications = this.getConflictingApplications(
+																user.getUserId(),
+																wageProposal.getApplicationId(),
+																jobService.getWorkDays(wageProposal));
+			
+			for(Application application : conflictingApplications){
+				this.updateApplicationStatus(application.getApplicationId(),
+												Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT);
+			}
+		}
 
 	}
 	
+	private boolean isEmployerAcceptanceExpired(int applicationId) {
+		
+		Application application = this.getApplication(applicationId);
+		
+		
+		if(ChronoUnit.MINUTES.between(LocalDateTime.now(), application.getExpirationDate()) < 0) return true;
+		else return false;
+	}
 
 
 	public void acceptWageProposal_Employer(int wageProposalId, HttpSession session,
 										Integer days, Integer hours, Integer minutes) {
 				
-		JobSearchUser user = SessionContext.getUser(session);
 		
-		if(isWageProposalCurrentlyProposedToUser(wageProposalId, user.getUserId()) && (
-				days != null || hours != null || minutes != null)){
+		
+		if( isWageProposalCurrentlyProposedToUser(wageProposalId, session) &&
+				(days != null || hours != null || minutes != null)){
 			
 			LocalDateTime employerAcceptedDate = LocalDateTime.now();
 			LocalDateTime expirationDate = employerAcceptedDate;
@@ -452,14 +497,36 @@ public class ApplicationServiceImpl {
 	}
 
 
-	private boolean isWageProposalCurrentlyProposedToUser(int wageProposalId, int userId) {
+	private boolean isWageProposalCurrentlyPendingApplicantsApproval(int wageProposalId, HttpSession session) {
 		
+		JobSearchUser user = SessionContext.getUser(session);
+		WageProposal wp = this.getWageProposal(wageProposalId);
+		
+		// This is a somewhat counter intuitive.
+		// Because a new wage proposal is NOT created when the employer 
+		// accepts the applicant's proposal (and and expiration date is set),
+		// but rather the status of the wage proposal sent BY the applicant is changed,
+		// the wage proposal's "ProposedByUserId" will still be the
+		// applicant's (i.e. the session user) user id.
+		if(wp.getStatus() == WageProposal.STATUS_PENDING_APPLICANT_APPROVAL &&
+				wp.getProposedByUserId() == user.getUserId()){
+			
+			return true;
+
+		}
+		else return false;
+	}
+
+
+	private boolean isWageProposalCurrentlyProposedToUser(int wageProposalId, HttpSession session) {
+		
+		JobSearchUser user = SessionContext.getUser(session);
 		WageProposal wp = this.getWageProposal(wageProposalId);
 		
 		// Verify the wage proposal has not yet been acted upon
 		if(!this.hasActionBeenTakenOnWageProposal(wp)){
 			
-			if(wp.getProposedToUserId() == userId) return true;
+			if(wp.getProposedToUserId() == user.getUserId()) return true;
 			else return false;
 		}
 		else return false;
@@ -467,12 +534,12 @@ public class ApplicationServiceImpl {
 	
 	private boolean hasActionBeenTakenOnWageProposal(WageProposal wp) {
 		
-		if(wp.getStatus() == WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED ||
-				wp.getStatus() == WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN){
+		if( wp.getStatus() == WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED ||
+				wp.getStatus() == WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN ){
 			
 			return false;
 		}
-		else return false;
+		else return true;
 	}
 
 
@@ -480,21 +547,30 @@ public class ApplicationServiceImpl {
 		repository.updateWageProposalStatus(wageProposalId, status);
 	}
 
-	public void declineWageProposalStatus(int wageProposalId) {
+	public void declineWageProposalStatus(int wageProposalId, HttpSession session) {
 
-		// Update wage proposal's status to declined
-		this.updateWageProposalStatus(wageProposalId, 2);
+		if(isWageProposalCurrentlyProposedToUser(wageProposalId, session)){
+			
+			this.updateWageProposalStatus(wageProposalId, WageProposal.STATUS_DECLINED);
 
-		// This status will allow the employer to see
-		// whom he declined outright and those with whom he could not reach a
-		// negotiation.
-		WageProposal wp = this.getWageProposal(wageProposalId);
-		Application application = this.getApplication(wp.getApplicationId());
-		this.updateApplicationStatus(application.getApplicationId(), 4);
-
+			// Is the below comment still relevant?
+			// Will the employer wish to have this transparency?
+			// Currently this transparency is not provided.
+			// If it is demanded, then another application status will need
+			// to be created in order to differentiate between the two cases. 
+			// Review this later.
+			// ****************************************
+			// Old thought:
+			// This status will allow the employer to see
+			// whom he declined outright and those with whom he could not reach a
+			// negotiation.
+			// ****************************************
+			WageProposal wp = this.getWageProposal(wageProposalId);
+			Application application = this.getApplication(wp.getApplicationId());
+			this.updateApplicationStatus(application.getApplicationId(), Application.STATUS_DECLINED);
+			
+		}
 	}
-
-
 
 	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDTOsByJob(Job job) {
 

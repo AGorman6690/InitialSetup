@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -632,6 +633,19 @@ public class UserRepository {
 						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
 						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
 						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
+
+	}
+
+	public Double getRatingValue_ByCategory(int userId, int categoryId) {
+
+		String sql = "SELECT Avg(r.value) FROM rating r"
+				+ " INNER JOIN job j on j.JobId = r.JobId"
+				+ " INNER JOIN job_category jc on jc.JobId = j.JobId"
+				+ " AND r.UserId = ?"
+				+ " AND r.Value != -1"
+				+ " AND jc.CategoryId = ?";				
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId }, Double.class);
 
 	}
 
