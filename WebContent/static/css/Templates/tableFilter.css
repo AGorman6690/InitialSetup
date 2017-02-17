@@ -17,6 +17,7 @@
 	display:block;
 	text-align:left;
 	font-weight: 100;
+	margin-bottom: 10px;	
 }
 
 th[data-filter-attr]{

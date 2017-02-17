@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
@@ -25,6 +27,7 @@ import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.MathUtility;
 
 @Repository
 public class ApplicationRepository {
@@ -38,52 +41,7 @@ public class ApplicationRepository {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-	// *********************************************************
-	// *********************************************************
-	// Do away with this
-	public List<Application> ApplicationWithUserRowMapper(String sql, Object[] args) {
-		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
-			@Override
-			public Application mapRow(ResultSet rs, int rownumber) throws SQLException {
 
-				Application application = new Application();
-				application.setApplicationId(rs.getInt("ApplicationId"));
-				application.setUserId(rs.getInt("UserId"));
-				application.setJobId(rs.getInt("JobId"));
-				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
-				application.setStatus(rs.getInt("Status"));
-				
-				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
-				if(ts_employerAcceptedDate != null)
-					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
-				
-				
-				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
-				if(ts_expirationDate != null)
-					application.setExpirationDate(ts_expirationDate.toLocalDateTime());
-				
-			
-				// Set the applicant
-				JobSearchUser user = new JobSearchUser();
-				user.setUserId(rs.getInt("UserId"));
-				user.setFirstName(rs.getString("FirstName"));
-				user.setLastName(rs.getString("LastName"));
-				user.setEmailAddress(rs.getString("Email"));
-				user.setHomeLat(rs.getFloat("HomeLat"));
-				user.setHomeLng(rs.getFloat("HomeLng"));
-				user.setHomeCity(rs.getString("HomeCity"));
-				user.setHomeState(rs.getString("HomeState"));
-				user.setHomeZipCode(rs.getString("HomeZipCode"));
-				user.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
-
-				application.setApplicant(user);
-
-				return application;
-			}
-		});
-	}
-	// *********************************************************
-	// *********************************************************
 
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -118,7 +76,7 @@ public class ApplicationRepository {
 			public WageProposal mapRow(ResultSet rs, int rownumber) throws SQLException {
 
 				WageProposal wageProposal = new WageProposal();
-				wageProposal.setAmount(rs.getFloat("Amount"));
+				wageProposal.setAmount(String.format("%.2f", rs.getFloat("Amount")));
 				wageProposal.setApplicationId(rs.getInt("ApplicationId"));
 				wageProposal.setId(rs.getInt("WageProposalId"));
 				wageProposal.setStatus(rs.getInt("Status"));
@@ -165,26 +123,27 @@ public class ApplicationRepository {
 		return this.ApplicationRowMapper(sql, argsList.toArray());
 	}
 
-	public List<Application> getApplicationsByJob(int jobId) {
+	public List<Application> getApplications_ByJob(int jobId) {
 
-		// Get all non-accepted applications for job.
-		// Status less than 3 is anything but accepted
-		String sql = "SELECT a.*, u.* " + "FROM application a " + "inner join user u " + "on u.userid = a.userid "
-				+ "WHERE JobId = ? AND Status != ?";
-		return ApplicationWithUserRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED });
+		String sql = "SELECT * FROM application a "
+						+ "INNER JOIN user u ON u.UserId = a.UserId "
+						+ "WHERE a.JobId = ? AND a.Status != ?";
+
+		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED });
 
 	}
 
 	public Application getApplication(int jobId, int userId) {
-		String sql = "SELECT a.*, u.* " + "FROM application a " + "inner join user u " + "on u.userid = a.userid "
-				+ "WHERE JobId = ? and a.UserId = ?";
+		
+		String sql = "SELECT * FROM application a"
+					+ " WHERE a.JobId = ?"
+					+ " AND a.UserId = ?";
 
-		List<Application> applications = this.ApplicationWithUserRowMapper(sql, new Object[] { jobId, userId });
+		List<Application> applications = this.ApplicationRowMapper(sql, new Object[] { jobId, userId });
+//		return  jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, Application.class);
 
-		if (applications.size() > 0)
-			return applications.get(0);
-		else
-			return null;
+		if (applications.size() > 0) return applications.get(0);
+		else return null;
 
 	}
 
@@ -194,8 +153,6 @@ public class ApplicationRepository {
 
 	}
 	
-
-	@SuppressWarnings("static-access")
 	public void updateApplication_PendingApplicantApproval(int wageProposalId,
 																LocalDateTime employerAcceptedDate,
 																LocalDateTime expirationDate) {
@@ -377,16 +334,17 @@ public class ApplicationRepository {
 
 	}
 
-	public void insertApplication(Application application) {
+	public void insertApplication(ApplicationDTO applicationDto) {
 
 		try {
 
 			// Insert the application
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insert_application(?, ?)}");
+					.prepareCall("{call insert_application(?, ?, ?)}");
 
-			cStmt.setInt(1, application.getUserId());
-			cStmt.setInt(2, application.getJobId());
+			cStmt.setInt(1, applicationDto.getApplicantId());
+			cStmt.setInt(2, applicationDto.getJobId());
+			cStmt.setInt(3, Application.STATUS_SUBMITTED);
 
 			ResultSet result = cStmt.executeQuery();
 
@@ -395,14 +353,14 @@ public class ApplicationRepository {
 			int newApplicationId = result.getInt("ApplicationId");
 
 			// Update the application DTO's wage proposal's application id
-			application.getWageProposal().setApplicationId(newApplicationId);
+			applicationDto.getWageProposal().setApplicationId(newApplicationId);
 
 			// Add the wage proposal
-			applicationService.addWageProposal(application.getWageProposal());
+			applicationService.addWageProposal(applicationDto.getWageProposal());
 
 			// Add answers
-			for (Answer answer : application.getAnswers()) {
-				answer.setUserId(application.getUserId());
+			for (Answer answer : applicationDto.getAnswers()) {
+				answer.setUserId(applicationDto.getApplicantId());
 				applicationService.addAnswer(answer);
 
 			}
@@ -613,11 +571,15 @@ public class ApplicationRepository {
 					+ " INNER JOIN job j on j.JobId = a.JobId"
 					+ " INNER JOIN work_day wd on wd.JobId = j.JobId"
 					+ " WHERE a.UserId = ? AND a.ApplicationId != ?"
+					+ " AND ( a.Status = ? OR a.Status = ? OR a.Status = ? )"
 					+ " AND (";
 			
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
 		args.add(reference_applicationId);
+		args.add(Application.STATUS_SUBMITTED);
+		args.add(Application.STATUS_CONSIDERED);
+		args.add(Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL);
 		
 		boolean isFirst = true;
 		for(WorkDay wd : workDays){

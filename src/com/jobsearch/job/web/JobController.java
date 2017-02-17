@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
@@ -135,10 +136,10 @@ public class JobController {
 
 	@ResponseBody
 	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public String applyForJob(@RequestBody Application application, HttpSession session) {
+	public String applyForJob(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
 		if (SessionContext.isLoggedIn(session)) {
-			applicationService.applyForJob(application, session);
+			applicationService.applyForJob(applicationDto, session);
 			return "redirect:/user/profile";
 		} else {
 			return "NotLoggedIn";
@@ -150,6 +151,16 @@ public class JobController {
 	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
 
 		jobService.setModel_PreviewJobPost(model, jobDto);
+		
+		return "/templates/JobInformation";
+	}
+	
+	@RequestMapping(value = "/preview/job-info/{jobId}", method = RequestMethod.POST)
+	public String previewJobInfo_ByJobId(Model model, @PathVariable(value = "jobId") int jobId) {
+
+		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
+		
+		model.addAttribute("jobDto", jobDto);
 		
 		return "/templates/JobInformation";
 	}

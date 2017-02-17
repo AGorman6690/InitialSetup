@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
@@ -32,10 +33,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.DateUtility.TimeSpanUnit;
 import com.jobsearch.utilities.MathUtility;
-
-import groovyjarjarasm.asm.tree.TryCatchBlockNode;
 
 
 @Service
@@ -232,9 +230,11 @@ public class JobServiceImpl {
 
 	}
 
-	public int getNewApplicationCount(List<Application> applications) {
-		return (int) applications.stream().filter(a -> a.getHasBeenViewed() == 0).count();
-
+	public int getNewApplicationCount(List<ApplicationDTO> applicationDtos) {
+		
+		return (int) applicationDtos.stream().filter(a -> a.getApplication()
+															.getHasBeenViewed() == 0)
+															.count();
 	}
 
 	public int getJobCountByCategory(int categoryId) {
@@ -280,7 +280,8 @@ public class JobServiceImpl {
 			jobDto.setJob(job);
 			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 			jobDto.setRatingDto(userService.getRatingDtoByUserAndJob(userId, job.getId()));
-
+			jobDto.setDurationDays(this.getDuration(job.getId()));
+			jobDto.setEndDate_milliseconds(job.getEndDate_local().toEpochDay());
 			jobDtos_jobsCompleted.add(jobDto);
 		}
 
@@ -373,7 +374,7 @@ public class JobServiceImpl {
 	}
 
 
-	public Job getJobByApplicationId(int applicationId) {
+	public Job getJob_ByApplicationId(int applicationId) {
 
 		return repository.getJobByApplicationId(applicationId);
 	}
@@ -434,7 +435,7 @@ public class JobServiceImpl {
 
 
 
-	private JobDTO getJobDTO_DisplayJobInfo(int jobId) {
+	public JobDTO getJobDTO_DisplayJobInfo(int jobId) {
 		
 		JobDTO jobDto = new JobDTO();
 		
@@ -444,9 +445,8 @@ public class JobServiceImpl {
 		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 		jobDto.setSkillsRequired(this.getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
 		jobDto.setSkillsDesired(this.getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
-		
-		this.setJobDtoDuration(jobDto);
-		
+		jobDto.setDurationDays(this.getDuration(jobId));
+
 		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(job.getStartDate_local(),
 												job.getStartTime_local(),
 									job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
@@ -500,39 +500,16 @@ public class JobServiceImpl {
 		
 		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
 		
-		List<Application> applications = applicationService.getApplicationsByJob(job.getId());
-		jobDto.setApplications(applications);
-		jobDto.setNewApplicationCount(this.getNewApplicationCount(applications));
-		
-		this.setJobDtoDuration(jobDto);
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByJob(job.getId());
+		jobDto.setApplicationDtos(applicationDtos);
+		jobDto.setNewApplicationCount(this.getNewApplicationCount(applicationDtos));
+
 		
 		System.err.println(jobDto.getJob().getUserId());
 		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
 												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
 		
 		return jobDto;
-	}
-	
-
-	public void setJobDtoDuration(JobDTO jobDto) {
-
-		if(jobDto.getJob() != null &&
-			jobDto.getJob().getStartDate() != null &&
-			jobDto.getJob().getEndDate() != null &&
-			jobDto.getJob().getStartTime() != null &&
-			jobDto.getJob().getEndTime() != null){
-			
-			jobDto.setDurationHours(DateUtility.getTimeSpan(jobDto.getJob().getStartDate(), 
-												jobDto.getJob().getStartTime(),
-												jobDto.getJob().getEndDate(), 
-												jobDto.getJob().getEndTime(), TimeSpanUnit.Hours));
-			
-			jobDto.setDurationDays(DateUtility.getTimeSpan(jobDto.getJob().getStartDate(), 
-													null,
-													jobDto.getJob().getEndDate(), 
-													null, TimeSpanUnit.Days).intValue());
-		}
-		
 	}
 
 
@@ -910,7 +887,7 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 					jobId, sessionUser.getUserId()));
 
-			userDto.setRating(userService.getRatingDtoByUserAndJob(sessionUser.getUserId(), jobId));
+			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser.getUserId(), jobId));
 			
 			break;			
 	
@@ -942,7 +919,7 @@ public class JobServiceImpl {
 		case "waiting":
 			
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
-			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
+			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
 			
@@ -956,7 +933,7 @@ public class JobServiceImpl {
 		
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 														jobId, sessionUser.getUserId()));		
-			jobDto.setApplications(applicationService.getApplicationsByJob(jobId));
+			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			break;
 			
@@ -984,7 +961,7 @@ public class JobServiceImpl {
 		model.addAttribute("context", context);
 //		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
-		model.addAttribute("userId", sessionUser.getUserId());
+		model.addAttribute("user", sessionUser);
 //		model.addAttribute("userDto", userDto);
 				
 	}

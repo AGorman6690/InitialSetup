@@ -30,7 +30,7 @@
 					<tr class="employee-container">
 						<td class="employee" data-id="${employeeDto.user.userId }">${employeeDto.user.firstName }</td>
 						<td class="rate-criteria-container">
-							<c:forEach items="${employeeDto.rating.rateCriteria }" var="rateCriterion">
+							<c:forEach items="${employeeDto.ratingDto.rateCriteria }" var="rateCriterion">
 								<div class="rate-criterion" data-id="${rateCriterion.rateCriterionId }"
 										 data-value="${rateCriterion.value }">
 									
@@ -80,7 +80,7 @@
 <%-- 							</c:forEach> --%>
 <!-- 							</div> -->
 <!-- 						</td>						 -->
-						<td><textarea class="comment" rows="3">${employeeDto.rating.comment }</textarea></td>
+						<td><textarea class="comment" rows="3">${employeeDto.ratingDto.comment }</textarea></td>
 						
 					</tr>
 				</c:forEach>				

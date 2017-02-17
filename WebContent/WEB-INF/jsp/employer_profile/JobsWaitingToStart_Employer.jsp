@@ -104,7 +104,7 @@
 
 								</td>	
 									
-								<c:set var="tdValue" value="${jobDto.applications.size() }" /> 
+								<c:set var="tdValue" value="${jobDto.applicationDtos.size() }" /> 
 								<td class="data ${tdValue > 0 ? 'pop' : '' }">
 									<c:choose>
 										<c:when test="${tdValue > 0 }">

@@ -47,85 +47,45 @@ public class ApplicationServiceImpl {
 	@Autowired
 	JobServiceImpl jobService;
 
-	public List<Application> getApplicationsByJob(int jobId) {
+
+	public List<ApplicationDTO> getApplicationDtos_ByJob(int jobId) {
+		
+		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 
 		// Query the application table
-		List<Application> applications = repository.getApplicationsByJob(jobId);
+		List<Application> applications = repository.getApplications_ByJob(jobId);
 
-		// Get the job's categories
-		List<Category> categories = categoryService.getCategoriesByJobId(jobId);
-
-		// Set each application's wage proposals.
-		// Set each applicant's endorsements.
 		for (Application application : applications) {
-
-			JobSearchUser applicant = application.getApplicant();
-
-			// Set the application's wage proposals
-			application.setWageProposals(this.getWageProposals(application.getApplicationId()));
-
-			// If applicable, get the application's current wage proposal,
-			// whether proposed by the employer or applicant
-			application.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			
-			application.setTime_untilEmployerApprovalExpires(
+			ApplicationDTO applicationDto =  new ApplicationDTO();
+			
+			applicationDto.setApplication(application);
+			
+			applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));	
+			
+			int applicantId = applicationDto.getApplicantDto().getUser().getUserId(); 
+					
+			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			
+			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			
+			applicationDto.setTime_untilEmployerApprovalExpires(
 							this.getTime_untilEmployerApprovalExpires(
 									application.getExpirationDate()));
-
-			// Set the current wage proposed BY the applicant.
-			// Since the desired pay can be countered several times,
-			// this holds the applicant's most recent pay request.
-			application.setCurrentDesiredWage(
-					this.getCurrentWageProposedBy(application.getApplicationId(), applicant.getUserId()));
-
-			applicant.setRating(userService.getRating(applicant.getUserId()));
-
-			// //Set the current wage proposed TO the applicant.
-			// application.setEmployersCurrentOfferedWage(this.getCurrentWageProposedTo(application.getApplicationId(),
-			// applicant.getUserId()));
-
-			applicant.setEndorsements(new ArrayList<Endorsement>());
-			// applicant.setAnswers(this.getAnswers(application.ge, userId));
-
-			// Set the application's questions and answers
-			// application.setQuestions(this.getQuestionsWithAnswers(jobId,
-			// applicant.getUserId()));
-			application.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
-
-			// These are the answers options selected by the applicant
-			application.setAnswerOptionIds_Selected(
-						this.getAnswerOptionIds_Selected_ByApplicantAndJob(
-									application.getApplicant().getUserId(), jobId));
 			
-			// application.setAnswers(this.getAnswersByJobAndUser(jobId,
-			// applicant.getUserId()));
-			// application.setAnswers(this.getAnswers(application.getQuestions(),
-			// applicant.getUserId());
+			applicationDto.getApplicantDto().setRatingValue_overall(userService.getRating(applicantId));
+			
+			applicationDto.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicantId));
+			
+			applicationDto.setAnswerOptionIds_Selected(
+						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
 
-			// Get the applicant's endorsement for ONLY the particular job's
-			// categories, not ALL categories.
-			for (Category category : categories) {
-
-				// Set the endorsement.
-				// Currently only the employer profile jsp is using this.
-				// As such, only the category name and endorsement count are
-				// needed.
-				Endorsement endorsement = new Endorsement();
-				endorsement.setCategoryName(category.getName());
-				endorsement
-						.setCount(userService.getEndorsementCountByCategory(applicant.getUserId(), category.getId()));
-
-				// Add the endorsement to the applicant
-				applicant.getEndorsements().add(endorsement);
-
-			}
-
+			applicationDtos.add(applicationDto);
 		}
 
-		return applications;
+		return applicationDtos;
 	}
-
-
+	
 	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
 		
 		// This will subtract the current time from the expiration date.
@@ -144,8 +104,8 @@ public class ApplicationServiceImpl {
 				long minutes =  ChronoUnit.MINUTES.between(now, expirationDate) - ( days * 24 * 60 ) - ( hours * 60 );
 				String result = "";
 				
-				if(days == 1) result += days + " day";
-				else if(days > 1) result += days + " days";
+				if(days == 1) result += days + " day, ";
+				else if(days > 1) result += days + " days, ";
 				
 				result += " " + hours + ":";
 				
@@ -176,9 +136,9 @@ public class ApplicationServiceImpl {
 		return repository.getCurrentWageProposal(application.getApplicationId());
 	}
 
-	public float getCurrentWageProposedBy(int applicationId, int proposedByUserId) {
-		return repository.getCurrentWageProposedBy(applicationId, proposedByUserId);
-	}
+//	public float getCurrentWageProposedBy(int applicationId, int proposedByUserId) {
+//		return repository.getCurrentWageProposedBy(applicationId, proposedByUserId);
+//	}
 
 	public List<WageProposal> getWageProposals(int applicationId) {
 		return repository.getWageProposals(applicationId);
@@ -201,24 +161,24 @@ public class ApplicationServiceImpl {
 		return repository.getApplication(applicationId);
 	}
 
-	public void applyForJob(Application application, HttpSession session) {
+	public void applyForJob(ApplicationDTO applicationDto, HttpSession session) {
 
 		// Set the application's user (i.e. the applicant)
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		application.setUserId(user.getUserId());
+		applicationDto.setApplicantId(user.getUserId());
 
 		// Set the wage proposed BY the applicant
-		application.getWageProposal().setProposedByUserId(user.getUserId());
+		applicationDto.getWageProposal().setProposedByUserId(user.getUserId());
 
 		// Set the wage proposed TO the employer
 		// Get the employer's id from the job object.
-		Job appliedToJob = jobService.getJob(application.getJobId());
-		application.getWageProposal().setProposedToUserId(appliedToJob.getUserId());
+		Job appliedToJob = jobService.getJob(applicationDto.getJobId());
+		applicationDto.getWageProposal().setProposedToUserId(appliedToJob.getUserId());
 
 		// Add the application to the database
 		// repository.addApplication(applicationDto.getJobId(),
 		// applicationDto.getUserId());
-		insertApplication(application);
+		insertApplication(applicationDto);
 
 		// //Add the wage proposal to the database
 		// this.addWageProposal(applicationDto.getWageProposal());
@@ -234,8 +194,8 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public void insertApplication(Application application) {
-		repository.insertApplication(application);
+	public void insertApplication(ApplicationDTO applicationDto) {
+		repository.insertApplication(applicationDto);
 
 	}
 
@@ -380,14 +340,16 @@ public class ApplicationServiceImpl {
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
-			applicationDto.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
-			applicationDto.getJob().setWorkDays(jobService.getWorkDays(applicationDto.getJob().getId()));
+			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
+			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
 					this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
 			
-			applicationDto.setConflictingApplications(
-					this.getConflictingApplications(userId, application.getApplicationId(), applicationDto.getJob().getWorkDays()));
+			applicationDto.setApplicationDtos_conflicting(
+					this.getApplicationDtos_Conflicting(userId,
+											application.getApplicationId(),
+											applicationDto.getJobDto().getWorkDays()));
 			
 			applicationDtos.add(applicationDto);
 		}
@@ -395,21 +357,26 @@ public class ApplicationServiceImpl {
 		return applicationDtos;
 	}
 
-	private List<Application> getConflictingApplications(int userId, int reference_applicationId, List<WorkDay> workDays) {
+	private List<ApplicationDTO> getApplicationDtos_Conflicting(int userId, int reference_applicationId, List<WorkDay> workDays) {
 		
-		List<Application> conflictingApplications = null;
+		List<ApplicationDTO> applicationDtos_conflicting = new ArrayList<ApplicationDTO>();
 		
 		if(workDays != null && workDays.size() > 0){
 			
-			conflictingApplications = repository.getApplications_WithAtLeastOneWorkDay(userId, reference_applicationId, workDays);
+			List<Application> applications_conflicting = repository.getApplications_WithAtLeastOneWorkDay(userId, reference_applicationId, workDays);
 			
-			for(Application application : conflictingApplications){
-				application.setJob(jobService.getJobByApplicationId(application.getApplicationId()));
+			for(Application application : applications_conflicting){
+				ApplicationDTO applicationDto = new ApplicationDTO();
+				
+				applicationDto.setApplication(application);
+				applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
+			
+				applicationDtos_conflicting.add(applicationDto);
 			}
-			
-			return conflictingApplications;
+						
 		}
-		else return null;
+		
+		return applicationDtos_conflicting;
 	}
 
 
@@ -435,7 +402,7 @@ public class ApplicationServiceImpl {
 		
 		
 		// Verify:
-		// 1) the proposal is proposed TO the session user
+		// 1) the proposal is proposed TO the session user (i.e. the applicant)
 		// OR
 		// 2) a)the proposal is pending the session user's approval
 			// AND
@@ -450,13 +417,14 @@ public class ApplicationServiceImpl {
 			userService.hireApplicant(wageProposal);	
 			
 			// If necessary, cancel the applicant's conflicting applications
-			List<Application> conflictingApplications = this.getConflictingApplications(
-																user.getUserId(),
-																wageProposal.getApplicationId(),
-																jobService.getWorkDays(wageProposal));
+			List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
+																		user.getUserId(),
+																		wageProposal.getApplicationId(),
+																		jobService.getWorkDays(wageProposal));
 			
-			for(Application application : conflictingApplications){
-				this.updateApplicationStatus(application.getApplicationId(),
+			for(ApplicationDTO applicationDto : applicationDtos_conflicting){
+			
+				this.updateApplicationStatus(applicationDto.getApplication().getApplicationId(),
 												Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT);
 			}
 		}
@@ -616,7 +584,7 @@ public class ApplicationServiceImpl {
 
 			// Set the dto
 			dto.setFailedWageProposal(failedWageProposal);
-			dto.setJob(jobService.getJobByApplicationId(failedWageProposal.getApplicationId()));
+			dto.setJob(jobService.getJob_ByApplicationId(failedWageProposal.getApplicationId()));
 
 			// Add the dto to the result
 			result.add(dto);

@@ -105,9 +105,7 @@ public class JobRepository {
 					}
 					
 					
-					e.setStatus(rs.getInt("Status"));
-					
-					
+									
 					
 					//The default **string** time format is, for example,: "3:30 PM"
 					if (e.getStartTime() != null){

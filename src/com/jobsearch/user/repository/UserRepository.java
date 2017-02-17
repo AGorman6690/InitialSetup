@@ -370,18 +370,30 @@ public class UserRepository {
 	}
 
 	public List<Double> getRatingForJob(int userId, int jobId) {
-		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ?";
+		String sql = "SELECT Value FROM rating"
+				+ " WHERE UserId = ?"
+				+ " AND JobId = ?";
+		
 		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Double.class);
 	}
 	
 
 	public double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
-		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ? AND RateCriterionId = ?";
+		
+		String sql = "SELECT Value FROM rating"
+				+ " WHERE UserId = ?"
+				+ " AND JobId = ?"
+				+ " AND RateCriterionId = ?";
+		
+		Double d = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
 		return jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
 	}
 
 	public List<Integer> getEndorsementCategoryIds(int userId) {
-		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? GROUP BY CategoryId";
+		String sql = "SELECT CategoryId FROM endorsement"
+				+ " WHERE UserId = ?"
+				+ " GROUP BY CategoryId";
+		
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, Integer.class);
 	}
 

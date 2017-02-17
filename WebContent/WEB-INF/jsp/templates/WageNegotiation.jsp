@@ -2,20 +2,20 @@
 
 
 <div id="${param_wage_proposal.id}" class="counter-offer-container dropdown-container">	
-								
 	<c:set var="toggleId" value="${ param_wage_proposal.id}-toggle-id" />
 	<span class="accent" data-toggle-id="${toggleId }">Waiting for you</span> 
 	<div id="${toggleId }" class="counter-offer-response dropdown-style">
 		<div class="pre-hire action">
 			<a data-toggle-id="conflicting-apps-${param_wage_proposal.id }" class="accent ${param_is_employer == 1 ? 'show-post-hire-action' : 'accept-counter ' }">
 				${param_is_employer == 1 ? 'Hire (almost)' : 'Accept' }</a>
-			<c:if test="${!empty dto.conflictingApplications }">
+			<c:if test="${!empty applicationDto.applicationDtos_conflicting }">
 				<div class="conflicting-apps-container sub-section">
 					Conflicting Applications:
 					By accepting this proposal, your following applications will be removed.
-					<c:forEach items="${dto.conflictingApplications }" var="application">
-						<div><a class="accent" href="/JobSearch/job/${application.job.id }
-								?c=profile-incomplete&p=1">${application.job.jobName }</a></div>
+					<c:forEach items="${applicationDto.applicationDtos_conflicting }"
+								 var="applicationDto_conflicting">
+						<div><a class="accent" href="/JobSearch/job/${applicationDto_conflicting.jobDto.job.id }
+								?c=profile-incomplete&p=1">${applicationDto_conflicting.jobDto.job.jobName }</a></div>
 					</c:forEach>
 				</div>
 			</c:if>

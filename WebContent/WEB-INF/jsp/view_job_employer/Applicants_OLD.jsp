@@ -204,11 +204,76 @@
 					</td>
 					
 					<td>
-						<%@ include file="../wage_proposal/WageProposal.jsp" %>
+						<div class="">
+							<c:choose>
+								<c:when test="${applicationDto.currentWageProposal.status == 1 }">
+								<!-- ****** If the current wage proposal has been accepted-->
+									<div>
+										<fmt:formatNumber type="number" minFractionDigits="2"
+										 maxFractionDigits="2" value="${applicationDto.currentWageProposal.amount}"/>
+										 has been accepted
+									</div>
+								</c:when>	
+								<c:when test="${applicationDto.currentWageProposal.status == 3 }">
+								<!-- ****** If the current wage proposal has been accepted-->
+									<div>
+										<c:choose>
+											<c:when test="${applicationDto.time_untilEmployerApprovalExpires == '-1' }">
+												<div>The applicant's time has expired</div>
+											</c:when>
+											<c:otherwise>
+												<div>Waiting for applicant's approval.</div>
+												<div class="expiration-time">Expires in ${applicationDto.time_untilEmployerApprovalExpires }</div>	
+											</c:otherwise>										
+										</c:choose>
+										
+									</div>
+								</c:when>													
+								<c:when test="${applicationDto.currentWageProposal.proposedToUserId != applicationDto.applicantDto.user.userId }">
+									<c:set var="param_is_employer" value="1" />
+									<c:set var="param_wage_proposal" value="${applicationDto.currentWageProposal }" />
+									<%@ include file="../templates/WageNegotiation.jsp" %>												
+								</c:when>
+								<c:otherwise>					
+									<div class="offer-context">
+										Waiting for applicant															
+									</div>									
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</td>									
 					<td>
 						<div class="vert-border">
-							<%@ include file="../wage_proposal/History_WageProposals.jsp" %>
+							<span class="dollar-sign">$</span>
+							<fmt:formatNumber type="number" minFractionDigits="2" 
+								maxFractionDigits="2" value="${applicationDto.currentWageProposal.amount}"/>
+							
+							<c:if test="${applicationDto.wageProposals.size() > 1 }">
+								<span data-toggle-id="wp-history-${applicationDto.application.applicationId }" 
+									class="show-wage-proposal-history glyphicon glyphicon-menu-down"></span>
+								<div id="wp-history-${applicationDto.application.applicationId }" class="dropdown-style">
+									<table class="wage-proposal-history-table">
+										<thead>
+											<tr class="no-filter">
+												<th>Proposed By</th>
+												<th>Amount</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach items="${applicationDto.wageProposals }" var="wageProposal">
+												<tr class="no-filter ${wageProposal.proposedByUserId == user.userId ? 'you' : 'not-you' }">
+													<td>${wageProposal.proposedByUserId == user.userId ? 'You' : 'Applicant' }</td>
+													<td>
+														<span class="dollar-sign">$</span>
+														<fmt:formatNumber type="number" minFractionDigits="2" 
+															maxFractionDigits="2" value="${wageProposal.amount}"/>
+													</td>
+												</tr>
+											</c:forEach>	
+										</tbody>
+									</table>
+								</div>
+							</c:if>
 						</div>
 					</td>
 					<td>

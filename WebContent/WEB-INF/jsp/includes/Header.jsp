@@ -76,7 +76,7 @@
 		<link href="/JobSearch/static/css/global_new.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/layout.css" rel="stylesheet" />			
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
-		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	
+<!-- 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	 -->
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 		

@@ -1,14 +1,13 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp"%>
-
+<%@ include file="../includes/resources/JobInformation.jsp"%>
 
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 
 	<script src="<c:url value="/static/javascript/SideBar.js"/>"></script>
-	<script src="<c:url value="/static/javascript/Map.js" />"></script>
-	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
+
+
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
@@ -18,7 +17,7 @@
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employee/viewJob_Employee.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/jobInfo.css" />
+
 
 		
 	<c:if test="${context == 'find' }">

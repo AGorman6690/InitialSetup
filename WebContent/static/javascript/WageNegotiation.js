@@ -49,7 +49,7 @@ $(document).ready(function(){
 		
 		$.ajax({
 			type : "POST",
-			url :"/JobSearch/desired-pay/accept?wageProposalId=" + wageProposalId,
+			url :"/JobSearch//wage-proposal/employee/accept?wageProposalId=" + wageProposalId,
 			headers : getAjaxHeaders(),
 			contentType : "application/json",	
 			dataType : "json",

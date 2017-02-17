@@ -675,7 +675,7 @@ public class UserServiceImpl {
 		List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(employee.getUserId());
 		
 		model.addAttribute("jobs_needRating", jobs_needRating);
-		model.addAttribute("userId", employee.getUserId());
+		model.addAttribute("user", employee);
 		
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("openApplicationCount", openApplicationCount);
@@ -776,7 +776,7 @@ public class UserServiceImpl {
 		for(JobSearchUser employee : employees){
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
 			employeeDto.setUser(employee);
-			employeeDto.setRating(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
+			employeeDto.setRatingDto(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
 			employeeDto.setWage(applicationService.getWage(employee.getUserId(), jobId));
 			
 			employeeDtos.add(employeeDto);			
@@ -803,7 +803,7 @@ public class UserServiceImpl {
 		return ratingDto;
 	}
 
-	private double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
+	private Double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
 		
 		return repository.getRatingValue_ByUserAndJob(rateCriterionId, userId, jobId);
 	}
@@ -886,9 +886,10 @@ public class UserServiceImpl {
 	public void setModel_Credentials_Employee(Model model, HttpSession session) {
 
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
-		userDto.setUser(SessionContext.getUser(session));
-		
+	
+		userDto.setUser(SessionContext.getUser(session));		
 		userDto.setCategoryDtos_jobsCompleted(categoryService.getCategoryDtos_JobsCompleted(userDto.getUser().getUserId()));
+		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userDto.getUser().getUserId()));;
 		
 		model.addAttribute("userDto", userDto);
 		

@@ -5,7 +5,7 @@ $(document).ready(function(){
 	$("#submitPosting_preview").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
 		if(arePostJobInputsValid()){
-			executeAjaxCall_previewJobPosting( getJobDto());
+			executeAjaxCall_previewJobPosting(getJobDto());
 			
 			$("#submitPosting_final_container").show();
 			$("#submitPosting_preview_container").hide();

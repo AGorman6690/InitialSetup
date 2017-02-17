@@ -29,27 +29,20 @@ $(document).ready(function(){
 
 	
 	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){
-		
-//		closeOtherDropdowns($(this).closest(".dropdown-container").attr("id"));		
+	
 		
 		var $th = $(this).closest("th[data-filter-attr]");
-//		var $filterContainer = $(this).closest(".filter-container");
 		var $table = $(this).closest("table");
 				
 		var filters = [];
 		filters= getFilters($table);
-				
-//		var filterValues = getFilterValues($filterContainer);
-//		var filterAttrName = $th.attr("data-filter-attr");
-		
+
 		filterTableRows(filters, $table);
 		
 		$th.find("span[data-toggle-id]").eq(0).click();
 	})
 	
 	$("th[data-sort-attr] input[type=radio]").change(function(){
-		
-//		closeOtherDropdowns($(this).closest(".dropdown-container").attr("id"));
 		
 		var $th = $(this).closest("th[data-sort-attr]");
 		var $table = $(this).closest("table");		
@@ -58,7 +51,6 @@ $(document).ready(function(){
 		
 		var sortedRows = getSortedRows(doSortAscending, sortAttr, $table);		
 		sortTable(sortedRows, $table);
-		
 		
 		resetOtherSortHeaders($th, $table);
 		

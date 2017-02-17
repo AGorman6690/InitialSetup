@@ -1,15 +1,17 @@
 	<%@ include file="../includes/Header.jsp"%>
 	<%@ include file="../includes/resources/DatePicker.jsp" %>
+	<%@ include file="../includes/resources/TableFilter.jsp" %>
+	<%@ include file="../includes/resources/WageProposal.jsp" %>
 	
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" /> -->
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/Templates/tableFilter.css" />
+
 	<link rel="stylesheet" type="text/css" href="../static/css/Templates/forms.css" />
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" /> -->
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
@@ -19,7 +21,7 @@
 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities/FilterTable.js" />"></script>
+
 	
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
 	
@@ -28,7 +30,7 @@
 <!-- 	over the "send counter offer" click event in the WageNegotiation.js -->
 <!-- 	This seems hackish. -->
 <!-- 	Address the logic later -->
-	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script> --%>
 	
 	<c:if test="${context == 'complete' }">	
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />

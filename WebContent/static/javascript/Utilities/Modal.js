@@ -5,8 +5,12 @@ $(document).ready(function(){
 	    }
 	}	
 	
-	$(".mod-header .glyphicon-remove").click(function(){
+	$("#saveModal .mod-header .glyphicon-remove").click(function(){
 		closeModal($(".mod"));
+	})
+	
+	$("#jobInfoModal .mod-header .glyphicon-remove").click(function(){
+		$(this).closest(".mod").hide();
 	})
 	
 	$("[data-toggle-mod-id]").click(function(){

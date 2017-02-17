@@ -14,12 +14,13 @@ class JobSearchUserDTO {
 
 	JobSearchUser user
 //	
-	RatingDTO rating
+	RatingDTO ratingDto
 	List<FindJobFilterDTO> savedFindJobFilters;
 	List<JobDTO> jobDtos_jobsCompleted;
 	List<String> availableDays;
 	double wage
 //	
+	double ratingValue_overall
 	List<CategoryDTO> categoryDtos_jobsCompleted
 	
 	Boolean isInvalidNewUser
@@ -31,5 +32,9 @@ class JobSearchUserDTO {
 	Boolean isInvalidEmail_duplicate
 	Boolean isInvalidMatchingEmail
 	Boolean isInvalidProfile
+	
+	JobSearchUserDTO(){
+		this.setRatingDto(new RatingDTO());
+	}
 	
 }
