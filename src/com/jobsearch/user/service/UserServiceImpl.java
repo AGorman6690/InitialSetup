@@ -917,6 +917,17 @@ public class UserServiceImpl {
 		return repository.getRatingValue_ByCategory(userId, categoryId);
 	}
 
+	public void setModel_PageLoad_FindEmployees(Model model, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
+		List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
+		jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
+		
+		model.addAttribute("jobDtos_current", jobDtos_current);
+		
+	}
+
 
 
 

@@ -431,15 +431,6 @@ public class UserRepository {
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
 	}
 
-	public void setHomeLocation(EditProfileRequestDTO editProfileRequest) {
-		String sql = "INSERT INTO user (HomeLat, HomeLng, HomeCity, HomeState, HomeZipCode) "
-				+ "VALUES (?, ?, ?, ?, ?) WHERE UserId = ?";
-		jdbcTemplate.update(sql,
-				new Object[] { editProfileRequest.getHomeLat(), editProfileRequest.getHomeLng(),
-						editProfileRequest.getHomeCity(), editProfileRequest.getHomeState(),
-						editProfileRequest.getHomeZipCode(), editProfileRequest.getUserId() });
-
-	}
 
 	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 

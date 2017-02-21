@@ -91,7 +91,7 @@ public class UserController {
 	public String viewCredentials(Model model, HttpSession session) {
 
 		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId());
-
+		model.addAttribute("isViewingOnesSelf", true);
 		return "/credentials_employee/Credentials_Employee";
 	}
 
@@ -120,15 +120,10 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
-	public ModelAndView viewFindEmployees(ModelAndView model, HttpSession session) {
+	public String viewFindEmployees(Model model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		model.addObject("user", user);
-
-		model.setViewName("FindEmployees");
-
-		// model.setViewName("Test");
-		return model;
+		userService.setModel_PageLoad_FindEmployees(model, session);
+		return "/find_employees/FindEmployees";
 	}
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)

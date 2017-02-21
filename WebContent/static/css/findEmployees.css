@@ -1,55 +1,38 @@
-.body-element-container input{
-	width:150px;
-	margin-bottom:8px;
-	display:inline-block;
+#location #miles,
+#location #city,
+#location #street{
+	width: 150px;
 }
 
-#rating{
-	width:60px;
-	margin-bottom:8px;
-	display:inline-block;
+#location #state,
+#location #zipCode{
+	width: 100px
 }
 
-#milesFromText{
-	padding-bottom: 10px;
-	font-weight: bold;
+#filtersContainer input,
+#filtersContainer select{
+    padding: 10px 10px;
+    border-radius: 1px;
+    border: 1px solid #c8c5c5;
 }
 
-#resultsContainer #nameHeader{
-	width:20%
+#filtersContainer .filter{
+	padding-bottom: 20px;
 }
 
-#resultsContainer #ratingHeader{
-	width:15%
+#filtersContainer .filter-value{
+	padding-left: 60px;
 }
 
-#resultsContainer #endorsementsHeader{
-	width:50%
+h3{
+	color: #197994;
+	font-size: 20px;
 }
 
-#resultsContainer #distanceHeader{
-	width:15%
+#filtersContainer{
+	border-bottom: 1px solid #cacaca;
 }
 
-#resultsContainer table{
-	width:100%;
-}
-
-#getEmployees{
-	padding: 10px 15px;
-}
-
-#clearCalendarContainer{
-	padding: 20px 0px 5px 25px;
-}
-
-/* #locationContainer input{ */
-/* 	display:inline-block; */
-/* } */
-
-.main-table-style td a{
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #5B7BA3;
+#resultsContainer{
+	display: none;
 }

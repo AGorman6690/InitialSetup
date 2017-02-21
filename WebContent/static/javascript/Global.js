@@ -32,7 +32,7 @@ function broswerIsWaiting(isWaiting){
 
 function setStates(){
 	var $e = $("#state"); 
-	$e.append('<option value="" selected style="display: none"></option>');
+	$e.append('<option value="" selected disabled>State</option>');
 	$e.append('<option value="AL">AL</option>');
 	$e.append('<option value="AK">AK</option>');
 	$e.append('<option value="AZ">AZ</option>');

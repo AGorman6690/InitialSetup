@@ -6,10 +6,3 @@
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />	
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker_new.css" />	
-
-
-
-<!-- //*************************************** -->
-<!-- // Verify this css sheet is still being used... -->
-<!-- //*************************************** -->
-<!-- <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" /> -->

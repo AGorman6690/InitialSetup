@@ -1,4 +1,19 @@
+$(document).ready(function(){
 
+//	$(".clear-calendar").click(function(){
+//		clearCalendar($(this).closest(".calendar-container"));
+//	})
+	
+})
+
+
+
+function clearCalendar($calendar, days){
+	$calendar.find("td.active111").each(function(){
+		$(this).removeClass("active111");
+	})
+	return [];
+}
 
 function getTdByDayMonthYear($calendar, day, month, year){
 	
