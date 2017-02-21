@@ -3,7 +3,7 @@
 <div class="section">
 	<div class="section-body">
 		<c:choose>
-			<c:when test="${jobDtos.size() == 0 }">
+			<c:when test="${yetToStartJobs_Dtos.size() == 0 }">
 				<div>You have no jobs waiting to start</div>	
 			</c:when>
 			
@@ -23,10 +23,10 @@
 							<th rowspan="1" class="right-edge"></th>
 							<tr class="header-2">
 								<th id="name" class="left-edge">Job Name</th>
-								<th id="startsIn" class="left-edge">Starts In</th>
-								<th id="" class="number left-edge">New</th>
+								<th id="startsIn" class="left-edge">Starts In</th>								
 								<th id="" class="number">Sent</th>
-								<th id="" class="number right-edge">Received</th>
+								<th id="" class="number left-edge">Received New</th>
+								<th id="" class="number right-edge">Received Total</th>
 								<th id="newApplicantions" class="number left-edge">New</th>
 								<th id="" class="number right-edge">Total</th>
 								<th id="hires" class="number right-edge">Employees</th>									
@@ -42,20 +42,82 @@
 						
 							<tr id="${jobDto.job.id }">
 								
-								<td class="job-name"><a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2" >${jobDto.job.jobName }</a></td>
-								<td>${jobDto.daysUntilStart } days</td>
+								<td class="job-name">
+									<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=all-apps" >
+										${jobDto.job.jobName }
+									</a>
+								</td>
 								
-								<td class="data">-</td>
-								<td class="data">-</td>
-	
-								<c:set var="tdValue" value="${jobDto.failedWageNegotiationDtos.size() }" /> 
-								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	
-		
+								<td>${jobDto.daysUntilStart } days</td>
+
+								<td class="data ${jobDto.countWageProposals_sent == 0 ? '' : 'pop'}">
+									<c:choose>
+										<c:when test="${jobDto.countWageProposals_sent > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=sent-proposals">
+											${jobDto.countWageProposals_sent }
+										</a>	
+										</c:when>
+										<c:otherwise>
+											-
+										</c:otherwise>
+									</c:choose>									
+								</td>
+
+								<td class="data ${jobDto.countWageProposals_received_new == 0 ? '' : 'pop'}">
+									<c:choose>
+										<c:when test="${jobDto.countWageProposals_received_new > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=received-proposals-new">
+											${jobDto.countWageProposals_received_new }
+										</a>	
+										</c:when>
+										<c:otherwise>
+											-
+										</c:otherwise>
+									</c:choose>									
+								</td>
+																	
+								<td class="data ${jobDto.countWageProposals_received == 0 ? '' : 'pop'}">
+									<c:choose>
+										<c:when test="${jobDto.countWageProposals_received > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=received-proposals">
+											${jobDto.countWageProposals_received }
+										</a>	
+										</c:when>
+										<c:otherwise>
+											-
+										</c:otherwise>
+									</c:choose>									
+								</td>	
+								
 								<c:set var="tdValue" value="${jobDto.newApplicationCount }" /> 
-								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	
+								<td class="data ${tdValue > 0 ? 'pop' : '' }">
+									<c:choose>
+										<c:when test="${tdValue > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=new-apps">
+											${tdValue }
+										</a>	
+										</c:when>
+										<c:otherwise>
+											-
+										</c:otherwise>
+									</c:choose>
+
+								</td>	
 									
-								<c:set var="tdValue" value="${jobDto.applications.size() }" /> 
-								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	
+								<c:set var="tdValue" value="${jobDto.applicationDtos.size() }" /> 
+								<td class="data ${tdValue > 0 ? 'pop' : '' }">
+									<c:choose>
+										<c:when test="${tdValue > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=all-apps">
+											${tdValue }
+										</a>	
+										</c:when>
+										<c:otherwise>
+											-
+										</c:otherwise>
+									</c:choose>
+
+								</td>
 									
 								<c:set var="tdValue" value="${jobDto.employees.size() }" /> 
 								<td class="data ${tdValue > 0 ? 'pop' : '' }">${tdValue > 0 ? tdValue : '-' }</td>	

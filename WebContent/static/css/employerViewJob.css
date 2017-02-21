@@ -26,6 +26,9 @@
 	display:inline-block;
 }
 
+#applicantsTable th{
+	padding-right:20px;
+}
 
 
 .question-format{
@@ -68,7 +71,7 @@
 }
 
 #wageNegotiation_current_offer{
-	width:10%;
+	width:15%;
 }
 
 #status{
@@ -81,6 +84,21 @@
 	cursor:pointer;
 	padding:5px;
 	font-size:20px;
+}
+
+#selectStatusContainer{
+    width: 230px;
+}
+
+#selectStatusContainer label,
+#selectQuestionsContainer label{
+	font-size: 16px;
+    font-weight: 100;
+    color: #000000;
+}
+
+#statusAllContainer{
+	margin-bottom:10px;
 }
 
 #selectQuestionsContainer,
@@ -113,7 +131,7 @@
 	padding: 4px 10px;
 	display:block;
 	margin:5px auto;
-	width:75px;
+	width:150px;
 }
 .active{
     background-color: #337ab7;

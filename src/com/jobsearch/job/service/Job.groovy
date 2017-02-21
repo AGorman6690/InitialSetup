@@ -3,6 +3,7 @@ package com.jobsearch.job.service
 import com.jobsearch.application.service.Application
 import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.Question
+import com.jobsearch.model.WorkDay
 import com.jobsearch.category.service.Category
 import java.sql.Time
 import java.time.LocalDate
@@ -24,8 +25,8 @@ public class Job {
 	String city
 	String state
 	String zipCode
-	float lat
-	float lng
+	Float lat
+	Float lng
 	
 	//******************************************************
 	//******************************************************
@@ -56,7 +57,7 @@ public class Job {
 	List<JobSearchUser> employees
 //	List<JobSearchUser> applicants
 //	List<Application> applications
-	List<PostQuestionDTO> questions
+//	List<Question> questions
 	Integer Duration
 	List<Integer> selectedQuestionIds
 	

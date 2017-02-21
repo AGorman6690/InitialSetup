@@ -27,7 +27,7 @@ public class FindJobFilterDTO {
 	String zipCode
 	float lat
 	float lng
-	int radius
+	Integer radius
 	
 	int[] categoryIds
 	List<Category> categories

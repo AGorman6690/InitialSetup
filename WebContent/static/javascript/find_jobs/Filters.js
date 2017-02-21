@@ -219,19 +219,24 @@ function setInitialValues_TimeAndDates(callback){
 	// Set calendars' initial date
 	$(".calendar-single-date").each(function(){
 		
-		var initDate = $(this).attr("data-init-date");
+		var string_initDate = $(this).attr("data-init-date").replace(/-/g, "/");
+		var initDate;
 		var td;
 		if(initDate != -1){
+			
+			initDate = new Date(string_initDate);
+			
+			// This will display the calendar on the correct date.
+			// The following getTd will fail if the date is in a future month.
+			$(this).datepicker("setDate", $.datepicker.formatDate("mm/dd/yy", initDate));
 		
-			initDate = new Date(initDate.replace(/-/g, "/"));
+			
 			td = getTdByDayMonthYear($(this), initDate.getDate(),
 										initDate.getMonth(), initDate.getFullYear());
 			
 			$(td).addClass("active111");
 
-			
 		}
-		
 	})
 	
 	// Once the controls are set, approve the specified filters

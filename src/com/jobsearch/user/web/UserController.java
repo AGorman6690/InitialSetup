@@ -4,13 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,8 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
@@ -49,10 +46,10 @@ public class UserController {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-	@RequestMapping(value = "/validateEmail", method = RequestMethod.GET)
-	public String validate(@RequestParam(name = "userId") int userId, ModelAndView model,
-			@ModelAttribute("user") JobSearchUser user) {
-
+	@RequestMapping(value = "/email/validate", method = RequestMethod.GET)
+	public String validateEmail(@RequestParam(name = "userId") int userId, HttpSession session){
+		
+		userService.setSession_EmailValidation(userId, session);
 		return "redirect:/user/profile";
 	}
 	
@@ -66,22 +63,59 @@ public class UserController {
 
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpSession session) {				
+	public String getProfile_SessionUser(Model model, HttpSession session) {				
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
-
-	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
-	public String signUp(Model model, @ModelAttribute("user") JobSearchUser user) {
-
-		user = userService.createUser(user);
+	
+	@RequestMapping(value = "/user/{userId}/profile", method = RequestMethod.GET)
+	public String getProfile_AUser(@PathVariable(value = "userId") int userId,
+									Model model, HttpSession session) {
 		
-		if (user != null) {
-			model.addAttribute("user", user);
-			return "EmailValidateMessage";
-		} else {
-			return "Invalid Login";
-		}
+		// ********************************************************
+		// ********************************************************
+		// Pretty this up.
+		// Think about combining the two view-profile/credentials-page requests
+		// ********************************************************
+		// ********************************************************
+		
+		
+		userService.setModel_Credentials_Employee(model, userId);
+		model.addAttribute("isViewingOnesSelf", false);
+		return "/credentials_employee/Credentials_Employee";
+	}
+	
+
+	
+	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
+	public String viewCredentials(Model model, HttpSession session) {
+
+		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId());
+
+		return "/credentials_employee/Credentials_Employee";
+	}
+
+
+	@ResponseBody
+	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
+	public String signUp(@RequestBody JobSearchUser user) {
+
+		
+		
+		// **********************************************************
+		// **********************************************************
+		// For security reasons, do you think we should pass an encrypted userId
+		// in the email-validation url?
+		// **********************************************************
+		// **********************************************************		
+		
+
+//		if (user != null) {
+//			model.addAttribute("user", user);
+//			return "EmailValidateMessage";
+//		} else {
+			return JSON.stringify(userService.createUser(user));
+//		}
 
 	}
 
@@ -128,21 +162,6 @@ public class UserController {
 		return "settings_employee/Availability";
 	}
 
-	@RequestMapping(value = "/post-job", method = RequestMethod.GET)
-	public ModelAndView viewPostJob(ModelAndView model, HttpSession session) {
-
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		model.addObject("user", user);
-
-		Job job = new Job();
-		model.addObject("job", job);
-
-		model.setViewName("/post_job/PostJob");
-		return model;
-	}
-	
-
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
@@ -173,11 +192,13 @@ public class UserController {
 
 	}
 
+	
+	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public void editEmployeeSettings(HttpSession session, @RequestBody EditProfileRequestDTO editProfileRequest) {
+	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
 
-		userService.editEmployeeSettings(editProfileRequest, session);
+		userService.editEmployeeSettings(user_edited, session);
 	}
 
 	@RequestMapping(value = "/search/employees", method = RequestMethod.GET)
@@ -235,23 +256,6 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/dummyData", method = RequestMethod.GET)
-	@ResponseBody
-	public void setDummyData() {
 
-		// Change this and the following conditions
-		// if you wish to create dummy data
-		int number = 0;
-
-		if (number == 1) {
-			userService.createUsers_DummyData();
-
-		}
-
-		if (number == 1) {
-			userService.createJobs_DummyData();
-		}
-
-	}
 
 }

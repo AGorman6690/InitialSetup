@@ -9,7 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.job.service.Job;
 
 @Repository
 public class CategoryRepository {
@@ -87,6 +89,19 @@ public class CategoryRepository {
 	public Category getCategory(int categoryId) {
 		String sql = "SELECT * FROM category WHERE CategoryId = ?";
 		return this.CategoryRowMapper(sql, new Object[] { categoryId }).get(0);
+	}
+
+	public List<Category> getCategories_ForCompletedJobs(int userId) {
+
+		String sql = "SELECT * FROM category c"
+					+ " INNER JOIN job_category jc ON jc.CategoryId = c.CategoryId"
+					+ " INNER JOIN job j ON jc.JobId = j.JobId"
+					+ " INNER JOIN application a ON a.JobId = j.JobId"
+					+ " WHERE j.Status = ?"
+					+ " AND a.UserId = ?"
+					+ " AND a.Status = ?";
+		
+		return CategoryRowMapper(sql, new Object[]{ Job.STATUS_PAST, userId, Application.STATUS_ACCEPTED });
 	}
 
 }

@@ -1,0 +1,30 @@
+#table_headerAnswers td.answers-container{
+	width:150px;	
+}
+
+#filterAnswersContainer{
+	width: 500px;
+}
+
+#filterAnswersContainer #filterAnswers{
+	width: 80px;
+}
+
+#filterAnswersContainer #header_question{
+	width: 250px;
+}
+
+#filterAnswersContainer #header_answers{
+	width: 125px;
+}
+#table_headerAnswers tbody td.question{
+	border-right: 0;
+}
+
+#table_headerAnswers tbody td.answers{
+	border-left: 0;
+}
+
+.expiration-time{
+	padding-top: 8px;
+}

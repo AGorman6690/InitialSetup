@@ -4,7 +4,7 @@ var workDays = [];
 $(document).ready(function() {
 	
 	
-	$("#jobAddress").click(function(){
+	$("body").on("click", "#jobAddress", function(){
 // **********************
 // 			http://stackoverflow.com/questions/6582834/use-a-url-to-link-to-a-google-map-with-a-marker-on-it
 // **********************
@@ -43,22 +43,25 @@ function setWorkDays(){
 function initCalendar_JobInfo(){
 	
 	var $calendar = $("#workDaysCalendar");
-		
-	var numberOfMonths = getNumberOfMonths($calendar);
-	var milliseconds;
-	var date;
 	
-	var minDate = $calendar.attr("data-min-date").replace(/-/g, "/");
+	if($calendar.length > 0 ){
+		var numberOfMonths = getNumberOfMonths($calendar);
+		var milliseconds;
+		var date;
+		
+		var minDate = $calendar.attr("data-min-date").replace(/-/g, "/");
 
-	$calendar.datepicker({
-		minDate: new Date(minDate),
-		numberOfMonths: numberOfMonths, 
-        beforeShowDay: function (date) {
+		$calendar.datepicker({
+			minDate: new Date(minDate),
+			numberOfMonths: numberOfMonths, 
+	        beforeShowDay: function (date) {
 
-			if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
-			else return [true, ""];
-        	
-        }
-    });
+				if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
+				else return [true, ""];
+	        	
+	        }
+	    });		
+	}
+
 }
 

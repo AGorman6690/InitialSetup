@@ -1,15 +1,18 @@
 package com.jobsearch.model
 
 class WageProposal {
+	
 	int id
 	int applicationId
-	double amount
+	String amount
 	int proposedByUserId
-	int proposedToUserId
-	
-	//-1: No action taken;
-	//0: Countered;
-	//1: Accepted;
-	//2: Declined;
+	int proposedToUserId	
+
 	int status
+	public static Integer STATUS_SUBMITTED_BUT_NOT_VIEWED = -2
+	public static Integer STATUS_VIEWED_BUT_NO_ACTION_TAKEN = -1
+	public static Integer STATUS_COUNTERED = 0
+	public static Integer STATUS_ACCEPTED = 1
+	public static Integer STATUS_DECLINED = 2
+	public static Integer STATUS_PENDING_APPLICANT_APPROVAL = 3;
 }

@@ -1,0 +1,61 @@
+.response-container{
+	display: none;
+	width: 300px;
+}
+
+
+.response-container .response{
+/* 	display: block; */
+	padding: 7px 0px;
+}
+
+.response-container .proposal-actions-container{
+	display: none;
+	margin: 0px 10px;
+	border-bottom: 1px solid black;
+	padding: 10px 0px;
+}
+
+.conflicting-apps-container{
+/* 	text-align: left; */
+/* 	padding-bottom: 10px; */
+}
+
+.proposal-actions{
+	padding-top: 10px;
+}
+
+.proposal-actions span{
+	margin: 0px 8px;
+}
+
+input.counter-amount{
+	width: 125px;
+	margin-top: 7px;
+}
+
+
+.accept-actions-container .time-container span{
+	width: 80px;
+	display: inline-block;
+    text-align: right;
+    padding-right: 15px;
+}
+
+
+.accept-actions-container input{
+	width: 60px;
+	margin-bottom: 3px;
+}
+
+.accept-actions-container .lbl{
+	font-weight: bold;
+}
+
+.amount-lbl{
+	margin-top: 15px;
+}
+
+.expiration-time{
+    padding-top: 10px;
+}

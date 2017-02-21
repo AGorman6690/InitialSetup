@@ -1,10 +1,18 @@
+
+
+
 td div.hide{
 	display:none;
 }
 
 
 td div.job.hover{
-	background-color:#c18585 !important;
+/* 	background-color:#c18585 !important; */
+/* 	background-color:#000000 !important; */
+/* 	background-color: #717171 !important; */
+	background-color: #163b3d !important;
+/* 	border: 2px solid #000000; */
+	
 }
 
 td div.job{
@@ -25,15 +33,6 @@ td div.job.two{
 	background-color: #163B3D;
 }
 
-td div.job.employment{
-	bottom:10px;
-	background-color: #886a00;
-}
-
-td div.job.application{
-	bottom:10px;
-	background-color: #85b0d4;
-}
 
 
 
@@ -68,9 +67,9 @@ td div.job.three{
 	text-align:center;
 }
 
-table#openApplications{
-	margin:auto;
-}
+
+
+
 
 .ui-datepicker-header{
     font-size: 18px;
@@ -101,9 +100,13 @@ table#openApplications{
 
 #calendarDetails_applications.disabled:not(.still-hovering) {
 	background-color: rgb(235, 235, 228);
-	border: 2px solid rgb(200, 197, 197);
-}
 	
+}
+
+#calendarDetails_applications{
+	margin-top: 30px;
+	border: 2px solid rgb(200, 197, 197);
+}	
 	
 	
 #date_detail{

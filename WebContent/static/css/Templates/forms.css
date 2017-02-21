@@ -6,6 +6,11 @@ input[type=radio]{
 	cursor:pointer;    
 }
 
+label{
+	font-weight:normal;
+	cursor:pointer;
+}
+
 .checkbox-container label{
 	cursor:pointer;
 }
@@ -20,4 +25,16 @@ input[type=radio]{
 
 select:disabled{
 	background-color: rgb(235, 235, 228);
+}
+
+.checkbox-container label.select-all-container{
+	margin-bottom:15px;
+}
+
+input:disabled:hover{
+	cursor:default;
+}
+
+.show-disabled label{
+	cursor:default;
 }

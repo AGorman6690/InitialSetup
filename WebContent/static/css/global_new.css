@@ -41,8 +41,41 @@ a.accent.no-hover:hover{
     font-weight: normal;
 }
 
+span.dollar-sign{
+    margin-right: 3px;
+}
+
 /* span.accent{ */
 /*     color: #337ab7; */
 /*     font-size: 15px; */
 /*     font-weight: bold; */
 /* } */
+
+
+.dropdown-container{
+	position: relative;
+}
+
+.dropdown-style{
+	position:absolute;
+	background-color:#ffffff;
+	z-index: 10000;
+	display:none;
+	border: 2px solid #163b3d;
+	border-radius:3px;
+	padding:20px;
+}
+
+.show-disabled{
+	background-color: rgb(235, 235, 228);
+    border: 2px solid rgb(200, 197, 197);
+    color: #8a8181;
+}
+
+
+span.glyphicon-menu-up, 
+span.glyphicon-menu-down{ 
+	margin: 0px 5px;
+	padding: 0px 5px;
+	color: #adadad;
+}

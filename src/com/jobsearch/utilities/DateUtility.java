@@ -6,20 +6,15 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Period;
 import java.time.ZoneId;
-import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
-import org.joda.time.Hours;
 
-import com.fasterxml.jackson.datatype.joda.ser.PeriodSerializer;
-import com.jobsearch.job.service.WorkDay;
+import com.jobsearch.model.WorkDay;
 
 public final class DateUtility {
 	
@@ -39,6 +34,10 @@ public final class DateUtility {
 		}
 		return null;
 	}
+	
+
+
+
 
 	public static java.sql.Date getSqlDate(String input, String inputFormat) {
 
@@ -54,6 +53,7 @@ public final class DateUtility {
 		}
 		return null;
 	}
+
 	
 	public static String formatSqlTime(java.sql.Time time, String format){
 		// For all formats:
@@ -245,7 +245,12 @@ public final class DateUtility {
 		return (int) (months_maxDate - months_minDate + 1);
 	}
 
-	
-	
+
+
+
+
+
+
+
 	
 }

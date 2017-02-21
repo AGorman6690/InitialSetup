@@ -114,6 +114,9 @@
 
         <!-- Hibernate -->
         <dependency org="org.hibernate" name="hibernate-core" rev="5.1.0.Final"/>
+        
+        <!-- Validation -->
+        <dependency org="javax.validation" name="validation-api" rev="1.0.0.GA"/>
 
 		<!-- Password Encryption -->
 		<dependency org="org.jasypt" name="jasypt" rev="1.9.2"/>
@@ -124,6 +127,7 @@
 		<dependency org="org.codehaus.groovy" name="groovy-all" rev="2.4.3"/>
 		<dependency org="org.codehaus.groovy" name="groovy" rev="2.4.3"/>
 		<dependency org="org.codehaus.groovy" name="groovy-ant" rev="2.4.3"/>
+		
 
     </dependencies>
 

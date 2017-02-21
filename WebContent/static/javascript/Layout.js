@@ -7,7 +7,11 @@ $(document).ready(function(){
 		//move to the right and back again ever so slightly.
 		//Using .hide
 		
-		if(toggleSpeed == -1){
+		if(toggleSpeed == -2){
+			if($e.is(":visible")) $e.hide();
+			else $e.show();
+		}
+		else if(toggleSpeed == -1){
 			$e.slideToggle(1000);	
 		}
 		else if(toggleSpeed == 0){
@@ -20,6 +24,7 @@ $(document).ready(function(){
 			$e.slideToggle(300);	
 		}else{
 			$e.slideToggle(500);	
+			$e.show();
 		}
 		
 //		var $eToToggle = $("#" + toggleId);
@@ -47,6 +52,6 @@ $(document).ready(function(){
 	
 })
 
-function triggerToggle(dataToggleId){
-	$("span[data-toggle-id='" + dataToggleId + "']").click();
-}
+//function triggerToggle(dataToggleId){
+//	$("span[data-toggle-id='" + dataToggleId + "']").click();
+//}

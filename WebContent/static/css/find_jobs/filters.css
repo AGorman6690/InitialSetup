@@ -1,6 +1,6 @@
 .dropdown-header{
 	padding: 10px;
-    width: 230px;
+/*     width: 230px; */
     height:44px;
 }
 
@@ -23,7 +23,6 @@
 }
 
 .dropdown-header .trigger-dropdown{
-/* 	display:inline-block; */
 	cursor: pointer;
 }
 
@@ -33,6 +32,7 @@
 /* 	padding:5px; */	
 	margin-right:5px;
 	display:none;
+	cursor: pointer;
 }
 
 .dropdown-header .glyphicon{
@@ -70,7 +70,7 @@
 /* 	background-color:#9a7601; */
 	background-color:#c1c1c1;
 /* 	color:#ffffff; */
-	color:#000000;
+	color:#424242;
 }
 
 #showSaveFilter, #clearAllFilters{
@@ -115,13 +115,13 @@
 }
 
 .dropdown{
-	position:absolute;
+	position: absolute;
 	z-index: 1000;
     border: 3px solid rgb(192,192,192);
-    padding: 10px 20px;
+    padding: 20px;
     background-color: #ffffff;
-	width:100%;
-	display:none;
+	width: 100%;
+	display: none;
 }
 
 .trigger-dropdown .glyphicon-menu-up,
@@ -139,8 +139,15 @@
 }
 
 #additionalFiltersContainer{
-	width:702px;
+	width:770px;
 	margin:auto;
+}
+
+.dropdown-header .glyphicon-menu-up,
+.dropdown-header .glyphicon-menu-down{
+	color: #000000;
+	margin: 0;
+	padding: 0;
 }
 
 #getJobs{
@@ -151,7 +158,7 @@
 
 .filter-container{
 	position:relative;
-	width: 230px;
+	width: 250px;
 	
 }
 

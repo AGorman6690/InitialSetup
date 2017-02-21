@@ -24,10 +24,6 @@
 	cursor:pointer;
 }
 
-#sectionContainers{
-	padding-top:15px;
-}
-
 .content-link.selected{
 	border-bottom: 2px solid #163B3D;
 }
@@ -59,4 +55,44 @@
 
 #noApplications{
 	text-align:center;
+}
+
+
+
+
+#completedJobs_needRating_Container{
+    border: 2px solid #afafaf;
+    padding-bottom: 20px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    width: 600px;
+    margin: 10px auto;
+}
+
+#completedJobs_needRating{
+	width:450px;
+	margin:auto;
+    padding-top: 40px;
+    padding-left: 25px;
+}
+
+#completedJobs_needRating table tbody > tr{
+	    border-top: 1px solid #909090;
+}
+
+#completedJobs_needRating p{
+	font-size:20px;
+	padding-bottom: 15px;
+}
+
+#completedJobs_needRating table{
+	margin-left:25px;
+}
+
+.response-for-approval-container span{
+	padding: 0px 8px;
+}
+
+.response-for-approval-container{
+	width: 100%;
 }

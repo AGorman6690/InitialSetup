@@ -99,7 +99,7 @@
 	function areAnswersValid(){
 		
 		var questionFormatId;
-		var answerContainers = $("#answersContainer").find(".answer-container")
+		var questions = $("#answersContainer").find(".answer-container")
 		var invalidCount = 0;
 		var answer;
 		
@@ -108,22 +108,27 @@
 		var answerOptionInput;
 		
 		
-		$.each(answerContainers, function(){
+		$("#answersContainer").find(".question-container .answer-options-container").each(function(){			
 			
-			//All possible answer inputs
-			radioInput = $(this).find("input[type=radio]:checked").parents('label').text();
-			textareaInput = $(this).find("textarea").val();
-			answerOptionInput = $(this).find(".answer-option.selected")[0];
-			
-			//If at least on possible input is valid
-			if(isValidInput(radioInput) || isValidInput(textareaInput) || isValidInput(answerOptionInput)){
-				setValidCss($(this));
+			if($(this).find("input:checked").length > 0){
+				setValidCss($(this).closest(".question-container"));
 			}
 			else{				
-				setInvalidCss($(this));
+				setInvalidCss($(this).closest(".question-container"));
 				invalidCount += 1;
 			}
+		})
+		
+		
+		$("#answersContainer").find("textarea").each(function(){			
 			
+			if($(this).val() != ""){
+				setValidCss($(this).closest(".question-container"));
+			}
+			else{				
+				setInvalidCss($(this).closest(".question-container"));
+				invalidCount += 1;
+			}
 		})
 		
 		if(invalidCount > 0){
@@ -136,19 +141,18 @@
 	}
 	
 	
-	function getApplicationRequestDTO(){
+	function getApplicationDTO(){
 		
-		var jobId = $("#jobId").val();
-		var dto = {};
+		var applicationDto = {};
 		
-		dto.jobId = jobId;
+		applicationDto.jobId = $("#jobId").val();
 		
-		dto.wageProposal = {};
-		dto.wageProposal = getWageProposal();
-		dto.answers = [];
-		dto.answers = getAnswers();
+		applicationDto.wageProposal = {};
+		applicationDto.wageProposal = getWageProposal();
+		applicationDto.answers = [];
+		applicationDto.answers = getAnswers();
 	
-		return dto;
+		return applicationDto;
 	
 	};
 	
@@ -156,7 +160,7 @@
 		
 		var wageProposal = {}
 		wageProposal.amount = $("#amount").val();
-		wageProposal.status = -1;
+		wageProposal.status = -2;
 		
 		return wageProposal;
 	}
@@ -167,64 +171,73 @@
 		var selectedAnswer;		
 		var answers = [];
 		var answer = {};
-		var questions = $("#questions").find(".question");
+		var questions = $("#questions").find(".question-container");
 		var questionId;
 		var questionFormatId
 		
-		$.each(questions, function(){	
-			questionId = $(this).attr("data-question-id");
-			questionFormatId = $(this).attr("data-question-format-id");
+		$("#answersContainer").find(".answer-option input:checked").each(function(){
 			
 			answer = {};
-			answer.questionId = questionId;
+			answer.questionId = $(this).attr("data-question-id");
+			answer.answerOptionId = $(this).attr("data-id");
 			
-			if(questionFormatId == 0){
-				answer.text = $(this).find("input[type=radio]:checked").parents('label').text();
-				answers.push(answer);
-			}
-			else if(questionFormatId == 1){
-				answer.text = $(this).find("textarea").val();
-				answers.push(answer);
-			}
-			else if(questionFormatId == 2){
-				selectedAnswer = $(this).find(".answer-option.selected")[0];
-				answer.answerOptionId = $(selectedAnswer).attr("data-answer-option-id")
-				answers.push(answer);
-			}
-			else if(questionFormatId == 3){
-				selectedAnswers = $(this).find(".answer-option.selected"); 
-				$.each(selectedAnswers, function(){
-					answer = {};
-					answer.questionId = questionId;
-					answer.answerOptionId = $(this).attr("data-answer-option-id");
-					
-					answers.push(answer);
-				})
-			}	
+			answers.push(answer);
+			
+			
 		})
 		
+		$("#answersContainer").find("textarea").each(function(){
+			
+			answer = {};
+			answer.questionId = $(this).attr("data-question-id");
+			answer.text = $(this).val();
+			
+			answers.push(answer);			
+			
+		})
+		
+		
+		
+//		$.each(questions, function(){	
+//			questionId = $(this).attr("data-question-id");
+//			questionFormatId = $(this).attr("data-question-format-id");
+//			
+//			answer = {};
+//			answer.questionId = questionId;
+//			
+//			if(questionFormatId == 1){
+//				answer.text = $(this).find("textarea").val();
+//				answers.push(answer);
+//			}
+//			else if(questionFormatId == 0 || questionFormatId == 2){
+//				answer.answerOptionId = $(this).find(".answer-options-container input:checked").eq(0).attr("data-id");
+//				answers.push(answer);
+//			}
+//			else if(questionFormatId == 3){
+//				selectedAnswers = $(this).find(".answer-options-container input:checked"); 
+//				$.each(selectedAnswers, function(){
+//					answer = {};
+//					answer.questionId = questionId;
+//					answer.answerOptionId = $(this).attr("data-id");
+//					
+//					answers.push(answer);
+//				})
+//			}	
+//		})
+//		
 		return answers;		
 	}
 	
 	function apply(){
-		
-		var applicationRequestDTO = {};
-		var headers = {};
-		
+
 		if(isInputValid()){
-			
-			//Get dto			
-			applicationRequestDTO = getApplicationRequestDTO();
-			
-			//Submit the apppliation			
-			headers[$("meta[name='_csrf_header']").attr("content")] = $(
-					"meta[name='_csrf']").attr("content");
+
 			$.ajax({
 				type : "POST",
 				url : environmentVariables.LaborVaultHost + '/JobSearch/job/apply',
-				headers : headers,
+				headers : getAjaxHeaders(),
 				contentType : "application/json",
-				data : JSON.stringify(applicationRequestDTO),
+				data : JSON.stringify(getApplicationDTO()),
 			}).done(function() {
 				redirectToProfile();
 			}).error(function() {
