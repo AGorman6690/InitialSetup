@@ -63,10 +63,38 @@ public class UserController {
 
 
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
-	public String getProfile(Model model, HttpSession session) {				
+	public String getProfile_SessionUser(Model model, HttpSession session) {				
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
+	
+	@RequestMapping(value = "/user/{userId}/profile", method = RequestMethod.GET)
+	public String getProfile_AUser(@PathVariable(value = "userId") int userId,
+									Model model, HttpSession session) {
+		
+		// ********************************************************
+		// ********************************************************
+		// Pretty this up.
+		// Think about combining the two view-profile/credentials-page requests
+		// ********************************************************
+		// ********************************************************
+		
+		
+		userService.setModel_Credentials_Employee(model, userId);
+		model.addAttribute("isViewingOnesSelf", false);
+		return "/credentials_employee/Credentials_Employee";
+	}
+	
+
+	
+	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
+	public String viewCredentials(Model model, HttpSession session) {
+
+		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId());
+
+		return "/credentials_employee/Credentials_Employee";
+	}
+
 
 	@ResponseBody
 	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
@@ -134,15 +162,6 @@ public class UserController {
 		return "settings_employee/Availability";
 	}
 
-	
-	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
-	public String viewCredentials(Model model, HttpSession session) {
-
-		userService.setModel_Credentials_Employee(model, session);
-
-		return "credentials_employee/Credentials_Employee";
-	}
-
 		
 	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
 	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
@@ -173,11 +192,13 @@ public class UserController {
 
 	}
 
+	
+	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 	@ResponseBody
-	public void editEmployeeSettings(HttpSession session, @RequestBody EditProfileRequestDTO editProfileRequest) {
+	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
 
-		userService.editEmployeeSettings(editProfileRequest, session);
+		userService.editEmployeeSettings(user_edited, session);
 	}
 
 	@RequestMapping(value = "/search/employees", method = RequestMethod.GET)
@@ -235,23 +256,6 @@ public class UserController {
 		}
 	}
 
-	@RequestMapping(value = "/dummyData", method = RequestMethod.GET)
-	@ResponseBody
-	public void setDummyData() {
 
-		// Change this and the following conditions
-		// if you wish to create dummy data
-		int number = 0;
-
-		if (number == 1) {
-			userService.createUsers_DummyData();
-
-		}
-
-		if (number == 1) {
-			userService.createJobs_DummyData();
-		}
-
-	}
 
 }

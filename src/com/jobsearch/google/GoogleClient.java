@@ -91,7 +91,6 @@ public class GoogleClient {
 			coordinate.setLatitude((float) results[0].geometry.location.lat);
 			coordinate.setLongitude((float) results[0].geometry.location.lng);
 			return coordinate;
-		}
-		return null;
+		}else return null;
 	}
 }

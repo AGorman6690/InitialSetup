@@ -4,6 +4,10 @@
 /* 	padding-top: 50px; */
 }
 
+#calendarContainer_both td{
+	padding: 0px
+}
+
 #calendarContainer_both .ui-datepicker-calendar{
 	width: 450px;
 	height: 525px;

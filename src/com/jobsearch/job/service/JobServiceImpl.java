@@ -869,7 +869,10 @@ public class JobServiceImpl {
 		case "find":
 			
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
-			jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
+			
+			if(sessionUser != null){
+				jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));	
+			}			
 			
 			break;
 

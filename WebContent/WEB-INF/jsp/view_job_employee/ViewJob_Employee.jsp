@@ -1,4 +1,5 @@
 <%@ include file="../includes/Header.jsp"%>
+<%@ include file="../includes/resources/DatePicker.jsp"%>
 <%@ include file="../includes/resources/JobInformation.jsp"%>
 
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
@@ -40,6 +41,8 @@
 				<div id="applicationStatus">						
 					${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
 						jobDto.application.status == 1 ? "Application has been declined" :
+						jobDto.application.status == 4 ? "Application is waiting for your approval" :
+						jobDto.application.status == 5 ? "Application has been withdrawn" :
 						"Application has been accepted" }						
 				</div>
 			</c:if>

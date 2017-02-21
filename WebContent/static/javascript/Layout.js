@@ -7,7 +7,7 @@ $(document).ready(function(){
 		//move to the right and back again ever so slightly.
 		//Using .hide
 		
-		if(toggleSpeed = -2){
+		if(toggleSpeed == -2){
 			if($e.is(":visible")) $e.hide();
 			else $e.show();
 		}

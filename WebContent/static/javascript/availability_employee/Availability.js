@@ -19,7 +19,8 @@ $(document).ready(function(){
 			onSelect: function(dateText, inst) {	    
 				onSelect_Availability(dateText);
 			},		        
-	        beforeShowDay: function (date) {        	
+	        beforeShowDay: function (date) {       
+	        	broswerIsWaiting(true);
 	        	return beforeShowDay_Availability(month, date, daysOfWeekToSelect);	
 	     	}
 	    });	

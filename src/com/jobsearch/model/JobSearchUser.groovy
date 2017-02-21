@@ -32,9 +32,10 @@ class JobSearchUser {
 	String homeCity
 	String homeState
 	String homeZipCode
-	int maxWorkRadius //Units = miles
+	Integer maxWorkRadius //Units = miles
 	double distanceFromJob
 	int createNewPassword
 //	double wage
-	double minimumDesiredPay
+	Double minimumDesiredPay
+	String stringMinimumDesiredPay
 }

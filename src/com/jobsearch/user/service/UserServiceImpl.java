@@ -31,6 +31,7 @@ import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryDTO;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
+import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
@@ -50,6 +51,7 @@ import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.user.web.EditProfileRequestDTO;
 import com.jobsearch.utilities.MathUtility;
+import com.jobsearch.utilities.VerificationUtility;
 
 
 @Service
@@ -479,28 +481,54 @@ public class UserServiceImpl {
 
 	}
 
-	public void editEmployeeSettings(EditProfileRequestDTO editProfileRequestDto, HttpSession session) {
+	public void editEmployeeSettings(JobSearchUser user_edited, HttpSession session) {
 
-		// Get the user from the session
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+		JobSearchUser sessionUser = (JobSearchUser) session.getAttribute("user");
+		user_edited.setUserId(sessionUser.getUserId());
+		
+		this.updateHomeLocation(user_edited);		
+		this.updateMaxDistanceWillingToWork(user_edited, user_edited.getMaxWorkRadius());
+		this.updateMinimumDesiredPay(user_edited, user_edited.getMinimumDesiredPay());
+		
 
-		// Set the dto's user id
-		editProfileRequestDto.setUserId(user.getUserId());
 
-		// Edit home location
-		GoogleClient maps = new GoogleClient();
-		GeocodingResult[] results = maps.getLatAndLng(editProfileRequestDto.getHomeCity() + " "
-				+ editProfileRequestDto.getHomeState() + " " + editProfileRequestDto.getHomeZipCode());
+		this.updateSessionUser(session);
+	}
 
-		if (results.length == 1) {
-			editProfileRequestDto.setHomeLat((float) results[0].geometry.location.lat);
-			editProfileRequestDto.setHomeLng((float) results[0].geometry.location.lng);
-			// this.updateHomeLocation(editProfileRequest);
-			repository.updateEmployeeSettings(editProfileRequestDto);
-
-			this.updateSessionUser(session);
-
+	public void updateMinimumDesiredPay(JobSearchUser user, Double minimumDesiredPay) {
+		
+		// Max distance willing to work
+		if(VerificationUtility.isPositiveNumber(minimumDesiredPay)){
+			repository.updateMinimumDesiredPay(user.getUserId(), minimumDesiredPay);
 		}
+		
+	}
+
+	public void updateHomeLocation(JobSearchUser user) {
+
+		if(user.getHomeCity() != null &&
+				user.getHomeState() != null &&
+				user.getHomeZipCode() != null){
+			
+			Coordinate coordinate = GoogleClient.getCoordinate(user.getHomeCity() + " "
+					+ user.getHomeState() + " "
+					+ user.getHomeZipCode());
+
+			if (coordinate != null) {			
+				repository.updateHomeLocation(user, coordinate);
+			}
+		}
+
+		
+	}
+
+	public void updateMaxDistanceWillingToWork(JobSearchUser user, Integer maxWorkRadius) {
+		
+		// Max distance willing to work
+		if(VerificationUtility.isPositiveNumber(maxWorkRadius)){
+			repository.updateMaxDistanceWillingToWork(user.getUserId(), maxWorkRadius);
+		}
+		
 	}
 
 	public void updateSessionUser(HttpSession session) {
@@ -582,20 +610,6 @@ public class UserServiceImpl {
 
 	}
 
-	public void createJobs_DummyData() {
-
-		// List<JobSearchUser> dummyEmployers = repository.getEmployers();
-		// DummyData dummyData = new DummyData();
-		//
-		// List<JobInfoPostRequestDTO> dummyJobs =
-		// dummyData.getDummyJobs(dummyEmployers);
-		// int lastDummyCreationId = repository.getLastDummyCreationId("job");
-		//
-		// for (JobInfoPostRequestDTO dummyJob : dummyJobs) {
-		// repository.createJob_DummyData(dummyJob, lastDummyCreationId + 1);
-		// }
-
-	}
 
 	public void resetPassword(JobSearchUser user) {
 
@@ -672,9 +686,6 @@ public class UserServiceImpl {
 		// *************************************************************
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(employee.getUserId());
 		
-		List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(employee.getUserId());
-		
-		model.addAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("user", employee);
 		
 		model.addAttribute("applicationDtos", applicationDtos);
@@ -807,6 +818,16 @@ public class UserServiceImpl {
 		
 		return repository.getRatingValue_ByUserAndJob(rateCriterionId, userId, jobId);
 	}
+	
+
+	public void setModel_Profile_AUser(int userId, Model model, HttpSession session) {
+		
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setUser(this.getUser(userId));
+		
+		model.addAttribute("userDto", userDto);
+	}
+
 
 	public void setModel_Profile(Model model, HttpSession session) {
 	
@@ -828,15 +849,11 @@ public class UserServiceImpl {
 		
 		SessionContext.setUser(session, user);
 		
-//		if(user != null){
-////			model.addAttribute("user", user);
-//			session.setAttribute("user", user);
-//			
-//			return true;
-//		}
-//		else{
-//			return false;
-//		}
+		if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(user.getUserId());		
+			session.setAttribute("jobs_needRating", jobs_needRating);	
+		}
+
 		
 	}
 	
@@ -883,11 +900,11 @@ public class UserServiceImpl {
 		
 	}
 
-	public void setModel_Credentials_Employee(Model model, HttpSession session) {
+	public void setModel_Credentials_Employee(Model model, int userId) {
 
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
 	
-		userDto.setUser(SessionContext.getUser(session));		
+		userDto.setUser(this.getUser(userId));		
 		userDto.setCategoryDtos_jobsCompleted(categoryService.getCategoryDtos_JobsCompleted(userDto.getUser().getUserId()));
 		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userDto.getUser().getUserId()));;
 		

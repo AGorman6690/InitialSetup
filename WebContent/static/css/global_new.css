@@ -71,3 +71,11 @@ span.dollar-sign{
     border: 2px solid rgb(200, 197, 197);
     color: #8a8181;
 }
+
+
+span.glyphicon-menu-up, 
+span.glyphicon-menu-down{ 
+	margin: 0px 5px;
+	padding: 0px 5px;
+	color: #adadad;
+}

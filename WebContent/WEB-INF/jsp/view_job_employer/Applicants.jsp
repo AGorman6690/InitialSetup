@@ -197,8 +197,7 @@
 					
 					<td>
 						<div class="vert-border">
-							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/
-										user/${applicationDto.applicantDto.user.userId}/jobs/completed">
+							<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
 										 ${applicationDto.applicantDto.user.firstName }</a>
 						</div>
 					</td>

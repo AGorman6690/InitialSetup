@@ -110,13 +110,15 @@
 			<div id="navItemsContainer">					
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
-						<a id="nav_profile" class="" href="/JobSearch/user/profile">Profile</a>	
-						<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Credentials</a>								
+					<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>							
+	
+							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
+								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a>							
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
-								<a id="nav_settings" href="/JobSearch/settings">Settings</a>
-								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							
+<!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->
+<!-- 								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							 -->
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
 								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
@@ -134,6 +136,19 @@
 			</div>
 		</nav>
 
+
+		<c:if test="${sessionScope.jobs_needRating.size() > 0 }">
+			<div id="ratingRequired">
+				<span class="lbl">Your Rating Required</span>
+				<span id="jobNames">
+					<c:forEach items="${jobs_needRating }" var="job">
+						<span><a class="job accent"
+							   href="/JobSearch/job/${job.id }/rate-employer">
+								${job.jobName }</a></span>
+					</c:forEach>
+				</span>		
+			</div>
+		</c:if>
 
 
 <script type="text/javascript">	

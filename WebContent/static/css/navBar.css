@@ -1,18 +1,21 @@
 #navItemsContainer a{
 	padding-left: 13px;
 	padding-right: 13px;
-	font-size:20px;	
+	font-size:18px;	
 }
 
 #navBar{
 	color:#337ab7;
-    max-width: 1200px;
-    margin: 5px auto;	
+/*     max-width: 1200px; */
+/*     margin: 5px auto;	 */
 	position: relative;
-	border-bottom: 3px solid #337ab7;
-	border-top: 3px solid #337ab7;	
+/* 	border-bottom: 2px solid #197994; */
+	border-bottom: 2px solid #cacaca;
+/* 	border-top: 3px solid #197994;	 */
 	height:80px;
 	line-height:74px;
+	font-weight: 600;
+    letter-spacing: 1.5px;
 }
 
 #logoContainer{
@@ -42,6 +45,36 @@
 
 #navBar a:hover{
 	text-decoration: none;
-	border-bottom: 3px solid #163B3D;
-	border-top: 3px solid #163B3D;
+	color: #197994;
+/* 	border-bottom: 3px solid #163B3D; */
+/* 	border-top: 3px solid #163B3D; */
+}
+
+
+#ratingRequired .lbl{
+	font-size: 19px;
+    padding-right: 15px;
+    border-right: 2px solid #cacaca;
+}
+
+#ratingRequired{
+    text-align: center;
+    height: 60px;
+    line-height: 60px;
+    border-bottom: 2px solid #cacaca;
+    background: #e4e4e4;
+}
+
+#ratingRequired #jobNames{
+	padding-left: 10px;
+}
+
+#ratingRequired #jobNames .job{
+	padding-left: 10px;
+	border-left: 1px solid #cacaca;
+}
+
+#ratingRequired #jobNames .job:first-child{
+	padding-left: 0px;
+	border-left: 0;
 }

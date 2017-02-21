@@ -29,33 +29,6 @@
 <!-- 	</div> -->
 
 
-<c:if test="${jobs_needRating.size() > 0 }">
-	
-	<div id="completedJobs_needRating_Container" class="row">
-		<div id="completedJobs_needRating">
-			<p>Completed Jobs Requiring Your Rating</p>
-			<table class="main-table-style">
-				<thead>
-					<tr>
-						<th>Job Name</th>
-						<th>Completion Date</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${jobs_needRating }" var="job">
-						<td><a class="accent"
-							   href="/JobSearch/job/${job.id }?c=profile-complete&p=1">
-								${job.jobName }</a>
-						</td>
-						<td>${job.stringEndDate }</td>
-						<td><a href="/JobSearch/job/${job.id }/rate-employer">Rate Employer</a>
-					</c:forEach>
-				</tbody>
-			</table>
-		</div>
-	</div>
-</c:if>
 				
 	<div class="row">
 	
