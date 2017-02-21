@@ -25,30 +25,27 @@
 			<div class="info-label">Questions</div>
 			<div id="answersContainer" class="info-value">									
 				<c:forEach items="${jobDto.questions }" var="question">
-					<div class="question-container">
+					<div class="question-container" data-question-id="${question.questionId }"
+					 	data-question-format-id="${question.formatId }">
 						${question.text }
 						<div class="answer-container">
 							
 							<c:choose>
-								<c:when test="${question.formatId == 0 }">
+								<c:when test="${question.formatId == 1 }">
 									<div>
-										<label><input type="radio" name="answer-options-${question.questionId }"
-												value="1">Yes</label>
-									</div>
-									<div>
-										<label><input type="radio"	name="answer-options-${question.questionId }"
-												value="0">No</label>
+										<textarea data-question-id="${question.questionId }" rows="3"></textarea>
 									</div>
 								</c:when>
 								
-								<c:when test="${question.formatId == 2 || question.formatId == 3}">
+								<c:when test="${question.formatId == 0 || question.formatId == 2 || question.formatId == 3}">
 									<div class="answer-options-container">
 									<c:forEach items="${question.answerOptions }" var="answerOption">
 										<div class="answer-option">
 											<label>
-												<input type="${question.formatId == 2 ? 'radio' : 'checkbox' }"
+												<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
 													name="answer-options-${question.questionId }"
-													data-id="${answerOption.answerOptionId }">
+													data-id="${answerOption.answerOptionId }"
+													data-question-id="${question.questionId}">
 													${answerOption.text }
 											</label>
 										</div>
