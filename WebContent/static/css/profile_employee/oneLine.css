@@ -4,6 +4,10 @@
 /* 	padding-top: 50px; */
 }
 
+#calendarContainer_both td{
+	padding: 0px
+}
+
 #calendarContainer_both .ui-datepicker-calendar{
 	width: 450px;
 	height: 525px;
@@ -91,7 +95,7 @@ table#openApplications_oneLine tbody tr:hover{
 	background-color: #eaeaea;
 }
 
-table#openApplications_oneLine table.wage-proposal-history-table tbody tr:hover{
+table#openApplications_oneLine table.wage-proposal-history-table tr:hover{
 	background-color: #ffffff;
 }
 

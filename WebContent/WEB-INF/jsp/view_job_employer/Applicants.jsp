@@ -3,7 +3,7 @@
 				
 <c:choose>			
 
-	<c:when test="${empty jobDto.applications}">
+	<c:when test="${empty jobDto.applicationDtos}">
 		<div class="no-data">There are currently no applicants for this job</div>
 	</c:when>
 
@@ -94,7 +94,9 @@
 					</th>
 					<th id="endorsements">Endorsements</th>
 				<c:if test="${jobDto.questions.size() > 0 }">
-					<th id="questions" class="header-dropdown" data-filter-attr="data-answer-option-ids-seleted">
+					<th id="questions" class="header-dropdown"
+						 data-filter-attr="data-answer-option-ids-seleted"
+						 data-must-match-all-filter-values="1">
 						<span data-toggle-id="filterAnswersContainer" >
 							<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
 						</span>					
@@ -105,15 +107,24 @@
 							<table id="table_headerAnswers" class="main-table-style">
 								<thead>
 									<tr class="no-filter">
-										<th>Question</th>
-										<th>Answer</th>												
+										<th id="filterAnswers"></th>
+										<th id="header_question">Question</th>
+										<th id="header_answers">Answer</th>												
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach items="${jobDto.questions }" var="question">
 										<tr class="no-filter">
-											<td>${question.text }</td>
-											<td class="answers-container">
+											<td>															
+												<label>
+													<input type="checkbox" checked
+														name="show-question-${question.questionId }"
+														class="filter-answers">
+														<span>Filter Answers</span>
+												</label>
+											</td>
+											<td class="question">${question.text }</td>
+											<td class="answers answers-container">
 												<div class="checkbox-container">
 													<c:forEach items="${question.answerOptions }"
 															var="answerOption">													
@@ -173,100 +184,51 @@
 				</tr>
 			</thead>
 			<tbody class="vertical-lines">
-			<c:forEach items="${jobDto.applications }" var="application">
-				<tr class="" data-application-status="${application.status }"
-					data-applicant-rating="${application.applicant.rating}"
-					data-application-id="${application.applicationId }"
-					data-is-old="${application.hasBeenViewed }"
-					data-wage-proposal-amount="${application.currentWageProposal.amount }"
-					data-wage-proposal-status="${application.currentWageProposal.status }"
-					data-is-sent-proposal="${application.currentWageProposal.proposedToUserId ==
-												 application.applicant.userId ? '1' : '0'}"
-					data-answer-option-ids-seleted="${application.answerOptionIds_Selected }">
+			<c:forEach items="${jobDto.applicationDtos }" var="applicationDto">
+				<tr class="" data-application-status="${applicationDto.application.status }"
+					data-applicant-rating="${applicationDto.applicantDto.ratingValue_overall}"
+					data-application-id="${applicationDto.application.applicationId }"
+					data-is-old="${applicationDto.application.hasBeenViewed }"
+					data-wage-proposal-amount="${applicationDto.currentWageProposal.amount }"
+					data-wage-proposal-status="${applicationDto.currentWageProposal.status }"
+					data-is-sent-proposal="${applicationDto.currentWageProposal.proposedToUserId ==
+												 applicationDto.applicantDto.user.userId ? '1' : '0'}"
+					data-answer-option-ids-seleted="${applicationDto.answerOptionIds_Selected }">
 					
 					<td>
 						<div class="vert-border">
-							<a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/${application.applicant.userId}/jobs/completed"> ${application.applicant.firstName }</a>
+							<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
+										 ${applicationDto.applicantDto.user.firstName }</a>
 						</div>
 					</td>
 					
 					<td>
-						<div class="">
-							<c:choose>
-								<c:when test="${application.currentWageProposal.status == 1 }">
-								<!-- ****** If the current wage proposal has been accepted-->
-									<div>
-										<fmt:formatNumber type="number" minFractionDigits="2"
-										 maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-										 has been accepted
-									</div>
-								</c:when>						
-								<c:when test="${application.currentWageProposal.proposedToUserId != application.applicant.userId }">
-									<c:set var="param_is_employer" value="1" />
-									<c:set var="param_wage_proposal" value="${application.currentWageProposal }" />
-									<%@ include file="../templates/WageNegotiation.jsp" %>												
-								</c:when>
-								<c:otherwise>					
-									<div class="offer-context">
-										Waiting for applicant															
-									</div>									
-								</c:otherwise>
-							</c:choose>
-						</div>
+						<%@ include file="../wage_proposal/WageProposal.jsp" %>
 					</td>									
 					<td>
 						<div class="vert-border">
-							<span class="dollar-sign">$</span>
-							<fmt:formatNumber type="number" minFractionDigits="2" 
-								maxFractionDigits="2" value="${application.currentWageProposal.amount}"/>
-							
-							<c:if test="${application.wageProposals.size() > 1 }">
-								<span data-toggle-id="wp-history-${application.applicationId }" 
-									class="show-wage-proposal-history glyphicon glyphicon-menu-down"></span>
-								<div id="wp-history-${application.applicationId }" class="dropdown-style">
-									<table class="wage-proposal-history-table">
-										<thead>
-											<tr class="no-filter">
-												<th>Proposed By</th>
-												<th>Amount</th>
-											</tr>
-										</thead>
-										<tbody>
-											<c:forEach items="${application.wageProposals }" var="wageProposal">
-												<tr class="no-filter ${wageProposal.proposedByUserId == userId ? 'you' : 'not-you' }">
-													<td>${wageProposal.proposedByUserId == userId ? 'You' : 'Applicant' }</td>
-													<td>
-														<span class="dollar-sign">$</span>
-														<fmt:formatNumber type="number" minFractionDigits="2" 
-															maxFractionDigits="2" value="${wageProposal.amount}"/>
-													</td>
-												</tr>
-											</c:forEach>	
-										</tbody>
-									</table>
-								</div>
-							</c:if>
+							<%@ include file="../wage_proposal/History_WageProposals.jsp" %>
 						</div>
 					</td>
 					<td>
 						<div class="vert-border">
-						 	${application.applicant.rating}
+						 	${applicationDto.applicantDto.ratingValue_overall}
 						 </div>
 					</td>
 					<td>		
 						<div class="vert-border">						
-						<c:forEach items="${application.applicant.endorsements }" var="endorsement">
+<%-- 						<c:forEach items="${application.applicant.endorsements }" var="endorsement"> --%>
 						
-							<div class="endorsement">													
-								${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span>
-							</div>
-						</c:forEach>
+<!-- 							<div class="endorsement">													 -->
+<%-- 								${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span> --%>
+<!-- 							</div> -->
+<%-- 						</c:forEach> --%>
 						</div>
 					</td>	
 				<c:if test="${jobDto.questions.size() > 0 }">
 					<td class="left">
 						<div class="vert-border">
-						<c:forEach items="${application.questions }" var="question">
+						<c:forEach items="${applicationDto.questions }" var="question">
 							<div data-question-id="${question.questionId }" class="question-container">
 								<div class="question">${question.text }</div>										
 								<div class="answer">
@@ -288,7 +250,7 @@
 					<td class="">
 						<div class="application-status-container">
 							<c:choose>
-								<c:when test="${application.status == 1 }">
+								<c:when test="${applicationDto.application.status == 1 }">
 								<button id="" value="1" class="active">Not Considering</button>
 								</c:when>
 								<c:otherwise>
@@ -296,7 +258,7 @@
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
-								<c:when test="${application.status == 2 }">
+								<c:when test="${applicationDto.application.status == 2 }">
 								<button id="" value="2" class="active">Considering</button>
 								</c:when>
 								<c:otherwise>

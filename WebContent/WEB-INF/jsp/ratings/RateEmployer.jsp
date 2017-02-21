@@ -59,7 +59,7 @@
 <%-- 						</c:forEach> --%>
 					</td>
 					
-					<td><textarea class="comment" rows="3">${employeeDto.rating.comment }</textarea></td>
+					<td><textarea class="comment" rows="3">${employeeDto.ratingDto.comment }</textarea></td>
 					
 				</tr>		
 			</tbody>

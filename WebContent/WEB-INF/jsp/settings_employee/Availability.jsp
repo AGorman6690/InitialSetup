@@ -96,8 +96,16 @@
 				
 				</div>	
 			</div>
+			<div id="legendContainer">
+				<div>
+					<span id="legend_unsaved" class="legend"></span><span>Unsaved Availability</span>
+				</div>
+				<div>
+					<span id="legend_saved" class="legend"></span>Saved Availability
+				</div>
+			</div>			
 		</div>			
-		
+
 		<div id="calendarContainers" class="container">
 <!-- 			<div id="januaryCal" class="calendar-container" > -->
 <!-- 				<div class="calendar" data-min-date="01/01/2017"></div> -->

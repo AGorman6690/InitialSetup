@@ -3,6 +3,7 @@ package com.jobsearch.job.service
 import java.util.List
 
 import com.jobsearch.application.service.Application
+import com.jobsearch.application.service.ApplicationDTO
 import com.jobsearch.category.service.Category;
 import com.jobsearch.model.FailedWageNegotiationDTO
 import com.jobsearch.model.JobSearchUser;
@@ -26,6 +27,8 @@ public class JobDTO {
 
 	 Job job
 	 
+	 Long endDate_milliseconds
+	 
 	 Integer durationDays
 	 double durationHours
 	 
@@ -43,7 +46,11 @@ public class JobDTO {
 	 int newApplicationCount
 	 List<JobSearchUser> applicants
 	 List<Application> applications
-	
+	 Application application
+	 
+	 List<ApplicationDTO> applicationDtos
+
+	 
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
 	 RatingDTO ratingDto

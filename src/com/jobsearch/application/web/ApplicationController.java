@@ -32,13 +32,6 @@ public class ApplicationController {
 	JobServiceImpl jobService;
 
 
-	@RequestMapping(value = "/applications/job/{jobId}", method = RequestMethod.GET)
-	@ResponseBody
-	public String getApplicationsByJob(@PathVariable(value = "jobId") int jobId){
-		return JSON.stringify(applicationService.getApplicationsByJob(jobId));
-	}
-
-
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
 	public void updateStatus(@RequestBody ApplicationDTO applicationDto) {
@@ -46,31 +39,44 @@ public class ApplicationController {
 								applicationDto.getNewStatus());
 	}
 
-	@RequestMapping(value = "/desired-pay/counter", method = RequestMethod.POST)
+	@RequestMapping(value = "/wage-proposal/counter", method = RequestMethod.POST)
 	@ResponseBody
 	public void counterOffer(@RequestBody WageProposalCounterDTO dto, HttpSession session) {
 
 		applicationService.insertCounterOffer(dto, session);
 	}
 
-	@RequestMapping(value = "/desired-pay/accept", method = RequestMethod.POST)
+	@RequestMapping(value = "/wage-proposal/accept/employer", method = RequestMethod.POST)
 	@ResponseBody
-	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	public String acceptOffer_Employer(@RequestParam(name = "wageProposalId", required = true) int wageProposalId,
+										@RequestParam(name = "days", required = false) Integer days,
+										@RequestParam(name = "hours", required = false) Integer hours,
+										@RequestParam(name = "minutes", required = false) Integer minutes,
+										HttpSession session) {
 
-		applicationService.acceptWageProposal(wageProposalId);
+		applicationService.acceptWageProposal_Employer(wageProposalId, session, days, hours, minutes);
 
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
 
 	}
 
-	@RequestMapping(value = "/desired-pay/decline", method = RequestMethod.POST)
-	@ResponseBody
-	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId) {
+	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)
+	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
+								HttpSession session) {
 
-		applicationService.declineWageProposalStatus(wageProposalId);
+		applicationService.acceptWageProposal_Employee(wageProposalId, session);
 
-		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
-		return JSON.stringify(wageProposal);
+		return "redirect:/user/profile";
+
+	}
+	
+	@RequestMapping(value = "/wage-proposal/decline", method = RequestMethod.GET)
+	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
+								HttpSession session) {
+
+		applicationService.declineWageProposalStatus(wageProposalId, session);
+
+		return "redirect:/user/profile";
 	}
 }

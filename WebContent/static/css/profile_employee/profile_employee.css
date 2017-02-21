@@ -88,3 +88,11 @@
 #completedJobs_needRating table{
 	margin-left:25px;
 }
+
+.response-for-approval-container span{
+	padding: 0px 8px;
+}
+
+.response-for-approval-container{
+	width: 100%;
+}

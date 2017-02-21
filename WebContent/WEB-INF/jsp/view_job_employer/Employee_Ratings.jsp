@@ -21,7 +21,7 @@
 					<tr>
 						<th id="employee">Employee</th>
 						<th id="rating">Rating</th>
-						<th id="endorsements">Endorsements</th>
+<!-- 						<th id="endorsements">Endorsements</th> -->
 						<th id="comment">Comment</th>
 					</tr>
 				</thead>
@@ -30,7 +30,7 @@
 					<tr class="employee-container">
 						<td class="employee" data-id="${employeeDto.user.userId }">${employeeDto.user.firstName }</td>
 						<td class="rate-criteria-container">
-							<c:forEach items="${employeeDto.rating.rateCriteria }" var="rateCriterion">
+							<c:forEach items="${employeeDto.ratingDto.rateCriteria }" var="rateCriterion">
 								<div class="rate-criterion" data-id="${rateCriterion.rateCriterionId }"
 										 data-value="${rateCriterion.value }">
 									
@@ -62,25 +62,25 @@
 	
 							</c:forEach>
 						</td>
-						<td>
-							<div class="endorsementsContainer">
-							<c:forEach items="${jobDto.categories }" var="category">
+<!-- 						<td> -->
+<!-- 							<div class="endorsementsContainer"> -->
+<%-- 							<c:forEach items="${jobDto.categories }" var="category"> --%>
 								
-								<c:set var="isCategoryEndorsed" value="0" />
-								<c:forEach items="${employeeDto.rating.endorsements }" var="endorsement">
-									<c:if test="${endorsement.categoryId == category.id}">
-										<c:set var="isCategoryEndorsed" value="1" />
-									</c:if>
-								</c:forEach>
+<%-- 								<c:set var="isCategoryEndorsed" value="0" /> --%>
+<%-- 								<c:forEach items="${employeeDto.rating.endorsements }" var="endorsement"> --%>
+<%-- 									<c:if test="${endorsement.categoryId == category.id}"> --%>
+<%-- 										<c:set var="isCategoryEndorsed" value="1" /> --%>
+<%-- 									</c:if> --%>
+<%-- 								</c:forEach> --%>
 								
-								<div data-id="${category.id }" data-value="${isCategoryEndorsed }" class="endorsement">
-									<span class="glyphicon ${isCategoryEndorsed == 1 ? 'glyphicon-ok' : 'glyphicon-remove' }"></span>
-									${category.name }
-								</div>
-							</c:forEach>
-							</div>
-						</td>						
-						<td><textarea class="comment" rows="3">${employeeDto.rating.comment }</textarea></td>
+<%-- 								<div data-id="${category.id }" data-value="${isCategoryEndorsed }" class="endorsement"> --%>
+<%-- 									<span class="glyphicon ${isCategoryEndorsed == 1 ? 'glyphicon-ok' : 'glyphicon-remove' }"></span> --%>
+<%-- 									${category.name } --%>
+<!-- 								</div> -->
+<%-- 							</c:forEach> --%>
+<!-- 							</div> -->
+<!-- 						</td>						 -->
+						<td><textarea class="comment" rows="3">${employeeDto.ratingDto.comment }</textarea></td>
 						
 					</tr>
 				</c:forEach>				

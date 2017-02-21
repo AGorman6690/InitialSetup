@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
+import com.jobsearch.google.Coordinate;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -132,6 +134,7 @@ public class UserRepository {
 				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
 				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 				e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
+				e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
 
 				Profile profile = new Profile();
 				profile.setName(rs.getString("p.ProfileType"));
@@ -142,23 +145,6 @@ public class UserRepository {
 		});
 	}
 
-	public List<Profile> ProfilesRowMapper(String sql, Object[] args) {
-
-		List<Profile> list;
-
-		list = jdbcTemplate.query(sql, args, new RowMapper<Profile>() {
-
-			@Override
-			public Profile mapRow(ResultSet rs, int rownumber) throws SQLException {
-				Profile e = new Profile();
-				e.setId(rs.getInt(1));
-				e.setName(rs.getString(2));
-				return e;
-			}
-		});
-
-		return list;
-	}
 
 	public ArrayList<Profile> ProfilesRowMapper(String sql) {
 
@@ -369,18 +355,30 @@ public class UserRepository {
 	}
 
 	public List<Double> getRatingForJob(int userId, int jobId) {
-		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ?";
+		String sql = "SELECT Value FROM rating"
+				+ " WHERE UserId = ?"
+				+ " AND JobId = ?";
+		
 		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Double.class);
 	}
 	
 
 	public double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
-		String sql = "SELECT Value FROM rating WHERE UserId = ? AND JobId = ? AND RateCriterionId = ?";
+		
+		String sql = "SELECT Value FROM rating"
+				+ " WHERE UserId = ?"
+				+ " AND JobId = ?"
+				+ " AND RateCriterionId = ?";
+		
+		Double d = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
 		return jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
 	}
 
 	public List<Integer> getEndorsementCategoryIds(int userId) {
-		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? GROUP BY CategoryId";
+		String sql = "SELECT CategoryId FROM endorsement"
+				+ " WHERE UserId = ?"
+				+ " GROUP BY CategoryId";
+		
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, Integer.class);
 	}
 
@@ -598,10 +596,6 @@ public class UserRepository {
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
-	public List<JobSearchUser> getEmployers() {
-		String sql = "SELECT * FROM user WHERE ProfileId = 2";
-		return this.JobSearchUserRowMapper(sql, new Object[] {});
-	}
 
 
 
@@ -633,6 +627,44 @@ public class UserRepository {
 						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
 						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
 
+	}
+
+	public Double getRatingValue_ByCategory(int userId, int categoryId) {
+
+		String sql = "SELECT Avg(r.value) FROM rating r"
+				+ " INNER JOIN job j on j.JobId = r.JobId"
+				+ " INNER JOIN job_category jc on jc.JobId = j.JobId"
+				+ " AND r.UserId = ?"
+				+ " AND r.Value != -1"
+				+ " AND jc.CategoryId = ?";				
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId }, Double.class);
+
+	}
+
+	public void updateHomeLocation(JobSearchUser user_edited, Coordinate coordinate) {
+		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
+				+ " HomeZipCode = ? WHERE UserId = ?";
+
+		jdbcTemplate.update(sql,
+				new Object[] { coordinate.getLatitude(), coordinate.getLongitude(),
+						user_edited.getHomeCity(), user_edited.getHomeState(),
+						user_edited.getHomeZipCode(), user_edited.getUserId() });
+		
+	}
+
+	public void updateMaxDistanceWillingToWork(int userId, Integer maxWorkRadius) {
+		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
+
+		jdbcTemplate.update(sql,
+				new Object[] { maxWorkRadius, userId });
+	}
+
+	public void updateMinimumDesiredPay(int userId, Double minimumDesiredPay) {
+		String sql = "UPDATE user SET MinimumPay = ? WHERE UserId = ?";
+
+		jdbcTemplate.update(sql,
+				new Object[] { minimumDesiredPay, userId });
 	}
 
 }

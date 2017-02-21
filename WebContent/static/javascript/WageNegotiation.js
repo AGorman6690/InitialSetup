@@ -46,13 +46,50 @@ $(document).ready(function(){
 
 		//Get the wage proposal id and proposal amount
 		var wageProposalId = $(counterOfferContainer).attr("id");
-//		var proposalAmount = $($(counterOfferContainer).find("#amount")[0]).html();
-		
-//		updateDOM($(counterOfferContainer), $(responseNotification),"Accepted " + twoDecimalPlaces(proposalAmount) + " offer");
 		
 		$.ajax({
 			type : "POST",
-			url :"/JobSearch/desired-pay/accept?wageProposalId=" + wageProposalId,
+			url :"/JobSearch//wage-proposal/employee/accept?wageProposalId=" + wageProposalId,
+			headers : getAjaxHeaders(),
+			contentType : "application/json",	
+			dataType : "json",
+		}).done(function(wageProposal) {			
+			updateDOM($(counterOfferContainer), $(responseNotification),
+						"Accepted " + twoDecimalPlaces(wageProposal.amount) + " offer");
+			
+			
+			// This is hackish.
+			// Consider using hyperlinks for the wage proposal actions and not ajax.
+			// Ajax is not necessary.
+			// Then the page can be reloaded and show the effects of accepting.
+			$("#nav_profile").click();
+			
+		}).error(function() {
+			
+		});		
+	})
+	
+	$(".send-pre-hire").click(function(){
+		
+		//Read the DOM.
+		var counterOfferContainer = $(this).parents(".counter-offer-container")[0];
+		var responseNotification = $(counterOfferContainer).siblings(".sent-response-notification")[0];		
+
+		//Get the wage proposal id and proposal amount
+		var wageProposalId = $(counterOfferContainer).attr("id");
+		
+		var days = $(counterOfferContainer).find(".time-container input.days-pre-hire").val();
+		var hours = $(counterOfferContainer).find(".time-container input.hours-pre-hire").val();
+		var minutes = $(counterOfferContainer).find(".time-container input.minutes-pre-hire").val();
+		
+		if(days == undefined) days = 0;
+		if(hours == undefined) hours = 0;
+		if(minutes == undefined) minutes = 0;
+		
+		$.ajax({
+			type : "POST",
+			url :"/JobSearch/employer/accept?wageProposalId=" + wageProposalId + "&days=" + days
+										+ "&hours=" + hours + "&minutes=" + minutes,			
 			headers : getAjaxHeaders(),
 			contentType : "application/json",	
 			dataType : "json",
@@ -65,6 +102,38 @@ $(document).ready(function(){
 		});		
 	})
 	
+	$(".show-post-hire-action").click(function(){
+		var $response = $(this).closest(".counter-offer-response");
+		var $postHireAction = $response.find(".post-hire-action"); 
+
+		$postHireAction.toggle();
+		$response.find(".re-counter-group").eq(0).toggle();
+		$response.find(".decline-counter-container").eq(0).toggle();
+
+	})
+	
+	$(".cancel-pre-hire").click(function(){
+		
+		var $response = $(this).closest(".counter-offer-response");
+		$response.find(".post-hire-action").eq(0).hide();
+		$response.find(".re-counter-group").eq(0).show();
+		$response.find(".decline-counter-container").eq(0).show();		
+		$response.find(".time-container input").each(function(){
+			$(this).val("");
+		})
+		
+		
+	})
+	
+	
+	$(".re-counter-container").click(function(){
+		var $response = $(this).closest(".counter-offer-response");
+
+		$response.find(".pre-hire").eq(0).toggle();
+		$response.find(".decline-counter-container").eq(0).toggle();	
+		$response.find(".re-counter-amount-container").eq(0).toggle();
+	})
+	
 //	$(".re-counter").click(function(){
 //		var $e = $($(this).siblings(".re-counter-amount-container")[0]); 
 //
@@ -74,10 +143,15 @@ $(document).ready(function(){
 //	})
 	
 	$(".cancel-counter-offer").click(function(){
-		var $e = $($(this).parents(".re-counter-amount-container")[0]);
-		slideUp($e, 500);
+//		var $e = $($(this).parents(".re-counter-amount-container")[0]);
+//		slideUp($e, 500);
 //		toggleClasses($e, "hide-element", "show-block");
 		$($(this).siblings("input")[0]).val("");
+		
+		var $response = $(this).closest(".counter-offer-response");
+		$response.find(".pre-hire").eq(0).toggle();
+		$response.find(".decline-counter-container").eq(0).toggle();
+		$response.find(".re-counter-amount-container").eq(0).toggle();
 	})
 
 	$(".send-counter-offer").click(function(){
@@ -86,7 +160,7 @@ $(document).ready(function(){
 		var counterOfferContainer = $(this).parents(".counter-offer-container")[0];
 		var responseNotification = $(counterOfferContainer).siblings(".sent-response-notification")[0];
 		
-		var counterAmount = $($(counterOfferContainer).find("input")[0]).val();	
+		var counterAmount = $(counterOfferContainer).find(".re-counter-amount-container input").eq(0).val();	
 		
 		//Create dto
 		var wageProposalCounterDTO = {};

@@ -1,14 +1,14 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/DatePicker.jsp"%>
-
+<%@ include file="../includes/resources/JobInformation.jsp"%>
 
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 
 	<script src="<c:url value="/static/javascript/SideBar.js"/>"></script>
-	<script src="<c:url value="/static/javascript/Map.js" />"></script>
-	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
+
+
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
@@ -17,7 +17,8 @@
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/jobInfo.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employee/viewJob_Employee.css" />
+
 
 		
 	<c:if test="${context == 'find' }">
@@ -36,8 +37,18 @@
 		</div>
 		
 		<div class="col-sm-10" id="sectionContainers">
+			<c:if test="${context == 'find' && !empty jobDto.application}">
+				<div id="applicationStatus">						
+					${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
+						jobDto.application.status == 1 ? "Application has been declined" :
+						jobDto.application.status == 4 ? "Application is waiting for your approval" :
+						jobDto.application.status == 5 ? "Application has been withdrawn" :
+						"Application has been accepted" }						
+				</div>
+			</c:if>
 			<div id="jobInfoContainer" class="section-container">
 				<div class="section-body">
+
 					<h4>Job Information</h4>
 					<div class="body-element-container">				
 						<%@include file="../templates/JobInformation.jsp"%>						
@@ -45,9 +56,8 @@
 				</div>
 			</div>
 
-		<c:choose>
-		
-			<c:when test="${context == 'find'}">
+		<c:choose>		
+			<c:when test="${context == 'find' && empty jobDto.application}">
 				<div id="applyContainer" class="section-container ">
 					<%@ include file="./ApplyContainer.jsp" %>
 				</div>

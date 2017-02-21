@@ -3,7 +3,7 @@
 	position:absolute;
 	z-index: 1000;
 	background-color: #ffffff;
-	border: 2px solid #163b3d;
+	border: 1px solid #adadad;
 	width: 200px;
 	font-size:15px;
 	padding:20px;
@@ -17,6 +17,7 @@
 	display:block;
 	text-align:left;
 	font-weight: 100;
+	margin-bottom: 10px;	
 }
 
 th[data-filter-attr]{

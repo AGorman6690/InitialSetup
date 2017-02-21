@@ -43,7 +43,7 @@
 	padding-right:10px;
 }
 
-.group input[type=input],
+.group input[type=text],
 .group input[type=password],
 .group input[type=email]{
 	width:225px;

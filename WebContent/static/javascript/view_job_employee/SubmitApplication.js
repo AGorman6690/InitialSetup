@@ -141,19 +141,18 @@
 	}
 	
 	
-	function getApplicationRequestDTO(){
+	function getApplicationDTO(){
 		
-		var jobId = $("#jobId").val();
-		var dto = {};
+		var applicationDto = {};
 		
-		dto.jobId = jobId;
+		applicationDto.jobId = $("#jobId").val();
 		
-		dto.wageProposal = {};
-		dto.wageProposal = getWageProposal();
-		dto.answers = [];
-		dto.answers = getAnswers();
+		applicationDto.wageProposal = {};
+		applicationDto.wageProposal = getWageProposal();
+		applicationDto.answers = [];
+		applicationDto.answers = getAnswers();
 	
-		return dto;
+		return applicationDto;
 	
 	};
 	
@@ -230,24 +229,15 @@
 	}
 	
 	function apply(){
-		
-		var applicationRequestDTO = {};
-		var headers = {};
-		
+
 		if(isInputValid()){
-			
-			//Get dto			
-			applicationRequestDTO = getApplicationRequestDTO();
-			
-			//Submit the apppliation			
-			headers[$("meta[name='_csrf_header']").attr("content")] = $(
-					"meta[name='_csrf']").attr("content");
+
 			$.ajax({
 				type : "POST",
 				url : environmentVariables.LaborVaultHost + '/JobSearch/job/apply',
-				headers : headers,
+				headers : getAjaxHeaders(),
 				contentType : "application/json",
-				data : JSON.stringify(applicationRequestDTO),
+				data : JSON.stringify(getApplicationDTO()),
 			}).done(function() {
 				redirectToProfile();
 			}).error(function() {

@@ -1,19 +1,20 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 <%@ include file="../includes/resources/PageContentManager.jsp" %>
+<%@ include file="../includes/resources/WageProposal.jsp" %>
+<%@ include file="../includes/resources/JobInfoModal.jsp" %>
+<%@ include file="../includes/resources/JobInformation.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/employeeProfile.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wageNegotiation.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/calendar.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee.css" />
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/oneLine.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
+
 
 <script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script>
 <script src="<c:url value="/static/javascript/profile_employee/ToggleCalendar.js" />"></script>							
-<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
+
 
 
 <div class="container">
@@ -28,33 +29,6 @@
 <!-- 	</div> -->
 
 
-<c:if test="${jobs_needRating.size() > 0 }">
-	
-	<div id="completedJobs_needRating_Container" class="row">
-		<div id="completedJobs_needRating">
-			<p>Completed Jobs Requiring Your Rating</p>
-			<table class="main-table-style">
-				<thead>
-					<tr>
-						<th>Job Name</th>
-						<th>Completion Date</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:forEach items="${jobs_needRating }" var="job">
-						<td><a class="accent"
-							   href="/JobSearch/job/${job.id }?c=profile-complete&p=1">
-								${job.jobName }</a>
-						</td>
-						<td>${job.stringEndDate }</td>
-						<td><a href="/JobSearch/job/${job.id }/rate-employer">Rate Employer</a>
-					</c:forEach>
-				</tbody>
-			</table>
-		</div>
-	</div>
-</c:if>
 				
 	<div class="row">
 	
@@ -64,24 +38,19 @@
 
 		
 			<div id="applicationDetails">
-			<c:forEach items="${applicationDtos }" var="applicationDto">
-			
-<%-- 				<c:if test="${applicationDto.application.status < 3 && --%>
-<%-- 								applicationDto.job.status < 2}"> --%>
-								
+				
+				<c:forEach items="${applicationDtos }" var="applicationDto">
 					<div class="application" data-id="${applicationDto.application.applicationId }"
-											 data-job-name="${applicationDto.job.jobName }"
-											 data-job-id="${applicationDto.job.id}"
-											 data-job-status="${applicationDto.job.status}">
-											 
-					<c:forEach items="${applicationDto.job.workDays }" var="workDay">
-						<div class="work-day" data-date="${workDay.stringDate }"></div>
-					</c:forEach>
+							 data-job-name="${applicationDto.jobDto.job.jobName }"
+							 data-job-id="${applicationDto.jobDto.job.id}"
+							 data-job-status="${applicationDto.jobDto.job.status}">
+									
+						<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
+							<div class="work-day" data-date="${workDay.stringDate }"></div>
+						</c:forEach>
 					
 					</div>
-<%-- 				</c:if> --%>
-					
-			</c:forEach>				
+					</c:forEach>				
 			</div>	
 			
 			<div id="employmentDetails">
@@ -338,6 +307,8 @@ function test(){
 
 </script>
 
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">
+</script>
 
 
 <%@ include file="../includes/Footer.jsp"%>

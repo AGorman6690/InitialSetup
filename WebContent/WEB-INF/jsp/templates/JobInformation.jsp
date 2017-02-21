@@ -92,19 +92,19 @@
 		
 		
 					
-		<c:choose>
-			<c:when test="${jobDto.job.durationTypeId == 1 }">
-				<c:set var="dateLabel" value="Date" />
-				<c:set var="durationValue" value="${jobDto.durationHours } hours"/>
-			</c:when>
-			<c:when test="${jobDto.job.durationTypeId == 2 }">
-				<c:set var="dateLabel" value="Dates" />
-				<c:set var="durationValue" value="${jobDto.durationDays } days"/>
-			</c:when>
-			<c:otherwise>
-				<c:set var="dateLabel" value="Start Date" />
-			</c:otherwise>
-		</c:choose>	
+<%-- 		<c:choose> --%>
+<%-- 			<c:when test="${jobDto.job.durationTypeId == 1 }"> --%>
+<%-- 				<c:set var="dateLabel" value="Date" /> --%>
+<%-- 				<c:set var="durationValue" value="${jobDto.durationHours } hours"/> --%>
+<%-- 			</c:when> --%>
+<%-- 			<c:when test="${jobDto.job.durationTypeId == 2 }"> --%>
+<%-- 				<c:set var="dateLabel" value="Dates" /> --%>
+<%-- 				<c:set var="durationValue" value="${jobDto.durationDays } days"/> --%>
+<%-- 			</c:when> --%>
+<%-- 			<c:otherwise> --%>
+<%-- 				<c:set var="dateLabel" value="Start Date" /> --%>
+<%-- 			</c:otherwise> --%>
+<%-- 		</c:choose>	 --%>
 								
 	
 				
@@ -120,7 +120,7 @@
 		
 		<div class="info-container row">
 			<div class="info-label col-sm-4">Duration</div>
-			<div class="info-value col-sm-8">${durationValue }</div>
+			<div class="info-value col-sm-8">${jobDto.durationDays }</div>
 		</div>
 	
 																	
@@ -129,7 +129,7 @@
 					
 		<div class="info-container row">
 			<div class="info-label col-sm-4">
-				${dateLabel }
+				Dates
 			</div>
 			<div class="info-value col-sm-8">
 				<div id="workDays">

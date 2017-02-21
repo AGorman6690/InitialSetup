@@ -30,3 +30,11 @@ select:disabled{
 .checkbox-container label.select-all-container{
 	margin-bottom:15px;
 }
+
+input:disabled:hover{
+	cursor:default;
+}
+
+.show-disabled label{
+	cursor:default;
+}

@@ -5,5 +5,5 @@ public class RateCriterion {
 	String name
 	int employeeId
 	int jobId
-	double value
+	Double value
 }

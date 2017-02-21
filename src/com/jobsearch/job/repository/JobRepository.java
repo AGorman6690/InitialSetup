@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.FindJobFilterDTO;
@@ -69,7 +70,8 @@ public class JobRepository {
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
 					e.setDurationTypeId(rs.getInt("DurationTypeId"));
-
+					e.setStatus(rs.getInt("Status"));
+					
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
 					e.setStartTime(jobService.getStartTime(jobId));
@@ -103,11 +105,7 @@ public class JobRepository {
 					}
 					
 					
-					
-					
-					e.setStatus(rs.getInt("Status"));
-					
-					
+									
 					
 					//The default **string** time format is, for example,: "3:30 PM"
 					if (e.getStartTime() != null){
@@ -1020,6 +1018,23 @@ public class JobRepository {
 	public List<Skill> getSkills_ByType(int jobId, int type) {
 		String sql = "SELECT * FROM skill WHERE JobId = ? AND Type = ?";
 		return SkillRowMapper(sql, new Object[]{ jobId, type });
+	}
+
+	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
+
+		String sql = "SELECT COUNT(*) FROM job j"
+					+ " INNER JOIN job_category jc ON jc.JobId = j.JobId"
+					+ " INNER JOIN application a ON a.JobId = j.JobId"
+					+ " WHERE j.Status = ?"
+					+ " AND a.UserId = ?"
+					+ " AND a.Status = ?"
+					+ " AND jc.CategoryId = ?";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ Job.STATUS_PAST,
+																userId,
+																Application.STATUS_ACCEPTED,
+																categoryId }, Integer.class);
+
 	}
 
 

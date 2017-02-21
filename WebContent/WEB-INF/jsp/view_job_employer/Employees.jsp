@@ -21,7 +21,7 @@
 					<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/
 							${userDto.user.userId}/jobs/completed"> ${userDto.user.firstName }</a></td>
 					<td>${userDto.wage }</td>
-					<td>${userDto.rating.value }</td>
+					<td>${userDto.ratingDto.value }</td>
 				</tr>	
 			</c:forEach>						
 			</tbody>

@@ -1,5 +1,7 @@
 package com.jobsearch.application.service
 
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.List
 
 import com.jobsearch.job.service.Job
@@ -14,24 +16,14 @@ public class Application {
 	int userId
 	int jobId
 	int hasBeenViewed
-	String jobName
-	Job job
-	JobSearchUser applicant
-	List<Question> questions
-	List<Integer> answerOptionIds_Selected
-	List<WageProposal> wageProposals
-	WageProposal wageProposal
-	WageProposal currentWageProposal
-	float currentDesiredWage
-	List<Answer> answers
+	LocalDateTime employerAcceptedDate
+	LocalDateTime expirationDate
 	
-	
-
-
-	int status
-	
+	int status	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;
 	public static Integer STATUS_CONSIDERED = 2;
 	public static Integer STATUS_ACCEPTED = 3;
+	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 4;
+	public static Integer STATUS_CANCELLED_DUE_TO_TIME_CONFLICT = 5;
 }

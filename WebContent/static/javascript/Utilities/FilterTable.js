@@ -29,27 +29,20 @@ $(document).ready(function(){
 
 	
 	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){
-		
-//		closeOtherDropdowns($(this).closest(".dropdown-container").attr("id"));		
+	
 		
 		var $th = $(this).closest("th[data-filter-attr]");
-//		var $filterContainer = $(this).closest(".filter-container");
 		var $table = $(this).closest("table");
 				
 		var filters = [];
 		filters= getFilters($table);
-				
-//		var filterValues = getFilterValues($filterContainer);
-//		var filterAttrName = $th.attr("data-filter-attr");
-		
+
 		filterTableRows(filters, $table);
 		
 		$th.find("span[data-toggle-id]").eq(0).click();
 	})
 	
 	$("th[data-sort-attr] input[type=radio]").change(function(){
-		
-//		closeOtherDropdowns($(this).closest(".dropdown-container").attr("id"));
 		
 		var $th = $(this).closest("th[data-sort-attr]");
 		var $table = $(this).closest("table");		
@@ -58,7 +51,6 @@ $(document).ready(function(){
 		
 		var sortedRows = getSortedRows(doSortAscending, sortAttr, $table);		
 		sortTable(sortedRows, $table);
-		
 		
 		resetOtherSortHeaders($th, $table);
 		
@@ -172,6 +164,7 @@ function getFilters($table){
 			filter = {};
 			filter.attr = filterAttr;
 			filter.values = filterValues;
+			filter.mustMatchAllValues = $(this).attr("data-must-match-all-filter-values");
 			filters.push(filter);	
 		}
 		
@@ -197,17 +190,36 @@ function filterTableRows(appliedFilters, $table){
 			// Per the current filter, get the row's value for this filter
 			filterValue_currentRow = $(row).attr(appliedFilter.attr);
 			
-			
+			// ********************************************************
+			// Note:
 			// If the row does not satisfy ALL APPLIED filters,
-			// then the row will be hidden.
+			// then the row will be hidden, hence the "return false" statements
+			// as soon as one of the applied filters is not satisfied. 
+			// ********************************************************
+			
+			// Check if the row has an array of filter vaues
 			if(isStringACommaSeperatedArray(filterValue_currentRow)){
 				
+				// Get the array of values
 				filterValue_currentRow = getArrayFromString(filterValue_currentRow);
 
-				if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
-					doShowRow = false;
-					return false; // exit
+			
+				// If the filter requires the row to satisfy ALL the applied filter values
+				if(appliedFilter.mustMatchAllValues == "1"){
+					if(!doesArrayContainAllValues(filterValue_currentRow, appliedFilter.values)){
+						doShowRow = false;
+						return false; // exit
+					}
 				}
+				
+				// or for the row to satisfy at least one applied filter value
+				else{
+					if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
+						doShowRow = false;
+						return false; // exit
+					}
+				}
+
 			}
 			else if(!doesArrayContainValue(filterValue_currentRow, appliedFilter.values)){
 				doShowRow = false;
