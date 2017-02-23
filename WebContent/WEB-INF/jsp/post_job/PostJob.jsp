@@ -112,12 +112,14 @@
 			</div>
 			
 			<div id="datesContainer" class="section-container">
+			
 				<div class="header row">
 					<p>Dates</p>
 				</div>
 				<div class="row">
 					<div class="label-text col-sm-3">
 						<p>Work Days</p>
+						<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label>
 					</div>
 					<div class="col-sm-9">							
 						<div class="calendar-container wide">

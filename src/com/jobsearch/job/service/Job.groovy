@@ -27,6 +27,7 @@ public class Job {
 	String zipCode
 	Float lat
 	Float lng
+	Boolean isPartialAvailabilityAllowed
 	
 	//******************************************************
 	//******************************************************

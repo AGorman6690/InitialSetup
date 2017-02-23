@@ -107,6 +107,6 @@
 	<import resource="classpath:spring-security.xml" />
 	<import resource="classpath:spring-register.xml" />
 	<import resource="classpath:spring-file-upload.xml" />
-	<import resource="classpath:spring-velocity.xml" />
+<!-- 	<import resource="classpath:spring-velocity.xml" /> -->
 
 </beans>

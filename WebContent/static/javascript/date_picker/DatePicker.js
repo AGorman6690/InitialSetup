@@ -8,6 +8,20 @@ $(document).ready(function(){
 
 
 
+function getDaysFromWorkDays(workDays, daysArray){
+	// Receive an array of work day objects and return
+	// an array of dates
+	
+	daysArray = [];
+	
+	$(workDays).each(function(){
+		daysArray.push(new Date(this.stringDate));
+	})
+	
+	return daysArray;
+	
+}
+
 function clearCalendar($calendar, days){
 	$calendar.find("td.active111").each(function(){
 		$(this).removeClass("active111");
@@ -155,6 +169,21 @@ function isDateAlreadySelected(dateToCheck, days){
 	if(arr.length > 0) return true;
 	else return false;
 	
+}
+
+function getWorkDays_FromSelectedDates($calendar, format){
+	
+	var selectedDates = getSelectedDates($calendar, format)
+	var workDays = [];
+	
+	$(selectedDates).each(function(){
+		var workDay = {};
+		workDay.stringDate = this;
+		
+		workDays.push(workDay);
+	})
+	
+	return workDays;
 }
 
 function getSelectedDates($calendar, format){

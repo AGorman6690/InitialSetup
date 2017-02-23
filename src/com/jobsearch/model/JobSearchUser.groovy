@@ -7,6 +7,7 @@ import java.util.List
 
 
 class JobSearchUser {
+	
 	int userId
 	int profileId
 	String firstName
@@ -17,16 +18,16 @@ class JobSearchUser {
 	String password
 	String matchingPassword
 	Profile profile
-	List<Category> categories
-	List<Job> jobs
-	List<Job> activeJobs
-	List<Job> jobsAppliedTo
-	List<Job> jobsHiredFor
-	List<RateCriterion> ratings
-	List<Endorsement> endorsements
-	Application application
+//	List<Category> categories
+//	List<Job> jobs
+//	List<Job> activeJobs
+//	List<Job> jobsAppliedTo
+//	List<Job> jobsHiredFor
+//	List<RateCriterion> ratings
+//	List<Endorsement> endorsements
+//	Application application
 	double rating
-	List<String> availableDates
+//	List<String> availableDates
 	float homeLat
 	float homeLng
 	String homeCity

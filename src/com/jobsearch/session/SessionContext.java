@@ -44,20 +44,23 @@ public class SessionContext {
 		// *************************************
 		// *************************************
 		JobSearchUser user = SessionContext.getUser(session);
-		if (user == null) {
-			return false;
-		}
-		else if(user.getEmailAddress() == null){
-			return false;
-		}
-		else {
-			if (user.getEmailAddress() == null) {
-				return false;
-			} else {
-				return true;
-			}
-
-		}
+		
+		if(user != null) return true;
+		else return false;
+//		if (user == null) {
+//			return false;
+//		}
+//		else if(user.getEmailAddress() == null){
+//			return false;
+//		}
+//		else {
+//			if (user.getEmailAddress() == null) {
+//				return false;
+//			} else {
+//				return true;
+//			}
+//
+//		}
 	}
 
 	public static void appendToFilteredJobIds(HttpSession session, List<Integer> jobIdsToAdd) {

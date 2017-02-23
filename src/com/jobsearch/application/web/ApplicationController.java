@@ -16,7 +16,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.model.WageProposalCounterDTO;
+import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -41,9 +41,9 @@ public class ApplicationController {
 
 	@RequestMapping(value = "/wage-proposal/counter", method = RequestMethod.POST)
 	@ResponseBody
-	public void counterOffer(@RequestBody WageProposalCounterDTO dto, HttpSession session) {
+	public void counterOffer(@RequestBody WageProposalDTO wageProposalDto, HttpSession session) {
 
-		applicationService.insertCounterOffer(dto, session);
+		applicationService.insertCounterOffer(wageProposalDto, session);
 	}
 
 	@RequestMapping(value = "/wage-proposal/accept/employer", method = RequestMethod.POST)

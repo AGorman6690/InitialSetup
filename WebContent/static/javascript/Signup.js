@@ -196,7 +196,7 @@ function isValidEmail(email){
 
 function executeAjaxCall_signUp(user){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
 		url: '/JobSearch/user/sign-up',
@@ -211,7 +211,7 @@ function executeAjaxCall_signUp(user){
 
 	function _success(newUserDto) {
 		
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 		
 		if(newUserDto.isInvalidNewUser){
 			showInvalidNewUser(newUserDto);
@@ -223,7 +223,7 @@ function executeAjaxCall_signUp(user){
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 	

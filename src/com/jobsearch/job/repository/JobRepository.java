@@ -71,6 +71,7 @@ public class JobRepository {
 					e.setLng(rs.getFloat("Lng"));
 					e.setDurationTypeId(rs.getInt("DurationTypeId"));
 					e.setStatus(rs.getInt("Status"));
+					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
 					
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
@@ -1020,6 +1021,7 @@ public class JobRepository {
 		return SkillRowMapper(sql, new Object[]{ jobId, type });
 	}
 
+	
 	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
 
 		String sql = "SELECT COUNT(*) FROM job j"
@@ -1035,6 +1037,20 @@ public class JobRepository {
 																Application.STATUS_ACCEPTED,
 																categoryId }, Integer.class);
 
+	}
+
+	public int getCount_JobsCompleted_ByUser(int userId) {
+		
+		String sql = "SELECT COUNT(*) FROM job j"
+				+ " INNER JOIN application a ON a.JobId = j.JobId"
+				+ " WHERE j.Status = ?"
+				+ " AND a.UserId = ?"
+				+ " AND a.Status = ?";
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ Job.STATUS_PAST,
+															userId,
+															Application.STATUS_ACCEPTED },
+																Integer.class);
 	}
 
 

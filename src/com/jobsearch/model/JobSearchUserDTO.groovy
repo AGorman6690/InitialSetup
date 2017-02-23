@@ -16,9 +16,13 @@ class JobSearchUserDTO {
 //	
 	RatingDTO ratingDto
 	List<FindJobFilterDTO> savedFindJobFilters;
-	List<JobDTO> jobDtos_jobsCompleted;
+	
 	List<String> availableDays;
 	double wage
+	
+	
+	List<JobDTO> jobDtos_jobsCompleted;
+	int count_jobsCompleted;
 //	
 	double ratingValue_overall
 	List<CategoryDTO> categoryDtos_jobsCompleted

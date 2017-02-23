@@ -1,13 +1,8 @@
 package com.jobsearch.application.service;
 
-import java.nio.file.Watchable;
-import java.time.Clock;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,18 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.application.repository.ApplicationRepository;
-import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.Endorsement;
-import com.jobsearch.model.FailedWageNegotiationDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.model.WageProposalCounterDTO;
+import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -265,7 +257,7 @@ public class ApplicationServiceImpl {
 		return repository.getWageProposal(wageProposalId);
 	}
 
-	public void insertCounterOffer(WageProposalCounterDTO dto, HttpSession session) {
+	public void insertCounterOffer(WageProposalDTO dto, HttpSession session) {
 	
 
 		// As received from the browser, get the wage proposal to counter
@@ -540,59 +532,7 @@ public class ApplicationServiceImpl {
 		}
 	}
 
-	public List<FailedWageNegotiationDTO> getFailedWageNegotiationDTOsByJob(Job job) {
 
-		List<FailedWageNegotiationDTO> result = new ArrayList<FailedWageNegotiationDTO>();
-
-		// Query the database for all the job's failed wage proposals
-		List<WageProposal> failedWageProposals = repository.getFailedWageProposalsByJob(job.getId());
-
-		// Create the failed wage negotiation DTOs
-		for (WageProposal failedWageProposal : failedWageProposals) {
-
-			// Create the dto
-			FailedWageNegotiationDTO dto = new FailedWageNegotiationDTO();
-
-			// Set the failed wage proposal
-			dto.setFailedWageProposal(failedWageProposal);
-
-			// Set the "other user" involved in the failed wage proposal
-			dto.setOtherUser(this.getOtherUserInvolvedInWageProposal(failedWageProposal, job.getUserId()));
-
-			// Add the dto to the results
-			result.add(dto);
-
-		}
-
-		return result;
-	}
-
-	public List<FailedWageNegotiationDTO> getFailedWageNegotiationsDTOsByUser(int userId) {
-
-		List<FailedWageNegotiationDTO> result = new ArrayList<FailedWageNegotiationDTO>();
-
-		// Query the database failed wage proposals.
-		// Only failed proposal pertaining to jobs still accepting applications
-		// is returned
-		List<WageProposal> failedWageProposals = repository.getFailedWageProposalsByUser(userId);
-
-		// Set the dtos
-		for (WageProposal failedWageProposal : failedWageProposals) {
-
-			// Create the dto
-			FailedWageNegotiationDTO dto = new FailedWageNegotiationDTO();
-
-			// Set the dto
-			dto.setFailedWageProposal(failedWageProposal);
-			dto.setJob(jobService.getJob_ByApplicationId(failedWageProposal.getApplicationId()));
-
-			// Add the dto to the result
-			result.add(dto);
-
-		}
-		return result;
-
-	}
 
 	public JobSearchUser getOtherUserInvolvedInWageProposal(WageProposal failedWageProposal, int dontReturnThisUserId) {
 

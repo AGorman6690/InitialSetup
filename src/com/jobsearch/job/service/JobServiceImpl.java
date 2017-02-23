@@ -34,6 +34,7 @@ import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
+import com.jobsearch.utilities.VerificationUtility;
 
 
 @Service
@@ -162,7 +163,7 @@ public class JobServiceImpl {
 
 	}
 
-	private int getDateId(String date) {
+	public int getDateId(String date) {
 		return repository.getDateId(date);
 	}
 
@@ -347,32 +348,6 @@ public class JobServiceImpl {
 		return repository.getJobsByStatusByEmployee(userId, 0);
 	}
 
-	public List<JobDTO> getJobsWithFailedWageNegotiations(int userId, List<Job> jobs) {
-
-		List<JobDTO> result = new ArrayList<JobDTO>();
-
-		for(Job job : jobs){
-
-			//Create a job dto
-			JobDTO jobDto = new JobDTO();
-
-			//Set the dto's job object
-			jobDto.setJob(job);
-
-			//Get the failed wage proposals for the job
-			jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));;
-
-			//If there are failed negotiations, add the dto to the result
-			if(jobDto.getFailedWageNegotiationDtos().size() > 0){
-				result.add(jobDto);
-			}
-
-		}
-
-
-		return result;
-	}
-
 
 	public Job getJob_ByApplicationId(int applicationId) {
 
@@ -464,7 +439,7 @@ public class JobServiceImpl {
 
 
 
-	private JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
+	public JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
 		
 		// ***************************************************
 		// ***************************************************
@@ -523,7 +498,7 @@ public class JobServiceImpl {
 		return repository.getJobsByEmployee(employeeUserId);
 	}
 
-	public int getJobCountByStatus(List<Job> jobs, int status) {
+	public int getCount_ByJobsAndStatus(List<Job> jobs, int status) {
 		
 		if(jobs != null){
 			return (int) jobs.stream().filter(j -> j.getStatus() == status).count();
@@ -570,7 +545,7 @@ public class JobServiceImpl {
 	
 	
 
-	private List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter) {
+	public List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter) {
 	
 		// For each job, set its:
 		// a) categories
@@ -1037,21 +1012,12 @@ public class JobServiceImpl {
 		
 		
 		
-		if(didSessionUserPostJob(session, postedQuestion.getJobId())){
+		if(VerificationUtility.didSessionUserPostJob(session, this.getJob(postedQuestion.getJobId()))){
 			return postedQuestion;
 		}
 		else return null;
 	}
 
-	private boolean didSessionUserPostJob(HttpSession session, int jobId) {
-		
-		Job job = this.getJob(jobId);
-		
-		if( SessionContext.getUser(session).getUserId() == job.getUserId()){
-			return true;
-		}
-		else return false;
-	}
 
 	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
 		
@@ -1119,6 +1085,20 @@ public class JobServiceImpl {
 	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
 		
 		return repository.getCount_JobsCompleted_ByCategory(userId, categoryId);
+	}
+
+	public JobDTO getJobDto_ByEmployer(HttpSession session, int jobId) {
+		
+		
+		if(VerificationUtility.didSessionUserPostJob(session, this.getJob(jobId))){
+			
+			return this.getJobDTO_DisplayJobInfo(jobId);
+		}
+		else return null;
+	}
+
+	public int getCount_JobsCompleted_ByUser(int userId) {
+		return repository.getCount_JobsCompleted_ByUser(userId);
 	}
 
 

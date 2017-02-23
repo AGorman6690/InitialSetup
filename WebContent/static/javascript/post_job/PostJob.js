@@ -137,7 +137,7 @@ function deleteSkill($clickedListItem){
 
 function importPreviousQuestion(questionId){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "GET",
 		url: '/JobSearch/post-job/previous-question/load?questionId=' + questionId,
@@ -152,7 +152,7 @@ function importPreviousQuestion(questionId){
 
 	function _success(questionDto) {			
 		
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		
 		// Reset the question section
 		clearAllInputs($("#questionsContainer"));
@@ -165,14 +165,14 @@ function importPreviousQuestion(questionId){
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
 
 function importPreviousJobPosting(jobId){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "GET",
 		url: '/JobSearch/post-job/previous-post/load?jobId=' + jobId,
@@ -187,11 +187,11 @@ function importPreviousJobPosting(jobId){
 
 	function _success(jobDto) {			
 		setControlValues(jobDto);
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
@@ -293,7 +293,9 @@ function getJobDto(){
 	jobDto.job.zipCode = $("#zipCode").val();
 	jobDto.job.durationTypeId = 2; // Phase this out once we agree that we are only targeting short term labor
 	jobDto.job.durationUnitLength = jobDto.workDays.length;
-
+	
+	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
+	else jobDto.job.isPartialAvailabilityAllowed = 0;
 
 	
 	return jobDto;
@@ -351,7 +353,7 @@ function getWorkDays(){
 }
 
 function executeAjaxCall_postJob(jobDto){
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
 		url: '/JobSearch/job/post',
@@ -367,18 +369,18 @@ function executeAjaxCall_postJob(jobDto){
 	function _success() {
 				
 		window.location.replace("/JobSearch/user/profile");
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
 
 function executeAjaxCall_previewJobPosting(jobDto){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
 		url: '/JobSearch/preview/job-info',
@@ -402,11 +404,11 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		initCalendar_JobInfo();
 		initMap();
 //		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }

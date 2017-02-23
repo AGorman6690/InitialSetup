@@ -14,15 +14,16 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.google.Coordinate;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
+import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Endorsement;
-import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.AvailabilityDTO;
-import com.jobsearch.user.web.EditProfileRequestDTO;
+import com.jobsearch.utilities.VerificationUtility;
 
 @Repository
 public class UserRepository {
@@ -33,6 +34,9 @@ public class UserRepository {
 	@Autowired
 	UserServiceImpl userService;
 
+	@Autowired
+	JobServiceImpl jobService;
+	
 	public JobSearchUser getUser(int userId) {
 
 		String sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where userid = ?";
@@ -120,27 +124,33 @@ public class UserRepository {
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
-				JobSearchUser e = new JobSearchUser();
-				e.setUserId(rs.getInt("UserId"));
-				e.setFirstName(rs.getString("FirstName"));
-				e.setLastName(rs.getString("LastName"));
-				e.setEmailAddress(rs.getString("Email"));
-				e.setProfileId(rs.getInt("u.ProfileId"));
-				e.setHomeLat(rs.getFloat("HomeLat"));
-				e.setHomeLng(rs.getFloat("HomeLng"));
-				e.setHomeCity(rs.getString("HomeCity"));
-				e.setHomeState(rs.getString("HomeState"));
-				e.setHomeZipCode(rs.getString("HomeZipCode"));
-				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
-				e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
-				e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
-				e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
+				
+				try {
+					JobSearchUser e = new JobSearchUser();
+					e.setUserId(rs.getInt("UserId"));
+					e.setFirstName(rs.getString("FirstName"));
+					e.setLastName(rs.getString("LastName"));
+					e.setEmailAddress(rs.getString("Email"));
+					e.setProfileId(rs.getInt("ProfileId"));
+					e.setHomeLat(rs.getFloat("HomeLat"));
+					e.setHomeLng(rs.getFloat("HomeLng"));
+					e.setHomeCity(rs.getString("HomeCity"));
+					e.setHomeState(rs.getString("HomeState"));
+					e.setHomeZipCode(rs.getString("HomeZipCode"));
+					e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
+					e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
+					e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
+					e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
 
-				Profile profile = new Profile();
-				profile.setName(rs.getString("p.ProfileType"));
+//					Profile profile = new Profile();
+//					profile.setName(rs.getString("p.ProfileType"));
 
-				e.setProfile(profile);
-				return e;
+//					e.setProfile(profile);
+					return e;
+				} catch (Exception e) {
+					return null;
+				}
+
 			}
 		});
 	}
@@ -405,19 +415,24 @@ public class UserRepository {
 
 	public void addAvailability(AvailabilityDTO availabilityDto){ //Date sqlDate) {
 		
-		String sql = "INSERT INTO availability (UserId, Day) VALUES";
+		// *************************************
+		// See note in userService.updateAvailability
+		// *************************************
+		
+		String sql = "INSERT INTO availability (UserId, DateId) VALUES";
 		ArrayList<Object> args = new ArrayList<Object>();
 		
 		boolean isFirst = true;
 		for(String date : availabilityDto.getStringDays()){
 			
-			if(isFirst)	sql += " (?, ?)";			
-			else sql += ", (?, ?)";
+			if(!isFirst) sql += ",";			
+			
+			sql += " (?, ?)";
 
 			
 			isFirst = false;
 			args.add(availabilityDto.getUserId());
-			args.add(date);
+			args.add(jobService.getDateId(date));
 		}
 		
 		sql += " ON DUPLICATE KEY UPDATE UserId = UserId";
@@ -427,73 +442,161 @@ public class UserRepository {
 	}
 
 	public List<String> getAvailableDays(int userId) {
-		String sql = "SELECT Day FROM availability WHERE UserId = ?";
+		String sql = "SELECT Date FROM  date d"
+						+ " INNER JOIN availability a ON a.DateId = d.Id"
+						+ " WHERE UserId = ?";
 		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
 	}
 
 
-	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
-
-		// ******************************************************************************************
-		// NOTE: For optimal performance, we may want to eventually do some
-		// testing to determine
-		// the order of these sub queries that executes most efficiently.
-		// ******************************************************************************************
+	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(JobDTO jobDto) {
 
 		// **********************************
 		// Summary:
-		// The sub query for the distance each employee is from the specified
-		// location is required.
-		// The sub query for availability is optional.
-		// The sub query for categories is optional.
+		// 1) The sub query for the distance between each employee's home location
+		// 		and the filter location is required.
+		// 2) The sub query for availability is optional.
+		//		2a) If availability is specified, then it is ensured that 
+		//			each potential employee's employment does not conflict
+		//			with the specified days in the search
+		//		2b) Note the query differences for whether partial availability is allowed  
+		// 3) The sub query for categories is optional.
 		// **********************************
 
-		String sql = "SELECT * FROM user WHERE user.UserId IN";
+		String sql = "SELECT * FROM user u WHERE u.UserId IN";
 		List<Object> argsList = new ArrayList<Object>();
 
 
 		int subQueryCount = 1; // 1 because the distance sub query is required
 
-		// Build sub query for availability.
-		// This filter requires the employee to have availability on ALL
-		// requested days.
-		// Sub query returns all user ids with availability on ALL requested
-		// days.
-		// This sub query is optional.
+		// ********************************************
+		// Availability sub query
+		// ********************************************		
 		String subQueryDates = null;
-		if (findEmployeesDto.getDays().size() > 0) {
+		if (VerificationUtility.isListPopulated(jobDto.getWorkDays())) {
 
-			subQueryDates = " (SELECT a0.UserId FROM availability a0";
-
-			// Initialize at 1 because the first date is accounted for in the
-			// WHERE clause at the end.
-			// See this SO post for sql details:
-			// http://stackoverflow.com/questions/1054299/sql-many-to-many-table-and-query
-			// The sub query takes the form:
-			// SELECT UserId
-			// FROM availability a0
-			// JOIN availability a1 ON a0.UserId = a1.UserId AND a1.Day = X
-			// JOIN availability a2 ON a1.UserId = a2.UserId AND a2.Day = Y
-			// WHERE Day = Z AND a0.UserId IN ([distance sub query])
-			for (int dateCount = 1; dateCount < findEmployeesDto.getDays().size(); dateCount++) {
-				int dateCountMinus1 = dateCount - 1;
-				subQueryDates += " JOIN availability a" + dateCount + " ON a" + dateCountMinus1 + ".UserId" + " = a"
-						+ dateCount + ".UserId AND a" + dateCount + ".Day = ?";
-				argsList.add(findEmployeesDto.getDays().get(dateCount));
+			// *************************************
+			// If Partial availability is allowed
+			// *************************************
+			if(jobDto.getJob().getIsPartialAvailabilityAllowed()){
+				
+				subQueryDates = " ( SELECT DISTINCT(a.UserId) FROM availability a WHERE (";
+				Boolean isFirst = true;
+				
+				for (WorkDay workDay : jobDto.getWorkDays()) {
+					
+					if(!isFirst) subQueryDates += " OR";
+					
+					subQueryDates += " a.DateId = ?";
+					
+					argsList.add(jobService.getDateId(workDay.getStringDate()));
+					
+					isFirst = false;
+				}	
+				
+				// close the WHERE clause
+				subQueryDates += ")";
+				
+				// Start the sub query to exclude the user ids with conflicting employment
+				subQueryDates += " AND a.UserId NOT IN ("; 
+				
+				// **************************************************
+				// Sub query to verify employment does not conflict with requested days.
+				// Only exclude the user ids that have employment on **ALL** requested days.
+				// **************************************************
+				subQueryDates += " SELECT DISTINCT(u3.UserId) FROM user u3";
+				subQueryDates += " INNER JOIN employment e ON e.UserId = u3.UserId";
+				
+				int i = 0;
+				for (WorkDay workDay : jobDto.getWorkDays()) {
+					
+					subQueryDates += " INNER JOIN work_day wd" + i
+							 			+ " ON e.JobId = wd" + i + ".JobId"
+							 			+ " AND wd" + i + ".DateId = ?";					
+					
+					argsList.add(jobService.getDateId(workDay.getStringDate()));
+					i += 1;
+				}	
+				
+				subQueryDates += " AND u3.UserId IN ";
+								
 			}
+			
+			// *************************************
+			// Else applicant must have ALL work days available 
+			// *************************************
+			else{
+							
+				subQueryDates = " (SELECT DISTINCT(a0.UserId) FROM availability a0";
+	
+				// See this SO post for sql details:
+				// http://stackoverflow.com/questions/1054299/sql-many-to-many-table-and-query
+				int i = 1;
+				for(WorkDay workDay : jobDto.getWorkDays()){
+					
+					
+					if(i == jobDto.getWorkDays().size()){
+						
+						// The WHERE clause must FOLLOW the JOINs
+						subQueryDates += " WHERE a0.DateId = ?";
+					}
+					else{
+						subQueryDates += " JOIN availability a" + i
+										+ " ON a" + (i - 1) + ".UserId = a"	+ i + ".UserId"
+										+ " AND a" + i + ".DateId = ?";						
+					}
 
-			subQueryDates += " WHERE a0.Day = ? AND a0.UserId IN ";
-			argsList.add(findEmployeesDto.getDays().get(0));
+					i += 1;							
+					argsList.add(jobService.getDateId(workDay.getStringDate()));
+				}
+	
+				// subQueryDates += " AND a0.UserId IN "; 
 
+				// Start the sub query to exclude the user ids with conflicting employment
+				subQueryDates += " AND a0.UserId NOT IN ("; 
+				
+				// **************************************************
+				// Sub query to verify employment does not conflict with requested days.
+				// Only exclude the user ids that have employment on **ALL** requested days.
+				// **************************************************
+				subQueryDates += " SELECT DISTINCT(u3.UserId) FROM user u3";
+				subQueryDates += " INNER JOIN employment e ON e.UserId = u3.UserId";	
+				subQueryDates += " INNER JOIN work_day wd ON e.JobId = wd.JobId";	
+				subQueryDates += " WHERE (";
+				Boolean isFirst = true;
+				
+				for (WorkDay workDay : jobDto.getWorkDays()) {
+					
+					if(!isFirst) subQueryDates += " OR";
+					
+					subQueryDates += " wd.DateId = ?";
+					
+					argsList.add(jobService.getDateId(workDay.getStringDate()));
+					
+					isFirst = false;
+				}	
+				
+				// close the WHERE clause
+				subQueryDates += ")";
+				
+				subQueryDates += " AND u3.UserId IN ";				
+				
+				
+			}
+			
 			sql += subQueryDates;
-			subQueryCount += 1;
+			subQueryCount += 2; // 1 for the availability sub query, 1 for the employment sub query
 
 		}
 
-/*
+		// ********************************************
+		// Category sub query
+		// ********************************************	
 		// Build the sub query for categories.
 		// This sub query has the same structure as the availability sub query.
 		// This returns all user ids that have ALL the requested categories.
+		
+/*
 		String subQueryCategories = null;
 		if (findEmployeesDto.getCategoryIds() != null) {
 
@@ -516,19 +619,20 @@ public class UserRepository {
 */
 
 		// Distance sub query.
-		// This returns all user ids with a home radius within the requested
-		// radius.
+		// This returns all user ids having a distance between the user's
+		// home location and job location that is less than or equal to the
+		// user's max-distance-willing-to-travel.
 		// This sub query is always required.
-		String subQueryDistance = " (SELECT UserId FROM user"
-				+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( user.HomeLat ) ) * cos( radians( user.HomeLng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( user.HomeLat ) ) ) ) < ? ";
+		String subQueryDistance = " ( SELECT u2.UserId FROM user u2"
+				+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( u2.HomeLat ) ) * cos( radians( u2.HomeLng ) - radians(?) ) "
+				+ "+ sin( radians(?) ) * sin( radians( u2.HomeLat ) ) ) ) <= u2.MaxWorkRadius ";
 
 		sql += subQueryDistance;
 
-		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
-		argsList.add(findEmployeesDto.getCoordinate().getLongitude());
-		argsList.add(findEmployeesDto.getCoordinate().getLatitude());
-		argsList.add(findEmployeesDto.getRadius());
+		argsList.add(jobDto.getJob().getLat());
+		argsList.add(jobDto.getJob().getLng());
+		argsList.add(jobDto.getJob().getLat());
+
 
 
 		// Need to close the sub queries
@@ -537,7 +641,7 @@ public class UserRepository {
 		}
 
 
-		return this.JobSearchUserRowMapper(sql, argsList.toArray());
+		return this.JobSearchUserProfileRowMapper(sql, argsList.toArray());
 	}
 
 	public void createUsers_DummyData(List<JobSearchUser> users, int dummyCreationId) {
@@ -606,18 +710,6 @@ public class UserRepository {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 0 WHERE email = ?";
 
 		jdbcTemplate.update(sql, new Object[] { password, email });
-	}
-
-	public void updateEmployeeSettings(EditProfileRequestDTO editProfileRequestDto) {
-		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
-				+ " HomeZipCode = ?, MaxWorkRadius = ?, MinimumPay = ? WHERE UserId = ?";
-
-	jdbcTemplate.update(sql,
-				new Object[] { editProfileRequestDto.getHomeLat(), editProfileRequestDto.getHomeLng(),
-						editProfileRequestDto.getHomeCity(), editProfileRequestDto.getHomeState(),
-						editProfileRequestDto.getHomeZipCode(), editProfileRequestDto.getMaxWorkRadius(),
-						editProfileRequestDto.getMinPay(), editProfileRequestDto.getUserId() });
-
 	}
 
 	public Double getRatingValue_ByCategory(int userId, int categoryId) {

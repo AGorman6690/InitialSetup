@@ -41,12 +41,12 @@ $(document).ready(function(){
 	
 	$(".confirm-counter").click(function(){
 
-		var wageProposalCounterDTO = {};
-		wageProposalCounterDTO.wageProposalIdToCounter = $(this).parents("[data-wage-proposal-id]")
+		var wageProposalDto = {};
+		wageProposalDto.wageProposalIdToCounter = $(this).parents("[data-wage-proposal-id]")
 																.eq(0)
 																.attr("data-wage-proposal-id");
 		
-		wageProposalCounterDTO.counterAmount = $(this).closest(".proposal-actions-container")
+		wageProposalDto.counterAmount = $(this).closest(".proposal-actions-container")
 														.find("input.counter-amount").eq(0).val();;
 
 		// Update the table's row attribute
@@ -58,7 +58,7 @@ $(document).ready(function(){
 			url :"/JobSearch/wage-proposal/counter",
 			headers : getAjaxHeaders(),
 			contentType : "application/json",
-			data : JSON.stringify(wageProposalCounterDTO)			
+			data : JSON.stringify(wageProposalDto)			
 		}).done(function() {	
 			
 			broswerIsWaiting(false);

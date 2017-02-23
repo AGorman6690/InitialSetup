@@ -5,7 +5,6 @@ import java.util.List
 import com.jobsearch.application.service.Application
 import com.jobsearch.application.service.ApplicationDTO
 import com.jobsearch.category.service.Category;
-import com.jobsearch.model.FailedWageNegotiationDTO
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
@@ -37,7 +36,6 @@ public class JobDTO {
 	 int months_workDaysSpan
 	 double daysUntilStart
 	 
-	 List<FailedWageNegotiationDTO> failedWageNegotiationDtos
 	 int countWageProposals_sent
 	 int countWageProposals_received
 	 int countWageProposals_received_new

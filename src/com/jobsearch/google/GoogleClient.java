@@ -7,6 +7,8 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.utilities.VerificationUtility;
 
 @Component
 public class GoogleClient {
@@ -92,5 +94,21 @@ public class GoogleClient {
 			coordinate.setLongitude((float) results[0].geometry.location.lng);
 			return coordinate;
 		}else return null;
+	}
+
+	public static Coordinate getCoordinate(Job job) {
+	
+		if(VerificationUtility.isValidLocation(job)){
+			
+			String address = "";
+			if(job.getStreetAddress() != null) address += job.getStreetAddress();
+			if(job.getCity() != null) address += job.getCity();
+			if(job.getState() != null) address += job.getState();
+			if(job.getZipCode() != null) address += job.getZipCode();
+
+			return getCoordinate(address);
+		}
+		else return null;
+
 	}
 }

@@ -2,7 +2,6 @@ package com.jobsearch.user.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -22,9 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
@@ -125,6 +124,15 @@ public class UserController {
 		userService.setModel_PageLoad_FindEmployees(model, session);
 		return "/find_employees/FindEmployees";
 	}
+	
+
+	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
+	public String findEmployees(@RequestBody JobDTO jobDto, Model model) {
+
+		userService.setModel_FindEmployees_Results(model, jobDto);
+
+		return"/find_employees/Results_Find_Employees";
+	}
 
 	@RequestMapping(value = "/settings", method = RequestMethod.GET)
 	public ModelAndView viewSettings(ModelAndView model, HttpSession session) {
@@ -196,22 +204,6 @@ public class UserController {
 		userService.editEmployeeSettings(user_edited, session);
 	}
 
-	@RequestMapping(value = "/search/employees", method = RequestMethod.GET)
-	@ResponseBody
-	public String findEmployees(@RequestParam(name = "fromAddress", required = true) String fromAddress,
-			@RequestParam(name = "radius", required = true) double radius,
-			@RequestParam(name = "day", value = "day", required = false) List<String> days,
-			@RequestParam(name = "rating", required = false) double rating,
-			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds) {
-
-		// Set the dto
-		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, rating, days, categoryIds);
-
-		// Run the velocity template
-		String findEmployeesResponseHTML = userService.getFindEmployeesResponseHTML(findEmployeesDto);
-
-		return findEmployeesResponseHTML;
-	}
 
 	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
 	public String rateEmployee(Model model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {

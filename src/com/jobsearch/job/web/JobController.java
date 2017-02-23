@@ -227,6 +227,16 @@ public class JobController {
 	}
 
 	
+	@ResponseBody
+	@RequestMapping(value = "get/job-dto/{jobId}", method = RequestMethod.GET)
+	public String getJobDto(HttpSession session,
+						@PathVariable(value = "jobId") int jobId) {	
+		
+		JobDTO jobDto = jobService.getJobDto_ByEmployer(session, jobId);
+		
+		return JSON.stringify(jobDto);
+			
+	}
 
 	
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)

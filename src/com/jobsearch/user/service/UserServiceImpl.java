@@ -1,6 +1,5 @@
 package com.jobsearch.user.service;
 
-import java.io.StringWriter;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,23 +11,18 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpSession;
 
-import org.apache.velocity.Template;
-import org.apache.velocity.VelocityContext;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.category.service.CategoryDTO;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
@@ -37,7 +31,6 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Endorsement;
-import com.jobsearch.model.FindEmployeesDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
@@ -49,7 +42,6 @@ import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
-import com.jobsearch.user.web.EditProfileRequestDTO;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationUtility;
 
@@ -78,10 +70,6 @@ public class UserServiceImpl {
 
 	@Value("${host.url}")
 	private String hostUrl;
-
-	@Autowired
-	@Qualifier("FindEmployeesResponseVM")
-	Template findEmployeesResponseTemplate;
 
 	public JobSearchUserDTO createUser(JobSearchUser proposedUser) {
 
@@ -466,20 +454,21 @@ public class UserServiceImpl {
 		// Records are deleted only to be re-inserted...
 		// This original post could be a potential solution:
 		// http://stackoverflow.com/questions/32922038/insert-data-to-table-with-existing-data-then-delete-data-that-was-not-touched-d
-		// Revisit this.
+		// For now it works, but revisit this.
 		// *********************************************************************		
 					
 		availabilityDto.setUserId(SessionContext.getUser(session).getUserId());				
 		repository.deleteAvailability(availabilityDto.getUserId());	
 		
-		if(availabilityDto.getStringDays() != null){
-			if(availabilityDto.getStringDays().size() > 0){		
-				repository.addAvailability(availabilityDto);
-			}		
+		if(availabilityDto.getStringDays() != null  &&
+				availabilityDto.getStringDays().size() > 0){
+			
+			repository.addAvailability(availabilityDto);
 		}
 
 
 	}
+
 
 	public void editEmployeeSettings(JobSearchUser user_edited, HttpSession session) {
 
@@ -536,60 +525,7 @@ public class UserServiceImpl {
 		session.setAttribute("user", user);
 	}
 
-	public List<JobSearchUser> findEmployees(FindEmployeesDTO findEmployeesDto) {
 
-		findEmployeesDto.setCoordinate(GoogleClient.getCoordinate(findEmployeesDto.getFromAddress()));
-
-		// If the address successfully yielded a coordinate
-		if (findEmployeesDto.getCoordinate() != null) {
-			List<JobSearchUser> result = new ArrayList<JobSearchUser>();
-
-			// Query the database
-			List<JobSearchUser> employees = repository.findEmployees(findEmployeesDto);
-
-			// Set the categories if the user filtered by category
-			List<Category> categories = new ArrayList<Category>();
-			if (findEmployeesDto.getCategoryIds().size() > 0) {
-				categories = categoryService.getCategories(findEmployeesDto.getCategoryIds());
-			}
-
-			// Set additional properties for each employee
-			for (JobSearchUser employee : employees) {
-
-				// Categories
-				// employee.setCategories(categoryService.getCategoriesByUserId(employee.getUserId()));
-
-				// Rating
-				employee.setRating(this.getRating(employee.getUserId()));
-
-				// The database query does not filter on rating.
-				// This condition is the rating filter.
-				if (employee.getRating() >= findEmployeesDto.getRating()) {
-
-					// Set endorsements if the user filtered by category
-					if (categories != null) {
-						employee.setEndorsements(this.getUserEndorsementsByCategory(employee.getUserId(), categories));
-					}
-
-					// Distance from job
-					employee.setDistanceFromJob(
-							MathUtility.round(GoogleClient.getDistance(findEmployeesDto.getCoordinate().getLatitude(),
-									findEmployeesDto.getCoordinate().getLongitude(), employee.getHomeLat(),
-									employee.getHomeLng()), 1, 0));
-
-					result.add(employee);
-
-				}
-
-			}
-
-			return result;
-
-		} else {
-			return null;
-		}
-
-	}
 
 	public void createUsers_DummyData() {
 
@@ -677,9 +613,9 @@ public class UserServiceImpl {
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		
 		List<Job> jobs_employment = jobService.getJobsByEmployee(employee.getUserId());
-		int pastEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 2);
-		int currentEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 1);
-		int futureEmploymentCount = jobService.getJobCountByStatus(jobs_employment, 0);
+		int pastEmploymentCount = jobService.getCount_ByJobsAndStatus(jobs_employment, 2);
+		int currentEmploymentCount = jobService.getCount_ByJobsAndStatus(jobs_employment, 1);
+		int futureEmploymentCount = jobService.getCount_ByJobsAndStatus(jobs_employment, 0);
 		
 		// *************************************************************
 		// Replace getJobsByEmplyee() with this
@@ -728,24 +664,6 @@ public class UserServiceImpl {
 //		applicationService.setJobsApplicationsHasBeenViewed(activeJobs, 1);
 		// *********************************************************************
 		// *********************************************************************
-
-	}
-
-	public String getFindEmployeesResponseHTML(FindEmployeesDTO findEmployeesDto) {
-
-		// Query the database
-		List<JobSearchUser> employees = this.findEmployees(findEmployeesDto);
-
-		StringWriter writer = new StringWriter();
-
-		// Set the context
-		final VelocityContext context = new VelocityContext();
-		context.put("employees", employees);
-		context.put("mathUtility", MathUtility.class);
-
-		findEmployeesResponseTemplate.merge(context, writer);
-
-		return writer.toString();
 
 	}
 
@@ -833,7 +751,7 @@ public class UserServiceImpl {
 	
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
-		if (sessionUser.getProfile().getName().equals("Employee")) {
+		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
 			this.setModel_EmployeeProfile(sessionUser, model);
 		}
 		else{
@@ -869,7 +787,7 @@ public class UserServiceImpl {
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 			
-		if (sessionUser.getProfile().getName().equals("Employee")) return "/employee_profile/EmployeeProfile";
+		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) return "/employee_profile/EmployeeProfile";
 		else return "/employer_profile/EmployerProfile";
 
 	}
@@ -919,12 +837,49 @@ public class UserServiceImpl {
 
 	public void setModel_PageLoad_FindEmployees(Model model, HttpSession session) {
 		
-		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
-		List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
-		jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
 		
-		model.addAttribute("jobDtos_current", jobDtos_current);
+		if(SessionContext.isLoggedIn(session)){
+		
+			JobSearchUser sessionUser = SessionContext.getUser(session);
+			
+			List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
+			jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
+			
+			model.addAttribute("jobDtos_current", jobDtos_current);	
+		}
+		
+		
+	}
+
+	public void setModel_FindEmployees_Results(Model model, JobDTO jobDto) {
+		
+		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
+		
+		Coordinate coordinate = GoogleClient.getCoordinate(jobDto.getJob());
+		
+		if(coordinate != null){
+			
+			jobDto.getJob().setLat(coordinate.getLatitude());
+			jobDto.getJob().setLng(coordinate.getLongitude());
+			
+			List<JobSearchUser> users = repository.getUsers_ByFindEmployeesSearch(jobDto);
+			
+			for(JobSearchUser user : users){
+				JobSearchUserDTO userDto = new JobSearchUserDTO();
+				
+				userDto.setUser(user);
+				
+				userDto.setRatingValue_overall(this.getRating(user.getUserId()));
+				userDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
+				userDtos.add(userDto);
+			}
+				
+		}
+		
+		
+		model.addAttribute("userDtos", userDtos);
+	
 		
 	}
 

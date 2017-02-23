@@ -20,7 +20,6 @@ $(document).ready(function(){
 				onSelect_Availability(dateText);
 			},		        
 	        beforeShowDay: function (date) {       
-	        	broswerIsWaiting(true);
 	        	return beforeShowDay_Availability(month, date, daysOfWeekToSelect);	
 	     	}
 	    });	
@@ -196,7 +195,7 @@ function updateSelectedDates_ByWeekDay(isDaySelected, dayOfWeek){
 //		selectDatesBy_Month_Year_And_WeekDays(this, 2017, daysOfWeekToSelect);		
 //	})	
 //	
-////	$("html").removeClass("waiting");
+////	broswerIsWaiting(false);
 //}
 //
 //function selectDatesBy_Month_Year_And_WeekDays(month, year, weekdays){

@@ -16,6 +16,13 @@ import com.jobsearch.google.GoogleClient
 import  com.jobsearch.utilities.DateUtility
 
 public class FindJobFilterDTO {
+	
+	// ***************************************************************
+	// ***************************************************************
+	// Eliminate this class.
+	// Just use JobDTO
+	// ***************************************************************
+	// ***************************************************************
 
 	int id
 	String savedName

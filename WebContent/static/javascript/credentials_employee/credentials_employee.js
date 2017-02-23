@@ -33,7 +33,7 @@ $(document).ready(function(){
 
 function executeAjaxCall_updateUserSettings(user_edited){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
 		url: '/JobSearch/user/settings/edit',
@@ -47,11 +47,11 @@ function executeAjaxCall_updateUserSettings(user_edited){
 	});
 
 	function _success() {
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 		location.reload();
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 	}
 }

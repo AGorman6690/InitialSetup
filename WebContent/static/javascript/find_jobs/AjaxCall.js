@@ -329,7 +329,7 @@ function isFilterApplied($filterContainer){
 
 function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "GET",
 		url: '/JobSearch/jobs/find/load-filter?savedFindJobFilterId=' + savedFindJobFilterId,
@@ -340,7 +340,7 @@ function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 	});
 
 	function _success(response) {
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 		$("#filtersContainer").html(response);
 
 		attachEventHandles_Filters();
@@ -348,7 +348,7 @@ function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}	
 	
@@ -356,7 +356,7 @@ function executeAjaxCall_loadFindJobFilter(savedFindJobFilterId){
 
 function executeAjaxCall_saveFindJobFilter(findJobFilterDto){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
 		url: '/JobSearch/jobs/save-find-job-filter',
@@ -370,13 +370,13 @@ function executeAjaxCall_saveFindJobFilter(findJobFilterDto){
 	});
 
 	function _success() {
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);	
 		$("#saveFilterName").val("");
 		closeModal($(".mod"));
 	}	
 
 	function _error() {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
@@ -384,7 +384,7 @@ function executeAjaxCall_saveFindJobFilter(findJobFilterDto){
 
 function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJobs){
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	if(!$("#mainBottom").is("visible"))	$("#mainBottom").show();
 	
 	$.ajax({
@@ -398,7 +398,7 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJob
 
 	function _success(response) {
 		
-		$("html").removeClass("waiting");		
+		broswerIsWaiting(false);		
 		
 		if(isAppendingJobs)	$("#getMoreJobsContainer").before(response);
 		else $("#filteredJobs").html(response);		
@@ -431,7 +431,7 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJob
 	}	
 
 	function _error(response) {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error set filter jobs')
 		
 	}
@@ -442,7 +442,7 @@ function executeAjaxCall_sortFilteredJobs(clickedSortDirection){
 	// Close dropdown
 	$("#sortByHeader").find("div[data-toggle-id]").eq(0).click();
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	
 	var isAscending = $(clickedSortDirection).attr("data-is-ascending");
 	var sortBy = $(clickedSortDirection).closest(".sort-by-container").attr("data-sort-by");
@@ -455,7 +455,7 @@ function executeAjaxCall_sortFilteredJobs(clickedSortDirection){
 		});
 
 	function _success(response) {
-		$("html").removeClass("waiting");		
+		broswerIsWaiting(false);		
 		$("#filteredJobs").html(response);	
 		
 		
@@ -473,7 +473,7 @@ function executeAjaxCall_sortFilteredJobs(clickedSortDirection){
 	}	
 
 	function _error(response) {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error set filter jobs')
 		
 	}
