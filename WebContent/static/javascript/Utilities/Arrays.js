@@ -16,7 +16,7 @@ function doesArrayContainValue(value, array){
 	
 	
 	// Trim white space
-	value = value.replace(/^\s+|\s+$/g,'')
+//	value = value.replace(/^\s+|\s+$/g,'')
 	
 	if($.inArray(value, array) == -1) return false;
 	else return true;

@@ -36,14 +36,16 @@ import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.web.AvailabilityDTO;
+import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
-import com.jobsearch.utilities.VerificationUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
 
 
 @Service
@@ -64,6 +66,9 @@ public class UserServiceImpl {
 
 	@Autowired
 	ApplicationServiceImpl applicationService;
+	
+	@Autowired
+	VerificationServiceImpl verificationService;
 
 	@Autowired
 	Mailer mailer;
@@ -227,6 +232,16 @@ public class UserServiceImpl {
 		return repository.getAvailableDays(userId);
 
 	}
+	
+
+	public List<String> getAvailableDays_byWorkDays(int userId, List<WorkDay> workDays) {
+		
+		if(verificationService.isListPopulated(workDays)){
+			return repository.getAvailableDays_byWorkDays(userId, workDays);
+		}
+		else return null;
+	}
+
 
 	public List<Profile> getProfiles() {
 		return repository.getProfiles();
@@ -461,6 +476,7 @@ public class UserServiceImpl {
 		repository.deleteAvailability(availabilityDto.getUserId());	
 		
 		if(availabilityDto.getStringDays() != null  &&
+				
 				availabilityDto.getStringDays().size() > 0){
 			
 			repository.addAvailability(availabilityDto);
@@ -468,6 +484,26 @@ public class UserServiceImpl {
 
 
 	}
+	
+	
+
+	public void updateAvailability(HttpSession session, List<WorkDay> workDays) {
+		
+		if(verificationService.isListPopulated(workDays)){
+			
+			AvailabilityDTO availabilityDto = new AvailabilityDTO();
+			
+			availabilityDto.setUserId(SessionContext.getUser(session).getUserId());
+			
+			for(WorkDay workDay : workDays){
+				availabilityDto.getStringDays().add(workDay.getStringDate());
+			}
+			
+			repository.addAvailability(availabilityDto);
+		}
+		
+	}
+
 
 
 	public void editEmployeeSettings(JobSearchUser user_edited, HttpSession session) {
@@ -487,7 +523,7 @@ public class UserServiceImpl {
 	public void updateMinimumDesiredPay(JobSearchUser user, Double minimumDesiredPay) {
 		
 		// Max distance willing to work
-		if(VerificationUtility.isPositiveNumber(minimumDesiredPay)){
+		if(verificationService.isPositiveNumber(minimumDesiredPay)){
 			repository.updateMinimumDesiredPay(user.getUserId(), minimumDesiredPay);
 		}
 		
@@ -514,7 +550,7 @@ public class UserServiceImpl {
 	public void updateMaxDistanceWillingToWork(JobSearchUser user, Integer maxWorkRadius) {
 		
 		// Max distance willing to work
-		if(VerificationUtility.isPositiveNumber(maxWorkRadius)){
+		if(verificationService.isPositiveNumber(maxWorkRadius)){
 			repository.updateMaxDistanceWillingToWork(user.getUserId(), maxWorkRadius);
 		}
 		
@@ -604,7 +640,8 @@ public class UserServiceImpl {
 		List<ApplicationDTO> applicationDtos = applicationService.
 												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
 															employee.getUserId(), 
-															Arrays.asList(Application.STATUS_SUBMITTED,
+															Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
+																		Application.STATUS_SUBMITTED,
 																		Application.STATUS_CONSIDERED,
 																		Application.STATUS_ACCEPTED,
 																		Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
@@ -856,30 +893,42 @@ public class UserServiceImpl {
 		
 		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
 		
-		Coordinate coordinate = GoogleClient.getCoordinate(jobDto.getJob());
-		
-		if(coordinate != null){
+		if(verificationService.isValidLocation(jobDto.getJob())){
+			Coordinate coordinate = GoogleClient.getCoordinate(jobDto.getJob());
 			
-			jobDto.getJob().setLat(coordinate.getLatitude());
-			jobDto.getJob().setLng(coordinate.getLongitude());
-			
-			List<JobSearchUser> users = repository.getUsers_ByFindEmployeesSearch(jobDto);
-			
-			for(JobSearchUser user : users){
-				JobSearchUserDTO userDto = new JobSearchUserDTO();
+			// Search location must return a result
+			if(coordinate != null){
 				
-				userDto.setUser(user);
+				jobDto.getJob().setLat(coordinate.getLatitude());
+				jobDto.getJob().setLng(coordinate.getLongitude());
 				
-				userDto.setRatingValue_overall(this.getRating(user.getUserId()));
-				userDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
-				userDtos.add(userDto);
-			}
+				// Get the users that match the search request 
+				List<JobSearchUser> users = repository.getUsers_ByFindEmployeesSearch(jobDto);
 				
-		}
-		
-		
-		model.addAttribute("userDtos", userDtos);
+				for(JobSearchUser user : users){
+					JobSearchUserDTO userDto = new JobSearchUserDTO();
+					
+					userDto.setUser(user);
 	
+					userDto.setRatingValue_overall(this.getRating(user.getUserId()));
+					userDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
+					userDtos.add(userDto);
+					
+					userDto.setCount_availableDays_perFindEmployeesSearch(
+												jobService.getCount_availableDays_ByUserAndWorkDays(
+															user.getUserId(), jobDto.getWorkDays()));
+					
+					userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(), jobDto.getWorkDays()));
+				}
+					
+			}
+			
+			jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
+			jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+			
+			model.addAttribute("jobDto", jobDto);
+			model.addAttribute("userDtos", userDtos);
+		}
 		
 	}
 

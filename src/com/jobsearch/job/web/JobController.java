@@ -183,22 +183,6 @@ public class JobController {
 	}
 	
 	
-	@RequestMapping(value = "/job/{jobId}/user/{userId}/jobs/completed", method = RequestMethod.GET)
-	// @ResponseBody
-	public String viewApplicant(@PathVariable(value = "userId") int userId,
-									 @PathVariable(value="jobId") int jobId,
-									 Model model, HttpSession session) {
-	
-		if (SessionContext.isLoggedIn(session)) {
-			userService.setModel_WorkHistoryForAllApplicants(model, userId, jobId);
-			return "EmployerViewEmployee";
-		} else {
-			return "NotLoggedIn";
-		}
-	
-	}
-
-	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(Model model, HttpSession session,
 						@RequestParam(name = "c", required = true) String c,

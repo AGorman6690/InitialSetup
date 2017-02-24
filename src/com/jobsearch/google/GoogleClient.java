@@ -8,13 +8,17 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.utilities.VerificationUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
+
 
 @Component
 public class GoogleClient {
 
 	@Autowired
 	private GeoApiContext context;
+	
+	@Autowired
+	private	VerificationServiceImpl verificationService;
 
 	public GeocodingResult[] getLatAndLng(String address) {
 		
@@ -98,8 +102,7 @@ public class GoogleClient {
 
 	public static Coordinate getCoordinate(Job job) {
 	
-		if(VerificationUtility.isValidLocation(job)){
-			
+
 			String address = "";
 			if(job.getStreetAddress() != null) address += job.getStreetAddress();
 			if(job.getCity() != null) address += job.getCity();
@@ -107,8 +110,7 @@ public class GoogleClient {
 			if(job.getZipCode() != null) address += job.getZipCode();
 
 			return getCoordinate(address);
-		}
-		else return null;
+
 
 	}
 }

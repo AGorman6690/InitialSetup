@@ -27,6 +27,8 @@ import com.jobsearch.model.Question;
 import com.jobsearch.model.Skill;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
+
 
 @Repository
 public class JobRepository {
@@ -46,6 +48,9 @@ public class JobRepository {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
+	@Autowired
+	VerificationServiceImpl verificationService;
+	
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
 		try {
@@ -160,11 +165,14 @@ public class JobRepository {
 				public WorkDay mapRow(ResultSet rs, int rownumber) throws SQLException {
 					
 					WorkDay e = new WorkDay();
-										
-					e.setDate(LocalDate.parse(rs.getDate("Date").toString()));
+					
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
-					e.setStringDate(rs.getString("Date").replace("-", "/"));			
+					e.setDateId(rs.getInt("DateId"));
+					
+					
+					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
+					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
 					return e;
 				}
 			});
@@ -433,30 +441,35 @@ public class JobRepository {
 		
 		
 		
-		//Work days
-		if(filter.getWorkingDays() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT wd0.jobId";
-			sql += " FROM work_day wd0";
-			
-			for (int i = 1; i < filter.getWorkingDays().size() + 1; i++) {
-				
-				String table1 = "wd" + (i - 1);
-				String table2 = "wd" + i;
-				
-				sql += " JOIN work_day " + table2;
-				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".date = ?";
-				
-				argsList.add(filter.getWorkingDays().get(i - 1));
-						
-			}
-			subTable = "wd_work_days";
+		// ************************************************************
+		// Now that a date table exists re-address this logic 
+		// ************************************************************
 		
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
-		}
+		//Work days
+//		if(filter.getWorkingDays() != null){
+//			sql += " JOIN (";
+//			sql += " SELECT DISTINCT wd0.jobId";
+//			sql += " FROM work_day wd0";
+//			
+//			for (int i = 1; i < filter.getWorkingDays().size() + 1; i++) {
+//				
+//				String table1 = "wd" + (i - 1);
+//				String table2 = "wd" + i;
+//				
+//				sql += " JOIN work_day " + table2;
+//				sql += " "
+//				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".date = ?";
+//				
+//				argsList.add(filter.getWorkingDays().get(i - 1));
+//						
+//			}
+//			subTable = "wd_work_days";
+//		
+//			sql += ") " + subTable;
+//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+//			
+//			nextTableToJoin = subTable;
+//		}
 					
 		//Categories
 		if(filter.getCategoryIds() != null){
@@ -532,32 +545,32 @@ public class JobRepository {
 			nextTableToJoin = subTable;
 		}	
 		
-		//Start date	
-		if(filter.getStartDate() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT jobId, Date as StartDate ";
-			sql += " FROM work_day";
-			sql += " GROUP BY jobId";
-			sql += " HAVING MIN(Date)";
-			
-			if(filter.getBeforeStartDate()){
-				sql += " <= ?";
-			}
-			else{
-				sql += " >= ?";
-			}
-			
-			argsList.add(filter.getStartDate());
-			
-			subTable = "wd_start_date";
-			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
-			
-			sqlSelect += ", " + subTable + ".StartDate AS StartDate";
-		}			
+//		//Start date	
+//		if(filter.getStartDate() != null){
+//			sql += " JOIN (";
+//			sql += " SELECT DISTINCT jobId, Date as StartDate ";
+//			sql += " FROM work_day";
+//			sql += " GROUP BY jobId";
+//			sql += " HAVING MIN(Date)";
+//			
+//			if(filter.getBeforeStartDate()){
+//				sql += " <= ?";
+//			}
+//			else{
+//				sql += " >= ?";
+//			}
+//			
+//			argsList.add(filter.getStartDate());
+//			
+//			subTable = "wd_start_date";
+//			
+//			sql += ") " + subTable;
+//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+//			
+//			nextTableToJoin = subTable;
+//			
+//			sqlSelect += ", " + subTable + ".StartDate AS StartDate";
+//		}			
 		
 //		if(filter.getSortBy() != null){
 //			if(filter.getSortBy().matches("StartDate))
@@ -565,30 +578,30 @@ public class JobRepository {
 
 		
 
-		//End date
-		if(filter.getEndDate() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT jobId";
-			sql += " FROM work_day";
-			sql += " GROUP BY jobId";
-			sql += " HAVING MAX(Date)";
-			
-			if(filter.getBeforeEndDate()){
-				sql += " <= ?";
-			}
-			else{
-				sql += " >= ?";
-			}
-			
-			argsList.add(filter.getEndDate());
-			
-			subTable = "wd_end_date";
-			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
-		}
+//		//End date
+//		if(filter.getEndDate() != null){
+//			sql += " JOIN (";
+//			sql += " SELECT DISTINCT jobId";
+//			sql += " FROM work_day";
+//			sql += " GROUP BY jobId";
+//			sql += " HAVING MAX(Date)";
+//			
+//			if(filter.getBeforeEndDate()){
+//				sql += " <= ?";
+//			}
+//			else{
+//				sql += " >= ?";
+//			}
+//			
+//			argsList.add(filter.getEndDate());
+//			
+//			subTable = "wd_end_date";
+//			
+//			sql += ") " + subTable;
+//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
+//			
+//			nextTableToJoin = subTable;
+//		}
 
 			
 		//Duration
@@ -725,20 +738,12 @@ public class JobRepository {
 
 	public Job getJob(int jobId) {
 
-//		select j.* , MIN(w.Date) as start, MAX(w.Date) as end
-//		from job j inner join work_day w on j.jobid = w.jobid where j.jobid = '65'
-
-		String sql = "SELECT j.*, MIN(w.Date) as work_day_StartDate, MAX(w.Date) as work_day_EndDate"
-						+ " FROM job j"
-						+ " INNER JOIN work_day w ON j.JobId = w.JobId"
-						+ " WHERE j.JobId = ?";
+	   String sql = "SELECT * FROM job j WHERE j.JobId = ?";
 
 		List<Job> jobs = this.JobRowMapper(sql, new Object[] { jobId });
 
-		if(jobs != null){
-			return jobs.get(0);
-		}
-		return null;
+		if(verificationService.isListPopulated(jobs)) return jobs.get(0);
+		else return null;
 	}
 
 
@@ -760,45 +765,43 @@ public class JobRepository {
 		// *******************************************************
 		// *******************************************************
 		
-		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, Date, DateId)"
-						+ "  VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId)"
+						+ "  VALUES (?, ?, ?, ?)";
 
 		jdbcTemplate.update(sql, new Object[]{ jobId,
 												workDay.getStringStartTime(),
 												workDay.getStringEndTime(),
-												DateUtility.getSqlDate(workDay.getDate().toString()),
 												workDay.getDateId()});
 
 	}
 
 	public Date getEndDate(int jobId) {
-		String sql = "SELECT MAX(Date)"
-				+ " FROM work_day"
-				+ " WHERE JobId = ?";
+		String sql = "SELECT MAX(d.Date) FROM date d"
+					+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
+					+ " WHERE JobId = ?";
 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
 	}
 
 	public Date getStartDate(int jobId) {
-		String sql = "SELECT MIN(Date)"
-				+ " FROM work_day"
+		String sql = "SELECT MIN(d.Date) FROM date d"
+				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
 				+ " WHERE JobId = ?";
 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
 	}
 	
-//	public LocalDate getStartLocalDate(int jobId) {
-//		String sql = "SELECT MIN(Date)"
-//				+ " FROM work_day"
-//				+ " WHERE JobId = ?";
-//
-//		
-//		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
-//	}
-//	
+	public LocalDate getStartLocalDate(int jobId) {
+		String sql = "SELECT MIN(d.Date) FROM date d"
+				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
+				+ " WHERE JobId = ?";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
+	}
+	
 	public LocalDate getEndLocalDate(int jobId) {
-		String sql = "SELECT MAX(Date)"
-				+ " FROM work_day"
+		String sql = "SELECT MAX(d.Date) FROM date d"
+				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
 				+ " WHERE JobId = ?";
 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
@@ -1051,6 +1054,101 @@ public class JobRepository {
 															userId,
 															Application.STATUS_ACCEPTED },
 																Integer.class);
+	}
+
+	public Integer getCount_availableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
+		
+		// Main query
+		String sql = "SELECT COUNT(*) FROM availability a0 WHERE a0.DateId NOT IN(";
+		
+		// Sub query.
+		// Exclude the user's available days that have turned into employment.
+		// I don't believe the job status needs to be verified as open or in-process.
+		// It is not possible to have a job in the future yet it is already completed...
+		sql += " SELECT a1.DateId FROM availability a1"
+				+ " INNER JOIN work_day wd ON wd.DateId = a1.DateId"
+				+ " INNER JOIN employment e ON e.JobId = wd.JobId"
+//				+ " INNER JOIN job j ON j.JobId = e.JobId"
+				+ " WHERE a1.UserId = ?"
+				+ " AND e.UserId = ?";
+//				 + " AND (j.Statsus = 0 OR j.Status = 1)"
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(userId);
+		args.add(userId);
+		
+		boolean isFirst = true;		
+		sql += " AND (";
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR ";
+			
+			sql += " wd.DateId = ?";
+			isFirst = false;
+			
+			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
+			args.add(workDay.getDateId());
+			
+		}
+		
+		// Close the AND
+		sql += ")";
+		
+		// Close the sub query
+		sql += ")";
+		
+		// Finish the main query
+		sql += " AND a0.UserId = ?";
+		args.add(userId);
+		
+		isFirst = true;		
+		sql += " AND (";
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR ";
+			
+			sql += " a0.DateId = ?";
+			isFirst = false;
+			
+			args.add(workDay.getDateId());
+		} 
+		sql += ")";
+		
+		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
+	}
+
+	public String getDateId(int dateId) {
+		String sql = "SELECT Date From Date WHERE Id = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ dateId }, String.class);
+	}
+
+	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
+		// Main query
+		String sql = "SELECT COUNT(*) FROM work_day wd"
+						+ " INNER JOIN employment e ON e.JobId = wd.JobId"
+						+ " WHERE e.UserId = ?"
+						+ " AND (";
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(userId);
+		
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR ";
+			
+			sql += " wd.DateId = ?";
+			isFirst = false;
+			
+			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
+			args.add(workDay.getDateId());
+			
+		}
+		
+		// Close the AND
+		sql += ")";
+				
+		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
 	}
 
 

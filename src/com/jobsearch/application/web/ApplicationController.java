@@ -17,6 +17,7 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalDTO;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
@@ -59,6 +60,26 @@ public class ApplicationController {
 		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
 		return JSON.stringify(wageProposal);
 
+	}
+	
+	
+	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)
+	@ResponseBody
+	public String acceptOffer(@PathVariable(value = "jobId") int jobId,
+								@PathVariable(value = "userId") int userId,
+								HttpSession session) {
+		Integer applicationStatus = applicationService.getApplicationStatus(jobId, userId, session);
+		
+		if(applicationStatus != null) return applicationStatus.toString();
+		else return SessionContext.get404Page();
+
+	}
+	
+	@RequestMapping(value = "/employer/offer/wage-proposal", method = RequestMethod.POST)
+	@ResponseBody
+	public void employerOfferWageProposal(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+
+		applicationService.offerWageProposal_byEmployer(applicationDto, session);
 	}
 
 	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)

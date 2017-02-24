@@ -9,6 +9,6 @@
 		</c:if>	
 	</c:when>
 	<c:otherwise>
-		<div id="questions" class="side-bar" data-section-id="section_questionsContainer">Questions</div>						
+<!-- 		<div id="questions" class="side-bar" data-section-id="section_questionsContainer">Questions</div>						 -->
 	</c:otherwise>					
 </c:choose>	

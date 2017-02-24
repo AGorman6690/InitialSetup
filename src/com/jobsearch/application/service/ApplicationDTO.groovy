@@ -33,6 +33,9 @@ class ApplicationDTO {
 	
 	int newStatus
 	
+	Integer days_offerExpires
+	Integer hours_offerExpires
+	Integer minutes_offerExpires
 	
 	ApplicationDTO(){
 		this.applicantDto = new JobSearchUserDTO();

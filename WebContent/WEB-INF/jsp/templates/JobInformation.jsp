@@ -29,6 +29,39 @@
 			</div>
 		</div>		
 		
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
+				Dates
+			</div>
+			<div class="info-value col-sm-8">
+				<div>
+					${jobDto.durationDays } days
+				</div>
+				<div id="workDays">
+					<c:forEach items="${jobDto.workDays }" var="workDay">
+						<div data-date="${!empty workDay.date ? workDay.date : workDay.stringDate }"></div>
+					</c:forEach>
+					
+				</div>
+				<c:choose>
+					<c:when test="${jobDto.job.durationTypeId == 2 }">		
+						<div id="workDaysCalendar" class="calendar-container read-only"
+							 data-min-date="${jobDto.date_firstWorkDay }"
+							 data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+					</c:when>
+					<c:otherwise>${jobDto.job.stringStartDate }</c:otherwise>				
+				</c:choose>
+			</div>
+		</div>	
+		
+		<div class="info-container row">
+			<div class="info-label col-sm-4">Start Time</div>
+			<div class="info-value col-sm-8">${jobDto.job.stringStartTime }</div>
+		</div>
+		<div class="info-container row">
+			<div class="info-label col-sm-4">End Time</div>
+			<div class="info-value col-sm-8">${jobDto.job.stringEndTime }</div>
+		</div>				
 		
 	<c:if test="${jobDto.skillsDesired.size() > 0 }">
 		<div class="info-container row">
@@ -61,6 +94,7 @@
 	</c:if>
 			
 		
+		
 		<div class="info-container row">
 			<div class="info-label col-sm-4">
 				Employment Type
@@ -89,65 +123,7 @@
 				</div>
 			</div>
 		</div>	
-		
-		
-					
-<%-- 		<c:choose> --%>
-<%-- 			<c:when test="${jobDto.job.durationTypeId == 1 }"> --%>
-<%-- 				<c:set var="dateLabel" value="Date" /> --%>
-<%-- 				<c:set var="durationValue" value="${jobDto.durationHours } hours"/> --%>
-<%-- 			</c:when> --%>
-<%-- 			<c:when test="${jobDto.job.durationTypeId == 2 }"> --%>
-<%-- 				<c:set var="dateLabel" value="Dates" /> --%>
-<%-- 				<c:set var="durationValue" value="${jobDto.durationDays } days"/> --%>
-<%-- 			</c:when> --%>
-<%-- 			<c:otherwise> --%>
-<%-- 				<c:set var="dateLabel" value="Start Date" /> --%>
-<%-- 			</c:otherwise> --%>
-<%-- 		</c:choose>	 --%>
-								
 	
-				
-	<%-- 					<c:if test="${job.durationTypeId == 1 || job.durationTypeId == 2 }"> --%>
-		<div class="info-container row">
-			<div class="info-label col-sm-4">Start Time</div>
-			<div class="info-value col-sm-8">${jobDto.job.stringStartTime }</div>
-		</div>
-		<div class="info-container row">
-			<div class="info-label col-sm-4">End Time</div>
-			<div class="info-value col-sm-8">${jobDto.job.stringEndTime }</div>
-		</div>				
-		
-		<div class="info-container row">
-			<div class="info-label col-sm-4">Duration</div>
-			<div class="info-value col-sm-8">${jobDto.durationDays }</div>
-		</div>
-	
-																	
-	<%-- 					</c:if> --%>
-
-					
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Dates
-			</div>
-			<div class="info-value col-sm-8">
-				<div id="workDays">
-					<c:forEach items="${jobDto.workDays }" var="workDay">
-						<div data-date="${!empty workDay.date ? workDay.date : workDay.stringDate }"></div>
-					</c:forEach>
-					
-				</div>
-				<c:choose>
-					<c:when test="${jobDto.job.durationTypeId == 2 }">		
-						<div id="workDaysCalendar" class="calendar-container read-only"
-							 data-min-date="${jobDto.date_firstWorkDay }"
-							 data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-					</c:when>
-					<c:otherwise>${jobDto.job.stringStartDate }</c:otherwise>				
-				</c:choose>
-			</div>
-		</div>	
 
 	<c:if test="${jobDto.questions.size() > 0 }">	
 		<div class="info-container row">	

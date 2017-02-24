@@ -4,13 +4,10 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -21,13 +18,11 @@ import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
 public class ApplicationRepository {
@@ -41,7 +36,8 @@ public class ApplicationRepository {
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
-
+	@Autowired
+	VerificationServiceImpl verificationService;
 
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -142,7 +138,7 @@ public class ApplicationRepository {
 		List<Application> applications = this.ApplicationRowMapper(sql, new Object[] { jobId, userId });
 //		return  jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, Application.class);
 
-		if (applications.size() > 0) return applications.get(0);
+		if (verificationService.isListPopulated(applications)) return applications.get(0);
 		else return null;
 
 	}
@@ -344,7 +340,7 @@ public class ApplicationRepository {
 
 			cStmt.setInt(1, applicationDto.getApplicantId());
 			cStmt.setInt(2, applicationDto.getJobId());
-			cStmt.setInt(3, Application.STATUS_SUBMITTED);
+			cStmt.setInt(3, applicationDto.getApplication().getStatus());
 
 			ResultSet result = cStmt.executeQuery();
 
@@ -359,11 +355,14 @@ public class ApplicationRepository {
 			applicationService.addWageProposal(applicationDto.getWageProposal());
 
 			// Add answers
-			for (Answer answer : applicationDto.getAnswers()) {
-				answer.setUserId(applicationDto.getApplicantId());
-				applicationService.addAnswer(answer);
+			if(verificationService.isListPopulated(applicationDto.getAnswers())){
+				for (Answer answer : applicationDto.getAnswers()) {
+					answer.setUserId(applicationDto.getApplicantId());
+					applicationService.addAnswer(answer);
 
+				}	
 			}
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -585,9 +584,9 @@ public class ApplicationRepository {
 		for(WorkDay wd : workDays){
 			
 			if(!isFirst) sql += " OR ";			
-			sql += " ( wd.Date = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
+			sql += " ( wd.DateId = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
 			
-			args.add(wd.getDate().toString());
+			args.add(wd.getDateId());
 			args.add(wd.getStringEndTime());
 			args.add(wd.getStringStartTime());
 			

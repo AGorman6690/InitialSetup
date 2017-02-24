@@ -2,7 +2,6 @@
 <%@ include file="../includes/resources/PageContentManager.jsp" %>
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script>
 
 <link rel="stylesheet" type="text/css" href="../static/css/profile.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />

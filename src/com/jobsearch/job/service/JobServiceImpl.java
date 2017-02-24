@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -34,7 +35,7 @@ import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
-import com.jobsearch.utilities.VerificationUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
 
 
 @Service
@@ -51,6 +52,9 @@ public class JobServiceImpl {
 
 	@Autowired
 	UserServiceImpl userService;
+	
+	@Autowired
+	VerificationServiceImpl verificationService;
 
 	@Autowired
 	GoogleClient googleClient;
@@ -846,7 +850,15 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			
 			if(sessionUser != null){
-				jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));	
+				
+				jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
+				
+				if(jobDto.getApplication() == null){
+					jobDto.setAvailabilityStatus(this.getAvailabilityStatus(
+														jobDto.getJob().getIsPartialAvailabilityAllowed(),
+														sessionUser.getUserId(),
+														jobDto.getWorkDays()));
+				}
 			}			
 			
 			break;
@@ -879,6 +891,40 @@ public class JobServiceImpl {
 
 				
 	}
+
+	private int getAvailabilityStatus(boolean isPartialAvailabilityAllowed, int userId,
+										List<WorkDay> workDays) {
+		
+		
+		if(verificationService.isListPopulated(workDays)){			
+			
+			Integer count_availableDays = this.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
+			Integer count_employmentDays = this.getCount_employmentDays_byUserAndWorkDays(userId, workDays);
+			
+			// If the user has **NO EMPLOYMENT** on these work days
+			if(count_employmentDays <= 0) {
+				
+				if(count_availableDays == 0) return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET;
+				else if(count_availableDays == workDays.size()) return JobDTO.AVAILABILITY_STATUS_COMPLETELY;
+				else {
+					if(isPartialAvailabilityAllowed) return JobDTO.AVAILABILITY_STATUS_PARTIAL_DUE_TO_AVAILABILITY_NOT_SET;
+					else return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET;
+				}
+				
+			}
+			// Else the user has at least one employment day within these work days
+			else{
+				
+				if(count_employmentDays == workDays.size()) return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_EMPLOYMENT;
+				else {					
+					if(isPartialAvailabilityAllowed) return JobDTO.AVAILABILITY_STATUS_PARTIAL_DUE_TO_EMPLOYMENT;
+					else return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_EMPLOYMENT;		
+				}							
+			}
+		}		
+		else return -1;		
+	}
+
 
 	public void setModel_ViewJob_Employer(Model model, HttpSession session,
 						String context, int jobId, String data_pageInit) {
@@ -1012,7 +1058,7 @@ public class JobServiceImpl {
 		
 		
 		
-		if(VerificationUtility.didSessionUserPostJob(session, this.getJob(postedQuestion.getJobId()))){
+		if(verificationService.didSessionUserPostJob(session, postedQuestion.getJobId())){
 			return postedQuestion;
 		}
 		else return null;
@@ -1090,7 +1136,7 @@ public class JobServiceImpl {
 	public JobDTO getJobDto_ByEmployer(HttpSession session, int jobId) {
 		
 		
-		if(VerificationUtility.didSessionUserPostJob(session, this.getJob(jobId))){
+		if(verificationService.didSessionUserPostJob(session, jobId)){
 			
 			return this.getJobDTO_DisplayJobInfo(jobId);
 		}
@@ -1099,6 +1145,40 @@ public class JobServiceImpl {
 
 	public int getCount_JobsCompleted_ByUser(int userId) {
 		return repository.getCount_JobsCompleted_ByUser(userId);
+	}
+
+	public Integer getCount_availableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
+		
+		// *************************************************
+		// This takes into account the user's employment and the days
+		// they have explicitly marked as "Available".
+		// If they have marked the 1st and 2nd as "available", and the
+		// work days are the 2nd and 3rd, then their availability count
+		// is 1 (the 3rd is not counted, because it was not marked as "available".
+		// *************************************************
+		
+		if(verificationService.isListPopulated(workDays)){
+			return repository.getCount_availableDays_ByUserAndWorkDays(userId, workDays);	
+		}
+		else return -1;
+	}
+	
+
+	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
+
+		// *************************************************
+		// This only takes into account the user's employment and ignores they days
+		// whether they have or have not explicitly marked as "Available"
+		// *************************************************
+		
+		if(verificationService.isListPopulated(workDays)){
+			return repository.getCount_employmentDays_byUserAndWorkDays(userId, workDays);	
+		}
+		else return -1;
+	}
+
+	public String getDate(int dateId) {
+		return repository.getDateId(dateId);
 	}
 
 

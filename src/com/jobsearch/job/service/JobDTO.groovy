@@ -61,5 +61,13 @@ public class JobDTO {
 	 List<Skill> skills
 	 List<Skill> skillsDesired
 	 List<Skill> skillsRequired
+	 
+	 int availabilityStatus
+	 public static Integer AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET = 0
+	 public static Integer AVAILABILITY_STATUS_NONE_DUE_TO_EMPLOYMENT = 1
+	 public static Integer AVAILABILITY_STATUS_PARTIAL_DUE_TO_AVAILABILITY_NOT_SET = 2
+	 public static Integer AVAILABILITY_STATUS_PARTIAL_DUE_TO_EMPLOYMENT = 3
+	 public static Integer AVAILABILITY_STATUS_COMPLETELY = 4
+
 
 }

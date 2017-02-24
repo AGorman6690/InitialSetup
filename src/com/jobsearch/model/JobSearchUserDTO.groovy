@@ -18,6 +18,9 @@ class JobSearchUserDTO {
 	List<FindJobFilterDTO> savedFindJobFilters;
 	
 	List<String> availableDays;
+	List<String> unavailableDays;
+	Integer count_availableDays_perFindEmployeesSearch
+	
 	double wage
 	
 	

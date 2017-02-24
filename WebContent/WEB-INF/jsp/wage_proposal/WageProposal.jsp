@@ -6,8 +6,16 @@
 			
 			<c:choose>
 				<c:when test="${applicationDto.currentWageProposal.proposedToUserId == user.userId }">
-					<span class="accent" data-toggle-id="response-container-${applicationDto.currentWageProposal.id }">
-						Waiting for you</span>	
+					
+				
+					
+					<div class="accent" data-toggle-id="response-container-${applicationDto.currentWageProposal.id }">
+					<c:if test="${applicationDto.application.status == -1 }">
+						<div>Employer initiated contact</div>
+					</c:if>					
+						
+						Waiting for you
+					</div>	
 				
 					<div id="response-container-${applicationDto.currentWageProposal.id }"
 						 class="response-container dropdown-style">
@@ -27,7 +35,7 @@
 						<div id="decline-details-${applicationDto.currentWageProposal.id }"
 							class="proposal-actions-container">
 							By declining the wage proposal,
-							${user.profileId == 1 ? 'your' : "the applicant's" }
+							${user.profileId == 1 ? 'your' : 'this' }
 							 application will be removed.
 							<div class="decline-actions proposal-actions">
 								<span class="accent confirm-decline">
@@ -59,7 +67,10 @@
 					
 				</c:when>
 				<c:otherwise>
-					Waiting for ${user.profileId == 1 ? 'employer' : 'applicant' }
+					<c:if test="${user.profileId == 2 && applicationDto.application.status == -1 }">
+						<div>You initiated contact.</div>
+					</c:if>					
+					Waiting for ${user.profileId == 1 ? 'employer.' : 'applicant.' }
 				</c:otherwise>
 			</c:choose>												
 		</c:when>

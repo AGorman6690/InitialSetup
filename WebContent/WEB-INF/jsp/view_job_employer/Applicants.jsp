@@ -14,6 +14,9 @@
 					<th id="" class="" colspan="1"></th>
 					<th id="" class="span" colspan="2">Wage Proposal</th>
 					<th id="" class="" colspan="1"></th>
+				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
+					<th id="" class="" colspan="1"></th>
+				</c:if>
 					<th id="" class="" colspan="1"></th>
 					<th id="" class="" colspan="1"></th>
 					<th id="" class="" colspan="1"></th>
@@ -71,6 +74,9 @@
 					
 					
 					</th>
+				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
+					<th id="" class="" colspan="1">Days Available</th>
+				</c:if>
 					<th id="rating" class="header-dropdown" data-sort-attr="data-applicant-rating">
 					
 						<span data-toggle-id="sortApplicantRating" >
@@ -210,6 +216,13 @@
 							<%@ include file="../wage_proposal/History_WageProposals.jsp" %>
 						</div>
 					</td>
+				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
+					<td>
+						<div class="vert-border">
+							${applicationDto.applicantDto.count_availableDays_perFindEmployeesSearch}
+						</div>
+					</td>
+				</c:if>
 					<td>
 						<div class="vert-border">
 						 	${applicationDto.applicantDto.ratingValue_overall}

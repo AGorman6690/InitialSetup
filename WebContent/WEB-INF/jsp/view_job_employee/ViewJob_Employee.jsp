@@ -37,15 +37,25 @@
 		</div>
 		
 		<div class="col-sm-10" id="sectionContainers">
-			<c:if test="${context == 'find' && !empty jobDto.application}">
-				<div id="applicationStatus">						
-					${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
-						jobDto.application.status == 1 ? "Application has been declined" :
-						jobDto.application.status == 4 ? "Application is waiting for your approval" :
-						jobDto.application.status == 5 ? "Application has been withdrawn" :
-						"Application has been accepted" }						
-				</div>
-			</c:if>
+			<div id="applicationStatus">	
+				<c:choose>					
+					<c:when test="${context == 'find' && !empty jobDto.application}">		
+							${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
+								jobDto.application.status == 1 ? "Application has been declined" :
+								jobDto.application.status == 4 ? "Application is waiting for your approval" :
+								jobDto.application.status == 5 ? "Application has been withdrawn" :
+								"Application has been accepted" }						
+						
+					</c:when>
+					<c:when test="${context == 'find' }">
+							${jobDto.availabilityStatus == 0 ? "Per your availability calendar, you are NOT available" :
+								jobDto.availabilityStatus == 1 ? "You are NOT available due to other employment. You cannot apply for this job." :	
+								jobDto.availabilityStatus == 2 ? "Per your availability calendar, you are PARTIALLY available" :						
+								jobDto.availabilityStatus == 3 ? "You are PARTIALLY available due to other employment" :
+								jobDto.availabilityStatus == 4 ? "You are available" : "" }							
+					</c:when>					
+				</c:choose>
+			</div>
 			<div id="jobInfoContainer" class="section-container">
 				<div class="section-body">
 
@@ -57,20 +67,23 @@
 			</div>
 
 		<c:choose>		
-			<c:when test="${context == 'find' && empty jobDto.application}">
+			<c:when test="${context == 'find' && 
+								(empty jobDto.application ||
+								jobDto.availabilityStatus != 1) }">
+								
 				<div id="applyContainer" class="section-container ">
 					<%@ include file="./ApplyContainer.jsp" %>
 				</div>
 			</c:when>
 			<c:otherwise>
-				<div id="section_questionsContainer" class="section-container">
-					<div class="section-body">
-						<h4>Questions</h4>
-						<div class="body-element-container">
-							<%@include file="../templates/Questions_ShowAnswers.jsp"%>
-						</div>
-					</div>		
-				</div>		
+<!-- 				<div id="section_questionsContainer" class="section-container"> -->
+<!-- 					<div class="section-body"> -->
+<!-- 						<h4>Questions</h4> -->
+<!-- 						<div class="body-element-container"> -->
+<%-- 							<%@include file="../templates/Questions_ShowAnswers.jsp"%> --%>
+<!-- 						</div> -->
+<!-- 					</div>		 -->
+<!-- 				</div>		 -->
 			</c:otherwise>	
 		</c:choose>		
 		</div> <!-- close sections container -->

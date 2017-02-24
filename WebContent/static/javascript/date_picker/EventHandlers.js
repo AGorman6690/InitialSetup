@@ -19,6 +19,21 @@ function beforeShowDay_ifSelected(date, days){
 	else return [true, ""];	   
 }
 
+function beforeShowDay_findEmployees_ifUserHasAvailability(
+			date, selectedDays, dates_employeeAvailability){
+	// This is to for the find employees page.
+	// If the user (i.e. the returned prospective employee) as availability
+	// on the requested date, then the calendar date will be green.
+	// If the user is not available, then the calendar date will be red.
+	
+	
+	// Check if date is in the particular array of dates
+	if(isDateAlreadySelected(date, dates_employeeAvailability)) return [true, 'is-available'];
+	else if(isDateAlreadySelected(date, selectedDays)) return [true, 'is-not-available'];
+	else return [true, ""];
+	
+}
+
 function onSelect_multiDaySelect_noRange(dateText, days){
  
 	var date = new Date(dateText);

@@ -23,6 +23,8 @@ import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.VerificationServiceImpl;
+
 
 @Service
 public class ApplicationServiceImpl {
@@ -38,6 +40,9 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	JobServiceImpl jobService;
+	
+	@Autowired
+	VerificationServiceImpl verificationService;
 
 
 	public List<ApplicationDTO> getApplicationDtos_ByJob(int jobId) {
@@ -71,6 +76,18 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setAnswerOptionIds_Selected(
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
+			
+			
+			List<WorkDay> workDays = jobService.getWorkDays(jobId);
+			int count_employmentDays = jobService.getCount_employmentDays_byUserAndWorkDays(
+														applicantId, workDays);
+			
+			// **********************************
+			// See lengthy note in applyForJob()
+			// **********************************
+			applicationDto.getApplicantDto().setCount_availableDays_perFindEmployeesSearch(
+													workDays.size() - count_employmentDays);
+			
 
 			applicationDtos.add(applicationDto);
 		}
@@ -170,14 +187,29 @@ public class ApplicationServiceImpl {
 		// Add the application to the database
 		// repository.addApplication(applicationDto.getJobId(),
 		// applicationDto.getUserId());
+		applicationDto.getApplication().setStatus(Application.STATUS_SUBMITTED);
 		insertApplication(applicationDto);
-
-		// //Add the wage proposal to the database
-		// this.addWageProposal(applicationDto.getWageProposal());
-
-		// Whether the applicant answered all the questions is handled on the
-		// client side.
-		// At this point, all questions have a valid answer.
+		
+		
+		// *********************************************
+		// Review this.
+		// Currently the applicant's availability is not updated at the time of application.
+		// An applicant's availability count will simply be:
+		// job-work-day count minus employment-work-day count amongst the job's work days.
+		// So even if the applicant has not explicitly claimed they are available on a particular day,
+		// as long as they are not employed on this day, then it will
+		// be assumed the applicant is available on this day
+		// *********************************************
+		// Reason for updating the applicant's availability:
+		// It is assumed that if the user applies for a job, then they are available on those date(s).
+		// If the user has not explicitly set this job's date(s) as "available" 
+		// on their availability calendar, then this will ensure their calendar is updated.
+		// This is implemented because if a job allows partial availability, and 
+		// an applicant has not explicitly stated their availability, then the count of day's
+		// the applicant is available cannot be returned to the employer.
+		
+//		userService.updateAvailability(session, appliedToJob.getWorkDays());
+		// *********************************************
 
 	}
 
@@ -187,6 +219,12 @@ public class ApplicationServiceImpl {
 	}
 
 	public void insertApplication(ApplicationDTO applicationDto) {
+		
+		// ****************************************************
+		// Need to validate answers
+		// ****************************************************
+		
+		
 		repository.insertApplication(applicationDto);
 
 	}
@@ -625,6 +663,35 @@ public class ApplicationServiceImpl {
 		if(countEmploymentRecord  == 1) return true;
 		else return false;
 	
+	}
+
+	public void offerWageProposal_byEmployer(ApplicationDTO applicationDto, HttpSession session) {
+
+		// Verify:
+		// 1) That the session user did indeed post this job.
+		// 2) That the prospective employee has not already applied to this job.
+		if(verificationService.didSessionUserPostJob(session, applicationDto.getJobId()) && 
+				!verificationService.didUserApplyForJob(applicationDto.getJobId(), applicationDto.getApplicantId())){
+			
+			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
+			applicationDto.getWageProposal().setProposedByUserId(SessionContext.getUser(session).getUserId());
+			applicationDto.getWageProposal().setProposedToUserId(applicationDto.getApplicantId());
+			
+			this.insertApplication(applicationDto);	
+		}
+
+	}
+
+	public Integer getApplicationStatus(int jobId, int userId, HttpSession session) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			Application application = this.getApplication(jobId, userId);
+			
+			if(application == null) return Application.STATUS_DOES_NOT_EXIST;
+			return application.getStatus();
+		}
+		else return null;
+		
 	}
 
 

@@ -24,7 +24,7 @@
 	padding-left: 60px;
 }
 
-h3{
+.filter h3{
 	color: #197994;
 	font-size: 20px;
 }
@@ -35,4 +35,51 @@ h3{
 
 #resultsContainer{
 	display: none;
+}
+
+td.days-available{
+	position: relative;	
+}
+
+td.days-available .calendar-container{
+    background-color: #ffffff;
+    z-index: 10000;
+    border: 2px solid #163b3d;
+    border-radius: 3px;
+    padding: 20px;
+    position: absolute;
+    display: none;
+}
+
+td.days-available .calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+td.days-available .calendar-container td.is-not-available {
+	background: #c38f8f;
+	border-radius: 5px;
+}
+
+td.days-available .calendar-container td.is-available a,
+td.days-available .calendar-container td.is-not-available a{
+	color: #ffffff;
+}
+
+span.toggle-availability-calendar{
+	cursor: pointer;
+}
+
+#makeOfferModal .mod-content{
+	width: 400px;
+	height: 420px;
+	margin: -210px 0 0 -200px;
+}
+
+.mod-content .item{
+	padding: 10px 0px;
+}
+
+.mod-body{
+	padding-left: 25px;
 }

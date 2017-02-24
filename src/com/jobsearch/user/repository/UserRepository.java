@@ -23,7 +23,7 @@ import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.AvailabilityDTO;
-import com.jobsearch.utilities.VerificationUtility;
+import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
 public class UserRepository {
@@ -36,6 +36,9 @@ public class UserRepository {
 
 	@Autowired
 	JobServiceImpl jobService;
+	
+	@Autowired
+	VerificationServiceImpl verificationService;
 	
 	public JobSearchUser getUser(int userId) {
 
@@ -449,12 +452,47 @@ public class UserRepository {
 	}
 
 
+	public List<String> getAvailableDays_byWorkDays(int userId, List<WorkDay> workDays) {
+		
+		String sql = "SELECT Date FROM  date d"
+						+ " INNER JOIN availability a ON a.DateId = d.Id"
+//						+ " INNER JOIN employment e ON e.DateId = a.DateId"
+						+ " WHERE a.UserId = ?"
+//						+ " WHERE e.UserId = ?"
+						+ " AND a.DateId NOT IN ("
+						+ "	SELECT wd.DateId FROM work_day wd"
+						+ " INNER JOIN employment e ON e.JobId = wd.JobId"
+						+ " WHERE e.UserId = ?"
+						+ " )"
+						+ " AND (";
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(userId);
+		args.add(userId);
+		
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR";
+			sql += " d.Date = ?";
+			
+			args.add(workDay.getStringDate());
+			
+			isFirst = false;
+		}
+		sql += ")";
+		
+		
+		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
+	}
+
+
 	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(JobDTO jobDto) {
 
 		// **********************************
 		// Summary:
 		// 1) The sub query for the distance between each employee's home location
-		// 		and the filter location is required.
+		// 		and the requested filter location is required.
 		// 2) The sub query for availability is optional.
 		//		2a) If availability is specified, then it is ensured that 
 		//			each potential employee's employment does not conflict
@@ -463,31 +501,54 @@ public class UserRepository {
 		// 3) The sub query for categories is optional.
 		// **********************************
 
-		String sql = "SELECT * FROM user u WHERE u.UserId IN";
+		// ***************************************************
+		// Main query
+		// ***************************************************
+		String sql = "SELECT * FROM user u WHERE u.UserId IN (";
 		List<Object> argsList = new ArrayList<Object>();
+				
+		// ********************************************
+		// Distance sub query
+		// ********************************************	
+		// This returns all user ids having a distance between the user's
+		// home location and job location that is less than or equal to the
+		// user's max-distance-willing-to-travel.
+		// This sub query is always required.
+		String subQuery_Distance = " SELECT u2.UserId FROM user u2"
+										+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( u2.HomeLat ) ) * cos( radians( u2.HomeLng ) - radians(?) ) "
+										+ "+ sin( radians(?) ) * sin( radians( u2.HomeLat ) ) ) ) <= u2.MaxWorkRadius ";
 
-
-		int subQueryCount = 1; // 1 because the distance sub query is required
-
+		argsList.add(jobDto.getJob().getLat());
+		argsList.add(jobDto.getJob().getLng());
+		argsList.add(jobDto.getJob().getLat());
+		
+		// This will be used to close the sub-query parenthesis
+		int subQueryCount = 1; // for the distance sub query. 
+		
 		// ********************************************
 		// Availability sub query
 		// ********************************************		
-		String subQueryDates = null;
-		if (VerificationUtility.isListPopulated(jobDto.getWorkDays())) {
+		String subQuery_Dates = null;
+		if (verificationService.isListPopulated(jobDto.getWorkDays())) {
+			
+			// Start the availability sub query
+			subQuery_Dates = " AND u2.UserId IN (";
 
 			// *************************************
-			// If Partial availability is allowed
+			// If Partial availability is allowed.
+			// A user id is selected if the user has availability
+			// on **AT LEAST 1** of the requested days.
 			// *************************************
 			if(jobDto.getJob().getIsPartialAvailabilityAllowed()){
 				
-				subQueryDates = " ( SELECT DISTINCT(a.UserId) FROM availability a WHERE (";
+				subQuery_Dates += " SELECT DISTINCT(a.UserId) FROM availability a WHERE (";
 				Boolean isFirst = true;
 				
 				for (WorkDay workDay : jobDto.getWorkDays()) {
 					
-					if(!isFirst) subQueryDates += " OR";
+					if(!isFirst) subQuery_Dates += " OR";
 					
-					subQueryDates += " a.DateId = ?";
+					subQuery_Dates += " a.DateId = ?";
 					
 					argsList.add(jobService.getDateId(workDay.getStringDate()));
 					
@@ -495,53 +556,50 @@ public class UserRepository {
 				}	
 				
 				// close the WHERE clause
-				subQueryDates += ")";
+				subQuery_Dates += ")";
 				
 				// Start the sub query to exclude the user ids with conflicting employment
-				subQueryDates += " AND a.UserId NOT IN ("; 
+				subQuery_Dates += " AND a.UserId NOT IN ("; 
 				
 				// **************************************************
 				// Sub query to verify employment does not conflict with requested days.
 				// Only exclude the user ids that have employment on **ALL** requested days.
 				// **************************************************
-				subQueryDates += " SELECT DISTINCT(u3.UserId) FROM user u3";
-				subQueryDates += " INNER JOIN employment e ON e.UserId = u3.UserId";
+				subQuery_Dates += " SELECT DISTINCT(u3.UserId) FROM user u3";
+				subQuery_Dates += " INNER JOIN employment e ON e.UserId = u3.UserId";
 				
 				int i = 0;
 				for (WorkDay workDay : jobDto.getWorkDays()) {
 					
-					subQueryDates += " INNER JOIN work_day wd" + i
+					subQuery_Dates += " INNER JOIN work_day wd" + i
 							 			+ " ON e.JobId = wd" + i + ".JobId"
 							 			+ " AND wd" + i + ".DateId = ?";					
 					
 					argsList.add(jobService.getDateId(workDay.getStringDate()));
 					i += 1;
 				}	
-				
-				subQueryDates += " AND u3.UserId IN ";
 								
 			}
 			
 			// *************************************
-			// Else applicant must have ALL work days available 
+			// Else applicant must have ALL work days available.
+			// A user id is selected if the user has availability
+			// on **ALL** of the requested days.			
 			// *************************************
 			else{
 							
-				subQueryDates = " (SELECT DISTINCT(a0.UserId) FROM availability a0";
+				subQuery_Dates += " SELECT DISTINCT(a0.UserId) FROM availability a0";
 	
-				// See this SO post for sql details:
-				// http://stackoverflow.com/questions/1054299/sql-many-to-many-table-and-query
 				int i = 1;
 				for(WorkDay workDay : jobDto.getWorkDays()){
-					
-					
+										
 					if(i == jobDto.getWorkDays().size()){
 						
 						// The WHERE clause must FOLLOW the JOINs
-						subQueryDates += " WHERE a0.DateId = ?";
+						subQuery_Dates += " WHERE a0.DateId = ?";
 					}
 					else{
-						subQueryDates += " JOIN availability a" + i
+						subQuery_Dates += " JOIN availability a" + i
 										+ " ON a" + (i - 1) + ".UserId = a"	+ i + ".UserId"
 										+ " AND a" + i + ".DateId = ?";						
 					}
@@ -550,26 +608,24 @@ public class UserRepository {
 					argsList.add(jobService.getDateId(workDay.getStringDate()));
 				}
 	
-				// subQueryDates += " AND a0.UserId IN "; 
-
 				// Start the sub query to exclude the user ids with conflicting employment
-				subQueryDates += " AND a0.UserId NOT IN ("; 
+				subQuery_Dates += " AND a0.UserId NOT IN ("; 
 				
 				// **************************************************
 				// Sub query to verify employment does not conflict with requested days.
 				// Only exclude the user ids that have employment on **ALL** requested days.
 				// **************************************************
-				subQueryDates += " SELECT DISTINCT(u3.UserId) FROM user u3";
-				subQueryDates += " INNER JOIN employment e ON e.UserId = u3.UserId";	
-				subQueryDates += " INNER JOIN work_day wd ON e.JobId = wd.JobId";	
-				subQueryDates += " WHERE (";
+				subQuery_Dates += " SELECT DISTINCT(u3.UserId) FROM user u3";
+				subQuery_Dates += " INNER JOIN employment e ON e.UserId = u3.UserId";	
+				subQuery_Dates += " INNER JOIN work_day wd ON e.JobId = wd.JobId";	
+				subQuery_Dates += " WHERE (";
 				Boolean isFirst = true;
 				
 				for (WorkDay workDay : jobDto.getWorkDays()) {
 					
-					if(!isFirst) subQueryDates += " OR";
+					if(!isFirst) subQuery_Dates += " OR";
 					
-					subQueryDates += " wd.DateId = ?";
+					subQuery_Dates += " wd.DateId = ?";
 					
 					argsList.add(jobService.getDateId(workDay.getStringDate()));
 					
@@ -577,14 +633,10 @@ public class UserRepository {
 				}	
 				
 				// close the WHERE clause
-				subQueryDates += ")";
-				
-				subQueryDates += " AND u3.UserId IN ";				
-				
-				
+				subQuery_Dates += ")";
+
 			}
-			
-			sql += subQueryDates;
+
 			subQueryCount += 2; // 1 for the availability sub query, 1 for the employment sub query
 
 		}
@@ -618,24 +670,11 @@ public class UserRepository {
 		}
 */
 
-		// Distance sub query.
-		// This returns all user ids having a distance between the user's
-		// home location and job location that is less than or equal to the
-		// user's max-distance-willing-to-travel.
-		// This sub query is always required.
-		String subQueryDistance = " ( SELECT u2.UserId FROM user u2"
-				+ " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( u2.HomeLat ) ) * cos( radians( u2.HomeLng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( u2.HomeLat ) ) ) ) <= u2.MaxWorkRadius ";
-
-		sql += subQueryDistance;
-
-		argsList.add(jobDto.getJob().getLat());
-		argsList.add(jobDto.getJob().getLng());
-		argsList.add(jobDto.getJob().getLat());
-
-
-
-		// Need to close the sub queries
+		// Build the query string		
+		sql += subQuery_Distance;
+		if(subQuery_Dates != null) sql += subQuery_Dates;
+		
+		// close the sub queries
 		for (int i = 0; i < subQueryCount; i++) {
 			sql += ")";
 		}

@@ -5,7 +5,7 @@ $(document).ready(function(){
 	    }
 	}	
 	
-	$("#saveModal .mod-header .glyphicon-remove").click(function(){
+	$(".mod-header .glyphicon-remove").click(function(){
 		closeModal($(".mod"));
 	})
 	

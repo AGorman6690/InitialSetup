@@ -23,6 +23,24 @@
 
 <div class="container">
 
+	<div class="postSections">
+		<span class="post-section">General</span>
+		<span>/</span>
+		<span class="post-section">Dates</span>
+		<span>/</span>
+		<span class="post-section">Times</span>
+		<span>/</span>
+		<span class="post-section">Location</span>
+		<span>/</span>
+		<span class="post-section">Compensation</span>
+		<span>/</span>
+		<span class="post-section">Categories</span>
+		<span>/</span>
+		<span class="post-section">Questions</span>
+		<span>/</span>
+		<span class="post-section">Employee Skill</span>							
+	</div>
+
 	<div class="row">
 		<div id="headerLinksContainer" class="col-sm-12">
 			<div id="submitPosting_preview_container">
