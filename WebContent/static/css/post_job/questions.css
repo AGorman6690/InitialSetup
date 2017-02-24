@@ -13,12 +13,14 @@
 /* } */
 
 #addedQuestions{
-	padding:5px 0px;
+	padding:20px 0px;
 }
 #addedQuestions a{
 	display:block;
 	padding:4px 0px;
 	height:35px;
+	color: #000000;
+	cursor:pointer;
 }
 
 #addedQuestions a:hover{
@@ -27,8 +29,9 @@
 }
 
 #addedQuestions a.selected{
-	color:#163B3D;
-	font-size:18px;
+	color:#197994;
+/* 	font-size:18px; */
+	font-weight: bold;
 }
 
 #questionActions button{
@@ -39,7 +42,7 @@
 }
 
 #questionActions button.clickable{
-	background-color:#337ab7;;
+	background-color:#163b3d;;
 	color:#ffffff;
 	cursor:pointer;
 }

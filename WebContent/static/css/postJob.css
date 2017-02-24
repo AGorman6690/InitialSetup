@@ -17,6 +17,7 @@
 .section-container .header.row{
 	font-size:28px;
 	height:auto;
+	display: none;
 /* 	font-weight:bold; */
 }
 .section-container{
@@ -48,7 +49,7 @@
 }
 
 .first.row{
-	padding-top:25px;
+	padding-top:50px;
 }
 
 #calendarContainer{
@@ -65,7 +66,6 @@
     cursor: pointer;
     padding: 10px;
     border: 1px solid rgb(192,192,192);
-
     width: 155px;
     font-size: 16px;
     overflow: hidden;    
@@ -83,14 +83,11 @@
 	margin-left:40px;
 }
 
-#timesTableContainer{
-	padding-left: 100px;
-}
-
 #timesTable thead .master-row,
 #timesTable thead .master-row-multi-select{
 	display:none;
 }
+
 
 #timesTable select.time{
 	width:125px;
@@ -144,12 +141,14 @@
 }
 
 #postedQuestionsContainer{
-	display:inline-block;
+/* 	display:inline-block; */
 	position: relative;
+	padding-top: 15px;
 }
 
 #postedQuestions{
 	width:350px;
+	left: 175px;
 /* 	height:500px; */
 /* 	overflow: scroll;  */
 }
@@ -195,3 +194,47 @@
 	display:none;
 }
 
+#postSections .post-section{
+	font-size: 17px;
+	color: #767676;
+}
+
+#postActions .post-section{
+	font-size: 18px;
+}
+
+.post-section{
+	margin: 0px 15px;
+	line-height: 50px;	
+	cursor: pointer;
+}
+#postActions{
+/* 	margin-top: 25px; */
+}
+
+#postSections{
+	border-bottom: 1px solid #cacaca;
+}
+
+#postSections, 
+#postActions{
+	text-align: center;
+	height: 50px;
+}
+
+#postSections .post-section.selected-section{
+	color: #197994;
+	font-weight: bold;
+/* 	font-size: 18px; */
+    border-bottom: 2px solid #cacaca;
+}
+
+.section-container{
+	width: 700px;
+	margin: auto;
+}
+
+#noDatesSelected{
+	font-size: 17px;
+	text-align: center;
+}

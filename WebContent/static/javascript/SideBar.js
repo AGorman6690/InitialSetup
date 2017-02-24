@@ -56,8 +56,9 @@
 		
 		$("#contentBarContainer").find(".selected-lines").eq(0).click();
 		
-		$(".side-bar").click(function(){
+		$(".side-bar, #postSections .post-section").click(function(){
 			
+			highlightArrayItem(this, $(this).parent().find(".post-section"), "selected-section");
 		
 			var sectionContainerId = $(this).attr("data-section-id");
 			selectSideBar(sectionContainerId);

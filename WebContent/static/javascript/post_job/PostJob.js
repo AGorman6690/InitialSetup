@@ -1,6 +1,22 @@
 var selectedDays = [];
 
 $(document).ready(function(){
+	
+	
+	
+	$("#nextSection").click(function(){
+		var $selectedSection = $("#postSections").find(".post-section.selected-section").eq(0);			
+		
+		var $nextSection = $selectedSection.next();
+		
+		if($nextSection.hasClass("post-section") == 0){
+			$nextSection = ($("#postSections").find(".post-section").eq(0));
+		}
+		
+		$nextSection.click();
+		
+		
+	})	
 
 	$("#submitPosting_preview").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
@@ -83,7 +99,7 @@ $(document).ready(function(){
 	
 	$("#postedJobs div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));
-		$("#postedJobsContainer").find("span[data-toggle-id]").eq(0).click();
+		$("#postSections").find(".post-section").eq(0).click();
 	})
 	
 	$("#postedQuestions div[data-question-id]").click(function(){

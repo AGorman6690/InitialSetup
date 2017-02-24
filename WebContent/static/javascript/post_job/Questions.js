@@ -324,7 +324,7 @@ function doesQuestionHaveAnAnswerList(question){
 
 function addQuestionToDOM(question){
 	
-	var html = "<a data-question-id='" + question.questionId + "' class='accent no-hover clickable'>";
+	var html = "<a data-question-id='" + question.questionId + "' class='no-hover clickable'>";
 	
 	var buttonText = getAddedQuestionText(question.text);
 	html += buttonText;			
