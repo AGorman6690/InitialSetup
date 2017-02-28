@@ -30,10 +30,7 @@
 .not-logged-in *{
 	pointer-events: none;
 }
-/* #calendar td, */
-.ui-datepicker-calendar a{
-	cursor:default !important;
-}
+
 
 #applyContainer .answer-option{
 	cursor:pointer;

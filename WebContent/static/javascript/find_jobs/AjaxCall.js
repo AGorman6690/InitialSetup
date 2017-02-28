@@ -4,6 +4,13 @@ $(document).ready(function(){
 	$(".sort-direction").click(function(){
 		executeAjaxCall_sortFilteredJobs(this);
 	})
+	
+	$("input#importAvailability").change(function(){
+		
+		if($(this).is(":checked")) executeAjaxCall_ImportAvailability();
+		
+		
+	})
 })
 
 
@@ -69,15 +76,15 @@ function getJsonObject_findJobFilterDTO(){
 		dto.isShorterThanDuration = getSelectedRadioValue($("#duration"));	
 	}
 	
-//	if(isFilterApplied($("#workDays"))){
-//		
-//		var selectedDates = getSelectedDates($("#workDaysCalendar"), "yy-mm-dd");
-//		$(selectedDates).each(function(){
-//			
-//		})
+	if(isFilterApplied($("#workDays"))){
+		
+		var selectedDates = getSelectedDates($("#workDaysCalendar"), "yy-mm-dd");
+		$(selectedDates).each(function(){
+			
+		})
 //		dto.duration = getFilterValue2($("#duration"));
 //		dto.isShorterThanDuration = getSelectedRadioValue($("#duration"));	
-//	}
+	}
 	
 	return dto;
 	
@@ -254,6 +261,10 @@ function getUrlParameters(initialUrlParameterString, isAppendingJobs){
 		$(selectedDates).each(function(){			
 			urlParameter += "&d=" + this;			
 		})
+		
+		parameterName = "doMatchAllDays";
+		filterValue = $("#work-days-dropdown").find("input[name='work-days-match-flag']:checked").eq(0).val();
+		urlParameter += "&" + parameterName + "=" + filterValue;
 
 	}
 	
@@ -478,5 +489,37 @@ function executeAjaxCall_sortFilteredJobs(clickedSortDirection){
 		
 	}
 
+}
+
+function executeAjaxCall_ImportAvailability(){
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/user/get/availability",
+		headers : getAjaxHeaders(),
+		dataType: "json",
+		success: _success,
+		error: _error,
+	})
+	
+	function _success(userDto){
+		broswerIsWaiting(false);
+		selectedDays_workDaysFilter = [];
+		$(userDto.availableDays).each(function(){
+			selectCalendarTdElement_ByDate($("#workDaysCalendar"), this);
+		})
+		
+	}
+	
+	function _error(userDto){
+		broswerIsWaiting(false);
+		alert("error")
+		
+	}
+	
+	
+	
+	
 }
 

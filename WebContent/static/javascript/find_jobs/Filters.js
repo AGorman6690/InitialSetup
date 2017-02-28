@@ -16,6 +16,14 @@ $(document).ready(function(){
 		setMap();
 
 	}
+	
+	$(window).scroll(function(){
+		
+		$e = $("#headerRow");
+//		alert($e.position().top + ", " + $e.outerHeight(true));
+		
+		console.log("current pos:" + $(document).scrollTop() + "top:" + $e.position().top + ", bottom: " + $e.position().top + ", " + $e.outerHeight(true))
+	})
 })
 
 
@@ -54,6 +62,8 @@ function attachEventHandles_Filters(){
 	
 	$("#getJobs").click(function(){
 		getJobs(0);
+		
+
 	})
 		
 	
@@ -476,23 +486,13 @@ function initWorkDaysCalendar(){
 	$("#workDaysCalendar").datepicker({
 			minDate: new Date(),
 			numberOfMonths: 2, 
-			onSelect: function(dateText, inst) {	
-        
-	            var date = new Date(dateText);
-	            
-	            if(selectedDays_workDaysFilter.length == 1){
-	            	attemptToAddDateRange(date, selectedDays_workDaysFilter);
-	            }
-	            else {
-	            	selectedDays_workDaysFilter = addOrRemoveDate(date, selectedDays_workDaysFilter);	            	
-	            }
-	            				
-//				$($e.closest(".calendar")).attr("data-selected-days-count", selectedDays.length);
+			onSelect: function(dateText, inst) {	        
+				selectedDays_workDaysFilter = onSelect_multiDaySelect_withRange(dateText, selectedDays_workDaysFilter);
+
 			},		        
 	        // This is run for every day visible in the datepicker.
 	        beforeShowDay: function (date) {
-	        	if(isDateAlreadySelected(date, selectedDays_workDaysFilter)) return [true, "active111"];
-	        	else return [true, ""];	        	
+	        	return beforeShowDay_ifSelected(date, selectedDays_workDaysFilter);
 	        }
 	    });	
 }

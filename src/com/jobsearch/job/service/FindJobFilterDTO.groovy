@@ -57,10 +57,10 @@ public class FindJobFilterDTO {
 	boolean beforeEndDate
 	
 	List<String> workingDays
+	boolean doMatchAllDays
 	
 	Double duration	
 	boolean isShorterThanDuration
-	Integer[] durationTypeIds
 	
 	int returnJobCount
 	String sortBy
@@ -77,8 +77,8 @@ public class FindJobFilterDTO {
 
 public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,
-			boolean beforeEndDate2, List<String> workingDays2, Double duration2, boolean lessThanDuration2,
-			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2, Integer[] durationTypeIds,
+			boolean beforeEndDate2, List<String> workingDays2, boolean doMatchAllDays, Double duration2, boolean lessThanDuration2,
+			int returnJobCount, String sortBy, boolean isAscending, boolean isAppendingJobs2, 
 			String city2, String state2, String zipCode2, String savedName) {
 		// TODO Auto-generated constructor stub
 
@@ -93,8 +93,6 @@ public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, Strin
 		this.setState(state2);
 		this.setZipCode(zipCode2);
 		this.setRadius(radius);
-		
-		this.setDurationTypeIds(durationTypeIds);
 
 		this.setReturnJobCount(returnJobCount);
 
@@ -139,7 +137,7 @@ public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, Strin
 		this.setEndDate(DateUtility.getSqlDate(endDate, "yyyy-MM-dd"));
 
 		this.setWorkingDays(workingDays2);
-		
+		this.doMatchAllDays
 		
 		
 		//************************************************************

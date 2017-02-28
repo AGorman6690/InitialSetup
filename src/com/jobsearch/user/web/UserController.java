@@ -25,6 +25,7 @@ import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -160,9 +161,20 @@ public class UserController {
 	@RequestMapping(value = "/availability", method = RequestMethod.GET)
 	public String viewAvailability(Model model, HttpSession session) {
 
+
 		userService.setModel_Availability(model, session);
 
 		return "settings_employee/Availability";
+
+	}
+	
+	@RequestMapping(value = "/user/get/availability", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUserAvailability(Model model, HttpSession session) {
+		
+		JobSearchUserDTO userDto = userService.getUserDTO_Availability(session);
+
+		return JSON.stringify(userDto);
 	}
 
 		

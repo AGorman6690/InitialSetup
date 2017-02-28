@@ -45,12 +45,12 @@ public class ApplicationServiceImpl {
 	VerificationServiceImpl verificationService;
 
 
-	public List<ApplicationDTO> getApplicationDtos_ByJob(int jobId) {
+	public List<ApplicationDTO> getApplicationDtos_ByJob_OpenApplications(int jobId) {
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 
 		// Query the application table
-		List<Application> applications = repository.getApplications_ByJob(jobId);
+		List<Application> applications = repository.getApplicationDtos_ByJob_OpenApplications(jobId);
 
 		for (Application application : applications) {
 			
@@ -77,7 +77,12 @@ public class ApplicationServiceImpl {
 			applicationDto.setAnswerOptionIds_Selected(
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
 			
+			applicationDto.setAvailableDays(this.getAvailableDays_byApplication(application.getApplicationId()));
 			
+			// *************************************************
+			// This can probably be eliminated in the near future.
+			// Review this.
+			// *************************************************
 			List<WorkDay> workDays = jobService.getWorkDays(jobId);
 			int count_employmentDays = jobService.getCount_employmentDays_byUserAndWorkDays(
 														applicantId, workDays);
@@ -95,6 +100,11 @@ public class ApplicationServiceImpl {
 		return applicationDtos;
 	}
 	
+	public List<String> getAvailableDays_byApplication(int applicationId) {
+		
+		return repository.getAvailableDays_byApplication(applicationId);
+	}
+
 	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
 		
 		// This will subtract the current time from the expiration date.
@@ -171,17 +181,24 @@ public class ApplicationServiceImpl {
 	}
 
 	public void applyForJob(ApplicationDTO applicationDto, HttpSession session) {
-
-		// Set the application's user (i.e. the applicant)
+		
+		Job appliedToJob = jobService.getJob(applicationDto.getJobId());
 		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
+
+		// ****************************************
+		// ****************************************
+		// Verify at least one application work day is within the job work days
+		// ****************************************
+		// ****************************************
+		
+		// Set the application's user (i.e. the applicant)		
 		applicationDto.setApplicantId(user.getUserId());
 
 		// Set the wage proposed BY the applicant
 		applicationDto.getWageProposal().setProposedByUserId(user.getUserId());
 
 		// Set the wage proposed TO the employer
-		// Get the employer's id from the job object.
-		Job appliedToJob = jobService.getJob(applicationDto.getJobId());
+		// Get the employer's id from the job object.		
 		applicationDto.getWageProposal().setProposedToUserId(appliedToJob.getUserId());
 
 		// Add the application to the database
@@ -691,6 +708,21 @@ public class ApplicationServiceImpl {
 			return application.getStatus();
 		}
 		else return null;
+		
+	}
+
+	public void insertApplicationWorkDays(int applicationId, int jobId, List<String> stringDates) {
+		
+		if(verificationService.isListPopulated(stringDates)){
+			
+			for(String stringDate : stringDates){
+				int dateId = jobService.getDateId(stringDate);
+				Integer workDayId = jobService.getWorkDayId(jobId, dateId);
+				repository.insertApplicationWorkDay(applicationId, workDayId);	
+			}
+			
+			
+		}
 		
 	}
 

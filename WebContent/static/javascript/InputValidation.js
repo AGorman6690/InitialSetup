@@ -260,31 +260,6 @@ function setValidCss($e){
 //	}	
 //}
 
-function validateDuration(durationTypeId, durationUnitLength){
-	
-	var $eDurationUnitLength = $("#durationUnitLength");
-	var $eInvalidDurationLength = $("#invalidDurationLength");
-	var isValid = true;
-	
-	// Weeks, months or years
-	if(durationTypeId == 3 || durationTypeId == 4 || durationTypeId == 5){		
-		if(!isValidatePositiveNumber(durationUnitLength)){
-			isValid = false;
-		}
-	}
-
-	
-	if(isValid){
-		setValidCss($eDurationUnitLength);
-		slideUp($eInvalidDurationLength, 500);
-		return 0;
-	}
-	else{
-		setInvalidCss($eDurationUnitLength);
-		slideDown($eInvalidDurationLength, 500);
-		return 1;
-	}
-}
 
 function validateMinimumSelectedCategories(){
 	

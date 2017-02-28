@@ -21,6 +21,7 @@ button.clear-calendar{
 
 .calendar-container .calendar td{
 	padding:3px 9px;
+	cursor: pointer;
 }
 
 .calendar{
@@ -29,7 +30,7 @@ button.clear-calendar{
 
 .calendar-container.read-only td,
 .calendar-container.read-only a{
-/* 	cursor:default !important; */
+	cursor:default !important;
 	color:#777171;
 	
 }
@@ -70,5 +71,34 @@ td.active111 a{
 .calendar-container .ui-datepicker-multi{
 	width:100% !important;
 }
+
+
+/* ***************************************************
+/* Availability Calendar */
+
+.availability-calendar-container .calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+.availability-calendar-container .calendar-container td.is-not-available {
+	background: #c38f8f;
+	border-radius: 5px;
+}
+
+.availability-calendar-container .calendar-container td.is-available a,
+.availability-calendar-container .calendar-container td.is-not-available a{
+	color: #ffffff;
+}
+
+
+.availability-calendar-container .calendar-container{
+	display: none;
+}
+
+.availability-calendar-container{
+	position: relative;
+}
+
 
 

@@ -20,20 +20,27 @@ $(document).ready(function(){
 
 	$("#submitPosting_preview").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
-		if(arePostJobInputsValid()){
+//		if(arePostJobInputsValid()){
 			executeAjaxCall_previewJobPosting(getJobDto());
 			
-			$("#submitPosting_final_container").show();
-			$("#submitPosting_preview_container").hide();
-		}
+			$("#submitPosting_final").show();
+			$("#editPosting").show();
+			$("#submitPosting_preview").hide();
+			$("#copyPreviousPost").hide();
+			$("#postSections").hide();
+//		}
 	})
 	
 	$("#editPosting").click(function(){
 		 
 		$("#displayExample_jobInfo").hide();
 		$("#postJobInfoContainer").show();
-		$("#submitPosting_final_container").hide();
-		$("#submitPosting_preview_container").show();
+		
+		$("#submitPosting_final").hide();
+		$("#editPosting").hide();
+		$("#submitPosting_preview").show();
+		$("#copyPreviousPost").show();
+		$("#postSections").show();
 	})
 	
 	$("#submitPosting_final").click(function(){
@@ -99,6 +106,9 @@ $(document).ready(function(){
 	
 	$("#postedJobs div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));
+		
+		$(this).closest("#postedJobsContainer").find("[data-toggle-id]").eq(0).click();
+		
 		$("#postSections").find(".post-section").eq(0).click();
 	})
 	
@@ -201,9 +211,10 @@ function importPreviousJobPosting(jobId){
 		cache: true
 	});
 
-	function _success(jobDto) {			
-		setControlValues(jobDto);
+	function _success(jobDto) {		
 		broswerIsWaiting(false);	
+		setControlValues(jobDto);
+		
 	}	
 
 	function _error() {
@@ -222,6 +233,14 @@ function setControlValues(jobDto){
 	$("#zipCode").val(jobDto.job.zipCode);
 	
 	
+	resetDatesAndTimes();
+	$(jobDto.workDays).each(function(){
+		// $("#workDaysCalendar_postJob").datepicker("setDate", new Date(this.stringDate));
+		selectCalendarTdElement_ByDate($("#workDaysCalendar_postJob"), this.stringDate);
+		// selectedDays.push(new Date(this.stringDate));		
+	})
+	
+	
 	resetEntireQuestionSection();
 	
 	$(jobDto.questions).each(function(){
@@ -231,17 +250,27 @@ function setControlValues(jobDto){
 	
 }
 
+function resetDatesAndTimes(){
+	selectedDays = [];
+	$("#timesTable tbody").empty();
+	$("#workDaysCalendar_postJob").datepicker("refresh");
+}
+
 function initWorkDaysCalendar(){
+	
 	$("#workDaysCalendar_postJob").datepicker({
 		minDate: new Date(),
 		numberOfMonths: 2, 
 		onSelect: function(dateText, inst) {	    
+			
 			selectedDays = onSelect_multiDaySelect_withRange(dateText, selectedDays);
 			
+			// Create the time elements
 			var tdDate;
 			var $clonedRow;
 			$("#timesTable tbody").empty();
 			$("#timesTable thead .master-row-multi-select").clone().appendTo("#timesTable tbody");
+			
 			$(selectedDays).each(function(){		
 			
 				$clonedRow = $("#timesTable thead .master-row").clone();
@@ -307,8 +336,6 @@ function getJobDto(){
 	jobDto.job.city = $("#city").val();
 	jobDto.job.state = $("#state").val();
 	jobDto.job.zipCode = $("#zipCode").val();
-	jobDto.job.durationTypeId = 2; // Phase this out once we agree that we are only targeting short term labor
-	jobDto.job.durationUnitLength = jobDto.workDays.length;
 	
 	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
 	else jobDto.job.isPartialAvailabilityAllowed = 0;
@@ -411,7 +438,9 @@ function executeAjaxCall_previewJobPosting(jobDto){
 	});
 
 	function _success(html_jobInfo) {
-		
+		broswerIsWaiting(false);	
+	
+	
 		$("#displayExample_jobInfo").show();
 		$("#displayExample_jobInfo").html(html_jobInfo);
 		$("#postJobInfoContainer").hide();
@@ -420,8 +449,7 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		initCalendar_JobInfo();
 		initMap();
 //		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
-		broswerIsWaiting(false);	
-	}	
+	}		
 
 	function _error() {
 		broswerIsWaiting(false);

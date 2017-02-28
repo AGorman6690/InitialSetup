@@ -68,6 +68,10 @@ public class JobDTO {
 	 public static Integer AVAILABILITY_STATUS_PARTIAL_DUE_TO_AVAILABILITY_NOT_SET = 2
 	 public static Integer AVAILABILITY_STATUS_PARTIAL_DUE_TO_EMPLOYMENT = 3
 	 public static Integer AVAILABILITY_STATUS_COMPLETELY = 4
+	 
+	 JobDTO(){
+		 this.job = new Job();		 
+	 }
 
 
 }

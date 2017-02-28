@@ -1,3 +1,6 @@
+#apply_selectWorkDays td.apply-selected-work-day{
+	background: #163b3d !important;
+}
 
 #workDaysCalendar{
 	width:600px;

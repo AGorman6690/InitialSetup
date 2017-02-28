@@ -45,10 +45,30 @@
 			</div>
 		</div>
 	</div>
+	
+<!-- 	<div class="header-options-container"> -->
+<!-- 		<span class="header-option">Start Time</span> -->
+<!-- 		<span class="header-option">End Time</span> -->
+<!-- 		<span class="header-option">Start Date</span> -->
+<!-- 		<span class="header-option">End Date</span> -->
+<!-- 		<span class="header-option">Duration</span> -->
+<!-- 		<span class="header-option">Categories</span> -->
+<!-- 		<span class="header-option">Work Days</span>	 -->
+<!-- 	</div> -->
 
 
-
-
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
+<!-- <br> -->
 
 <!-- <div id="filtersContainer"> -->
 	<div class="row">
@@ -250,7 +270,16 @@
 				</div>
 				
 				<div id="work-days-dropdown" class="dropdown" data-units="days selected">
-					<div class="note">Jobs having at least one work day in the selected date range will be returned</div>
+					<label><input id="importAvailability" type="checkbox">Select Your Personal Availability</label>
+					
+					<div class="note">Return jobs with:</div>
+					<div class="radio-container">
+						<label><input value="0" type="radio" name="work-days-match-flag" checked>at least one work day selected</label>
+						<label><input value="1" type="radio" name="work-days-match-flag">a work day on all selected days, but there might be more work days that have not been selected</label>
+						<label><input value="2" type="radio" name="work-days-match-flag">all work days selected</label>
+					</div>
+					
+					
 					<div class="filter-value calendar-container calendar-multi-date">
 						<div id="workDaysCalendar" class="calendar">
 						</div>

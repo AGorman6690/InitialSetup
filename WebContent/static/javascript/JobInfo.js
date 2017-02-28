@@ -1,5 +1,6 @@
 	
 var workDays = [];
+var apply_selectedWorkDays = [];
 
 $(document).ready(function() {
 	
@@ -23,10 +24,58 @@ $(document).ready(function() {
 		}
 		
 	})
+
 	
 	setWorkDays();
 	initCalendar_JobInfo();
+	initCalendar_Apply_SelectWorkDays();
 })
+
+
+function isCalendarInDOM_applicantSelectWorkDays(){
+	
+	// If the job is accepting partial availability, the calendar will be in the DOM
+	var $calendar = $("#applyContainer").find("#apply_selectWorkDays.calendar").eq(0);
+	if($calendar.length > 0) return true;
+	else return false;
+}
+
+function initCalendar_Apply_SelectWorkDays(){
+
+	if(isCalendarInDOM_applicantSelectWorkDays()){
+		
+		var $calendar = $("#apply_selectWorkDays");
+		var numberOfMonths = getNumberOfMonths($calendar);	
+		if(numberOfMonths > 2) numberOfMonths = 2;
+		
+		var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
+		if(isNaN(minDate.getTime()) == true) minDate = new Date();
+		
+		$calendar.datepicker({
+			minDate: minDate,
+			numberOfMonths: numberOfMonths,
+			onSelect: function(dateText, inst){
+				
+				// The applicant can only select a valid work day
+				if(doesDateArrayContainDate(new Date(dateText), workDays)){
+					apply_selectedWorkDays = onSelect_multiDaySelect_withRange(
+							dateText, apply_selectedWorkDays);	
+				}
+				
+			},
+	        beforeShowDay: function (date) {
+
+				if(isDateAlreadySelected(date, apply_selectedWorkDays)) return [true, "active111 apply-selected-work-day"];
+				else if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
+				else return [true, ""];
+	        	
+	        }
+	    });		
+		
+	}
+	
+}
+
 
 function setWorkDays(){
 	
@@ -45,14 +94,15 @@ function initCalendar_JobInfo(){
 	var $calendar = $("#workDaysCalendar");
 	
 	if($calendar.length > 0 ){
-		var numberOfMonths = getNumberOfMonths($calendar);
-		var milliseconds;
-		var date;
 		
-		var minDate = $calendar.attr("data-min-date").replace(/-/g, "/");
-
+		var numberOfMonths = getNumberOfMonths($calendar);	
+		if(numberOfMonths > 2) numberOfMonths = 2;
+		
+		var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
+		if(isNaN(minDate.getTime()) == true) minDate = new Date();
+		
 		$calendar.datepicker({
-			minDate: new Date(minDate),
+			minDate: minDate,
 			numberOfMonths: numberOfMonths, 
 	        beforeShowDay: function (date) {
 

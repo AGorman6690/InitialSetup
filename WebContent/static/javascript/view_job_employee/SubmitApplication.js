@@ -151,10 +151,25 @@
 		applicationDto.wageProposal = getWageProposal();
 		applicationDto.answers = [];
 		applicationDto.answers = getAnswers();
+		applicationDto.availableDays = getAvailableDays();
 	
 		return applicationDto;
 	
-	};
+	}
+	
+	function getAvailableDays(){
+		
+		var availableDays = [];
+		
+		if(isCalendarInDOM_applicantSelectWorkDays){
+			
+			availableDays = getSelectedDates($("#apply_selectWorkDays"), "yy-mm-dd", "apply-selected-work-day");
+		}
+		
+		return availableDays;
+		
+		
+	}
 	
 	function getWageProposal(){
 		
@@ -196,35 +211,6 @@
 			
 		})
 		
-		
-		
-//		$.each(questions, function(){	
-//			questionId = $(this).attr("data-question-id");
-//			questionFormatId = $(this).attr("data-question-format-id");
-//			
-//			answer = {};
-//			answer.questionId = questionId;
-//			
-//			if(questionFormatId == 1){
-//				answer.text = $(this).find("textarea").val();
-//				answers.push(answer);
-//			}
-//			else if(questionFormatId == 0 || questionFormatId == 2){
-//				answer.answerOptionId = $(this).find(".answer-options-container input:checked").eq(0).attr("data-id");
-//				answers.push(answer);
-//			}
-//			else if(questionFormatId == 3){
-//				selectedAnswers = $(this).find(".answer-options-container input:checked"); 
-//				$.each(selectedAnswers, function(){
-//					answer = {};
-//					answer.questionId = questionId;
-//					answer.answerOptionId = $(this).attr("data-id");
-//					
-//					answers.push(answer);
-//				})
-//			}	
-//		})
-//		
 		return answers;		
 	}
 	

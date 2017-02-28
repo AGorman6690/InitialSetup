@@ -35,22 +35,17 @@
 			</div>
 			<div class="info-value col-sm-8">
 				<div>
-					${jobDto.durationDays } days
+					${jobDto.workDays.size() } days
 				</div>
 				<div id="workDays">
 					<c:forEach items="${jobDto.workDays }" var="workDay">
 						<div data-date="${!empty workDay.date ? workDay.date : workDay.stringDate }"></div>
 					</c:forEach>
 					
-				</div>
-				<c:choose>
-					<c:when test="${jobDto.job.durationTypeId == 2 }">		
-						<div id="workDaysCalendar" class="calendar-container read-only"
-							 data-min-date="${jobDto.date_firstWorkDay }"
-							 data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-					</c:when>
-					<c:otherwise>${jobDto.job.stringStartDate }</c:otherwise>				
-				</c:choose>
+				</div>	
+				<div id="workDaysCalendar" class="calendar-container read-only"
+					 data-min-date="${jobDto.date_firstWorkDay }"
+					 data-number-of-months="${jobDto.months_workDaysSpan }"></div>			
 			</div>
 		</div>	
 		
@@ -62,21 +57,6 @@
 			<div class="info-label col-sm-4">End Time</div>
 			<div class="info-value col-sm-8">${jobDto.job.stringEndTime }</div>
 		</div>				
-		
-	<c:if test="${jobDto.skillsDesired.size() > 0 }">
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Desired Skills
-			</div>
-			<div class="info-value col-sm-8">
-				<ul>
-					<c:forEach items="${jobDto.skillsDesired }" var="skill">
-						<li>${skill.text }</li>	
-					</c:forEach>
-				</ul>
-			</div>
-		</div>			
-	</c:if>
 	
 	<c:if test="${jobDto.skillsRequired.size() > 0 }">
 		<div class="info-container row">
@@ -93,8 +73,21 @@
 		</div>			
 	</c:if>
 			
-		
-		
+	<c:if test="${jobDto.skillsDesired.size() > 0 }">
+		<div class="info-container row">
+			<div class="info-label col-sm-4">
+				Desired Skills
+			</div>
+			<div class="info-value col-sm-8">
+				<ul>
+					<c:forEach items="${jobDto.skillsDesired }" var="skill">
+						<li>${skill.text }</li>	
+					</c:forEach>
+				</ul>
+			</div>
+		</div>			
+	</c:if>
+
 		<div class="info-container row">
 			<div class="info-label col-sm-4">
 				Employment Type

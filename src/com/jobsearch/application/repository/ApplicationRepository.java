@@ -119,13 +119,18 @@ public class ApplicationRepository {
 		return this.ApplicationRowMapper(sql, argsList.toArray());
 	}
 
-	public List<Application> getApplications_ByJob(int jobId) {
+	public List<Application> getApplicationDtos_ByJob_OpenApplications(int jobId) {
 
-		String sql = "SELECT * FROM application a "
-						+ "INNER JOIN user u ON u.UserId = a.UserId "
-						+ "WHERE a.JobId = ? AND a.Status != ?";
+		String sql = "SELECT * FROM application a"
+						+ " INNER JOIN user u ON u.UserId = a.UserId"
+						+ " WHERE a.JobId = ?"
+						+ " AND (a.Status != ?"
+						+ " AND a.Status != ?"
+						+ " AND a.Status != ? )";
 
-		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED });
+		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED,
+																Application.STATUS_DECLINED,
+																Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT});
 
 	}
 
@@ -362,7 +367,11 @@ public class ApplicationRepository {
 
 				}	
 			}
-
+			
+			// Add the work days the applicant applied for						
+			applicationService.insertApplicationWorkDays(newApplicationId,
+															applicationDto.getJobId(),
+															applicationDto.getAvailableDays());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -596,6 +605,23 @@ public class ApplicationRepository {
 		sql += "))";
 		
 		return ApplicationRowMapper(sql, args.toArray());
+	}
+
+	public void insertApplicationWorkDay(int applicationId, Integer workDayId) {
+		String sql = "INSERT INTO application_work_day (ApplicationId, WorkDayId) VALUES (?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ applicationId, workDayId } );
+		
+	}
+
+	public List<String> getAvailableDays_byApplication(int applicationId) {
+
+
+		String sql = "Select d.Date FROM date d"
+					+ " INNER JOIN work_day wd on wd.DateId = d.Id"
+					+ " INNER JOIN application_work_day a_wd ON a_wd.WorkDayId = wd.WorkDayId"
+					+ " WHERE a_wd.ApplicationId = ?";
+		
+		return jdbcTemplate.queryForList(sql, new Object[]{ applicationId }, String.class);
 	}
 
 

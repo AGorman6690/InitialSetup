@@ -43,4 +43,18 @@
     padding-bottom: 20px;
     cursor: pointer;
     display: inline-block;
+    font-weight: bold;
+}
+
+#postActions p{
+	display: inline-block;
+}
+
+#postActions #submitPosting_final,
+#postActions #editPosting{
+	display: none;
+}
+
+#displayExample_jobInfo{
+	padding-top: 50px;
 }

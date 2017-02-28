@@ -218,8 +218,25 @@
 					</td>
 				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
 					<td>
-						<div class="vert-border">
-							${applicationDto.applicantDto.count_availableDays_perFindEmployeesSearch}
+						<div class="vert-border availability-calendar-container">						
+							${applicationDto.availableDays.size()}
+							<span class="glyphicon glyphicon-menu-up"></span>
+							<div class="calendar-container dropdown-style read-only">
+								<div class="calendar" data-number-of-months="${jobDto.months_workDaysSpan }"
+										data-first-date="${jobDto.date_firstWorkDay }">
+									
+								</div>
+								<div class="dates-available">
+									<c:forEach items="${applicationDto.availableDays }" var="date">
+										<div data-date="${date }"></div>
+									</c:forEach>
+								</div>
+								<div class="dates-in-question">
+									<c:forEach items="${jobDto.workDays }" var="workDay">
+										<div data-date="${workDay.stringDate }"></div>
+									</c:forEach>
+								</div>								
+							</div>
 						</div>
 					</td>
 				</c:if>

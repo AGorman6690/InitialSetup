@@ -74,7 +74,6 @@ public class JobRepository {
 					e.setZipCode(rs.getString("ZipCode"));
 					e.setLat(rs.getFloat("Lat"));
 					e.setLng(rs.getFloat("Lng"));
-					e.setDurationTypeId(rs.getInt("DurationTypeId"));
 					e.setStatus(rs.getInt("Status"));
 					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
 					
@@ -288,7 +287,7 @@ public class JobRepository {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJob().getJobName());
 			 cStmt.setInt(2, user.getUserId());
@@ -299,7 +298,8 @@ public class JobRepository {
 			 cStmt.setString(7, jobDto.getJob().getZipCode());
 			 cStmt.setFloat(8,  jobDto.getJob().getLat());
 			 cStmt.setFloat(9,  jobDto.getJob().getLng());
-			 cStmt.setInt(10, jobDto.getJob().getDurationTypeId());
+			 cStmt.setInt(10,  Job.STATUS_FUTURE);
+			 cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
 
 			 ResultSet result = cStmt.executeQuery();
 
@@ -338,295 +338,257 @@ public class JobRepository {
 	}
 
 	public List<Job> getFilteredJobs(FindJobFilterDTO filter) {
-
-
-//SQL example for filtering jobs.
-//Copy and paste into MySQL for better viewing.
-//***********************************************************
-//***********************************************************
+		
+		// ****************************************************************
+		// ****************************************************************
+		// Summary:
+		// 1) The distance query is the only required query.
+		// 2) All other filters are sub queries within sub queries.
+		// 3) The sub queries are returning the job ids that match the particular filter.
+		// ****************************************************************
+		// ****************************************************************
 		
 		
-//	select j.*, 
-//		( 3959 * acos( cos( radians( 45.104839) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(-93.144936) ) 
-//		+ sin( radians( 45.104839) ) * sin( radians( lat ) ) ) ) AS distance,
-//		(EndDate - StartDate + 1) as duration
-//	from job j
-//
-//	-- work days
-//	join (
-//		select distinct w0.jobid
-//		from work_day w0
-//		join work_day w1 on w0.jobid = w1.jobid and w1.date = '2016-10-26'
-//		join work_day w2 on w1.jobid = w2.jobid and w2.date = '2016-10-25'
-//	) wd0
-//	on wd0.jobid = j.jobid
-//
-//	-- categories
-//	join (
-//		select distinct jc0.jobid
-//		from job_category jc0
-//		join job_category jc1 on jc0.jobid = jc1.jobid and jc1.categoryid = '3'
-//		join job_category jc2 on jc1.jobid = jc2.jobid and jc2.categoryid = '3'
-//	) jc
-//	on jc.jobid = wd0.jobid
-//
-//	-- start time
-//	join(
-//		select distinct jobid
-//		from work_day
-//		group by jobid
-//		having min(starttime) < '07:30:00'
-//	) wd1
-//	on wd1.jobid = jc.jobid
-//
-//	-- end time
-//	join(
-//		select distinct jobid
-//		from work_day
-//		group by jobid
-//		having min(endtime) > '17:30:00'
-//	) wd2
-//	on wd2.jobid = wd1.jobid
-//
-//	having distance < 16 and j.jobid <> 71 and j.jobid <> 73;		
-		
-//***********************************************************
-//***********************************************************		
-
 		List<Object> argsList = new ArrayList<Object>();
 
-		//Arguments for distance filter
-
-		String originalJobTableName = "j";
-		String nextTableToJoin;
-		String subTable;
-		
-		//Distance
+		// **************************************************************
+		//Main query: distance filter
+		// **************************************************************
 		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
-		String sqlSelect = "SELECT *, "
+		String sql = "SELECT *, "
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance";
-		
-//		String sql = "SELECT *, "
-//					+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-//					+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
-//					+ " FROM job j";
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
+				+ " FROM job j";
 
-		String sql = " FROM job " + originalJobTableName;
 		
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
 		argsList.add(filter.getLat());
 		
-		nextTableToJoin = "j";
 		
-		//Duration Type
-		if(filter.getDurationTypeIds() != null){
-			boolean isFirst = true;
-			sql += " WHERE (";
-			for(Integer durationTypeId : filter.getDurationTypeIds()){
-				
-				if (isFirst){
-					sql += " j.DurationTypeId = ?";
-					isFirst = false;
-				}
-				else sql += " OR j.DurationTypeId = ?";
-				
-				argsList.add(durationTypeId);
-			}
+		String startNextSubQuery = " WHERE j.JobId IN (";
+		int count_subQueries = 0;
+		
+		// **************************************************
+		// Work day sub query
+		// **************************************************	
+		String sql_subQuery = null;
+		if (verificationService.isListPopulated(filter.getWorkingDays())) {
 			
-			sql += ")";
-			
-		}
-		
-		
-		
-		// ************************************************************
-		// Now that a date table exists re-address this logic 
-		// ************************************************************
-		
-		//Work days
-//		if(filter.getWorkingDays() != null){
-//			sql += " JOIN (";
-//			sql += " SELECT DISTINCT wd0.jobId";
-//			sql += " FROM work_day wd0";
-//			
-//			for (int i = 1; i < filter.getWorkingDays().size() + 1; i++) {
-//				
-//				String table1 = "wd" + (i - 1);
-//				String table2 = "wd" + i;
-//				
-//				sql += " JOIN work_day " + table2;
-//				sql += " "
-//				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".date = ?";
-//				
-//				argsList.add(filter.getWorkingDays().get(i - 1));
-//						
-//			}
-//			subTable = "wd_work_days";
-//		
-//			sql += ") " + subTable;
-//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-//			
-//			nextTableToJoin = subTable;
-//		}
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";			
+
+			sql_subQuery += " SELECT DISTINCT wd0.jobId";
+			sql_subQuery += " FROM work_day wd0";
+
+
+			// *************************************
+			// If **ALL** work days are selected.
+			// A job is returned if all their work days was selected by the user.
+			// *************************************
+			if(filter.getDoMatchAllDays()){
+								
+				int i = 1;
+				for (String workDay : filter.getWorkingDays()) {
 					
-		//Categories
-		if(filter.getCategoryIds() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT jc0.jobId";
-			sql += " FROM job_category jc0";
-			
-
-			for (int i = 1; i < filter.getCategories().size() + 1; i++) {
-				
-				String table1 = "jc" + (i - 1);
-				String table2 = "jc" + i;
-				
-				sql += " JOIN job_categories " + table2;
-				sql += " ON " + table1 + ".jobId = " + table2 + ".jobId AND " + table2 + ".categoryId = ?";
-				
-				argsList.add(filter.getCategories().get(i).getId());
+					if(i == filter.getWorkingDays().size()){
 						
-			}
-			subTable = "job_category";
+						// The WHERE clause must FOLLOW the JOINs
+						sql_subQuery += " WHERE wd0.DateId = ?";
+					}
+					else{
+						sql_subQuery += " INNER JOIN work_day wd" + i
+					 			+ " ON wd" + i +".JobId = wd" + (i-1) + ".JobId"
+					 			+ " AND wd" + i + ".DateId = ?";			
 			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
-		}					
-
-		//Start time
-		if(filter.getStartTime() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT jobId";
-			sql += " FROM work_day";
-			sql += " GROUP BY jobId";
-			
-			if(filter.getBeforeStartTime()){
-				sql += " HAVING MAX(startTime) <= ?";
+										
+					}
+					argsList.add(jobService.getDateId(workDay));	
+					i += 1;
+				}					
+										
 			}
 			else{
-				sql += " HAVING MIN(startTime) >= ?";
+				
+				// *************************************
+				// If **At least one** work day was selected.
+				// A job is returned if at least one of their word days was selected by the user.
+				// *************************************	
+				boolean isFirst = true;
+				sql_subQuery += " WHERE (";
+				for (String workDay : filter.getWorkingDays()) {
+					
+					if(!isFirst) sql_subQuery += " OR ";
+					sql_subQuery += " wd0.DateId = ?";
+					
+					argsList.add(jobService.getDateId(workDay));	
+					isFirst = false;
+				}		
+				
+				// Close the where clause
+				sql_subQuery += ")";		
+				
 			}
+				
+			sql += sql_subQuery;
+			
+			count_subQueries += 1;
+			
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd0.JobId IN (";
+		
+		}	
+
+		// ************************************************
+		// Start date sub query
+		// ************************************************
+		if(filter.getStartDate() != null){
+			
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";
+			
+			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
+			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
+			sql_subQuery += " GROUP BY wd.JobId";
+			sql_subQuery += " HAVING MIN(d.Date)";
+			
+			if(filter.getBeforeStartDate()) sql_subQuery += " <= ?";
+			else sql_subQuery += " >= ?";
+			
+			argsList.add(filter.getStartDate());
+			
+			sql += sql_subQuery;
+			
+			count_subQueries += 1;
+
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd.JobId IN (";		
+		}	
+		
+		
+		// ************************************************
+		// End date sub query
+		// ************************************************
+		if(filter.getEndDate() != null){
+			
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";
+			
+			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
+			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
+			sql_subQuery += " GROUP BY wd.JobId";
+			sql_subQuery += " HAVING MAX(d.Date)";
+			
+			if(filter.getBeforeEndDate()) sql_subQuery += " <= ?";
+			else sql_subQuery += " >= ?";
+			
+			argsList.add(filter.getEndDate());
+			
+			sql += sql_subQuery;
+			
+			count_subQueries += 1;
+
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd.JobId IN (";		
+		}		
+		
+		
+		// ************************************************
+		// Start time sub query
+		// ************************************************
+		if(filter.getStartTime() != null){
+			
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";
+			
+			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
+			sql_subQuery += " GROUP BY wd.JobId";
+			
+			if(filter.getBeforeStartTime()) sql_subQuery += " HAVING MAX(wd.StartTime) <= ?";
+			else sql_subQuery += " HAVING MIN(wd.StartTime) >= ?";
 			
 			argsList.add(filter.getStartTime());
 			
-			subTable = "wd_start_time";
+			sql += sql_subQuery;
 			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = "wd_start_time";
-		}	
+			count_subQueries += 1;
+
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd.JobId IN (";		
+		}		
 		
-		//End time
+		// ************************************************
+		// End time sub query
+		// ************************************************
 		if(filter.getEndTime() != null){
-			sql += " JOIN (";
-			sql += " SELECT DISTINCT jobId";
-			sql += " FROM work_day";
-			sql += " GROUP BY jobId";
 			
-			if(filter.getBeforeEndTime()){
-				sql += " HAVING MAX(endTime) <= ?";	
-			}
-			else{
-				sql += " HAVING MIN(endTime) >= ?";
-			}
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";
+			
+			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
+			sql_subQuery += " GROUP BY wd.JobId";
+			
+			if(filter.getBeforeEndTime()) sql_subQuery += " HAVING MAX(wd.EndTime) <= ?";
+			else sql_subQuery += " HAVING MIN(wd.EndTime) >= ?";
 			
 			argsList.add(filter.getEndTime());
 			
-			subTable = "wd_end_time";
+			sql += sql_subQuery;
 			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
+			count_subQueries += 1;
+
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd.JobId IN (";		
 		}	
-		
-//		//Start date	
-//		if(filter.getStartDate() != null){
-//			sql += " JOIN (";
-//			sql += " SELECT DISTINCT jobId, Date as StartDate ";
-//			sql += " FROM work_day";
-//			sql += " GROUP BY jobId";
-//			sql += " HAVING MIN(Date)";
-//			
-//			if(filter.getBeforeStartDate()){
-//				sql += " <= ?";
-//			}
-//			else{
-//				sql += " >= ?";
-//			}
-//			
-//			argsList.add(filter.getStartDate());
-//			
-//			subTable = "wd_start_date";
-//			
-//			sql += ") " + subTable;
-//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-//			
-//			nextTableToJoin = subTable;
-//			
-//			sqlSelect += ", " + subTable + ".StartDate AS StartDate";
-//		}			
-		
-//		if(filter.getSortBy() != null){
-//			if(filter.getSortBy().matches("StartDate))
-//		}
-
-		
-
-//		//End date
-//		if(filter.getEndDate() != null){
-//			sql += " JOIN (";
-//			sql += " SELECT DISTINCT jobId";
-//			sql += " FROM work_day";
-//			sql += " GROUP BY jobId";
-//			sql += " HAVING MAX(Date)";
-//			
-//			if(filter.getBeforeEndDate()){
-//				sql += " <= ?";
-//			}
-//			else{
-//				sql += " >= ?";
-//			}
-//			
-//			argsList.add(filter.getEndDate());
-//			
-//			subTable = "wd_end_date";
-//			
-//			sql += ") " + subTable;
-//			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-//			
-//			nextTableToJoin = subTable;
-//		}
-
+				
+		// ************************************************
+		// Duration sub query
+		// ************************************************
+		if(filter.getEndTime() != null){
 			
-		//Duration
-		if(filter.getDuration() != null){
-			sql += " JOIN (";
-			sql += " SELECT jobId";
-			sql += " FROM work_day";
-			sql += " GROUP BY jobId";
-			sql += " HAVING COUNT(jobId)";
+			// Initialize the sub query's sql string.
+			// If there was a previous sub query, then another sub query needs to be opened
+			// for this sub query.
+			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
+			else sql_subQuery = "";
 			
-			if(filter.getIsShorterThanDuration()){
-				sql += " <= ?";
-			}
-			else{
-				sql += " >= ?";
-			}
+			sql_subQuery += " SELECT wd.JobId FROM work_day wd";
+			sql_subQuery += " GROUP BY wd.JobId";
+			sql_subQuery += " HAVING COUNT(wd.DateId)";
+			
+			if(filter.getIsShorterThanDuration()) sql_subQuery += " <= ?";
+			else sql_subQuery += " >= ?";
 			
 			argsList.add(filter.getDuration());
 			
-			subTable = "wd_duration";
+			sql += sql_subQuery;
 			
-			sql += ") " + subTable;
-			sql += " ON " + subTable + ".jobId = " + nextTableToJoin + ".jobId";
-			
-			nextTableToJoin = subTable;
+			count_subQueries += 1;
+
+			// If there is another sub query, this needs to start it
+			startNextSubQuery = " AND wd.JobId IN (";		
+		}			
+		
+		// Close the sub queries before finishing the distance query
+		int i = 0;
+		while(i < count_subQueries){
+			sql += " )";
+			i += 1;
 		}
 		
 
@@ -638,7 +600,7 @@ public class JobRepository {
 		if(filter.getJobIdsToExclude() != null){
 			
 			for(Integer id : filter.getJobIdsToExclude()){
-				sql += " AND " + originalJobTableName + ".jobId <> ?";
+				sql += " AND j.jobId <> ?";
 				argsList.add(id);
 			}
 		}
@@ -660,12 +622,8 @@ public class JobRepository {
 		
 		
 		//Number of jobs to return
-		//argsList.add(filter.getReturnJobCount());
 		sql += " LIMIT 0 , 25";
-
-		
-		sql = sqlSelect + sql;
-		
+	
 		
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
@@ -1149,6 +1107,12 @@ public class JobRepository {
 		sql += ")";
 				
 		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
+	}
+
+	public Integer getWorkDayId(int jobId, int dateId) {
+		
+		String sql = "SELECT WorkDayId FROM work_day WHERE JobId = ? and DateId = ?"; 
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  dateId }, Integer.class);
 	}
 
 

@@ -44,6 +44,18 @@ function getTdByDayMonthYear($calendar, day, month, year){
 	
 }
 
+function selectCalendarTdElement_ByDate($calendar, stringDate){
+	
+	var date = new Date(stringDate);
+	
+	var $td = $(getTdByDayMonthYear($calendar, date.getDate(), date.getMonth(), date.getFullYear()));
+	
+	$td.click();
+	
+	
+	
+}
+
 function getDateFromTdElement(td){
 	var year = $(td).attr("data-year");
 	var month = parseInt($(td).attr("data-month"));
@@ -186,9 +198,12 @@ function getWorkDays_FromSelectedDates($calendar, format){
 	return workDays;
 }
 
-function getSelectedDates($calendar, format){
+function getSelectedDates($calendar, format, className_selectedDate){
+		
+	if(className_selectedDate == undefined) className_selectedDate = "active111";
 	
-	var selectedTds = $calendar.find(".active111");
+	
+	var selectedTds = $calendar.find("." + className_selectedDate);
 	var selectedDates = [];
 	var date;
 

@@ -932,6 +932,14 @@ public class UserServiceImpl {
 		
 	}
 
+	public JobSearchUserDTO getUserDTO_Availability(HttpSession session) {
+		
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setAvailableDays(this.getAvailableDays(SessionContext.getUser(session).getUserId()));
+
+		return userDto;
+	}
+
 
 
 

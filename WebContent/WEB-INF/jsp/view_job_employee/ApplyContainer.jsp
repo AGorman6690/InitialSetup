@@ -19,6 +19,19 @@
 				<input class="form-control" placeholder="" id="amount">								
 			</div>
 		</div>
+		
+	<c:if test="${jobDto.job.isPartialAvailabilityAllowed == true }">
+		<div class="info-container">
+					<div class="info-label">Work Days You Are Available</div>
+			<div class="info-value">
+				<div class="calendar-container">
+					<div id="apply_selectWorkDays" class="calendar"
+						data-min-date="${jobDto.date_firstWorkDay }"
+						data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+				</div>							
+			</div>
+		</div>
+	</c:if>
 			
 	<c:if test="${jobDto.questions.size() > 0 }">			
 		<div id="questions" class="body-element-container info-container">

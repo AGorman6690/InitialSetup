@@ -65,7 +65,7 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)
 	@ResponseBody
-	public String acceptOffer(@PathVariable(value = "jobId") int jobId,
+	public String getApplicationStatus_ByUserAndJob(@PathVariable(value = "jobId") int jobId,
 								@PathVariable(value = "userId") int userId,
 								HttpSession session) {
 		Integer applicationStatus = applicationService.getApplicationStatus(jobId, userId, session);

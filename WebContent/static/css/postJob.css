@@ -140,6 +140,11 @@
 	font-size:16px;
 }
 
+#postedJobs div[data-posted-job-id]:hover,
+#postedQuestions div[data-question-id]:hover{
+	background: #cacaca;	
+}
+
 #postedQuestionsContainer{
 /* 	display:inline-block; */
 	position: relative;
@@ -185,9 +190,7 @@
 #submitPosting_preview_container,
 #submitPosting_final_container{
     display: inline-block;
-    padding: 10px 0px;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
+
 }
 
 #headerLinksContainer #submitPosting_final_container{
@@ -225,8 +228,8 @@
 #postSections .post-section.selected-section{
 	color: #197994;
 	font-weight: bold;
-/* 	font-size: 18px; */
-    border-bottom: 2px solid #cacaca;
+	font-size: 18px;
+/*     border-bottom: 2px solid #cacaca; */
 }
 
 .section-container{

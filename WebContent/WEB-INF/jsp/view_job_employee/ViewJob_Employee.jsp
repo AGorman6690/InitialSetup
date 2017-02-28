@@ -12,8 +12,7 @@
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/categories.css" />	
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob.css " />	
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob2.css " />	
-	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/questions.css " />		
+	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/employeeViewJob2.css " />		
 	<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
 	

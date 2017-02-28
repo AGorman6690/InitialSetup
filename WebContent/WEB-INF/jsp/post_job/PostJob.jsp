@@ -26,7 +26,7 @@
 	<div id="postActions">
 		<c:if test="${!empty postedJobs }">
 			<div id="postedJobsContainer">
-				<span id="copyPreviousPost1" class="post-section"
+				<span id="copyPreviousPost" class="post-section"
 					 data-toggle-id="postedJobs">Copy a previous posting</span>
 				<div id="postedJobs" class="dropdown-style">
 					<c:forEach items="${postedJobs }" var="job">
@@ -34,10 +34,10 @@
 					</c:forEach>
 				</div>
 			</div>
-			<span>/</span>
 		</c:if>	
-<!-- 		<span>/</span> -->
-		<span id="submitPosting_preview" class="post-section">Preview job posting</span>	
+		<span id="submitPosting_preview" class="post-section">Preview Job Posting</span>
+		<span id="editPosting" class="post-section" data-section-id="employmentContainer">Edit posting</span>
+		<span id="submitPosting_final" class="post-section" data-section-id="employmentContainer">Submit posting</span>
 	</div>
 	<div id="postSections">
 		<span class="post-section selected-section" data-section-id="generalContainer">General</span>

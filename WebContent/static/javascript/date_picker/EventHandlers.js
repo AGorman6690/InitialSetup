@@ -14,8 +14,9 @@ function onSelect_multiDaySelect_withRange(dateText, days){
         				
 }
 
+
 function beforeShowDay_ifSelected(date, days){
-	if(isDateAlreadySelected(date, selectedDays)) return [true, "active111"];
+	if(isDateAlreadySelected(date, days)) return [true, "active111"];
 	else return [true, ""];	   
 }
 

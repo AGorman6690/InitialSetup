@@ -79,6 +79,7 @@
 <!-- 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	 -->
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/headerOptions.css" />	
 		
 <!-- 		Global Scripts -->
 		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	

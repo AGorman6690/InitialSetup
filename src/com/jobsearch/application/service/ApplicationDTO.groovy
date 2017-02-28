@@ -37,9 +37,12 @@ class ApplicationDTO {
 	Integer hours_offerExpires
 	Integer minutes_offerExpires
 	
+	List<String> availableDays
+	
 	ApplicationDTO(){
 		this.applicantDto = new JobSearchUserDTO();
 		this.jobDto = new JobDTO();
+		this.application = new Application();
 	}
 
 }

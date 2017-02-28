@@ -43,52 +43,7 @@ $(document).ready(function(){
 	})
 	
 	$("#makeOfferModal select").change(function(){
-		var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");
-		var prospectiveEmployeeId = $("#makeOfferModal").attr("data-user-id");
-		
-		$.ajax({
-			type: "GET",
-			url: "/JobSearch/application/" + jobId + "/user/" + prospectiveEmployeeId + "/status",
-			
-		}).done(function(applicationStatus){
-			 
-			var message = "";
-			var userName = $("#makeOfferTo_name").html();
-			
-			switch (applicationStatus) {
-			case "-1":
-				message = "You have already proposed an application to " + userName + " for this job.";
-				break;
-
-			case "0":
-			case "2":
-			case "4":
-				message = userName + " has an open appliation for this job.";			
-				break;
-				
-			case "1":
-				message = userName + "'s application has already been declined for this job.";				
-				break;
-				
-			case "3":
-				message = userName + " has already been hired for this job.";
-				break;
-				
-			case "5":
-				message = userName + " has already applied for this job."
-							+ " His application was withdrawn due to a time conflict with his other employment.";
-				break;
-				
-			default:
-				break;
-			}
-			
-			
-			if(message != ""){
-				$("#makeAnOffer_applicationStatus").html(message);
-			}
-			
-		})
+		showApplicationStatus_ProspectiveEmployee();
 	})
 	
 
@@ -211,6 +166,56 @@ $(document).ready(function(){
 	initAvailabilityCalendar();
 	
 })
+
+function showApplicationStatus_ProspectiveEmployee(){
+	
+	var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");
+	var prospectiveEmployeeId = $("#makeOfferModal").attr("data-user-id");
+	
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/application/" + jobId + "/user/" + prospectiveEmployeeId + "/status",
+		
+	}).done(function(applicationStatus){
+		 
+		var message = "";
+		var userName = $("#makeOfferTo_name").html();
+		
+		switch (applicationStatus) {
+		case "-1":
+			message = "You have already proposed an application to " + userName + " for this job.";
+			break;
+
+		case "0":
+		case "2":
+		case "4":
+			message = userName + " has an open appliation for this job.";			
+			break;
+			
+		case "1":
+			message = userName + "'s application has already been declined for this job.";				
+			break;
+			
+		case "3":
+			message = userName + " has already been hired for this job.";
+			break;
+			
+		case "5":
+			message = userName + " has already applied for this job."
+						+ " His application was withdrawn due to a time conflict with his other employment.";
+			break;
+			
+		default:
+			break;
+		}
+		
+		
+		if(message != ""){
+			$("#makeAnOffer_applicationStatus").html(message);
+		}
+		
+	})
+}
 
 function showJobInfo(jobDto){
 	

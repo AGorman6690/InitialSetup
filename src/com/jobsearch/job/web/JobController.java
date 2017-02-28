@@ -93,13 +93,13 @@ public class JobController {
 			@RequestParam(name = "beforeStartDate", required = false) boolean beforeStartDate,
 			@RequestParam(name = "beforeEndDate", required = false) boolean beforeEndDate,
 			@RequestParam(name = "d", value = "d", required = false) List<String> workingDays,
+			@RequestParam(name = "doMatchAllDays", value = "doMatchAllDays", required = false) boolean doMatchAllDays,
 			@RequestParam(name = "duration", required = false) Double duration,
 			@RequestParam(name = "isShorterThanDuration", required = false) boolean isShorterThanDuration,
 			@RequestParam(name = "returnJobCount", required = false, defaultValue = "25") Integer returnJobCount,
 			@RequestParam(name = "sortBy", required = false) String sortBy,
 			@RequestParam(name = "isAscending", required = false) boolean isAscending,
 			@RequestParam(name = "isAppendingJobs", required = true) boolean isAppendingJobs,
-			@RequestParam(name = "dt", value="dt", required = false) Integer[] durationTypeIds,
 			@RequestParam(name = "savedName", required = false) String savedName,
 //			@RequestParam(value = "id", required = false) int[] loadedJobIds ,
 			HttpSession session,
@@ -116,8 +116,8 @@ public class JobController {
 		
 
 		FindJobFilterDTO filter = new FindJobFilterDTO(radius, fromAddress, categoryIds, startTime, endTime, beforeStartTime,
-				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, duration,
-				isShorterThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, durationTypeIds,
+				beforeEndTime, startDate, endDate, beforeStartDate, beforeEndDate, workingDays, doMatchAllDays, duration,
+				isShorterThanDuration, returnJobCount, sortBy, isAscending, isAppendingJobs, 
 				city, state, zipCode, savedName);
 				
 			
@@ -237,6 +237,16 @@ public class JobController {
 	public String loadPreviousPostedQuestion(@RequestParam(name = "questionId", required = true) int questionId,
 												HttpSession session) {
 
+		// *****************************************************
+		// *****************************************************
+		// Can the getJobDto methond be used in place of this????
+		// The getJobDTO_DisplayJobInfo() should also be responsible 
+		// for setting the questions.
+		// This is redundant.
+		// *****************************************************
+		// *****************************************************
+		
+		
 		Question postedQuestion = jobService.getQuestion_PreviousPostedQuestion(session, questionId);
 		
 		return JSON.stringify(postedQuestion);
