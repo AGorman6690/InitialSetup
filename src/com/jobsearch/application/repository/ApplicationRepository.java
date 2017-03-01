@@ -341,11 +341,28 @@ public class ApplicationRepository {
 
 			// Insert the application
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insert_application(?, ?, ?)}");
+					.prepareCall("{call insert_application(?, ?, ?, ?, ?)}");
 
 			cStmt.setInt(1, applicationDto.getApplicantId());
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
+			
+			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
+				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
+			}
+			else{
+				cStmt.setTimestamp(4, null);
+			}
+			
+			if(applicationDto.getApplication().getExpirationDate() != null){
+				cStmt.setTimestamp(5, Timestamp.valueOf(applicationDto.getApplication().getExpirationDate()));	
+			}
+			else{
+				cStmt.setTimestamp(5, null);
+			}
+			
+			
+			
 
 			ResultSet result = cStmt.executeQuery();
 
@@ -372,6 +389,7 @@ public class ApplicationRepository {
 			applicationService.insertApplicationWorkDays(newApplicationId,
 															applicationDto.getJobId(),
 															applicationDto.getAvailableDays());
+
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

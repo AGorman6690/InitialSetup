@@ -391,10 +391,12 @@ public class ApplicationServiceImpl {
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
-					this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
+								this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
+			
+			applicationDto.setAvailableDays(this.getAvailableDays_byApplication(application.getApplicationId()));
 			
 			applicationDto.setApplicationDtos_conflicting(
-					this.getApplicationDtos_Conflicting(userId,
+								this.getApplicationDtos_Conflicting(userId,
 											application.getApplicationId(),
 											applicationDto.getJobDto().getWorkDays()));
 			
@@ -404,7 +406,8 @@ public class ApplicationServiceImpl {
 		return applicationDtos;
 	}
 
-	private List<ApplicationDTO> getApplicationDtos_Conflicting(int userId, int reference_applicationId, List<WorkDay> workDays) {
+	private List<ApplicationDTO> getApplicationDtos_Conflicting(int userId, int reference_applicationId,
+													List<WorkDay> workDays) {
 		
 		List<ApplicationDTO> applicationDtos_conflicting = new ArrayList<ApplicationDTO>();
 		
@@ -497,13 +500,11 @@ public class ApplicationServiceImpl {
 				(days != null || hours != null || minutes != null)){
 			
 			LocalDateTime employerAcceptedDate = LocalDateTime.now();
-			LocalDateTime expirationDate = employerAcceptedDate;
-			
-			if(days != null) expirationDate = expirationDate.plusDays(days);
-			if(hours != null) expirationDate = expirationDate.plusHours(hours);
-			if(minutes != null) expirationDate = expirationDate.plusMinutes(minutes);
+			LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
+													days, hours, minutes);
 						
 			repository.updateWageProposalStatus(wageProposalId, WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+			
 			repository.updateApplication_PendingApplicantApproval(wageProposalId, employerAcceptedDate,
 																expirationDate);
 				
@@ -511,6 +512,19 @@ public class ApplicationServiceImpl {
 		}		
 	}
 
+	public LocalDateTime getExpirationDate(LocalDateTime start, Integer days_expiresIn,
+			 					Integer hours_expiresIn, Integer minutes_expiresIn){
+		
+		
+		LocalDateTime expirationDate = start;
+		
+		if(days_expiresIn != null) expirationDate = expirationDate.plusDays(days_expiresIn);
+		if(hours_expiresIn != null) expirationDate = expirationDate.plusHours(hours_expiresIn);
+		if(minutes_expiresIn != null) expirationDate = expirationDate.plusMinutes(minutes_expiresIn);
+		
+		return expirationDate;
+		
+	}
 
 	private boolean isWageProposalCurrentlyPendingApplicantsApproval(int wageProposalId, HttpSession session) {
 		
@@ -682,7 +696,7 @@ public class ApplicationServiceImpl {
 	
 	}
 
-	public void offerWageProposal_byEmployer(ApplicationDTO applicationDto, HttpSession session) {
+	public void initiateContact_byEmployer(ApplicationDTO applicationDto, HttpSession session) {
 
 		// Verify:
 		// 1) That the session user did indeed post this job.
@@ -690,11 +704,26 @@ public class ApplicationServiceImpl {
 		if(verificationService.didSessionUserPostJob(session, applicationDto.getJobId()) && 
 				!verificationService.didUserApplyForJob(applicationDto.getJobId(), applicationDto.getApplicantId())){
 			
+			// Set the application
 			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
+			
+			LocalDateTime employerAcceptedDate = LocalDateTime.now();
+			LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
+													applicationDto.getDays_offerExpires(),
+													applicationDto.getHours_offerExpires(),
+													applicationDto.getMinutes_offerExpires());
+			
+			applicationDto.getApplication().setEmployerAcceptedDate(employerAcceptedDate);
+			applicationDto.getApplication().setExpirationDate(expirationDate);
+			
+			
+			// Set the wage proposal
 			applicationDto.getWageProposal().setProposedByUserId(SessionContext.getUser(session).getUserId());
 			applicationDto.getWageProposal().setProposedToUserId(applicationDto.getApplicantId());
+			applicationDto.getWageProposal().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
 			
 			this.insertApplication(applicationDto);	
+						
 		}
 
 	}

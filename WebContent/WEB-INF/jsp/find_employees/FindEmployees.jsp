@@ -6,12 +6,11 @@
 
 <script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>
 <link href="/JobSearch/static/css/Templates/forms.css" rel="stylesheet" />
-
-
-<script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
-<link href="/JobSearch/static/css/findEmployees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/table.css" rel="stylesheet" />
 
+<script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
+<link href="/JobSearch/static/css/find_employees/findEmployees.css" rel="stylesheet" />
+<link href="/JobSearch/static/css/find_employees/make_offer_modal.css" rel="stylesheet" />
 
 
 <div class="container">
@@ -66,42 +65,6 @@
 </div>	
 
 
-<div id="makeOfferModal" class="mod">
-	<div class="mod-content">
-		<div class="mod-header">
-			<span class="glyphicon glyphicon-remove"></span>
-			<h3>Make An Offer To <span id="makeOfferTo_name"></span></h3>			
-		</div>
-
-		<div class="mod-body">
-			<div class="item">
-				<c:choose>
-					<c:when test="${empty jobDtos_current }">
-						You cannot make an offer. In order to make an offer, you must first post a job.
-					</c:when>
-					<c:otherwise>
-						<p id="makeAnOffer_applicationStatus"></p>
-						<label>Select a job</label>
-						<select>
-							<option disabled selected></option>
-							<c:forEach items="${jobDtos_current }" var="jobDto">
-								<option data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</option>
-							</c:forEach>
-						</select>						
-						<div class="item">
-							<label>Offer Amount</label>
-							<input id="amount" />
-						</div>
-						<div class="item accept-actions-container">
-							<%@ include file="../wage_proposal/AcceptWageProposal.jsp" %>
-						</div>						
-					</c:otherwise>
-				</c:choose>
-			</div>		
-
-		</div>
-		
-	</div>
-</div>
+<%@ include file="./MakeOfferModal.jsp"%>
 
 <%@ include file="../includes/Footer.jsp"%>

@@ -1,5 +1,7 @@
 var selectedDays = [];
 var dates_employeeAvailability = [];
+var dates_selectedAvailability_makeOffer;
+
 
 $(document).ready(function(){
 	
@@ -11,7 +13,7 @@ $(document).ready(function(){
 	// This is kludged 
 	// ********************************************************
 	// ********************************************************
-	$("#makeOfferModal .accept-employer").click(function(){
+	$("#makeOfferModal #sendOffer").click(function(){
 		
 		var applicationDto = {};
 		applicationDto.application = {};
@@ -20,17 +22,19 @@ $(document).ready(function(){
 		applicationDto.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
 		applicationDto.applicantId = $("#makeOfferModal").attr("data-user-id");
 		applicationDto.wageProposal.amount = $("#makeOfferModal input#amount").val();
+		applicationDto.availableDays = getSelectedDates($("#makerOffer_workDaysCalendar"), 
+											"yy-mm-dd", "apply-selected-work-day");
 
-		var $acceptActionsContainer = $(this).parents(".accept-actions-container").eq(0);
-		applicationDto.days_offerExpires = $acceptActionsContainer.find(".time-container input.days-pre-hire").val();
-		applicationDto.hours_offerExpires = $acceptActionsContainer.find(".time-container input.hours-pre-hire").val();
-		applicationDto.minutes_offerExpires = $acceptActionsContainer.find(".time-container input.minutes-pre-hire").val();
+		var $detialsContainer = $("#detailsContainer_makeAnOffer");
+		applicationDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
+		applicationDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
+		applicationDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
 
 		
 		broswerIsWaiting(true);
 		$.ajax({
 			type : "POST",
-			url :"/JobSearch/employer/offer/wage-proposal",
+			url :"/JobSearch/employer/initiate-contact",
 			headers : getAjaxHeaders(),
 			contentType : "application/json",	
 			data: JSON.stringify(applicationDto),
@@ -42,8 +46,9 @@ $(document).ready(function(){
 		
 	})
 	
-	$("#makeOfferModal select").change(function(){
-		showApplicationStatus_ProspectiveEmployee();
+	$("#selectJob_initiateContact select").change(function(){
+		var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");;
+		showApplicationStatus_ProspectiveEmployee(jobId);
 	})
 	
 
@@ -51,13 +56,20 @@ $(document).ready(function(){
 	
 	$("#resultsContainer").on("click", "span.show-make-offer-modal", function(){
 		
+		resetModal();
+		
 		var $tr = $(this).closest("tr");
 		var prospectiveEmployeeId = $tr.attr("data-user-id");
+		var prospectiveEmployeeName = $tr.attr("data-user-name");
 		
 		$("#makeOfferModal").attr("data-user-id", prospectiveEmployeeId);
 		
-		$("#makeOfferTo_name").html($tr.attr("data-user-name"));
+		// Show the clicked employee's name
+		$("#makeOfferModal").find("span.make-offer-to-name").each(function(){
+			$(this).html(prospectiveEmployeeName);
+		})
 		
+
 		$("#makeOfferModal").show();		
 	})
 	
@@ -162,57 +174,139 @@ $(document).ready(function(){
 		
 	})
 	
+	$("#makeAnOffer").click(function(){
+//		$("#detailsContainer_makeAnOffer").show();
+		$("#selectJob_initiateContact").show();
+	})
+	
+	$("#inviteToApply").click(function(){
+		$("#detailsContainer_makeAnOffer").hide();
+		$("#selectJob_initiateContact").show();
+	})
+	
 	setStates();
 	initAvailabilityCalendar();
+
+	$("button.clear").click(function(){
+		clearCalendar($("#makerOffer_workDaysCalendar"), "apply-selected-work-day");
+		dates_selectedAvailability_makeOffer = [];
+	})
 	
 })
 
-function showApplicationStatus_ProspectiveEmployee(){
+function resetModal(){
+	$("#inviteToApply").removeClass("selected-green");
+	$("#makeAnOffer").removeClass("selected-green");
+	$("#selectJob_initiateContact").hide();
+	$("#detailsContainer_makeAnOffer").hide();
+	$("#actionsContainer_initiateContact").hide();
+	$("#selectJob_initiateContact select").val("");
+	$("#makeAnOffer_applicationStatus").hide();
+}
+
+function showApplicationStatus_ProspectiveEmployee(jobId){
 	
-	var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");
 	var prospectiveEmployeeId = $("#makeOfferModal").attr("data-user-id");
 	
+	// Get the user's application status for the particular job
 	$.ajax({
 		type: "GET",
 		url: "/JobSearch/application/" + jobId + "/user/" + prospectiveEmployeeId + "/status",
+		dataType: "json",
+	}).done(function(jobDto){
 		
-	}).done(function(applicationStatus){
+		var attemptingToInvite;
 		 
+		// Per the applicaiton status, show a message to the employer
 		var message = "";
-		var userName = $("#makeOfferTo_name").html();
+		var userName = $(".mod-header .make-offer-to-name").html();
+		var canInitiateContact = false;
 		
-		switch (applicationStatus) {
-		case "-1":
+		switch (jobDto.applicationStatus) {
+		case -1:
 			message = "You have already proposed an application to " + userName + " for this job.";
 			break;
 
-		case "0":
-		case "2":
-		case "4":
-			message = userName + " has an open appliation for this job.";			
+		case 0:
+		case 2:
+		case 4:
+			message = userName + " has an open appliation for this job.";				
 			break;
 			
-		case "1":
+		case 1:
 			message = userName + "'s application has already been declined for this job.";				
 			break;
 			
-		case "3":
+		case 3:
 			message = userName + " has already been hired for this job.";
 			break;
 			
-		case "5":
+		case 5:
 			message = userName + " has already applied for this job."
 						+ " His application was withdrawn due to a time conflict with his other employment.";
 			break;
 			
 		default:
+			canInitiateContact = true;
 			break;
 		}
 		
-		
+		var $e = $("#makeAnOffer_applicationStatus");
 		if(message != ""){
-			$("#makeAnOffer_applicationStatus").html(message);
+			$e.html(message);
+			$e.show();
 		}
+		else{
+			$e.hide();
+		}
+		
+		
+		if($("button#InviteToApply").hasClass("selected-green")) attemptingToInvite = true;
+		else attemptingToInvite = false;
+		
+		
+		if(canInitiateContact){
+			
+			// Show/hide controls
+			$("#actionsContainer_initiateContact").show();			
+			if(attemptingToInvite){				
+				$("#detailsContainer_makeAnOffer").hide();
+				$("#sendOffer").hide();
+				$("#sendInvite").show();				
+			}
+			else{
+				$("#detailsContainer_makeAnOffer").show();
+				$("#sendOffer").show();
+				$("#sendInvite").hide();
+			}
+			
+			// If the job allows partial availability,
+			// then the employer has to select the days he wishes the
+			// prospective employee to work.
+			$calendarContainer = $("#makeOfferModal .calendar-container");
+			if(jobDto.job.isPartialAvailabilityAllowed){
+				
+				dates_selectedAvailability_makeOffer = [];
+				var dates_possibleAvailability = getDaysFromWorkDays(jobDto.workDays, dates_possibleAvailability);
+				var $calendar = $("#makerOffer_workDaysCalendar");
+				
+				// Destroy the datepicker if it is present
+				if($calendar.hasClass("hasDatepicker")) $calendar.datepicker("destroy");
+
+				// Set the date picker and show the job's work days
+				$calendar = setDataAttributes_calendarContainer_byJobDto($calendar, jobDto);		
+				initCalendar_selectAvailability($calendar, dates_selectedAvailability_makeOffer, dates_possibleAvailability);
+
+				$calendarContainer.show();
+			}
+			else $calendarContainer.hide();			
+		}
+		else{
+			$("#actionsContainer_initiateContact").hide();	
+			$("#detailsContainer_makeAnOffer").hide();
+		}
+		
+
 		
 	})
 }
@@ -224,13 +318,11 @@ function showJobInfo(jobDto){
 	$("#city").val(jobDto.job.city);
 	$("#state").val(jobDto.job.state);
 	$("#zipCode").val(jobDto.job.zipCode);
-	
-	
+		
 	// Set the availability calendar
 	selectedDays = getDaysFromWorkDays(jobDto.workDays, selectedDays);
 	$("#availabilityCalendar").datepicker("refresh");
-	
-	
+		
 }
 
 function initAvailabilityCalendar(){

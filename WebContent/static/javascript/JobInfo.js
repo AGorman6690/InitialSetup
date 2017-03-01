@@ -41,6 +41,13 @@ function isCalendarInDOM_applicantSelectWorkDays(){
 }
 
 function initCalendar_Apply_SelectWorkDays(){
+	
+	// ***********************************************************
+	// ***********************************************************
+	// Eventually replace this with the generic date picker init function
+	// ***********************************************************
+	// ***********************************************************
+	
 
 	if(isCalendarInDOM_applicantSelectWorkDays()){
 		

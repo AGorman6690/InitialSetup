@@ -45,6 +45,7 @@ public class JobDTO {
 	 List<JobSearchUser> applicants
 	 List<Application> applications
 	 Application application
+	 Integer applicationStatus
 	 
 	 List<ApplicationDTO> applicationDtos
 

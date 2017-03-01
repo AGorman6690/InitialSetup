@@ -14,6 +14,13 @@ $(document).ready(function(){
 			
 		}
 	})
+	
+	$(".button-group button").click(function(){
+	
+		highlightArrayItem(this, $(this).parent().find("button"), "selected-green");
+		
+	})
+	
 			
 })
 

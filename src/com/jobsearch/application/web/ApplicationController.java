@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WageProposal;
@@ -68,18 +69,30 @@ public class ApplicationController {
 	public String getApplicationStatus_ByUserAndJob(@PathVariable(value = "jobId") int jobId,
 								@PathVariable(value = "userId") int userId,
 								HttpSession session) {
-		Integer applicationStatus = applicationService.getApplicationStatus(jobId, userId, session);
 		
-		if(applicationStatus != null) return applicationStatus.toString();
-		else return SessionContext.get404Page();
+		// ***************************************
+		// ***************************************
+		// Pretty this up
+		// ***************************************
+		// ***************************************
+		
+		
+		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
+		jobDto.setApplicationStatus(applicationService.getApplicationStatus(jobId, userId, session));
+//		jobDto.setJob(jobService.getJob(jobId));
+		jobDto.setWorkDays(jobService.getWorkDays(jobId));
+		
+		return JSON.stringify(jobDto);
+//		if(jobDto.getApplicationStatus() != null) return JSON.stringify(jobDto);
+//		else return SessionContext.get404Page();
 
 	}
 	
-	@RequestMapping(value = "/employer/offer/wage-proposal", method = RequestMethod.POST)
+	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
 	@ResponseBody
-	public void employerOfferWageProposal(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+	public void employerInitiateContact(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
-		applicationService.offerWageProposal_byEmployer(applicationDto, session);
+		applicationService.initiateContact_byEmployer(applicationDto, session);
 	}
 
 	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)

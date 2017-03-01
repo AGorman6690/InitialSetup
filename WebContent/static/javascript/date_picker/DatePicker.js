@@ -1,8 +1,11 @@
 $(document).ready(function(){
 
-//	$(".clear-calendar").click(function(){
-//		clearCalendar($(this).closest(".calendar-container"));
-//	})
+	$(".calendar-container button.clear").click(function(){
+		
+		var clearClassName = $(this).attr("data-clear-class");
+		if(clearClassName == undefined) clearClassName = "active111";
+		clearCalendar($(this).closest(".calendar-container"), clearClassName);
+	})
 	
 })
 
@@ -22,9 +25,9 @@ function getDaysFromWorkDays(workDays, daysArray){
 	
 }
 
-function clearCalendar($calendar, days){
-	$calendar.find("td.active111").each(function(){
-		$(this).removeClass("active111");
+function clearCalendar($calendar, clearClassName){
+	$calendar.find("td." + clearClassName).each(function(){
+		$(this).removeClass(clearClassName);
 	})
 	return [];
 }
@@ -72,6 +75,18 @@ function getSelectedDate($calendar){
 	
 }
 
+function setDataAttributes_calendarContainer_byJobDto($calendar, jobDto){
+	
+	// Some calendars are initiated with the calendars data attributes.
+	// When calendars are initiated after an ajax request, these data attributes
+	// need to be set after the page is rendered.
+	
+	$calendar.attr("data-number-of-months", jobDto.months_workDaysSpan);
+	$calendar.attr("data-min-date", jobDto.date_firstWorkDay); 
+	
+	return $calendar;
+}
+
 function getNumberOfMonths($e){
 	
 	var numberOfMonths = $e.attr("data-number-of-months");
@@ -79,9 +94,21 @@ function getNumberOfMonths($e){
 		return 1;
 	}
 	else{
-		return parseInt(numberOfMonths);
+		numberOfMonths =  parseInt(numberOfMonths);
+		
+		if(isNaN(numberOfMonths)) return 1;
+		else return numberOfMonths;
 	}
 		
+}
+
+function getMinDate($calendar){
+	
+	var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
+	
+	if(isNaN(minDate.getTime()) == true) return new Date();
+	else return minDate;
+	
 }
 
 function attemptToAddDate(date, days){

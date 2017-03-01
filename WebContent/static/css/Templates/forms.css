@@ -11,6 +11,12 @@ label{
 	cursor:pointer;
 }
 
+.label-horiz{
+	width: 120px;
+    display: inline-block;
+    text-align: right;
+}
+
 .checkbox-container label{
 	cursor:pointer;
 }
