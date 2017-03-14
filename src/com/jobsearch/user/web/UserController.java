@@ -168,6 +168,16 @@ public class UserController {
 
 	}
 	
+	@RequestMapping(value = "/user/invitations", method = RequestMethod.GET)
+	public String viewInvitations(Model model, HttpSession session) {
+
+
+		userService.setModel_Invitations(model, session);
+
+		return "employee_profile/ApplicationInvites_Employee";
+
+	}
+	
 	@RequestMapping(value = "/user/get/availability", method = RequestMethod.GET)
 	@ResponseBody
 	public String getUserAvailability(Model model, HttpSession session) {

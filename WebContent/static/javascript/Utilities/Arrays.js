@@ -4,6 +4,7 @@ function attemptToAddValueToArray(value, array){
 }
 
 function removeValueFromArray(value, array){
+	
 	if($.inArray(value, array) != -1){
 		array.push(value);
 	}
@@ -11,6 +12,15 @@ function removeValueFromArray(value, array){
 		return (element != value);
 	})
 }
+
+
+function removeDateFromArray(date, array){
+	
+	return $.grep(array, function(_date, i){
+		return _date.getTime() != date.getTime();
+	})
+}
+
 
 function doesArrayContainValue(value, array){
 	

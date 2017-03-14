@@ -90,6 +90,7 @@
 		<script src="<c:url value="/static/javascript/Utilities/Arrays.js" />"></script>
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Global.js" />"></script>	
+		<script src="<c:url value="/static/javascript/InitDtos.js" />"></script>	
 		
 						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -116,7 +117,8 @@
 							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
-								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a>							
+								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a>
+								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 <!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->
 <!-- 								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							 -->

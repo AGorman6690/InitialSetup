@@ -1,0 +1,72 @@
+#appicants_tileView{
+	padding-top: 50px;
+}
+#appicants_tileView thead tr:not(:last-child){
+	padding-bottom: 15px;
+}
+#appicants_tileView thead tr{
+	display: block;
+}
+
+#appicants_tileView tbody{
+	display: block;
+	padding-left: 100px;
+	padding-top: 20px;
+}
+
+#appicants_tileView tbody tr:not(:last-child){
+	border-bottom: 1px solid #bbbbbb;	
+}
+
+#appicants_tileView th{
+	padding: 0px 10px;
+	border-left: 2px solid #cacaca;
+	font-size: 16px;
+}
+
+#appicants_tileView th.lbl{
+	padding-right: 30px;
+	border-left: 0;
+	font-weight: bold;
+	font-size: 18px;
+	color: #163b3d;
+}
+
+#appicants_tileView .image-container{
+	vertical-align: top;
+	padding-right: 40px;
+}
+
+#appicants_tileView td{
+	padding: 20px 0px;
+}
+
+td img{
+	width: 100px;
+	height: 100px;
+}
+
+#appicants_tileView td div{
+	display: inline-block;
+}
+
+#appicants_tileView p.name{
+    font-weight: bold;
+    font-size: 17px;
+    color: #197994;
+    margin-left: -20px;
+}
+
+.proposal-container h3{
+	font-size: 16px;
+/* 	margin-bottom: 0px; */
+}
+
+.proposal-container p {
+	padding-left: 20px;
+
+}
+
+#appicants_tileView .rating-container .star{
+	font-size: 20px;
+}

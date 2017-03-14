@@ -73,8 +73,31 @@ td.active111 a{
 }
 
 
+.calendar-container td {
+	border-radius: 5px;
+}
+
+.calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+.calendar-container td.is-not-available {
+	background: #c38f8f;
+	border-radius: 5px;
+}
+
+.calendar-container td.is-available a,
+.calendar-container td.is-not-available a{
+	color: #ffffff;
+}
+
+
 /* ***************************************************
 /* Availability Calendar */
+/* Eliminate all instances that depend on this css. */
+/* Use the more robust version above */
+/* The .availability-calendar-container class is unnecessary */
 
 .availability-calendar-container .calendar-container td.is-available {
 	background: #65886e;

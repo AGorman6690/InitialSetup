@@ -8,9 +8,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
@@ -18,9 +20,12 @@ import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayProposal;
+import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -65,6 +70,22 @@ public class ApplicationRepository {
 			}
 		});
 	}
+	
+	
+	public List<ApplicationInvite> ApplicationInviteRowMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<ApplicationInvite>() {
+			@Override
+			public ApplicationInvite mapRow(ResultSet rs, int rownumber) throws SQLException {
+
+				ApplicationInvite applicationInvite = new ApplicationInvite();
+				applicationInvite.setApplicationInviteId(rs.getInt("ApplicationInviteId"));
+				applicationInvite.setJobId(rs.getInt("JobId"));
+				applicationInvite.setUserId(rs.getInt("UserId"));
+
+				return applicationInvite;
+			}
+		});
+	}	
 
 	public List<WageProposal> WageProposalRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<WageProposal>() {
@@ -316,24 +337,39 @@ public class ApplicationRepository {
 	}
 
 
-	public void addWageProposal(WageProposal wageProposal) {
-		String sql = "INSERT INTO wage_proposal (ApplicationId, ProposedByUserId, ProposedToUserId, Amount, Status)"
-				+ " VALUES (?, ?, ?, ?, ?)";
-
-		jdbcTemplate.update(sql, new Object[] { wageProposal.getApplicationId(),
-													wageProposal.getProposedByUserId(),
-													wageProposal.getProposedToUserId(),
-													wageProposal.getAmount(),
-													WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED });
-
-	}
-
 	public void addApplication(int jobId, int userId) {
 		String sql = "INSERT INTO application (UserId, JobId)" + " VALUES (?, ?)";
 
 		jdbcTemplate.update(sql, new Object[] { userId, jobId });
 
 	}
+	
+
+	public void insertEmploymentProposal(EmploymentProposalDTO employmentProposalDto) {
+
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call insert_employment_proposal(?, ?, ?, ?, ?)}");
+
+			cStmt.setInt(1, employmentProposalDto.getApplicationId());
+			cStmt.setInt(2, employmentProposalDto.getProposedByUserId());
+			cStmt.setInt(3, employmentProposalDto.getProposedToUserId());
+			cStmt.setFloat(4, Float.valueOf(employmentProposalDto.getAmount()));
+			cStmt.setInt(5, employmentProposalDto.getStatus());
+			
+			ResultSet result = cStmt.executeQuery();		
+			result.next();
+			employmentProposalDto.setEmploymentProposalId(result.getInt("WageProposalId"));
+
+			applicationService.insertEmploymentProsalWorkDays(employmentProposalDto);		
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		
+	}
+
 
 	public void insertApplication(ApplicationDTO applicationDto) {
 
@@ -347,6 +383,7 @@ public class ApplicationRepository {
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
 			
+			// When the employer initiates contact, these will not be null
 			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
 				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
 			}
@@ -370,11 +407,9 @@ public class ApplicationRepository {
 			result.next();
 			int newApplicationId = result.getInt("ApplicationId");
 
-			// Update the application DTO's wage proposal's application id
-			applicationDto.getWageProposal().setApplicationId(newApplicationId);
-
-			// Add the wage proposal
-			applicationService.addWageProposal(applicationDto.getWageProposal());
+			// Insert the employment proposal
+			applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
+			applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());
 
 			// Add answers
 			if(verificationService.isListPopulated(applicationDto.getAnswers())){
@@ -384,12 +419,6 @@ public class ApplicationRepository {
 
 				}	
 			}
-			
-			// Add the work days the applicant applied for						
-			applicationService.insertApplicationWorkDays(newApplicationId,
-															applicationDto.getJobId(),
-															applicationDto.getAvailableDays());
-
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -410,7 +439,7 @@ public class ApplicationRepository {
 
 	public WageProposal getCurrentWageProposal(int applicationId) {
 
-		String sql = "SELECT * FROM wage_proposal" + " WHERE WageProposalId = "
+		String sql = "SELECT * FROM wage_proposal WHERE WageProposalId = "
 				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ?)";
 
 		List<WageProposal> result = this.WageProposalRowMapper(sql, new Object[] { applicationId });
@@ -625,22 +654,48 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, args.toArray());
 	}
 
-	public void insertApplicationWorkDay(int applicationId, Integer workDayId) {
-		String sql = "INSERT INTO application_work_day (ApplicationId, WorkDayId) VALUES (?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ applicationId, workDayId } );
+
+	public List<String> getProposedWorkDays(int employmentProposalId) {
 		
-	}
-
-	public List<String> getAvailableDays_byApplication(int applicationId) {
-
-
+		// **************************************************************************
+		//Now that the user needs to specify the work days when applying to
+		//jobs with partial availability, can this method be removed????
+		// Review this.
+		// **************************************************************************
 		String sql = "Select d.Date FROM date d"
 					+ " INNER JOIN work_day wd on wd.DateId = d.Id"
-					+ " INNER JOIN application_work_day a_wd ON a_wd.WorkDayId = wd.WorkDayId"
-					+ " WHERE a_wd.ApplicationId = ?";
+					+ " INNER JOIN employment_proposal_work_day ep_wd ON ep_wd.WorkDayId = wd.WorkDayId"
+					+ " WHERE ep_wd.EmploymentProposalId = ?";
 		
-		return jdbcTemplate.queryForList(sql, new Object[]{ applicationId }, String.class);
+		return jdbcTemplate.queryForList(sql, new Object[]{ employmentProposalId }, String.class);
 	}
+
+	public void insertEmploymentProsalWorkDay(int employmentProposalId, int workDayId) {
+	
+		String sql = "INSERT INTO employment_proposal_work_day (EmploymentProposalId, WorkDayId)"
+						+ " VALUES (?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{ employmentProposalId, workDayId } );
+		
+	}
+
+	public List<ApplicationInvite> getApplicationInvites(int userId) {
+		
+		String sql = "SELECT * FROM application_invite WHERE UserId = ?";
+
+		return ApplicationInviteRowMapper(sql, new Object[]{ userId } );
+	}
+
+
+	public void insertApplicationInvite(ApplicationInvite applicationInvite) {
+		
+		String sql = "INSERT INTO application_invite (JobId, UserId, Status) VALUES (?, ?, ?)";
+		jdbcTemplate.update(sql, new Object[]{ applicationInvite.getJobId(),
+											   applicationInvite.getUserId(),
+											   applicationInvite.getStatus() });
+		
+	}
+
 
 
 

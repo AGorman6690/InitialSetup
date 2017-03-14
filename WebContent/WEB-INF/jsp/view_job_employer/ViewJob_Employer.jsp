@@ -2,24 +2,22 @@
 	<%@ include file="../includes/resources/DatePicker.jsp" %>
 	<%@ include file="../includes/resources/TableFilter.jsp" %>
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
-	
+	<%@ include file="../includes/resources/StarRatings.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/wageNegotiation.css" /> -->
 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" /> -->
 
-	<link rel="stylesheet" type="text/css" href="../static/css/Templates/forms.css" />
-<!-- 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" /> -->
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/Map.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/Map.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
-	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
 
 	
@@ -65,6 +63,11 @@
 					<div id="applicants" class="">
 						<%@ include file="./Applicants.jsp" %>
 					</div>
+					
+					<div id="appicants_tileView">
+						<%@ include file="./Applicants_TileView.jsp" %>
+					</div>
+					
 				</div>	
 				</c:if>	
 				

@@ -7,3 +7,4 @@
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />	
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker_new.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/dateColors.css" />	

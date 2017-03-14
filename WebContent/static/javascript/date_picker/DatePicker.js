@@ -102,12 +102,20 @@ function getNumberOfMonths($e){
 		
 }
 
+
 function getMinDate($calendar){
 	
-	var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
+	var dateString = $calendar.attr("data-min-date");
 	
-	if(isNaN(minDate.getTime()) == true) return new Date();
-	else return minDate;
+	if(dateString != undefined){
+		var minDate = new Date(dateString.replace(/-/g, "/"));
+		
+		if(isNaN(minDate.getTime()) == true) return new Date();
+		else return minDate;		
+	}else{
+		return new Date();
+	}
+
 	
 }
 
@@ -118,6 +126,20 @@ function attemptToAddDate(date, days){
     }
 	
 }
+
+function dateify(dateString){
+	
+	// This is used to initialize a date object.
+	// For some reason the date string needs to be formatted as yyyy/mm/dd.
+	// If it isn't, then the date in initialized to the date string minus one day.
+	
+	var date = new Date(dateString.replace(/-/g, "/"));
+	
+	if(isNaN(date.getTime()) == true) return undefined;
+	else return date;
+	
+}
+
 
 function addOrRemoveDate(date, days){
 	if(!isDateAlreadySelected(date, days)) days.push(date);

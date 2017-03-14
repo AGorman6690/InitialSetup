@@ -28,3 +28,19 @@
 .expiration-time{
 	padding-top: 8px;
 }
+
+
+.counter-calendar-container .calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+.counter-calendar-container .calendar-container td.is-not-available {
+	background: #bbbbbb;
+	border-radius: 5px;
+}
+
+.counter-calendar-container .calendar-container td.is-available a,
+.counter-calendar-container .calendar-container td.is-not-available a{
+	color: #ffffff;
+}

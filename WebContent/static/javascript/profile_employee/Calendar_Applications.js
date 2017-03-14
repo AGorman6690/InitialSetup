@@ -17,12 +17,13 @@ $(function() {
 });
 
 $(document).ready(function(){
+
 	setCalendarDays();
 //		setCalendarDays_employment();
 	
-	initCalendar_Employee_Profile($("#calendar_applications"));	
+//	initCalendar_Employee_Profile($("#calendar_applications"));	
 	
-	initCalendar_Both();
+//	initCalendar_Both();
 
 	$("#calendarContainer_applications").on("mouseover", "td div[data-job-name]", function(){
 		

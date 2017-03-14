@@ -432,6 +432,7 @@ public class JobServiceImpl {
 		return jobDto;
 	}
 	
+
 	
 	private List<Skill> getSkills_ByType(int jobId, Integer type) {
 		return repository.getSkills_ByType(jobId, type);
@@ -938,7 +939,7 @@ public class JobServiceImpl {
 
 		switch (context) {
 		case "waiting":
-			
+
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
@@ -1186,6 +1187,24 @@ public class JobServiceImpl {
 	public Integer getWorkDayId(int jobId, int dateId) {
 		
 		return repository.getWorkDayId(jobId, dateId);
+	}
+
+	public void setCalendarInitData(JobDTO jobDto, List<WorkDay> workDays) {
+		
+		// ********************************************************
+		// Convert all other instances of the below methods to use this method
+		// ********************************************************
+				
+		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
+		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(workDays));
+		
+	}
+
+	public List<String> getDateStrings_UnavailableWorkDays(int userId, List<WorkDay> workDays) {
+		
+		if(verificationService.isListPopulated(workDays)){			
+			return repository.getDateStrings_UnavailableWorkDays(userId, workDays);				
+		}else return null;
 	}
 
 

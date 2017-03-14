@@ -37,6 +37,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
@@ -938,6 +939,23 @@ public class UserServiceImpl {
 		userDto.setAvailableDays(this.getAvailableDays(SessionContext.getUser(session).getUserId()));
 
 		return userDto;
+	}
+
+	public void setModel_Invitations(Model model, HttpSession session) {
+		
+		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(
+															SessionContext.getUser(session).getUserId());
+		
+		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
+		
+		for(ApplicationInvite applicationInvite : applicationInvites){
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
+			jobDto.setApplicationInvite(applicationInvite);
+			jobDtos_applicationInvites.add(jobDto);
+		}
+		
+		model.addAttribute("jobDtos_applicationInvites", jobDtos_applicationInvites);
 	}
 
 

@@ -111,7 +111,7 @@ function getSortedRows(doSortAscending, sortAttr, $table){
 	var searchIndex;
 	
 	// for each table row
-	$table.find("tbody tr:not(.no-filter)").each(function(i, row){
+	$table.find("> tbody > tr:not(.no-filter)").each(function(i, row){
 		
 		// Store row information
 		currentRow = {};

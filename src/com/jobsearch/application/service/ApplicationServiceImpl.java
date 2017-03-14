@@ -16,11 +16,13 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayProposal;
+import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
@@ -65,6 +67,8 @@ public class ApplicationServiceImpl {
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+
+			
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
 							this.getTime_untilEmployerApprovalExpires(
@@ -77,21 +81,30 @@ public class ApplicationServiceImpl {
 			applicationDto.setAnswerOptionIds_Selected(
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
 			
-			applicationDto.setAvailableDays(this.getAvailableDays_byApplication(application.getApplicationId()));
+			applicationDto.setDateStrings_availableWorkDays(
+								this.getProposedWorkDays(applicationDto.getCurrentWageProposal().getId()));
+			
+			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
+			
+			applicationDto.setDateStrings_unavailableWorkDays(jobService.getDateStrings_UnavailableWorkDays(applicantId,
+																applicationDto.getJobDto().getWorkDays()));
+			
+			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
 			
 			// *************************************************
-			// This can probably be eliminated in the near future.
+			// With the advent of applicationDto.availableDays,
+			// this can probably be eliminated in the near future.
 			// Review this.
-			// *************************************************
-			List<WorkDay> workDays = jobService.getWorkDays(jobId);
+			// *************************************************			
 			int count_employmentDays = jobService.getCount_employmentDays_byUserAndWorkDays(
-														applicantId, workDays);
+														applicantId, applicationDto.getJobDto().getWorkDays());
 			
 			// **********************************
 			// See lengthy note in applyForJob()
 			// **********************************
 			applicationDto.getApplicantDto().setCount_availableDays_perFindEmployeesSearch(
-													workDays.size() - count_employmentDays);
+													applicationDto.getJobDto().getWorkDays().size()
+														- count_employmentDays);
 			
 
 			applicationDtos.add(applicationDto);
@@ -99,10 +112,16 @@ public class ApplicationServiceImpl {
 
 		return applicationDtos;
 	}
-	
-	public List<String> getAvailableDays_byApplication(int applicationId) {
+
+
+	public WageProposal getCurrentWageProposal(Application application) {
+		return repository.getCurrentWageProposal(application.getApplicationId());
+	}
+
+
+	public List<String> getProposedWorkDays(int employmentProposalId) {
 		
-		return repository.getAvailableDays_byApplication(applicationId);
+		return repository.getProposedWorkDays(employmentProposalId);
 	}
 
 	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
@@ -151,10 +170,6 @@ public class ApplicationServiceImpl {
 		return 0;
 	}
 
-	public WageProposal getCurrentWageProposal(Application application) {
-		return repository.getCurrentWageProposal(application.getApplicationId());
-	}
-
 //	public float getCurrentWageProposedBy(int applicationId, int proposedByUserId) {
 //		return repository.getCurrentWageProposedBy(applicationId, proposedByUserId);
 //	}
@@ -195,11 +210,11 @@ public class ApplicationServiceImpl {
 		applicationDto.setApplicantId(user.getUserId());
 
 		// Set the wage proposed BY the applicant
-		applicationDto.getWageProposal().setProposedByUserId(user.getUserId());
+		applicationDto.getEmploymentProposalDto().setProposedByUserId(user.getUserId());
 
 		// Set the wage proposed TO the employer
 		// Get the employer's id from the job object.		
-		applicationDto.getWageProposal().setProposedToUserId(appliedToJob.getUserId());
+		applicationDto.getEmploymentProposalDto().setProposedToUserId(appliedToJob.getUserId());
 
 		// Add the application to the database
 		// repository.addApplication(applicationDto.getJobId(),
@@ -230,10 +245,6 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public void addWageProposal(WageProposal wageProposal) {
-		repository.addWageProposal(wageProposal);
-
-	}
 
 	public void insertApplication(ApplicationDTO applicationDto) {
 		
@@ -312,11 +323,12 @@ public class ApplicationServiceImpl {
 		return repository.getWageProposal(wageProposalId);
 	}
 
-	public void insertCounterOffer(WageProposalDTO dto, HttpSession session) {
+	public void insertCounterOffer(EmploymentProposalDTO employmentProposalDto, HttpSession session) {
 	
 
+
 		// As received from the browser, get the wage proposal to counter
-		WageProposal wagePropasalToCounter = this.getWageProposal(dto.getWageProposalIdToCounter());
+		WageProposal wagePropasalToCounter = this.getWageProposal(employmentProposalDto.getEmploymentProposalId());
 		
 		// Get the application that pertains to the requested counter offer
 		Application application = this.getApplication(wagePropasalToCounter.getApplicationId());
@@ -329,7 +341,7 @@ public class ApplicationServiceImpl {
 		// 1) The wage proposal id received from the browser was indeed proposed TO the session user
 		//		Reason: the user can edit the wage proposal id in the browser.
 		// 2) The current wage proposal pertaining to this application is currently
-		//			proposed TO the session user.
+		//			proposed TO the session user, and thus they can counter the current proposal.
 		//		Reason: Because this is initiated by an Ajax call, the browser can lag and the user
 		//					might click "send counter offer" more than once.
 		if(wagePropasalToCounter.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
@@ -337,7 +349,7 @@ public class ApplicationServiceImpl {
 				
 		
 			// Set the proposal-to-counter's status to "countered"
-			this.updateWageProposalStatus(dto.getWageProposalIdToCounter(), 0);
+			this.updateWageProposalStatus(employmentProposalDto.getEmploymentProposalId(), 0);
 	
 			// Update the application's status to considering.
 			// The employer's action of making a counter offer implies the employer
@@ -346,20 +358,20 @@ public class ApplicationServiceImpl {
 			// status to "considering"
 			// before making a counter offer, this ensures the application is set to
 			// the correct status.		
-			this.updateApplicationStatus(application.getApplicationId(), 2);
+			this.updateApplicationStatus(application.getApplicationId(), Application.STATUS_CONSIDERED);
 	
-			// Create a new wage proposal for the counter offer
-			WageProposal counter = new WageProposal();
-			counter.setAmount(dto.getCounterAmount());
-	
+
 			// This counter offer is being proposed BY the user whom the
 			// wage-proposal-to-counter was proposed TO,
 			// and vice versa.
-			counter.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
-			counter.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
-			counter.setApplicationId(wagePropasalToCounter.getApplicationId());
-								
-			repository.addWageProposal(counter);
+			employmentProposalDto.setProposedByUserId(wagePropasalToCounter.getProposedToUserId());
+			employmentProposalDto.setProposedToUserId(wagePropasalToCounter.getProposedByUserId());
+		
+			if(employmentProposalDto.getAmount() == null ||
+					employmentProposalDto.getAmount() == "") employmentProposalDto.setAmount(currentWageProposalInDatabase.getAmount());
+			
+			this.insertEmploymentProposal(employmentProposalDto);
+
 		}	
 
 	}
@@ -393,13 +405,18 @@ public class ApplicationServiceImpl {
 			applicationDto.setTime_untilEmployerApprovalExpires(
 								this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
 			
-			applicationDto.setAvailableDays(this.getAvailableDays_byApplication(application.getApplicationId()));
+			applicationDto.setDateStrings_availableWorkDays(this.getProposedWorkDays(
+									applicationDto.getCurrentWageProposal().getId()));
+			
+			applicationDto.setDateStrings_unavailableWorkDays(
+							jobService.getDateStrings_UnavailableWorkDays(userId,
+											applicationDto.getJobDto().getWorkDays()));
 			
 			applicationDto.setApplicationDtos_conflicting(
 								this.getApplicationDtos_Conflicting(userId,
 											application.getApplicationId(),
 											applicationDto.getJobDto().getWorkDays()));
-			
+			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
 			applicationDtos.add(applicationDto);
 		}
 		
@@ -718,10 +735,10 @@ public class ApplicationServiceImpl {
 			
 			
 			// Set the wage proposal
-			applicationDto.getWageProposal().setProposedByUserId(SessionContext.getUser(session).getUserId());
-			applicationDto.getWageProposal().setProposedToUserId(applicationDto.getApplicantId());
-			applicationDto.getWageProposal().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
-			
+			applicationDto.getEmploymentProposalDto().setProposedToUserId(applicationDto.getApplicantId());
+			applicationDto.getEmploymentProposalDto().setProposedByUserId(SessionContext.getUser(session).getUserId());
+			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+
 			this.insertApplication(applicationDto);	
 						
 		}
@@ -732,7 +749,6 @@ public class ApplicationServiceImpl {
 		
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 			Application application = this.getApplication(jobId, userId);
-			
 			if(application == null) return Application.STATUS_DOES_NOT_EXIST;
 			return application.getStatus();
 		}
@@ -740,18 +756,48 @@ public class ApplicationServiceImpl {
 		
 	}
 
-	public void insertApplicationWorkDays(int applicationId, int jobId, List<String> stringDates) {
+	public void insertEmploymentProsalWorkDays(EmploymentProposalDTO employmentProposalDTO) {
 		
-		if(verificationService.isListPopulated(stringDates)){
+		if(verificationService.isListPopulated(employmentProposalDTO.getDateStrings_proposedDates())){
+			int jobId = jobService.getJob_ByApplicationId(employmentProposalDTO.getApplicationId()).getId();
 			
-			for(String stringDate : stringDates){
-				int dateId = jobService.getDateId(stringDate);
-				Integer workDayId = jobService.getWorkDayId(jobId, dateId);
-				repository.insertApplicationWorkDay(applicationId, workDayId);	
-			}
-			
+			for(String dateString : employmentProposalDTO.getDateStrings_proposedDates()){
+				
+				int dateId = jobService.getDateId(dateString);				
+				int workDayId = jobService.getWorkDayId(jobId, dateId);
+				repository.insertEmploymentProsalWorkDay(employmentProposalDTO.getEmploymentProposalId(),
+															workDayId);	
+			}			
 			
 		}
+		
+	}
+
+	public void insertEmploymentProposal(EmploymentProposalDTO employmentProposalDto) {
+	
+		// *********************************************************
+		// *********************************************************
+		// Verify the work day proposal is valid. i.e. verify at least one of the
+		// proposed date strings is a work day for the particular job.
+		// *********************************************************
+		// *********************************************************
+		
+		repository.insertEmploymentProposal(employmentProposalDto);
+		
+	}
+
+	public List<ApplicationInvite> getApplicationInvites(int userId) {
+		
+		return repository.getApplicationInvites(userId);
+	}
+
+	public void insertApplicationInvite(ApplicationInvite applicationInvite, HttpSession session) {
+		
+		// Verify:
+		// 1) 
+		
+		applicationInvite.setStatus(ApplicationInvite.STATUS_NOT_YET_VIEWED);
+		repository.insertApplicationInvite(applicationInvite);
 		
 	}
 

@@ -219,7 +219,7 @@
 				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
 					<td>
 						<div class="vert-border availability-calendar-container">						
-							${applicationDto.availableDays.size()}
+							${applicationDto.dateStrings_availableWorkDays.size()}
 							<span class="glyphicon glyphicon-menu-up"></span>
 							<div class="calendar-container dropdown-style read-only">
 								<div class="calendar" data-number-of-months="${jobDto.months_workDaysSpan }"
@@ -227,7 +227,7 @@
 									
 								</div>
 								<div class="dates-available">
-									<c:forEach items="${applicationDto.availableDays }" var="date">
+									<c:forEach items="${applicationDto.dateStrings_availableWorkDays }" var="date">
 										<div data-date="${date }"></div>
 									</c:forEach>
 								</div>

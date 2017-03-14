@@ -1,0 +1,29 @@
+.calendar-container .calendar td.unavailable{
+	background: #000000;
+	cursor: default;
+}
+
+.calendar-container .calendar td.unavailable a{
+	color: #ffffff;
+	cursor: default;
+}
+
+.calendar-container .calendar td.proposed{
+	background: #4f9a63;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.proposed a{
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.a-job-work-day{
+	background: #bbbbbb;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.a-job-work-day a{
+	color: #ffffff;
+	cursor: pointer;
+}

@@ -10,6 +10,7 @@ import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
 import com.jobsearch.model.Skill
 import com.jobsearch.model.WorkDay
+import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.user.rate.RatingDTO
 
 public class JobDTO {
@@ -48,7 +49,7 @@ public class JobDTO {
 	 Integer applicationStatus
 	 
 	 List<ApplicationDTO> applicationDtos
-
+	 ApplicationInvite applicationInvite
 	 
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos

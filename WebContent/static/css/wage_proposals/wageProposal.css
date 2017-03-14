@@ -1,6 +1,6 @@
 .response-container{
 	display: none;
-	width: 300px;
+	width: 460px;
 }
 
 
@@ -58,4 +58,8 @@ input.counter-amount{
 
 .expiration-time{
     padding-top: 10px;
+}
+
+.counter-calendar-container{
+	padding-top: 30px;
 }

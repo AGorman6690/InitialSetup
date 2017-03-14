@@ -1,0 +1,21 @@
+.response-container.dropdown-style{
+	width: 770px;
+}
+
+table.main-table-style > tbody > tr > td:first-child{
+	font-weight: bold;
+}
+
+table.main-table-style > tbody > tr > td{
+	vertical-align: top;
+}
+
+table.main-table-style > tbody > tr > td:last-child{
+	color: #197994;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+table.main-table-style > tbody > tr > td:last-child p:hover{
+	text-decoration: underline;
+}

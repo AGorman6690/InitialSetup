@@ -146,38 +146,27 @@
 		var applicationDto = {};
 		
 		applicationDto.jobId = $("#jobId").val();
-		
-		applicationDto.wageProposal = {};
-		applicationDto.wageProposal = getWageProposal();
-		applicationDto.answers = [];
-		applicationDto.answers = getAnswers();
-		applicationDto.availableDays = getAvailableDays();
+		applicationDto.employmentProposalDto = getEmploymentProposalDto();
+		applicationDto.answers = getAnswers();		
 	
-		return applicationDto;
-	
+		return applicationDto;	
 	}
+
 	
-	function getAvailableDays(){
+	function getEmploymentProposalDto(){
 		
-		var availableDays = [];
+		var employmentProposalDto = {};
+		employmentProposalDto.dateStrings_proposedDates = [];
 		
+		employmentProposalDto.amount = $("#amount").val();
+			
 		if(isCalendarInDOM_applicantSelectWorkDays){
 			
-			availableDays = getSelectedDates($("#apply_selectWorkDays"), "yy-mm-dd", "apply-selected-work-day");
+			employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+										$("#apply_selectWorkDays"), "yy-mm-dd", "apply-selected-work-day");
 		}
-		
-		return availableDays;
-		
-		
-	}
-	
-	function getWageProposal(){
-		
-		var wageProposal = {}
-		wageProposal.amount = $("#amount").val();
-		wageProposal.status = -2;
-		
-		return wageProposal;
+
+		return employmentProposalDto;
 	}
 	
 	function getAnswers(){

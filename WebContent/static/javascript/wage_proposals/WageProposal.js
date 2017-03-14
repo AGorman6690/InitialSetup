@@ -40,25 +40,34 @@ $(document).ready(function(){
 	})
 	
 	$(".confirm-counter").click(function(){
-
-		var wageProposalDto = {};
-		wageProposalDto.wageProposalIdToCounter = $(this).parents("[data-wage-proposal-id]")
-																.eq(0)
-																.attr("data-wage-proposal-id");
 		
-		wageProposalDto.counterAmount = $(this).closest(".proposal-actions-container")
-														.find("input.counter-amount").eq(0).val();;
+		var $e = $(this);
+		var $calendar = $e.closest(".proposal-actions-container").find(".counter-calendar .calendar").eq(0);	
+
+		
+		var employmentProposalDto = {};
+		employmentProposalDto.applicationId = $e.closest("tr").attr("data-application-id");
+		employmentProposalDto.amount = $e.closest(".proposal-actions-container")
+													.find("input.counter-amount").eq(0).val();	
+		employmentProposalDto.employmentProposalId = $e.parents("[data-wage-proposal-id]")
+															.eq(0)
+															.attr("data-wage-proposal-id");
+
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates($calendar, "yy-mm-dd", "proposed");;
+		
+		
+
 
 		// Update the table's row attribute
-		$(this).closest("tr").attr("data-is-sent-proposal", "1");
+//		$(this).closest("tr").attr("data-is-sent-proposal", "1");
 		
 		broswerIsWaiting(true);
 		$.ajax({
 			type : "POST",
-			url :"/JobSearch/wage-proposal/counter",
+			url :"/JobSearch/employment-proposal/counter",
 			headers : getAjaxHeaders(),
 			contentType : "application/json",
-			data : JSON.stringify(wageProposalDto)			
+			data : JSON.stringify(employmentProposalDto)			
 		}).done(function() {	
 			
 			broswerIsWaiting(false);
@@ -69,6 +78,51 @@ $(document).ready(function(){
 			broswerIsWaiting(false);
 		});	
 	})
-
+	
+	initCalendars_counterCalendars();
 	
 })
+
+//function getDateStrings_proposedDates($e){
+//	
+//	var dateStrings_proposedDates = [];
+//	var workDayProposalDto = {};
+//
+//	var $calendar = $e.closest(".proposal-actions-container").find(".counter-calendar .calendar").eq(0);	
+//	var proposedDates = getSelectedDates($calendar, "yy-mm-dd", "proposed");
+//	
+//	$(proposedDates).each(function(){
+//		dateStrings_proposedDates.push(this);
+//	})
+//	
+//	return workDayProposalDtos;
+//}
+//
+//function getWageProposalDto($e){
+//	
+//	var wageProposalDto = {};
+//	
+//	wageProposalDto.wageProposalIdToCounter = $e.parents("[data-wage-proposal-id]")
+//														.eq(0)
+//														.attr("data-wage-proposal-id");
+//
+//	wageProposalDto.counterAmount = $e.closest(".proposal-actions-container")
+//											.find("input.counter-amount").eq(0).val();;	
+//
+//	return wageProposalDto;
+//}
+
+function initCalendars_counterCalendars(){
+	
+	$(".counter-calendar .calendar").each(function(){
+		
+		var $container = $(this).closest(".counter-calendar-container");
+		
+		
+		var dates_application = getDateFromContainer($container.find(".work-days-application"));
+		var dates_job = getDateFromContainer($container.find(".work-days-job"));
+		var dates_unavailable = getDateFromContainer($container.find(".work-days-unavailable"));
+		
+		initCalendar_counterApplicationDays($(this), dates_application, dates_job, dates_unavailable)
+	})
+}

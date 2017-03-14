@@ -1,13 +1,16 @@
 package com.jobsearch.application.service
 
+import java.awt.TexturePaintContext.Int;
 import java.util.List;
 
 import com.jobsearch.job.service.Job
 import com.jobsearch.job.service.JobDTO
 import com.jobsearch.model.Answer
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal
+import com.jobsearch.model.WorkDay
 
 class ApplicationDTO {
 	
@@ -19,6 +22,10 @@ class ApplicationDTO {
 	
 	WageProposal currentWageProposal
 	List<WageProposal> wageProposals
+	
+	// ******************************
+	// Can this be removed????
+	// ******************************
 	WageProposal wageProposal
 		
 	JobDTO jobDto
@@ -37,12 +44,22 @@ class ApplicationDTO {
 	Integer hours_offerExpires
 	Integer minutes_offerExpires
 	
-	List<String> availableDays
+	// ******************************************************.
+	// Rename this to: dateStrings_currentlyProposedWorkDays
+	// ******************************************************	
+	List<String> dateStrings_availableWorkDays
+//	List<String> dateStrings_currentlyProposedWorkDays
+		
+	List<String> dateStrings_unavailableWorkDays
+	
+	
+	EmploymentProposalDTO employmentProposalDto
 	
 	ApplicationDTO(){
 		this.applicantDto = new JobSearchUserDTO();
 		this.jobDto = new JobDTO();
 		this.application = new Application();
 	}
+
 
 }

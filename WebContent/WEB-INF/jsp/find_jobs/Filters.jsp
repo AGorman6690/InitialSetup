@@ -270,14 +270,14 @@
 				</div>
 				
 				<div id="work-days-dropdown" class="dropdown" data-units="days selected">
-					<label><input id="importAvailability" type="checkbox">Select Your Personal Availability</label>
+					<label><input id="importAvailability" type="checkbox">Import Your Personal Availability</label>
 					
-					<div class="note">Return jobs with:</div>
-					<div class="radio-container">
-						<label><input value="0" type="radio" name="work-days-match-flag" checked>at least one work day selected</label>
-						<label><input value="1" type="radio" name="work-days-match-flag">a work day on all selected days, but there might be more work days that have not been selected</label>
-						<label><input value="2" type="radio" name="work-days-match-flag">all work days selected</label>
-					</div>
+<!-- 					<div class="note">Return jobs with:</div> -->
+<!-- 					<div class="radio-container"> -->
+<!-- 						<label><input value="0" type="radio" name="work-days-match-flag" checked>at least one work day selected</label> -->
+<!-- 						<label><input value="1" type="radio" name="work-days-match-flag">a work day on all selected days, but there might be more work days that have not been selected</label> -->
+<!-- 						<label><input value="2" type="radio" name="work-days-match-flag">all work days selected</label> -->
+<!-- 					</div> -->
 					
 					
 					<div class="filter-value calendar-container calendar-multi-date">

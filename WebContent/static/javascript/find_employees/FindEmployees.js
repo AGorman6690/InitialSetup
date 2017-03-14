@@ -15,40 +15,24 @@ $(document).ready(function(){
 	// ********************************************************
 	$("#makeOfferModal #sendOffer").click(function(){
 		
-		var applicationDto = {};
-		applicationDto.application = {};
-		applicationDto.wageProposal = {};
-		
-		applicationDto.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
-		applicationDto.applicantId = $("#makeOfferModal").attr("data-user-id");
-		applicationDto.wageProposal.amount = $("#makeOfferModal input#amount").val();
-		applicationDto.availableDays = getSelectedDates($("#makerOffer_workDaysCalendar"), 
-											"yy-mm-dd", "apply-selected-work-day");
+		executeAjaxCall_sendOffer();
 
-		var $detialsContainer = $("#detailsContainer_makeAnOffer");
-		applicationDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
-		applicationDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
-		applicationDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
-
-		
-		broswerIsWaiting(true);
-		$.ajax({
-			type : "POST",
-			url :"/JobSearch/employer/initiate-contact",
-			headers : getAjaxHeaders(),
-			contentType : "application/json",	
-			data: JSON.stringify(applicationDto),
-			dataType : "json"
-			
-		}).done(function(){
-			broswerIsWaiting(false);
-		})
-		
 	})
 	
+	$("#makeOfferModal #sendInvite").click(function(){
+		
+		executeAjaxCall_sendInvite();
+
+	})
+	
+	
 	$("#selectJob_initiateContact select").change(function(){
-		var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");;
-		showApplicationStatus_ProspectiveEmployee(jobId);
+		
+//		if($("#makeAnOffer").hasClass("selected-green")){
+			var jobId = $(this).find("option:selected").eq(0).attr("data-job-id");;
+			showApplicationStatus_ProspectiveEmployee(jobId);	
+//		}
+		
 	})
 	
 
@@ -194,6 +178,60 @@ $(document).ready(function(){
 	
 })
 
+function executeAjaxCall_sendOffer(){
+	
+	var applicationDto = {};
+	applicationDto.application = {};
+	applicationDto.employmentProposalDto = {};
+	
+	applicationDto.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
+	applicationDto.applicantId = $("#makeOfferModal").attr("data-user-id");
+	applicationDto.employmentProposalDto.amount = $("#makeOfferModal input#amount").val();
+	applicationDto.employmentProposalDto.dateStrings_proposedDates = getSelectedDates($("#makerOffer_workDaysCalendar"), 
+										"yy-mm-dd", "apply-selected-work-day");
+
+	var $detialsContainer = $("#detailsContainer_makeAnOffer");
+	applicationDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
+	applicationDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
+	applicationDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
+
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type : "POST",
+		url :"/JobSearch/employer/initiate-contact",
+		headers : getAjaxHeaders(),
+		contentType : "application/json",	
+		data: JSON.stringify(applicationDto),
+		dataType : "json"
+		
+	}).done(function(){
+		broswerIsWaiting(false);
+	})	
+}
+
+function executeAjaxCall_sendInvite(){
+	
+	var applicationInvite = {};
+
+	
+	applicationInvite.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
+	applicationInvite.userId = $("#makeOfferModal").attr("data-user-id");
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type : "POST",
+		url :"/JobSearch/employer/initiate-contact/application-invite",
+		headers : getAjaxHeaders(),
+		contentType : "application/json",	
+		data: JSON.stringify(applicationInvite),
+		dataType : "json"
+		
+	}).done(function(){
+		broswerIsWaiting(false);
+	})	
+}
+
 function resetModal(){
 	$("#inviteToApply").removeClass("selected-green");
 	$("#makeAnOffer").removeClass("selected-green");
@@ -261,7 +299,7 @@ function showApplicationStatus_ProspectiveEmployee(jobId){
 		}
 		
 		
-		if($("button#InviteToApply").hasClass("selected-green")) attemptingToInvite = true;
+		if($("button#inviteToApply").hasClass("selected-green")) attemptingToInvite = true;
 		else attemptingToInvite = false;
 		
 		

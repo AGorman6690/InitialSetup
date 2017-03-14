@@ -16,8 +16,10 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalDTO;
+import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -41,11 +43,11 @@ public class ApplicationController {
 								applicationDto.getNewStatus());
 	}
 
-	@RequestMapping(value = "/wage-proposal/counter", method = RequestMethod.POST)
+	@RequestMapping(value = "/employment-proposal/counter", method = RequestMethod.POST)
 	@ResponseBody
-	public void counterOffer(@RequestBody WageProposalDTO wageProposalDto, HttpSession session) {
+	public void counterOffer(@RequestBody EmploymentProposalDTO employmentProposalDto, HttpSession session) {
 
-		applicationService.insertCounterOffer(wageProposalDto, session);
+		applicationService.insertCounterOffer(employmentProposalDto, session);
 	}
 
 	@RequestMapping(value = "/wage-proposal/accept/employer", method = RequestMethod.POST)
@@ -90,7 +92,7 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
 	@ResponseBody
-	public void employerInitiateContact(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+	public void initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
 		applicationService.initiateContact_byEmployer(applicationDto, session);
 	}
@@ -112,5 +114,12 @@ public class ApplicationController {
 		applicationService.declineWageProposalStatus(wageProposalId, session);
 
 		return "redirect:/user/profile";
+	}
+	
+	@RequestMapping(value = "/employer/initiate-contact/application-invite", method = RequestMethod.POST)
+	@ResponseBody
+	public void inviteToApply(@RequestBody ApplicationInvite applicationInvite, HttpSession session) {
+
+		applicationService.insertApplicationInvite(applicationInvite, session);
 	}
 }

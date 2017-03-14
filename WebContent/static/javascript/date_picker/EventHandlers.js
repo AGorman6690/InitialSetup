@@ -35,6 +35,21 @@ function beforeShowDay_findEmployees_ifUserHasAvailability(
 	
 }
 
+function beforeShowDay_counterApplicationDays(date,
+		dates_application, dates_job, dates_unavailable){
+	// This is to for the find employees page.
+	// If the user (i.e. the returned prospective employee) as availability
+	// on the requested date, then the calendar date will be green.
+	// If the user is not available, then the calendar date will be red.
+	
+	
+	// Check if date is in the particular array of dates
+	if(doesDateArrayContainDate(date, dates_unavailable)) return [true, 'unavailable'];
+	else if(doesDateArrayContainDate(date, dates_application)) return [true, 'proposed'];
+	else if(doesDateArrayContainDate(date, dates_job)) return [true, 'a-job-work-day'];
+	else return [true, ""];
+	
+}
 function onSelect_multiDaySelect_noRange(dateText, days){
  
 	var date = new Date(dateText);

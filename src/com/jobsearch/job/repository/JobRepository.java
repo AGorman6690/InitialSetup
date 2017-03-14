@@ -313,10 +313,10 @@ public class JobRepository {
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
 
-					cStmt.setInt(1, createdJob.getId());
-					cStmt.setInt(2, categoryId);
+				cStmt.setInt(1, createdJob.getId());
+				cStmt.setInt(2, categoryId);
 
-					cStmt.executeQuery();
+				cStmt.executeQuery();
 			}
 
 			// Add the questions
@@ -1113,6 +1113,85 @@ public class JobRepository {
 		
 		String sql = "SELECT WorkDayId FROM work_day WHERE JobId = ? and DateId = ?"; 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  dateId }, Integer.class);
+	}
+
+	public List<String> getDateStrings_UnavailableWorkDays(int userId, List<WorkDay> workDays) {
+		
+		
+		List<Object> args = new ArrayList<Object>();
+		String sql = "SELECT d.Date from date d WHERE d.Id NOT IN (";
+		
+		// **********************************************
+		// Structure:
+		// If the user is either:
+		// 1) unavailable
+		// 2) or employed
+		// on the requested days,
+		// then return the date id
+		// **********************************************
+		
+		// Unavailability sub query.
+		sql += " SELECT a.DateId FROM availability a WHERE a.UserId = ?";
+		args.add(userId);		
+
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			if(isFirst) sql += " AND (";
+			else sql += " OR";
+			
+			sql += " a.DateId = ?";
+			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
+			args.add(workDay.getDateId());
+			
+			isFirst = false;
+		}
+		
+		// Close the AND clause
+		sql += " ) ";
+		
+		
+		// Employment sub query.
+		sql += " OR a.DateId IN ("
+				+ " SELECT DISTINCT(d1.Id) FROM date d1"
+				+ " INNER JOIN work_day wd ON wd.DateId = d1.Id"
+				+ " INNER JOIN employment e ON e.JobId = wd.JobId"
+				+ " WHERE e.UserId = ?";
+		
+		args.add(userId);
+		
+
+		isFirst = true;
+		for(WorkDay workDay : workDays){
+			if(isFirst) sql += " AND (";
+			else sql += " OR";
+			
+			sql += " wd.DateId = ?";
+			args.add(workDay.getDateId());
+			
+			isFirst = false;
+		}
+				
+		// Close the AND and two IN clauses
+		sql += " ) ) )";			
+				
+		
+		// Restrict the main query to the work days in question
+		isFirst = true;
+		for(WorkDay workDay : workDays){
+			if(isFirst) sql += " AND (";
+			else sql += " OR";
+			
+			sql += " d.Id = ?";
+			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
+			args.add(workDay.getDateId());
+			
+			isFirst = false;
+		}	
+		// Close the AND clausec
+		sql += " ) ";		
+		
+		
+		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
 	}
 
 
