@@ -14,6 +14,7 @@ $(document).ready(function(){
 	$("#pageContentLinksContainer").find(".page-content-link.selected").eq(0).trigger("click");
 
 	
+	
 })
 	
 

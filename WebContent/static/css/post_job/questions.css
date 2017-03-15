@@ -72,3 +72,11 @@
 #question{
 	width:300px;
 }
+
+#postedQuestions{
+	width:350px;
+	left: 175px;
+	text-align: left;
+/* 	height:500px; */
+/* 	overflow: scroll;  */
+}

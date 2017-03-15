@@ -87,7 +87,7 @@ table#employeesTable{
 }
 
 tbody.vertical-lines td div.vert-border{
-	    border-right: 2px solid #ddd;
+/* 	    border-right: 2px solid #ddd; */
 }
 
 

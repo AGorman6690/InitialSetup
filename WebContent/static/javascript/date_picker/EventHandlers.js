@@ -21,7 +21,7 @@ function beforeShowDay_ifSelected(date, days){
 }
 
 function beforeShowDay_findEmployees_ifUserHasAvailability(
-			date, selectedDays, dates_employeeAvailability){
+			date, dates_jobWorkDays, dates_applicantProposal){
 	// This is to for the find employees page.
 	// If the user (i.e. the returned prospective employee) as availability
 	// on the requested date, then the calendar date will be green.
@@ -29,8 +29,8 @@ function beforeShowDay_findEmployees_ifUserHasAvailability(
 	
 	
 	// Check if date is in the particular array of dates
-	if(isDateAlreadySelected(date, dates_employeeAvailability)) return [true, 'is-available'];
-	else if(isDateAlreadySelected(date, selectedDays)) return [true, 'is-not-available'];
+	if(doesDateArrayContainDate(date, dates_applicantProposal)) return [true, 'proposed'];
+	else if(doesDateArrayContainDate(date, dates_jobWorkDays)) return [true, 'a-job-work-day'];
 	else return [true, ""];
 	
 }

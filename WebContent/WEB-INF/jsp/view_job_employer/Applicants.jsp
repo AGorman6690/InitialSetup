@@ -8,26 +8,30 @@
 	</c:when>
 
 	<c:otherwise>
-		<table id="applicantsTable" class="main-table-style">
+		<div id="changeLayout_applicants">
+<!-- 			<span id="tileView_applicants" class="glyphicon glyphicon-th-large"></span> -->
+<!-- 			<span id="tableView_applicants" class="glyphicon glyphicon-th-list"></span> -->
+			<span id="tableView_applicants">Table View</span>
+			<span id="tileView_applicants">Tile View</span>
+		</div>
+	
+		<table id="applicantsTable" class="main-table-style table-view">
 			<thead>
 				<tr>
-					<th id="" class="" colspan="1"></th>
-					<th id="" class="span" colspan="2">Wage Proposal</th>
-					<th id="" class="" colspan="1"></th>
-				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-					<th id="" class="" colspan="1"></th>
+					<th id="" class="table-view" colspan="1"></th>
+					<th id="" class="table-view span tile-view" colspan="${jobDto.job.isPartialAvailabilityAllowed ? 3 : 2 }">Proposal</th>
+					<th id="" class="table-view tile-view" colspan="1"></th>
+				<c:if test="${jobDto.questions.size() > 0 }">
+					<th id="" class="table-view" colspan="1"></th>
 				</c:if>
-					<th id="" class="" colspan="1"></th>
-					<th id="" class="" colspan="1"></th>
-					<th id="" class="" colspan="1"></th>
-					<th id="" class="" colspan="1"></th>
+					<th id="" class="table-view tile-view" colspan="1"></th>
 				</tr>
 			
 				<tr>
-					<th id="applicantName">Name</th>
-					<th id="wageNegotiation_status" class="header-dropdown" data-filter-attr="data-is-sent-proposal">
+					<th id="applicantName" class="table-view" >Name</th>
+					<th id="wageNegotiation_status" class="header-dropdown table-view tile-view" data-filter-attr="data-is-sent-proposal">
 						<span data-toggle-id="filterWageProposalStatus" >
-							<span class="glyphicon glyphicon-menu-down"></span>Status
+							Status<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
 						<div id="filterWageProposalStatus" class="dropdown-container filter-container checkbox-container">
 							<span class="approve-filter glyphicon glyphicon-ok"></span>
@@ -52,10 +56,10 @@
 						
 						</div>
 					</th>
-					<th id="wageNegotiation_current_offer" class="header-dropdown" data-sort-attr="data-wage-proposal-amount">
+					<th id="wageNegotiation_current_offer" class="header-dropdown table-view tile-view" data-sort-attr="data-wage-proposal-amount">
 					
 						<span data-toggle-id="sortWageProposalOffer" >
-							<span class="glyphicon glyphicon-menu-down"></span>Current Offer
+							Wage<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
 						<div id="sortWageProposalOffer" class="dropdown-container sort-container">
 <!-- 							<span class="approve-sort glyphicon glyphicon-ok"></span> -->
@@ -75,12 +79,31 @@
 					
 					</th>
 				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-					<th id="" class="" colspan="1">Days Available</th>
+
+					<th class="header-dropdown table-view tile-view"
+						 data-sort-attr="data-proposed-work-day-count">
+					
+						<span data-toggle-id="sortProposedWorkDayCount" >
+							Work Days<span class="glyphicon glyphicon-menu-down"></span>
+						</span>
+						<div id="sortProposedWorkDayCount" class="dropdown-container sort-container">		
+							<label>
+								<input type="radio"	name="proposed-work-day-count"
+									data-sort-ascending="0">High to Low
+							</label>
+							<label>
+								<input type="radio"	name="proposed-work-day-count"
+									data-sort-ascending="1">Low to High
+							</label>					
+						</div>					
+					
+					</th>					
 				</c:if>
-					<th id="rating" class="header-dropdown" data-sort-attr="data-applicant-rating">
+					<th id="rating" class="header-dropdown table-view tile-view"
+						 data-sort-attr="data-applicant-rating">
 					
 						<span data-toggle-id="sortApplicantRating" >
-							<span class="glyphicon glyphicon-menu-down"></span>Rating
+							Rating<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
 						<div id="sortApplicantRating" class="dropdown-container sort-container">
 <!-- 							<span class="approve-sort glyphicon glyphicon-ok"></span> -->
@@ -98,9 +121,8 @@
 						</div>					
 					
 					</th>
-					<th id="endorsements">Endorsements</th>
 				<c:if test="${jobDto.questions.size() > 0 }">
-					<th id="questions" class="header-dropdown"
+					<th id="questions" class="header-dropdown table-view tile-view"
 						 data-filter-attr="data-answer-option-ids-seleted"
 						 data-must-match-all-filter-values="1">
 						<span data-toggle-id="filterAnswersContainer" >
@@ -153,10 +175,10 @@
 					</th>						
 
 				</c:if>							
-					<th id="status" class="left header-dropdown" data-filter-attr="data-application-status">
+					<th id="status" class="left header-dropdown table-view tile-view" data-filter-attr="data-application-status">
 					
 						<span data-toggle-id="filterApplicationStatus" >
-							<span class="glyphicon glyphicon-menu-down"></span>Status
+							Favorites<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
 						<div id="filterApplicationStatus" class="dropdown-container filter-container checkbox-container">
 							<span class="approve-filter glyphicon glyphicon-ok"></span>
@@ -191,7 +213,8 @@
 			</thead>
 			<tbody class="vertical-lines">
 			<c:forEach items="${jobDto.applicationDtos }" var="applicationDto">
-				<tr class="" data-application-status="${applicationDto.application.status }"
+				<tr class=""
+					data-application-status="${applicationDto.application.status }"
 					data-applicant-rating="${applicationDto.applicantDto.ratingValue_overall}"
 					data-application-id="${applicationDto.application.applicationId }"
 					data-is-old="${applicationDto.application.hasBeenViewed }"
@@ -199,64 +222,59 @@
 					data-wage-proposal-status="${applicationDto.currentWageProposal.status }"
 					data-is-sent-proposal="${applicationDto.currentWageProposal.proposedToUserId ==
 												 applicationDto.applicantDto.user.userId ? '1' : '0'}"
-					data-answer-option-ids-seleted="${applicationDto.answerOptionIds_Selected }">
+					data-answer-option-ids-seleted="${applicationDto.answerOptionIds_Selected }"
+					data-proposed-work-day-count="${applicationDto.dateStrings_availableWorkDays.size() }"
+					>
 					
-					<td>
+					<td class="table-view">
 						<div class="vert-border">
 							<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
 										 ${applicationDto.applicantDto.user.firstName }</a>
 						</div>
 					</td>
 					
-					<td>
+					<td class="table-view">
 						<%@ include file="../wage_proposal/WageProposal.jsp" %>
 					</td>									
-					<td>
+					<td class="table-view">
 						<div class="vert-border">
 							<%@ include file="../wage_proposal/History_WageProposals.jsp" %>
 						</div>
 					</td>
 				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-					<td>
-						<div class="vert-border availability-calendar-container">						
+					<td class="table-view">	
+						<div data-toggle-id="${applicationDto.application.applicationId }-calendar">				
 							${applicationDto.dateStrings_availableWorkDays.size()}
-							<span class="glyphicon glyphicon-menu-up"></span>
-							<div class="calendar-container dropdown-style read-only">
-								<div class="calendar" data-number-of-months="${jobDto.months_workDaysSpan }"
-										data-first-date="${jobDto.date_firstWorkDay }">
-									
-								</div>
-								<div class="dates-available">
-									<c:forEach items="${applicationDto.dateStrings_availableWorkDays }" var="date">
-										<div data-date="${date }"></div>
-									</c:forEach>
-								</div>
-								<div class="dates-in-question">
-									<c:forEach items="${jobDto.workDays }" var="workDay">
-										<div data-date="${workDay.stringDate }"></div>
-									</c:forEach>
-								</div>								
+							<span class="glyphicon glyphicon-menu-down"></span>
+						</div>
+						<div id="${applicationDto.application.applicationId }-calendar"
+							class="calendar-container availability-calendar-container 
+									dropdown-style read-only">
+							<div class="calendar" data-number-of-months="${jobDto.months_workDaysSpan }"
+									data-min-date="${jobDto.date_firstWorkDay }">
+								
 							</div>
+							<div class="dates-applicant-proposal">
+								<c:forEach items="${applicationDto.dateStrings_availableWorkDays }" var="date">
+									<div data-date="${date }"></div>
+								</c:forEach>
+							</div>
+							<div class="dates-job-work-days">
+								<c:forEach items="${jobDto.workDays }" var="workDay">
+									<div data-date="${workDay.stringDate }"></div>
+								</c:forEach>
+							</div>								
 						</div>
 					</td>
 				</c:if>
-					<td>
+					<td class="table-view">
 						<div class="vert-border">
 						 	${applicationDto.applicantDto.ratingValue_overall}
 						 </div>
 					</td>
-					<td>		
-						<div class="vert-border">						
-<%-- 						<c:forEach items="${application.applicant.endorsements }" var="endorsement"> --%>
-						
-<!-- 							<div class="endorsement">													 -->
-<%-- 								${endorsement.categoryName } <span class="badge">  ${endorsement.count }</span> --%>
-<!-- 							</div> -->
-<%-- 						</c:forEach> --%>
-						</div>
-					</td>	
+
 				<c:if test="${jobDto.questions.size() > 0 }">
-					<td class="left">
+					<td class="left table-view">
 						<div class="vert-border">
 						<c:forEach items="${applicationDto.questions }" var="question">
 							<div data-question-id="${question.questionId }" class="question-container">
@@ -277,7 +295,7 @@
 				</c:if>			
 	
 	<!-- 								Application Status						 -->
-					<td class="">
+					<td class="table-view">
 						<div class="application-status-container">
 							<c:choose>
 								<c:when test="${applicationDto.application.status == 1 }">
@@ -297,7 +315,30 @@
 							</c:choose>										
 						</div>
 					</td>
-				</tr>
+					
+					<td class="tile-view" colspan="5">
+						<div class="image-container">
+							<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">
+						</div>
+						<div>
+							<p class="name">
+								<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
+										 ${applicationDto.applicantDto.user.firstName }</a>
+							</p>
+							<p>
+								<input name="input-1" class="rating-loading"
+										value="${applicationDto.applicantDto.ratingValue_overall }	">
+								${applicationDto.applicantDto.ratingValue_overall }						
+							</p>
+							<div class="proposal-container">
+								<h3>Proposal</h3>
+								<p>$ ${applicationDto.currentWageProposal.amount }</p>
+								<p>${fn:length(applicationDto.dateStrings_availableWorkDays) } of ${fn:length(applicationDto.jobDto.workDays) } days</p>
+							</div>
+						</div>
+					</td>
+				</tr>				
+
 			</c:forEach>						
 			</tbody>					
 		</table>			

@@ -74,7 +74,7 @@ span.dollar-sign{
 	background-color:#ffffff;
 	z-index: 10000;
 	display:none;
-	border: 2px solid #163b3d;
+	border: 2px solid #cacaca;
 	border-radius:3px;
 	padding:20px;
 }

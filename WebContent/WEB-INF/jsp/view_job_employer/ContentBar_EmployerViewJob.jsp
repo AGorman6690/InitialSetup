@@ -1,15 +1,16 @@
 <%@ include file="../includes/TagLibs.jsp" %>
 
 
-<p id="content_jobInfo" class="content-bar" data-section-id="jobInfoContainer">Job Information</p>
+<span  class="select-page-section" data-page-section-id="jobInfoContainer">Job Information</span>
 
 <c:if test="${context == 'waiting' }">
-	<p id="content_applicants" class="content-bar selected-lines" data-section-id="applicantsContainer">Applicants</p>
+	<span class="select-page-section selected" data-page-section-id="applicantsContainer">Applicants</span>
 </c:if>
 
 <c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-	<p id="content_employees" class="content-bar  ${context != 'waiting' ? 'selected-lines' : '' }" data-section-id="employeesContainer">
-		${context == 'complete' ? 'Employee Ratings' : 'Employees' }</p>
+	<span class="select-page-section ${context != 'waiting' ? 'selected' : '' }"
+		 data-page-section-id="employeesContainer">
+		${context == 'complete' ? 'Employee Ratings' : 'Employees' }</span>
 </c:if>
 
 

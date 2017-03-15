@@ -3,10 +3,11 @@
 	<%@ include file="../includes/resources/TableFilter.jsp" %>
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
 	<%@ include file="../includes/resources/StarRatings.jsp" %>
+	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
 	
-	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" /> -->
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" />
+<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" /> -->
 <!-- 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" /> -->
 
 	
@@ -16,7 +17,7 @@
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Map.js" />"></script> --%>
-	<script src="<c:url value="/static/javascript/SideBar.js" />"></script>
+<%-- 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script> --%>
 <%-- 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script> --%>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
 
@@ -37,20 +38,13 @@
 		<script src="<c:url value="/static/javascript/view_job_employer/Employee_Ratings.js" />"></script>
 	</c:if>
 	
+	<div class="select-page-section-container">	
+		<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
+	</div>	
 	<div class="container">	
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 		<input id="data_pageInit" type="hidden" value="${data_pageInit }">
-		<div class="row"  >
 
-			<div id="contentBarContainer" class="header-container">
-			<div id="jobNameHeader" id="tempRow1">
-				<h3>${jobDto.job.jobName }</h3>
-			</div>		
-				<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
-			</div>			
-			
-			
-		</div>
 		<div class="row">
 		
 			<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
@@ -59,21 +53,21 @@
 
 			<div class="col-sm-12" id="sectionContainers">
 				<c:if test="${context == 'waiting' }">
-				<div id="applicantsContainer" class="section-container">
+				<div id="applicantsContainer" class="page-section">
 					<div id="applicants" class="">
 						<%@ include file="./Applicants.jsp" %>
 					</div>
 					
-					<div id="appicants_tileView">
-						<%@ include file="./Applicants_TileView.jsp" %>
-					</div>
+<!-- 					<div id="appicants_tileView"> -->
+<%-- 						<%@ include file="./Applicants_TileView.jsp" %> --%>
+<!-- 					</div> -->
 					
 				</div>	
 				</c:if>	
 				
 				
 				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-				<div id="employeesContainer" class="section-container">				
+				<div id="employeesContainer" class="page-section">				
 					<div id="employees" class="">
 					<c:choose>
 						<c:when test="${context == 'complete' }">
@@ -87,7 +81,7 @@
 				</div>	
 				</c:if>
 				
-				<div id="jobInfoContainer" class="section-container">
+				<div id="jobInfoContainer" class="page-section">
 					<%@include file="../templates/JobInformation.jsp"%>
 				</div>				
 				

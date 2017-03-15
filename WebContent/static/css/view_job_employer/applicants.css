@@ -44,3 +44,67 @@
 .counter-calendar-container .calendar-container td.is-not-available a{
 	color: #ffffff;
 }
+
+#changeLayout_applicants span{
+	font-size: 17px;
+	padding: 5px;
+	margin-left: 15px;
+	cursor: pointer;
+}
+
+#changeLayout_applicants{
+    padding-bottom: 40px;
+    text-align: center;
+    color: #163b3d;
+    font-weight: bold;
+}
+
+.application-status-container button{
+	border: 0;
+	padding: 4px 10px;
+	display:block;
+	margin:5px auto;
+	width:150px;
+}
+.active{
+    background-color: #337ab7;
+    color: #ffffff;
+}
+
+#applicantsTable table.table-view{
+	width: 1100px;
+}
+
+table#applicantsTable.table-view th{
+	width: 16%;
+}
+
+table#applicantsTable th{
+    font-size: 17px;
+    color: #555555;
+    font-weight: normal;
+}  
+
+
+
+
+td span.glyphicon{
+	font-size:11px;
+}
+
+.availability-calendar-container{
+	width: 380px;
+}
+.availability-calendar-container .ui-datepicker-group:not(.ui-datepicker-group-last){
+	padding-bottom: 55px;
+}
+
+
+.question-container .answer{
+	text-align:left;
+}
+
+.answer-container{
+	padding-left:25px;	
+}
+	

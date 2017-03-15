@@ -93,37 +93,4 @@ td.active111 a{
 }
 
 
-/* ***************************************************
-/* Availability Calendar */
-/* Eliminate all instances that depend on this css. */
-/* Use the more robust version above */
-/* The .availability-calendar-container class is unnecessary */
-
-.availability-calendar-container .calendar-container td.is-available {
-	background: #65886e;
-	border-radius: 5px;
-}
-
-.availability-calendar-container .calendar-container td.is-not-available {
-	background: #c38f8f;
-	border-radius: 5px;
-}
-
-.availability-calendar-container .calendar-container td.is-available a,
-.availability-calendar-container .calendar-container td.is-not-available a{
-	color: #ffffff;
-}
-
-
-.availability-calendar-container .calendar-container{
-	display: none;
-}
-
-.availability-calendar-container{
-	position: relative;
-}
-
-td.apply-selected-work-day{
-	background: #163b3d !important;
-}
 

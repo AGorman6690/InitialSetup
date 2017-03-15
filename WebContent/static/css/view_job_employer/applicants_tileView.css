@@ -1,56 +1,32 @@
-#appicants_tileView{
-	padding-top: 50px;
-}
-#appicants_tileView thead tr:not(:last-child){
-	padding-bottom: 15px;
-}
-#appicants_tileView thead tr{
-	display: block;
-}
 
-#appicants_tileView tbody{
-	display: block;
-	padding-left: 100px;
-	padding-top: 20px;
-}
 
-#appicants_tileView tbody tr:not(:last-child){
+#applicantsTable.tile-view tbody tr:not(:last-child){
 	border-bottom: 1px solid #bbbbbb;	
 }
 
-#appicants_tileView th{
-	padding: 0px 10px;
-	border-left: 2px solid #cacaca;
-	font-size: 16px;
+#applicantsTable.tile-view th{
+/* 	padding: 0px 10px; */
+/* 	border-left: 2px solid #cacaca; */
+/* 	font-size: 16px; */
+	width: 20%;
 }
 
-#appicants_tileView th.lbl{
-	padding-right: 30px;
-	border-left: 0;
-	font-weight: bold;
-	font-size: 18px;
-	color: #163b3d;
-}
 
-#appicants_tileView .image-container{
+td.tile-view .image-container{
 	vertical-align: top;
 	padding-right: 40px;
 }
 
-#appicants_tileView td{
-	padding: 20px 0px;
-}
-
-td img{
+td.tile-view img{
 	width: 100px;
 	height: 100px;
 }
 
-#appicants_tileView td div{
+td.tile-view div{
 	display: inline-block;
 }
 
-#appicants_tileView p.name{
+td.tile-view p.name{
     font-weight: bold;
     font-size: 17px;
     color: #197994;
@@ -67,6 +43,28 @@ td img{
 
 }
 
-#appicants_tileView .rating-container .star{
+td.tile-view .rating-container .star{
 	font-size: 20px;
+}
+
+#applicantsTable td.tile-view{
+	display: none;
+}
+
+#applicantsTable.tile-view tbody{
+/* 	display: block; */
+/* 	padding-left: 100px; */
+	text-align: left;
+}
+
+#applicantsTable.tile-view td.tile-view{
+	display: block;
+	width: 600px;
+	padding: 20px 0px;
+	text-align: left;
+}
+
+#applicantsTable.tile-view{
+	width: 700px;
+	margin: auto;
 }
