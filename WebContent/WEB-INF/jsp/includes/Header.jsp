@@ -118,12 +118,14 @@
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a>
+								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications NEW</a>
 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 <!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->
 <!-- 								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							 -->
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
+								<a id="nav_jobs" href="/JobSearch/user/profile">Jobs</a>	
 								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
 								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
 

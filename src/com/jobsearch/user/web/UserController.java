@@ -68,6 +68,12 @@ public class UserController {
 		return userService.getProfileJspName(session);
 	}
 	
+	@RequestMapping(value = "/user/profile-new", method = RequestMethod.GET)
+	public String getProfile_SessionUser_NEW(Model model, HttpSession session) {				
+		userService.setModel_Profile(model, session);		
+		return "/employee_profile/Profile_Employee";
+	}
+	
 	@RequestMapping(value = "/user/{userId}/profile", method = RequestMethod.GET)
 	public String getProfile_AUser(@PathVariable(value = "userId") int userId,
 									Model model, HttpSession session) {

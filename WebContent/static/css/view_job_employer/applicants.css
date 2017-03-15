@@ -76,7 +76,16 @@
 }
 
 table#applicantsTable.table-view th{
-	width: 16%;
+	width: 20%;
+}
+
+table#applicantsTable.table-view.has-answers th,
+table#applicantsTable.table-view.has-work-days th{
+	width: 16.7%;
+}
+
+table#applicantsTable.table-view.has-work-days.has-answers th{
+	width: 14.2%;
 }
 
 table#applicantsTable th{
@@ -106,5 +115,9 @@ td span.glyphicon{
 
 .answer-container{
 	padding-left:25px;	
+}
+
+.question-container{
+	padding:10px 0px;
 }
 	

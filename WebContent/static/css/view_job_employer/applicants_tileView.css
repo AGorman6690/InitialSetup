@@ -9,6 +9,21 @@
 /* 	border-left: 2px solid #cacaca; */
 /* 	font-size: 16px; */
 	width: 20%;
+	font-size: 16px;
+	padding: 4px 2px;
+}
+
+table#applicantsTable.tile-view th{
+	width: 25%;
+}
+
+table#applicantsTable.tile-view.has-answers th,
+table#applicantsTable.tile-view.has-work-days th{
+	width: 20%;
+}
+
+table#applicantsTable.tile-view.has-work-days.has-answers th{
+	width: 16.7%;
 }
 
 
@@ -23,7 +38,7 @@ td.tile-view img{
 }
 
 td.tile-view div{
-	display: inline-block;
+/* 	display: inline-block; */
 }
 
 td.tile-view p.name{
@@ -65,6 +80,28 @@ td.tile-view .rating-container .star{
 }
 
 #applicantsTable.tile-view{
-	width: 700px;
+	width: 750px;
 	margin: auto;
+}
+
+#applicantsTable.tile-view td.tile-view{
+	position: relative;
+}
+
+#applicantsTable.tile-view td.tile-view .image-container,
+#applicantsTable.tile-view td.tile-view .proposal-container{
+	float: left;	
+}
+
+#applicantsTable.tile-view td.tile-view .info-container,
+#applicantsTable.tile-view td.tile-view .answer-container{
+	float: right;	
+}
+
+
+#applicantsTable.tile-view td.tile-view .answer-container{
+    padding-left: 100px;
+    overflow-y: scroll;
+    max-height: 120px;
+    width: 470px;
 }

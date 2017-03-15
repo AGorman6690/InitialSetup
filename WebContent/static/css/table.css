@@ -52,9 +52,9 @@ table.main-table-style{
 
 .main-table-style th{
 	padding:4px 8px;
-    color: #163b3d;
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 17px;
+    color: #555555;
+    font-weight: normal;
 }
 
 td .accent{

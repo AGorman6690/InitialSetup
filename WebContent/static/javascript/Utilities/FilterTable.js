@@ -181,7 +181,7 @@ function filterTableRows(appliedFilters, $table){
 	var doShowRow;
 
 	// Loop through each row that that should be filtered
-	$table.find("tbody tr:not(.no-filter)").each(function(i, row){
+	$table.find("> tbody > tr:not(.no-filter)").each(function(i, row){
 		
 		// Loop through each filter object
 		doShowRow = true;

@@ -15,7 +15,9 @@
 			<span id="tileView_applicants">Tile View</span>
 		</div>
 	
-		<table id="applicantsTable" class="main-table-style table-view">
+		<table id="applicantsTable" class="main-table-style table-view
+			${jobDto.job.isPartialAvailabilityAllowed ? 'has-work-days' : '' }
+			${jobDto.questions.size() > 0 ? 'has-answers' : ''}">
 			<thead>
 				<tr>
 					<th id="" class="table-view" colspan="1"></th>
@@ -45,12 +47,12 @@
 								<label>
 									<input id="" type="checkbox"
 										name="wage-prpoposal-status"
-										data-filter-attr-value="1">Sent
+										data-filter-attr-value="1">Waiting for applicant
 								</label>
 								<label>
 									<input id="" type="checkbox"
 										name="wage-prpoposal-status"
-										data-filter-attr-value="0">Received
+										data-filter-attr-value="0">Waiting for you
 								</label>
 							</div>
 						
@@ -126,7 +128,7 @@
 						 data-filter-attr="data-answer-option-ids-seleted"
 						 data-must-match-all-filter-values="1">
 						<span data-toggle-id="filterAnswersContainer" >
-							<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>Answers
+							Answers<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>
 						</span>					
 						<div id="filterAnswersContainer" class="dropdown-container dropdown-style filter-container" >
 							
@@ -135,21 +137,27 @@
 							<table id="table_headerAnswers" class="main-table-style">
 								<thead>
 									<tr class="no-filter">
-										<th id="filterAnswers"></th>
+										<th id="filterAnswers">Display Question</th>
 										<th id="header_question">Question</th>
-										<th id="header_answers">Answer</th>												
+										<th id="header_answers">Filter Answer</th>												
 									</tr>
 								</thead>
 								<tbody>
 									<c:forEach items="${jobDto.questions }" var="question">
 										<tr class="no-filter">
-											<td>															
+											<td>	
 												<label>
 													<input type="checkbox" checked
-														name="show-question-${question.questionId }"
-														class="filter-answers">
-														<span>Filter Answers</span>
-												</label>
+														data-question-id="${question.questionId }"
+														class="show-question-and-answers">
+														<span></span>
+												</label>																									
+<!-- 												<label> -->
+<!-- 													<input type="checkbox" checked -->
+<%-- 														name="show-question-${question.questionId }" --%>
+<!-- 														class="filter-answers"> -->
+<!-- 														<span>Filter Answers</span> -->
+<!-- 												</label> -->
 											</td>
 											<td class="question">${question.text }</td>
 											<td class="answers answers-container">
@@ -278,8 +286,8 @@
 						<div class="vert-border">
 						<c:forEach items="${applicationDto.questions }" var="question">
 							<div data-question-id="${question.questionId }" class="question-container">
-								<div class="question">${question.text }</div>										
-								<div class="answer">
+								<p class="question">${question.text }</p>										
+								<p class="answer">
 									<c:set var="answerCount" value="${question.answers.size() }"></c:set>
 									<c:set var="i" value="${0 }"></c:set>
 									<c:forEach items="${question.answers }" var="answer">
@@ -287,7 +295,7 @@
 										<c:set var="i" value="${i +1 }"></c:set>
 									</c:forEach>
 									
-								</div>
+								</p>
 							</div>
 						</c:forEach>
 						</div>
@@ -316,24 +324,37 @@
 						</div>
 					</td>
 					
-					<td class="tile-view" colspan="5">
+					<td class="tile-view" colspan="99">
 						<div class="image-container">
 							<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">
 						</div>
-						<div>
-							<p class="name">
-								<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
-										 ${applicationDto.applicantDto.user.firstName }</a>
-							</p>
-							<p>
-								<input name="input-1" class="rating-loading"
-										value="${applicationDto.applicantDto.ratingValue_overall }	">
-								${applicationDto.applicantDto.ratingValue_overall }						
-							</p>
+						<div class="info-container">
+							<div>
+								<p class="name">
+									<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
+											 ${applicationDto.applicantDto.user.firstName }</a>
+								</p>
+								<p>
+									<input name="input-1" class="rating-loading"
+											value="${applicationDto.applicantDto.ratingValue_overall }	">
+									${applicationDto.applicantDto.ratingValue_overall }						
+								</p>
+							</div>
 							<div class="proposal-container">
 								<h3>Proposal</h3>
 								<p>$ ${applicationDto.currentWageProposal.amount }</p>
 								<p>${fn:length(applicationDto.dateStrings_availableWorkDays) } of ${fn:length(applicationDto.jobDto.workDays) } days</p>
+							</div>
+							<div class="answer-container">
+								<c:forEach items="${applicationDto.questions }" var="question">
+									<p>${question.text }</p>
+									<p>
+										<c:forEach items="${question.answers }" var="answer" varStatus="status">
+											${answer.text}${!status.last ? ',' : ''}			
+										</c:forEach>
+									</p>									
+								</c:forEach>
+								
 							</div>
 						</div>
 					</td>

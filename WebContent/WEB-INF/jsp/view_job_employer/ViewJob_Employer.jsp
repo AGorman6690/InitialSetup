@@ -1,36 +1,28 @@
-	<%@ include file="../includes/Header.jsp"%>
-	<%@ include file="../includes/resources/DatePicker.jsp" %>
-	<%@ include file="../includes/resources/TableFilter.jsp" %>
-	<%@ include file="../includes/resources/WageProposal.jsp" %>
-	<%@ include file="../includes/resources/StarRatings.jsp" %>
-	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
-	
-<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/employerViewJob.css" /> -->
-	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/jobInfo.css" /> -->
-<!-- 	<link rel="stylesheet" type="text/css" href="../static/css/questions.css" /> -->
-
-	
-	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
-	
-	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-<%-- 	<script src="<c:url value="/static/javascript/Map.js" />"></script> --%>
-<%-- 	<script src="<c:url value="/static/javascript/SideBar.js" />"></script> --%>
-<%-- 	<script src="<c:url value="/static/javascript/JobInfo.js" />"></script> --%>
-	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
-
-	
-		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
-	
 <!-- 	Currently the "WageNegotiation.js" has to be loaded AFTER the "FilterTable.js". -->
 <!-- 	If it is not, then the "html" click event in the FilterTable.js will take precedence -->
 <!-- 	over the "send counter offer" click event in the WageNegotiation.js -->
 <!-- 	This seems hackish. -->
 <!-- 	Address the logic later -->
 <%-- 	<script src="<c:url value="/static/javascript/WageNegotiation.js" />"></script> --%>
+
+	<%@ include file="../includes/Header.jsp"%>
+	<%@ include file="../includes/resources/DatePicker.jsp" %>
+	<%@ include file="../includes/resources/TableFilter.jsp" %>
+	<%@ include file="../includes/resources/WageProposal.jsp" %>
+	<%@ include file="../includes/resources/StarRatings.jsp" %>
+	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
+	<%@ include file="../includes/resources/JobInformation.jsp" %>
 	
+	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
+	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
+	
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
+	<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
+	
+
 	<c:if test="${context == 'complete' }">	
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" />
@@ -96,10 +88,9 @@
 		</div>		
 	</div>	
 
-<!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap"> -->
-<!-- </script> -->
 
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
 </script>
 
 

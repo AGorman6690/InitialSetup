@@ -166,7 +166,7 @@
 			<div class="accent">${jobDto.job.city}, ${jobDto.job.state }</div>
 			<div class="accent">${jobDto.job.zipCode }</div>
 		</div>			
-		<div id="map" class="right-border" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }">				 --%>
+		<div id="map" class="right-border" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }">				
 		</div>	 
 	</div>
 </div>

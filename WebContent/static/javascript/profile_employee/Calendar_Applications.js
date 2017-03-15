@@ -17,13 +17,36 @@ $(function() {
 });
 
 $(document).ready(function(){
+	
+	$("#applications_calendar_view .calendar").on("mouseover", "td div.popup", function(){
+		
+		var visiblePopup = $("#applications_calendar_view").find(".popuptext:visible").eq(0);
+		
+		if(visiblePopup != this){
+			$(visiblePopup).hide();
+			$(this).find(".popuptext").show();
+		}
+		
+		
+		
+	})
+
+	$("#applications_calendar_view .calendar").on("mousedown", "td .popuptext span", function(){
+
+			window.location = "/JobSearch/job/" + $(this).attr("data-job-id") + "?c=profile-incomplete&p=1";
+		
+	})
+	
+	$("#applications_calendar_view").on("mouseout", ".calendar", function(e){
+//		hideVisiblePopup();
+	})
+	
+
 
 	setCalendarDays();
-//		setCalendarDays_employment();
+
 	
-//	initCalendar_Employee_Profile($("#calendar_applications"));	
-	
-//	initCalendar_Both();
+	initCalendar_Both();
 
 	$("#calendarContainer_applications").on("mouseover", "td div[data-job-name]", function(){
 		
@@ -167,6 +190,84 @@ $(document).ready(function(){
 	})
 })
 
+function hideVisiblePopup(){
+	
+	var visiblePopup = $("#applications_calendar_view").find(".popuptext:visible").eq(0).hide();
+
+}
+
+
+function showApplications_both(){
+	
+	var colorClass;
+	var divHtml;
+	var td; 
+	var appCount;
+	
+	$(calendarDays).each(function(){
+		
+		appCount = this.applications.length;
+		
+		if(appCount > 0){
+			
+			
+			date_calendarDay = new Date(this.date);
+			td = getTdByDayMonthYear($(".calendar"), date_calendarDay.getDate().toString(),
+														 date_calendarDay.getMonth().toString(),				
+														 date_calendarDay.getFullYear().toString());	
+			
+//			$(td).addClass("popup");
+			
+			if(this.applications[0].jobStatus == 1){
+				divHtml = "<div class='job employment'>";
+			}
+			else{
+				
+				if(appCount == 1) colorClass = "lgt";
+				else if(appCount == 2) colorClass = "med";
+				else colorClass = "drk";
+				
+				divHtml = "<div class='job application popup " + colorClass + "'><span class='app-count'>" + "</span>";	
+			}
+			
+			
+			// *******************************************************************
+			// *******************************************************************
+			// Pretty this up.
+			// If the popup is persued, then the below div can be removed entirely.
+			// The job info can be stored in the span.
+			// *******************************************************************
+			// *******************************************************************
+			
+			$(this.applications).each(function(){
+				divHtml += "<div data-id='" + this.id + "'"
+							  + " data-job-name='" + this.jobName + "'"
+							  + " data-job-id='" + this.jobId + "'"
+							  + " class='hide line'></div>";	
+							  
+				
+			})
+			
+			divHtml += "<span class='popuptext'>";
+			$(this.applications).each(function(){
+//				divHtml += 	"<aclass='accent'" +
+//					   "href='/JobSearch/job/" + this.jobId + "?c=profile-incomplete&p=1'>" + this.jobName + "</a>";				
+				
+				divHtml += "<span data-id='" + this.id + "'"
+				  + " data-job-id='" + this.jobId + "'"
+				  + ">" + this.jobName + "</span>";
+			})			
+			divHtml += "</span>";
+			
+			
+			divHtml += "</div>";
+			
+			$(td).append(divHtml);	
+		}
+		
+	})
+}
+
 function showAllApplications(){
 	$("#openApplications_oneLine").find("tr.application").each(function(){
 		
@@ -286,23 +387,24 @@ function setCalendarDays_employment(){
 
 function setCalendarDays(){
 	
-	var applications = $("#applicationDetails").find(".application");
+//	var applications = $("#applicationDetails").find(".application");
 	var workDays = [];
 	var lineClass;
 	var application = {};
 	var calendarDays_toAddTo = [];
 	
-	$(applications).each(function(){
+	$("#applicationDetails .application").each(function(){
 		
 		// Read the DOM for the application's work days
-		workDays = [];		
-		$(this).find(".work-day").each(function(){
-			workDays.push($(this).attr("data-date"))
-		});
+		workDays = getDateFromContainer($(this))
+//		workDays = [];		
+//		$(this).find(".work-day").each(function(){
+//			workDays.push($(this).attr("data-date"))
+//		});
 		
 		// From the application's work days,
 		// get the calendar day objects to add this application to
-		calendarDays_toAddTo = []
+		calendarDays_toAddTo = [];
 		calendarDays_toAddTo = getCalendarDays(workDays, calendarDays);
 		
 		// Create the application object
@@ -327,10 +429,9 @@ function initCalendar_Both(){
 //	var numberOfMonths = getNumberOfMonths($e);
 //	var minDate = new Date(?);
 
-	$("#calendar_both").datepicker({
-//		minDate: minDate,
+	$("#applications_calendar_view .calendar").datepicker({
+		minDate: new Date(),
 		numberOfMonths: 1, 
-		hideIfNoPrevNext: true,
 		afterShow: showApplications_both,
 	});
 }
@@ -349,55 +450,6 @@ function initCalendar_Employee_Profile($e){
 }
 
 
-function showApplications_both(){
-	
-	var colorClass;
-	var divHtml;
-	var td; 
-	var appCount;
-	
-	$(calendarDays).each(function(){
-		
-		appCount = this.applications.length;
-		
-		if(appCount > 0){
-			
-			
-			date_calendarDay = new Date(this.date);
-			td = getTdByDayMonthYear($(".calendar"), date_calendarDay.getDate().toString(),
-														 date_calendarDay.getMonth().toString(),				
-														 date_calendarDay.getFullYear().toString());	
-			
-			
-			if(this.applications[0].jobStatus == 1){
-				divHtml = "<div class='job employment'>";
-			}
-			else{
-				
-				if(appCount == 1) colorClass = "lgt";
-				else if(appCount == 2) colorClass = "med";
-				else colorClass = "drk";
-				
-				divHtml = "<div class='job application " + colorClass + "'><span class='app-count'>" + appCount + "</span>";	
-			}
-			
-			
-			$(this.applications).each(function(){
-				divHtml += "<div data-id='" + this.id + "'"
-							  + " data-job-name='" + this.jobName + "'"
-							  + " data-job-id='" + this.jobId + "'"
-							  + " class='hide both'></div>";	
-							  
-				
-			})
-			
-			divHtml += "</div>";
-			
-			$(td).append(divHtml);	
-		}
-		
-	})
-}
 
 
 function showApplications(){
