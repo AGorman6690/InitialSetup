@@ -75,7 +75,7 @@ td div.job.application{
 
 #applications_calendar_view.with-list td div.job.application{
 	position: absolute;
-	height: 10px;
+	height: 30px;
 	width: 100%
 }
 
@@ -86,4 +86,18 @@ td div.job.application{
 #applications_calendar_view.with-list .calendar td{
     height:70px;
     width: 70px;
+}
+
+
+#applications_list_view tbody tr:hover{
+	background-color: #eaeaea;
+}
+
+#applications_calendar_view.with-list td div.job.hover{
+/* 	background-color:#c18585 !important; */
+/* 	background-color:#000000 !important; */
+/* 	background-color: #717171 !important; */
+	background-color: #163b3d !important;
+/* 	border: 2px solid #000000; */
+	
 }

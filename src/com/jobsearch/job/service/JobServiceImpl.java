@@ -282,7 +282,7 @@ public class JobServiceImpl {
 			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
 			jobDto.setRatingDto(userService.getRatingDtoByUserAndJob(userId, job.getId()));
 			jobDto.setDurationDays(this.getDuration(job.getId()));
-			jobDto.setEndDate_milliseconds(job.getEndDate_local().toEpochDay());
+			jobDto.setMilliseconds_endDate(job.getEndDate_local().toEpochDay());
 			jobDtos_jobsCompleted.add(jobDto);
 		}
 

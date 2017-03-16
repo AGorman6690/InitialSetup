@@ -9,24 +9,29 @@
 	<%@ include file="../includes/resources/DatePicker.jsp" %>
 	<%@ include file="../includes/resources/TableFilter.jsp" %>
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
-	<%@ include file="../includes/resources/StarRatings.jsp" %>
+		<%@ include file="../includes/resources/StarRatings.jsp" %>
 	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
 	<%@ include file="../includes/resources/JobInformation.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
 	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
-	<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
-	
 
+	
+	<c:if test="${context != 'complete' }">
+		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
+		<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
+		<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
+			
+	</c:if>
+	
 	<c:if test="${context == 'complete' }">	
-		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" />
-		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" />
-		<script src="<c:url value="/static/External/ratings/star-rating.js" />"></script>
+
+<!-- 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/ratings/star-rating.css" /> -->
+<!-- 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings.css" /> -->
+<%-- 		<script src="<c:url value="/static/External/ratings/star-rating.js" />"></script> --%>
 		<script src="<c:url value="/static/javascript/view_job_employer/Employee_Ratings.js" />"></script>
 	</c:if>
 	

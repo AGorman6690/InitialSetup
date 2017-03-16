@@ -126,11 +126,11 @@ function getSortedRows(doSortAscending, sortAttr, $table){
 			while(searchIndex < sortedRows.length ){
 				
 				if(doSortAscending == 1){
-					if(currentRow.value > sortedRows[searchIndex].value) searchIndex += 1;
+					if(parseInt(currentRow.value) > parseInt(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 				else{
-					if(currentRow.value < sortedRows[searchIndex].value) searchIndex += 1;
+					if(parseInt(currentRow.value) < parseInt(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 			} 
@@ -197,7 +197,7 @@ function filterTableRows(appliedFilters, $table){
 			// as soon as one of the applied filters is not satisfied. 
 			// ********************************************************
 			
-			// Check if the row has an array of filter vaues
+			// Check if the row has an array of filter values
 			if(isStringACommaSeperatedArray(filterValue_currentRow)){
 				
 				// Get the array of values
@@ -212,7 +212,7 @@ function filterTableRows(appliedFilters, $table){
 					}
 				}
 				
-				// or for the row to satisfy at least one applied filter value
+				// or if the filter only requires the row to satisfy at least one applied filter value
 				else{
 					if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
 						doShowRow = false;

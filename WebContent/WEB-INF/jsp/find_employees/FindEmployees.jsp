@@ -40,9 +40,9 @@
 		</div>
 		<div id="availabilityFilterContainer" class="filter">
 			<h3>Availability</h3>
-			<div class="filter-value">
-				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label>
-			</div>
+<!-- 			<div class="filter-value"> -->
+<!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
+<!-- 			</div> -->
 			<div class="calendar-container filter-value">
 				<div id="availabilityCalendar" class="calendar">
 				</div>

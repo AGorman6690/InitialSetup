@@ -4,6 +4,7 @@
 <%@ include file="../includes/resources/JobInfoModal.jsp" %>
 <%@ include file="../includes/resources/JobInformation.jsp" %>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
+<%@ include file="../includes/resources/TableFilter.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
@@ -13,9 +14,10 @@
 <script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>		
 		
 <div class="select-page-section-container">
-	<span data-page-section-id="applications_list_view" class="select-page-section">List</span>
-	<span data-page-section-id="applications_calendar_view"  class="select-page-section selected">Calendar</span>
-	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view"  class="select-page-section override-click-event">List/Calendar</span>
+	<span data-page-section-id="applications_list_view" class="selected select-page-section">List</span>
+	<span data-page-section-id="applications_calendar_view"  class="select-page-section ">Calendar</span>
+	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view"
+		class="select-page-section override-click-event">List/Calendar</span>
 </div>
 	
 <div id="applicationDetails">	

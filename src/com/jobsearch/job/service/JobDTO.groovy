@@ -27,7 +27,8 @@ public class JobDTO {
 
 	 Job job
 	 
-	 Long endDate_milliseconds
+	 Long milliseconds_startDate
+	 Long milliseconds_endDate
 	 
 	 Integer durationDays
 	 double durationHours
@@ -58,6 +59,7 @@ public class JobDTO {
 	 List<Category> categories
 	 List<Integer> categoryIds
 	 
+	 Double distance
 	 Double distanceFromFilterLocation
 	 
 	 List<Skill> skills

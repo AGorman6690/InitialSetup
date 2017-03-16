@@ -117,8 +117,8 @@
 							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
-								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a>
-								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications NEW</a>
+<!-- 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a> -->
+								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications</a>
 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 <!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->

@@ -305,14 +305,14 @@
 	<!-- 								Application Status						 -->
 					<td class="table-view">
 						<div class="application-status-container">
-							<c:choose>
-								<c:when test="${applicationDto.application.status == 1 }">
-								<button id="" value="1" class="active">Not Considering</button>
-								</c:when>
-								<c:otherwise>
-								<button id="" value="1" class="">Not Considering</button>
-								</c:otherwise>
-							</c:choose>
+<%-- 							<c:choose> --%>
+<%-- 								<c:when test="${applicationDto.application.status == 1 }"> --%>
+<!-- 								<button id="" value="1" class="active">Not Considering</button> -->
+<%-- 								</c:when> --%>
+<%-- 								<c:otherwise> --%>
+<!-- 								<button id="" value="1" class="">Not Considering</button> -->
+<%-- 								</c:otherwise> --%>
+<%-- 							</c:choose> --%>
 							<c:choose>
 								<c:when test="${applicationDto.application.status == 2 }">
 								<button id="" value="2" class="active">Considering</button>

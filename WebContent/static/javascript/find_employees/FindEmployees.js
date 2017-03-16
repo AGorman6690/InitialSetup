@@ -119,53 +119,22 @@ $(document).ready(function(){
 	
 	$("#findEmployees").click(function(){
 		
-		var jobDto = {};
-		jobDto.job = {};
-		
-		jobDto.job.streetAddress = $("#street").val();
-		jobDto.job.city = $("#city").val();
-		jobDto.job.state = $("#state").val();
-		jobDto.job.zipCode = $("#zipCode").val();
-		
-		jobDto.workDays = getWorkDays_FromSelectedDates($("#availabilityCalendar"), "yy-mm-dd");
-		
-		if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
-		else jobDto.job.isPartialAvailabilityAllowed = 0;
-
-		
-		broswerIsWaiting(true);
-		$.ajax({
-			type: "POST",
-			url: "/JobSearch/find/employees/results",
-			contentType: "application/json",
-			headers : getAjaxHeaders(),
-			data: JSON.stringify(jobDto),
-			dataType: "html",
-			success: _success,
-			error: _error,
-		})
-		
-		function _success(html_findEmployee_results){
-			broswerIsWaiting(false);
-			$("#resultsContainer").show();
-			$("#results").empty();
-			$("#results").append(html_findEmployee_results);
-		}
-		
-		function _error(){
-			broswerIsWaiting(false);
-		}
+		executeAjaxCall_findEmployees();
 		
 	})
 	
 	$("#makeAnOffer").click(function(){
 //		$("#detailsContainer_makeAnOffer").show();
 		$("#selectJob_initiateContact").show();
+		$("#actionsContainer_initiateContact #sendInvite").hide();
+		$("#actionsContainer_initiateContact #sendOffer").show();
 	})
 	
 	$("#inviteToApply").click(function(){
 		$("#detailsContainer_makeAnOffer").hide();
 		$("#selectJob_initiateContact").show();
+		$("#actionsContainer_initiateContact #sendInvite").show();
+		$("#actionsContainer_initiateContact #sendOffer").hide();
 	})
 	
 	setStates();
@@ -177,6 +146,46 @@ $(document).ready(function(){
 	})
 	
 })
+
+
+function executeAjaxCall_findEmployees(){
+	var jobDto = {};
+	jobDto.job = {};
+	
+	jobDto.job.streetAddress = $("#street").val();
+	jobDto.job.city = $("#city").val();
+	jobDto.job.state = $("#state").val();
+	jobDto.job.zipCode = $("#zipCode").val();
+	
+	jobDto.workDays = getWorkDays_FromSelectedDates($("#availabilityCalendar"), "yy-mm-dd");
+	
+//	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
+//	else jobDto.job.isPartialAvailabilityAllowed = 0;
+	jobDto.job.isPartialAvailabilityAllowed = 1;
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "POST",
+		url: "/JobSearch/find/employees/results",
+		contentType: "application/json",
+		headers : getAjaxHeaders(),
+		data: JSON.stringify(jobDto),
+		dataType: "html",
+		success: _success,
+		error: _error,
+	})
+	
+	function _success(html_findEmployee_results){
+		broswerIsWaiting(false);
+		$("#resultsContainer").show();
+		$("#results").empty();
+		$("#results").append(html_findEmployee_results);
+	}
+	
+	function _error(){
+		broswerIsWaiting(false);
+	}
+}
 
 function executeAjaxCall_sendOffer(){
 	

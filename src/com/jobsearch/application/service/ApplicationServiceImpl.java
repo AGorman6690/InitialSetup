@@ -25,6 +25,7 @@ import com.jobsearch.model.WorkDayProposal;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 
@@ -396,12 +397,23 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setApplication(application);
 			
+			// Wage proposal
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
+			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
+			applicationDto.getJobDto().setMilliseconds_startDate(
+										applicationDto.getJobDto().getJob().getStartDate_local().toEpochDay());
+			applicationDto.getJobDto().setMilliseconds_endDate(
+					applicationDto.getJobDto().getJob().getEndDate_local().toEpochDay());
 			
+			applicationDto.getJobDto().setDistance(DistanceUtility.getDistance(
+											userService.getUser(userId), applicationDto.getJobDto().getJob()));
+			
+			
+			// Miscellaneous
 			applicationDto.setTime_untilEmployerApprovalExpires(
 								this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
 			
@@ -416,6 +428,7 @@ public class ApplicationServiceImpl {
 								this.getApplicationDtos_Conflicting(userId,
 											application.getApplicationId(),
 											applicationDto.getJobDto().getWorkDays()));
+			
 			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
 			applicationDtos.add(applicationDto);
 		}
@@ -511,7 +524,9 @@ public class ApplicationServiceImpl {
 	public void acceptWageProposal_Employer(int wageProposalId, HttpSession session,
 										Integer days, Integer hours, Integer minutes) {
 				
-		
+		// *************************************************
+		// Verify this is the current wage proposal 
+		// *************************************************		
 		
 		if( isWageProposalCurrentlyProposedToUser(wageProposalId, session) &&
 				(days != null || hours != null || minutes != null)){
@@ -520,7 +535,20 @@ public class ApplicationServiceImpl {
 			LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
 													days, hours, minutes);
 						
-			repository.updateWageProposalStatus(wageProposalId, WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+//			repository.updateWageProposalStatus(wageProposalId, WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+			
+			WageProposal wageProposal = this.getWageProposal(wageProposalId);
+			
+			EmploymentProposalDTO employmentProposalDto = new EmploymentProposalDTO();
+			employmentProposalDto.setAmount(wageProposal.getAmount());
+			employmentProposalDto.setProposedByUserId(wageProposal.getProposedToUserId());
+			employmentProposalDto.setProposedToUserId(wageProposal.getProposedByUserId());
+			employmentProposalDto.setApplicationId(wageProposal.getApplicationId());
+			employmentProposalDto.setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
+			
+			employmentProposalDto.setDateStrings_proposedDates(this.getProposedWorkDays(wageProposal.getId()));
+			
+			this.insertEmploymentProposal(employmentProposalDto);
 			
 			repository.updateApplication_PendingApplicantApproval(wageProposalId, employerAcceptedDate,
 																expirationDate);
@@ -569,13 +597,16 @@ public class ApplicationServiceImpl {
 		JobSearchUser user = SessionContext.getUser(session);
 		WageProposal wp = this.getWageProposal(wageProposalId);
 		
+		// ********************************
+		// I cannot figure out why I had the hasActionBeenTakenOnWageProposal() condition...
+		// ********************************
 		// Verify the wage proposal has not yet been acted upon
-		if(!this.hasActionBeenTakenOnWageProposal(wp)){
+//		if(!this.hasActionBeenTakenOnWageProposal(wp)){
 			
 			if(wp.getProposedToUserId() == user.getUserId()) return true;
 			else return false;
-		}
-		else return false;
+//		}
+//		else return false;
 	}
 	
 	private boolean hasActionBeenTakenOnWageProposal(WageProposal wp) {

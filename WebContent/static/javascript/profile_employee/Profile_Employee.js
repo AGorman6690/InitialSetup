@@ -15,6 +15,8 @@ $(document).ready(function(){
 		
 		highlightArrayItem($(this), $(".select-page-section-container .select-page-section"), "selected");
 		
+		hideVisiblePopup();
+		
 	})
 	
 	$(".select-page-section-container :not(#show_list_and_calendar)").click(function(){

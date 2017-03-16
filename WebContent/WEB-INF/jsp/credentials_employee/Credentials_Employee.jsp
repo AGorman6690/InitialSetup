@@ -125,7 +125,7 @@
 					<tbody>
 						<c:forEach items="${userDto.jobDtos_jobsCompleted }" var="jobDto">
 							<tr data-rating="${jobDto.ratingDto.value }"
-								data-end-date="${jobDto.endDate_milliseconds }"
+								data-end-date="${jobDto.milliseconds_endDate }"
 								data-duration="${jobDto.durationDays }">
 								
 								<td class="past-job">
@@ -204,7 +204,7 @@
 <!-- 					<tbody> -->
 <%-- 						<c:forEach items="${userDto.jobDtos_jobsCompleted }" var="jobDto"> --%>
 <%-- 							<tr data-rating="${jobDto.ratingDto.value }" --%>
-<%-- 								data-end-date="${jobDto.endDate_milliseconds }" --%>
+<%-- 								data-end-date="${jobDto.milliseconds_endDate }" --%>
 <%-- 								data-duration="${jobDto.durationDays }"> --%>
 								
 <%-- 								<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }?c=profile-complete&p=1">${jobDto.job.jobName }</a></td> --%>
