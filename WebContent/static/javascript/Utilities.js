@@ -48,12 +48,9 @@ function toggle($e){
 }
 
 function slideUp($e, milliseconds){
-	if(milliseconds != undefined){
-		$e.slideUp(milliseconds);	
-	}
-	else{
-		$e.slideUp(300);
-	}
+	if(milliseconds != undefined) $e.slideUp(milliseconds);	
+	else $e.slideUp(300);
+	
 }
 
 function slideDown($e, milliseconds){

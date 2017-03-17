@@ -107,8 +107,13 @@ button.not-clickable{
 body {
   overflow-y: scroll;
   font-family: "Nunito", sans-serif !important;
-  letter-spacing: 0.75px;
+/*   letter-spacing: 0.75px; */
+  letter-spacing: 0.1em;
   font-size: 15px;
+  
+  
+/*   http://stackoverflow.com/questions/29682271/safari-kerning-issue-when-using-f-and-i */
+  font-variant-ligatures: no-common-ligatures;
 }
 
 

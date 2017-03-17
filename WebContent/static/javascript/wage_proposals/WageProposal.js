@@ -1,4 +1,56 @@
+
+
+
 $(document).ready(function(){
+	
+//	$("button.counter").click(function (){ toggleCounterContainer($(this)) })
+//	
+//	$("button.accept").click(function (){ hideCounterContainer($(this)) })
+	
+	$(".wage-proposal-container button.accept").click(function() {
+		hideCounterContainer($(this));
+		setConfirmationContainer_showApprovedWage($(this), true);
+	})
+	
+	
+	$(".wage-proposal-container button.counter").click(function() {
+		toggleCounterContainer($(this));		 
+		setConfirmationContainer_showApprovedWage($(this), false);
+	})
+	
+	$(".work-day-proposal-container button.counter").click(function() {
+		toggleCounterContainer($(this));		 
+		setConfirmationContainer_showApprovedWorkDays($(this), false);
+	})
+	
+	$(".work-day-proposal-container button.accept").click(function() {
+		hideCounterContainer($(this));
+		setConfirmationContainer_showApprovedWorkDays($(this), true);
+	})
+	
+	$(".counter-wage input").focusout(function(){
+		setConfirmationContainer_showNewProposedWageAmount($(this));
+	})
+	
+	$(".proceed-to-confirmation-container .confirm").click(function (){
+		initCalendar_confirmProposedWorkDays($(this));
+		setExpirationTimeToConfirm($(this));
+		toggleConfirmationContainer($(this));			
+		
+	})
+	
+	$(".confirmation-container .send").click(function() {})
+	
+	$(".confirmation-container .edit").click(function() { toggleConfirmationContainer($(this)) })
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	$(".cancel").click(function(){		
 		$(this).closest(".proposal-actions-container").hide();		
@@ -112,16 +164,151 @@ $(document).ready(function(){
 //	return wageProposalDto;
 //}
 
+function setExpirationTimeToConfirm($e){
+	var $responseContainer = $e.closest(".response-container");
+
+	var days = $responseContainer.find("input.days").val();
+	var hours = $responseContainer.find("input.hours").val();
+	var minutes = $responseContainer.find("input.minutes").val();
+	
+	var html = "";
+	
+	if(days > 1) html += days + " days ";
+	else if(days == 1) html += days + " day ";
+	
+	if(hours > 0)html += hours + ":";
+	
+	if(minutes == 0) html += "00";
+	else if(minutes < 10) html += "0" + minutes;
+	else html += minutes;
+	
+	html += " hrs";
+	
+	
+	$responseContainer.find(".confirm-expiration").eq(0).html(html);
+}
+
+function setConfirmationContainer_showNewProposedWageAmount($e){
+	var $responseContainer = $e.closest(".response-container");
+	
+	var newProposedWageAmount = $responseContainer.find(".counter-wage input").eq(0).val();
+	
+	var $span_newAmount = $responseContainer.find(".confirmation-container .confirm-wage-container" +
+												" .counter-proposal span.new-proposed-amount").eq(0);
+	
+	$span_newAmount.html(newProposedWageAmount);
+}
+
+function setConfirmationContainer_showApprovedWage($e, doShow){
+	
+	var $confirmWageContainer = $e.closest(".response-container")
+									.find(".confirmation-container .confirm-wage-container");
+	
+	if(doShow){
+		$confirmWageContainer.find(".accept-proposal").eq(0).show();
+		$confirmWageContainer.find(".counter-proposal").eq(0).hide();	
+	}else{
+		$confirmWageContainer.find(".accept-proposal").eq(0).hide();
+		$confirmWageContainer.find(".counter-proposal").eq(0).show();
+	}
+	
+	
+}
+
+function setConfirmationContainer_showApprovedWorkDays($e, doShow){
+	
+	var $confirmWorkDaysContainer = $e.closest(".response-container")
+									.find(".confirmation-container .confirm-work-days-container");
+	
+	if(doShow){
+		$confirmWorkDaysContainer.find(".accept-proposal").eq(0).show();
+		$confirmWorkDaysContainer.find(".counter-proposal").eq(0).hide();	
+	}else{
+		$confirmWorkDaysContainer.find(".accept-proposal").eq(0).hide();
+		$confirmWorkDaysContainer.find(".counter-proposal").eq(0).show();
+	}
+	
+	
+}
+
+function toggleCounterContainer($e){
+	$e.closest("div.proposal").next("div.counter-container").eq(0).toggle();
+}
+
+
+function hideCounterContainer($e){
+	$e.closest("div.proposal").next("div.counter-container").eq(0).hide();
+}
+
+function toggleConfirmationContainer($e){
+	
+	var speed = 700;
+	var $responseContainer = $e.closest(".response-container");
+	var $confirmationContainer = $responseContainer.find(".confirmation-container").eq(0);
+	var $proposalContainer = $responseContainer.find(".proposal-container").eq(0);
+	
+	if($confirmationContainer.is(":visible")){
+		slideUp($confirmationContainer, speed);
+		slideDown($proposalContainer, speed);
+	}
+	else{
+		slideDown($confirmationContainer, speed);
+		slideUp($proposalContainer, speed);
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+function initCalendar_confirmProposedWorkDays($e){
+	
+	var $responseContainer = $e.closest(".response-container");
+	var $calendar_countered = $responseContainer.find(".counter-work-days .calendar").eq(0);
+	var dates_proposed = [];
+
+		
+	$calendar_confirmProposal = $responseContainer.find(".confirm-work-days-container .calendar");		
+	$calendar_confirmProposal.datepicker("destroy");
+		
+	var $allDaysContainer = $responseContainer.find(".calendar-container-proposed-work-days");
+
+	// If work days were countered
+	if($calendar_countered.is(":visible")){
+		dates_proposed = getSelectedDates($calendar_countered, undefined, "proposed");
+	}else{
+		dates_proposed = getDateFromContainer($allDaysContainer.find(".work-days-application"));
+	}
+	
+	var dates_job = getDateFromContainer($allDaysContainer.find(".work-days-job"));
+	var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));
+	
+	initCalendar_counterApplicationDays($calendar_confirmProposal,
+										dates_proposed, dates_job, dates_unavailable);
+		
+
+}
+
+
+
+
+
+
 function initCalendars_counterCalendars(){
 	
 	$(".counter-calendar .calendar").each(function(){
 		
-		var $container = $(this).closest(".counter-calendar-container");
+		var $allDaysContainer = $(this).closest(".calendar-container-proposed-work-days");
 		
 		
-		var dates_application = getDateFromContainer($container.find(".work-days-application"));
-		var dates_job = getDateFromContainer($container.find(".work-days-job"));
-		var dates_unavailable = getDateFromContainer($container.find(".work-days-unavailable"));
+		var dates_application = getDateFromContainer($allDaysContainer.find(".work-days-application"));
+		var dates_job = getDateFromContainer($allDaysContainer.find(".work-days-job"));
+		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));
 		
 		initCalendar_counterApplicationDays($(this), dates_application, dates_job, dates_unavailable)
 	})

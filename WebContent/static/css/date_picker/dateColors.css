@@ -8,7 +8,7 @@
 	cursor: default;
 }
 
-.calendar-container .calendar td.proposed{
+.calendar td.proposed{
 	background: #4f9a63;
 	cursor: pointer;
 }

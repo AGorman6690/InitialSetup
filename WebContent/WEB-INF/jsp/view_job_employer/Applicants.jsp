@@ -242,7 +242,8 @@
 					</td>
 					
 					<td class="table-view">
-						<%@ include file="../wage_proposal/WageProposal.jsp" %>
+<%-- 						<%@ include file="../wage_proposal/WageProposal.jsp" %> --%>
+						<%@ include file="../wage_proposal/WageProposal_NEW.jsp" %>
 					</td>									
 					<td class="table-view">
 						<div class="vert-border">

@@ -20,39 +20,45 @@
 					<div id="response-container-${applicationDto.currentWageProposal.id }"
 						 class="response-container dropdown-style">
 						
-						<table class="main-table-style">
-							<thead>
-								<tr>
-									<th></th>
-									<th></th>
-									<th></th>
-								</tr>								
-							</thead>
-							<tbody>
-								<tr>
-									<td></td>
-									<td></td>
-									<td>
-										<p>Decline the application</p>
-									</td>
-								</tr>							
-								<tr>
-									<td>Wage Proposal</td>
-									<td>$ ${applicationDto.currentWageProposal.amount }</td>
-									<td>
-										<p>Accept</p>
-										<p>Counter</p>
-									</td>
-								</tr>
-								<tr class="counter">
-									<td colspan="3">
+						<div class="proposal-container">
+							<div class="header">
+								<button class="sqr-btn">Decline the application</button>
+							</div>
+
+							
+									<div class="proposal wage-proposal-container">
 										
-									</td>
-								</tr>
-								<tr>
-									<td>Work Days Proposal</td>
-									<td>
-										<div class="calendar-container-proposed">
+										<p>Wage Proposal</p>
+										<p >$ ${applicationDto.currentWageProposal.amount }</p>
+										<div class="button-group">
+											<button class="sqr-btn accept">Accept</button>
+											<button class="sqr-btn counter">Counter</button>
+										</div>
+										
+									</div>
+									<div class="counter-container counter-wage">
+										<div>
+											<p>Current proposal<span>$ ${applicationDto.currentWageProposal.amount }</span>
+											
+											</p>
+											<c:if test="${applicationDto.wageProposals.size() > 1 }">
+												<p>Your last proposal<span>$ ${applicationDto.wageProposals[fn:length(applicationDto.wageProposals) - 2].amount }</span></p>
+											</c:if>				
+											<p>Counter proposal<input type="text" /></p>
+											</div>								
+										</div>
+									<div class="proposal work-day-proposal-container">
+										<p>Work Days Proposal</p>
+										<p>${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days
+											<span class="glyphicon glyphicon-menu-down"></span>
+										</p>
+										<div class="button-group">
+											<button class="sqr-btn accept">Accept</button>
+											<button class="sqr-btn counter">Counter</button>
+										</div>
+									</div>
+									<div class="counter-container counter-work-days">
+										<div class="calendar-container-proposed-work-days">
 											<div class="work-days-job">
 												<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
 													<div data-date="${workDay.stringDate }"></div>
@@ -63,89 +69,106 @@
 													<div data-date="${dateString }"></div>
 												</c:forEach>
 											</div>
-											<div class="calendar-container counter-calendar read-only ">
+											<div class="days-unavailable">
+												<c:forEach items="${applicationDto.dateStrings_unavailableWorkDays }" var="dateString">
+													<div data-date="${dateString }"></div>
+												</c:forEach>
+											</div>
+											<div class="calendar-container counter-calendar">
 												<div class="calendar"
 													data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 													data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
 												</div>
 											</div>
-										</div>									
-									</td>
-									<td>
-										<p>Accept</p>
-										<p>Counter</p>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					
+										</div>															
+									</div>
+									<div class="proposal set-expiration">
+										<p>This Proposal Expires In</p>
+										<div>
+											<div>
+												<p>Days</p>
+												<input class="days" type="text" value="0"/>
+											</div>
+											<div>
+												<p>Hours</p>
+												<input class="hours" type="text" value="0"/>
+											</div>
+											<div>
+												<p>Minutes</p>
+												<input class="minutes" type="text" value="0"/>
+											</div>		
+										</div>								
+									</div>
+							<div class="proceed-to-confirmation-container">
+								<span class="confirm sqr-btn">Confirm</span>
+								<span class="cancel">Cancel</span>
+							</div>										
+						</div>
 						
 						
-						<div class="accent response"
-						 	data-toggle-id="accept-details-${applicationDto.currentWageProposal.id }">
-						 	Accept</div>
-						 	
-						<div id="accept-details-${applicationDto.currentWageProposal.id }"
-							class="proposal-actions-container accept-actions-container">						
-							<%@ include file="./AcceptWageProposal.jsp" %>				
-						</div>						 	
-						 				
-				 		<div class="accent response"
-						 	data-toggle-id="decline-details-${applicationDto.currentWageProposal.id }">
-						 	Decline</div>
-						 	
-						<div id="decline-details-${applicationDto.currentWageProposal.id }"
-							class="proposal-actions-container">
-							By declining the wage proposal,
-							${user.profileId == 1 ? 'your' : 'this' }
-							 application will be removed.
-							<div class="decline-actions proposal-actions">
-								<span class="accent confirm-decline">
-									<a href="/JobSearch/wage-proposal/decline?wageProposalId=${applicationDto.currentWageProposal.id }">
-									Confirm</a></span>
-								<span class="accent cancel">Cancel</span>
+						<div class="confirmation-container">
+							<div class="proposal confirm confirm-wage-container">
+								<p>Wage Proposal</p>
+								<div class="cell accept-proposal">
+									<p>You are <span class="bold">accepting</span> $ ${applicationDto.currentWageProposal.amount }</p>
+								</div>
+								<div class="cell counter-proposal">
+<%-- 									<p>You are countering $ ${applicationDto.currentWageProposal.amount }</p> --%>
+									<p>You are <span class="bold">proposing</span> <span class="new-proposed-amount"></span></p>
+								</div>							
 							</div>
-						</div>						 	
-						 				
-						<div class="accent response"
-						 	data-toggle-id="counter-details-${applicationDto.currentWageProposal.id }">
-						 	Counter</div>	
-
-						<div id="counter-details-${applicationDto.currentWageProposal.id }"
-							class="proposal-actions-container">
-							<p>Current proposal: $ ${applicationDto.currentWageProposal.amount }</p>
-							<c:if test="${applicationDto.wageProposals.size() > 1 }">
-								<p>Your last proposal: $ ${applicationDto.wageProposals[fn:length(applicationDto.wageProposals) - 2].amount }</p>
-							</c:if>
-							<div class="amount-lbl">Counter Amount</div>
-							<input class="counter-amount"></input>						
-							<div class="counter-actions proposal-actions">
-								<span class="accent confirm-counter">Send</span>
-								<span class="accent cancel">Cancel</span>
-							</div>	
-							
-							<div class="counter-calendar-container">
+							<div class="proposal confirm confirm-work-days-container">
 								<p>Work Days</p>
-								<div class="work-days-job">
-									<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
-										<div data-date="${workDay.stringDate }"></div>
-									</c:forEach>
+								<div class="cell accept-proposal">
+									<p>You are <span class="bold">accepting</span> the following work days</p>
 								</div>
-								<div class="work-days-application">
-									<c:forEach items="${applicationDto.dateStrings_availableWorkDays }" var="dateString">
-										<div data-date="${dateString }"></div>
-									</c:forEach>
-								</div>
-								<div class="calendar-container counter-calendar read-only ">
+								<div class="cell counter-proposal">
+									<p>You are <span class="bold">proposing</span> the following work days</p>
+										
+									<div class="calendar-container-confirm-proposed-work-days">
+	
+										<div class="work-days-job">
+											<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
+												<div data-date="${workDay.stringDate }"></div>
+											</c:forEach>
+										</div>
+										<div class="work-days-application">
+											<c:forEach items="${applicationDto.dateStrings_availableWorkDays }" var="dateString">
+												<div data-date="${dateString }"></div>
+											</c:forEach>
+										</div>
+										<div class="days-unavailable">
+											<c:forEach items="${applicationDto.dateStrings_unavailableWorkDays }" var="dateString">
+												<div data-date="${dateString }"></div>
+											</c:forEach>
+										</div>
+									</div>	
+								</div>	
+								<div class="calendar-container read-only">
 									<div class="calendar"
 										data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 										data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
 									</div>
 								</div>
-							</div>				
+																					
+							</div>
+							<div class="proposal confirm confirm-expiration-container">
+								<p>Expiration</p>
+								<div class="cell accept-proposal">
+									<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>
+								</div>							
+							</div>							
+							
+							<div class="send-container">
+								<span class="send sqr-btn">Send</span>
+								<span class="edit">Edit</span>
+							</div>
 						</div>
 						
+						
+						
 					</div>
+			
 					
 				</c:when>
 				<c:otherwise>

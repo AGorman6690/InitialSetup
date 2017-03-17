@@ -116,15 +116,18 @@ function initCalendar_counterApplicationDays($calendar, dates_application, dates
 		minDate: getMinDate($calendar),
 		numberOfMonths: parseInt(getNumberOfMonths($calendar)),
 		onSelect: function(dateText, inst){
-			var date = dateify(dateText);
 			
-			if(doesDateArrayContainDate(date, dates_unavailable)){}
-			else if(doesDateArrayContainDate(date, dates_application)){				
-				dates_application = removeDateFromArray(date, dates_application);				
-			}	
-			else if(doesDateArrayContainDate(date, dates_job)){				
-				dates_application.push(date);				
-			}	
+			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
+				var date = dateify(dateText);
+				
+				if(doesDateArrayContainDate(date, dates_unavailable)){}
+				else if(doesDateArrayContainDate(date, dates_application)){				
+					dates_application = removeDateFromArray(date, dates_application);				
+				}	
+				else if(doesDateArrayContainDate(date, dates_job)){				
+					dates_application.push(date);				
+				}
+			}
 			
 		},
 		beforeShowDay: function (date) {

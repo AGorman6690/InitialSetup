@@ -2,4 +2,4 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/wageProposal.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/historyTable.css" />
 
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/wageProposal_NEW.css" /> -->
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/wageProposal_NEW.css" />

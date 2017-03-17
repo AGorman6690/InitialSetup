@@ -17,12 +17,22 @@ $(document).ready(function(){
 	
 	$(".button-group button").click(function(){
 	
-		highlightArrayItem(this, $(this).parent().find("button"), "selected-green");
+		selectButton($(this))
 		
 	})
 	
 			
 })
+
+function selectButton($button){
+	
+	var $buttonGroup = $button.closest(".button-group");
+	var className = $buttonGroup.attr("class-name");
+	if(className == undefined) className = "selected";
+	
+	if($button.hasClass(className)) $button.removeClass(className);
+	else highlightArrayItem($button, $buttonGroup.find("button"), className);
+}
 
 
 function redirectToProfile(){
