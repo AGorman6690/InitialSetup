@@ -21,7 +21,10 @@ public class Application {
 	
 	int status	
 	public static Integer STATUS_DOES_NOT_EXIST = -999;
-	public static Integer STATUS_PROPOSED_BY_EMPLOYER = -1;
+	
+	
+
+	public static Integer STATUS_PROPOSED_BY_EMPLOYER = -1;	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;
 	public static Integer STATUS_CONSIDERED = 2;

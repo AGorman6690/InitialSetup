@@ -81,9 +81,10 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setAnswerOptionIds_Selected(
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
-			
+		
 			applicationDto.setDateStrings_availableWorkDays(
 								this.getProposedWorkDays(applicationDto.getCurrentWageProposal().getId()));
+
 			
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 			
@@ -417,8 +418,10 @@ public class ApplicationServiceImpl {
 			applicationDto.setTime_untilEmployerApprovalExpires(
 								this.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
 			
-			applicationDto.setDateStrings_availableWorkDays(this.getProposedWorkDays(
-									applicationDto.getCurrentWageProposal().getId()));
+			if(applicationDto.getCurrentWageProposal() != null){
+				applicationDto.setDateStrings_availableWorkDays(this.getProposedWorkDays(
+										applicationDto.getCurrentWageProposal().getId()));
+			}
 			
 			applicationDto.setDateStrings_unavailableWorkDays(
 							jobService.getDateStrings_UnavailableWorkDays(userId,
@@ -725,9 +728,9 @@ public class ApplicationServiceImpl {
 		
 	}
 
-	public List<Question> getQuestions_ByEmployer(int userId) {
+	public List<Question> getDistinctQuestions_byEmployer(int userId) {
 		
-		return repository.getQuestions_ByEmployer(userId);
+		return repository.getDistinctQuestions_byEmployer(userId);
 	}
 
 	public Question getQuestion(int questionId) {
@@ -824,12 +827,32 @@ public class ApplicationServiceImpl {
 
 	public void insertApplicationInvite(ApplicationInvite applicationInvite, HttpSession session) {
 		
+		// **********************************************************
+		// **********************************************************
+		// Re-asses the ApplicationInvite Class.
+		// If invites-to-apply are only going to be differentiated from actual-appications
+		// by a status, then do away with this class
+		// Revisit this.
+		// **********************************************************
+		// **********************************************************		
+		
+		
 		// Verify:
-		// 1) 
+		// 1) The session user actually posted this job.
+		if(verificationService.didSessionUserPostJob(session, applicationInvite.getJobId())){
+
 		
-		applicationInvite.setStatus(ApplicationInvite.STATUS_NOT_YET_VIEWED);
-		repository.insertApplicationInvite(applicationInvite);
+			ApplicationDTO applicationDto = new ApplicationDTO();
+			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
+			applicationDto.setJobId(applicationInvite.getJobId());
+			applicationDto.setApplicantId(applicationInvite.getUserId());
+			
+			this.insertApplication(applicationDto);
+			
+	//		applicationInvite.setStatus(ApplicationInvite.STATUS_NOT_YET_VIEWED);
+	//		repository.insertApplicationInvite(applicationInvite);
 		
+		}
 	}
 
 

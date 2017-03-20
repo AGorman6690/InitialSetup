@@ -128,8 +128,8 @@
 }
 
 #postedJobs{
-	width:225px;
-	
+	width:329px;
+	margin-left: 10px;
 }
 
 #postedJobs div[data-posted-job-id],

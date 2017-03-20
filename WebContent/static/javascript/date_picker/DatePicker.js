@@ -125,6 +125,8 @@ function attemptToAddDate(date, days){
 		days.push(date);
     }
 	
+	return days;
+	
 }
 
 function dateify(dateString){

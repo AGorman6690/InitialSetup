@@ -647,6 +647,9 @@ public class UserServiceImpl {
 																		Application.STATUS_ACCEPTED,
 																		Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
 		
+//		List<JobDTO> jobDtos_applicationInvites = this.getJobDtos_ApplicationInvites(employee.getUserId());
+		
+		
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
 		
@@ -666,12 +669,29 @@ public class UserServiceImpl {
 		model.addAttribute("openApplicationCount", openApplicationCount);
 		model.addAttribute("failedApplicationCount", failedApplicationCount);
 		
+//		model.addAttribute("jobDtos_applicationInvites", jobDtos_applicationInvites);
 		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("jobs_employment", jobs_employment);		
 		model.addAttribute("pastEmploymentCount", pastEmploymentCount);
 		model.addAttribute("currentEmploymentCount", currentEmploymentCount);
 		model.addAttribute("futureEmploymentCount", futureEmploymentCount);
 
+	}
+
+	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
+		
+		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(userId);
+		
+		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
+		
+		for(ApplicationInvite applicationInvite : applicationInvites){
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
+			jobDto.setApplicationInvite(applicationInvite);
+			jobDtos_applicationInvites.add(jobDto);
+		}
+		
+		return jobDtos_applicationInvites;
 	}
 
 	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
@@ -864,6 +884,24 @@ public class UserServiceImpl {
 		userDto.setCategoryDtos_jobsCompleted(categoryService.getCategoryDtos_JobsCompleted(userDto.getUser().getUserId()));
 		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userDto.getUser().getUserId()));;
 		
+		userDto.setAvailableDays(this.getAvailableDays(userId));
+		
+		
+		
+		List<ApplicationDTO> applicationDtos = applicationService.
+				getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+							userId, 
+							Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
+										Application.STATUS_SUBMITTED,
+										Application.STATUS_CONSIDERED,
+										Application.STATUS_ACCEPTED,
+										Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
+
+
+		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(userId);
+		
+		model.addAttribute("applicationDtos", applicationDtos);
+		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("userDto", userDto);
 		
 	}
@@ -941,22 +979,6 @@ public class UserServiceImpl {
 		return userDto;
 	}
 
-	public void setModel_Invitations(Model model, HttpSession session) {
-		
-		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(
-															SessionContext.getUser(session).getUserId());
-		
-		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
-		
-		for(ApplicationInvite applicationInvite : applicationInvites){
-			JobDTO jobDto = new JobDTO();
-			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
-			jobDto.setApplicationInvite(applicationInvite);
-			jobDtos_applicationInvites.add(jobDto);
-		}
-		
-		model.addAttribute("jobDtos_applicationInvites", jobDtos_applicationInvites);
-	}
 
 
 

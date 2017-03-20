@@ -2,16 +2,21 @@
 
 <div class="dropdown-container" data-wage-proposal-id="${applicationDto.currentWageProposal.id }">
 	<c:choose>
+		<c:when test="${applicationDto.application.status == -1 }">
+			<p>Employer invited you to apply</p>
+		</c:when>		
 		<c:when test="${applicationDto.currentWageProposal.status == -2 || 
 						applicationDto.currentWageProposal.status == -1 ||
 						applicationDto.currentWageProposal.status == 0 ||
 						applicationDto.currentWageProposal.status == 3 }">
 			
 			<c:choose>
+		
 				<c:when test="${applicationDto.currentWageProposal.proposedToUserId == user.userId }">
 					
 					<div class="accent" data-toggle-id="response-container-${applicationDto.currentWageProposal.id }">
 						<c:choose>
+
 							<c:when test="${applicationDto.currentWageProposal.status == 3 }">
 								<c:choose>
 									<c:when test="${applicationDto.time_untilEmployerApprovalExpires == '-1' }">
@@ -22,9 +27,7 @@
 											<c:when test="${user.profileId == 1 }">
 												<div data-toggle-id="accept-details-${applicationDto.currentWageProposal.id }"
 													class="accent">
-													<p>${applicationDto.application.status == -1 ?
-															 "Employer initiated contact." :
-															 "Employer accepted your offer." }</p>
+													<p>Employer accepted your offer.</p>
 													<p>Waiting for your approval.</p>
 												</div>
 											</c:when>

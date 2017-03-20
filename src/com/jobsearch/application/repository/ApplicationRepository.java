@@ -147,9 +147,11 @@ public class ApplicationRepository {
 						+ " WHERE a.JobId = ?"
 						+ " AND (a.Status != ?"
 						+ " AND a.Status != ?"
+						+ " AND a.Status != ?"
 						+ " AND a.Status != ? )";
 
-		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_ACCEPTED,
+		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_PROPOSED_BY_EMPLOYER,
+																Application.STATUS_ACCEPTED,
 																Application.STATUS_DECLINED,
 																Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT});
 
@@ -382,8 +384,11 @@ public class ApplicationRepository {
 			cStmt.setInt(1, applicationDto.getApplicantId());
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
+	
 			
-			// When the employer initiates contact, these will not be null
+			
+			
+			// When the employer initiates contact and makes an offer, these will not be null
 			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
 				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
 			}
@@ -398,18 +403,17 @@ public class ApplicationRepository {
 				cStmt.setTimestamp(5, null);
 			}
 			
-			
-			
-
 			ResultSet result = cStmt.executeQuery();
 
 			// Get the new application id from the result
 			result.next();
 			int newApplicationId = result.getInt("ApplicationId");
 
-			// Insert the employment proposal
-			applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
-			applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());
+			// If this was NOT an invite to apply, insert the employment proposal
+			if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
+				applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
+				applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());	
+			}			
 
 			// Add answers
 			if(verificationService.isListPopulated(applicationDto.getAnswers())){
@@ -587,11 +591,12 @@ public class ApplicationRepository {
 		
 	}
 
-	public List<Question> getQuestions_ByEmployer(int userId) {
+	public List<Question> getDistinctQuestions_byEmployer(int userId) {
 		
 		String sql = "SELECT * FROM question q"
 						+ " INNER JOIN job j ON j.JobId = q.JobId"
-						+ " WHERE j.UserId = ?";
+						+ " WHERE j.UserId = ?"
+						+ " GROUP BY q.question";
 		
 		return QuestionRowMapper(sql, new Object[]{ userId });
 

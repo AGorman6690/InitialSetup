@@ -108,7 +108,7 @@ body {
   overflow-y: scroll;
   font-family: "Nunito", sans-serif !important;
 /*   letter-spacing: 0.75px; */
-  letter-spacing: 0.1em;
+
   font-size: 15px;
   
   
@@ -116,6 +116,9 @@ body {
   font-variant-ligatures: no-common-ligatures;
 }
 
+button, body{
+	letter-spacing: 0.1em;
+}
 
 .static-row{
 	 border-top: 1px solid #ddd;

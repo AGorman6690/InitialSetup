@@ -19,6 +19,8 @@ function removeDateFromArray(date, array){
 	return $.grep(array, function(_date, i){
 		return _date.getTime() != date.getTime();
 	})
+	
+	return array;
 }
 
 

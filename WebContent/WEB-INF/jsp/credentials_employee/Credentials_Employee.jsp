@@ -3,8 +3,10 @@
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/credentials/credentials.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/credentials/calendar_availability.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 
+<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>	
 <%-- <script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script> --%>
 <script src="<c:url value="/static/javascript/credentials_employee/credentials_employee.js" />"></script>
 
@@ -19,8 +21,10 @@
 		</div>
 		<div id="personalInfo">
 			<div class="info">
-<!-- 			<span class="glyphicon glyphicon-pencil"></span> -->
-				<div class="lbl">Home Location</div>
+
+				<div class="lbl">Home Location
+					<span class="glyphicon glyphicon-pencil"></span>
+				</div>
 				<div data-toggle-id="editHomeLocation" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					${userDto.user.homeCity}, ${userDto.user.homeState} ${userDto.user.homeZipCode }</div>
 				<c:if test="${isViewingOnesSelf }">
@@ -34,7 +38,9 @@
 				</c:if>
 			</div>
 			<div class="info">
-				<div class="lbl">Maximum distance willing to travel</div>
+				<div class="lbl">Maximum distance willing to travel
+					<span class="glyphicon glyphicon-pencil"></span>
+				</div>
 				<div data-toggle-id="editMaxDistance" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					${userDto.user.maxWorkRadius } miles</div>
 				
@@ -47,7 +53,9 @@
 				</c:if>				
 			</div>
 			<div class="info">
-				<div class="lbl">Minimum hourly wage</div>
+				<div class="lbl">Minimum hourly wage
+					<span class="glyphicon glyphicon-pencil"></span>
+				</div>
 				<div data-toggle-id="editMinimumPay" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					$${userDto.user.stringMinimumDesiredPay } per hour</div>
 				
@@ -60,7 +68,10 @@
 				</c:if>
 			</div>
 			<div class="info">
-				<div data-toggle-id="aboutContainer" class="lbl">About<span class="glyphicon glyphicon-menu-down"></span></div>
+				<div data-toggle-id="aboutContainer" class="lbl">About
+					<span class="glyphicon glyphicon-menu-down"></span>
+					<span class="glyphicon glyphicon-pencil"></span>
+				</div>
 				<div id="aboutContainer" class="value">the more obscure Latin words, consectetur, from a Lorem Ipsum
 				 passage, and going through the cites of the word in classical literature, discovered
 				  the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
@@ -86,12 +97,56 @@
 		</div>
 	
 	</div>
-	
-<!-- 	<div id="availabilityContainer"> -->
-<!-- 		<div class="header-container"> -->
-<!-- 			<h3>Availability</h3> -->
-<!-- 		</div>	 -->
-<!-- 	</div> -->
+
+	<div class="availability-container calendar-container">
+		<div class="header-container">
+			<h3>Calendar<span class="glyphicon glyphicon-pencil"></span></h3>
+		</div>	
+		<div class="days-of-week-container checkbox-container">
+			<div><label><input class="select-all" type="checkbox">Select all</label></div>
+			<div class="options">
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="0">Su</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="1">Mo</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="2">Tu</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="3">We</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="4">Th</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="5">Fr</label>
+				<label><input type="checkbox" name="days-of-week" data-day-of-week="6">Sa</label>
+			</div>
+		</div>
+		<div class="calendar"></div>
+		
+		
+			<div id="applicationDetails">				
+				<c:forEach items="${applicationDtos }" var="applicationDto">
+					<div class="application" data-id="${applicationDto.application.applicationId }"
+							 data-job-name="${applicationDto.jobDto.job.jobName }"
+							 data-job-id="${applicationDto.jobDto.job.id}"
+							 data-job-status="${applicationDto.jobDto.job.status}">									
+						<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
+							<div class="work-day" data-date="${workDay.stringDate }"></div>
+						</c:forEach>
+					</div>
+				</c:forEach>				
+			</div>	
+			
+			<div id="employmentDetails">
+				<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">				
+					<div class="job" data-job-id="${jobDto.job.id}"
+									data-job-name="${jobDto.job.jobName }">											 
+						<c:forEach items="${jobDto.workDays }" var="workDay">
+							<div class="work-day" data-date="${workDay.stringDate }"></div>
+						</c:forEach>					
+					</div>						
+				</c:forEach>				
+			</div>		
+			
+			<div id="availabilityDetails">
+				<c:forEach items="${userDto.availableDays }" var="dateString">														 
+					<div class="work-day" data-date="${dateString }"></div>					
+				</c:forEach>				
+			</div>				
+	</div>
 	
 	<div id="workHistoryContainer">
 		<div class="header-container">

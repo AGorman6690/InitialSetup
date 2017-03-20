@@ -1023,7 +1023,7 @@ public class JobServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		List<Job> postedJobs = this.getJobs_ByEmployer(sessionUser.getUserId());
-		List<Question> postedQuestions = applicationService.getQuestions_ByEmployer(sessionUser.getUserId());
+		List<Question> postedQuestions = applicationService.getDistinctQuestions_byEmployer(sessionUser.getUserId());
 		
 		model.addAttribute("postedJobs", postedJobs);
 		model.addAttribute("postedQuestions", postedQuestions);

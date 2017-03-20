@@ -92,3 +92,7 @@ span.glyphicon-menu-down{
 	padding: 0px 5px;
 	color: #adadad;
 }
+
+.glyphicon{
+	cursor: pointer;
+}

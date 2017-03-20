@@ -13,17 +13,29 @@
 	cursor: pointer;
 }
 
-.calendar-container .calendar td.proposed a{
-	color: #ffffff;
-	cursor: pointer;
-}
-
 .calendar-container .calendar td.a-job-work-day{
 	background: #bbbbbb;
 	cursor: pointer;
 }
 
-.calendar-container .calendar td.a-job-work-day a{
+.calendar-container .calendar td.a-job-work-day a,
+.calendar-container .calendar td.proposed a,
+.calendar-container .calendar td.application{
 	color: #ffffff;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.available{
+	background: #bbbbbb;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.application{
+	background: #b7c7e0;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.employment a{
+	color: #8ed4b1;
 	cursor: pointer;
 }

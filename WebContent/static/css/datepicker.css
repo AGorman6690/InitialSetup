@@ -38,7 +38,11 @@
 .ui-datepicker-header {
     position: relative;
     padding-bottom: 10px;
-    border-bottom: 1px solid #d6d6d6;
+/*     border-bottom: 1px solid #d6d6d6; */
+}
+
+.ui-datepicker-calendar thead tr{
+	border-bottom: 1px solid #cacaca;
 }
  
 .ui-datepicker-title { text-align: center; }

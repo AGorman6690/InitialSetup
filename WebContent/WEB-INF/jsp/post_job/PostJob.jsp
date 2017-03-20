@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
 
@@ -23,23 +23,27 @@
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
 
+
 	<div id="postActions">
 		<c:if test="${!empty postedJobs }">
 			<div id="postedJobsContainer">
-				<span id="copyPreviousPost" class="post-section"
-					 data-toggle-id="postedJobs">Copy a previous posting</span>
+				<button id="copyPreviousPost" class="sqr-btn"
+					 data-toggle-id="postedJobs">Copy a previous job posting</button>
+				<button id="startNewJob" class="sqr-btn">Start a new job posting</button>
 				<div id="postedJobs" class="dropdown-style">
 					<c:forEach items="${postedJobs }" var="job">
 						<div data-posted-job-id="${job.id }">${job.jobName }</div>
 					</c:forEach>
 				</div>
+			
 			</div>
+			
 		</c:if>	
-		<span id="submitPosting_preview" class="post-section">Preview Job Posting</span>
+<!-- 		<span id="submitPosting_preview" class="post-section">Preview Job Posting</span> -->
 		<span id="editPosting" class="post-section" data-section-id="employmentContainer">Edit posting</span>
 		<span id="submitPosting_final" class="post-section" data-section-id="employmentContainer">Submit posting</span>
 	</div>
-	<div id="postSections">
+	<div id="postSections" class="${!empty postedJobs ? 'hide-on-load' : '' }">
 		<span class="post-section selected-section" data-section-id="generalContainer">General</span>
 <!-- 		<span>/</span> -->
 		<span class="post-section" data-section-id="datesContainer">Dates</span>
@@ -58,48 +62,20 @@
 	</div>
 
 
-<div class="container">
+<div class="container ${!empty postedJobs ? 'hide-on-load' : '' }">
 
 
-
-<!-- 	<div class="row"> -->
-<!-- 		<div id="headerLinksContainer" class="col-sm-12"> -->
-<!-- 			<div id="submitPosting_preview_container"> -->
-<%-- 				<c:if test="${!empty postedJobs }"> --%>
-<!-- 					<div id="postedJobsContainer"> -->
-<!-- 						<span id="copyPreviousPost1" class="page-content-link selected" -->
-<!-- 							 data-toggle-id="postedJobs">Copy a previous posting</span> -->
-<!-- 						<div id="postedJobs" class="dropdown-style"> -->
-<%-- 							<c:forEach items="${postedJobs }" var="job"> --%>
-<%-- 								<div data-posted-job-id="${job.id }">${job.jobName }</div> --%>
-<%-- 							</c:forEach> --%>
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<span>/</span> -->
-<%-- 				</c:if> --%>
-				
-<!-- 				<span id="submitPosting_preview" class="page-content-link" -->
-<!-- 					 data-section-id="employmentContainer">Preview job posting</span> -->
-<!-- 			</div> -->
-<!-- 			<div id="submitPosting_final_container"> -->
-<!-- 				<span id="previewJobPosting_Label" class="" -->
-<!-- 					 >Preview Job Posting</span> -->
-<!-- 				<span id="editPosting" class="page-content-link" -->
-<!-- 					 data-section-id="employmentContainer">Edit posting</span> -->
-<!-- 				<span>/</span> -->
-<!-- 				<span id="submitPosting_final" class="page-content-link" -->
-<!-- 					 data-section-id="employmentContainer">Submit posting</span> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
 	<div class="row">
 		<div id="displayExample_jobInfo"  class="col-sm-12">
 		
 		</div>
 	</div>
 	<div id="postJobInfoContainer">
-		<p id="nextSection">Next</p>
-	
+		<div class="header-container">
+			<div><button id="submitPosting_preview" class="sqr-btn">Preview Job Posting</button></div>
+			<span id="previousSection">Previous</span>
+			<span id="nextSection">Next</span>
+		</div>
 	
 		<div id="generalContainer" class="first section-container">
 			<div class="item">
@@ -241,6 +217,9 @@
 		</div>	
 		
 		<div id="questionsContainer" class="section-container">
+			<div id="addedQuestions" class="item">
+				<p>Added Questions</p>
+			</div>		
 			<div class="">
 				<div id="questionActions">
 					<button id="newQuestion" class="clickable btn-sqr">Clear</button>
@@ -264,7 +243,10 @@
 					</c:if>
 					<div id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</div>
 				</div>
-				<div id="addedQuestions"></div>
+<!-- 				<div class="item"> -->
+<!-- 					<p>Added Questions</p> -->
+
+<!-- 				</div> -->
 			</div>			
 			
 			

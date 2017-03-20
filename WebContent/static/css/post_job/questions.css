@@ -13,7 +13,8 @@
 /* } */
 
 #addedQuestions{
-	padding:20px 0px;
+/* 	padding:20px 0px; */
+	display: none;
 }
 #addedQuestions a{
 	display:block;
@@ -23,15 +24,19 @@
 	cursor:pointer;
 }
 
+#questionActions{
+	padding-bottom: 20px;
+}
 #addedQuestions a:hover{
 	text-decoration:none;
 	text-shadow: none;
 }
 
 #addedQuestions a.selected{
-	color:#197994;
-/* 	font-size:18px; */
-	font-weight: bold;
+    color: #163b3d;
+    /* font-size: 18px; */
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 #questionActions button{

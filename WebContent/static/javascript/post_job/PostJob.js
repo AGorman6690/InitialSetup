@@ -60,6 +60,10 @@ $(document).ready(function(){
 		$("#noDatesSelected").show();
 	})
 	
+	$("#startNewJob").click(function(){
+		showPostJobSections();
+	})
+	
 	$("#timesTable tbody").on("change", "select.select-all.start-time", function(){
 		
 		var time = $(this).val();
@@ -214,13 +218,19 @@ function importPreviousJobPosting(jobId){
 	function _success(jobDto) {		
 		broswerIsWaiting(false);	
 		setControlValues(jobDto);
-		
+		showPostJobSections();
+
 	}	
 
 	function _error() {
 		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
+}
+
+function showPostJobSections(){
+	$(".hide-on-load").each(function(){ $(this).removeClass("hide-on-load") });
+	$("#postedJobsContainer").hide();
 }
 
 function setControlValues(jobDto){

@@ -176,13 +176,16 @@ function setExpirationTimeToConfirm($e){
 	if(days > 1) html += days + " days ";
 	else if(days == 1) html += days + " day ";
 	
-	if(hours > 0)html += hours + ":";
+	if(hours > 1)html += hours + ":";
+
 	
 	if(minutes == 0) html += "00";
 	else if(minutes < 10) html += "0" + minutes;
 	else html += minutes;
 	
-	html += " hrs";
+	if(hours > 1)html += " hrs";
+	else if(hours == 1 && minutes > 0) html += " hrs";
+	else html += " hr";
 	
 	
 	$responseContainer.find(".confirm-expiration").eq(0).html(html);

@@ -193,8 +193,14 @@ function deleteQuestion(){
 	//Remove the question from the cart
 	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedQuestion.questionId);
 	
+	setDisplay_addedQuestions();
+	
 }
 
+function setDisplay_addedQuestions(){
+	if(questions.length > 0) $("#addedQuestions").show();
+	else $("#addedQuestions").hide();
+}
 function showSelectedQuestion(){
 	
 	var selectedQuestion = getSelectedQuestion();
@@ -284,6 +290,7 @@ function addQuestion(){
 		addQuestionToDOM(question);
 		clearAllInputs($("#questionsContainer"));
 		slideUp($("#answerListContainer"), 400);
+		setDisplay_addedQuestions();
 	}
 }
 function getQuestion(){
