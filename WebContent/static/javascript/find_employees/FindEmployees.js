@@ -19,6 +19,11 @@ $(document).ready(function(){
 
 	})
 	
+	$("#job-i-might-post").click(function(){
+		$("#filtersContainer").show();
+//		$(this).hide();
+	})
+	
 	$("#makeOfferModal #sendInvite").click(function(){
 		
 		executeAjaxCall_sendInvite();
@@ -96,9 +101,9 @@ $(document).ready(function(){
 		selectedDays = clearCalendar($(this).closest(".calendar-container"));
 	})
 	
-	$("#loadCurrentJobContainer select").change(function(){
+	$("#posted-jobs [data-posted-job-id]").click(function(){
 		
-		var selectedJobId = $(this).find("option:selected").attr("data-job-id");
+		var selectedJobId = $(this).attr("data-posted-job-id");
 		
 		$.ajax({
 			type: "GET",
@@ -359,6 +364,8 @@ function showApplicationStatus_ProspectiveEmployee(jobId){
 }
 
 function showJobInfo(jobDto){
+	
+	$("#filtersContainer").show();
 	
 	// Set the location
 	$("#street").val(jobDto.job.street);

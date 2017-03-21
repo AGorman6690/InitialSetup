@@ -2,9 +2,10 @@
 <%-- <%@ include file="../includes/resources/PageContentManager.jsp" %> --%>
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 <%@ include file="../includes/resources/JobInformation.jsp" %>
+<%@ include file="../includes/resources/SelectPageSection.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" /> -->
 <!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
@@ -23,61 +24,55 @@
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
 
+<c:if test="${!empty postedJobs }">
+	<div id="copy-or-new-container">
+		<div id="copy-previous-post-container">
+			<button id="copy-previous-post" class="sqr-btn"
+				 data-toggle-id="previous-job-posts">Begin from a previous job posting</button>
+			<div id="previous-job-posts" class="dropdown-style">
+				<c:forEach items="${postedJobs }" var="job">
+					<div data-posted-job-id="${job.id }">${job.jobName }</div>
+				</c:forEach>
+			</div>					 
+		</div>
+		<button id="startNewJob" class="sqr-btn">Start a new job posting</button>
+		
+	</div>			
+</c:if>	
 
-	<div id="postActions">
-		<c:if test="${!empty postedJobs }">
-			<div id="postedJobsContainer">
-				<button id="copyPreviousPost" class="sqr-btn"
-					 data-toggle-id="postedJobs">Copy a previous job posting</button>
-				<button id="startNewJob" class="sqr-btn">Start a new job posting</button>
-				<div id="postedJobs" class="dropdown-style">
-					<c:forEach items="${postedJobs }" var="job">
-						<div data-posted-job-id="${job.id }">${job.jobName }</div>
-					</c:forEach>
-				</div>
-			
-			</div>
-			
-		</c:if>	
-<!-- 		<span id="submitPosting_preview" class="post-section">Preview Job Posting</span> -->
-		<span id="editPosting" class="post-section" data-section-id="employmentContainer">Edit posting</span>
-		<span id="submitPosting_final" class="post-section" data-section-id="employmentContainer">Submit posting</span>
-	</div>
-	<div id="postSections" class="${!empty postedJobs ? 'hide-on-load' : '' }">
-		<span class="post-section selected-section" data-section-id="generalContainer">General</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="datesContainer">Dates</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="timesContainer">Times</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="locationContainer">Location</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="compensationContainer">Compensation</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="categoriesContainer">Categories</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="questionsContainer">Questions</span>
-<!-- 		<span>/</span> -->
-		<span class="post-section" data-section-id="employeeSkillsContainer">Employee Skills</span>							
-	</div>
+
+<div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
+	<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
+	<span class="select-page-section" data-page-section-id="datesContainer">Dates</span>
+	<span class="select-page-section" data-page-section-id="timesContainer">Times</span>
+	<span class="select-page-section" data-page-section-id="locationContainer">Location</span>
+	<span class="select-page-section" data-page-section-id="compensationContainer">Compensation</span>
+	<span class="select-page-section" data-page-section-id="categoriesContainer">Categories</span>
+	<span class="select-page-section" data-page-section-id="questionsContainer">Questions</span>
+	<span class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
+</div>
 
 
 <div class="container ${!empty postedJobs ? 'hide-on-load' : '' }">
 
 
-	<div class="row">
-		<div id="displayExample_jobInfo"  class="col-sm-12">
+	<div id="preview-job-posting-container">
+		<div id="edit-or-submit-container">
+			<button id="editPosting" class="sqr-btn">Edit Job Posting</button>
+			<button id="submitPosting_final" class="sqr-btn">Submit Job Posting</button>
+		</div>	
+		<div id="displayExample_jobInfo">
 		
 		</div>
 	</div>
-	<div id="postJobInfoContainer">
-		<div class="header-container">
-			<div><button id="submitPosting_preview" class="sqr-btn">Preview Job Posting</button></div>
-			<span id="previousSection">Previous</span>
-			<span id="nextSection">Next</span>
+	<div id="post-job-container">
+		<div id="previous-next-container">
+			<button id="proceed-to-preview-job-posting" class="sqr-btn">Confirm Job Posting</button>
+			<span id="previous-section">Previous</span>
+			<span id="next-section">Next</span>
 		</div>
 	
-		<div id="generalContainer" class="first section-container">
+		<div id="generalContainer" class="page-section">
 			<div class="item">
 				<p>Employment Type</p>
 				<div class="radio-container">
@@ -99,7 +94,7 @@
 			</div>
 		</div>
 		
-		<div id="datesContainer" class="section-container">
+		<div id="datesContainer" class="page-section">
 
 			<div class="row">
 				<div class="item">
@@ -115,7 +110,7 @@
 			</div>			
 		</div>		
 		
-		<div id="timesContainer" class="section-container">
+		<div id="timesContainer" class="page-section">
 
 			<p id="noDatesSelected" class="">Please select one or more dates</p>
 			<div id="timesTableContainer" >
@@ -131,7 +126,7 @@
 <!-- 					************************************ -->
 						<tr class="master-row-multi-select">
 							<td></td>
-							<td><label><input class="select-all" type="checkbox" name="time">Select All</label></td>
+							<td><label><input class="select-all" type="checkbox" name="time">Select All Dates</label></td>
 							<td><select   class="time start-time select-all"></select></td>
 							<td><select  class="time end-time select-all"></select></td>							
 						</tr>
@@ -152,7 +147,7 @@
 			</div>
 		</div>	
 					
-		<div id="locationContainer" class="section-container">
+		<div id="locationContainer" class="page-section">
 			<div class="item">
 				<p>Street Address</p>						
 				<input id="street" type="text" class=""	value="2217 Bonnie Lane"></input>						
@@ -172,7 +167,7 @@
 		</div>	
 		
 		
-		<div id="compensationContainer" class="section-container">
+		<div id="compensationContainer" class="page-section">
 			<div class="item">
 				<p>Method</p>
 				<div class="radio-container">							
@@ -207,7 +202,7 @@
 			</div>								
 		</div>			
 						
-		<div id="categoriesContainer" class="section-container">
+		<div id="categoriesContainer" class="page-section">
 			<div class="header row">
 				<p>Categories</p>
 			</div>		
@@ -216,13 +211,26 @@
 			</div>								
 		</div>	
 		
-		<div id="questionsContainer" class="section-container">
-			<div id="addedQuestions" class="item">
+		<div id="questionsContainer" class="page-section">
+			<div id="copy-or-new-question">
+				<div id="copy-question-container">
+					<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Copy a previous question</button>
+					<div id="postedQuestions" class="dropdown-style">
+						<c:forEach items="${postedQuestions }" var="question">
+							<div data-question-id="${question.questionId }">${question.text }</div>
+						</c:forEach>
+					</div>					
+				</div>
+				<button id="create-new-question" class="sqr-btn">Create a new question</button>
+			</div>
+			<div id="addedQuestionsContainer" class="item">
 				<p>Added Questions</p>
+				<div id="addedQuestions"></div>
 			</div>		
-			<div class="">
+
+			<div id="create-question-container">
 				<div id="questionActions">
-					<button id="newQuestion" class="clickable btn-sqr">Clear</button>
+<!-- 					<button id="newQuestion" class="clickable btn-sqr">Clear</button> -->
 					<button id="addQuestion" class="clickable btn-sqr">Add</button>
 					<button id="deleteQuestion" class="btn-sqr">Delete</button>
 					<button id="editQuestion" class="btn-sqr">Edit</button>							
@@ -232,8 +240,8 @@
 					</span>
 					<c:if test="${!empty postedQuestions }">
 						<div id="postedQuestionsContainer">
-							<span id="copyPreviousQuestion" data-toggle-id="postedQuestions">
-								Copy a previous question</span>
+<!-- 							<span id="copyPreviousQuestion" data-toggle-id="postedQuestions"> -->
+<!-- 								Copy a previous question</span> -->
 							<div id="postedQuestions" class="dropdown-style">
 								<c:forEach items="${postedQuestions }" var="question">
 									<div data-question-id="${question.questionId }">${question.text }</div>
@@ -242,48 +250,43 @@
 						</div>
 					</c:if>
 					<div id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</div>
-				</div>
-<!-- 				<div class="item"> -->
-<!-- 					<p>Added Questions</p> -->
-
-<!-- 				</div> -->
-			</div>			
-			
-			
-			<div class="item">
-				<p>Question Format</p>						
-				<select id="questionFormat" class="question-formats">
-				  <option class="answer-format-item" data-format-id="0">Yes or No</option>
-				  <option class="answer-format-item" data-format-id="1">Short Answer</option>
-				  <option class="answer-format-item" data-format-id="2">Single Answer</option>
-				  <option class="answer-format-item" data-format-id="3">Multiple Answer</option>
-				</select>					
-			</div>	
-			
-			<div class="item">
-				<p>Question</p>						
-				<textarea id="question" class="" rows="3"></textarea>				
-			</div>		
-			
-			<div class="item" id="answerListContainer">
-					<p>Answers</p>						
-					<div id="answerList">
-						<div class="list-item answer-container">
-							<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
-							<input type="text" class="answer-option">
+				</div>		
+				
+				
+				<div class="item">
+					<p>Question Format</p>						
+					<select id="questionFormat" class="question-formats">
+					  <option class="answer-format-item" data-format-id="0">Yes or No</option>
+					  <option class="answer-format-item" data-format-id="1">Short Answer</option>
+					  <option class="answer-format-item" data-format-id="2">Single Answer</option>
+					  <option class="answer-format-item" data-format-id="3">Multiple Answer</option>
+					</select>					
+				</div>	
+				
+				<div class="item">
+					<p>Question</p>						
+					<textarea id="question" class="" rows="3"></textarea>				
+				</div>		
+				
+				<div class="item" id="answerListContainer">
+						<p>Answers</p>						
+						<div id="answerList">
+							<div class="list-item answer-container">
+								<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
+								<input type="text" class="answer-option">
+							</div>
+							<div class="list-item answer-container">
+								<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
+								<input type="text" class="answer-option">
+							</div>
 						</div>
-						<div class="list-item answer-container">
-							<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
-							<input type="text" class="answer-option">
-						</div>
-					</div>
-					<span id="addAnswer" class="add-list-item glyphicon glyphicon-plus"></span>			
-			</div>										
-			
-		</div>					
+						<span id="addAnswer" class="add-list-item glyphicon glyphicon-plus"></span>			
+				</div>										
+				
+			</div>
+		</div>
 		
-
-		<div id="employeeSkillsContainer" class="section-container">
+		<div id="employeeSkillsContainer" class="page-section">
 			<div class="item">
 					<p>Required</p>					
 					<div id="requiredSkillsContainer" class="list-items-container skills-container">

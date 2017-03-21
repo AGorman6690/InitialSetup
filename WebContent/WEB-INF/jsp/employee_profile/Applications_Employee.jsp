@@ -17,7 +17,7 @@
 					<th id="action-th" class="left-edge">Status</th>					
 					<th class="header-dropdown" data-sort-attr="data-employment-proposal-amount">
 						<span data-toggle-id="sort_proposed-amount" >
-							Proposed Amount<span class="glyphicon glyphicon-menu-down"></span>
+							Amount<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
 						<div id="sort_proposed-amount" class="dropdown-container sort-container">
 							<label>
@@ -105,7 +105,7 @@
 							data-job-start-date="${applicationDto.jobDto.milliseconds_startDate }"
 							data-job-end-date="${applicationDto.jobDto.milliseconds_endDate }"
 							data-job-duration-days="${applicationDto.jobDto.workDays.size() }"
-							data-distance="${applicationDto.jobDto.distance }"
+							data-job-distance="${applicationDto.jobDto.distance }"
 							>
 							<td>
 								<a class="accent ${applicationDto.application.status == 3 ? 'accepted' : ''}"

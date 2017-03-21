@@ -27,6 +27,7 @@
 
 .calendar-container .calendar td.available{
 	background: #bbbbbb;
+/* 	background: #b7c7e0; */
 	cursor: pointer;
 }
 

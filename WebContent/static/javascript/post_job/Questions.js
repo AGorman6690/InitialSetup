@@ -44,7 +44,8 @@ $(document).ready(function(){
 		
 	})
 	
-	$("body").on("click", "#newQuestion.clickable", function(){
+//	$("body").on("click", "#newQuestion.clickable", function(){
+	$("#create-new-question").click(function(){
 		
 		clearAllInputs($("#questionsContainer"));
 		enableAllInputFields($("#questionsContainer"));
@@ -198,8 +199,8 @@ function deleteQuestion(){
 }
 
 function setDisplay_addedQuestions(){
-	if(questions.length > 0) $("#addedQuestions").show();
-	else $("#addedQuestions").hide();
+	if(questions.length > 0) $("#addedQuestionsContainer").show();
+	else $("#addedQuestionsContainer").hide();
 }
 function showSelectedQuestion(){
 	

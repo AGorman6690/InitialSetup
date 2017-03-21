@@ -2,45 +2,38 @@ var selectedDays = [];
 
 $(document).ready(function(){
 	
+	$("#create-new-question").click(function(){
+		setDisplay_createQuestionContainer();
+	})
 	
-	
-	$("#nextSection").click(function(){
-		var $selectedSection = $("#postSections").find(".post-section.selected-section").eq(0);			
+	$("#next-section, #previous-section").click(function(){
 		
-		var $nextSection = $selectedSection.next();
-		
-		if($nextSection.hasClass("post-section") == 0){
-			$nextSection = ($("#postSections").find(".post-section").eq(0));
-		}
-		
-		$nextSection.click();
-		
-		
-	})	
+		var $nextSection;
+		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
 
-	$("#submitPosting_preview").click(function(){
+		if($(this).attr("id") == "next-section") $nextSection = $selectedSection.next();
+		else  $nextSection = $selectedSection.prev();
+		
+		if($nextSection.hasClass("select-page-section") == 0){
+			$nextSection = $("#select-page-section-container").find(".select-page-section").eq(0);
+		}		
+		$nextSection.click();				
+	})	
+	
+
+	$("#proceed-to-preview-job-posting").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
 //		if(arePostJobInputsValid()){
 			executeAjaxCall_previewJobPosting(getJobDto());
 			
-			$("#submitPosting_final").show();
-			$("#editPosting").show();
-			$("#submitPosting_preview").hide();
-			$("#copyPreviousPost").hide();
-			$("#postSections").hide();
+
+
 //		}
 	})
 	
 	$("#editPosting").click(function(){
-		 
-		$("#displayExample_jobInfo").hide();
-		$("#postJobInfoContainer").show();
-		
-		$("#submitPosting_final").hide();
-		$("#editPosting").hide();
-		$("#submitPosting_preview").show();
-		$("#copyPreviousPost").show();
-		$("#postSections").show();
+		setDisplay_previewJobPost(false);		
+
 	})
 	
 	$("#submitPosting_final").click(function(){
@@ -108,7 +101,7 @@ $(document).ready(function(){
 		
 	})
 	
-	$("#postedJobs div[data-posted-job-id]").click(function(){
+	$("#previous-job-posts div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));
 		
 		$(this).closest("#postedJobsContainer").find("[data-toggle-id]").eq(0).click();
@@ -118,7 +111,8 @@ $(document).ready(function(){
 	
 	$("#postedQuestions div[data-question-id]").click(function(){
 		importPreviousQuestion($(this).attr("data-question-id"));
-		$("#postedQuestionsContainer").find("span[data-toggle-id]").eq(0).click();
+		$("#copy-previous-question").click();
+		
 	})
 	
 	$("body").on("click", "#employeeSkillsContainer .add-list-item", function(){
@@ -141,6 +135,25 @@ $(document).ready(function(){
 	
 	
 })
+
+function setDisplay_previewJobPost(doShowPreview){
+
+	if(doShowPreview){
+		$("#preview-job-posting-container").show();
+		$("#post-job-container").hide();
+		$("#postSections").hide();		
+	}
+	else{
+		$("#preview-job-posting-container").hide();
+		$("#post-job-container").show();
+		$("#postSections").show();
+	}
+	
+}
+
+function setDisplay_createQuestionContainer(){
+	$("#create-question-container").show();
+}
 
 function addAnotherSkill($listItemsContainer){
 	var $aSkillContainer = $listItemsContainer.find(".list-item").eq(0);			
@@ -192,6 +205,8 @@ function importPreviousQuestion(questionId){
 		setClickableness_ForQuestionActions(true, true, false, false);
 		
 		showQuestionDto(questionDto);
+		
+		setDisplay_createQuestionContainer();
 	}	
 
 	function _error() {
@@ -230,7 +245,7 @@ function importPreviousJobPosting(jobId){
 
 function showPostJobSections(){
 	$(".hide-on-load").each(function(){ $(this).removeClass("hide-on-load") });
-	$("#postedJobsContainer").hide();
+	$("#copy-or-new-container").hide();
 }
 
 function setControlValues(jobDto){
@@ -450,10 +465,9 @@ function executeAjaxCall_previewJobPosting(jobDto){
 	function _success(html_jobInfo) {
 		broswerIsWaiting(false);	
 	
+		setDisplay_previewJobPost(true);
 	
-		$("#displayExample_jobInfo").show();
 		$("#displayExample_jobInfo").html(html_jobInfo);
-		$("#postJobInfoContainer").hide();
 		
 		setWorkDays();
 		initCalendar_JobInfo();

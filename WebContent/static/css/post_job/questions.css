@@ -14,7 +14,7 @@
 
 #addedQuestions{
 /* 	padding:20px 0px; */
-	display: none;
+/* 	display: none; */
 }
 #addedQuestions a{
 	display:block;
@@ -34,7 +34,7 @@
 
 #addedQuestions a.selected{
     color: #163b3d;
-    /* font-size: 18px; */
+    font-size: 17px;
     font-weight: bold;
     text-decoration: underline;
 }
@@ -70,6 +70,11 @@
 	padding-top:4px;
 }
 
+#timesTableContainer{
+    width: 700px;
+    margin: auto;
+    display: none;
+}
 #questionsContainer .header.row{
 	padding-bottom:0px;
 }
@@ -80,7 +85,6 @@
 
 #postedQuestions{
 	width:350px;
-	left: 175px;
 	text-align: left;
 /* 	height:500px; */
 /* 	overflow: scroll;  */

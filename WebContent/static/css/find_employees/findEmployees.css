@@ -1,7 +1,6 @@
-#location #miles,
 #location #city,
 #location #street{
-	width: 150px;
+	width: 200px;
 }
 
 #location #state,
@@ -17,7 +16,7 @@
 }
 
 #filtersContainer .filter{
-	padding-bottom: 20px;
+	padding-bottom: 45px;
 }
 
 #filtersContainer .filter-value{
@@ -31,6 +30,7 @@
 
 #filtersContainer{
 	border-bottom: 1px solid #cacaca;
+	text-align: center;
 }
 
 #resultsContainer{
@@ -69,3 +69,42 @@ td.days-available .calendar-container td.is-not-available a{
 span.toggle-availability-calendar{
 	cursor: pointer;
 }
+
+#what-kind-of-job-container{
+	padding: 50px 0px;
+	text-align: center;	
+}
+
+#what-kind-of-job-container p{
+	font-size: 20px;
+    margin-bottom: 20px;	
+}
+
+#what-kind-of-job-container button{
+	width: 340px;
+	font-size: 19px;
+}
+
+#posted-jobs-container{
+	display: inline-block;
+	
+}
+
+#posted-jobs{
+	margin-left: 20px;
+	width: 340px;
+}
+
+#posted-jobs [data-posted-job-id]{
+	padding: 10px 10px;
+}
+
+#posted-jobs [data-posted-job-id]:hover{
+	background: #cacaca;
+	cursor:pointer;
+}
+
+.hide-on-load{
+	display: none;
+}
+

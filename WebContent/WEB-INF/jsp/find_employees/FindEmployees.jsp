@@ -14,21 +14,26 @@
 
 
 <div class="container">
-	
-	<div id="filtersContainer">
-		<c:if test="${!empty jobDtos_current}">
-			<div id="loadCurrentJobContainer" class="filter">
-				<h3>Current Jobs</h3>
-				<div class="filter-value">
-					<select>
-						<option selected disabled>Select a job</option>
-						<c:forEach items="${jobDtos_current }" var="jobDto">
-							<option data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</option>
-						</c:forEach>
-					</select>
-				</div>
+
+<c:if test="${!empty jobDtos_current}">
+	<div id="what-kind-of-job-container">
+		<p>Find employees for a job...</p>
+		<div id="posted-jobs-container" class="dropdown-container" data-toggle-id="posted-jobs">
+			<button class="sqr-btn teal">I have already posted</button>
+			<div id="posted-jobs" class="dropdown-style">
+				<c:forEach items="${jobDtos_current }" var="jobDto">
+					<div data-posted-job-id="${jobDto.job.id }">${jobDto.job.jobName }</div>
+				</c:forEach>
 			</div>
-		</c:if>
+		</div>			
+		<button id="job-i-might-post" class="sqr-btn teal">I am thinking about posting</button>
+	</div>
+</c:if>
+
+
+	
+	<div id="filtersContainer" class="${!empty jobDtos_current ? 'hide-on-load' : ''}">
+
 		<div id="locationFilterContainer" class="filter">
 			<h3>Location</h3>
 			<div id="location" class="filter-value">
@@ -39,7 +44,7 @@
 			</div>
 		</div>
 		<div id="availabilityFilterContainer" class="filter">
-			<h3>Availability</h3>
+			<h3>Work Days</h3>
 <!-- 			<div class="filter-value"> -->
 <!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
 <!-- 			</div> -->
@@ -49,12 +54,13 @@
 				<button class="clear-calendar">Clear</button>
 			</div>
 		</div>
-		<div><button id="findEmployees">Get Employees</button></div>
+		
 		<div id="categoriesFilterContainer" class="filter">
 			<h3>Categories</h3>
 			<div  class="filter-value"></div>
 		</div>	
 		
+		<div><button id="findEmployees" class="sqr-btn green">Get Employees</button></div>
 	</div>
 	<div id="resultsContainer">
 		<h3>Results</h3>

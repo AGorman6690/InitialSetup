@@ -126,11 +126,11 @@ function getSortedRows(doSortAscending, sortAttr, $table){
 			while(searchIndex < sortedRows.length ){
 				
 				if(doSortAscending == 1){
-					if(parseInt(currentRow.value) > parseInt(sortedRows[searchIndex].value)) searchIndex += 1;
+					if(parseFloat(currentRow.value) > parseFloat(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 				else{
-					if(parseInt(currentRow.value) < parseInt(sortedRows[searchIndex].value)) searchIndex += 1;
+					if(parseFloat(currentRow.value) < parseFloat(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 			} 

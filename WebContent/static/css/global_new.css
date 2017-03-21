@@ -24,6 +24,22 @@ input, select, textarea{
     padding:5px 10px;
 }
 
+.sqr-btn.teal{
+	padding: 15px 20px;
+	color: #ffffff;
+	background: #197994;
+	font-size: 19px;
+	margin: 0px 20px;
+}
+
+.sqr-btn.green{
+	padding: 10px 25px;
+	color: #ffffff;
+	background: #163b3d;
+	font-size: 18px;
+	margin: 0px 20px;
+}
+
 .button-group button{
     border-radius: 0;
     border: 1px solid rgb(192,192,192);
