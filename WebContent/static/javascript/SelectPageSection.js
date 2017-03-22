@@ -35,6 +35,7 @@ function showPageSection($e){
 }
 
 function initPage_selectPageSection(){
+	var d = $(".select-page-section-container .select-page-section.selected")
 	$(".select-page-section-container .select-page-section.selected").click();
 	
 }

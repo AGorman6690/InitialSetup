@@ -46,6 +46,7 @@ $(document).ready(function(){
 		
 		var $th = $(this).closest("th[data-sort-attr]");
 		var $table = $(this).closest("table");		
+//		var $tbody = $(this).closest("thead").siblings("tbody").eq(0);
 		var sortAttr = $(this).closest("th[data-sort-attr]").attr("data-sort-attr");
 		var doSortAscending = $(this).attr("data-sort-ascending");
 		
@@ -99,9 +100,9 @@ function sortTable(sortedRows, $table){
 	$(sortedRows).each(function(){
 		sortedHtml += this.html;
 	})
-		
-	$table.find("tbody").eq(0).html(sortedHtml);
-	
+
+	$table.find("> tbody").eq(0).html(sortedHtml);
+
 }
 
 function getSortedRows(doSortAscending, sortAttr, $table){

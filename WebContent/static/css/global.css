@@ -102,7 +102,9 @@ button.not-clickable{
 }
 
 
-
+.always-show{
+	display: block !important;
+}
 
 body {
   overflow-y: scroll;

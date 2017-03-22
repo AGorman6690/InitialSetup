@@ -1,5 +1,6 @@
 package com.jobsearch.job.service
 
+import java.awt.TexturePaintContext.Int;
 import java.util.List
 
 import com.jobsearch.application.service.Application
@@ -41,6 +42,12 @@ public class JobDTO {
 	 int countWageProposals_sent
 	 int countWageProposals_received
 	 int countWageProposals_received_new
+	 
+	 int countApplications_new
+	 int countApplications_received
+	 int countApplications_declined
+	 
+	 int countEmployees_hired
 	 
 	 List<Question> questions
 	 int newApplicationCount

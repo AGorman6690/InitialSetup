@@ -8,7 +8,7 @@ class WageProposal {
 	int proposedByUserId
 	int proposedToUserId	
 
-	int status
+	Integer status
 	public static Integer STATUS_SUBMITTED_BUT_NOT_VIEWED = -2
 	public static Integer STATUS_VIEWED_BUT_NO_ACTION_TAKEN = -1
 	public static Integer STATUS_COUNTERED = 0

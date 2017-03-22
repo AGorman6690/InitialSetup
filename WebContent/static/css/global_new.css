@@ -30,6 +30,16 @@ input, select, textarea{
 	background: #197994;
 	font-size: 19px;
 	margin: 0px 20px;
+	font-weight: normal;
+}
+
+.sqr-btn.gray{
+	padding: 15px 20px;
+	color: #000000;
+	background: #f4f4f4;
+	font-size: 19px;
+	margin: 0px 20px;
+	font-weight: normal;
 }
 
 .sqr-btn.green{

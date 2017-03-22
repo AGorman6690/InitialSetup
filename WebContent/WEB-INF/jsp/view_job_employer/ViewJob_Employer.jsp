@@ -14,7 +14,6 @@
 	<%@ include file="../includes/resources/JobInformation.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
-	<link rel="stylesheet" type="text/css" href="../static/css/profile_employer/profile_employer.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
@@ -68,7 +67,7 @@
 					<div id="employees" class="">
 					<c:choose>
 						<c:when test="${context == 'complete' }">
-							<%@ include file="./Employee_Ratings.jsp" %>
+<%-- 							<%@ include file="./Employee_Ratings.jsp" %> --%>
 						</c:when>
 						<c:otherwise>	
 							<%@ include file="./Employees.jsp" %>					

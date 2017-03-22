@@ -1,9 +1,12 @@
 package com.jobsearch.model
 
 public class RateCriterion {
-	int rateCriterionId
+	Integer rateCriterionId
 	String name
-	int employeeId
-	int jobId
+	Integer employeeId
+	Integer jobId
+	boolean isUsedToRateEmployee
 	Double value
+	
+	public static int VALUE_NOT_YET_RATED = -1;
 }

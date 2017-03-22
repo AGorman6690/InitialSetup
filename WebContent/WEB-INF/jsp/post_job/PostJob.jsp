@@ -1,28 +1,18 @@
 <%@ include file="../includes/Header.jsp"%>
-<%-- <%@ include file="../includes/resources/PageContentManager.jsp" %> --%>
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 <%@ include file="../includes/resources/JobInformation.jsp" %>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/postJob.css" /> -->
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/sideBar.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
-
-<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
-<script src="<c:url value="/static/javascript/Category.js" />"></script>
-<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>		
-
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/post_job/post_job_new.css" />				
-			
-			
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/post_job/post_job_new.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/post_job/questions.css" />			
+
+<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/SubmitValidation.js" />"></script>
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
-
 
 <c:if test="${!empty postedJobs }">
 	<div id="copy-or-new-container">
@@ -35,11 +25,9 @@
 				</c:forEach>
 			</div>					 
 		</div>
-		<button id="startNewJob" class="sqr-btn">Start a new job posting</button>
-		
+		<button id="startNewJob" class="sqr-btn">Start a new job posting</button>		
 	</div>			
 </c:if>	
-
 
 <div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
 	<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
@@ -51,7 +39,6 @@
 	<span class="select-page-section" data-page-section-id="questionsContainer">Questions</span>
 	<span class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
 </div>
-
 
 <div class="container ${!empty postedJobs ? 'hide-on-load' : '' }">
 

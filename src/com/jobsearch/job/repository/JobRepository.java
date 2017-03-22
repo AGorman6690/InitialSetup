@@ -24,6 +24,7 @@ import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -691,7 +692,29 @@ public class JobRepository {
 		return JobRowMapper(sql, args.toArray());
 	}
 
-
+	public List<Job> getJobs_byEmployerAndStatuses(int userId_employer, List<Integer> jobStatuses) {
+		
+		
+		String sql = "SELECT * FROM job j"
+					+ " WHERE j.UserId = ? AND (";
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(userId_employer);
+		
+		boolean isFirst = true;
+		for(Integer jobStatus : jobStatuses){ 
+			
+			if(isFirst) sql += "j.Status = ?";
+			else sql += " OR j.Status = ?";
+		
+			isFirst = false;
+			args.add(jobStatus);					
+		}
+		
+		sql += ")";
+		
+		return JobRowMapper(sql, args.toArray());
+	}
 
 
 	public Job getJob(int jobId) {
@@ -954,20 +977,19 @@ public class JobRepository {
 		return JobRowMapper(sql, new Object[]{ userId });
 	}
 
-	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
-		
-		// *******************************************************
-		// *******************************************************
-		// Once the back end is built for employer ratings,
-		// update the sql statement
-		// *******************************************************
-		// *******************************************************
+	public List<Job> getJobs_needRating_byUser(int userId) {
 
-		String sql = "SELECT * FROM job j"
-						+ " INNER JOIN application a ON a.JobId = j.JobId "
-						+ " WHERE a.UserId = ? AND j.Status = ?";
+		// The sub query is required because **employers**, if a job had more than 1 employee,
+		// will return the same job more than once.
 		
-		return JobRowMapper(sql, new Object[]{ userId, Job.STATUS_PAST });
+		String sql = "SELECT * FROM job j WHERE j.JobId IN ("
+						+ " SELECT DISTINCT(j1.JobId) FROM job j1"
+						+ " INNER JOIN rating r ON r.JobId = j1.JobId "
+						+ " WHERE r.RatedByUserId = ?"
+						+ " AND r.Value = ?"
+						+ " AND j1.Status = ? )";
+		
+		return JobRowMapper(sql, new Object[]{ userId, RateCriterion.VALUE_NOT_YET_RATED, Job.STATUS_PAST });
 	}
 
 	public void addSkill(Integer jobId, Skill skill) {

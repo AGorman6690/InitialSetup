@@ -35,35 +35,84 @@ public class ApplicationController {
 	@Autowired
 	JobServiceImpl jobService;
 
+	
 
-	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody
-	public void updateStatus(@RequestBody ApplicationDTO applicationDto) {
-		applicationService.updateApplicationStatus(applicationDto.getApplication().getApplicationId(),
-								applicationDto.getNewStatus());
+	@RequestMapping(value = "/apply", method = RequestMethod.POST)
+	public String applyForJob(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+
+		if (SessionContext.isLoggedIn(session)) {
+			applicationDto.getEmploymentProposalDto().setContext(EmploymentProposalDTO.CONTEXT_INITIATE);
+			applicationService.applyForJob(applicationDto, session);
+			return "redirect:/user/profile";
+		} else {
+			return "NotLoggedIn";
+		}
+
 	}
 
-	@RequestMapping(value = "/employment-proposal/counter", method = RequestMethod.POST)
-	@ResponseBody
-	public void counterOffer(@RequestBody EmploymentProposalDTO employmentProposalDto, HttpSession session) {
 
-		applicationService.insertCounterOffer(employmentProposalDto, session);
+//	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)
+//	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
+//								HttpSession session) {
+//
+//		applicationService.acceptTheProposalProposedByEmployer(wageProposalId, session);
+//
+//		return "redirect:/user/profile";
+//
+//	}
+	
+	
+	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
+	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
+												@RequestParam(name = "c", required = true) String c, 
+												HttpSession session) {
+
+		applicationService.respondToEmploymentProposal(employmentProposalDto, session, c);
+	
+		return "";
+
 	}
+	
+//	@RequestMapping(value = "/employment-proposal/approve/applicant", method = RequestMethod.GET)
+//	public String approveOffer(@RequestBody EmploymentProposalDTO employmentProposalDto,
+//								HttpSession session) {
+//
+//		applicationService.approveTheProposalAcceptedByEmployer(employmentProposalDto, session);
+//
+//		return "redirect:/user/profile";
+//
+//	}
+//	
+//	@RequestMapping(value = "/employment-proposal/decline", method = RequestMethod.GET)
+//	public String declineOffer(@RequestBody EmploymentProposalDTO employmentProposalDto,
+//								HttpSession session) {
+//
+//		employmentProposalDto.setContext(EmploymentProposalDTO.CONTEXT_DECLINE);		
+////		applicationService.processEmploymentProposal(employmentProposalDto, session);
+//		
+//		return "redirect:/user/profile";
+//	}
 
-	@RequestMapping(value = "/wage-proposal/accept/employer", method = RequestMethod.POST)
-	@ResponseBody
-	public String acceptOffer_Employer(@RequestParam(name = "wageProposalId", required = true) int wageProposalId,
-										@RequestParam(name = "days", required = false) Integer days,
-										@RequestParam(name = "hours", required = false) Integer hours,
-										@RequestParam(name = "minutes", required = false) Integer minutes,
-										HttpSession session) {
 
-		applicationService.acceptWageProposal_Employer(wageProposalId, session, days, hours, minutes);
+//	@RequestMapping(value = "/employment-proposal/counter", method = RequestMethod.POST)
+//	@ResponseBody
+//	public void counterOffer(@RequestBody EmploymentProposalDTO employmentProposalDto, HttpSession session) {
+//
+//		applicationService.insertCounterOffer(employmentProposalDto, session);
+//	}
 
-		WageProposal wageProposal = applicationService.getWageProposal(wageProposalId);
-		return JSON.stringify(wageProposal);
-
-	}
+//	@RequestMapping(value = "/employment-proposal/accept/employer", method = RequestMethod.POST)
+//	@ResponseBody	
+//	public String acceptOffer_Employer(@RequestBody EmploymentProposalDTO employmentProposalDTO,
+//											HttpSession session) {	
+//
+//		applicationService.acceptProposalMadeByEmployee(employmentProposalDTO, session);
+//
+//
+//		return "";
+//
+//	}
 	
 	
 	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)
@@ -97,29 +146,19 @@ public class ApplicationController {
 		applicationService.initiateContact_byEmployer(applicationDto, session);
 	}
 
-	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)
-	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
-								HttpSession session) {
-
-		applicationService.acceptWageProposal_Employee(wageProposalId, session);
-
-		return "redirect:/user/profile";
-
-	}
-	
-	@RequestMapping(value = "/wage-proposal/decline", method = RequestMethod.GET)
-	public String declineOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
-								HttpSession session) {
-
-		applicationService.declineWageProposalStatus(wageProposalId, session);
-
-		return "redirect:/user/profile";
-	}
 	
 	@RequestMapping(value = "/employer/initiate-contact/application-invite", method = RequestMethod.POST)
 	@ResponseBody
 	public void inviteToApply(@RequestBody ApplicationInvite applicationInvite, HttpSession session) {
 
 		applicationService.insertApplicationInvite(applicationInvite, session);
+	}
+	
+	
+	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
+	@ResponseBody
+	public void updateStatus(@RequestBody ApplicationDTO applicationDto) {
+		applicationService.updateApplicationStatus(applicationDto.getApplication().getApplicationId(),
+								applicationDto.getNewStatus());
 	}
 }

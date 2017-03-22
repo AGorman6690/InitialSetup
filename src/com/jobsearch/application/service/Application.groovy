@@ -18,12 +18,21 @@ public class Application {
 	int hasBeenViewed
 	LocalDateTime employerAcceptedDate
 	LocalDateTime expirationDate
+
+	// *************************************************************************
+	// *************************************************************************
+	// Should the status be replaced by several boolean properties?????
+	// I'm beginning to think so: 
+	// isOpen
+	// isConsidered
+	// isProposedByEmployer
+	// isCanceledDueToTimeConflict
+	// isAccepted
+	// *************************************************************************
+	// *************************************************************************
 	
 	int status	
 	public static Integer STATUS_DOES_NOT_EXIST = -999;
-	
-	
-
 	public static Integer STATUS_PROPOSED_BY_EMPLOYER = -1;	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;

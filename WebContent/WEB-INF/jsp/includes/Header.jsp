@@ -148,7 +148,7 @@
 				<span id="jobNames">
 					<c:forEach items="${jobs_needRating }" var="job">
 						<span><a class="job accent"
-							   href="/JobSearch/job/${job.id }/rate-employer">
+							   href="/JobSearch/job/${job.id }/rate-${sessionScope.user.profileId == 1 ? 'employer' : 'employees' }">
 								${job.jobName }</a></span>
 					</c:forEach>
 				</span>		

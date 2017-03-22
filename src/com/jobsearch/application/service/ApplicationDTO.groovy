@@ -40,6 +40,11 @@ class ApplicationDTO {
 	
 	int newStatus
 	
+	
+	// ****************************************************************
+	// These have been added to EmploymentProposalDTO.
+	// Remove them.
+	// ****************************************************************
 	Integer days_offerExpires
 	Integer hours_offerExpires
 	Integer minutes_offerExpires

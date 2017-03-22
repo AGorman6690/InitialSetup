@@ -1,0 +1,45 @@
+h2{
+	font-weight: bold;
+	font-size: 17px;
+	color: #163b3d;
+}
+
+p,
+p a{
+	font-weight: normal;
+	font-size: 16px;
+	color: #000000;	
+}
+
+.item > p,
+.my-rating-container{
+	padding-left: 50px;	
+}
+
+.my-rating-container{
+	
+	padding-bottom: 60px;
+}
+
+textarea{
+	width: 350px;
+}
+
+.rating-container{
+	padding-left: 30px;
+}
+
+.my-rating-container .rating-container .clear-rating{
+	display: none;
+}
+
+.item{
+	padding-bottom: 25px;
+}
+
+.my-container{
+	width: 700px;
+	margin: auto;
+	padding-top: 35px;
+}
+

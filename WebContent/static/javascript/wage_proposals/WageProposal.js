@@ -39,9 +39,10 @@ $(document).ready(function(){
 		
 	})
 	
-	$(".confirmation-container .send").click(function() {})
+	$(".confirmation-container .send").click(function() { sendEmploymentProposal($(this)) })
 	
 	$(".confirmation-container .edit").click(function() { toggleConfirmationContainer($(this)) })
+	
 	
 	
 	
@@ -163,6 +164,53 @@ $(document).ready(function(){
 //
 //	return wageProposalDto;
 //}
+
+
+function sendEmploymentProposal($e){
+	var context = "accept-by-employer";
+	var $responseContainer = $e.closest(".response-container");
+	
+	var employmentProposalDto = {};
+	
+	employmentProposalDto.applicationId = $e.closest("tr[data-application-id]")
+														.eq(0)
+														.attr("data-application-id");
+	
+	if($responseContainer.find(".wage-proposal-container button.counter.selected").size() > 0){
+		context = "counter";
+		employmentProposalDto.amount = $(".counter-container.counter-wage input").val();
+	}
+	
+	if($responseContainer.find(".work-day-proposal-container button.counter.selected").size() > 0){
+		context = "counter";
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+								$(".counter-work-days .calendar"), "yy-mm-dd", "proposed");
+	}
+	
+	employmentProposalDto.days_offerExpires = $responseContainer.find(".set-expiration input.days").val();
+	employmentProposalDto.hours_offerExpires = $responseContainer.find(".set-expiration input.hours").val();
+	employmentProposalDto.minutes_offerExpires = $responseContainer.find(".set-expiration input.minutes").val();
+
+	
+		
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type : "POST",
+		url :"/JobSearch/employment-proposal/respond?c=" + context,			
+		headers : getAjaxHeaders(),
+		data: JSON.stringify(employmentProposalDto),
+		contentType : "application/json",	
+		dataType : "text",
+	}).done(function(response) {			
+
+		broswerIsWaiting(false);
+		location.reload(true);
+		
+	}).error(function() {
+		broswerIsWaiting(false);
+	});		
+}
 
 function setExpirationTimeToConfirm($e){
 	var $responseContainer = $e.closest(".response-container");

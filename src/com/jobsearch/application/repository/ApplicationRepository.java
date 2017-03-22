@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.EmploymentProposalDTO;
@@ -105,6 +106,30 @@ public class ApplicationRepository {
 		});
 	}
 
+	public List<EmploymentProposalDTO> EmploymentProposalDTOMapper(String sql, Object[] args) {
+		return jdbcTemplate.query(sql, args, new RowMapper<EmploymentProposalDTO>() {
+			@Override
+			public EmploymentProposalDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
+
+				EmploymentProposalDTO employmentProposalDto = new EmploymentProposalDTO();
+				
+				employmentProposalDto.setAmount(String.format("%.2f", rs.getFloat("Amount")));
+				employmentProposalDto.setApplicationId(rs.getInt("ApplicationId"));
+				employmentProposalDto.setEmploymentProposalId(rs.getInt("WageProposalId"));
+				employmentProposalDto.setStatus(rs.getInt("Status"));
+				employmentProposalDto.setProposedByUserId(rs.getInt("ProposedByUserId"));
+				employmentProposalDto.setProposedToUserId(rs.getInt("ProposedToUserId"));
+				
+				
+				employmentProposalDto.setDateStrings_proposedDates(
+										applicationService.getProposedWorkDays(
+												employmentProposalDto.getEmploymentProposalId()));
+
+				return employmentProposalDto;
+			}
+		});
+	}
+	
 	public List<Application> getApplicationsByUser(int userId) {
 		String sql = "SELECT * FROM application WHERE UserId = ?";
 
@@ -177,19 +202,18 @@ public class ApplicationRepository {
 
 	}
 	
-	public void updateApplication_PendingApplicantApproval(int wageProposalId,
+	public void updateApplication_PendingApplicantApproval(Integer applicationId,
 																LocalDateTime employerAcceptedDate,
 																LocalDateTime expirationDate) {
 	
 		String sql = "UPDATE application a"
-					+ " INNER JOIN wage_proposal wp on wp.ApplicationId = a.ApplicationId"
 					+ " SET a.Status = ?, a.EmployerAcceptedDate = ?, a.ExpirationDate = ?"
-					+ " WHERE wp.WageProposalId = ?";
+					+ " WHERE a.ApplicationId = ?";
 		
 		jdbcTemplate.update(sql, new Object[]{ Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL,
 												employerAcceptedDate.toString(),
 												expirationDate.toString(),
-												wageProposalId });
+												applicationId });
 		
 	}
 
@@ -367,6 +391,7 @@ public class ApplicationRepository {
 			
 		} catch (Exception e) {
 			// TODO: handle exception
+			int i = 0;
 		}
 
 		
@@ -407,21 +432,25 @@ public class ApplicationRepository {
 
 			// Get the new application id from the result
 			result.next();
-			int newApplicationId = result.getInt("ApplicationId");
+			Integer newApplicationId = result.getInt("ApplicationId");
 
-			// If this was NOT an invite to apply, insert the employment proposal
-			if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
-				applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
-				applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());	
-			}			
-
-			// Add answers
-			if(verificationService.isListPopulated(applicationDto.getAnswers())){
-				for (Answer answer : applicationDto.getAnswers()) {
-					answer.setUserId(applicationDto.getApplicantId());
-					applicationService.addAnswer(answer);
-
-				}	
+			if(newApplicationId != null){
+			
+				// If this was NOT an invite to apply, insert the employment proposal
+				if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
+					applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
+					applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());	
+				}			
+	
+				// Add answers  
+				if(verificationService.isListPopulated(applicationDto.getAnswers())){
+					for (Answer answer : applicationDto.getAnswers()) {
+						answer.setUserId(applicationDto.getApplicantId());
+						applicationService.addAnswer(answer);
+	
+					}	
+				}
+				
 			}
 
 		} catch (SQLException e) {
@@ -452,6 +481,19 @@ public class ApplicationRepository {
 		} else {
 			return null;
 		}
+	}
+	
+
+
+	public EmploymentProposalDTO getCurrentEmploymentProposal(Integer applicationId) {
+	
+		String sql = "SELECT * FROM wage_proposal WHERE WageProposalId = "
+				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ?)";
+
+		List<EmploymentProposalDTO> result = this.EmploymentProposalDTOMapper(sql, new Object[] { applicationId });
+		
+		if (verificationService.isListPopulated(result)) return result.get(0);
+		else return null;
 	}
 
 	public float getCurrentWageProposedBy(int applicationId, int proposedById) {
@@ -573,6 +615,50 @@ public class ApplicationRepository {
 											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
 											Integer.class);
 
+	}
+	
+	
+
+
+	public int getCountApplications_new(Integer jobId) {
+		
+		String sql = "SELECT COUNT(*) FROM application a"
+				+ " WHERE a.JobId = ?"
+				+ " AND a.HasBeenViewed = 0";
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
+	}
+	
+	public int getCountApplications_received(Integer jobId) {
+		
+		String sql = "SELECT COUNT(*) FROM application a"
+				+ " WHERE a.JobId = ?"
+				+ " AND ( a.Status = ?"
+				+ " OR a.Status = ?"
+				+ " OR a.Status = ? )";
+				
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,
+																Application.STATUS_SUBMITTED,
+																Application.STATUS_CONSIDERED,
+																Application.STATUS_PROPOSED_BY_EMPLOYER}, Integer.class);
+	}
+
+	public int getCountApplications_declined(Integer jobId) {
+		
+		String sql = "SELECT COUNT(*) FROM application a"
+				+ " WHERE a.JobId = ?"
+				+ " AND a.Status = ?";
+				
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId, Application.STATUS_DECLINED}, Integer.class);
+	}
+	
+	
+	public int getCountEmployees_hired(Integer jobId) {
+		
+		String sql = "SELECT COUNT(*) FROM employment e"
+				+ " WHERE e.JobId = ?";
+				
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
 	}
 
 	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
@@ -701,6 +787,13 @@ public class ApplicationRepository {
 		
 	}
 
+
+	public EmploymentProposalDTO getEmploymentProposalDto(int employmentProposalId) {
+
+		String sql = "SELECT * FROM wage_proposal wp WHERE wp.WageProposalId = ?"; 
+
+		return this.EmploymentProposalDTOMapper(sql, new Object[]{ employmentProposalId }).get(0);
+	}
 
 
 

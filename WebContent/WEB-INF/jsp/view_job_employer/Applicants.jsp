@@ -143,11 +143,11 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${jobDto.questions }" var="question">
+									<c:forEach items="${jobDto.questions }" var="question" varStatus="status">
 										<tr class="no-filter">
 											<td>	
-												<label>
-													<input type="checkbox" checked
+												<label class="display-question">
+													<input type="checkbox" ${status.first ? 'checked' : '' }
 														data-question-id="${question.questionId }"
 														class="show-question-and-answers">
 														<span></span>
@@ -197,11 +197,11 @@
 									>Select All
 							</label>
 							<div class="options">
-								<label>
-									<input id="" type="checkbox"
-										name="application-status"
-										data-filter-attr-value="0">No action taken
-								</label>
+<!-- 								<label> -->
+<!-- 									<input id="" type="checkbox" -->
+<!-- 										name="application-status" -->
+<!-- 										data-filter-attr-value="0">No action taken -->
+<!-- 								</label> -->
 								<label>
 									<input id="" type="checkbox"
 										name="application-status"
@@ -242,7 +242,6 @@
 					</td>
 					
 					<td class="table-view">
-<%-- 						<%@ include file="../wage_proposal/WageProposal.jsp" %> --%>
 						<%@ include file="../wage_proposal/WageProposal_NEW.jsp" %>
 					</td>									
 					<td class="table-view">
@@ -285,19 +284,19 @@
 				<c:if test="${jobDto.questions.size() > 0 }">
 					<td class="left table-view">
 						<div class="vert-border">
-						<c:forEach items="${applicationDto.questions }" var="question">
-							<div data-question-id="${question.questionId }" class="question-container">
+						<c:forEach items="${applicationDto.questions }" var="question" varStatus="status_questions">
+							<div data-question-id="${question.questionId }"
+								class="question-container ${status_questions.first ? 'displayed' : 'not-first' }">
 								<p class="question">${question.text }</p>										
 								<p class="answer">
-									<c:set var="answerCount" value="${question.answers.size() }"></c:set>
-									<c:set var="i" value="${0 }"></c:set>
-									<c:forEach items="${question.answers }" var="answer">
-										${answer.text}<c:if test="${i < answerCount - 1 }">,</c:if>											
-										<c:set var="i" value="${i +1 }"></c:set>
-									</c:forEach>
-									
+									<c:forEach items="${question.answers }" var="answer" varStatus="status">
+										${answer.text}${!status.last ? ',' : '' }										
+									</c:forEach>									
 								</p>
 							</div>
+							<c:if test="${!status_questions.first && status_questions.last }">
+								<span class="glyphicon glyphicon-menu-down show-all-questions"></span>
+							</c:if>
 						</c:forEach>
 						</div>
 					</td>

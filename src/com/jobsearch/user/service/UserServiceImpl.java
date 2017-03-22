@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.persistence.Lob;
 import javax.servlet.http.HttpSession;
 
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -224,10 +225,6 @@ public class UserServiceImpl {
 		return repository.getEmpolyeesByJob(jobId);
 	}
 
-	public void hireApplicant(int userId, int jobId) {
-		repository.hireApplicant(userId, jobId);
-
-	}
 
 	public List<String> getAvailableDays(int userId) {
 		return repository.getAvailableDays(userId);
@@ -293,8 +290,8 @@ public class UserServiceImpl {
 
 	}
 
-	public List<RateCriterion> getRatingCriteia() {
-		return repository.getRatingCriteria();
+	public List<RateCriterion> getRatingCriteia_toRateEmployee() {
+		return repository.getRatingCriteia_toRateEmployee();
 	}
 
 	public JobSearchUser validateUser(int userId) {
@@ -630,10 +627,16 @@ public class UserServiceImpl {
 
 		// Update the application's status to hired
 		applicationService.updateApplicationStatus(application.getApplicationId(), Application.STATUS_ACCEPTED);
+		
+		this.insertEmployment(application.getUserId(), application.getJobId());
 
-		// Hire the applicant
-		this.hireApplicant(application.getUserId(), application.getJobId());
+	}
 
+
+	private void insertEmployment(int userId, int jobId) {
+		
+		repository.insertEmployment(userId, jobId);
+		
 	}
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
@@ -696,20 +699,10 @@ public class UserServiceImpl {
 
 	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
 
-		List<JobDTO> jobDtos_jobsWaitingToStart = jobService.getJobDtos_JobsWaitingToStart_Employer(employer.getUserId());
+		List<JobDTO> jobDtos = jobService.getJobDtos_employerProfile(employer.getUserId());
 
-		List<JobDTO> jobDtos_jobsInProcess = jobService.getJobDtos_JobsInProcess_Employer(employer.getUserId());
-
-		List<JobDTO> jobDtos_jobsCompleted = jobService.getJobDtos_JobsCompleted_Employer(employer.getUserId());
-
+		model.addAttribute("jobDtos", jobDtos);
 		
-		model.addAttribute("yetToStartJobs_Dtos", jobDtos_jobsWaitingToStart);
-		model.addAttribute("jobDtos_jobsInProcess", jobDtos_jobsInProcess);
-		model.addAttribute("jobDtos_jobsCompleted", jobDtos_jobsCompleted);
-		
-
-
-
 		// *********************************************************************
 		// *********************************************************************
 		// When the profile is requested and presented to the user,
@@ -776,7 +769,7 @@ public class UserServiceImpl {
 		
 		RatingDTO ratingDto = new RatingDTO();
 		
-		ratingDto.setRateCriteria(this.getRatingCriteia());		
+		ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployee());		
 		
 		for(RateCriterion rateCriterion : ratingDto.getRateCriteria()){
 			rateCriterion.setValue(this.getRatingValue_ByUserAndJob(rateCriterion.getRateCriterionId(),
@@ -825,11 +818,8 @@ public class UserServiceImpl {
 		
 		SessionContext.setUser(session, user);
 		
-		if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
-			List<Job> jobs_needRating = jobService.getJobs_NeedRating_FromEmployee(user.getUserId());		
-			session.setAttribute("jobs_needRating", jobs_needRating);	
-		}
-
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(user.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);	
 		
 	}
 	
@@ -979,6 +969,49 @@ public class UserServiceImpl {
 		return userDto;
 	}
 
+	public List<RateCriterion> getRatingCriteia_toRateEmployer() {
+		
+		return repository.getRateCriteria_toRateEmployer();
+	}
+
+	public void insertRatings_toRateEmployer(int jobId) {
+		
+		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
+		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployer();
+		Job job = jobService.getJob(jobId);
+		
+		
+		for(JobSearchUser employee : employees){
+			
+			for(RateCriterion rateCriterion : rateCriteria){
+				repository.insertRating(rateCriterion.getRateCriterionId(),
+											job.getUserId(),
+											job.getId(),
+											employee.getUserId());
+			}		
+			
+		}
+		
+	}
+
+
+	public void insertRatings_toRateEmployees(int jobId) {
+		
+		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
+		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployee();
+		Job job = jobService.getJob(jobId);
+
+		for(JobSearchUser employee : employees){
+			for(RateCriterion rateCriterion : rateCriteria){
+				repository.insertRating(rateCriterion.getRateCriterionId(),
+											employee.getUserId(),
+											job.getId(),
+											job.getUserId());
+			}		
+		}
+		
+		
+	}
 
 
 

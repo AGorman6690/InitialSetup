@@ -204,9 +204,13 @@ public class UserRepository {
 
 			@Override
 			public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {
+				
 				RateCriterion e = new RateCriterion();
-				e.setRateCriterionId(rs.getInt(1));
-				e.setName(rs.getString(2));
+				
+				e.setRateCriterionId(rs.getInt("RateCriterionId"));
+				e.setName(rs.getString("Name"));
+				e.setIsUsedToRateEmployee(rs.getBoolean("IsUsedToRateEmployee"));
+				
 				return e;
 			}
 		});
@@ -263,27 +267,12 @@ public class UserRepository {
 
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
 
-		String sql = "SELECT *" + " FROM user" + " INNER JOIN employment" + " ON user.UserId = employment.UserId"
-				+ " AND employment.JobId = ?";
+		String sql = "SELECT * FROM user u"
+					+ " INNER JOIN employment e ON e.UserId = u.UserId"
+					+ " AND e.JobId = ?"
+					+ " AND e.WasTerminated = 0";
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
-	}
-
-	public void hireApplicant(int userId, int jobId) {
-
-		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call hire_applicant(?, ?)}");
-
-			cStmt.setInt(1, userId);
-			cStmt.setInt(2, jobId);
-
-			cStmt.executeQuery();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
@@ -307,8 +296,8 @@ public class UserRepository {
 
 	}
 
-	public List<RateCriterion> getRatingCriteria() {
-		String sql = "SELECT * FROM ratecriterion";
+	public List<RateCriterion> getRatingCriteia_toRateEmployee() {
+		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 1";
 		return this.RateCriterionRowMapper(sql, new Object[] {});
 	}
 
@@ -787,6 +776,28 @@ public class UserRepository {
 
 		jdbcTemplate.update(sql,
 				new Object[] { minimumDesiredPay, userId });
+	}
+
+	public List<RateCriterion> getRateCriteria_toRateEmployer() {
+		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 0 ORDER BY RateCriterionId ASC";
+		return this.RateCriterionRowMapper(sql, new Object[]{});
+	}
+
+	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {
+		
+		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, Value, RatedByUserId)"
+					+ " VALUES (?, ?, ?, ?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId,
+												RateCriterion.VALUE_NOT_YET_RATED, ratedByUserId });
+		
+	}
+
+	public void insertEmployment(int userId, int jobId) {
+		
+		String sql = "INSERT INTO employment ( UserId, JobId, WasTerminated ) VALUES( ?, ?, 0)";
+		jdbcTemplate.update(sql, new Object[]{ userId, jobId } );
+		
 	}
 
 }

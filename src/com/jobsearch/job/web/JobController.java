@@ -132,20 +132,7 @@ public class JobController {
 
 	}
 	
-	
 
-	@ResponseBody
-	@RequestMapping(value = "/job/apply", method = RequestMethod.POST)
-	public String applyForJob(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
-
-		if (SessionContext.isLoggedIn(session)) {
-			applicationService.applyForJob(applicationDto, session);
-			return "redirect:/user/profile";
-		} else {
-			return "NotLoggedIn";
-		}
-
-	}
 	
 	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
 	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
@@ -279,6 +266,14 @@ public class JobController {
 		else return SessionContext.get404Page();
 	}	
 
+	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
+	public String viewRateEmployees(@PathVariable(value= "jobId") int jobId,
+									Model model, HttpSession session) {
+
+		if(jobService.setModel_ViewRateEmployees(jobId, model, session)) return "/ratings/RateEmployees";
+		else return SessionContext.get404Page();
+	}
+	
 	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
 	public ModelAndView viewEditJob(ModelAndView model) {
 

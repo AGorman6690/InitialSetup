@@ -19,6 +19,7 @@
 }
 #table_headerAnswers tbody td.question{
 	border-right: 0;
+	text-align: left;
 }
 
 #table_headerAnswers tbody td.answers{
@@ -111,6 +112,7 @@ td span.glyphicon{
 
 .question-container .answer{
 	text-align:left;
+	padding-left: 20px;	
 }
 
 .answer-container{
@@ -120,4 +122,24 @@ td span.glyphicon{
 .question-container{
 	padding:10px 0px;
 }
+
+
+.question-container.not-first{
+	display: none;
+}
+
+.question-container .question{
+    /* font-weight: bold; */
+    font-style: italic;
+}
+
+#applicantsTable .show-all-questions{
+    margin: auto;
+    display: block;
+    width: 20px;
+}
 	
+label.display-question{
+    padding: 10px;
+    width: 35px;
+}

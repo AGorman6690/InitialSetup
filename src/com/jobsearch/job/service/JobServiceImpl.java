@@ -29,6 +29,7 @@ import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
@@ -37,6 +38,8 @@ import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+
+import javafx.print.PrinterJob.JobStatus;
 
 
 @Service
@@ -168,11 +171,11 @@ public class JobServiceImpl {
 
 		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 
-		//Query the database
+		// Query the database
 		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_FUTURE);
 		
 		if(jobsWaitingToStart != null){
-			//Set the job Dtos
+			// Set the job Dtos
 			for(Job job : jobsWaitingToStart){
 				
 				JobDTO jobDto = new JobDTO();
@@ -186,7 +189,34 @@ public class JobServiceImpl {
 		return null;
 
 	}
+	
+	public List<JobDTO> getJobDtos_employerProfile(int userId) {
 
+		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+
+		//Query the database
+		List<Job> jobs = this.getJobs_byEmployerAndStatuses(userId, Arrays.asList(Job.STATUS_FUTURE,
+																					Job.STATUS_PRESENT));
+		if(jobs != null){
+
+			for(Job job : jobs){
+				
+				JobDTO jobDto = new JobDTO();
+				jobDto = this.getJobDTO_employerProfile(job, userId);
+				jobDtos.add(jobDto);
+			}
+
+			return jobDtos;		
+		}
+
+		return null;
+
+	}
+
+
+	public List<Job> getJobs_byEmployerAndStatuses(int userId, List<Integer> jobStatuses) {
+		return repository.getJobs_byEmployerAndStatuses(userId, jobStatuses);
+	}
 
 	public List<JobDTO> getJobDtos_JobsInProcess_Employer(int userId) {
 		
@@ -360,11 +390,11 @@ public class JobServiceImpl {
 	}
 	
 
-	public List<WorkDay> getWorkDays(WageProposal wageProposal) {
-		
-		Application application = applicationService.getApplication(wageProposal.getApplicationId());
-		return getWorkDays(application.getJobId());
-	}
+//	public List<WorkDay> getWorkDays(WageProposal wageProposal) {
+//		
+//		Application application = applicationService.getApplication(wageProposal.getApplicationId());
+//		return getWorkDays(application.getJobId());
+//	}
 
 
 
@@ -439,6 +469,45 @@ public class JobServiceImpl {
 	}
 
 
+	public JobDTO getJobDTO_employerProfile(Job job, int userId) {
+		
+		JobDTO jobDto = new JobDTO();
+		
+		jobDto.setJob(job);		
+		
+		// Wage Proposals
+		jobDto.setCountWageProposals_sent(
+				applicationService.getCountWageProposal_Sent(job.getId(), userId));
+		
+		jobDto.setCountWageProposals_received(
+				applicationService.getCountWageProposal_Received(job.getId(), userId));
+		
+		jobDto.setCountWageProposals_received_new(
+				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
+		
+		// Applications
+		jobDto.setCountApplications_new(
+				applicationService.getCountApplications_new(job.getId()));
+		
+		jobDto.setCountApplications_received(
+				applicationService.getCountApplications_received(job.getId()));
+		
+		jobDto.setCountApplications_declined(
+				applicationService.getCountApplications_declined(job.getId()));
+		
+		// Employees
+		jobDto.setCountEmployees_hired(
+				applicationService.getCountEmployees_hired(job.getId()));
+		
+		
+		// Other job details
+		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
+				job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
+
+		
+		return jobDto;
+		
+	}
 
 	public JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
 		
@@ -491,7 +560,21 @@ public class JobServiceImpl {
 
 
 	public void updateJobStatus(int status, int jobId) {
+		
+		// ***********************************************************
+		// ***********************************************************
+		// Job completion will be done automatically.
+		// Once that is built, insert the inital ratings there
+		if(status == Job.STATUS_PAST){
+			userService.insertRatings_toRateEmployer(jobId);
+			userService.insertRatings_toRateEmployees(jobId);
+		}
+		// ***********************************************************
+		// ***********************************************************
+		
 		repository.updateJobStatus(status, jobId);
+		
+		
 
 	}
 
@@ -1061,9 +1144,9 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getJobs_NeedRating_FromEmployee(int userId) {
+	public List<Job> getJobs_needRating_byUser(int userId) {
 		
-		return repository.getJobs_NeedRating_FromEmployee(userId);
+		return repository.getJobs_needRating_byUser(userId);
 	}
 
 	public boolean setModel_ViewRateEmployer(int jobId, Model model, HttpSession session) {
@@ -1072,15 +1155,43 @@ public class JobServiceImpl {
 		
 		if(applicationService.wasUserEmployedForJob(user.getUserId(), jobId)){
 			
+			Job job = this.getJob(jobId);
 			JobSearchUser employer = userService.getUser(this.getJob(jobId).getUserId());
-			
+			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployer() ;
+					
+			model.addAttribute("job", job);
 			model.addAttribute("employer", employer);
+			model.addAttribute("rateCriteria", rateCriteria);
 			
 			return true;
 		}
 		else return false;
 		
 	}
+	
+
+	public boolean setModel_ViewRateEmployees(int jobId, Model model, HttpSession session) {
+
+		Job job = this.getJob(jobId);
+		
+		// Verify:
+		// 1) The session user posted the job
+		// and 2) The job is closed
+		if(verificationService.didSessionUserPostJob(session, job) && 
+				job.getStatus() == Job.STATUS_PAST){
+			
+			
+			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployee();
+			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
+			
+			model.addAttribute("job", job);
+			model.addAttribute("employees", employees);
+			model.addAttribute("rateCriteria", rateCriteria);			
+			
+			return true;
+		}else return false;
+	}
+
 
 	public void addSkills(Integer jobId, List<Skill> skills) {
 		

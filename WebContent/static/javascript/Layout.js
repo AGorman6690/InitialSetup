@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	$("body").on("click", "[data-toggle-id]", function(){
+	$(document).on("click", "[data-toggle-id]", function(){
 		var toggleId = $(this).attr("data-toggle-id");
 		var toggleSpeed = $(this).attr("data-toggle-speed");
 		var $e = $("#" + toggleId);
@@ -23,8 +23,17 @@ $(document).ready(function(){
 		else if(toggleSpeed == 2){
 			$e.slideToggle(300);	
 		}else{
-			$e.slideToggle(500);	
-			$e.show();
+//			$e.slideToggle(500);	
+			if($e.is(":visible")){
+				$e.hide();
+				$e.removeClass("always-show");
+			}
+			else{
+				$e.show();
+				$e.addClass("always-show");
+			}
+			// No idea why this show() was here in tandem with the slideToggle()....
+//			$e.show();
 		}
 		
 //		var $eToToggle = $("#" + toggleId);

@@ -209,7 +209,7 @@
 
 			$.ajax({
 				type : "POST",
-				url : environmentVariables.LaborVaultHost + '/JobSearch/job/apply',
+				url : environmentVariables.LaborVaultHost + '/JobSearch/apply',
 				headers : getAjaxHeaders(),
 				contentType : "application/json",
 				data : JSON.stringify(getApplicationDTO()),

@@ -24,12 +24,12 @@ $(document).ready(function(){
     });
     
     $('.timeliness, .work-ethic, .hire-again').on('rating.change', function(event, value, caption) {
-        setRateCriterionValue($(this), value);
+//        setRateCriterionValue($(this), value);
         
       });
 	
     $('.timeliness, .work-ethic, .hire-again').on('rating.clear', function(event) {
-    	setRateCriterionValue($(this), "0");
+//    	setRateCriterionValue($(this), "0");
       });
 
 
