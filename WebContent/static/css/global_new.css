@@ -3,6 +3,11 @@
     color: #ffffff;
 }
 
+.linky-hover:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
 .selected-green{
     background-color: #163b3d !important;
     color: #ffffff !important;

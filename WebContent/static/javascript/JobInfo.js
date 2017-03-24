@@ -25,11 +25,42 @@ $(document).ready(function() {
 		
 	})
 
+	initCalendar_jobInfo_workDays();
 	
 	setWorkDays();
 	initCalendar_JobInfo();
 	initCalendar_Apply_SelectWorkDays();
 })
+
+function initCalendar_jobInfo_workDays(){
+
+	var workDays = getDateFromContainer($("#work-days-calendar-container .work-days"));
+	var $calendar = $("#work-days-calendar-container .calendar");
+	var firstDate = getMinDate($calendar)
+
+	$calendar.datepicker({
+		minDate: firstDate,
+		numberOfMonths: getNumberOfMonths($(this)),
+		beforeShowDay: function(date){
+			if(doesDateArrayContainDate(date, workDays)) return [true, "active111"];
+			else return [true, ""];
+		}		
+	})
+	
+	$calendar.datepicker("setDate", firstDate);
+	
+	
+	var html = "";
+	$calendar.find("td.active111").each(function (){
+		
+		html = "<div class='start-and-end-times'>";
+		html += "<p>12:30a</p><p>12:33p</p>";
+		html += "</div>"
+		
+		$(this).append(html);
+		
+	})
+}
 
 
 function isCalendarInDOM_applicantSelectWorkDays(){

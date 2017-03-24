@@ -748,7 +748,7 @@ public class UserRepository {
 				+ " AND r.UserId = ?"
 				+ " AND r.Value != -1"
 				+ " AND jc.CategoryId = ?";				
-		
+		 
 		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId }, Double.class);
 
 	}

@@ -205,7 +205,7 @@ public class UserController {
 		userService.updatePassword(newPassword.getPassword(), user.getEmailAddress());
 
 		if (user.getProfile().getName().equals("Employee")) {
-			model.setViewName("EmployeeProfile");
+			model.setViewName("Profile_Employee");
 		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
 		}

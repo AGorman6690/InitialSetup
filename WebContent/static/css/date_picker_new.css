@@ -4,7 +4,10 @@ button.clear-calendar{
 }
 
 
-
+.calendar th,
+.calendar td{
+	text-align: center;
+}
 
 .calendar-container{
 /* 	width:300px; */

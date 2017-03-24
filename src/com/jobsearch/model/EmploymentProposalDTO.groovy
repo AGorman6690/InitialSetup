@@ -15,14 +15,7 @@ class EmploymentProposalDTO {
 	
 	List<String> dateStrings_proposedDates
 	
-	
-	Integer context
-	public static Integer CONTEXT_INITIATE = 0
-	public static Integer CONTEXT_COUNTER = 1
-	public static Integer CONTEXT_ACCEPT_BY_EMPLOYER = 2
-	public static Integer CONTEXT_APPROVE_BY_EMPLOYEE = 3
-	public static Integer CONTEXT_DECLINE	 = 4
-	
+
 		
 	Integer status
 	public static Integer STATUS_SUBMITTED_BUT_NOT_VIEWED = -2

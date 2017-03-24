@@ -1,6 +1,7 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/DatePicker.jsp"%>
 <%@ include file="../includes/resources/JobInformation.jsp"%>
+<%@ include file="../includes/resources/SelectPageSection.jsp"%>
 
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <%-- 	<script src="<c:url value="/static/javascript/Category.js" />"></script> --%>
@@ -24,18 +25,16 @@
 		<script src="<c:url value="/static/javascript/view_job_employee/SubmitApplication.js"/>"></script>
 	</c:if>
 	
-	
-	<!-- Time picker -->
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/External/jquery.timepicker.css" />
-	<script	src="<c:url value="/static/External/jquery.timepicker.min.js" />"></script>	
+<div class="select-page-section-container">
+	<span data-page-section-id="jobInfoContainer" class="selected select-page-section">Job Information</span>
+	<span data-page-section-id="applyContainer"  class="select-page-section ">Apply</span>
+</div>
 	
 <div class="container">
 	<div class="row">
-		<div id="sideBarContainer" class="col-sm-2">
-			<%@ include file="./SideBar_EmployeeViewJob.jsp" %>
-		</div>
+
 		
-		<div class="col-sm-10" id="sectionContainers">
+		<div class="col-sm-12" id="sectionContainers">
 			<div id="applicationStatus">	
 				<c:choose>					
 					<c:when test="${context == 'find' && !empty jobDto.application}">		
@@ -55,13 +54,10 @@
 					</c:when>					
 				</c:choose>
 			</div>
-			<div id="jobInfoContainer" class="section-container">
+			<div id="jobInfoContainer" class="section-container page-section">
 				<div class="section-body">
-
-					<h4>Job Information</h4>
-					<div class="body-element-container">				
+	
 						<%@include file="../templates/JobInformation.jsp"%>						
-					</div>
 				</div>
 			</div>
 
@@ -70,7 +66,7 @@
 								(empty jobDto.application ||
 								jobDto.availabilityStatus != 1) }">
 								
-				<div id="applyContainer" class="section-container ">
+				<div id="applyContainer" class="section-container page-section">
 					<%@ include file="./ApplyContainer.jsp" %>
 				</div>
 			</c:when>

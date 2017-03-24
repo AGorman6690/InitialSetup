@@ -100,4 +100,11 @@ function setStates(){
 	$e.append('<option value="West Virginia">WV</option>');
 	$e.append('<option value="Wisconsin">WI</option>');
 	$e.append('<option value="Wyoming">WY</option>');	
+	
+	
+	var initValue = $e.attr("data-init-value");
+	$e.find("option[value='" + initValue + "']").prop("selected", true);
+	
+	
+	
 }

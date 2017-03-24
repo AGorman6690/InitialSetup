@@ -506,50 +506,43 @@ public class UserServiceImpl {
 
 	public void editEmployeeSettings(JobSearchUser user_edited, HttpSession session) {
 
-		JobSearchUser sessionUser = (JobSearchUser) session.getAttribute("user");
+		JobSearchUser sessionUser = SessionContext.getUser(session);
 		user_edited.setUserId(sessionUser.getUserId());
 		
 		this.updateHomeLocation(user_edited);		
-		this.updateMaxDistanceWillingToWork(user_edited, user_edited.getMaxWorkRadius());
-		this.updateMinimumDesiredPay(user_edited, user_edited.getMinimumDesiredPay());
+		this.updateMaxDistanceWillingToWork(user_edited);
+		this.updateMinimumDesiredPay(user_edited);
 		
-
-
 		this.updateSessionUser(session);
 	}
 
-	public void updateMinimumDesiredPay(JobSearchUser user, Double minimumDesiredPay) {
+	public void updateMinimumDesiredPay(JobSearchUser user_edited) {
 		
 		// Max distance willing to work
-		if(verificationService.isPositiveNumber(minimumDesiredPay)){
-			repository.updateMinimumDesiredPay(user.getUserId(), minimumDesiredPay);
+		if(verificationService.isPositiveNumber(user_edited.getMinimumDesiredPay())){
+			repository.updateMinimumDesiredPay(user_edited.getUserId(), user_edited.getMinimumDesiredPay());
 		}
 		
 	}
 
-	public void updateHomeLocation(JobSearchUser user) {
+	public void updateHomeLocation(JobSearchUser user_edited) {
 
-		if(user.getHomeCity() != null &&
-				user.getHomeState() != null &&
-				user.getHomeZipCode() != null){
+//		if(GoogleClient.isValidAddress(user)){
 			
-			Coordinate coordinate = GoogleClient.getCoordinate(user.getHomeCity() + " "
-					+ user.getHomeState() + " "
-					+ user.getHomeZipCode());
+			Coordinate coordinate = GoogleClient.getCoordinate(user_edited);
 
 			if (coordinate != null) {			
-				repository.updateHomeLocation(user, coordinate);
+				repository.updateHomeLocation(user_edited, coordinate);
 			}
-		}
+//		}
 
 		
 	}
 
-	public void updateMaxDistanceWillingToWork(JobSearchUser user, Integer maxWorkRadius) {
-		
-		// Max distance willing to work
-		if(verificationService.isPositiveNumber(maxWorkRadius)){
-			repository.updateMaxDistanceWillingToWork(user.getUserId(), maxWorkRadius);
+	public void updateMaxDistanceWillingToWork(JobSearchUser user_edited) {
+
+		if(verificationService.isPositiveNumber(user_edited.getMaxWorkRadius())){
+			repository.updateMaxDistanceWillingToWork(user_edited.getUserId(), user_edited.getMaxWorkRadius());
 		}
 		
 	}
@@ -896,14 +889,12 @@ public class UserServiceImpl {
 		
 	}
 
-	public double getRatingValue_ByCategory(int userId, int categoryId) {
+	public Double getRatingValue_ByCategory(int userId, int categoryId) {
 		
 		return repository.getRatingValue_ByCategory(userId, categoryId);
 	}
 
 	public void setModel_PageLoad_FindEmployees(Model model, HttpSession session) {
-		
-		
 		
 		if(SessionContext.isLoggedIn(session)){
 		
@@ -914,7 +905,6 @@ public class UserServiceImpl {
 			
 			model.addAttribute("jobDtos_current", jobDtos_current);	
 		}
-		
 		
 	}
 

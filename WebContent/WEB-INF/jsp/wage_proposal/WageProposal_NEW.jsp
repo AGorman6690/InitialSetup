@@ -18,11 +18,12 @@
 					</div>	
 				
 					<div id="response-container-${applicationDto.currentWageProposal.id }"
-						 class="response-container dropdown-style">
+						 class="response-container dropdown-style"
+						 data-application-id="${applicationDto.application.applicationId}">
 						
 						<div class="proposal-container">
 							<div class="header">
-								<button class="sqr-btn">Decline the application</button>
+								<button class="sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>
 							</div>
 
 							
@@ -82,23 +83,25 @@
 											</div>
 										</div>															
 									</div>
-									<div class="proposal set-expiration">
-										<p>This Proposal Expires In</p>
-										<div>
+									<c:if test="${user.profileId == 2 }">
+										<div class="proposal set-expiration">
+											<p>This Proposal Expires In</p>
 											<div>
-												<p>Days</p>
-												<input class="days" type="text" value="0"/>
-											</div>
-											<div>
-												<p>Hours</p>
-												<input class="hours" type="text" value="0"/>
-											</div>
-											<div>
-												<p>Minutes</p>
-												<input class="minutes" type="text" value="0"/>
-											</div>		
-										</div>								
-									</div>
+												<div>
+													<p>Days</p>
+													<input class="days" type="text" value="0"/>
+												</div>
+												<div>
+													<p>Hours</p>
+													<input class="hours" type="text" value="0"/>
+												</div>
+												<div>
+													<p>Minutes</p>
+													<input class="minutes" type="text" value="0"/>
+												</div>		
+											</div>								
+										</div>
+									</c:if>
 							<div class="proceed-to-confirmation-container">
 								<span class="confirm sqr-btn">Confirm</span>
 								<span class="cancel">Cancel</span>
@@ -152,12 +155,14 @@
 								</div>
 																					
 							</div>
-							<div class="proposal confirm confirm-expiration-container">
-								<p>Expiration</p>
-								<div class="cell accept-proposal">
-									<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>
-								</div>							
-							</div>							
+							<c:if test="${user.profileId == 2 }">
+								<div class="proposal confirm confirm-expiration-container">
+									<p>Expiration</p>
+									<div class="cell accept-proposal">
+										<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>
+									</div>							
+								</div>		
+							</c:if>					
 							
 							<div class="send-container">
 								<span class="send sqr-btn">Send</span>
@@ -180,7 +185,7 @@
 			</c:choose>												
 		</c:when>
 	
-		<c:when test="${applicationDto.currentWageProposal.status == 1 }">
+		<c:when test="${applicationDto.currentWageProposal.status == 4 }">
 			Accepted
 		</c:when>
 		

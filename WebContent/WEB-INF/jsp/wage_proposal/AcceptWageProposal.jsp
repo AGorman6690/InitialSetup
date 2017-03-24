@@ -16,9 +16,7 @@
 			</div>
 		</c:if>		
 		<div class="accept-actions proposal-actions">
-			<span class="accent confirm-accept">
-				<a href="/JobSearch/wage-proposal/accept/applicant?wageProposalId=${applicationDto.currentWageProposal.id }">
-					Confirm</a></span>
+			<span class="accent approve-by-applicant" data-application-id="${applicationDto.application.applicationId }">Confirm</span>
 			<span class="accent cancel">Cancel</span>
 		</div>
 	</c:when>

@@ -45,9 +45,9 @@ class ApplicationDTO {
 	// These have been added to EmploymentProposalDTO.
 	// Remove them.
 	// ****************************************************************
-	Integer days_offerExpires
-	Integer hours_offerExpires
-	Integer minutes_offerExpires
+//	Integer days_offerExpires
+//	Integer hours_offerExpires
+//	Integer minutes_offerExpires
 	
 	// ******************************************************.
 	// Rename this to: dateStrings_currentlyProposedWorkDays

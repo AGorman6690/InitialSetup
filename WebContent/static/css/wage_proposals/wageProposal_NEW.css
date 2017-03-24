@@ -55,6 +55,7 @@
     border-bottom: 1px solid #cacaca;
 /*     background: #f3f3f3;     */
 	padding-top: 25px;
+	padding-bottom: 20px;
     text-align: left;
 }
 
@@ -83,18 +84,25 @@
 }
 
 .counter-wage input{
-	width: 120px;
+	width: 62px;
 }
 
 .counter-container p span,
 .counter-wage input{
 	margin-left: 15px;
 	font-weight: normal;
+	float: right;
 }
 
 .counter-container p{
 	font-weight: bold;
+	width: 250px;
 }
+
+.counter-container.counter-wage div p:last-child{
+    padding-top: 20px;
+}
+
 .calendar-container-proposed-work-days {
     width: 300px;
     margin: auto;
@@ -154,7 +162,7 @@ div.confirmation-container div.calendar-container div.calendar{
 
 
 .calendar-container .calendar td.proposed{
-	background: #163b3d;
+	background: #197994;
 }
 
 .confirmation-container .proposal.confirm  > div{

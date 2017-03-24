@@ -10,5 +10,5 @@ public class CategoryDTO {
 	Category category
 	
 	int count_jobsCompleted
-	double ratingValue_jobsCompleted
+	Double ratingValue_jobsCompleted
 }

@@ -1,16 +1,12 @@
 <%@ include file="../includes/Header.jsp"%>
-
-
-
-<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-
-
 <script src="<c:url value="/static/javascript/profile_employer/Profile_Employer.js" />"></script>
 <%@ include file="../includes/resources/SelectPageSection.jsp"%>
 
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employer/profile_employer.css" />
+
+<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 
 
 <!-- <div class="select-page-section-container employer-profile"> -->
@@ -22,7 +18,7 @@
 
 <div class="container">
 
-	<%@ include file="./JobsWaitingToStart_Employer.jsp" %>
+	<%@ include file="./Jobs_Current_Employer.jsp" %>
 
 </div>
 

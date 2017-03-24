@@ -1,62 +1,73 @@
 
 <%@ include file="../includes/TagLibs.jsp"%>	
 
+<div>
+
+	<div class="title">
+		<p class="job-name">${jobDto.job.jobName }</p>
+		<p class="categories">		
+			<c:forEach items="${jobDto.categories }" var="category">
+				<span class="category">${category.name}</span>
+			</c:forEach>	
+		</p>
+		<p id="job-description">
+				${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+		
+		</p>
+		<div id="map-container">
+			<div id="jobAddress">
+				<div class="accent">${jobDto.job.streetAddress }</div>
+				<div class="accent">${jobDto.job.city}, ${jobDto.job.state }</div>
+				<div class="accent">${jobDto.job.zipCode }</div>		
+			</div>	
+			<div id="map" class="right-border" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
+		</div>		
+
+	</div>
+	<div id="middle-container">
+		
+		<div id="work-days-calendar-container" class="calendar-container read-only">
+			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+			<div class="work-days">
+				<c:forEach items="${jobDto.workDays }" var="workDay">
+					<div data-date="${workDay.stringDate }"></div>
+				</c:forEach>
+			</div>
+		</div>		
+	</div>
+	
+	
+		<c:if test="${jobDto.questions.size() > 0 }">			
+			<div id="questions-container">
+				<p>Questions</p>
+				<div class="questions">
+					<c:forEach items="${jobDto.questions }" var="question">					
+						<p>${question.text }</p>
+						<div class="answer-container">
+							<c:choose>
+								<c:when test="${question.formatId == 2 || question.formatId == 3}">
+									<div class="answer-options-container">
+									<c:forEach items="${question.answerOptions }" var="answerOption">
+										<div class="answer-option">
+											${answerOption.text }
+										</div>
+									</c:forEach>
+									</div>
+								</c:when>
+							</c:choose>
+						</div>
+					</c:forEach>		
+				</div>			
+			</div>		
+		</c:if>		
+</div>
+
 
 <div class="row">
 					
-	<div class="col-sm-8 container">
-		<div class="info-container row">
-			<div class="info-label col-sm-4">Name
-			</div>
-			<div class="info-value col-sm-8">
-				${jobDto.job.jobName }
-			</div>
-		</div>	
-		<div class="info-container row">
-			<div class="info-label col-sm-4">${jobDto.categories.size() > 1 ? "Categories" : "Category"}</div>
-			<div class="info-value col-sm-8">
-				<c:forEach items="${jobDto.categories }" var="category">
-				<span class="category">${category.name}</span>
-				</c:forEach>					
-			</div>
-		</div>
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Description
-			</div>
-			<div class="info-value col-sm-8">
-				${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-			</div>
-		</div>		
-		
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Dates
-			</div>
-			<div class="info-value col-sm-8">
-				<div>
-					${jobDto.workDays.size() } days
-				</div>
-				<div id="workDays">
-					<c:forEach items="${jobDto.workDays }" var="workDay">
-						<div data-date="${!empty workDay.date ? workDay.date : workDay.stringDate }"></div>
-					</c:forEach>
-					
-				</div>	
-				<div id="workDaysCalendar" class="calendar-container read-only"
-					 data-min-date="${jobDto.date_firstWorkDay }"
-					 data-number-of-months="${jobDto.months_workDaysSpan }"></div>			
-			</div>
-		</div>	
-		
-		<div class="info-container row">
-			<div class="info-label col-sm-4">Start Time</div>
-			<div class="info-value col-sm-8">${jobDto.job.stringStartTime }</div>
-		</div>
-		<div class="info-container row">
-			<div class="info-label col-sm-4">End Time</div>
-			<div class="info-value col-sm-8">${jobDto.job.stringEndTime }</div>
-		</div>				
+	<div class="container">
+
+
 	
 	<c:if test="${jobDto.skillsRequired.size() > 0 }">
 		<div class="info-container row">
@@ -116,35 +127,7 @@
 				</div>
 			</div>
 		</div>	
-	
 
-	<c:if test="${jobDto.questions.size() > 0 }">	
-		<div class="info-container row">	
-			<div class="info-label col-sm-4">Questions</div>
-			<div class="info-value col-sm-8">
-					
-				<c:forEach items="${jobDto.questions }" var="question">
-					<div class="question-container">
-						${question.text }
-						<div class="answer-container">
-							<c:choose>
-								<c:when test="${question.formatId == 2 || question.formatId == 3}">
-									<div class="answer-options-container">
-									<c:forEach items="${question.answerOptions }" var="answerOption">
-										<div class="answer-option">
-											${answerOption.text }
-										</div>
-									</c:forEach>
-									</div>
-								</c:when>
-							</c:choose>
-						</div>
-					</div>
-				</c:forEach>		
-					
-			</div>
-		</div>
-	</c:if>
 		
 		<br>
 		<br>
@@ -161,13 +144,9 @@
 		<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
 	</div>
 	<div class="col-sm-4">
-		<div id="jobAddress">
-			<div class="accent">${jobDto.job.streetAddress }</div>
-			<div class="accent">${jobDto.job.city}, ${jobDto.job.state }</div>
-			<div class="accent">${jobDto.job.zipCode }</div>
-		</div>			
-		<div id="map" class="right-border" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }">				
-		</div>	 
+	
+		
+ 
 	</div>
 </div>
 

@@ -105,7 +105,161 @@ tbody.vertical-lines td div.vert-border{
 }
 
 
-/* /*  Single calendar */ */
-/* #workDaysCalendar .ui-datepicker-inline :not(.ui-datepicker-group){ */
-/* 	width:300px; */
-/* }  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.title{
+	width: 900px;
+/* 	float: left; */
+	margin: auto;
+	padding: 20px;
+	border-bottom: 1px solid #bbbbbb;
+	height: 600px;
+}
+
+.job-name,
+.categories{
+	text-align:center;
+}
+
+.title p.job-name{
+	font-size: 24px;
+	font-weight: bold;
+}
+
+/* .categories, */
+/* .questions-container, */
+/* #job-description{ */
+/* 	padding-left: 50px; */
+/* } */
+
+span.category{
+    padding: 5px;
+    border: 3px solid #c3c3c3;
+    background: #f4f4f4;
+	border-radius: 5px;    
+	display: inline-block;
+}
+
+#job-description{
+	padding-top: 20px;
+	max-height: 300px;
+	overflow-y: auto; 
+	width: 500px;
+	text-align: left;
+	margin:auto;
+	float: left;
+	
+}
+
+#questions-container > p{
+	font-weight: bold;
+	font-size: 18px;
+}
+
+#questions-container{
+/* 	padding-top: 25px; */
+	clear: left;
+}
+
+.questions{
+	padding-left: 50px;
+	font-weight: normal;
+	font-size: 16px;
+}
+
+#middle-container{
+	padding-top: 35px;
+	height: 700px;
+/*     width: 950px; */
+    margin: auto;	
+    clear: both;
+}
+#map-container{
+	float: right;
+/* 	display: none; */
+}
+
+#jobAddress{
+	text-align: right;
+}
+#jobAddress .accent{
+/*     font-weight: bold; */
+    font-size: 15px;
+/*     color: #197994; */
+}
+
+#work-days-calendar-container{
+/* 	padding-top: 50px; */
+/* 	float: left; */
+	
+}
+
+#work-days-calendar-container .calendar{
+/* 	width: 500px; */
+	margin: auto;
+}
+
+#work-days-calendar-container .calendar .ui-datepicker-title{
+    font-weight: bold;
+    font-size: 19px;
+    color: #197994;
+}
+
+#work-days-calendar-container .calendar td{
+	padding: 2px ;
+	vertical-align: top;
+	text-align: center;
+	height: 75px;
+	width: 70px;
+	
+}
+#work-days-calendar-container .ui-datepicker-group{
+	width: 500px;
+	padding: 0px 20px;
+}
+
+#work-days-calendar-container .calendar td.active111 a{
+    width: 100%;
+    display: inline-block;
+    background: #163b3d;
+
+}
+
+#work-days-calendar-container .calendar td.active111{
+	background: #fff;
+}
+
+
+.start-and-end-times{
+/* 	background: #ffffff; */
+	color: #000;
+    border: 2px solid #163b3d;	
+	padding: 2px;
+	text-align: center;
+	font-size: 13px;
+}
+
+.start-and-end-times p{
+	margin: 2px;
+}
+
+
+
+
+
+
+
+
+

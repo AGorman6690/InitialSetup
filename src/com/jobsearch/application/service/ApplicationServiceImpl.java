@@ -19,6 +19,7 @@ import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
@@ -331,62 +332,23 @@ public class ApplicationServiceImpl {
 	
 
 
-	public void acceptProposalMadeByEmployee(EmploymentProposalDTO employmentProposalDto,
-												HttpSession session) {
-				
 
-	    EmploymentProposalDTO proposalToBeAccepted = getCurrentEmploymentProposal(
-	    									employmentProposalDto.getApplicationId());
-
-		if(proposalToBeAccepted.getProposedToUserId() == SessionContext.getUser(session).getUserId() && 
-				proposalToBeAccepted.getStatus() != EmploymentProposalDTO.STATUS_DECLINED &&
-				proposalToBeAccepted.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
-
-			
-			
-
-		
-			if( employmentProposalDto.getDays_offerExpires() != null ||
-					employmentProposalDto.getHours_offerExpires() != null ||
-							employmentProposalDto.getMinutes_offerExpires() != null) {
-				
-				LocalDateTime employerAcceptedDate = LocalDateTime.now();
-				LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
-						employmentProposalDto.getDays_offerExpires(),
-						employmentProposalDto.getHours_offerExpires(),
-						employmentProposalDto.getMinutes_offerExpires());
-			
-				EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-				
-				newProposal.setAmount(proposalToBeAccepted.getAmount());
-				newProposal.setProposedByUserId(proposalToBeAccepted.getProposedToUserId());
-				newProposal.setProposedToUserId(proposalToBeAccepted.getProposedByUserId());
-				newProposal.setApplicationId(proposalToBeAccepted.getApplicationId());
-				newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);				
-				newProposal.setDateStrings_proposedDates(proposalToBeAccepted.getDateStrings_proposedDates());
-				
-				this.insertEmploymentProposal(newProposal);
-				
-				repository.updateApplication_PendingApplicantApproval(employmentProposalDto.getEmploymentProposalId(), employerAcceptedDate,
-																	expirationDate);
-					
-			}
-		}		
-	}
-	
-	
 
 
 	public void respondToEmploymentProposal(EmploymentProposalDTO employmentProposalDto,
 											HttpSession session,
 											String context) {
 	   
-		// Per the application id, get the most recent employment proposal in the database
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
+		// Get the proposal being RESPONDED TO.
+		// Per the application id, get the most recent employment proposal in the database.
 		EmploymentProposalDTO proposalBeingAddressed = getCurrentEmploymentProposal(
 							employmentProposalDto.getApplicationId());
 
-		// Is this proposal currently presented TO the session user and
-		// is this proposal not yet declined? 
+		// For all responses:
+		// 1) Is the proposal being responded to currently presented TO the session user
+		// 2) AND is this proposal not yet declined? 
 		if(proposalBeingAddressed.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
 				proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_DECLINED){
 			
@@ -402,50 +364,65 @@ public class ApplicationServiceImpl {
 	
 				case "counter":
 					
-					if(proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL){
-				    	
-						this.updateWageProposalStatus(proposalBeingAddressed.getEmploymentProposalId(),
-								WageProposal.STATUS_COUNTERED);
-
-						EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
+					// **Employers** must provide an expiration time for all counter offers they make
+					if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
+							isValidExpirationTime(employmentProposalDto) ) || 
+							sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE ){
 						
-						newProposal.setProposedByUserId(proposalBeingAddressed.getProposedToUserId());
-						newProposal.setProposedToUserId(proposalBeingAddressed.getProposedByUserId());
-						newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-						newProposal.setApplicationId(proposalBeingAddressed.getApplicationId());
-						
-						// ***********************************************************************************
-						// This needs to be verified
-						if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
-							newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+						// Offers that are pending the applicant's approval
+						// (i.e. the employer has accepted the applicant's proposal)
+						// cannot be countered.
+						if(proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL){
+					    	
+							this.updateWageProposalStatus(proposalBeingAddressed.getEmploymentProposalId(),
+									WageProposal.STATUS_COUNTERED);
+	
+							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
+							
+							newProposal.setProposedByUserId(proposalBeingAddressed.getProposedToUserId());
+							newProposal.setProposedToUserId(proposalBeingAddressed.getProposedByUserId());
+							newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
+							newProposal.setApplicationId(proposalBeingAddressed.getApplicationId());
+							
+							// ***********************************************************************************
+							// This needs to be verified
+							if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
+								newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+							}
+							else{
+								newProposal.setDateStrings_proposedDates(proposalBeingAddressed.getDateStrings_proposedDates());
+							}
+							if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
+								newProposal.setAmount(employmentProposalDto.getAmount());
+							}else{
+								newProposal.setAmount(proposalBeingAddressed.getAmount());
+							}
+							// ***********************************************************************************
+							
+							this.insertEmploymentProposal(newProposal);			
 						}
-						else{
-							newProposal.setDateStrings_proposedDates(proposalBeingAddressed.getDateStrings_proposedDates());
-						}
-						if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
-							newProposal.setAmount(employmentProposalDto.getAmount());
-						}else{
-							newProposal.setAmount(proposalBeingAddressed.getAmount());
-						}
-						// ***********************************************************************************
-						
-						this.insertEmploymentProposal(newProposal);						
 					}					
 					break;
 				
-				case "accept-by-employer":
+				case "accept-by-employer":					
+					
+					// ****************************************************
+					// ****************************************************
+					// Review whether is makes most sense to place the expiration and accepted timestamps
+					// on the application or the proposal.
+					// As things have evolved, I think it makes more sense to place them on the proposal.
+					// Review this.
+					// ****************************************************
+					// ****************************************************					
+					
 					if(proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
 
+						if(isValidExpirationTime(employmentProposalDto)){
 
-						if( employmentProposalDto.getDays_offerExpires() != null ||
-								employmentProposalDto.getHours_offerExpires() != null ||
-										employmentProposalDto.getMinutes_offerExpires() != null) {
 							
 							LocalDateTime employerAcceptedDate = LocalDateTime.now();
 							LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
-									employmentProposalDto.getDays_offerExpires(),
-									employmentProposalDto.getHours_offerExpires(),
-									employmentProposalDto.getMinutes_offerExpires());
+																employmentProposalDto);
 						
 							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
 							
@@ -456,16 +433,25 @@ public class ApplicationServiceImpl {
 							newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);				
 							newProposal.setDateStrings_proposedDates(proposalBeingAddressed.getDateStrings_proposedDates());
 							
+							
 							this.insertEmploymentProposal(newProposal);
 							
-							repository.updateApplication_PendingApplicantApproval(proposalBeingAddressed.getEmploymentProposalId(),
+							repository.updateApplication_PendingApplicantApproval(proposalBeingAddressed.getApplicationId(),
 																				employerAcceptedDate, expirationDate);				
 							
-						}					
+						}				
 					}					
 					break;
 				
 				case "approve-by-applicant":
+					
+					// ***************************************************
+					// ***************************************************
+					// Should the status of the applicant's proposal be set to "Accepted"???
+					// Currently it is not being updated and remaining at -1.
+					// Review this.
+					// ***************************************************
+					// ***************************************************
 				
 					if(proposalBeingAddressed.getStatus() == EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL &&
 						!isEmployerAcceptanceExpired(employmentProposalDto.getApplicationId()) ){
@@ -473,6 +459,8 @@ public class ApplicationServiceImpl {
 						this.updateWageProposalStatus(proposalBeingAddressed.getEmploymentProposalId(),
 														EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
 		
+						this.updateApplicationStatus(proposalBeingAddressed.getApplicationId(), Application.STATUS_ACCEPTED);
+						
 						// If necessary, cancel the applicant's conflicting applications
 						List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
 													SessionContext.getUser(session).getUserId(),
@@ -488,84 +476,24 @@ public class ApplicationServiceImpl {
 			}
 		}
 	}
-
-	public void insertCounterOffer(EmploymentProposalDTO employmentProposalDto, HttpSession session) {
-	
-		// ***********************************************************************
-		// ***********************************************************************
-		// Need to verify that something was actually countered.
-		// i.e. Either the amount and/or the work days
-		// ***********************************************************************
-		// ***********************************************************************
-
-	    EmploymentProposalDTO proposalToBeCountered = getCurrentEmploymentProposal(
-	    											employmentProposalDto.getApplicationId());
-	    
-	    if(proposalToBeCountered.getProposedToUserId() == SessionContext.getUser(session).getUserId() && 
-	    	proposalToBeCountered.getStatus() != EmploymentProposalDTO.STATUS_DECLINED &&
-	    	proposalToBeCountered.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
-	    	
-	    	this.updateWageProposalStatus(employmentProposalDto.getEmploymentProposalId(),
-	    									WageProposal.STATUS_COUNTERED);
-	    	
-	    	EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-	    	
-	    	newProposal.setProposedByUserId(proposalToBeCountered.getProposedToUserId());
-	    	newProposal.setProposedToUserId(proposalToBeCountered.getProposedByUserId());
-	    	newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-	    	newProposal.setApplicationId(proposalToBeCountered.getApplicationId());
-	    	
-	    	// ***********************************************************************************
-	    	// This needs to be verified
-	    	if(!verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
-	    		newProposal.setDateStrings_proposedDates(proposalToBeCountered.getDateStrings_proposedDates());
-	    	}
-	    	
-			if(!verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
-				newProposal.setAmount(proposalToBeCountered.getAmount());
-			}
-	    	// ***********************************************************************************
-	    	
-			this.insertEmploymentProposal(employmentProposalDto);	    	
-	    		
-	    }
-
-	}
 	
 	
-	public void approveTheProposalAcceptedByEmployer(EmploymentProposalDTO employmentProposalDto,
-														HttpSession session) {
+
+	private boolean isValidExpirationTime(EmploymentProposalDTO employmentProposalDto) {
 		
-	    EmploymentProposalDTO proposalToBeApproved = getCurrentEmploymentProposal(
-				employmentProposalDto.getApplicationId());
-
-		// Verify:
-		// 1) the proposal is proposed TO the session user (i.e. the applicant)
-		// AND
-		// 2) a)the proposal is pending the session user's approval
-			// AND
-			// b) the  the employer's acceptance is not expired
-		if(proposalToBeApproved.getProposedToUserId() == SessionContext.getUser(session).getUserId() && 
-				proposalToBeApproved.getStatus() == EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL &&
-				!isEmployerAcceptanceExpired(employmentProposalDto.getApplicationId()) ){
-
-			this.updateWageProposalStatus(proposalToBeApproved.getEmploymentProposalId(),
-											EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
-
-			// If necessary, cancel the applicant's conflicting applications
-			List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
-										SessionContext.getUser(session).getUserId(),
-										employmentProposalDto.getApplicationId(),
-										jobService.getWorkDays(this.getApplication(employmentProposalDto.getApplicationId()).getJobId()));
+		if( ( employmentProposalDto.getDays_offerExpires() != null ||
+				employmentProposalDto.getHours_offerExpires() != null ||
+					employmentProposalDto.getMinutes_offerExpires() != null) && 
+				( employmentProposalDto.getDays_offerExpires() > 0 ||
+					employmentProposalDto.getHours_offerExpires() > 0 ||
+						employmentProposalDto.getMinutes_offerExpires() > 0) )
 			
-			for(ApplicationDTO applicationDto : applicationDtos_conflicting){
-			
-				this.updateApplicationStatus(applicationDto.getApplication().getApplicationId(),
-												Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT);
-			}
-		}
+			return true;
+		else return false;
+	}
 
-	}	
+
+
 
 	public List<ApplicationDTO> getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(int userId, List<Integer> applicationStatuses){
 		
@@ -666,22 +594,7 @@ public class ApplicationServiceImpl {
 	public List<Application> getApplicationsByUser(int userId) {
 		return repository.getApplicationsByUser(userId);
 	}
-	
-	public void acceptTheProposalProposedByEmployer(int wageProposalId, HttpSession session) {
-		
 
-		
-		EmploymentProposalDTO employmentProposalDto = this.getEmploymentProposalDto(wageProposalId);
-		
-
-		if(verificationService.canSessionUserAcceptEmploymentProposal(session, employmentProposalDto)){
-
-			this.updateWageProposalStatus(employmentProposalDto.getEmploymentProposalId(),
-											EmploymentProposalDTO.STATUS_ACCEPTED);
-			
-		}
-
-	}
 	
 
 	public EmploymentProposalDTO getEmploymentProposalDto(int employmentProposalId) {
@@ -703,15 +616,17 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public LocalDateTime getExpirationDate(LocalDateTime start, Integer days_expiresIn,
-			 					Integer hours_expiresIn, Integer minutes_expiresIn){
+	public LocalDateTime getExpirationDate(LocalDateTime start, EmploymentProposalDTO employmentProposalDto){
 		
 		
 		LocalDateTime expirationDate = start;
 		
-		if(days_expiresIn != null) expirationDate = expirationDate.plusDays(days_expiresIn);
-		if(hours_expiresIn != null) expirationDate = expirationDate.plusHours(hours_expiresIn);
-		if(minutes_expiresIn != null) expirationDate = expirationDate.plusMinutes(minutes_expiresIn);
+		if(employmentProposalDto.getDays_offerExpires() != null)
+			expirationDate = expirationDate.plusDays(employmentProposalDto.getDays_offerExpires() );
+		if(employmentProposalDto.getHours_offerExpires()  != null)
+			expirationDate = expirationDate.plusHours(employmentProposalDto.getHours_offerExpires() );
+		if(employmentProposalDto.getMinutes_offerExpires()  != null)
+			expirationDate = expirationDate.plusMinutes(employmentProposalDto.getMinutes_offerExpires() );
 		
 		return expirationDate;
 		
@@ -831,9 +746,7 @@ public class ApplicationServiceImpl {
 			
 			LocalDateTime employerAcceptedDate = LocalDateTime.now();
 			LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
-													applicationDto.getDays_offerExpires(),
-													applicationDto.getHours_offerExpires(),
-													applicationDto.getMinutes_offerExpires());
+													applicationDto.getEmploymentProposalDto());
 			
 			applicationDto.getApplication().setEmployerAcceptedDate(employerAcceptedDate);
 			applicationDto.getApplication().setExpirationDate(expirationDate);

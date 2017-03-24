@@ -1,4 +1,6 @@
 var calendarDays = [];
+var $calendar_applications;
+
 
 var lineClass_1 = "one";
 var lineClass_2 = "two";
@@ -18,6 +20,11 @@ $(function() {
 
 $(document).ready(function(){
 	
+	
+	$calendar_applications = $("#applications_calendar_view .calendar");
+	
+	
+	
 	$(".container").on("mouseover", "#applications_calendar_view:not(.with-list) .calendar td div.popup", function(){
 		
 		var visiblePopup = $("#applications_calendar_view").find(".popuptext:visible").eq(0);
@@ -26,15 +33,11 @@ $(document).ready(function(){
 			$(visiblePopup).hide();
 			$(this).find(".popuptext").show();
 		}
-		
-		
-		
+
 	})
 
 	$("#applications_calendar_view .calendar").on("mousedown", "td .popuptext span", function(){
-
-			window.location = "/JobSearch/job/" + $(this).attr("data-job-id") + "?c=profile-incomplete&p=1";
-		
+		window.location = "/JobSearch/job/" + $(this).attr("data-job-id") + "?c=profile-incomplete&p=1";
 	})
 	
 	$("#applications_calendar_view").on("mouseout", ".calendar", function(e){
@@ -94,7 +97,7 @@ function showApplications_both(){
 			
 			
 			date_calendarDay = new Date(this.date);
-			td = getTdByDayMonthYear($(".calendar"), date_calendarDay.getDate().toString(),
+			td = getTdByDayMonthYear($calendar_applications, date_calendarDay.getDate().toString(),
 														 date_calendarDay.getMonth().toString(),				
 														 date_calendarDay.getFullYear().toString());	
 			
@@ -218,7 +221,7 @@ function setCalendarDays(){
 
 function initCalendar_Both(){
 
-	$("#applications_calendar_view .calendar").datepicker({
+	$calendar_applications.datepicker({
 		minDate: new Date(),
 		numberOfMonths: 1, 
 		afterShow: showApplications_both,

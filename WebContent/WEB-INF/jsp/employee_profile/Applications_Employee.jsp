@@ -115,7 +115,7 @@
 							</td>
 
 							<td>
-								<%@ include file="../wage_proposal/WageProposal.jsp" %>
+								<%@ include file="../wage_proposal/WageProposal_NEW.jsp" %>
 							</td>
 							<td>
 								<%@ include file="../wage_proposal/History_WageProposals.jsp" %>

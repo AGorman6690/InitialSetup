@@ -18,14 +18,36 @@ function initPage(){
 
 function showColumnsForPerspective(perspective){
 	
-	$("#table_jobsWaitingToStart").find("th, td").each(function(){
+	$table = $("#table_jobsWaitingToStart");
+	
+//	$table.slideUp(200, function(){
+//		
+//		
+//		$table.find("th, td").each(function(){
+//			
+//			if($(this).hasClass(perspective)) $(this).show();
+//			else if($(this).hasClass("perm") == 0) $(this).hide();
+////			else $(this).hide();
+//			
+//			
+//		})	
+//		
+//		
+//		$table.slideDown(1000);
+//		
+//	});
+	
+	
+
+	$table.find("th, td").each(function(){
 		
 		if($(this).hasClass(perspective)) $(this).show();
 		else if($(this).hasClass("perm") == 0) $(this).hide();
 //		else $(this).hide();
 		
 		
-	})
+	})	
+	
 	
 	
 }
@@ -34,6 +56,7 @@ function addPerspectiveToTable(perspective){
 	
 	$table = $("#table_jobsWaitingToStart");
 	
+	$table.removeClass("job-details");
 	$table.removeClass("wage-proposal");
 	$table.removeClass("application");
 	$table.removeClass("employee");

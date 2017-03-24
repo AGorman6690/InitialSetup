@@ -73,16 +73,6 @@
 	padding-left:45px;
 }
 
-.question-container{
-	margin: 10px 0px;
-	padding:20px 4px;
-/* 	border-bottom: 2px solid buttonface; */
-}
-
-.question-container:first-child{
-	padding-top:0px;
-}
-
 #applyContainer .question{
 	padding:15px 0px;
 }

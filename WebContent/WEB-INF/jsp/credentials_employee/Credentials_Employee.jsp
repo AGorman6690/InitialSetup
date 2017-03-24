@@ -21,66 +21,71 @@
 		</div>
 		<div id="personalInfo">
 			<div class="info">
-
+				<p id="make-edits" class="linky-hover">Edit</p>
+				<p id="save-edits" class="">Save</p>
 				<div class="lbl">Home Location
-					<span class="glyphicon glyphicon-pencil"></span>
+<!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
-				<div data-toggle-id="editHomeLocation" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
+				<div class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					${userDto.user.homeCity}, ${userDto.user.homeState} ${userDto.user.homeZipCode }</div>
 				<c:if test="${isViewingOnesSelf }">
 					<div id="editHomeLocation" class="edit-container">
-						<div><span class="lbl">City</span><input id="city" type="text"></div>
-						<div><span class="lbl">State</span><select id="state"></select></div>
-						<div><span class="lbl">Zip Code</span><input id="zipCode" type="text"></div>
-						<button id="saveHomeLocation" class="save-changes square-button-green">Save</button>
-						<div class="cancel-changes">Cancel</div>
+						<div><span class="lbl">City</span><input id="city" type="text" value="${userDto.user.homeCity }"></div>
+						<div><span class="lbl">State</span><select id="state" data-init-value="${userDto.user.homeState }"></select></div>
+						<div><span class="lbl">Zip Code</span><input id="zipCode" type="text" value="${userDto.user.homeZipCode }"></div>
+<!-- 						<button id="saveHomeLocation" class="save-changes square-button-green">Save</button> -->
+<!-- 						<div class="cancel-changes">Cancel</div> -->
 					</div>
 				</c:if>
 			</div>
 			<div class="info">
 				<div class="lbl">Maximum distance willing to travel
-					<span class="glyphicon glyphicon-pencil"></span>
+<!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
-				<div data-toggle-id="editMaxDistance" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
+				<div class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					${userDto.user.maxWorkRadius } miles</div>
 				
 				<c:if test="${isViewingOnesSelf }">
 					<div id="editMaxDistance" class="edit-container">
-						<div><span class="lbl">Miles</span><input id="miles" type="text"></div>
-						<button id="saveMaxDistance" class="save-changes square-button-green">Save</button>
-						<div class="cancel-changes">Cancel</div>
+						<div><span class="lbl">Miles</span><input id="miles" type="text" value="${userDto.user.maxWorkRadius }"></div>
+<!-- 						<button id="saveMaxDistance" class="save-changes square-button-green">Save</button> -->
+<!-- 						<div class="cancel-changes">Cancel</div> -->
 					</div>
 				</c:if>				
 			</div>
 			<div class="info">
 				<div class="lbl">Minimum hourly wage
-					<span class="glyphicon glyphicon-pencil"></span>
+<!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
-				<div data-toggle-id="editMinimumPay" class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
+				<div class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
 					$${userDto.user.stringMinimumDesiredPay } per hour</div>
 				
 				<c:if test="${isViewingOnesSelf }">
 					<div id="editMinimumPay" class="edit-container">
-						<div><span class="lbl">$ per hour</span><input id="dollarsPerHour" type="text"></div>
-						<button id="saveMinimumPay" class="save-changes square-button-green">Save</button>
-						<div class="cancel-changes">Cancel</div>
+						<div><span class="lbl">$ per hour</span><input id="dollarsPerHour" type="text" value="${userDto.user.stringMinimumDesiredPay }"></div>
+<!-- 						<button id="saveMinimumPay" class="save-changes square-button-green">Save</button> -->
+<!-- 						<div class="cancel-changes">Cancel</div> -->
 					</div>					
 				</c:if>
 			</div>
 			<div class="info">
 				<div data-toggle-id="aboutContainer" class="lbl">About
 					<span class="glyphicon glyphicon-menu-down"></span>
-					<span class="glyphicon glyphicon-pencil"></span>
+<!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
-				<div id="aboutContainer" class="value">the more obscure Latin words, consectetur, from a Lorem Ipsum
-				 passage, and going through the cites of the word in classical literature, discovered
-				  the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
-				   Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in
-				    45 BC. This book is a treatise on the theory of ethics, very popular during the
-				     Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes
-				      from a line in section 1.10.32.
-
-				The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham. </div>
+				<div id="aboutContainer" class="value">
+				 	<p>Edit</p>
+					<p>the more obscure Latin words, consectetur, from a Lorem Ipsum
+					 passage, and going through the cites of the word in classical literature, discovered
+					  the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
+					   Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written in
+					    45 BC. This book is a treatise on the theory of ethics, very popular during the
+					     Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes
+					      from a line in section 1.10.32.
+	
+						The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from "de Finibus Bonorum et Malorum" by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by H. Rackham.
+					</p>
+				 </div>
 			</div>			
 			<div class="info">
 				<div data-toggle-id="availabilityCalendarContainer" class="lbl">
@@ -281,25 +286,3 @@
 	</div>
 </div>
 
-<script>
-
-	$(document).ready(function(){
-		
-			
-		$("#availabilityCalendar").datepicker({
-			minDate: new Date(),
-			numberOfMonths: 1, 
-			onSelect: function(dateText, inst) {	    
-				
-			},		        
-	        beforeShowDay: function (date) {        	
-	        	return [true, ""];
-	     	}
-		})
-		
-		setStates();
-		
-	})
-
-
-</script>

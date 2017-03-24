@@ -43,7 +43,7 @@ $(document).ready(function(){
 	
 	$(".confirmation-container .edit").click(function() { toggleConfirmationContainer($(this)) })
 	
-	
+	$(".approve-by-applicant").click( function() { sendApplicantApproval($(this)) });
 	
 	
 	
@@ -165,35 +165,82 @@ $(document).ready(function(){
 //	return wageProposalDto;
 //}
 
+function getEmploymentProposalDto($responseContainer){
 
-function sendEmploymentProposal($e){
-	var context = "accept-by-employer";
-	var $responseContainer = $e.closest(".response-container");
-	
 	var employmentProposalDto = {};
 	
-	employmentProposalDto.applicationId = $e.closest("tr[data-application-id]")
-														.eq(0)
-														.attr("data-application-id");
+	employmentProposalDto.applicationId = $responseContainer.attr("data-application-id");
 	
-	if($responseContainer.find(".wage-proposal-container button.counter.selected").size() > 0){
-		context = "counter";
+	if(isAmountBeingCountered($responseContainer)){
 		employmentProposalDto.amount = $(".counter-container.counter-wage input").val();
 	}
 	
-	if($responseContainer.find(".work-day-proposal-container button.counter.selected").size() > 0){
-		context = "counter";
+	if(areWorkDaysBeingCountered($responseContainer)){
 		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
 								$(".counter-work-days .calendar"), "yy-mm-dd", "proposed");
+	}	
+	
+	if(isSessionUserAnEmployer($responseContainer)){
+		employmentProposalDto.days_offerExpires = $responseContainer.find(".set-expiration input.days").val();
+		employmentProposalDto.hours_offerExpires = $responseContainer.find(".set-expiration input.hours").val();
+		employmentProposalDto.minutes_offerExpires = $responseContainer.find(".set-expiration input.minutes").val();		
 	}
 	
-	employmentProposalDto.days_offerExpires = $responseContainer.find(".set-expiration input.days").val();
-	employmentProposalDto.hours_offerExpires = $responseContainer.find(".set-expiration input.hours").val();
-	employmentProposalDto.minutes_offerExpires = $responseContainer.find(".set-expiration input.minutes").val();
+	return employmentProposalDto;
+}
 
+function isAmountBeingCountered($responseContainer){
+	if($responseContainer.find(".wage-proposal-container button.counter.selected").size() > 0)
+		return true;
+	else return false;
+}
+
+function areWorkDaysBeingCountered($responseContainer){
+	if($responseContainer.find(".work-day-proposal-container button.counter.selected").size() > 0)
+		return true;
+	else return false;
+}
+
+function isSessionUserAnEmployer($responseContainer){
+	if($responseContainer.find(".confirm-expiration-container").size() > 0) return true;
+	else return false;
+}
+
+function getContext($responseContainer){
 	
-		
+	if(isAmountBeingCountered($responseContainer) || areWorkDaysBeingCountered($responseContainer))
+		return "counter";
+	else if(isSessionUserAnEmployer($responseContainer))
+		return "accept-by-employer";
+	else return "approve-by-applicant";
 	
+}
+
+function sendApplicantApproval($e){
+	
+	var context = "approve-by-applicant";
+	var employmentProposalDto = {};	
+	employmentProposalDto.applicationId = $e.attr("data-application-id");
+	
+	executeAjaxCall_respondToProposal(employmentProposalDto, context);
+}
+
+function sendEmploymentProposal($e){
+	
+	// ****************************************************************
+	// ****************************************************************
+	// Need to add verification before sending ajax request
+	// ****************************************************************
+	// ****************************************************************
+	
+	var $responseContainer = $e.closest(".response-container");
+	var employmentProposalDto = getEmploymentProposalDto($responseContainer);
+	var context = getContext($responseContainer);
+
+	executeAjaxCall_respondToProposal(employmentProposalDto, context);
+}
+
+function executeAjaxCall_respondToProposal(employmentProposalDto, context){
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",

@@ -1,25 +1,18 @@
 .container{
-	padding-top: 100px;
+	padding-top: 30px;
 }
 #applicantsTable .endorsement .badge{
 	margin-left: 5px;
 }
 
-th#waiting-for-applicant,
-th#waiting-for-you{
-/* 	width: 150px; */
+button.sqr-btn.gray,
+button.sqr-btn.teal{
+	padding: 10px 12px;
+	font-size: 15px;
+/* 	border: 0; */
+/* 	background: #ffffff; */
+/* 	color: #197994; */
 }
-
-/* table.wage-proposal th#job-name{ */
-/* 	width: 10%; */
-/* } */
-/* table.application th#job-name{ */
-/* 	width: 11%; */
-/* } */
-/* table.employee th#job-name{ */
-/* 	width: 14%; */
-/* } */
-
 
 table.wage-proposal th{
 	width: 12.5%;
@@ -61,6 +54,13 @@ table.employee tbody td.employee.first span{
 	border-left: 1px solid #bbbbbb;
 }
 
+table.job-details tbody td.wage-proposal.perm-first span,
+table.job-details tbody td.application.perm-first span,
+table.job-details tbody td.employee.perm-first span{	
+	border-left: 1px solid #bbbbbb;
+}
+
+
 table#table_jobsWaitingToStart thead th button{
 	margin-bottom: 15px;
 }
@@ -72,6 +72,7 @@ table.main-table-style tbody tr td{
 tbody tr td span {
     display: inline-block;
     width: 100%;
+    padding: 0px 10px;
 }
 
 tbody tr:hover{

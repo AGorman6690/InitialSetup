@@ -205,9 +205,9 @@ function executeAjaxCall_sendOffer(){
 										"yy-mm-dd", "apply-selected-work-day");
 
 	var $detialsContainer = $("#detailsContainer_makeAnOffer");
-	applicationDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
-	applicationDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
-	applicationDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
+	applicationDto.employmentProposalDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
+	applicationDto.employmentProposalDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
+	applicationDto.employmentProposalDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
 
 	
 	broswerIsWaiting(true);

@@ -1,28 +1,42 @@
 var dates_editedAvailability = []
 
 $(document).ready(function(){
-	$("#saveHomeLocation").click(function(){
-		var user_edited = {};
-		user_edited.homeCity = $("#city").val();;
-		user_edited.homeState = $("#state option:selected").val();;
-		user_edited.homeZipCode = $("#zipCode").val();
-		
-		executeAjaxCall_updateUserSettings(user_edited);
+	
+	$("#make-edits").click(function(){
+		$(this).hide();
+		$("#save-edits").show();
+		$(".edit-container").each(function(){ $(this).show() });
+		$("#personalInfo .value").each(function(){ $(this).hide() });
 	})
 	
-	$("#saveMaxDistance").click(function(){
-		var user_edited = {};
-		user_edited.maxWorkRadius = $("#miles").val();;
+	$("#save-edits").click(function(){
 		
-		executeAjaxCall_updateUserSettings(user_edited);
-	})
-	
-	$("#saveMinimumPay").click(function(){
-		var user_edited = {};
-		user_edited.minimumDesiredPay = $("#dollarsPerHour").val();;
-		
-		executeAjaxCall_updateUserSettings(user_edited);
+		executeAjaxCall_updateUserSettings();
 	})	
+	
+	
+//	$("#saveHomeLocation").click(function(){
+//		var user_edited = {};
+//		user_edited.homeCity = $("#city").val();;
+//		user_edited.homeState = $("#state option:selected").val();;
+//		user_edited.homeZipCode = $("#zipCode").val();
+//		
+//		executeAjaxCall_updateUserSettings(user_edited);
+//	})
+//	
+//	$("#saveMaxDistance").click(function(){
+//		var user_edited = {};
+//		user_edited.maxWorkRadius = $("#miles").val();;
+//		
+//		executeAjaxCall_updateUserSettings(user_edited);
+//	})
+//	
+//	$("#saveMinimumPay").click(function(){
+//		var user_edited = {};
+//		user_edited.minimumDesiredPay = $("#dollarsPerHour").val();;
+//		
+//		executeAjaxCall_updateUserSettings(user_edited);
+//	})	
 	
 	$(".cancel-changes").click(function(){
 		$(this).closest(".edit-container").find("input, select").each(function(){
@@ -42,6 +56,21 @@ $(document).ready(function(){
 	$(document).on("click", ".ui-datepicker-prev span, .ui-datepicker-next span", function(){
 		selectCalendarDays_byDaysOfWeek();
 	})
+	
+	
+	$("#availabilityCalendar").datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1, 
+		onSelect: function(dateText, inst) {	    
+			
+		},		        
+        beforeShowDay: function (date) {        	
+        	return [true, ""];
+     	}
+	})
+
+	
+	setStates();
 	
 	
 })
@@ -101,6 +130,15 @@ function initCalendar_availability(){
 }
 
 function executeAjaxCall_updateUserSettings(user_edited){
+	
+	var user_edited = {};
+	
+	user_edited.homeCity = $("#city").val();;
+	user_edited.homeState = $("#state option:selected").val();;
+	user_edited.homeZipCode = $("#zipCode").val();
+	user_edited.maxWorkRadius = $("#miles").val();;
+	user_edited.minimumDesiredPay = $("#dollarsPerHour").val();;	
+	
 	
 	broswerIsWaiting(true);
 	$.ajax({

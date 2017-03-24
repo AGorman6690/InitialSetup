@@ -50,18 +50,6 @@ public class ApplicationController {
 		}
 
 	}
-
-
-//	@RequestMapping(value = "/wage-proposal/accept/applicant", method = RequestMethod.GET)
-//	public String acceptOffer(@RequestParam(name = "wageProposalId") int wageProposalId,
-//								HttpSession session) {
-//
-//		applicationService.acceptTheProposalProposedByEmployer(wageProposalId, session);
-//
-//		return "redirect:/user/profile";
-//
-//	}
-	
 	
 	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
 	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
@@ -73,46 +61,6 @@ public class ApplicationController {
 		return "";
 
 	}
-	
-//	@RequestMapping(value = "/employment-proposal/approve/applicant", method = RequestMethod.GET)
-//	public String approveOffer(@RequestBody EmploymentProposalDTO employmentProposalDto,
-//								HttpSession session) {
-//
-//		applicationService.approveTheProposalAcceptedByEmployer(employmentProposalDto, session);
-//
-//		return "redirect:/user/profile";
-//
-//	}
-//	
-//	@RequestMapping(value = "/employment-proposal/decline", method = RequestMethod.GET)
-//	public String declineOffer(@RequestBody EmploymentProposalDTO employmentProposalDto,
-//								HttpSession session) {
-//
-//		employmentProposalDto.setContext(EmploymentProposalDTO.CONTEXT_DECLINE);		
-////		applicationService.processEmploymentProposal(employmentProposalDto, session);
-//		
-//		return "redirect:/user/profile";
-//	}
-
-
-//	@RequestMapping(value = "/employment-proposal/counter", method = RequestMethod.POST)
-//	@ResponseBody
-//	public void counterOffer(@RequestBody EmploymentProposalDTO employmentProposalDto, HttpSession session) {
-//
-//		applicationService.insertCounterOffer(employmentProposalDto, session);
-//	}
-
-//	@RequestMapping(value = "/employment-proposal/accept/employer", method = RequestMethod.POST)
-//	@ResponseBody	
-//	public String acceptOffer_Employer(@RequestBody EmploymentProposalDTO employmentProposalDTO,
-//											HttpSession session) {	
-//
-//		applicationService.acceptProposalMadeByEmployee(employmentProposalDTO, session);
-//
-//
-//		return "";
-//
-//	}
 	
 	
 	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)

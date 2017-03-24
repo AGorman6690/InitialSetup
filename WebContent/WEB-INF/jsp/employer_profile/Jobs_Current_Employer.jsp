@@ -11,42 +11,46 @@
 				<table id="table_jobsWaitingToStart" class="main-table-style">
 					<thead>
 						<tr class="">		
-							<th class="placeholder perm1 perm"></th>
-							<th class="placeholder perm1 perm"></th>
-							<th class="wage-proposal" colspan="4" scope="colgroup">
-								<button class="sqr-btn teal select-on-load" data-perspective="wage-proposal">Wage Proposals</button>
+							<th class="job-details" colspan="4" scope="colgroup">
+								<button class="sqr-btn teal select-on-load" data-perspective="job-details">Details</button>
+							</th>						
+							<th class="wage-proposal application employee">
+								<button class="sqr-btn gray" data-perspective="job-details">Details</button>							
 							</th>
-							<th class="application employee" colspan="2" scope="colgroup">
+<!-- 							<th class="placeholder perm1 perm"></th> -->
+							<th class="wage-proposal" colspan="4" scope="colgroup">
+								<button class="sqr-btn teal " data-perspective="wage-proposal">Wage Proposals</button>
+							</th>
+							<th class="application employee job-details" colspan="2" scope="colgroup">
 								<button class="sqr-btn gray" data-perspective="wage-proposal">Wage Proposals</button>
 							</th>
 							<th class="application" colspan="3" scope="colgroup">
-							<button class="sqr-btn teal" data-perspective="application">Applications</button>
+								<button class="sqr-btn teal" data-perspective="application">Applications</button>
 							</th>
-							<th class="wage-proposal employee" colspan="1" scope="colgroup">
+							<th class="wage-proposal employee job-details" colspan="1" scope="colgroup">
 								<button class="sqr-btn gray" data-perspective="application">Applications</button>
 							</th>
 							<th class="employee" colspan="2" scope="colgroup">
 								<button class="sqr-btn teal" data-perspective="employee">Employees</button>
 							</th>
-							<th class="wage-proposal application" colspan="1" scope="colgroup">
+							<th class="wage-proposal application job-details" colspan="1" scope="colgroup">
 								<button class="sqr-btn gray" data-perspective="employee">Employees</button>
 							</th>
 							
 							<th rowspan="1" class=""></th>
 						</tr>
 						<tr class="">
-							<th id="job-name" class="perm1 perm">Job Name</th>
-							<th id="starts-in" class="other perm1 perm">Starts In</th>								
+							<th id="job-name" class="job-details perm1 perm">Job</th>
+							<th id="" class="job-details">Starts In</th>
+							<th id="" class="job-details">End Date</th>
+							<th id="" class="job-details">Location</th>								
 							<th id="" class="wage-proposal">New</th>
 							<th id="waiting-for-applicant" class="wage-proposal perm">Sent</th>
 							<th id="waiting-for-you" class="wage-proposal perm">Received</th>
 							<th id="" class="wage-proposal">Accepted</th>
-<!-- 							<th id="" class="wage-proposal">Offers you initiated</th> -->
-<!-- 							<th id="" class="wage-proposal">Pending applicant approval</th> -->
 							<th id="" class="application">New</th>
 							<th id="" class="application perm">Open</th>
 							<th id="" class="application">Declined</th>
-<!-- 							<th id="" class="application">Invites</th> -->
 							<th id="" class="employee perm">Hires</th>
 							<th id="" class="employee">Max Hires</th>									
 						</tr>
@@ -58,13 +62,15 @@
 						
 							<tr id="${jobDto.job.id }">
 								
-								<td class="perm1 perm">
+								<td class="job-details perm1 perm perm-first">
 									<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=all-apps" >
 										${jobDto.job.jobName }
 									</a>
 								</td>
 								
-								<td class="perm1 perm">${jobDto.daysUntilStart } days</td>
+								<td class="job-details"><span>${jobDto.daysUntilStart } days</span></td>
+								<td class="job-details"><span>${jobDto.job.stringEndDate }</span></td>
+								<td class="job-details"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
 
 								<td class="wage-proposal first" data-job-status="${jobDto.job.status }" data-job-data="received-proposals-new">
 									<span class="${jobDto.countWageProposals_received_new == 0 ? '' : 'accent'}">
