@@ -29,7 +29,11 @@ function doesArrayContainValue(value, array){
 	
 	// Trim white space
 	value = value.replace(/^\s+|\s+$/g,'')
-	
+//	value = parseInt(value);
+	$(array).each(function(){
+		console.log(this)
+	})
+
 	if($.inArray(value, array) == -1) return false;
 	else return true;
 }
@@ -78,14 +82,14 @@ function doesArrayContainAllValues(values, array){
 	
 }
 
-function isStringACommaSeperatedArray(string){
+function isStringACommaSeperatedArray(str){
 	
 	var array;
 	
 	// If necessary, remove the leading and trailing square brackets.
-	string = string.replace(/[\[\]]/g, "");
+	str = str.replace(/[\[\]]/g, "");
 		
-	array = string.split(",");
+	array = str.split(",");
 	
 	if(array.length > 0) return true;
 	else return false;

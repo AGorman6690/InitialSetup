@@ -17,14 +17,17 @@ table#applicantsTable.tile-view th{
 	width: 25%;
 }
 
-table#applicantsTable.tile-view.has-answers th,
-table#applicantsTable.tile-view.has-work-days th{
-	width: 20%;
+table#applicantsTable.tile-view.has-answers th{
+	width: auto;
 }
+/* table#applicantsTable.tile-view.has-answers th, */
+/* table#applicantsTable.tile-view.has-work-days th{ */
+/* 	width: 20%; */
+/* } */
 
-table#applicantsTable.tile-view.has-work-days.has-answers th{
-	width: 16.7%;
-}
+/* table#applicantsTable.tile-view.has-work-days.has-answers th{ */
+/* 	width: 16.7%; */
+/* } */
 
 
 td.tile-view .image-container{

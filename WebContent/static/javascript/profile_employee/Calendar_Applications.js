@@ -8,15 +8,15 @@ var lineClass_3 = "three";
 
 //Refer to: https://bugs.jqueryui.com/ticket/6885
 //I was directed to the above link from http://stackoverflow.com/questions/6334898/jquery-datepicker-after-update-event-or-equivalent/6337622#6337622
-$(function() {
-	$.datepicker._updateDatepicker_original = $.datepicker._updateDatepicker;
-	$.datepicker._updateDatepicker = function(inst) {
-		$.datepicker._updateDatepicker_original(inst);
-		var afterShow = this._get(inst, 'afterShow');
-		if (afterShow)
-			afterShow.apply((inst.input ? inst.input[0] : null));  // trigger custom callback
-	}
-});
+//$(function() {
+//	$.datepicker._updateDatepicker_original = $.datepicker._updateDatepicker;
+//	$.datepicker._updateDatepicker = function(inst) {
+//		$.datepicker._updateDatepicker_original(inst);
+//		var afterShow = this._get(inst, 'afterShow');
+//		if (afterShow)
+//			afterShow.apply((inst.input ? inst.input[0] : null));  // trigger custom callback
+//	}
+//});
 
 $(document).ready(function(){
 	

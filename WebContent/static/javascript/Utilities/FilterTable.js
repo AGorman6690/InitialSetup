@@ -27,19 +27,12 @@ $(document).ready(function(){
 		}
 	})
 
+	$("th[data-filter-attr] input[type=radio]").click(function(){	
+		applyFilters($(this))
+	})
 	
-	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){
-	
-		
-		var $th = $(this).closest("th[data-filter-attr]");
-		var $table = $(this).closest("table");
-				
-		var filters = [];
-		filters= getFilters($table);
-
-		filterTableRows(filters, $table);
-		
-		$th.find("span[data-toggle-id]").eq(0).click();
+	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){	
+		applyFilters($(this))
 	})
 	
 	$("th[data-sort-attr] input[type=radio]").change(function(){
@@ -60,6 +53,18 @@ $(document).ready(function(){
 	
 	
 })
+
+function applyFilters($e){
+	var $th = $e.closest("th[data-filter-attr]");
+	var $table = $e.closest("table");
+			
+	var filters = [];
+	filters= getFilters($table);
+
+	filterTableRows(filters, $table);
+	
+	$th.find("span[data-toggle-id]").eq(0).click();
+}
 
 	
 function closeOtherDropdowns(dropdownIdToExclude){
@@ -198,8 +203,10 @@ function filterTableRows(appliedFilters, $table){
 			// as soon as one of the applied filters is not satisfied. 
 			// ********************************************************
 			
+			
 			// Check if the row has an array of filter values
 			if(isStringACommaSeperatedArray(filterValue_currentRow)){
+//			if($.isArray(filterValue_currentRow)){
 				
 				// Get the array of values
 				filterValue_currentRow = getArrayFromString(filterValue_currentRow);

@@ -1,9 +1,9 @@
-	
-var workDays = [];
-var apply_selectedWorkDays = [];
+var $calendar_applicationWorkDays;
+
 
 $(document).ready(function() {
 	
+	$calendar_applicationWorkDays = $("#apply-work-days-calendar-container .calendar");
 	
 	$("body").on("click", "#jobAddress", function(){
 // **********************
@@ -26,11 +26,10 @@ $(document).ready(function() {
 	})
 
 	initCalendar_jobInfo_workDays();
-	
-	setWorkDays();
-	initCalendar_JobInfo();
-	initCalendar_Apply_SelectWorkDays();
+	initCalendar_apply_workDays();
+
 })
+
 
 function initCalendar_jobInfo_workDays(){
 
@@ -40,80 +39,91 @@ function initCalendar_jobInfo_workDays(){
 
 	$calendar.datepicker({
 		minDate: firstDate,
-		numberOfMonths: getNumberOfMonths($(this)),
+		numberOfMonths: getNumberOfMonths($calendar),
 		beforeShowDay: function(date){
 			if(doesDateArrayContainDate(date, workDays)) return [true, "active111"];
 			else return [true, ""];
-		}		
+		},
+		afterShow: function(){
+			var html = "";
+			$(workDays).each(function(){
+				
+				var td = getTdByDate($calendar, this);
+				
+				html = "<div class='start-and-end-times'>";
+				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "</div>"
+				
+				$(td).append(html);
+			})				
+		}
 	})
 	
 	$calendar.datepicker("setDate", firstDate);
-	
-	
-	var html = "";
-	$calendar.find("td.active111").each(function (){
-		
-		html = "<div class='start-and-end-times'>";
-		html += "<p>12:30a</p><p>12:33p</p>";
-		html += "</div>"
-		
-		$(this).append(html);
-		
-	})
+
 }
 
-
-function isCalendarInDOM_applicantSelectWorkDays(){
+function initCalendar_apply_workDays(){
 	
-	// If the job is accepting partial availability, the calendar will be in the DOM
-	var $calendar = $("#applyContainer").find("#apply_selectWorkDays.calendar").eq(0);
-	if($calendar.length > 0) return true;
-	else return false;
-}
-
-function initCalendar_Apply_SelectWorkDays(){
-	
-	// ***********************************************************
-	// ***********************************************************
-	// Eventually replace this with the generic date picker init function
-	// ***********************************************************
-	// ***********************************************************
-	
-
-	if(isCalendarInDOM_applicantSelectWorkDays()){
+	if(doesApplicantNeedToSelectWorkDays()){
 		
-		var $calendar = $("#apply_selectWorkDays");
-		var numberOfMonths = getNumberOfMonths($calendar);	
-		if(numberOfMonths > 2) numberOfMonths = 2;
+		var firstDate = getMinDate($calendar_applicationWorkDays)
+		var workDays = getDateFromContainer($calendar_applicationWorkDays.siblings(".work-days").eq(0));
+		var selectedWorkDays = [];
 		
-		var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
-		if(isNaN(minDate.getTime()) == true) minDate = new Date();
-		
-		$calendar.datepicker({
-			minDate: minDate,
-			numberOfMonths: numberOfMonths,
-			onSelect: function(dateText, inst){
+		$calendar_applicationWorkDays.datepicker({
+			minDate: firstDate,
+			numberOfMonths: getNumberOfMonths($calendar_applicationWorkDays),
+			onSelect: function(dateString, inst){
+				var date = dateify(dateString);
 				
-				// The applicant can only select a valid work day
-				if(doesDateArrayContainDate(new Date(dateText), workDays)){
-					apply_selectedWorkDays = onSelect_multiDaySelect_withRange(
-							dateText, apply_selectedWorkDays);	
+				if(doesDateArrayContainDate(date, workDays)){
+					if(doesDateArrayContainDate(date, selectedWorkDays))
+						selectedWorkDays = removeDateFromArray(date, selectedWorkDays);
+					else selectedWorkDays = attemptToAddDate(date, selectedWorkDays);
 				}
 				
 			},
-	        beforeShowDay: function (date) {
-
-				if(isDateAlreadySelected(date, apply_selectedWorkDays)) return [true, "active111 apply-selected-work-day"];
-				else if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
+			beforeShowDay: function(date){
+				if(doesDateArrayContainDate(date, selectedWorkDays)) return [true, "active111 selected-work-day"];
+				else if(doesDateArrayContainDate(date, workDays)){
+					
+					return [true, "active111"];
+				}
 				else return [true, ""];
-	        	
-	        }
-	    });		
+			},
+			afterShow: function(){
+				var html = "";
+				$(workDays).each(function(){
+					
+					var td = getTdByDate($calendar_applicationWorkDays, this);
+					
+					html = "<div class='start-and-end-times'>";
+					html += "<p>7:30a</p><p>5:30p</p>";
+					html += "</div>"
+					
+					$(td).append(html);
+				})			
+			}
+
+		})
+		
+		$calendar_applicationWorkDays.datepicker("setDate", firstDate);
 		
 	}
+
+
 	
+
 }
 
+
+function doesApplicantNeedToSelectWorkDays(){
+	
+	var $calendar = $("#apply-work-days-calendar-container .calendar");
+	if($calendar != undefined) return true;
+	else return false;
+}
 
 function setWorkDays(){
 	
@@ -127,29 +137,4 @@ function setWorkDays(){
 	
 }
 
-function initCalendar_JobInfo(){
-	
-	var $calendar = $("#workDaysCalendar");
-	
-	if($calendar.length > 0 ){
-		
-		var numberOfMonths = getNumberOfMonths($calendar);	
-		if(numberOfMonths > 2) numberOfMonths = 2;
-		
-		var minDate = new Date($calendar.attr("data-min-date").replace(/-/g, "/"));
-		if(isNaN(minDate.getTime()) == true) minDate = new Date();
-		
-		$calendar.datepicker({
-			minDate: minDate,
-			numberOfMonths: numberOfMonths, 
-	        beforeShowDay: function (date) {
-
-				if(isDateAlreadySelected(date, workDays)) return [true, "active111"];
-				else return [true, ""];
-	        	
-	        }
-	    });		
-	}
-
-}
 

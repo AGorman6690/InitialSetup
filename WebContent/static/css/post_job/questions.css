@@ -24,9 +24,6 @@
 	cursor:pointer;
 }
 
-#questionActions{
-	padding-bottom: 20px;
-}
 #addedQuestions a:hover{
 	text-decoration:none;
 	text-shadow: none;
@@ -70,11 +67,6 @@
 	padding-top:4px;
 }
 
-#timesTableContainer{
-    width: 700px;
-    margin: auto;
-    display: none;
-}
 #questionsContainer .header.row{
 	padding-bottom:0px;
 }

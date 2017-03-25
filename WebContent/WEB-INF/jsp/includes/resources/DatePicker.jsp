@@ -5,6 +5,6 @@
 <script src="<c:url value="/static/javascript/date_picker/EventHandlers.js" />"></script>
 <script src="<c:url value="/static/javascript/date_picker/InitDatePickers.js" />"></script>
 
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />	
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker_new.css" />	
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/dateColors.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/datepicker.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/calendar_container.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/date_colors.css" />	

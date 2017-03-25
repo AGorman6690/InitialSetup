@@ -152,7 +152,7 @@
 				</c:forEach>				
 			</div>				
 	</div>
-	
+<c:if test="${!empty userDto.jobDtos_jobsCompleted }">
 	<div id="workHistoryContainer">
 		<div class="header-container">
 			<h3>Work History</h3>
@@ -284,5 +284,6 @@
 			</div>
 		</div>
 	</div>
+</c:if>	
 </div>
 

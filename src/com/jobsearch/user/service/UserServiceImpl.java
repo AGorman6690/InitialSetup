@@ -626,7 +626,7 @@ public class UserServiceImpl {
 	}
 
 
-	private void insertEmployment(int userId, int jobId) {
+	public void insertEmployment(int userId, int jobId) {
 		
 		repository.insertEmployment(userId, jobId);
 		

@@ -47,6 +47,12 @@ function getTdByDayMonthYear($calendar, day, month, year){
 	
 }
 
+function getTdByDate($calendar, date){
+	
+	return getTdByDayMonthYear($calendar, date.getDate(), date.getMonth(), date.getFullYear());
+	
+}
+
 function selectCalendarTdElement_ByDate($calendar, stringDate){
 	
 	var date = new Date(stringDate);
@@ -265,4 +271,36 @@ function getSelectedDates($calendar, format, className_selectedDate){
 	})
 	
 	return selectedDates;
+}
+
+function showHoverDateRange($calendar, hoverDate, firstDate){
+
+	var iDate;
+	var td;
+	var startDate;
+	var endDate;
+	
+	if(!isNaN(hoverDate.getTime()) && firstDate.getTime() != hoverDate.getTime()){
+		if(hoverDate.getTime() < firstDate.getTime()){
+			
+			startDate = hoverDate;
+			endDate = firstDate;
+			endDate.setDate(endDate.getDate() - 1);
+		}else{
+			startDate = firstDate;
+			startDate.setDate(startDate.getDate() + 1);
+			endDate = hoverDate;
+		}
+			
+		$calendar.find("td.hover-range").each(function(){ $(this).removeClass("hover-range") });
+		iDate = startDate;
+		while(startDate.getTime() <= endDate.getTime()){
+			
+			td = getTdByDate($calendar, iDate);
+			$(td).addClass("hover-range");
+		
+			iDate.setDate(iDate.getDate() + 1);
+			
+		}			
+	}
 }

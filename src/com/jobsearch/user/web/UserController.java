@@ -141,18 +141,6 @@ public class UserController {
 		return"/find_employees/Results_Find_Employees";
 	}
 
-	@RequestMapping(value = "/settings", method = RequestMethod.GET)
-	public ModelAndView viewSettings(ModelAndView model, HttpSession session) {
-
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		if (user.getProfileId() == 1) {
-			model.setViewName("EmployeeSettings");
-		}
-
-		return model;
-	
-	}
 	
 	@RequestMapping(value = "/availability/update", method = RequestMethod.POST)
 	public String updateAvailability(@RequestBody AvailabilityDTO availabilityDto,

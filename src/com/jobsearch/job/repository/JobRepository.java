@@ -30,6 +30,8 @@ import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
+import io.codearte.catchexception.shade.mockito.internal.verification.Only;
+
 
 @Repository
 public class JobRepository {
@@ -359,7 +361,7 @@ public class JobRepository {
 		String sql = "SELECT *, "
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
 				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
-				+ " FROM job j";
+				+ " FROM job j WHERE j.Status < 2";
 
 		
 		argsList.add(filter.getLat());
@@ -367,7 +369,7 @@ public class JobRepository {
 		argsList.add(filter.getLat());
 		
 		
-		String startNextSubQuery = " WHERE j.JobId IN (";
+		String startNextSubQuery = " AND j.JobId IN (";
 		int count_subQueries = 0;
 		
 		// **************************************************
@@ -592,6 +594,9 @@ public class JobRepository {
 			i += 1;
 		}
 		
+	
+		// Only closed jobs
+//		sql += " WHERE j.Status < 2";
 
 		//Complete the distance filter.			
 		sql += " HAVING distance < ?";

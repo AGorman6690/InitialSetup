@@ -74,23 +74,19 @@
 <!-- 		Global Links -->
 		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/global_new.css" rel="stylesheet" />	
-		<link href="/JobSearch/static/css/layout.css" rel="stylesheet" />			
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
 <!-- 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	 -->
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/headerOptions.css" />	
 		
-<!-- 		Global Scripts -->
-		<script src="<c:url value="/static/javascript/Layout.js" />"></script>	
+<!-- 		Global Scripts -->	
 		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
-		<script src="<c:url value="/static/javascript/SideBar.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
 		<script src="<c:url value="/static/javascript/Utilities/Arrays.js" />"></script>
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
-		<script src="<c:url value="/static/javascript/Global.js" />"></script>	
-		<script src="<c:url value="/static/javascript/InitDtos.js" />"></script>	
+		<script src="<c:url value="/static/javascript/Global.js" />"></script>		
 		
 						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">

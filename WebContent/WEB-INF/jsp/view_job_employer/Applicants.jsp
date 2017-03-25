@@ -30,7 +30,43 @@
 				</tr>
 			
 				<tr>
-					<th id="applicantName" class="table-view" >Name</th>
+				
+					<th id="applicantName" class="left header-dropdown table-view tile-view"
+					 data-filter-attr="data-application-status" data-must-match-all-filter-values="0">
+					
+						<span data-toggle-id="filterApplicationStatus" >
+							Name<span class="glyphicon glyphicon-menu-down"></span>
+						</span>
+						<div id="filterApplicationStatus" class="dropdown-container filter-container checkbox-container">
+<!-- 							<span class="approve-filter glyphicon glyphicon-ok"></span> -->
+							
+<!-- 							<label class="select-all-container"> -->
+<!-- 								<input id="filterOption_wageProposal_selectAll" class="select-all" -->
+<!-- 									type="checkbox" name="wage-prpoposal-status" -->
+<!-- 									>Select All -->
+<!-- 							</label> -->
+							<div class="options">
+<!-- 								<label> -->
+<!-- 									<input id="" type="checkbox" -->
+<!-- 										name="application-status" -->
+<!-- 										data-filter-attr-value="0">No action taken -->
+<!-- 								</label> -->
+								<label>
+									<input id="" type="radio"
+										name="application-status"
+										data-filter-attr-value="0">All
+								</label>
+								<label>
+									<input id="" type="radio"
+										name="application-status"
+										data-filter-attr-value="2">Favorites
+								</label>								
+							</div>
+						
+						</div>					
+
+					</th>				
+
 					<th id="wageNegotiation_status" class="header-dropdown table-view tile-view" data-filter-attr="data-is-sent-proposal">
 						<span data-toggle-id="filterWageProposalStatus" >
 							Status<span class="glyphicon glyphicon-menu-down"></span>
@@ -183,46 +219,13 @@
 					</th>						
 
 				</c:if>							
-					<th id="status" class="left header-dropdown table-view tile-view" data-filter-attr="data-application-status">
-					
-						<span data-toggle-id="filterApplicationStatus" >
-							Favorites<span class="glyphicon glyphicon-menu-down"></span>
-						</span>
-						<div id="filterApplicationStatus" class="dropdown-container filter-container checkbox-container">
-							<span class="approve-filter glyphicon glyphicon-ok"></span>
-							
-							<label class="select-all-container">
-								<input id="filterOption_wageProposal_selectAll" class="select-all"
-									type="checkbox" name="wage-prpoposal-status"
-									>Select All
-							</label>
-							<div class="options">
-<!-- 								<label> -->
-<!-- 									<input id="" type="checkbox" -->
-<!-- 										name="application-status" -->
-<!-- 										data-filter-attr-value="0">No action taken -->
-<!-- 								</label> -->
-								<label>
-									<input id="" type="checkbox"
-										name="application-status"
-										data-filter-attr-value="1">Not considering
-								</label>
-								<label>
-									<input id="" type="checkbox"
-										name="application-status"
-										data-filter-attr-value="2">Considering
-								</label>								
-							</div>
-						
-						</div>					
 
-					</th>
 				</tr>
 			</thead>
 			<tbody class="vertical-lines">
 			<c:forEach items="${jobDto.applicationDtos }" var="applicationDto">
 				<tr class=""
-					data-application-status="${applicationDto.application.status }"
+					data-application-status="[0,${applicationDto.application.status }]"
 					data-applicant-rating="${applicationDto.applicantDto.ratingValue_overall}"
 					data-application-id="${applicationDto.application.applicationId }"
 					data-is-old="${applicationDto.application.hasBeenViewed }"
@@ -235,7 +238,8 @@
 					>
 					
 					<td class="table-view">
-						<div class="vert-border">
+						<div class="vert-border name-container">
+							<span class="favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
 							<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
 										 ${applicationDto.applicantDto.user.firstName }</a>
 						</div>
@@ -301,29 +305,6 @@
 						</div>
 					</td>
 				</c:if>			
-	
-	<!-- 								Application Status						 -->
-					<td class="table-view">
-						<div class="application-status-container">
-<%-- 							<c:choose> --%>
-<%-- 								<c:when test="${applicationDto.application.status == 1 }"> --%>
-<!-- 								<button id="" value="1" class="active">Not Considering</button> -->
-<%-- 								</c:when> --%>
-<%-- 								<c:otherwise> --%>
-<!-- 								<button id="" value="1" class="">Not Considering</button> -->
-<%-- 								</c:otherwise> --%>
-<%-- 							</c:choose> --%>
-							<c:choose>
-								<c:when test="${applicationDto.application.status == 2 }">
-								<button id="" value="2" class="active">Considering</button>
-								</c:when>
-								<c:otherwise>
-								<button id="" value="2" class="">Considering</button>
-								</c:otherwise>
-							</c:choose>										
-						</div>
-					</td>
-					
 					<td class="tile-view" colspan="99">
 						<div class="image-container">
 							<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">

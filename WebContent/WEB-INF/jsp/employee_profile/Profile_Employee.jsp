@@ -48,7 +48,7 @@
 		</c:choose>
 	</div>
 	<div id="applications_calendar_view" class="page-section">
-		<div class="calendar-container">
+		<div class="calendar-container teal-title">
 			<div class="calendar"></div>
 		</div>
 	</div>

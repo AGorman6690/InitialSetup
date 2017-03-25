@@ -2,22 +2,21 @@
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 
 
-	<script src="<c:url value="/static/javascript/Category.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>	
-	<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-	<link rel="stylesheet" type="text/css"	href="../static/css/Templates/Modal.css" />
-		
-	<script src="<c:url value="/static/javascript/find_jobs/Filters.js" />"></script>
-	<script src="<c:url value="/static/javascript/find_jobs/AjaxCall.js" />"></script>
-	<script src="<c:url value="/static/javascript/find_jobs/Map.js" />"></script>
-	<script src="<c:url value="/static/javascript/find_jobs/FilterResultsInteraction.js" />"></script>
-	<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/findJobs.css" />	
-	<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/sortBy.css" />
-	<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filters.css" />
-	<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filteredJobs.css" />
+<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+<script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
+<script src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
+<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>	
+<link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/Templates/Modal.css" />
+	
+<script src="<c:url value="/static/javascript/find_jobs/Filters.js" />"></script>
+<script src="<c:url value="/static/javascript/find_jobs/AjaxCall.js" />"></script>
+<script src="<c:url value="/static/javascript/find_jobs/Map.js" />"></script>
+<script src="<c:url value="/static/javascript/find_jobs/FilterResultsInteraction.js" />"></script>
+<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/findJobs.css" />	
+<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/sortBy.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filters.css" />
+<link rel="stylesheet" type="text/css"	href="../static/css/find_jobs/filteredJobs.css" />
 
 
 

@@ -42,7 +42,6 @@ public class ApplicationController {
 	public String applyForJob(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
 		if (SessionContext.isLoggedIn(session)) {
-			applicationDto.getEmploymentProposalDto().setContext(EmploymentProposalDTO.CONTEXT_INITIATE);
 			applicationService.applyForJob(applicationDto, session);
 			return "redirect:/user/profile";
 		} else {

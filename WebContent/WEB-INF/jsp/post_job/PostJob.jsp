@@ -31,7 +31,7 @@
 
 <div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
 	<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
-	<span class="select-page-section" data-page-section-id="datesContainer">Dates</span>
+	<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Dates</span>
 	<span class="select-page-section" data-page-section-id="timesContainer">Times</span>
 	<span class="select-page-section" data-page-section-id="locationContainer">Location</span>
 	<span class="select-page-section" data-page-section-id="compensationContainer">Compensation</span>
@@ -40,7 +40,7 @@
 	<span class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
 </div>
 
-<div class="container ${!empty postedJobs ? 'hide-on-load' : '' }">
+<div class=" ${!empty postedJobs ? 'hide-on-load' : '' }">
 
 
 	<div id="preview-job-posting-container">
@@ -88,38 +88,54 @@
 					<p>Partial Availability</p>
 					<label><input id="partialAvailabilityAllowed" type="checkbox">Allowed</label>
 				</div>					
-				<div class="item calendar-container">
+				<div class="item calendar-container teal-navigation">
 					<p>Dates</p>
 					<div id="workDaysCalendar_postJob" class="calendar" data-is-showing-job="0">
 					</div>											
-					<button class="square-button" id="clearCalendar">Clear</button>
+					<button class="" id="clearCalendar">Clear</button>
 				</div>
 			</div>			
 		</div>		
 		
 		<div id="timesContainer" class="page-section">
-
-			<p id="noDatesSelected" class="">Please select one or more dates</p>
+		
+			<p id="no-dates-selected" class="linky-hover">Please select one or more dates</p>
+			<div id="initial-time-question">
+				<p>The start time and the end time for each date ...</p>
+				<button id="times-are-the-same" class="sqr-btn gray sm">is the same</button>
+				<button id="times-are-not-the-same" class="sqr-btn gray sm">is NOT the same</button>
+			</div>
+			<div id="set-one-start-and-end-time">
+				<div>
+					<p>Start Time</p>
+					<select id="single-start-time" class="time start-time"></select>
+				</div>
+				<div>
+					<p>End Time</p>
+					<select id="single-end-time" class="time end-time"></select>
+				</div>
+			</div>
 			<div id="timesTableContainer" >
 				<table id="timesTable" class="main-table-style">
 					<thead>
 						<tr>
-							<th>Dates</th>
-							<th>Selection</th>
+							<th>Date</th>
+<!-- 							<th>Selection</th> -->
 							<th>Start Time</th>
 							<th>End Time</th>
 						</tr>
 <!-- 							These elements are only to be cloned -->
 <!-- 					************************************ -->
-						<tr class="master-row-multi-select">
-							<td></td>
-							<td><label><input class="select-all" type="checkbox" name="time">Select All Dates</label></td>
-							<td><select   class="time start-time select-all"></select></td>
-							<td><select  class="time end-time select-all"></select></td>							
-						</tr>
+<!-- 						<tr class="master-row-multi-select"> -->
+<!-- 							<td colspan="1">Set Selected Dates</td> -->
+<!-- 							<td></td> -->
+<!-- 							<td><label><input class="select-all" type="checkbox" name="time">Set Times For Multiple Dates</label></td> -->
+<!-- 							<td><select   class="time start-time select-all"></select></td> -->
+<!-- 							<td><select  class="time end-time select-all"></select></td>							 -->
+<!-- 						</tr> -->
 						<tr class="master-row work-day-row">
 							<td class="date"></td>
-							<td><input type="checkbox" name="time"></td>
+<!-- 							<td><input type="checkbox" name="time"></td> -->
 							<td><select class="time start-time"></select></td>
 							<td><select class="time end-time"></select></td>
 						</tr>
@@ -199,7 +215,7 @@
 		</div>	
 		
 		<div id="questionsContainer" class="page-section">
-			<div id="copy-or-new-question">
+			<div id="copy-or-new-question" class="item">
 				<div id="copy-question-container">
 					<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Copy a previous question</button>
 					<div id="postedQuestions" class="dropdown-style">
@@ -215,7 +231,7 @@
 				<div id="addedQuestions"></div>
 			</div>		
 
-			<div id="create-question-container">
+			<div id="create-question-container" class="item">
 				<div id="questionActions">
 <!-- 					<button id="newQuestion" class="clickable btn-sqr">Clear</button> -->
 					<button id="addQuestion" class="clickable btn-sqr">Add</button>

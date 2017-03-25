@@ -3,6 +3,9 @@
     color: #ffffff;
 }
 
+.pad-top{
+	padding-top: 25px;
+}
 .linky-hover:hover{
 	text-decoration: underline;
 	cursor: pointer;
@@ -36,6 +39,26 @@ input, select, textarea{
 	font-size: 19px;
 	margin: 0px 20px;
 	font-weight: normal;
+}
+
+.sqr-btn.gray-2{
+    font-size: 16px;
+    color: #163b3d;
+    cursor: pointer;
+    margin: 0px 15px;
+    border: 2px solid#bbbbbb;
+    padding: 2px 10px;
+    background: #f4f4f4;
+}
+
+.sqr-btn.teal.sm{
+	padding: 9px 13px;
+	font-size: 16px;
+}
+
+.sqr-btn.gray.sm{
+	padding: 9px 13px;
+	font-size: 16px;
 }
 
 .sqr-btn.gray{
@@ -122,8 +145,13 @@ span.glyphicon-menu-down{
 	margin: 0px 5px;
 	padding: 0px 5px;
 	color: #adadad;
+	font-size: 12px;
 }
 
 .glyphicon{
+	cursor: pointer;
+}
+
+[data-toggle-id]{
 	cursor: pointer;
 }

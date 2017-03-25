@@ -13,7 +13,7 @@
 }
 
 .item{
-	padding-bottom: 35px;
+	padding-top: 35px;
 }
 
 .item p{
@@ -36,11 +36,10 @@
 
 #edit-or-submit-container,
 #previous-next-container{
-    padding: 25px 0px 15px 0px;
+    padding: 25px 0px 35px 0px;
     text-align: center;
     border-bottom: 1px solid #cacaca;	
     margin: auto;
-    margin-bottom: 40px;	
     width: 600px;
 }
 
@@ -59,23 +58,34 @@
 	background: #163b3d;
 	color: #ffffff;
 	padding: 10px 20px;
-	margin: auto;
-	margin-bottom: 20px;
+
 	font-size: 20px;
     width: 270px;
 }
-
+#proceed-to-preview-job-posting{
+	margin: 0px auto 20px;
+}
+#editPosting,
+#submitPosting_final{
+	margin: 0px 10px;
+}
+#clearCalendar,
 #previous-next-container span{
-	font-size: 18px;
+	font-size: 16px;
 	color: #163b3d;
 	cursor: pointer;
 	margin: 0px 15px;
-	font-weight: bold;
+/* 	font-weight: bold; */
+    border: 2px solid#bbbbbb;
+    padding: 2px 10px;
+    width: 119px;
+    display: inline-block;
+    background: #f4f4f4;
 }
 
-#previous-next-container span:hover{
-	text-decoration: underline;
-}
+/* #previous-next-container span:hover{ */
+/* 	text-decoration: underline; */
+/* } */
 
 .page-section{
 	text-align: center;
@@ -134,10 +144,62 @@ thead .master-row{
 
 #copy-question-container{
 	display: inline-block;
-    padding-bottom: 25px;	
 }
 
 #locationContainer input,
 #locationContainer select{
 	width: 225px;
+}
+
+#initial-time-question{
+	padding-bottom: 30px;
+}
+
+#initial-time-question,
+#set-one-start-and-end-time,
+#timesTableContainer{
+	display: none;
+}
+
+
+#timesTableContainer{
+    width: 700px;
+    margin: auto;
+}
+
+#initial-time-question p{
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+#initial-time-question button.sqr-btn{
+	width: 230px;
+}
+
+#initial-time-question .sqr-btn.selected{
+	background: #197994;
+	color: #fff;
+}
+
+#set-one-start-and-end-time p{
+	display: inline-block;
+	width: 120px;
+	text-align: left;
+}
+
+#set-one-start-and-end-time div:first-child{
+	margin-bottom: 20px;
+}
+
+.calendar .ui-datepicker-title{
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.add-list-item{
+	padding: 5px;
+	margin-top: 8px;
+}
+
+.list-item{
+	margin: 8px 0px;
 }

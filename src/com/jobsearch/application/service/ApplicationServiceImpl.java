@@ -90,8 +90,16 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 			
-			applicationDto.setDateStrings_unavailableWorkDays(jobService.getDateStrings_UnavailableWorkDays(applicantId,
-																applicationDto.getJobDto().getWorkDays()));
+			// **********************************************************************
+			// **********************************************************************
+			// Determine whether the employees should specify the days they are **available** 
+			// or **unavailable**.
+			// I'm leaning towards: "assume the user is available unless otherwise noted".
+			// (i.e. the user specifies their unavailability.
+			// **********************************************************************
+			// **********************************************************************
+//			applicationDto.setDateStrings_unavailableWorkDays(jobService.getDateStrings_UnavailableWorkDays(applicantId,
+//																applicationDto.getJobDto().getWorkDays()));
 			
 			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
 			
@@ -341,23 +349,23 @@ public class ApplicationServiceImpl {
 	   
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
-		// Get the proposal being RESPONDED TO.
+		// Get the proposal being **RESPONDED TO**.
 		// Per the application id, get the most recent employment proposal in the database.
-		EmploymentProposalDTO proposalBeingAddressed = getCurrentEmploymentProposal(
+		EmploymentProposalDTO proposalBeingRespondedTo = getCurrentEmploymentProposal(
 							employmentProposalDto.getApplicationId());
 
 		// For all responses:
 		// 1) Is the proposal being responded to currently presented TO the session user
 		// 2) AND is this proposal not yet declined? 
-		if(proposalBeingAddressed.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
-				proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_DECLINED){
+		if(proposalBeingRespondedTo.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
+				proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_DECLINED){
 			
 			switch (context) {
 				case "decline":
-					this.updateApplicationStatus(proposalBeingAddressed.getApplicationId(),
+					this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
 							EmploymentProposalDTO.STATUS_DECLINED);
 	
-						Application application = this.getApplication(proposalBeingAddressed.getApplicationId());
+						Application application = this.getApplication(proposalBeingRespondedTo.getApplicationId());
 						this.updateApplicationStatus(application.getApplicationId(),
 							Application.STATUS_DECLINED);				
 					break;
@@ -372,17 +380,17 @@ public class ApplicationServiceImpl {
 						// Offers that are pending the applicant's approval
 						// (i.e. the employer has accepted the applicant's proposal)
 						// cannot be countered.
-						if(proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL){
+						if(proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL){
 					    	
-							this.updateWageProposalStatus(proposalBeingAddressed.getEmploymentProposalId(),
+							this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
 									WageProposal.STATUS_COUNTERED);
 	
 							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
 							
-							newProposal.setProposedByUserId(proposalBeingAddressed.getProposedToUserId());
-							newProposal.setProposedToUserId(proposalBeingAddressed.getProposedByUserId());
+							newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
+							newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
 							newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-							newProposal.setApplicationId(proposalBeingAddressed.getApplicationId());
+							newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 							
 							// ***********************************************************************************
 							// This needs to be verified
@@ -390,12 +398,12 @@ public class ApplicationServiceImpl {
 								newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
 							}
 							else{
-								newProposal.setDateStrings_proposedDates(proposalBeingAddressed.getDateStrings_proposedDates());
+								newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
 							}
 							if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
 								newProposal.setAmount(employmentProposalDto.getAmount());
 							}else{
-								newProposal.setAmount(proposalBeingAddressed.getAmount());
+								newProposal.setAmount(proposalBeingRespondedTo.getAmount());
 							}
 							// ***********************************************************************************
 							
@@ -415,30 +423,27 @@ public class ApplicationServiceImpl {
 					// ****************************************************
 					// ****************************************************					
 					
-					if(proposalBeingAddressed.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
+					if(proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
 
 						if(isValidExpirationTime(employmentProposalDto)){
 
-							
 							LocalDateTime employerAcceptedDate = LocalDateTime.now();
 							LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
 																employmentProposalDto);
 						
 							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
 							
-							newProposal.setAmount(proposalBeingAddressed.getAmount());
-							newProposal.setProposedByUserId(proposalBeingAddressed.getProposedToUserId());
-							newProposal.setProposedToUserId(proposalBeingAddressed.getProposedByUserId());
-							newProposal.setApplicationId(proposalBeingAddressed.getApplicationId());
+							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
+							newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
+							newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
+							newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 							newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);				
-							newProposal.setDateStrings_proposedDates(proposalBeingAddressed.getDateStrings_proposedDates());
-							
+							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
 							
 							this.insertEmploymentProposal(newProposal);
 							
-							repository.updateApplication_PendingApplicantApproval(proposalBeingAddressed.getApplicationId(),
+							repository.updateApplication_PendingApplicantApproval(proposalBeingRespondedTo.getApplicationId(),
 																				employerAcceptedDate, expirationDate);				
-							
 						}				
 					}					
 					break;
@@ -447,19 +452,23 @@ public class ApplicationServiceImpl {
 					
 					// ***************************************************
 					// ***************************************************
-					// Should the status of the applicant's proposal be set to "Accepted"???
+					// Should the status of the applicant's **proposal** be set to "Accepted"???
 					// Currently it is not being updated and remaining at -1.
 					// Review this.
 					// ***************************************************
 					// ***************************************************
 				
-					if(proposalBeingAddressed.getStatus() == EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL &&
+					if(proposalBeingRespondedTo.getStatus() == EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL &&
 						!isEmployerAcceptanceExpired(employmentProposalDto.getApplicationId()) ){
 		
-						this.updateWageProposalStatus(proposalBeingAddressed.getEmploymentProposalId(),
+						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
 														EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
 		
-						this.updateApplicationStatus(proposalBeingAddressed.getApplicationId(), Application.STATUS_ACCEPTED);
+						this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(), Application.STATUS_ACCEPTED);
+						
+						
+						userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(),
+										jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId()).getId());
 						
 						// If necessary, cancel the applicant's conflicting applications
 						List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
@@ -540,9 +549,15 @@ public class ApplicationServiceImpl {
 										applicationDto.getCurrentWageProposal().getId()));
 			}
 			
-			applicationDto.setDateStrings_unavailableWorkDays(
-							jobService.getDateStrings_UnavailableWorkDays(userId,
-											applicationDto.getJobDto().getWorkDays()));
+			
+			// **************************************************
+			// **************************************************
+			// See note in getApplicationDtos_ByJob_OpenApplications();
+			// **************************************************
+			// **************************************************
+//			applicationDto.setDateStrings_unavailableWorkDays(
+//							jobService.getDateStrings_UnavailableWorkDays(userId,
+//											applicationDto.getJobDto().getWorkDays()));
 			
 			applicationDto.setApplicationDtos_conflicting(
 								this.getApplicationDtos_Conflicting(userId,

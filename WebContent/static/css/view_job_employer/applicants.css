@@ -80,6 +80,17 @@ table#applicantsTable.table-view th{
 	width: 20%;
 }
 
+table td span.glyphicon-star,
+table td span.glyphicon-star-empty{
+    font-size: 25px;
+    margin-right: 15px;
+}
+.glyphicon-star{
+	color: #000;
+}
+.glyphicon-star-empty{
+	color: #c4c4c4;
+}
 table#applicantsTable.table-view.has-answers th,
 table#applicantsTable.table-view.has-work-days th{
 	width: 16.7%;
@@ -95,7 +106,23 @@ table#applicantsTable th{
     font-weight: normal;
 }  
 
-
+td div.name-container{
+    height: 30px;
+    position: relative;
+}
+td div.name-container span{
+    position: absolute;
+    left: 7px;
+    top: 1px;
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+}
+td div.name-container a{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 30px;	
+}
 
 
 td span.glyphicon{
@@ -110,25 +137,28 @@ td span.glyphicon{
 }
 
 
-.question-container .answer{
+table .question-container .answer{
 	text-align:left;
 	padding-left: 20px;	
+}
+table .question-container{
+	width: 250px;;
 }
 
 .answer-container{
 	padding-left:25px;	
 }
 
-.question-container{
+table .question-container{
 	padding:10px 0px;
 }
 
 
-.question-container.not-first{
+table .question-container.not-first{
 	display: none;
 }
 
-.question-container .question{
+table .question-container .question{
     /* font-weight: bold; */
     font-style: italic;
 }

@@ -3,6 +3,10 @@
 	cursor: default;
 }
 
+.calendar-container .calendar.show-hover-range td.hover-range{
+	background: #bbbbbb !important;
+}
+
 .calendar-container .calendar td.unavailable a{
 	color: #ffffff;
 	cursor: default;

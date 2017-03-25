@@ -70,6 +70,26 @@ td.active111 a{
 	display:none;
 }
 
+.calendar-container.teal-title .ui-datepicker-title{
+    font-weight: bold;
+    font-size: 19px;
+    color: #197994;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+.calendar-container.teal-title .ui-datepicker-prev,
+.calendar-container.teal-title .ui-datepicker-next{
+    color: #163b3d;
+    font-weight: bold;
+    font-size: 16px;
+}
 
 .calendar-container .ui-datepicker-multi{
 	width:100% !important;
@@ -95,5 +115,15 @@ td.active111 a{
 	color: #ffffff;
 }
 
+.calendar-container.hide-prev-next .ui-datepicker-prev,
+.calendar-container.hide-prev-next .ui-datepicker-next{
+	display: none
+}
 
-
+.calendar-container.teal-navigation .ui-datepicker-next,
+.calendar-container.teal-navigation .ui-datepicker-prev{
+    padding: 2px 6px;
+    background: #8e8e8e;
+    color: #fff;
+    border-radius: 4px;
+}

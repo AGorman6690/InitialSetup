@@ -1,8 +1,20 @@
 
 <%@ include file="../includes/TagLibs.jsp"%>	
 
-<div>
 
+
+<div class="page">
+		<div id="map-section">
+		<div id="map-container" class="corner">
+			<div id="jobAddress">
+				<p class="accent">${jobDto.job.streetAddress }</p>
+				<p class="accent">${jobDto.job.city}, ${jobDto.job.state }</p>
+				<p class="accent">${jobDto.job.zipCode }</p>		
+			</div>	
+			<div id="map" class="right-border corner" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
+		</div>
+	</div>
+	
 	<div class="title">
 		<p class="job-name">${jobDto.job.jobName }</p>
 		<p class="categories">		
@@ -11,22 +23,63 @@
 			</c:forEach>	
 		</p>
 		<p id="job-description">
-				${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-		
+			${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 		</p>
-		<div id="map-container">
-			<div id="jobAddress">
-				<div class="accent">${jobDto.job.streetAddress }</div>
-				<div class="accent">${jobDto.job.city}, ${jobDto.job.state }</div>
-				<div class="accent">${jobDto.job.zipCode }</div>		
+		<c:if test="${jobDto.skillsRequired.size() > 0 || jobDto.skillsDesired.size() > 0 }">
+			<div id="skills-container">
+<!-- 				<p data-toggle-id="skills-details" class="detail-header-lbl">Skills<span class="glyphicon-menu-down glyphicon"></span></p> -->
+				<div id="skills-details"  class="details-container">
+					<c:if test="${jobDto.skillsRequired.size() > 0 }">
+						<div>
+							<p class="detail-header-lbl">Required Skills</p>
+							<ul>
+								<c:forEach items="${jobDto.skillsRequired }" var="skill">
+									<li>${skill.text }</li>	
+								</c:forEach>
+							</ul>
+						</div>		
+					</c:if>
+						
+					<c:if test="${jobDto.skillsDesired.size() > 0 }">
+						<div>
+							<p class="detail-header-lbl">Desired Skills</p>
+							<ul>
+								<c:forEach items="${jobDto.skillsDesired }" var="skill">
+									<li>${skill.text }</li>	
+								</c:forEach>
+							</ul>
+						</div>			
+					</c:if>
+				</div>
 			</div>	
-			<div id="map" class="right-border" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
-		</div>		
+		</c:if>		
+		<c:if test="${jobDto.questions.size() > 0 }">			
+			<div id="questions-container-new">
+				<p data-toggle-speed="2" data-toggle-id="question-details" class="detail-header-lbl">Questions<span class="glyphicon-menu-down glyphicon"></span></p>
+				<div id="question-details" class="details-container">
+					<c:forEach items="${jobDto.questions }" var="question">					
+						<p>${question.text }</p>
+						
+						<c:choose>
+							<c:when test="${question.formatId == 2 || question.formatId == 3}">
+								<div class="answer-container">
+									<ul>
+									<c:forEach items="${question.answerOptions }" var="answerOption">
+										<li>${answerOption.text }</li>
+									</c:forEach>
+									</ul>
+								</div>
+							</c:when>
+						</c:choose>
+						
+					</c:forEach>		
+				</div>			
+			</div>		
+		</c:if>		
 
 	</div>
-	<div id="middle-container">
-		
-		<div id="work-days-calendar-container" class="calendar-container read-only">
+	<div id="middle-container">		
+		<div id="work-days-calendar-container" class="calendar-container read-only job-info-calendar ">
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 			<div class="work-days">
 				<c:forEach items="${jobDto.workDays }" var="workDay">
@@ -35,70 +88,18 @@
 			</div>
 		</div>		
 	</div>
-	
-	
-		<c:if test="${jobDto.questions.size() > 0 }">			
-			<div id="questions-container">
-				<p>Questions</p>
-				<div class="questions">
-					<c:forEach items="${jobDto.questions }" var="question">					
-						<p>${question.text }</p>
-						<div class="answer-container">
-							<c:choose>
-								<c:when test="${question.formatId == 2 || question.formatId == 3}">
-									<div class="answer-options-container">
-									<c:forEach items="${question.answerOptions }" var="answerOption">
-										<div class="answer-option">
-											${answerOption.text }
-										</div>
-									</c:forEach>
-									</div>
-								</c:when>
-							</c:choose>
-						</div>
-					</c:forEach>		
-				</div>			
-			</div>		
-		</c:if>		
 </div>
 
-
-<div class="row">
-					
-	<div class="container">
-
-
-	
-	<c:if test="${jobDto.skillsRequired.size() > 0 }">
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Required Skills
-			</div>
-			<div class="info-value col-sm-8">
-				<ul>
-					<c:forEach items="${jobDto.skillsRequired }" var="skill">
-						<li>${skill.text }</li>	
-					</c:forEach>
-				</ul>
-			</div>
-		</div>			
-	</c:if>
-			
-	<c:if test="${jobDto.skillsDesired.size() > 0 }">
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Desired Skills
-			</div>
-			<div class="info-value col-sm-8">
-				<ul>
-					<c:forEach items="${jobDto.skillsDesired }" var="skill">
-						<li>${skill.text }</li>	
-					</c:forEach>
-				</ul>
-			</div>
-		</div>			
-	</c:if>
-
+	<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
 		<div class="info-container row">
 			<div class="info-label col-sm-4">
 				Employment Type
@@ -129,25 +130,10 @@
 		</div>	
 
 		
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
+	
 		
 		<a class="square-button-green" href="/JobSearch/job/${jobDto.job.id }/update/status/1">Start Job (for debugging)</a>	
 		<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
-	</div>
-	<div class="col-sm-4">
-	
-		
- 
-	</div>
-</div>
+
 
 		

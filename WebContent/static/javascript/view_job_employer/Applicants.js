@@ -44,9 +44,55 @@ $(document).ready(function(){
 		if($("#applicantsTable").hasClass("tile-view")) showTileView(false);
 	})
 	
+	
+	
+	$(".favorite-flag").click(function(){ updateApplicationStatus($(this)) })
+	
 	initCalendars_applicantAvailability();
 	
 })
+
+
+function updateApplicationStatus($e){
+
+
+	var applicationDto = {};
+	applicationDto.application = {};
+	
+	var $tr = $e.closest("tr");
+	applicationDto.application.applicationId = $tr.attr("data-application-id");
+	
+	toggleClasses($e, "glyphicon-star", "glyphicon-star-empty");
+	
+	if($e.hasClass("glyphicon-star")) applicationDto.newStatus = 2;
+	else applicationDto.newStatus = 0;
+	
+	// This is very hackish.
+	// A string-array, with zero as an element, is set because this will ensure the
+	// "All" filter on the "Name" column will still work after this row's application-status attribute
+	// is updated below.
+	$tr.attr("data-application-status", "[0," + applicationDto.newStatus + "]"); 
+	
+	$.ajax({
+		type : "POST",
+		url : '/JobSearch/application/status/update',
+		headers : getAjaxHeaders(),
+		contentType : "application/json",
+		data: JSON.stringify(applicationDto),
+		success: _success,
+		error: _error
+	})
+	
+	function _success(){		
+		
+		
+	}
+	
+	function _error(){
+// 		alert("status error")
+	}
+}
+
 
 function initCalendars_applicantAvailability(){
 	
