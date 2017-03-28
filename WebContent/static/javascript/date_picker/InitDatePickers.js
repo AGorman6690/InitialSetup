@@ -108,6 +108,98 @@ function initCalendar_showAvailability($calendar, dates_application, dates_job){
 	
 }
 
+function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable, dates_proposed){
+
+	var firstDate = getMinDate($calendar)
+
+	$calendar.datepicker({
+		minDate: firstDate,
+		numberOfMonths: getNumberOfMonths($calendar),
+		onSelect: function(dateText, inst){
+			
+			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
+				var date = dateify(dateText);
+				
+				if(doesDateArrayContainDate(date, dates_unavailable)){}
+				else if(doesDateArrayContainDate(date, dates_proposed)){				
+					dates_proposed = removeDateFromArray(date, dates_proposed);				
+				}	
+				else if(doesDateArrayContainDate(date, dates_workDays)){				
+					dates_proposed.push(date);				
+				}
+			}
+			
+		},
+		beforeShowDay: function(date){
+			if(doesDateArrayContainDate(date, dates_proposed)) return [true, "active111 proposed-work-day"];
+			else if(doesDateArrayContainDate(date, dates_workDays)) return [true, "active111 job-work-day"];
+			else if(doesDateArrayContainDate(date, dates_unavailable)) return [true, "active111 unavailable"];
+			else return [true, ""];
+		},
+		afterShow: function(){
+			var html = "";
+			$(dates_workDays).each(function(){
+				
+				var td = getTdByDate($calendar, this);
+				
+				html = "<div class='start-and-end-times'>";
+				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "</div>"
+				
+				$(td).append(html);
+			})				
+		}
+	})
+	
+	$calendar.datepicker("setDate", firstDate);
+
+}
+
+function initCalendar_showWorkDays_counterProposal($calendar, dates_workDays, dates_unavailable, dates_proposed){
+	
+	var firstDate = getMinDate($calendar)
+
+	$calendar.datepicker({
+//		minDate: firstDate,
+		numberOfMonths: getNumberOfMonths($calendar),
+		onSelect: function(dateText, inst){
+			
+			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
+				var date = dateify(dateText);
+				
+				if(doesDateArrayContainDate(date, dates_unavailable)){}
+				else if(doesDateArrayContainDate(date, dates_application)){				
+					dates_application = removeDateFromArray(date, dates_application);				
+				}	
+				else if(doesDateArrayContainDate(date, dates_job)){				
+					dates_application.push(date);				
+				}
+			}
+			
+		},
+		beforeShowDay: function(date){
+			if(doesDateArrayContainDate(date, dates_proposed)) return [true, "active111 proposed-work-day"];
+			else if(doesDateArrayContainDate(date, dates_workDays)) return [true, "active111 job-work-day"];
+			else if(doesDateArrayContainDate(date, dates_unavailable)) return [true, "active111 unavailable"];
+			else return [true, ""];
+		},
+		afterShow: function(){
+			var html = "";
+			$(dates_workDays).each(function(){
+				
+				var td = getTdByDate($calendar, this);
+				
+				html = "<div class='start-and-end-times'>";
+				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "</div>"
+				
+				$(td).append(html);
+			})				
+		}
+	})
+	
+	$calendar.datepicker("setDate", firstDate);	
+}
 function initCalendar_counterApplicationDays($calendar, dates_application, dates_job, dates_unavailable){
 
 

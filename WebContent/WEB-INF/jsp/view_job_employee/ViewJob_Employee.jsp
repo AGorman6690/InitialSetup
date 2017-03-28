@@ -9,6 +9,8 @@
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css " />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employee/viewJob_Employee.css" />
 
+
+
 <c:if test="${context == 'find' }">
 	<script src="<c:url value="/static/javascript/view_job_employee/SubmitApplication.js"/>"></script>
 </c:if>

@@ -1069,7 +1069,7 @@ public class JobServiceImpl {
 				
 	}
 
-	public List<JobDTO> getJobDtos_Employment_CurrentAndFuture(int userId_employee) {
+	public List<JobDTO> getJobDtos_employment_currentAndFuture(int userId_employee) {
 
 		List<Job> jobs = this.getJobs_ByEmployeeAndJobStatuses(userId_employee, 
 													Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));

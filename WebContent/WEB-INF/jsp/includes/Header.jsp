@@ -109,7 +109,7 @@
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
 					<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>							
-	
+					<a id="nav_calendar" class="" href="/JobSearch/user/calendar">Calendar</a>
 							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
@@ -151,6 +151,7 @@
 			</div>
 		</c:if>
 
+<%-- 	<%@ inlude file="../event_calendar/Event_Calendar.jsp" %> --%>
 
 <script type="text/javascript">	
 	var environmentVariables = {

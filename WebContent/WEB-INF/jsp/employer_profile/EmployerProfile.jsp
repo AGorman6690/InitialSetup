@@ -9,11 +9,12 @@
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 
 
-<!-- <div class="select-page-section-container employer-profile"> -->
-<!-- 	<span class="select-page-section selected" data-perspective="wage-proposal">Wage Proposals</span> -->
-<!-- 	<span class="select-page-section" data-perspective="application">Applications</span> -->
-<!-- 	<span class="select-page-section" data-perspective="employee">Employees</span> -->
-<!-- </div> -->
+<div class="select-page-section-container employer-profile">
+	<span class="select-page-section selected" data-perspective="wage-proposal">Job Details</span>
+	<span class="select-page-section selected" data-perspective="wage-proposal">Wage Proposals</span>
+	<span class="select-page-section" data-perspective="application">Applications</span>
+	<span class="select-page-section" data-perspective="employee">Employees</span>
+</div>
 
 
 <div class="container">

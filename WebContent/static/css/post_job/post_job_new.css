@@ -203,3 +203,22 @@ thead .master-row{
 .list-item{
 	margin: 8px 0px;
 }
+
+#compensationContainer .radio-container{
+	width: 300px;
+	margin: auto;
+	text-align: left;
+}
+#compensationContainer .radio-container label{
+/* 	text-align: left; */
+}
+#compensationContainer .radio-container .radio:first-child{
+	margin-bottom: 13px;
+}
+
+
+input#maxPay{
+	display: block;
+	width: 75px;
+	margin: 5px auto;
+}

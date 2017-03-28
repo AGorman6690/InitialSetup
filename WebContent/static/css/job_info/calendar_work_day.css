@@ -1,0 +1,47 @@
+td.active111.proposed-work-day .start-and-end-times{
+	border: 2px solid  #163b3d;
+	background: #fcfdc1;
+}
+td.job-work-day .start-and-end-times{
+	 border: 2px solid #888888;	
+}
+
+.start-and-end-times{
+	color: #000;   
+	padding: 2px;
+	text-align: center;
+	font-size: 13px;
+}
+
+.start-and-end-times p{
+	margin: 2px;
+}
+
+.job-info-calendar .ui-datepicker-group{
+	padding: 0px 20px;
+}
+.job-info-calendar .calendar td.active111.proposed-work-day a{
+   background: #163b3d;
+}
+.job-info-calendar .calendar td.active111.job-work-day a{
+   background: #888888;
+}
+.job-info-calendar .calendar td.active111 a{
+    width: 100%;
+    display: inline-block;
+}
+.job-info-calendar .ui-datepicker-inline{
+	margin: auto;
+}
+
+.job-info-calendar .calendar td.active111{
+	background: #fff;
+
+}
+.job-info-calendar .calendar td{
+	padding: 2px ;
+	vertical-align: top;
+	text-align: center;
+	height: 75px;
+	width: 70px;	
+}

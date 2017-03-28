@@ -22,7 +22,7 @@ button.clear-calendar{
 	width:650px;
 }
 
-.calendar-container .calendar td{
+.calendar-container td{
 	padding:3px 9px;
 	cursor: pointer;
 }

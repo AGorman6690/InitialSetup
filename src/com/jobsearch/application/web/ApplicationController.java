@@ -50,6 +50,7 @@ public class ApplicationController {
 
 	}
 	
+	@ResponseBody
 	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
 	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
 												@RequestParam(name = "c", required = true) String c, 
@@ -57,7 +58,7 @@ public class ApplicationController {
 
 		applicationService.respondToEmploymentProposal(employmentProposalDto, session, c);
 	
-		return "";
+		return ""; 
 
 	}
 	

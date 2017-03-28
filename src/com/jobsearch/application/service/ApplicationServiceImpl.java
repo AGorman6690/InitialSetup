@@ -3,6 +3,7 @@ package com.jobsearch.application.service;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.mail.Session;
@@ -69,8 +70,8 @@ public class ApplicationServiceImpl {
 					
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
-			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
-
+//			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.setEmploymentProposalDto(this.getCurrentEmploymentProposal(application.getApplicationId()));
 			
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
@@ -85,7 +86,7 @@ public class ApplicationServiceImpl {
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
 		
 			applicationDto.setDateStrings_availableWorkDays(
-								this.getProposedWorkDays(applicationDto.getCurrentWageProposal().getId()));
+								this.getProposedWorkDays(applicationDto.getEmploymentProposalDto().getEmploymentProposalId()));
 
 			
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
@@ -525,6 +526,7 @@ public class ApplicationServiceImpl {
 			applicationDto.setApplication(application);
 			
 			// Wage proposal
+			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(application.getApplicationId()));
 			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
@@ -879,6 +881,13 @@ public class ApplicationServiceImpl {
 		return repository.getCountEmployees_hired(jobId);
 	}
 
+	public List<Integer> getApplicationStatuses_openOrAccepted(){	
+		return Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
+				Application.STATUS_SUBMITTED,
+				Application.STATUS_CONSIDERED,
+				Application.STATUS_ACCEPTED,
+				Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL);
+	}
 
 
 }

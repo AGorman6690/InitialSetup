@@ -9,6 +9,7 @@ button.sqr-btn.gray,
 button.sqr-btn.teal{
 	padding: 10px 12px;
 	font-size: 15px;
+	margin: 0;
 /* 	border: 0; */
 /* 	background: #ffffff; */
 /* 	color: #197994; */
@@ -73,6 +74,8 @@ tbody tr td span {
     display: inline-block;
     width: 100%;
     padding: 0px 10px;
+/*     height: 45px; */
+/*     line-height: 45px; */
 }
 
 tbody tr:hover{

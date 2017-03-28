@@ -1,11 +1,14 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/DatePicker.jsp" %>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
-<%@ include file="../includes/resources/JobInfoModal.jsp" %>
-<%@ include file="../includes/resources/JobInformation.jsp" %>
+<%-- <%@ include file="../includes/resources/JobInfoModal.jsp" %> --%>
+<%-- <%@ include file="../includes/resources/JobInformation.jsp" %> --%>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 <%@ include file="../includes/resources/TableFilter.jsp" %>
+<%@ include file="../includes/resources/Modal.jsp" %>
 
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/calendar_work_day.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/inputValidation.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee_NEW.css" />

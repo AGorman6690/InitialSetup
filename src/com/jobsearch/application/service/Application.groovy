@@ -21,7 +21,8 @@ public class Application {
 
 	// *************************************************************************
 	// *************************************************************************
-	// Should the status be replaced by several boolean properties?????
+	// This status property is evolving into more than a simple "status".
+	// Should the status be replaced by several boolean properties????
 	// I'm beginning to think so: 
 	// isOpen
 	// isConsidered

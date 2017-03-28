@@ -637,11 +637,7 @@ public class UserServiceImpl {
 		List<ApplicationDTO> applicationDtos = applicationService.
 												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
 															employee.getUserId(), 
-															Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
-																		Application.STATUS_SUBMITTED,
-																		Application.STATUS_CONSIDERED,
-																		Application.STATUS_ACCEPTED,
-																		Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
+															applicationService.getApplicationStatuses_openOrAccepted());
 		
 //		List<JobDTO> jobDtos_applicationInvites = this.getJobDtos_ApplicationInvites(employee.getUserId());
 		
@@ -657,7 +653,7 @@ public class UserServiceImpl {
 		// *************************************************************
 		// Replace getJobsByEmplyee() with this
 		// *************************************************************
-		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(employee.getUserId());
+		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(employee.getUserId());
 		
 		model.addAttribute("user", employee);
 		
@@ -673,6 +669,8 @@ public class UserServiceImpl {
 		model.addAttribute("futureEmploymentCount", futureEmploymentCount);
 
 	}
+	
+
 
 	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
 		
@@ -749,7 +747,9 @@ public class UserServiceImpl {
 		for(JobSearchUser employee : employees){
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
 			employeeDto.setUser(employee);
-			employeeDto.setRatingDto(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
+			
+			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));
+//			employeeDto.setRatingDto(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
 			employeeDto.setWage(applicationService.getWage(employee.getUserId(), jobId));
 			
 			employeeDtos.add(employeeDto);			
@@ -881,7 +881,7 @@ public class UserServiceImpl {
 										Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
 
 
-		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_Employment_CurrentAndFuture(userId);
+		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(userId);
 		
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
@@ -984,7 +984,6 @@ public class UserServiceImpl {
 		
 	}
 
-
 	public void insertRatings_toRateEmployees(int jobId) {
 		
 		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
@@ -998,12 +997,26 @@ public class UserServiceImpl {
 											job.getId(),
 											job.getUserId());
 			}		
-		}
-		
+		}	
 		
 	}
 
-
-
+	public void setModel_ViewCalendar_Employee(Model model, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+																sessionUser.getUserId(),
+																	applicationService.getApplicationStatuses_openOrAccepted());
+		
+		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(sessionUser.getUserId());
+		
+		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
+		
+		model.addAttribute("applicationDtos", applicationDtos);
+		model.addAttribute("jobDtos_employment", jobDtos_employment);
+		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
+			
+	}
 
 }

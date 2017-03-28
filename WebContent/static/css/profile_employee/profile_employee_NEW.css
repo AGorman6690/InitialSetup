@@ -89,7 +89,7 @@ td div.job.application{
 }
 
 
-#applications_list_view tbody tr:hover{
+#applications_list_view > table > tbody > tr:hover{
 	background-color: #eaeaea;
 }
 

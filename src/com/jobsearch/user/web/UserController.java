@@ -100,6 +100,13 @@ public class UserController {
 		model.addAttribute("isViewingOnesSelf", true);
 		return "/credentials_employee/Credentials_Employee";
 	}
+	
+	@RequestMapping(value = "/user/calendar", method = RequestMethod.GET)
+	public String viewCalendar(Model model, HttpSession session) {
+
+		userService.setModel_ViewCalendar_Employee(model, session);
+		return "/event_calendar/Event_Calendar";
+	}
 
 
 	@ResponseBody

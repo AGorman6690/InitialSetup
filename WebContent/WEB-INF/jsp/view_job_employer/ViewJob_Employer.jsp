@@ -9,9 +9,10 @@
 	<%@ include file="../includes/resources/DatePicker.jsp" %>
 	<%@ include file="../includes/resources/TableFilter.jsp" %>
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
-		<%@ include file="../includes/resources/StarRatings.jsp" %>
+	<%@ include file="../includes/resources/StarRatings.jsp" %>
 	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
 	<%@ include file="../includes/resources/JobInformation.jsp" %>
+	<%@ include file="../includes/resources/Modal.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
 	

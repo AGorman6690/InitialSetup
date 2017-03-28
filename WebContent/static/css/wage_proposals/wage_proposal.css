@@ -1,0 +1,124 @@
+.response-container .mod-content {
+    top: 20px;
+    width: 1200px;
+    margin-left: -600px;
+}
+.mod-body{
+	position: relative;
+   
+}
+.withdraw-application{
+	top: 20px;
+	right: 20px;
+	position: absolute;
+	background: #bb4555;
+    color: #fff;
+}
+
+.current-wage-proposal{
+	width: 85px;
+    background: #fcfdc1;
+    border: 2px solid #163b3d;
+    padding: 4px;
+    margin: auto;
+}
+
+.action-button-container span{
+	cursor: pointer;
+}
+.action-button-container{
+	padding: 40px 0px 30px 0px;;
+}
+.confirm,
+.send{
+	display: inline-block;
+	width: 140px;
+}
+.cancel,
+.edit{
+	display: inline-block;
+    font-size: 18px;
+    width: 100px;
+    text-align: left;
+}
+
+
+.button-group .sqr-btn.gray-2{
+	padding: 8px 13px;
+	margin: 0;
+}
+
+h1{
+	font-size: 22px;
+	font-weight: bold;
+	color: #197994;
+	margin-bottom: 25px;
+}
+
+.button-group button.selected{
+	background: #163b3d;
+	color: #fff;
+	border: 0;
+}
+
+.proposal h2{
+	font-size: 16px;
+	font-weight: bold;
+	color: #163b3d;
+}
+
+input.counter-wage-amount{
+	width: 62px;
+}
+
+.bold{
+	font-weight: bold;
+	font-size: 18px;
+	text-decoration: underline;
+}
+
+.proposal{
+    padding-bottom: 15px;
+    border-bottom: 2px solid #cacaca;
+    width: 500px;
+    margin: auto;
+}
+
+
+.number-of-work-days{
+	margin: 20px 0px 10px 0px;
+	font-size: 16px;
+	font-weight: bold;
+}
+.ui-datepicker-title{
+	font-size: 17px;
+	font-weight: bold;
+}
+
+
+.counter-container,
+.confirmation-container,
+.send-proposal-container{
+	display: none;
+}
+
+.response-container.confirm .button-group,
+.response-container.confirm .wage-container .proposal-container,
+.response-container.confirm .wage-container .counter-container,
+.response-container.confirm .proceed-to-confirmation-container,
+.response-container.confirm .set-expiration{
+	display: none !important;
+}
+
+.response-container.confirm .confirmation-container,
+.response-container.confirm .send-proposal-container{
+	display: block !important;
+}
+
+.time-container{
+	display: inline-block;
+	margin: 0px 7px;
+}
+.time-container input{
+	width: 65px;
+}

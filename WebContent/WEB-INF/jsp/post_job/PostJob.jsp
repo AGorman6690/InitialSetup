@@ -54,7 +54,7 @@
 	</div>
 	<div id="post-job-container">
 		<div id="previous-next-container">
-			<button id="proceed-to-preview-job-posting" class="sqr-btn">Confirm Job Posting</button>
+			<button id="proceed-to-preview-job-posting" class="sqr-btn">Review Job Posting</button>
 			<span id="previous-section">Previous</span>
 			<span id="next-section">Next</span>
 		</div>
@@ -120,22 +120,22 @@
 					<thead>
 						<tr>
 							<th>Date</th>
-<!-- 							<th>Selection</th> -->
+							<th>Selection</th>
 							<th>Start Time</th>
 							<th>End Time</th>
 						</tr>
 <!-- 							These elements are only to be cloned -->
 <!-- 					************************************ -->
-<!-- 						<tr class="master-row-multi-select"> -->
-<!-- 							<td colspan="1">Set Selected Dates</td> -->
-<!-- 							<td></td> -->
-<!-- 							<td><label><input class="select-all" type="checkbox" name="time">Set Times For Multiple Dates</label></td> -->
-<!-- 							<td><select   class="time start-time select-all"></select></td> -->
-<!-- 							<td><select  class="time end-time select-all"></select></td>							 -->
-<!-- 						</tr> -->
+						<tr class="master-row-multi-select">
+							<td colspan="1">Set Selected Dates</td>
+							<td></td>
+							<td><label><input class="select-all" type="checkbox" name="time">Set Times For Multiple Dates</label></td>
+							<td><select   class="time start-time select-all"></select></td>
+							<td><select  class="time end-time select-all"></select></td>							
+						</tr>
 						<tr class="master-row work-day-row">
 							<td class="date"></td>
-<!-- 							<td><input type="checkbox" name="time"></td> -->
+							<td><input type="checkbox" name="time"></td>
 							<td><select class="time start-time"></select></td>
 							<td><select class="time end-time"></select></td>
 						</tr>
@@ -172,36 +172,16 @@
 		
 		<div id="compensationContainer" class="page-section">
 			<div class="item">
-				<p>Method</p>
-				<div class="radio-container">							
-					<div class="radio">
-					  <label><input type="radio" name="pay-method">By the hour</label>
-					</div>
-					<div class="radio">
-					  <label><input type="radio" name="pay-method">By the job</label>
-					</div>					
-				</div> 
-			</div>	
-			<div class="item">
-				<p>Range</p>	
+				<p>Maximum Hourly Pay</p>	
 				<div class="radio-container">					
 					<div class="radio">
 					  <label><input value="0" type="radio" name="pay-range">No, accept all offers</label>
 					</div>
 					<div class="radio">
-					  <label><input value = "1" type="radio" name="pay-range">Yes, only accept offers between:</label>
+					  <label><input value = "1" type="radio" name="pay-range">Yes, do not accept offers over:</label>
+						<input id="maxPay" type="text"></input>	
 					</div>
-				</div>			
-				<div id="payRangeContainer"> 
-					<div id="minPayContainer">
-						<label for="startTime" class="form-control-label">Min</label>
-						<input id="minPay" type="text"></input>												
-					</div>
-					<div id="maxPayContainer">
-						<label for="startTime" class="form-control-label">Max</label>
-						<input id="maxPay" type="text"></input>												
-					</div>	
-				</div>				
+				</div>							
 			</div>								
 		</div>			
 						
