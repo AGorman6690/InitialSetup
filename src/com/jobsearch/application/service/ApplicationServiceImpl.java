@@ -51,7 +51,7 @@ public class ApplicationServiceImpl {
 	VerificationServiceImpl verificationService;
 
 
-	public List<ApplicationDTO> getApplicationDtos_ByJob_OpenApplications(int jobId) {
+	public List<ApplicationDTO> getApplicationDtos_ByJob_OpenApplications(int jobId, HttpSession session) {
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 
@@ -72,7 +72,8 @@ public class ApplicationServiceImpl {
 			
 //			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setEmploymentProposalDto(this.getCurrentEmploymentProposal(application.getApplicationId()));
-			
+			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
+							getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
 							this.getTime_untilEmployerApprovalExpires(
@@ -89,7 +90,9 @@ public class ApplicationServiceImpl {
 								this.getProposedWorkDays(applicationDto.getEmploymentProposalDto().getEmploymentProposalId()));
 
 			
+			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
+			
 			
 			// **********************************************************************
 			// **********************************************************************
@@ -141,7 +144,7 @@ public class ApplicationServiceImpl {
 		return repository.getProposedWorkDays(employmentProposalId);
 	}
 
-	private String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
+	public String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
 		
 		// This will subtract the current time from the expiration date.
 		
@@ -393,6 +396,11 @@ public class ApplicationServiceImpl {
 							newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 							newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 							
+							if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
+								newProposal.setEmployerAcceptedDate(LocalDateTime.now());
+								newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));	
+							}
+														
 							// ***********************************************************************************
 							// This needs to be verified
 							if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
@@ -505,17 +513,20 @@ public class ApplicationServiceImpl {
 
 
 
-	public List<ApplicationDTO> getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(int userId, List<Integer> applicationStatuses){
+	public List<ApplicationDTO> getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(HttpSession session, 
+											int userId, List<Integer> applicationStatuses){
 		
 		List<Application> applications = this.getApplications_ByUserAndStatuses_OpenJobs(userId, applicationStatuses);		
 
-		List<ApplicationDTO> applicationDtos = getApplicationDtos_ByApplications(applications, userId);
+		List<ApplicationDTO> applicationDtos = getApplicationDtos_ByApplications(applications, userId, session);
 		
 		return applicationDtos;
 	}
 
 
-	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications, int userId) {
+	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications,
+																		int userId,
+																		HttpSession session) {
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 		
@@ -527,7 +538,9 @@ public class ApplicationServiceImpl {
 			
 			// Wage proposal
 			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(application.getApplicationId()));
-			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
+					getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+//			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
 			
 			// Job dto
@@ -572,6 +585,14 @@ public class ApplicationServiceImpl {
 		
 		return applicationDtos;
 	}
+
+	public Boolean getIsProposedToSessionUser(HttpSession session, EmploymentProposalDTO employmentProposalDto) {
+		
+		if(SessionContext.getUser(session).getUserId() == employmentProposalDto.getProposedToUserId())
+			return true;
+		else return false;
+	}
+
 
 	private List<ApplicationDTO> getApplicationDtos_Conflicting(int userId, int reference_applicationId,
 													List<WorkDay> workDays) {

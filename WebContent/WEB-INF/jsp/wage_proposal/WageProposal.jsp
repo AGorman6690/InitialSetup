@@ -13,13 +13,13 @@
 			<c:choose>
 				<c:when test="${applicationDto.employmentProposalDto.proposedToUserId == user.userId }">
 
-					<div class="accent show-mod" data-toqqqqggle-id="response-container-${applicationDto.application.applicationId }">
-					<c:if test="${applicationDto.application.status == -1 }">
-						<div>Employer initiated contact</div>
-					</c:if>					
+<%-- 					<div class="accent show-mod" data-toqqqqggle-id="response-container-${applicationDto.application.applicationId }"> --%>
+<%-- 					<c:if test="${applicationDto.application.status == -1 }"> --%>
+<!-- 						<div>Employer initiated contact</div> -->
+<%-- 					</c:if>					 --%>
 						
-						Waiting for you
-					</div>	
+<!-- 						Waiting for you -->
+<!-- 					</div>	 -->
 				
 					<div id="response-container-${applicationDto.application.applicationId }"
 						 class="response-container mod"
@@ -51,26 +51,21 @@
 									</div>
 								</div>	
 													
-								<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>
-	
-								<div class="action-button-container">
-									<div class="proceed-to-confirmation-container">
-										<span class="confirm sqr-btn teal">Review</span>
-										<span class="cancel">Cancel</span>
-									</div>
-									<div class="send-proposal-container">
-										<span class="send sqr-btn teal">Send</span>
-										<span class="edit">Edit</span>
-									</div>
-								</div>								
-								<div class="proposal wage-container">								
+								<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>							
+								<div class="proposal wage-container">	
+									<c:if test="${user.profileId == 1 }">
+										<div class="proposal applicant-expiration-clock">
+											<h1>This offer expires in</h1>
+											<p>${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</p>
+										</div>
+									</c:if>							
 									<h1>Wage</h1>
 									<div class="button-group">
 										<button class="sqr-btn gray-2 accept">Accept</button>
 										<button class="sqr-btn gray-2 counter">Counter</button>
 									</div>								
 									<div class="proposal-container">
-										<h2>Current proposal</h2>
+										<h2>${user.profileId == 1 ? "Employer's" : "Applicant's" } proposal</h2>
 										<p class="current-wage-proposal">$ ${applicationDto.employmentProposalDto.amount }</p>											
 									</div>
 									<div class="counter-container">									
@@ -81,7 +76,7 @@
 											</div>
 										</c:if>													
 										<div>
-											<h2>Counter amount</h2>
+											<h2>Your counter amount</h2>
 											<input class="counter-wage-amount" type="text" />
 										</div>							
 									</div>
@@ -92,7 +87,7 @@
 								</div>
 	
 								<div class="proposal work-day-container pad-top">						
-									<h1>Work Days Proposal</h1>
+									<h1>Work Days</h1>
 									<div class="button-group">
 										<button class="sqr-btn gray-2 accept">Accept</button>
 										<button class="sqr-btn gray-2 counter">Counter</button>
@@ -103,7 +98,7 @@
 									</div>																	
 <%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
 									<div class="proposal-container">						
-										<div class="job-info-calendar calendar-container hide-prev-next read-only">
+										<div class="calendar-container hide-prev-next read-only">
 											<div class="calendar"
 												data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 												data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
@@ -140,7 +135,17 @@
 											<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>						
 										</div>		
 									</div>
-								</c:if>					
+								</c:if>	
+								<div class="action-button-container">
+									<div class="proceed-to-confirmation-container">
+										<span class="confirm sqr-btn teal">Review</span>
+										<span class="cancel">Cancel</span>
+									</div>
+									<div class="send-proposal-container">
+										<span class="send sqr-btn teal">Send</span>
+										<span class="edit">Edit</span>
+									</div>
+								</div>													
 							</div>
 						</div>
 					</div>			
@@ -150,7 +155,7 @@
 					<c:if test="${user.profileId == 2 && applicationDto.application.status == -1 }">
 						<div>You initiated contact.</div>
 					</c:if>					
-					Waiting for ${user.profileId == 1 ? 'employer.' : 'applicant.' }
+<%-- 					Waiting for ${user.profileId == 1 ? 'employer.' : 'applicant.' } --%>
 				</c:otherwise>
 			</c:choose>												
 		</c:when>

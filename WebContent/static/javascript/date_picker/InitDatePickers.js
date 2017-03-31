@@ -108,17 +108,21 @@ function initCalendar_showAvailability($calendar, dates_application, dates_job){
 	
 }
 
-function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable, dates_proposed){
+function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable, dates_proposed,
+						dates_other_applications){
 
 	var firstDate = getMinDate($calendar)
 
 	$calendar.datepicker({
-		minDate: firstDate,
+//		minDate: firstDate,
 		numberOfMonths: getNumberOfMonths($calendar),
 		onSelect: function(dateText, inst){
 			
 			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
 				var date = dateify(dateText);
+				
+				
+				
 				
 				if(doesDateArrayContainDate(date, dates_unavailable)){}
 				else if(doesDateArrayContainDate(date, dates_proposed)){				
@@ -131,10 +135,17 @@ function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable,
 			
 		},
 		beforeShowDay: function(date){
-			if(doesDateArrayContainDate(date, dates_proposed)) return [true, "active111 proposed-work-day"];
-			else if(doesDateArrayContainDate(date, dates_workDays)) return [true, "active111 job-work-day"];
-			else if(doesDateArrayContainDate(date, dates_unavailable)) return [true, "active111 unavailable"];
-			else return [true, ""];
+			
+			var classNameToAdd = "";
+			
+			if(doesDateArrayContainDate(date, dates_unavailable))classNameToAdd = "unavailable";
+			else{
+				if(doesDateArrayContainDate(date, dates_proposed)) classNameToAdd = "proposed-work-day";
+				if(doesDateArrayContainDate(date, dates_workDays)) classNameToAdd += " job-work-day";
+				if(doesDateArrayContainDate(date, dates_other_applications)) classNameToAdd += " other-application-work-day";
+			}
+
+			return [true, classNameToAdd];
 		},
 		afterShow: function(){
 			var html = "";
@@ -144,9 +155,24 @@ function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable,
 				
 				html = "<div class='start-and-end-times'>";
 				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "<div class='select-work-day'>";
+				html += "<span class='glyphicon glyphicon-ok'></span>";
+				html += "</div>";				
 				html += "</div>"
 				
 				$(td).append(html);
+			})	
+			$(dates_other_applications).each(function(){
+				
+				var td = getTdByDate($calendar, this);
+				
+				if($(td).find(".start-and-end-times").size() == 0){
+					html = "<div class='start-and-end-times'>";				
+					html += "</div>"
+					
+					$(td).append(html);
+				}
+
 			})				
 		}
 	})

@@ -4,7 +4,7 @@
 <c:if test="${applicationDto.application.status > -1 }">					
 	<span class="dollar-sign">$</span>
 	<fmt:formatNumber type="number" minFractionDigits="2" 
-		maxFractionDigits="2" value="${applicationDto.currentWageProposal.amount}"/>
+		maxFractionDigits="2" value="${applicationDto.employmentProposalDto.amount}"/>
 	
 	<c:if test="${applicationDto.wageProposals.size() > 1 }">
 		<span data-toggle-id="wp-history-${applicationDto.application.applicationId }"

@@ -27,6 +27,7 @@ import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayProposal;
 import com.jobsearch.model.application.ApplicationInvite;
+import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -58,14 +59,14 @@ public class ApplicationRepository {
 				application.setStatus(rs.getInt("Status"));
 				
 				
-				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
-				if(ts_employerAcceptedDate != null)
-					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
-				
-				
-				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
-				if(ts_expirationDate != null)
-					application.setExpirationDate(ts_expirationDate.toLocalDateTime());
+//				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
+//				if(ts_employerAcceptedDate != null)
+//					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
+//				
+//				
+//				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
+//				if(ts_expirationDate != null)
+//					application.setExpirationDate(ts_expirationDate.toLocalDateTime());
 
 				return application;
 			}
@@ -121,10 +122,24 @@ public class ApplicationRepository {
 				employmentProposalDto.setProposedToUserId(rs.getInt("ProposedToUserId"));
 				
 				
+				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
+				if(ts_employerAcceptedDate != null)
+					employmentProposalDto.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
+				
+				
+				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
+				if(ts_expirationDate != null)
+					employmentProposalDto.setExpirationDate(ts_expirationDate.toLocalDateTime());				
+
+				
 				employmentProposalDto.setDateStrings_proposedDates(
 										applicationService.getProposedWorkDays(
 												employmentProposalDto.getEmploymentProposalId()));
+				
+				employmentProposalDto.setTime_untilEmployerApprovalExpires(
+						applicationService.getTime_untilEmployerApprovalExpires(employmentProposalDto.getExpirationDate()));
 
+				
 				return employmentProposalDto;
 			}
 		});
@@ -375,13 +390,27 @@ public class ApplicationRepository {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insert_employment_proposal(?, ?, ?, ?, ?)}");
+					.prepareCall("{call insert_employment_proposal(?, ?, ?, ?, ?, ? , ?)}");
 
 			cStmt.setInt(1, employmentProposalDto.getApplicationId());
 			cStmt.setInt(2, employmentProposalDto.getProposedByUserId());
 			cStmt.setInt(3, employmentProposalDto.getProposedToUserId());
 			cStmt.setFloat(4, Float.valueOf(employmentProposalDto.getAmount()));
 			cStmt.setInt(5, employmentProposalDto.getStatus());
+			
+			if(employmentProposalDto.getEmployerAcceptedDate() != null &&
+					employmentProposalDto.getExpirationDate() != null){
+				
+				cStmt.setTimestamp(6, Timestamp.valueOf(employmentProposalDto.getEmployerAcceptedDate()));
+				cStmt.setTimestamp(7, Timestamp.valueOf(employmentProposalDto.getExpirationDate()));
+			}else{
+				cStmt.setTimestamp(6, null);
+				cStmt.setTimestamp(7, null);
+				
+			}
+			
+			
+			
 			
 			ResultSet result = cStmt.executeQuery();		
 			result.next();
@@ -404,29 +433,29 @@ public class ApplicationRepository {
 
 			// Insert the application
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insert_application(?, ?, ?, ?, ?)}");
+					.prepareCall("{call insert_application(?, ?, ?)}");
 
 			cStmt.setInt(1, applicationDto.getApplicantId());
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
 	
+			// ************************************************************************
 			
-			
-			
-			// When the employer initiates contact and makes an offer, these will not be null
-			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
-				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
-			}
-			else{
-				cStmt.setTimestamp(4, null);
-			}
-			
-			if(applicationDto.getApplication().getExpirationDate() != null){
-				cStmt.setTimestamp(5, Timestamp.valueOf(applicationDto.getApplication().getExpirationDate()));	
-			}
-			else{
-				cStmt.setTimestamp(5, null);
-			}
+//			// When the employer initiates contact and makes an offer, these will not be null
+//			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
+//				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
+//			}
+//			else{
+//				cStmt.setTimestamp(4, null);
+//			}
+//			
+//			if(applicationDto.getApplication().getExpirationDate() != null){
+//				cStmt.setTimestamp(5, Timestamp.valueOf(applicationDto.getApplication().getExpirationDate()));	
+//			}
+//			else{
+//				cStmt.setTimestamp(5, null);
+//			}
+			// ************************************************************************
 			
 			ResultSet result = cStmt.executeQuery();
 

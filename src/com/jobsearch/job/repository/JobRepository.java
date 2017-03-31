@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -31,6 +32,7 @@ import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 import io.codearte.catchexception.shade.mockito.internal.verification.Only;
+import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 
 
 @Repository
@@ -835,7 +837,7 @@ public class JobRepository {
 	}
 
 	public List<WorkDay> getWorkDays(int jobId) {
-		String sql = "SELECT * FROM work_day WHERE JobId = ?";
+		String sql = "SELECT * FROM work_day WHERE JobId = ? ORDER BY DateId ASC";
 		return this.WorkDayMapper(sql, new Object[]{ jobId });
 	}
 	
@@ -1108,6 +1110,37 @@ public class JobRepository {
 	}
 
 	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
+		
+		// Find a user's employment in which the work days for theur employed-for jobs
+		// span the passed-in work days.
+		// The "passed-in work days" are typically the work days in which a user is
+		// attempting to APPLY for.
+		// ________________________________
+		// For a time conflict to exist, the following conditions MUST be met:
+		// For a particular calendar day:
+		// 1) The START TIME for the applying-for job must be LESS THAN the
+		//	 	END TIME of the employed-for job
+		//		---- AND ----
+		// 2) The END TIME for the applying-for job must GREATER THAN the
+		// 		START TIME of the employed-for job
+		// Simply said: A time conflict exists if the applying-for job starts before
+		//				an employed-for job ends AND the applying-for job ends after
+		//				an employed-for job starts
+		// ____________________________________
+		// I.e.
+		// ---- If ----
+		// the passed work days are (the days you are applying for):
+		// 1-A) 4-1 5:00 to 4-1 13:00
+		// 2-A) 4-2 5:00 to 4-2 13:00
+		// ---- AND ----
+		// the user's employment work days are (the days to compare against):
+		// 1-E) 4-1 11:00 to 4-1 17:00
+		// 2-E) 4-2 15:00 to 4-2 17:00
+		// ---- THEN ----
+		// the returned count would be 1;
+		// 1-A starts before 1-E ends; AND 1-A ends after 1-E starts; thus a conflict;  
+		// Although 2-A starts before 2-E ends, 2-A ends before 2-E starts; thus NOT a conflict;
+		
 		// Main query
 		String sql = "SELECT COUNT(*) FROM work_day wd"
 						+ " INNER JOIN employment e ON e.JobId = wd.JobId"
@@ -1122,11 +1155,18 @@ public class JobRepository {
 			
 			if(!isFirst) sql += " OR ";
 			
+			sql += "(";
 			sql += " wd.DateId = ?";
+			sql += " AND ? < wd.EndTime";
+			sql += " AND ? > wd.StartTime";
+			sql += ")";
 			isFirst = false;
 			
 			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
+		
 			args.add(workDay.getDateId());
+			args.add(workDay.getStringStartTime());
+			args.add(workDay.getStringEndTime());
 			
 		}
 		

@@ -167,28 +167,28 @@ public class JobServiceImpl {
 		return repository.getDateId(date);
 	}
 
-	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
-
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-
-		// Query the database
-		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_FUTURE);
-		
-		if(jobsWaitingToStart != null){
-			// Set the job Dtos
-			for(Job job : jobsWaitingToStart){
-				
-				JobDTO jobDto = new JobDTO();
-				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId(), userId);
-				jobDtos.add(jobDto);
-			}
-
-			return jobDtos;		
-		}
-
-		return null;
-
-	}
+//	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
+//
+//		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
+//
+//		// Query the database
+//		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_FUTURE);
+//		
+//		if(jobsWaitingToStart != null){
+//			// Set the job Dtos
+//			for(Job job : jobsWaitingToStart){
+//				
+//				JobDTO jobDto = new JobDTO();
+//				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId(), userId);
+//				jobDtos.add(jobDto);
+//			}
+//
+//			return jobDtos;		
+//		}
+//
+//		return null;
+//
+//	}
 	
 	public List<JobDTO> getJobDtos_employerProfile(int userId) {
 
@@ -508,55 +508,55 @@ public class JobServiceImpl {
 		return jobDto;
 		
 	}
-
-	public JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
-		
-		// ***************************************************
-		// ***************************************************
-		// If only the counts are going to be displayed, and not specific job details,
-		// then set an integer variable on the jobDto.
-		// There's no need to pass a list of objects (wage negotiations, applications, employees)
-		// Review this.
-		// ***************************************************
-		// ***************************************************
-		
-
-		JobDTO jobDto = new JobDTO();
-		
-		Job job = this.getJob(jobId);
-		jobDto.setJob(job);
-		
-//		jobDto.setWorkDays(this.getWorkDays(jobId));
-		
-//		jobDto.setQuestions(applicationService.getQuestions(jobId));
-		
-//		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
-
-//		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-		
-		jobDto.setCountWageProposals_sent(
-				applicationService.getCountWageProposal_Sent(job.getId(), userId));
-		
-		jobDto.setCountWageProposals_received(
-				applicationService.getCountWageProposal_Received(job.getId(), userId));
-		
-		jobDto.setCountWageProposals_received_new(
-				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
-
-		
-		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
-		
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByJob_OpenApplications(job.getId());
-		jobDto.setApplicationDtos(applicationDtos);
-		jobDto.setNewApplicationCount(this.getNewApplicationCount(applicationDtos));
-
-		
-		System.err.println(jobDto.getJob().getUserId());
-		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
-												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
-		
-		return jobDto;
-	}
+//
+//	public JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
+//		
+//		// ***************************************************
+//		// ***************************************************
+//		// If only the counts are going to be displayed, and not specific job details,
+//		// then set an integer variable on the jobDto.
+//		// There's no need to pass a list of objects (wage negotiations, applications, employees)
+//		// Review this.
+//		// ***************************************************
+//		// ***************************************************
+//		
+//
+//		JobDTO jobDto = new JobDTO();
+//		
+//		Job job = this.getJob(jobId);
+//		jobDto.setJob(job);
+//		
+////		jobDto.setWorkDays(this.getWorkDays(jobId));
+//		
+////		jobDto.setQuestions(applicationService.getQuestions(jobId));
+//		
+////		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
+//
+////		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
+//		
+//		jobDto.setCountWageProposals_sent(
+//				applicationService.getCountWageProposal_Sent(job.getId(), userId));
+//		
+//		jobDto.setCountWageProposals_received(
+//				applicationService.getCountWageProposal_Received(job.getId(), userId));
+//		
+//		jobDto.setCountWageProposals_received_new(
+//				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
+//
+//		
+//		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
+//		
+//		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByJob_OpenApplications(job.getId());
+//		jobDto.setApplicationDtos(applicationDtos);
+//		jobDto.setNewApplicationCount(this.getNewApplicationCount(applicationDtos));
+//
+//		
+//		System.err.println(jobDto.getJob().getUserId());
+//		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
+//												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
+//		
+//		return jobDto;
+//	}
 
 
 	public void updateJobStatus(int status, int jobId) {
@@ -1024,7 +1024,7 @@ public class JobServiceImpl {
 		case "waiting":
 
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
-			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId));
+			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 						
 			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
@@ -1036,7 +1036,7 @@ public class JobServiceImpl {
 		
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 														jobId, sessionUser.getUserId()));		
-			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId));
+			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			break;
 			
@@ -1281,8 +1281,8 @@ public class JobServiceImpl {
 	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
 
 		// *************************************************
-		// This only takes into account the user's employment and ignores they days
-		// whether they have or have not explicitly marked as "Available"
+		// This only takes into account the user's employment and ignores the days
+		// they have or have not explicitly marked as "Available"
 		// *************************************************
 		
 		if(verificationService.isListPopulated(workDays)){

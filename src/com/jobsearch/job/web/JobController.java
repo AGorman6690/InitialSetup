@@ -24,6 +24,8 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -173,20 +175,27 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
 	public String getJob(Model model, HttpSession session,
 						@RequestParam(name = "c", required = true) String c,
-						@RequestParam(name = "p", required = true) Integer p,
+						@RequestParam(name = "p", required = false) Integer p,
 						@RequestParam(name = "d", required = false) String d,
 						@PathVariable(value = "jobId") int jobId) {	
 		
-		// c is the context in which the job was clicked
-		// p is the user's profile id
-		// data is whether the **employer** clicked a data point for the job
-		// (i.e. wage negotiations, applicants, or employees)
+		// c is the context in which the job was clicked.
+		// ************************************************************
+		// ************************************************************
+		// (Phase this out. Use the Session User's profile id. No need to pass it from the browser.)
+		// p is the user's profile id. 
+		// ************************************************************
+		// ************************************************************
+		// d is whether the **employer** clicked a data point for the job on his profile dashboard
+		// (i.e. wage negotiations, applicants, or employees).
+		// For the possible values for the "d" variable, see the initPage() function in the View_Job_Employer.jsp file
 		
-		if(p == 1){
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
 			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
 			return  "/view_job_employee/ViewJob_Employee";
 		}
-		else if(p == 2){
+		else if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
 			jobService.setModel_ViewJob_Employer(model, session, c, jobId, d);	
 			return  "/view_job_employer/ViewJob_Employer";
 		}

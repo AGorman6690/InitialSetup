@@ -2,6 +2,10 @@ td.active111.proposed-work-day .start-and-end-times{
 	border: 2px solid  #163b3d;
 	background: #fcfdc1;
 }
+
+td.active111.proposed-work-day:not(.other-application-work-day){
+	 border: 0;	
+}
 td.job-work-day .start-and-end-times{
 	 border: 2px solid #888888;	
 }
@@ -11,17 +15,21 @@ td.job-work-day .start-and-end-times{
 	padding: 2px;
 	text-align: center;
 	font-size: 13px;
+	position: relative;
 }
 
 .start-and-end-times p{
 	margin: 2px;
+/* 	font-weight: bold */
 }
 
 .job-info-calendar .ui-datepicker-group{
 	padding: 0px 20px;
 }
 .job-info-calendar .calendar td.active111.proposed-work-day a{
-   background: #163b3d;
+/*    background: #163b3d; */
+   background: #fff;
+   color: #000 !important;
 }
 .job-info-calendar .calendar td.active111.job-work-day a{
    background: #888888;
@@ -45,3 +53,4 @@ td.job-work-day .start-and-end-times{
 	height: 75px;
 	width: 70px;	
 }
+

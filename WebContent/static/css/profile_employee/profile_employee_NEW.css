@@ -28,6 +28,10 @@ td div.job.application{
 	width: 100%
 }
 
+td.alert{
+	background: #a75454;
+	color: #fff;
+}
 
 
 #applications_calendar_view .calendar td{
@@ -101,3 +105,33 @@ td div.job.application{
 /* 	border: 2px solid #000000; */
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .button-group button{ */
+/* 	display: block; */
+/* 	margin-bottom: 8px; */
+/* 	width: 175px; */
+/* } */
+
+#summary-table{
+    width: 424px;
+    margin: auto;
+    padding-bottom: 40px;
+}
+

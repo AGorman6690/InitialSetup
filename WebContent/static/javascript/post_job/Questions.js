@@ -32,12 +32,15 @@ $(document).ready(function(){
 			showSelectedQuestion();		
 			
 			setClickableness_ForQuestionActions(true, false, true, true);
+			$("#addedQuestionsContainer .question-actions-container").show();
+			setDisplay_createQuestionContainer(true);
 		}
 		else{
 			clearAllInputs($("#questionsContainer"));
 			
 			setClickableness_ForQuestionActions(true, true, false, false);
 			enableAllInputFields($("#questionsContainer"));
+			$("#addedQuestionsContainer .question-actions-container").hide();
 		}
 
 		clearInvalidContentAndStyle();
@@ -52,7 +55,7 @@ $(document).ready(function(){
 		$("#answerListContainer").hide();
 		setClickableness_ForQuestionActions(true, true, false, false);
 		deselectAddedQuestion();
-
+		setDisplay_createQuestionContainer(true);
 	})
 	
 	$("body").on("click", "#addQuestion.clickable", function(){
@@ -292,6 +295,7 @@ function addQuestion(){
 		clearAllInputs($("#questionsContainer"));
 		slideUp($("#answerListContainer"), 400);
 		setDisplay_addedQuestions();
+		setDisplay_createQuestionContainer(false);
 	}
 }
 function getQuestion(){

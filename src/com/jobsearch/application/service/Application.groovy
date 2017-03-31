@@ -16,6 +16,11 @@ public class Application {
 	int userId
 	int jobId
 	int hasBeenViewed
+	
+	// ******************************
+	// Do away with these.
+	// They are moving to the employment proposal dto
+	// *******************************
 	LocalDateTime employerAcceptedDate
 	LocalDateTime expirationDate
 

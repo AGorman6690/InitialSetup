@@ -7,6 +7,9 @@
 	position: relative;
    
 }
+.mod{
+	text-align: center;
+}
 .withdraw-application{
 	top: 20px;
 	right: 20px;
@@ -16,7 +19,8 @@
 }
 
 .current-wage-proposal{
-	width: 85px;
+	width: 120px;
+	font-size: 20px;
     background: #fcfdc1;
     border: 2px solid #163b3d;
     padding: 4px;
@@ -80,7 +84,7 @@ input.counter-wage-amount{
 .proposal{
     padding-bottom: 15px;
     border-bottom: 2px solid #cacaca;
-    width: 500px;
+/*     width: 500px; */
     margin: auto;
 }
 
@@ -121,4 +125,44 @@ input.counter-wage-amount{
 }
 .time-container input{
 	width: 65px;
+}
+
+.applicant-expiration-clock h1{
+	color: #163b3d;
+	margin-bottom: 10px;
+}
+.applicant-expiration-clock p{
+	font-weight: bold;
+    margin-bottom: 0px;
+}
+
+
+
+
+
+
+
+
+.application-proposal-container .proposal-item{
+	display: inline-block;
+	padding: 0px 10px;
+	text-align: left;
+}
+.application-proposal-container{
+	width: 550px
+} 
+.proposal-item.amount{
+	width: 23%;
+}
+.proposal-item.amount .show-wage-proposal-history {
+	margin: 0px;
+}
+.proposal-item.work-days{
+	width: 25%;
+}
+.proposal-item.status{
+	width: 50%;
+}
+.proposal-item.status p{
+	display: inline-block
 }

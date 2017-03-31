@@ -3,7 +3,7 @@
 
 <span  class="select-page-section ${context == 'complete' ? 'selected' : ''}" data-page-section-id="jobInfoContainer">Job Information</span>
 
-<c:if test="${context == 'waiting' }">
+<c:if test="${context == 'waiting' || context == 'in-process' }">
 	<span class="select-page-section selected" data-page-section-id="applicantsContainer">Applicants</span>
 </c:if>
 

@@ -221,8 +221,8 @@ span.category{
 .job-info-calendar .calendar .ui-datepicker-title,
 #questions-container > p{
     font-weight: bold;
-    font-size: 19px;
-    color: #197994;
+/*     font-size: 19px; */
+/*     color: #197994; */
     text-align: center;
 }
 .job-info-calendar .calendar td{
@@ -341,15 +341,11 @@ span.category{
 /* 	padding-top: 20px; */
 /* } */
 
-#submit-application-container{
-	text-align: center;
-	padding: 25px 0px
-}
 
 #not-logged-in-warning{
 /* 	font-weight: bold; */
 	color: #ad3535;
-	font-size: 17px;
+	font-size: 23px;
 	display: none;;
 	margin: 20px 0px;
 }
@@ -358,9 +354,12 @@ span.category{
 	display: block;
 }
 input#amount{
-	width: 60px;
+	width: 100px;
+	height: 50px;
+	font-size: 30px;
 	margin:auto;
 	text-align: center;
+	font-size: 30px;
 }
 #apply-container{
 	width: 1000px;

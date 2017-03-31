@@ -12,6 +12,7 @@ import javax.mail.internet.InternetAddress;
 import javax.persistence.Lob;
 import javax.servlet.http.HttpSession;
 
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -632,10 +633,11 @@ public class UserServiceImpl {
 		
 	}
 
-	public void setModel_EmployeeProfile(JobSearchUser employee, Model model) {
+	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
 		
 		List<ApplicationDTO> applicationDtos = applicationService.
 												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+															session,
 															employee.getUserId(), 
 															applicationService.getApplicationStatuses_openOrAccepted());
 		
@@ -796,7 +798,7 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			this.setModel_EmployeeProfile(sessionUser, model);
+			this.setModel_EmployeeProfile(sessionUser, model, session);
 		}
 		else{
 			this.setModel_EmployerProfile(sessionUser, model);
@@ -859,7 +861,7 @@ public class UserServiceImpl {
 		
 	}
 
-	public void setModel_Credentials_Employee(Model model, int userId) {
+	public void setModel_Credentials_Employee(Model model, int userId, HttpSession session) {
 
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
 	
@@ -873,6 +875,7 @@ public class UserServiceImpl {
 		
 		List<ApplicationDTO> applicationDtos = applicationService.
 				getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+							session,
 							userId, 
 							Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
 										Application.STATUS_SUBMITTED,
@@ -900,10 +903,10 @@ public class UserServiceImpl {
 		
 			JobSearchUser sessionUser = SessionContext.getUser(session);
 			
-			List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
-			jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
+//			List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
+//			jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
 			
-			model.addAttribute("jobDtos_current", jobDtos_current);	
+//			model.addAttribute("jobDtos_current", jobDtos_current);	
 		}
 		
 	}
@@ -1006,8 +1009,9 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
 		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
+																session,
 																sessionUser.getUserId(),
-																	applicationService.getApplicationStatuses_openOrAccepted());
+																applicationService.getApplicationStatuses_openOrAccepted());
 		
 		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(sessionUser.getUserId());
 		

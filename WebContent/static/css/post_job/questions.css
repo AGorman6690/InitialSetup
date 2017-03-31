@@ -36,17 +36,20 @@
     text-decoration: underline;
 }
 
-#questionActions button{
+.question-actions-container button{
 	background-color:rgb(192,192,192);
 	color:#000000;
 	cursor:default;
 	outline:none;	
 }
 
-#questionActions button.clickable{
+.question-actions-container button.clickable{
 	background-color:#163b3d;;
 	color:#ffffff;
 	cursor:pointer;
+}
+#addedQuestionsContainer .question-actions-container{
+	display: none;
 }
 
 #questionsContainer :disabled{

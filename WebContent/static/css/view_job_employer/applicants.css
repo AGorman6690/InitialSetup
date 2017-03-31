@@ -30,6 +30,13 @@
 	padding-top: 8px;
 }
 
+#showAllApplicants{
+	margin: 20px auto;
+	display: block
+}
+.container{
+	padding-top: 25px;
+}
 
 .counter-calendar-container .calendar-container td.is-available {
 	background: #65886e;

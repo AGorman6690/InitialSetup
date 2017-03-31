@@ -86,7 +86,7 @@ public class UserController {
 		// ********************************************************
 		
 		
-		userService.setModel_Credentials_Employee(model, userId);
+		userService.setModel_Credentials_Employee(model, userId, session);
 		model.addAttribute("isViewingOnesSelf", false);
 		return "/credentials_employee/Credentials_Employee";
 	}
@@ -96,7 +96,7 @@ public class UserController {
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
 	public String viewCredentials(Model model, HttpSession session) {
 
-		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId());
+		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId(), session);
 		model.addAttribute("isViewingOnesSelf", true);
 		return "/credentials_employee/Credentials_Employee";
 	}

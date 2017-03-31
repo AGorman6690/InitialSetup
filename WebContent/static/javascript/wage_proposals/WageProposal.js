@@ -4,7 +4,7 @@
 $(document).ready(function(){
 	
 	$(".show-mod").click(function(){
-		$(this).siblings(".mod").eq(0).show();
+		$(this).parent().find(".mod").eq(0).show();
 	})
 	
 	
@@ -428,33 +428,41 @@ function hideConfirmationContainer($e){
 function initCalendar_proposedWorkDays(){
 	
 	$(".work-day-container .calendar").each(function(){
-		var $allDaysContainer = $(this).closest(".response-container").find(".dates-container").eq(0);
 		
+		var $responseContainer = $(this).closest(".response-container"); 
+		var applicationId = $responseContainer.attr("data-application-id");
+		var $allDaysContainer = $responseContainer.find(".dates-container").eq(0);		
 		
 		var dates_proposed = getDateFromContainer($allDaysContainer.find(".proposal-work-days"));
 		var dates_workDays = getDateFromContainer($allDaysContainer.find(".job-work-days"));
 		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));	
+		var dates_other_applications = [];
+		$("#all-other-application-dates")
+									.find(".work-day:not([data-application-id='" + applicationId + "'])").each(function() {
+										dates_other_applications.push(dateify($(this).attr("data-date")));
+									})
 		
-		initCalendar_showWorkDays($(this), dates_workDays, dates_unavailable, dates_proposed);	
+		initCalendar_showWorkDays($(this), dates_workDays, dates_unavailable, dates_proposed,
+				dates_other_applications);	
 	})
 
 	
 }
 
-function initCalendar_counterWorkDays(){
-	
-	$(".work-day-container .calendar").each(function(){
-		var $allDaysContainer = $(this).closest(".response-container").find(".dates-container").eq(0);
-
-		var dates_proposed = getDateFromContainer($allDaysContainer.find(".proposal-work-days"));
-		var dates_workDays = getDateFromContainer($allDaysContainer.find(".job-work-days"));
-		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));	
-		
-		initCalendar_showWorkDays_counterProposal($(this), dates_workDays, dates_unavailable, dates_proposed);	
-	})
-
-	
-}
+//function initCalendar_counterWorkDays(){
+//	
+//	$(".work-day-container .calendar").each(function(){
+//		var $allDaysContainer = $(this).closest(".response-container").find(".dates-container").eq(0);
+//
+//		var dates_proposed = getDateFromContainer($allDaysContainer.find(".proposal-work-days"));
+//		var dates_workDays = getDateFromContainer($allDaysContainer.find(".job-work-days"));
+//		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));	
+//		
+//		initCalendar_showWorkDays_counterProposal($(this), dates_workDays, dates_unavailable, dates_proposed);	
+//	})
+//
+//	
+//}
 
 //function initCalendars_counterCalendars(){
 //	

@@ -1,12 +1,10 @@
 <%@ include file="../includes/TagLibs.jsp" %>
 
 
-<div id="submit-application-container">
-	<button id="submitApplication" class="sqr-btn teal" data-job-id="${jobDto.job.id }">Submit Application</button>
-	<a id="not-logged-in-warning"	class="${!isLoggedIn ? 'show-warning' : ''}"
-		href="/JobSearch/login-signup?login=true">You must be logged in to apply for a job
-	</a>				
-</div>	
+<a id="not-logged-in-warning"	class="${!isLoggedIn ? 'show-warning' : ''}"
+	href="/JobSearch/login-signup?login=true">You must be logged in to apply for a job
+</a>	
+
 
 <div class="apply-action">
 		<p>Propose a desired hourly wage</p>
@@ -64,6 +62,9 @@
 		</c:forEach>		
 	</div>	
 </c:if>	
-
+<div id="submit-application-container">
+	<button id="submitApplication" class="sqr-btn teal" data-job-id="${jobDto.job.id }">Submit Application</button>
+			
+</div>	
 
 	

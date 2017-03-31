@@ -14,16 +14,17 @@
 	<%@ include file="../includes/resources/JobInformation.jsp" %>
 	<%@ include file="../includes/resources/Modal.jsp" %>
 	
-	<link rel="stylesheet" type="text/css" href="../static/css/table.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
+	<script src="/JobSearch/static/javascript/view_job_employer/View_Job_Employer.js" type="text/javascript" ></script>
 
-	
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/calendar_application_summary.css" />
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
-		<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants.css" />
-		<link rel="stylesheet" type="text/css" href="../static/css/view_job_employer/applicants_tileView.css" />
+		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants.css" />
+		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants_tileView.css" />
 			
 	</c:if>
 	
@@ -42,162 +43,42 @@
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 		<input id="data_pageInit" type="hidden" value="${data_pageInit }">
 
-		<div class="row">
 		
-			<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
-				<button id="showAllApplicants" class="sqr-btn">Show All Applicants</button>			
-			</c:if>
-
-			<div class="col-sm-12" id="sectionContainers">
-				<c:if test="${context == 'waiting' }">
-				<div id="applicantsContainer" class="page-section">
-					<div id="applicants" class="">
-						<%@ include file="./Applicants.jsp" %>
-					</div>
-					
-<!-- 					<div id="appicants_tileView"> -->
-<%-- 						<%@ include file="./Applicants_TileView.jsp" %> --%>
-<!-- 					</div> -->
-					
-				</div>	
-				</c:if>	
-				
-				
-				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-				<div id="employeesContainer" class="page-section">				
-					<div id="employees" class="">
-					<c:choose>
-						<c:when test="${context == 'complete' }">
+		<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
+			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
+		</c:if>
+		<c:if test="${context == 'waiting' }">
+			<div id="applicantsContainer" class="page-section">
+				<div id="applicants" class="">
+					<%@ include file="./Applicants.jsp" %>
+				</div>
+			</div>	
+		</c:if>	
+		
+		
+		<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
+		<div id="employeesContainer" class="page-section">				
+			<div id="employees" class="">
+			<c:choose>
+				<c:when test="${context == 'complete' }">
 <%-- 							<%@ include file="./Employee_Ratings.jsp" %> --%>
-						</c:when>
-						<c:otherwise>	
-							<%@ include file="./Employees.jsp" %>					
-						</c:otherwise>
-					</c:choose>
-					</div>			
-				</div>	
-				</c:if>
-				
-				<div id="jobInfoContainer" class="page-section">
-					<%@include file="../templates/JobInformation.jsp"%>
-				</div>				
-				
-<%-- 				<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }"> --%>
-<!-- 				<div id="questionsContainer" class="section-container"> -->
-<%-- 					<%@include file="./Questions.jsp"%>	 --%>
-<!-- 				</div> -->
-<%-- 				</c:if> --%>
-				
-			</div> <!-- end column -->
-
-		</div>		
+				</c:when>
+				<c:otherwise>	
+					<%@ include file="./Employees.jsp" %>					
+				</c:otherwise>
+			</c:choose>
+			</div>			
+		</div>	
+		</c:if>
+		
+		<div id="jobInfoContainer" class="page-section">
+			<%@include file="../templates/JobInformation.jsp"%>
+		</div>				
 	</div>	
 
 
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-</script>
-
-
-<script type="text/javascript">
-
-$(document).ready(function(){
-	
-	initPage();
-
-	
-	$("#questionListContainer input[type='checkbox']").click(function(){
-		$("#selectAllQuestions").prop("checked", false);
-		$("#selectNoQuestions").prop("checked", false);
-	})
-	
-	$("#showAllApplicants").click(function(){{
-
-		showAllApplications();
-		$(this).hide();
-	}})
-	
-})
-
-function showAllApplications(){
-	
-	var filters = [];
-	var filter = {};
-	
-	filter.attr = "data-is-sent-proposal";
-	filter.values = [];
-	filter.values.push("0");
-	filter.values.push("1");
-	
-	filters.push(filter);
-	
-	filterTableRows(filters, $("#applicantsTable"));
-}
-
-function initPage(){
-	
-	var data_initPage = $("#data_pageInit").val();
-
-	if(data_initPage != "all-apps"){
-	
-		var filters = [];
-		var filter = {};
-		filter.values = [];
-	
-		switch(data_initPage){
-		case "new-apps":
-			filter.attr = "data-is-old";
-			filter.values.push("0");
-			break;
-		
-	// 	case "all-apps":
-	// 		showApplications(true, true, false, false );
-	// 		break;
-		
-		case "sent-proposals":
-			filter.attr = "data-is-sent-proposal";
-			filter.values.push("1");
-			break;
-		
-		case "received-proposals":
-			filter.attr = "data-is-sent-proposal";
-			filter.values.push("0");
-			break;
-			
-		case "received-proposals-new":
-			filter.attr = "data-wage-proposal-status";
-			filter.values.push("-2");
-			break;		
-		}
-		
-		
-		filters.push(filter);
-		filterTableRows(filters, $("#applicantsTable"));
-		
-	}	
-}
-
-
-
-
-function isAddingApplicationStatus(clickedStatusButton){
-	
-	var currentApplicationStatus = $($(clickedStatusButton).closest("[data-application-status]")[0]).attr("data-application-status");
-	var clickedApplicationStatus = $(clickedStatusButton).val();
-	
-	// If the row's application status is the same as the clicked button's status,
-	// then the user is toggling the status to off (i.e. they are removing the application status) 
-	if (currentApplicationStatus == clickedApplicationStatus){
-		return false;
-	}
-	else{
-		return true;
-	}
-}
-
-
-
-
 </script>
 
 

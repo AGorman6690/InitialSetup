@@ -1,0 +1,21 @@
+.container{
+	padding: 50px 0px;
+	width: 1200px;
+}
+
+.offers-received-container{
+	position: relative;
+	display: inline-block;
+}
+a.new-offers-received{
+    position: absolute;
+    top: -21px;
+    right: -39px;
+    font-weight: bold;
+    font-size: 16px;
+    border: 3px solid #bd3131;
+    color: #bd3131;
+    padding: 0px 6px;
+    /* border-radius: 23px; */
+    /* text-decoration: underline; */
+}

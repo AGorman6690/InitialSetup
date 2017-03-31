@@ -195,9 +195,21 @@
 		</div>	
 		
 		<div id="questionsContainer" class="page-section">
-			<div id="copy-or-new-question" class="item">
-				<div id="copy-question-container">
-					<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Copy a previous question</button>
+			<div id="addedQuestionsContainer" class="item">			
+				<p>Added Questions</p>
+				<div class="question-actions-container">
+					<button id="deleteQuestion" class="btn-sqr">Delete</button>
+					<button id="editQuestion" class="btn-sqr">Edit</button>	
+					<span id="editQuestionResponses">
+						<span id="saveEditQuestionChanges" class="glyphicon glyphicon-ok"></span>
+						<span id="cancelEditQuestionChanges" class="glyphicon glyphicon-remove"></span>
+					</span>
+			</div>				
+			<div id="addedQuestions"></div>
+		</div>		
+		<div id="copy-or-new-question" class="item">
+			<div id="copy-question-container">
+				<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Copy a previous question</button>
 					<div id="postedQuestions" class="dropdown-style">
 						<c:forEach items="${postedQuestions }" var="question">
 							<div data-question-id="${question.questionId }">${question.text }</div>
@@ -206,21 +218,18 @@
 				</div>
 				<button id="create-new-question" class="sqr-btn">Create a new question</button>
 			</div>
-			<div id="addedQuestionsContainer" class="item">
-				<p>Added Questions</p>
-				<div id="addedQuestions"></div>
-			</div>		
+		
 
 			<div id="create-question-container" class="item">
-				<div id="questionActions">
+				<div id="questionActions" class="question-actions-container">
 <!-- 					<button id="newQuestion" class="clickable btn-sqr">Clear</button> -->
 					<button id="addQuestion" class="clickable btn-sqr">Add</button>
-					<button id="deleteQuestion" class="btn-sqr">Delete</button>
-					<button id="editQuestion" class="btn-sqr">Edit</button>							
-					<span id="editQuestionResponses">
-						<span id="saveEditQuestionChanges" class="glyphicon glyphicon-ok"></span>
-						<span id="cancelEditQuestionChanges" class="glyphicon glyphicon-remove"></span>
-					</span>
+<!-- 					<button id="deleteQuestion" class="btn-sqr">Delete</button> -->
+<!-- 					<button id="editQuestion" class="btn-sqr">Edit</button>							 -->
+<!-- 					<span id="editQuestionResponses"> -->
+<!-- 						<span id="saveEditQuestionChanges" class="glyphicon glyphicon-ok"></span> -->
+<!-- 						<span id="cancelEditQuestionChanges" class="glyphicon glyphicon-remove"></span> -->
+<!-- 					</span> -->
 					<c:if test="${!empty postedQuestions }">
 						<div id="postedQuestionsContainer">
 <!-- 							<span id="copyPreviousQuestion" data-toggle-id="postedQuestions"> -->

@@ -1,5 +1,6 @@
 package com.jobsearch.model
 
+import java.time.LocalDateTime;
 
 class EmploymentProposalDTO {
 	
@@ -8,13 +9,17 @@ class EmploymentProposalDTO {
 	Integer proposedByUserId
 	Integer proposedToUserId	
 	String amount
+	LocalDateTime employerAcceptedDate
+	LocalDateTime expirationDate
 	
 	Integer days_offerExpires
 	Integer hours_offerExpires
 	Integer minutes_offerExpires
+	String time_untilEmployerApprovalExpires
+
 	
 	List<String> dateStrings_proposedDates
-	
+	Boolean isProposedToSessionUser
 
 		
 	Integer status

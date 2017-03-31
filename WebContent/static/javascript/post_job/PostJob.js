@@ -4,10 +4,7 @@ $(document).ready(function(){
 	
 	
 	$calendar_workDays = $("#workDaysCalendar_postJob");
-	
-	$("#create-new-question").click(function(){
-		setDisplay_createQuestionContainer();
-	})
+
 	
 	$("#next-section, #previous-section").click(function(){
 		
@@ -277,8 +274,9 @@ function setDisplay_previewJobPost(doShowPreview){
 	
 }
 
-function setDisplay_createQuestionContainer(){
-	$("#create-question-container").show();
+function setDisplay_createQuestionContainer(doShow){
+	if(doShow) $("#create-question-container").show();
+	else $("#create-question-container").hide();
 }
 
 function addAnotherSkill($listItemsContainer){
@@ -332,7 +330,7 @@ function importPreviousQuestion(questionId){
 		
 		showQuestionDto(questionDto);
 		
-		setDisplay_createQuestionContainer();
+		setDisplay_createQuestionContainer(true);
 	}	
 
 	function _error() {
