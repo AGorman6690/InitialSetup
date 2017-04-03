@@ -3,6 +3,8 @@ package com.jobsearch.job.service
 import java.awt.TexturePaintContext.Int;
 import java.util.List
 
+import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTestVisitor;
+
 import com.jobsearch.application.service.Application
 import com.jobsearch.application.service.ApplicationDTO
 import com.jobsearch.category.service.Category;
@@ -11,6 +13,7 @@ import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
 import com.jobsearch.model.Skill
 import com.jobsearch.model.WorkDay
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.user.rate.RatingDTO
 
@@ -35,6 +38,7 @@ public class JobDTO {
 	 double durationHours
 	 
 	 List<WorkDay> workDays
+	 List<WorkDayDto> workDayDtos
 	 String date_firstWorkDay
 	 int months_workDaysSpan
 	 double daysUntilStart
@@ -81,7 +85,8 @@ public class JobDTO {
 	 public static Integer AVAILABILITY_STATUS_COMPLETELY = 4
 	 
 	 JobDTO(){
-		 this.job = new Job();		 
+		 this.job = new Job();	
+		 this.workDays = new ArrayList<WorkDay>();	 
 	 }
 
 

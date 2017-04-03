@@ -3,7 +3,7 @@
 
 $(document).ready(function(){
 	
-	$(".show-mod").click(function(){
+	$("body").on("click", ".show-mod", function(){
 		$(this).parent().find(".mod").eq(0).show();
 	})
 	

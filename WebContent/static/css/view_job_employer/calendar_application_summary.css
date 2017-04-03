@@ -11,11 +11,13 @@ td .employment-fraction{
 /* 	height: 15%; */
 /* 	position: absolute; */
 /* 	bottom: 65%; */
-    background: #6dad6d;
-    color: #fff;	
+    background: #aad4aa;
+    color: #fff;
+    border: 1px solid #6dad6d;
+/*     color: #6dad6d;	 */
 }
 td .application-count span{
-	bottom: 5px;
+	bottom: 28px;
     left: 41%;
     position: absolute;
     margin-top: 5px;
@@ -23,12 +25,35 @@ td .application-count span{
     color: #000;
     font-weight: bold;  
 /*     color: #fff; */
+/* 	left: 33%; */
+/*     background: #fff; */
+/*     border-radius: 29px; */
+/*     width: 24px; */
+/*     border: 1px solid #000; */
 }
 
 .calendar td{
 	border: 1px solid #e4e4e4;
 }
 
-td.active111{
+td.job-work-day{
 	position: relative;
+}
+td.job-work-day:hover{
+	background: #dcdccb;
+}
+.calendar td{
+	padding: 2px;
+    vertical-align: top;
+    text-align: center;
+    height: 75px;
+    width: 70px;
+    border-bottom: 2px solid #bbbbbb;
+}
+.calendar td a{
+/* 	font-size: 18px; */
+/* 	font-weight: bold; */
+}
+.job-info-calendar.calendar-container .calendar td{
+	height: 100px;
 }

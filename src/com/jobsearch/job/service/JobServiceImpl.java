@@ -33,6 +33,7 @@ import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -1026,7 +1027,7 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-						
+			jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
 			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
 			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
 			
@@ -1067,6 +1068,23 @@ public class JobServiceImpl {
 		model.addAttribute("user", sessionUser);
 //		model.addAttribute("userDto", userDto);
 				
+	}
+
+	public List<WorkDayDto> getWorkDayDtos(int jobId) {
+		
+		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
+		List<WorkDay> workDays = getWorkDays(jobId);
+		
+		for(WorkDay workDay : workDays){
+			WorkDayDto workDayDto = new WorkDayDto();
+			workDayDto.setWorkDay(workDay);
+			workDayDto.setCount_applicants(applicationService.getCount_applicantsByDay(workDay.getDateId(), jobId));
+			workDayDto.setCount_positionsFilled(applicationService.getCount_positionsFilledByDay(workDay.getDateId(), jobId));
+			workDayDto.setCount_totalPositions(4);
+			workDayDtos.add(workDayDto);
+		}
+		
+		return workDayDtos;
 	}
 
 	public List<JobDTO> getJobDtos_employment_currentAndFuture(int userId_employee) {
@@ -1316,6 +1334,30 @@ public class JobServiceImpl {
 		if(verificationService.isListPopulated(workDays)){			
 			return repository.getDateStrings_UnavailableWorkDays(userId, workDays);				
 		}else return null;
+	}
+
+	public void setModel_getApplicants_byJobAndDate(Model model, HttpSession session, int jobId, String dateString) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			List<Application> applications = applicationService.getApplications_byJobAndDate(jobId, dateString);
+		
+			List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos(applications, session);
+			
+			JobDTO jobDto_findEmployees = new JobDTO();
+			jobDto_findEmployees.setJob(getJob(jobId));
+			
+			WorkDay workDay = new WorkDay();
+			workDay.setStringDate(dateString);
+			jobDto_findEmployees.getWorkDays().add(workDay);
+			
+			List<JobSearchUser> otherApplicantsWhoAreAvailable = userService.getUsers_ByFindEmployeesSearch(jobDto_findEmployees);
+			
+			JobDTO jobDto = getJobDTO_DisplayJobInfo(jobId);
+			jobDto.setApplicationDtos(applicationDtos);
+
+			model.addAttribute("jobDto", jobDto);
+		}
+
 	}
 
 

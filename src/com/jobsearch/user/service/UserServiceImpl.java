@@ -925,7 +925,7 @@ public class UserServiceImpl {
 				jobDto.getJob().setLng(coordinate.getLongitude());
 				
 				// Get the users that match the search request 
-				List<JobSearchUser> users = repository.getUsers_ByFindEmployeesSearch(jobDto);
+				List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(jobDto);
 				
 				for(JobSearchUser user : users){
 					JobSearchUserDTO userDto = new JobSearchUserDTO();
@@ -952,6 +952,12 @@ public class UserServiceImpl {
 			model.addAttribute("userDtos", userDtos);
 		}
 		
+	}
+
+
+	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(JobDTO jobDto) {
+		
+		return repository.getUsers_ByFindEmployeesSearch(jobDto);
 	}
 
 	public JobSearchUserDTO getUserDTO_Availability(HttpSession session) {

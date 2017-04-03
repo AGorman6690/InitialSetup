@@ -4,10 +4,12 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.SQLQuery;
 import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +32,8 @@ import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
+
+import sun.launcher.resources.launcher;
 
 @Repository
 public class ApplicationRepository {
@@ -439,8 +443,7 @@ public class ApplicationRepository {
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
 	
-			// ************************************************************************
-			
+			// ************************************************************************			
 //			// When the employer initiates contact and makes an offer, these will not be null
 //			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
 //				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
@@ -823,6 +826,62 @@ public class ApplicationRepository {
 
 		return this.EmploymentProposalDTOMapper(sql, new Object[]{ employmentProposalId }).get(0);
 	}
+
+
+	public Integer getCount_applicantsByDay(int dateId, int jobId) {
+
+		String sql = "SELECT COUNT(a.ApplicationId)";
+		sql += " FROM application a";
+		sql += " INNER JOIN wage_proposal wp ON wp.ApplicationId = a.ApplicationId";
+		sql += " INNER JOIN employment_proposal_work_day e ON e.EmploymentProposalId = wp.WageProposalId";
+		sql += " INNER JOIN work_day wd ON wd.WorkDayId = e.WorkDayId";
+		sql += " WHERE wd.DateId = ?";
+		sql += " AND a.IsOpen = 1";
+		sql += " AND a.JobId = ?";
+//		sql += " AND wp.WageProposalId IN ( "
+//				+ "SELECT MAX(wp1.WageProposalId) FROM wage_proposal wp1 WHERE wp1.ApplicationId = ? )";
+		sql += " AND wp.IsCurrentProposal = 1";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ dateId, jobId }, Integer.class);
+	}
+
+	public Integer getCount_positionsFilledByDay(int dateId, int jobId) {
+		
+		String sql = "SELECT COUNT(e.Id)";
+		sql += " FROM employment e";
+		sql += " INNER JOIN application a ON a.JobId = e.JobId";
+		sql += " INNER JOIN wage_proposal wp ON wp.ApplicationId = a.ApplicationId";
+		sql += " INNER JOIN employment_proposal_work_day e_p ON e_p.EmploymentProposalId = wp.WageProposalId";
+		sql += " INNER JOIN work_day wd ON wd.WorkDayId = e_p.WorkDayId";
+		sql += " WHERE wd.DateId = ?";
+		sql += " AND e.JobId = ?";
+		sql += " AND e.WasTerminated = 0";
+		sql += " AND wp.IsCurrentProposal = 1";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ dateId, jobId }, Integer.class);
+	}
+
+	public void updateWageProposal_isCurrentProposal(Integer employmentProposalId, int isCurrentProposal) {
+		String sql = "UPDATE wage_proposal SET IsCurrentProposal = ? WHERE WageProposalId = ?";
+		jdbcTemplate.update(sql, new Object[]{ employmentProposalId, isCurrentProposal });		
+	}
+
+
+	public List<Application> getApplications_byJobAndDate(int jobId, int dateId) {
+		String sql = "SELECT * FROM application a";
+				sql += " INNER JOIN wage_proposal wp ON wp.ApplicationId = a.ApplicationId";
+				sql += " INNER JOIN employment_proposal_work_day e_p ON e_p.EmploymentProposalId = wp.WageProposalId";
+				sql += " INNER JOIN work_day wd ON wd.WorkDayId = e_p.WorkDayId";
+				sql += " WHERE a.IsOpen = 1";
+				sql += " AND a.JobId = ?";
+				sql += " AND wp.IsCurrentProposal = 1";
+				sql += " AND wd.DateId = ?";
+				
+		return ApplicationRowMapper(sql, new Object[]{ jobId, dateId });
+	}
+
+
+
 
 
 

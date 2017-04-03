@@ -972,8 +972,10 @@ public class JobRepository {
 		return this.JobRowMapper(sql, args.toArray());
 	}
 
-	public int getDateId(String date) {
-		
+	public Integer getDateId(String date) {
+		// ***************************************************
+		// date must be in the form yyyy-mm-dd
+		// ***************************************************
 		String sql = "SELECT Id FROM date where Date = ?";
 		return jdbcTemplate.queryForObject(sql, new Object[]{ date }, Integer.class);
 	}

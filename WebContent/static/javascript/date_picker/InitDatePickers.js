@@ -62,6 +62,37 @@ function getDateFromContainer($container){
 	
 }
 
+function getDateFromContainer($container){
+	
+	var dates = [];
+	var date;
+	$container.find("[data-date]").each(function(){
+		
+		date = dateify($(this).attr("data-date"));		
+		if(date != undefined) dates.push(date);		
+	})
+	
+	return dates;
+	
+}
+
+function getWorkDayDtosFromContainer($container){
+	
+	var workDayDtos = [];
+	
+	$container.find(".work-day-dto").each(function(){
+		var workDayDto = {};
+		workDayDto.date = dateify($(this).attr("data-date"));
+		workDayDto.count_applicants = $(this).attr("data-count-applicants");
+		workDayDto.count_positionsFilled = $(this).attr("data-count-positions-filled");
+		workDayDto.count_totalPositions = $(this).attr("data-count-total-positions");
+		
+		workDayDtos.push(workDayDto);
+	})
+	
+	return workDayDtos;
+	
+}
 
 
 function initCalendar_selectAvailability($calendar, currentAvailability, workDays){

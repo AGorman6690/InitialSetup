@@ -21,34 +21,56 @@ $(document).ready(function(){
 
 function initCalendar_employerViewJob_applicantSummary() {
 	
-	var workDays = getDateFromContainer($("#work-days-calendar-container .work-days"));
+	var workDayDtos = getWorkDayDtosFromContainer($("#work-day-dtos"));
 	var $calendar = $("#job-calendar-application-summary .calendar");
 	var firstDate = getMinDate($calendar)
 
 	$calendar.datepicker({
 //		minDate: firstDate,
 		numberOfMonths: getNumberOfMonths($calendar),
+		onSelect: function(dateString, inst){
+			var jobId = $("#jobId").val();
+			var date = new Date(dateString);
+			$.ajax({
+				type: "GET",
+				url: "/JobSearch/job/" + jobId + "/work-day/" + $.datepicker.formatDate("yy-mm-dd", date) + "/applicants",
+				headers: getAjaxHeaders(),
+				dataType: "html",
+				success: function(html) {
+					$("#modal_applicants .mod-content").html(html);
+					$("#modal_applicants.mod").show();
+				}
+			})
+		},
 		beforeShowDay: function(date){
-			if(doesDateArrayContainDate(date, workDays)) return [true, "active111"];
+			if(doesWorkDayDtoArrayContainDate(date, workDayDtos)) return [true, "job-work-day"];
 			else return [true, ""];
 		},
 		afterShow: function(){
 			var html = "";
 			var counts = [3, 8, 10];
-			var max = Math.max.apply(null, counts);
-			$(workDays).each(function(i, date){
+			var max = Math.max.apply(null, $.map(workDayDtos, function(workDayDto){ return workDayDto.count_applicants }));
+			$(workDayDtos).each(function(i, workDayDto){
 				
-				var td = getTdByDate($calendar, date);
-				var number = parseInt(Math.random() * 10);
-				html = "<div class='employment-fraction'>1 / 4</div>";
+				var td = getTdByDate($calendar, workDayDto.date);
+//				var number = parseInt(Math.random() * 10);
+//				html = "<div class='employment-fraction'>1 / 4</div>";
+//				html += "<div class='application-count'>";
+//				html += "<span>" + number + "</span>";
+//				html += "</div>"
+				
+				html = "<div class='employment-fraction'>" + workDayDto.count_positionsFilled + " / " + workDayDto.count_totalPositions + "</div>";
 				html += "<div class='application-count'>";
-				html += "<span>" + number + "</span>";
-				html += "</div>"
-				
+				html += "<span>" + workDayDto.count_applicants + "</span>";
+				html += "</div>"					
+					
+					
 				$(td).append(html);
 				var $addedDiv = $(td).find(".application-count");
 				
-				$addedDiv.css("height", 40 * number / 10 + "%");
+				var maxHeightPercentage = 32;
+//				$addedDiv.css("height", 32 * number / 10 + "%");
+				$addedDiv.css("height", maxHeightPercentage * ( workDayDto.count_applicants / max ) + "%");
 			})				
 		}
 	})

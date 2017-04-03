@@ -1,5 +1,6 @@
 package com.jobsearch.application.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.application.repository.ApplicationRepository;
@@ -225,7 +227,6 @@ public class ApplicationServiceImpl {
 		
 		if(verificationService.isPositiveNumber(applicationDto.getEmploymentProposalDto().getAmount())){
 		
-
 			// Set the employment proposal
 			applicationDto.getEmploymentProposalDto().setProposedByUserId(sessionUser.getUserId());	
 			applicationDto.getEmploymentProposalDto().setProposedToUserId(appliedToJob.getUserId());
@@ -388,6 +389,8 @@ public class ApplicationServiceImpl {
 					    	
 							this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
 									WageProposal.STATUS_COUNTERED);
+							
+							
 	
 							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
 							
@@ -416,6 +419,7 @@ public class ApplicationServiceImpl {
 							}
 							// ***********************************************************************************
 							
+							this.updateWageProposal_isCurrentProposal(proposalBeingRespondedTo.getEmploymentProposalId(), 0);
 							this.insertEmploymentProposal(newProposal);			
 						}
 					}					
@@ -449,6 +453,7 @@ public class ApplicationServiceImpl {
 							newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);				
 							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
 							
+							this.updateWageProposal_isCurrentProposal(proposalBeingRespondedTo.getEmploymentProposalId(), 0);
 							this.insertEmploymentProposal(newProposal);
 							
 							repository.updateApplication_PendingApplicantApproval(proposalBeingRespondedTo.getApplicationId(),
@@ -497,6 +502,13 @@ public class ApplicationServiceImpl {
 	
 	
 
+	public void updateWageProposal_isCurrentProposal(Integer employmentProposalId, int isCurrentProposal) {
+		
+		repository.updateWageProposal_isCurrentProposal(employmentProposalId, isCurrentProposal);
+		
+	}
+
+
 	private boolean isValidExpirationTime(EmploymentProposalDTO employmentProposalDto) {
 		
 		if( ( employmentProposalDto.getDays_offerExpires() != null ||
@@ -522,6 +534,71 @@ public class ApplicationServiceImpl {
 		
 		return applicationDtos;
 	}
+
+	
+
+
+	public List<ApplicationDTO> getApplicationDtos(List<Application> applications, HttpSession session) {
+		
+		// **************************************************************
+		// **************************************************************
+		// Consider consolidating all the getApplicationDto methods into this. 
+		// **************************************************************
+		// **************************************************************
+		
+		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
+		
+		for (Application application : applications) {
+			
+			ApplicationDTO applicationDto =  new ApplicationDTO();
+			
+			applicationDto.setApplication(application);
+			
+			applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));	
+			
+			int applicantId = applicationDto.getApplicantDto().getUser().getUserId(); 
+					
+			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			
+//			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
+			applicationDto.setEmploymentProposalDto(this.getCurrentEmploymentProposal(application.getApplicationId()));
+			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
+							getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+			
+			applicationDto.setTime_untilEmployerApprovalExpires(
+							this.getTime_untilEmployerApprovalExpires(
+									application.getExpirationDate()));
+			
+			applicationDto.getApplicantDto().setRatingValue_overall(userService.getRating(applicantId));
+			
+			applicationDto.setQuestions(this.getQuestionsWithAnswersByJobAndUser(application.getJobId(), applicantId));
+			
+			applicationDto.setAnswerOptionIds_Selected(
+						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, application.getJobId()));
+		
+			applicationDto.setDateStrings_availableWorkDays(
+								this.getProposedWorkDays(applicationDto.getEmploymentProposalDto().getEmploymentProposalId()));
+
+			
+			
+			// **********************************************************************
+			// **********************************************************************
+			// Determine whether the employees should specify the days they are **available** 
+			// or **unavailable**.
+			// I'm leaning towards: "assume the user is available unless otherwise noted".
+			// (i.e. the user specifies their unavailability.
+			// **********************************************************************
+			// **********************************************************************
+//			applicationDto.setDateStrings_unavailableWorkDays(jobService.getDateStrings_UnavailableWorkDays(applicantId,
+//																applicationDto.getJobDto().getWorkDays()));
+			
+
+			applicationDtos.add(applicationDto);
+		}
+
+		return applicationDtos;
+	}
+
 
 
 	private List<ApplicationDTO> getApplicationDtos_ByApplications(List<Application> applications,
@@ -892,7 +969,7 @@ public class ApplicationServiceImpl {
 
 
 	public int getCountApplications_declined(Integer jobId) {
-		
+	
 		return repository.getCountApplications_declined(jobId);
 	}
 
@@ -908,6 +985,23 @@ public class ApplicationServiceImpl {
 				Application.STATUS_CONSIDERED,
 				Application.STATUS_ACCEPTED,
 				Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL);
+	}
+
+
+	public Integer getCount_applicantsByDay(int dateId, int jobId) {
+		
+		return repository.getCount_applicantsByDay(dateId, jobId);
+	}
+
+
+	public Integer getCount_positionsFilledByDay(int dateId, int jobId) {
+		return repository.getCount_positionsFilledByDay(dateId, jobId);
+	}
+
+
+	public List<Application> getApplications_byJobAndDate(int jobId, String dateString) {
+		
+		return repository.getApplications_byJobAndDate(jobId, jobService.getDateId(dateString));
 	}
 
 

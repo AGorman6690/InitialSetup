@@ -40,9 +40,19 @@
 		<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
 	</div>	
 	<div class="container">	
+
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 		<input id="data_pageInit" type="hidden" value="${data_pageInit }">
-
+		
+		<div id="work-day-dtos">
+			<c:forEach items="${jobDto.workDayDtos }" var="workDayDto">
+				<div class="work-day-dto" data-date="${workDayDto.workDay.stringDate }"
+					 data-count-applicants="${workDayDto.count_applicants }"
+					 data-count-positions-filled="${workDayDto.count_positionsFilled }"
+					 data-count-total-positions="${workDayDto.count_totalPositions }">
+				 </div>
+			</c:forEach>
+		</div>
 		
 		<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
 			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
@@ -73,7 +83,13 @@
 		
 		<div id="jobInfoContainer" class="page-section">
 			<%@include file="../templates/JobInformation.jsp"%>
-		</div>				
+		</div>	
+		
+		<div id="modal_applicants" class="mod">
+			<div class="mod-content">
+				
+			</div>
+		</div>			
 	</div>	
 
 

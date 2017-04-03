@@ -8,6 +8,12 @@
 	</c:when>
 
 	<c:otherwise>
+		<div id="applications-employer-view-job">
+			<c:forEach items="${jobDto.applicationDtos }" var="applicationDto">
+				<div class="application"></div>
+			</c:forEach>								
+		</div>
+
 		<div id="job-calendar-application-summary" class="job-info-calendar calendar-container">
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 		</div>

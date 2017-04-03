@@ -22,6 +22,4 @@ public class WorkDayProposal {
 	public static int STATUS_COUNTERED = 1;
 	public static int STATUS_ACCEPTED = 2;
 	public static int STATUS_DECLINED = 3;
-	
-	 
 }

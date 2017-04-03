@@ -108,7 +108,6 @@ public class UserController {
 		return "/event_calendar/Event_Calendar";
 	}
 
-
 	@ResponseBody
 	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
 	public String signUp(@RequestBody JobSearchUser user) {

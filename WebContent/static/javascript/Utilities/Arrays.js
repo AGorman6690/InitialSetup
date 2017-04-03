@@ -50,6 +50,18 @@ function doesDateArrayContainDate(dateToCheck, dateArray){
 	
 }
 
+function doesWorkDayDtoArrayContainDate(dateToCheck, workDayDtos){
+	
+	var arr = [];	
+	arr = $.grep(workDayDtos, function(workDayDto, days){
+		return workDayDto.date.getTime() == dateToCheck.getTime();
+	})
+	
+	if(arr.length > 0) return true;
+	else return false;
+	
+}
+
 function doesArrayContainAtLeastOneValue(values, array){
 	
 	var doesContainAtleastOneValue = false;

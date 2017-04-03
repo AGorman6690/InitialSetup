@@ -134,7 +134,16 @@ public class JobController {
 
 	}
 	
+	@RequestMapping(value = "/job/{jobId}/work-day/{dateString}/applicants", method = RequestMethod.GET)
+	public String getApplicants_byJobAndDate(Model model, HttpSession session,
+											@PathVariable(value = "jobId") int jobId,
+											@PathVariable(value = "dateString") String dateString) {
 
+		jobService.setModel_getApplicants_byJobAndDate(model, session, jobId, dateString);
+		
+		return "/view_job_employer/Applicants_ByJobAndDate";
+	}
+	
 	
 	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
 	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {

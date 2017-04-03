@@ -443,6 +443,12 @@ public class UserRepository {
 
 	public List<String> getAvailableDays_byWorkDays(int userId, List<WorkDay> workDays) {
 		
+		// ***********************************************
+		// ***********************************************
+		// "availability" table needs to be changed to "unavailability"
+		// ***********************************************
+		// ***********************************************
+		
 		String sql = "SELECT Date FROM  date d"
 						+ " INNER JOIN availability a ON a.DateId = d.Id"
 //						+ " INNER JOIN employment e ON e.DateId = a.DateId"
@@ -521,9 +527,10 @@ public class UserRepository {
 		if (verificationService.isListPopulated(jobDto.getWorkDays())) {
 			
 			// Start the availability sub query
-			subQuery_Dates = " AND u2.UserId IN (";
+			subQuery_Dates = " AND u2.UserId NOT IN (";
 
 			// *************************************
+			// UPDATE THIS NOTE TO REFLECT UNAVAILABILITY, NOT AVAILABILITY
 			// If Partial availability is allowed.
 			// A user id is selected if the user has availability
 			// on **AT LEAST 1** of the requested days.

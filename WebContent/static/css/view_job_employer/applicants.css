@@ -180,3 +180,8 @@ label.display-question{
     padding: 10px;
     width: 35px;
 }
+
+#modal_applicants .mod-content{
+	width: 850px;
+	margin-left: -425px;
+}
