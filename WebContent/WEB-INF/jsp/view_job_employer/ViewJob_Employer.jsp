@@ -21,6 +21,8 @@
 	<script src="/JobSearch/static/javascript/view_job_employer/View_Job_Employer.js" type="text/javascript" ></script>
 
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/calendar_application_summary.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/view_job_employer.css" />
+	
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants.css" />
@@ -63,7 +65,7 @@
 					<%@ include file="./Applicants.jsp" %>
 				</div>
 			</div>	
-			<div id="job-calendar-application-summary" class="job-info-calendar calendar-container page-section">
+			<div id="job-calendar-application-summary" class="v2 hide-unused-rows calendar-container page-section">
 				<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 			</div>
 		</c:if>	

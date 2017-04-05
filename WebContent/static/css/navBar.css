@@ -1,7 +1,8 @@
 #navItemsContainer a{
-	padding-left: 13px;
-	padding-right: 13px;
+/* 	padding-left: 13px; */
+/* 	padding-right: 13px; */
 	font-size:18px;	
+	 border-left: 2px solid #cacaca;
 }
 
 #navBar{
@@ -10,7 +11,7 @@
 /*     margin: 5px auto;	 */
 	position: relative;
 /* 	border-bottom: 2px solid #197994; */
-	border-bottom: 2px solid #cacaca;
+	border-bottom: 1px solid #cacaca;
 /* 	border-top: 3px solid #197994;	 */
 	height:80px;
 	line-height:74px;
@@ -26,10 +27,11 @@
 }
 
 #navBar a{
-	color:#163B3D;
-	cursor:pointer;
-	padding-top:6px;
-	padding-bottom:6px;
+    color: #163B3D;
+    cursor: pointer;
+	margin: 6px 13px;
+   
+    padding-left: 4px;
 }
 
 #navItemsContainer{

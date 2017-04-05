@@ -57,3 +57,23 @@ td.job-work-day:hover{
 .job-info-calendar.calendar-container .calendar td{
 	height: 100px;
 }
+
+
+
+
+
+
+
+
+
+
+.v2 .calendar td{
+	height: 100px;
+}
+.v2 .calendar td.job-work-day a {
+    background: #fff;
+    color: #000;
+}
+
+
+

@@ -19,6 +19,24 @@ $(document).ready(function(){
 	
 })
 
+function executeAjaxCall_getApplicantsByJobAndDate(jobId, date){
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/job/" + jobId + "/work-day/" + $.datepicker.formatDate("yy-mm-dd", date) + "/applicants",
+		headers: getAjaxHeaders(),
+		dataType: "html",
+		success: function(html) {
+			$("#modal_applicants .mod-content").html(html);
+			$("#modal_applicants.mod").show();
+			broswerIsWaiting(false);
+		},
+		error: function() {
+			broswerIsWaiting(false);
+		}
+	})	
+}
+
 function initCalendar_employerViewJob_applicantSummary() {
 	
 	var workDayDtos = getWorkDayDtosFromContainer($("#work-day-dtos"));
@@ -31,21 +49,7 @@ function initCalendar_employerViewJob_applicantSummary() {
 		onSelect: function(dateString, inst){
 			var jobId = $("#jobId").val();
 			var date = new Date(dateString);
-			broswerIsWaiting(true);
-			$.ajax({
-				type: "GET",
-				url: "/JobSearch/job/" + jobId + "/work-day/" + $.datepicker.formatDate("yy-mm-dd", date) + "/applicants",
-				headers: getAjaxHeaders(),
-				dataType: "html",
-				success: function(html) {
-					$("#modal_applicants .mod-content").html(html);
-					$("#modal_applicants.mod").show();
-					broswerIsWaiting(false);
-				},
-				error: function() {
-					broswerIsWaiting(false);
-				}
-			})
+			executeAjaxCall_getApplicantsByJobAndDate(jobId, date);
 		},
 		beforeShowDay: function(date){
 			if(doesWorkDayDtoArrayContainDate(date, workDayDtos)) return [true, "job-work-day"];
@@ -66,16 +70,19 @@ function initCalendar_employerViewJob_applicantSummary() {
 				
 				html = "<div class='employment-fraction'>" + workDayDto.count_positionsFilled + " / " + workDayDto.count_totalPositions + "</div>";
 				html += "<div class='application-count'>";
-				html += "<span>" + workDayDto.count_applicants + "</span>";
+				html += "<span>";
+				if(workDayDto.count_applicants > 0) html += workDayDto.count_applicants;
+				html += "</span>";
 				html += "</div>"					
 					
 					
 				$(td).append(html);
 				var $addedDiv = $(td).find(".application-count");
-				
 				var maxHeightPercentage = 32;
-//				$addedDiv.css("height", 32 * number / 10 + "%");
 				$addedDiv.css("height", maxHeightPercentage * ( workDayDto.count_applicants / max ) + "%");
+				
+				var $tr = $(td).closest("tr");
+				if($tr.hasClass("show-row") == 0) $tr.addClass("show-row");
 			})				
 		}
 	})

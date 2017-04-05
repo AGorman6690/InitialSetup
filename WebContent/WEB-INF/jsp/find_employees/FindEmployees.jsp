@@ -4,6 +4,7 @@
 <%@ include file="../includes/resources/InputValidation.jsp"%>
 
 
+
 <script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>
 <link href="/JobSearch/static/css/Templates/forms.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/table.css" rel="stylesheet" />
@@ -11,9 +12,8 @@
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <link href="/JobSearch/static/css/find_employees/findEmployees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/find_employees/make_offer_modal.css" rel="stylesheet" />
+<link href="/JobSearch/static/css/find_employees/cal_find_employees.css" rel="stylesheet" />
 
-
-<div class="container">
 
 <c:if test="${!empty jobDtos_current}">
 	<div id="what-kind-of-job-container">
@@ -30,7 +30,7 @@
 	</div>
 </c:if>
 
-
+<input id="jobId_getOnPageLoad" type="hidden" value="${jobId_getOnPageLoad }">
 	
 	<div id="filtersContainer" class="${!empty jobDtos_current ? 'hide-on-load' : ''}">
 
@@ -48,7 +48,7 @@
 <!-- 			<div class="filter-value"> -->
 <!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
 <!-- 			</div> -->
-			<div class="calendar-container filter-value">
+			<div class="v2 calendar-container filter-value work-day-filter">
 				<div id="availabilityCalendar" class="calendar">
 				</div>
 				<button class="clear-calendar">Clear</button>
@@ -68,7 +68,7 @@
 		
 		</div>
 	</div>
-</div>	
+	
 
 
 <%@ include file="./MakeOfferModal.jsp"%>

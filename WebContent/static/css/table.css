@@ -3,8 +3,12 @@ table.main-table-style{
 } 
 
 .main-table-style thead{
-    border-bottom: 1px solid #ddd;
+/*     border-bottom: 1px solid #ddd; */
 /*     border-top: 1px solid #ddd; */
+}
+
+.main-table-style.shadow > thead > tr:last-child{
+	box-shadow: 3px 3px 5px #848484;
 }
 
 .main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
@@ -18,11 +22,11 @@ table.main-table-style{
 }
 
 .main-table-style > tbody > tr{
-	border-top:1px solid #ddd;
+	border-bottom:1px solid #ddd;
 }
 
 .main-table-style tbody tr:first-child{
-	border-bottom: 0;
+/* 	border-bottom: 0; */
 }
 
 .main-table-style tbody tr{
@@ -51,10 +55,18 @@ table.main-table-style{
 }
 
 .main-table-style th{
-	padding:4px 8px;
+	padding:13px 8px;
     font-size: 16px;
-    color: #888888;
+/*     color: #888888; */
+	color: #000;
     font-weight: normal;
+}
+.main-table-style th.teal{
+	background: #197994;	
+    color: #fff;
+}
+.main-table-style th.teal.first{
+	border-top-left-radius: 7px;
 }
 
 td .accent{

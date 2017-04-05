@@ -1,0 +1,33 @@
+#select-an-employee-cont{
+	margin: auto;
+}
+#select-an-employee-cont,
+#select-an-employee-cont .dropdown-style{
+    width: 450px;
+}
+#select-an-employee-cont button{
+	width: 100%;
+	margin: auto;
+}
+
+.question{
+	width: 400px;
+	margin: auto;
+}
+.question p,
+#replace-cont p:first-child	{
+	font-weight: bold;
+	color: #163b3d;
+	font-size: 17px;
+}
+#questions-cont .button-group button.sqr-btn{
+	display: inline-block;
+	margin-bottom: 10px;
+}
+#questions-cont{
+	padding-top: 30px;
+}
+#post-select{
+	display: none;
+}
+

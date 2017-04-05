@@ -22,7 +22,7 @@
 			<span id="tileView_applicants">Tile View</span>
 		</div>
 	
-		<table id="applicantsTable" class="main-table-style table-view
+		<table id="applicantsTable" class="main-table-style table-view shadow
 			${jobDto.job.isPartialAvailabilityAllowed ? 'has-work-days' : '' }
 			${jobDto.questions.size() > 0 ? 'has-answers' : ''}">
 			<thead>
@@ -157,7 +157,7 @@
 	
 					</c:if>									
 
-					<th>Proposal</th>
+					<th class="teal first">Proposal</th>
 <!-- 					<th id="wageNegotiation_status" class="header-dropdown table-view tile-view" data-filter-attr="data-is-sent-proposal"> -->
 <!-- 						<span data-toggle-id="filterWageProposalStatus" > -->
 <!-- 							Status<span class="glyphicon glyphicon-menu-down"></span> -->

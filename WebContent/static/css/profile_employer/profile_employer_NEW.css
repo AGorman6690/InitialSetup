@@ -19,3 +19,42 @@ a.new{
     /* border-radius: 23px; */
     /* text-decoration: underline; */
 }
+
+#table_jobsWaitingToStart thead tr th.job-status.first{
+	border-top-left-radius: 7px;
+}
+#table_jobsWaitingToStart thead tr th.job-status{
+/*     padding-top: 8px; */
+/*     border-top: 2px solid #163b3d; */
+/*     border-bottom: 2px solid #163b3d; */
+/*     color: #000; */
+/*     font-weight: bold; */
+/*     background: #163b3d; */
+	background: #197994;	
+    color: #fff;
+}
+
+#table_jobsWaitingToStart thead tr{
+/*     box-shadow: 3px 3px 5px #e0cfcf; */
+    box-shadow: 3px 3px 5px #848484;
+/*     background: #f4f4f4; */
+}
+table.main-table-style thead {
+	border-bottom: 0;
+}
+
+#table_jobsWaitingToStart thead tr th{
+    color: #000;
+/*     font-weight: bold; */
+    letter-spacing: 0.12em;
+}
+
+td.job-location span{
+	border-right: 2px solid #cacaca;
+    display: inline-block;
+}
+
+td button.replace-an-employee{
+	width: 140px;
+}
+

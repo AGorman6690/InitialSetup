@@ -1,0 +1,36 @@
+.v2 td{
+	padding: 2px ;
+	vertical-align: top;
+	text-align: center;
+	height: 75px;
+	width: 70px;
+	border: 1px solid #e4e4e4;	
+}
+.v2 .calendar td.ui-datepicker-other-month{
+	border: 0
+}
+.v2 td.job-work-day a{
+	display: inline-block;
+	width: 100%;
+	background: #163b3d;
+	color: #fff;
+}
+.v2 .added-content{
+	padding: 5px 0px;
+	background: #fff;
+	border: 2px solid #163b3d;
+}   
+.v2 .added-content p{
+	margin-bottom: 2px;
+	font-weight: normal;
+	color: #000;
+}   
+.v2 td.job-work-day {
+	background: #fff;
+}
+.v2.hide-unused-rows tbody tr{
+	display: none;
+}
+.v2.hide-unused-rows tbody tr.show-row{
+	display: table-row;
+}

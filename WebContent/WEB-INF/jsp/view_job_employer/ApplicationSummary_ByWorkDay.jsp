@@ -20,7 +20,9 @@
 	</c:if>
 	<c:if test="${count_userswhoAreAvailableButHaveNotApplied > 0}">
 		<div id="otherUsersWhoHaveNotApplied" class="pad-top">
-			<p>${count_userswhoAreAvailableButHaveNotApplied } more available users</p>
+			<p>
+				<a href="/JobSearch/job/${jobDto.job.id}/find-employees">${count_userswhoAreAvailableButHaveNotApplied } more available users</a>
+			</p>
 		</div>
 	</c:if>
 </div>

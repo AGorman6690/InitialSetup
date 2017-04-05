@@ -68,6 +68,7 @@
 					
 <!-- 		Google Font -->
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
 	
 			
 		
@@ -108,11 +109,12 @@
 			<div id="navItemsContainer">					
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
-					<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>							
-					<a id="nav_calendar" class="" href="/JobSearch/user/calendar">Calendar</a>
+					<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>					
+					
 							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
+								<a id="nav_calendar" class="" href="/JobSearch/user/calendar">Calendar</a>
 <!-- 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a> -->
 								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications</a>
 <!-- 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							 -->

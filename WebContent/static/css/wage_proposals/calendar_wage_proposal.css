@@ -34,7 +34,7 @@ span.ui-state-default{
 td.job-work-day{
     cursor: pointer;
 }
-.calendar td.job-work-day.proposed-work-day{
+.proposal.work-day-container td.job-work-day.proposed-work-day{
 	opacity: 1;
 }
 .proposal.work-day-container td.job-work-day{
@@ -69,7 +69,8 @@ td.job-work-day.proposed-work-day a{
 	display: block;
 	width: 100%;
 /*  	background: #99ce99; */
-	background: #163b3d;
+/* 	background: #163b3d; */
+	background: #197994;
 	color: #fff;
 	
 }
@@ -99,7 +100,7 @@ td.job-work-day.proposed-work-day a{
     opacity: 0.6;
 }
 .job-work-day.has-conflicting-applications.proposed-work-day .added-content .other-application{
-	opacity: 1;
+/* 	opacity: 1; */
 }
 td.other-application-work-day a,
 td.other-application-work-day span.ui-state-default{
@@ -118,4 +119,10 @@ td.other-application-work-day span.ui-state-default{
 .response-container .added-content p:nth-of-type(2){
 /* 	margin-bottom: 0px; */
 	margin-bottom: 35px;
+}
+.wage-proposal-calendar .calendar tbody tr{
+	display: none;
+}
+.wage-proposal-calendar .calendar tbody tr.show-row{
+	display: table-row;
 }

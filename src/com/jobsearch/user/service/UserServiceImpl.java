@@ -32,6 +32,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
@@ -886,21 +887,28 @@ public class UserServiceImpl {
 		return repository.getRatingValue_ByCategory(userId, categoryId);
 	}
 
-	public void setModel_PageLoad_FindEmployees(Model model, HttpSession session) {
+	public void setModel_findEmployees_pageLoad(Model model, HttpSession session) {
 		
 		if(SessionContext.isLoggedIn(session)){
 		
 			JobSearchUser sessionUser = SessionContext.getUser(session);
 			
-//			List<JobDTO> jobDtos_current = jobService.getJobDtos_JobsWaitingToStart_Employer(sessionUser.getUserId());
-//			jobDtos_current.addAll(jobService.getJobDtos_JobsInProcess_Employer(sessionUser.getUserId()));
+			List<Job> jobs_current = jobService.getJobs_byEmployerAndStatuses(sessionUser.getUserId(), Arrays.asList(Job.STATUS_FUTURE,
+																	Job.STATUS_PRESENT));
+						
+			List<JobDTO> jobDtos_current = new ArrayList<JobDTO>();
+			for(Job job_current : jobs_current){
+				JobDTO jobDto_current = jobService.getJobDTO_DisplayJobInfo(job_current.getId());
+				jobDtos_current.add(jobDto_current);
+			}			
 			
-//			model.addAttribute("jobDtos_current", jobDtos_current);	
+//			model.addAttribute("json", JSON.stringify(jobDtos_current));
+			model.addAttribute("jobDtos_current", jobDtos_current);	
 		}
 		
 	}
 
-	public void setModel_FindEmployees_Results(Model model, EmployeeSearch employeeSearch) {
+	public void setModel_findEmployees_results(Model model, EmployeeSearch employeeSearch) {
 		
 		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
 		
@@ -937,7 +945,7 @@ public class UserServiceImpl {
 			employeeSearch.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(employeeSearch.getJobDto().getWorkDays()).toString());
 			employeeSearch.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(employeeSearch.getJobDto().getWorkDays()));
 			
-			model.addAttribute("jobDto", employeeSearch);
+			model.addAttribute("jobDto", employeeSearch.getJobDto());
 			model.addAttribute("userDtos", userDtos);
 		}
 		

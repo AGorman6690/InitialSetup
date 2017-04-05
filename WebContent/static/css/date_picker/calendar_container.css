@@ -3,7 +3,9 @@ button.clear-calendar{
 	margin-left: 35px;	
 }
 
-
+.calendar th{
+	border-bottom: 1px solid #cacaca;
+}
 .calendar th,
 .calendar td{
 	text-align: center;

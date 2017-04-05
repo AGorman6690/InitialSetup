@@ -31,10 +31,10 @@
 
 <div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
 	<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
-	<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Dates</span>
+	<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Work Days</span>
 	<span class="select-page-section" data-page-section-id="timesContainer">Times</span>
+	<span class="select-page-section" data-page-section-id="positionsContainer">Positions</span>
 	<span class="select-page-section" data-page-section-id="locationContainer">Location</span>
-	<span class="select-page-section" data-page-section-id="compensationContainer">Compensation</span>
 	<span class="select-page-section" data-page-section-id="categoriesContainer">Categories</span>
 	<span class="select-page-section" data-page-section-id="questionsContainer">Questions</span>
 	<span class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
@@ -88,8 +88,8 @@
 					<p>Partial Availability</p>
 					<label><input id="partialAvailabilityAllowed" type="checkbox">Allowed</label>
 				</div>					
-				<div class="item calendar-container teal-navigation">
-					<p>Dates</p>
+				<div class="item calendar-container teal-navigation v2">
+					<p>Work Days</p>
 					<div id="workDaysCalendar_postJob" class="calendar" data-is-showing-job="0">
 					</div>											
 					<button class="" id="clearCalendar">Clear</button>
@@ -149,6 +149,15 @@
 			
 			</div>
 		</div>	
+		<div id="positionsContainer" class="page-section">
+			<div class="item">
+				<p>Positions</p>
+			</div>		
+			<div>
+				<p>How many positions are you filling per day?</p>
+				<input type="text" value="2">
+			</div>								
+		</div>			
 					
 		<div id="locationContainer" class="page-section">
 			<div class="item">
@@ -168,22 +177,6 @@
 				<input id="zipCode" type="text" value="55119"></input>						
 			</div>						
 		</div>	
-		
-		
-		<div id="compensationContainer" class="page-section">
-			<div class="item">
-				<p>Maximum Hourly Pay</p>	
-				<div class="radio-container">					
-					<div class="radio">
-					  <label><input value="0" type="radio" name="pay-range">No, accept all offers</label>
-					</div>
-					<div class="radio">
-					  <label><input value = "1" type="radio" name="pay-range">Yes, do not accept offers over:</label>
-						<input id="maxPay" type="text"></input>	
-					</div>
-				</div>							
-			</div>								
-		</div>			
 						
 		<div id="categoriesContainer" class="page-section">
 			<div class="header row">
@@ -196,7 +189,7 @@
 		
 		<div id="questionsContainer" class="page-section">
 			<div id="addedQuestionsContainer" class="item">			
-				<p>Added Questions</p>
+				<p>Questions</p>
 				<div class="question-actions-container">
 					<button id="deleteQuestion" class="btn-sqr">Delete</button>
 					<button id="editQuestion" class="btn-sqr">Edit</button>	
@@ -209,7 +202,7 @@
 		</div>		
 		<div id="copy-or-new-question" class="item">
 			<div id="copy-question-container">
-				<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Copy a previous question</button>
+				<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">Begin with a previous question</button>
 					<div id="postedQuestions" class="dropdown-style">
 						<c:forEach items="${postedQuestions }" var="question">
 							<div data-question-id="${question.questionId }">${question.text }</div>

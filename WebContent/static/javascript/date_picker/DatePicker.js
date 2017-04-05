@@ -7,9 +7,39 @@ $(document).ready(function(){
 		clearCalendar($(this).closest(".calendar-container"), clearClassName);
 	})
 	
+	$("body").on("mouseover", ".calendar.show-hover-range td", function(){
+		
+		var $caledar = $(this).closest(".calendar");
+		var hoverDate = getDateFromTdElement(this);
+		var firstDate = dateify($caledar.attr("data-first-date"));
+
+		showHoverDateRange($caledar, hoverDate, firstDate);
+		
+	})
+	
 })
 
+function isDateInWorkDayDtos(date, workDayDtos) {
+	
+	var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
+	
+	if(workDayDto != undefined) return true;
+	else return false;
+}
 
+function getWorkDayDtoByDate(dateToFind, workDayDtos) {
+	
+	var result = false;
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(dateify(workDayDto.workDay.stringDate).getTime() == dateToFind.getTime()){
+			result = workDayDto;
+			return false;
+		}
+	})
+	
+	if(!result) return undefined;
+	else return result;
+}
 
 function getDaysFromWorkDays(workDays, daysArray){
 	// Receive an array of work day objects and return
@@ -19,6 +49,20 @@ function getDaysFromWorkDays(workDays, daysArray){
 	
 	$(workDays).each(function(){
 		daysArray.push(new Date(this.stringDate));
+	})
+	
+	return daysArray;
+	
+}
+
+function getDatesFromWorkDayDtos(workDayDtos, daysArray){
+	// Receive an array of work day objects and return
+	// an array of dates
+	
+	daysArray = [];
+	
+	$(workDayDtos).each(function(i, workDayDto){
+		daysArray.push(new Date(workDayDto.workDay.stringDate));
 	})
 	
 	return daysArray;
@@ -44,6 +88,14 @@ function getTdByDayMonthYear($calendar, day, month, year){
 	});
 	
 	return td;
+	
+}
+
+function resetCalendar_hoverRange(days, $calendar){
+	
+	
+	
+
 	
 }
 

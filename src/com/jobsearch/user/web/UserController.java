@@ -135,7 +135,7 @@ public class UserController {
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public String viewFindEmployees(Model model, HttpSession session) {
 
-		userService.setModel_PageLoad_FindEmployees(model, session);
+		userService.setModel_findEmployees_pageLoad(model, session);
 		return "/find_employees/FindEmployees";
 	}
 	
@@ -143,7 +143,7 @@ public class UserController {
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
 	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
 
-		userService.setModel_FindEmployees_Results(model, employeeSearch);
+		userService.setModel_findEmployees_results(model, employeeSearch);
 
 		return"/find_employees/Results_Find_Employees";
 	}

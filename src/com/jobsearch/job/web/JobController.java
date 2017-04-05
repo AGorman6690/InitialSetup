@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.codehaus.groovy.runtime.m12n.MetaInfExtensionModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,6 +78,7 @@ public class JobController {
 		
 		return "";
 	}
+
 
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
@@ -215,6 +217,18 @@ public class JobController {
 		
 	}
 
+	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)
+	public String findEmployeesForJob(Model model, HttpSession session,
+										@PathVariable(value = "jobId") int jobId) {	
+		
+		
+//		model.addAttribute("doLoadJobAfterLoad", true);
+		model.addAttribute("jobId_getOnPageLoad", jobId);
+		
+		
+		return "/find_employees/FindEmployees";
+			
+	}
 	
 	@ResponseBody
 	@RequestMapping(value = "get/job-dto/{jobId}", method = RequestMethod.GET)
@@ -299,5 +313,15 @@ public class JobController {
 		return model;
 	}
 
+	
+	
+	@RequestMapping(value = "/job/{jobId}/replace-employee", method = RequestMethod.GET)
+	public String viewReplaceEmployee(Model model, HttpSession session,
+										@PathVariable(value = "jobId") int jobId){	
+
+		if(jobService.setModel_viewReplaceEmployees(model, session, jobId))
+			return "ReplaceAnEmployee";
+		else return SessionContext.get404Page();
+	}
 
 }

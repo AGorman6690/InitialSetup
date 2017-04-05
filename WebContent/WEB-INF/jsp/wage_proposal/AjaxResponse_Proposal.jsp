@@ -119,7 +119,7 @@
 					</div>																										
 	<%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
 					<div class="proposal-container">						
-						<div class="calendar-container hide-prev-next read-only">
+						<div class="calendar-container wage-proposal-calendar hide-prev-next read-only">
 							<div class="calendar"
 								data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 								data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
@@ -127,7 +127,7 @@
 						</div>
 					</div>
 					<div class="counter-container">									
-						<div class="job-info-calendar calendar-container hide-prev-next">									
+						<div class="job-info-calendar calendar-container wage-proposal-calendar hide-prev-next">									
 							<div class="calendar"
 								data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 								data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
@@ -170,4 +170,9 @@
 			</div>													
 		</div>
 	</div>
+
 </div>		
+
+<div id="json_workDayDtos" class="hide">
+	${json_workDayDtos }
+</div>

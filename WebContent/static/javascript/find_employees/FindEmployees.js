@@ -5,6 +5,8 @@ var dates_selectedAvailability_makeOffer;
 
 $(document).ready(function(){
 	
+	initPage();
+	
 	// ********************************************************
 	// ********************************************************
 	// Address how the employer-initiated wage proposal fits into the
@@ -98,28 +100,18 @@ $(document).ready(function(){
 	})
 	
 	$(".clear-calendar").click(function(){
-		selectedDays = clearCalendar($(this).closest(".calendar-container"));
+//		selectedDays = resetCalendar_hoverRange(selectedDays, $("#availabilityCalendar"));
+
+		resetCal_findEmplyees();
+		
+		
 	})
 	
 	$("#posted-jobs [data-posted-job-id]").click(function(){
 		
 		var selectedJobId = $(this).attr("data-posted-job-id");
 		
-		$.ajax({
-			type: "GET",
-			url: "/JobSearch/get/job-dto/" + selectedJobId,
-			dataType: "json",
-			success: _success,
-			error: _error,
-		})
-		
-		function _success(jobDto){			
-			showJobInfo(jobDto);
-		}
-
-		function _error(){
-			alert("error load job")
-		}
+		executeAjaxCall_loadJobDto(selectedJobId);
 	})
 	
 	$("#findEmployees").click(function(){
@@ -143,7 +135,8 @@ $(document).ready(function(){
 	})
 	
 	setStates();
-	initAvailabilityCalendar();
+	var workDayDtos = [];
+	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), workDayDtos);
 
 	$("button.clear").click(function(){
 		clearCalendar($("#makerOffer_workDaysCalendar"), "apply-selected-work-day");
@@ -152,8 +145,133 @@ $(document).ready(function(){
 	
 })
 
+function initPage(){
+	var jobId_getOnPageLoad = $("#jobId_getOnPageLoad").val();
+	
+	if(jobId_getOnPageLoad != "") executeAjaxCall_loadJobDto(jobId_getOnPageLoad);
+}
+
+function resetCal_findEmplyees(){
+	var $calendar = $("#availabilityCalendar");
+	selectedDays = [];	
+	
+	$calendar.datepicker("refresh");
+	$calendar.removeClass("show-hover-range");	
+}
+
+function onSelect_ShowHoverRange($calendar, selectedDateText, selectedDays){
+
+	var isThisTheFirstDateSelected = false;
+	var isThisTheSecondDateSelected = false;
+	
+	if(selectedDays.length == 0) isThisTheFirstDateSelected = true;
+	if(selectedDays.length == 1) isThisTheSecondDateSelected = true;
+	
+	selectedDays = onSelect_multiDaySelect_withRange(selectedDateText, selectedDays);
+				
+	if(isThisTheFirstDateSelected){
+		$calendar.addClass("show-hover-range");
+		$calendar.attr("data-first-date", selectedDateText);
+	}
+	else $calendar.removeClass("show-hover-range");
+	
+	if(selectedDays.length == 0){
+		selectedDays = [];
+		$calendar.datepicker("refresh");
+		$calendar.removeClass("show-hover-range");		
+	}
+	
+	return selectedDays;
+}
+
+function initCalendar_findEmployees_workDaysFilter($calendar, workDayDtos){
+
+	// ***************************************************************
+	// ***************************************************************
+	// Consider passing the selectedDays and not having it be global
+	// ***************************************************************
+	// ***************************************************************
+	
+	$calendar.datepicker({
+		numberOfMonths: 2,
+		onSelect: function(dateText, inst) {
+			
+			selectedDays = onSelect_ShowHoverRange($calendar, dateText, selectedDays);
+
+		},		        
+        beforeShowDay: function (date) {       
+        	
+        	var className = ""
+        	if(isDateInWorkDayDtos(date, workDayDtos)) className += " job-work-day";
+        	if(doesDateArrayContainDate(date, selectedDays)) className += " active111";        	
+        	
+        	return [true, className];	    
+     	},
+		afterShow: function(){
+			var html = "";
+			$(workDayDtos).each(function(){
+				
+				var td = getTdByDate($calendar, dateify(this.workDay.stringDate));
+				
+				html = "<div class='added-content'>";
+				html += "<p>7:30a</p><p>5:30p</p>";
+//				html += "<div class='select-work-day'>";
+//				html += "<span class='glyphicon glyphicon-ok'></span>";
+//				html += "</div>";	
+//				html += "<div class='other-application'></div>";
+				html += "</div>"
+				
+				$(td).append(html);
+				
+				var $tr = $(td).closest("tr");
+				if($tr.hasClass("show-row") == 0) $tr.addClass("show-row"); 
+			})	
+			
+		}
+    });	
+
+	
+}
+
+function executeAjaxCall_loadJobDto(jobId) {
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/get/job-dto/" + jobId,
+		dataType: "json",
+		success: _success,
+		error: _error,
+	})
+	
+	function _success(jobDto){			
+		showJobInfo(jobDto);
+	}
+
+	function _error(){
+		alert("error load job")
+	}
+}
+
+
+function showJobInfo(jobDto){
+	
+	$("#filtersContainer").show();
+	
+	// Set the location
+	$("#street").val(jobDto.job.streetAddress);
+	$("#city").val(jobDto.job.city);
+	$("#state").val(jobDto.job.state);
+	$("#zipCode").val(jobDto.job.zipCode);
+		
+	// Set the availability calendar
+	selectedDays = getDatesFromWorkDayDtos(jobDto.workDayDtos, selectedDays);
+
+	$("#availabilityCalendar").datepicker("destroy");
+	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), jobDto.workDayDtos);
+		
+}
 
 function executeAjaxCall_findEmployees(){
+	var employeeSearch = {};
 	var jobDto = {};
 	jobDto.job = {};
 	
@@ -168,13 +286,15 @@ function executeAjaxCall_findEmployees(){
 //	else jobDto.job.isPartialAvailabilityAllowed = 0;
 	jobDto.job.isPartialAvailabilityAllowed = 1;
 	
+	employeeSearch.jobDto = jobDto;
+	
 	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		url: "/JobSearch/find/employees/results",
 		contentType: "application/json",
 		headers : getAjaxHeaders(),
-		data: JSON.stringify(jobDto),
+		data: JSON.stringify(employeeSearch),
 		dataType: "html",
 		success: _success,
 		error: _error,
@@ -363,35 +483,8 @@ function showApplicationStatus_ProspectiveEmployee(jobId){
 	})
 }
 
-function showJobInfo(jobDto){
-	
-	$("#filtersContainer").show();
-	
-	// Set the location
-	$("#street").val(jobDto.job.street);
-	$("#city").val(jobDto.job.city);
-	$("#state").val(jobDto.job.state);
-	$("#zipCode").val(jobDto.job.zipCode);
-		
-	// Set the availability calendar
-	selectedDays = getDaysFromWorkDays(jobDto.workDays, selectedDays);
-	$("#availabilityCalendar").datepicker("refresh");
-		
-}
 
-function initAvailabilityCalendar(){
-	
-	$("#availabilityCalendar").datepicker({
-		numberOfMonths: 2,
-		onSelect: function(dateText){
-			selectedDays = onSelect_multiDaySelect_withRange(dateText, selectedDays)
-		},
-		 beforeShowDay: function (date) {
-			 return beforeShowDay_ifSelected(date, selectedDays);
-		 }
-	})
-	
-}
+
 
 function initCalendar_employeeAvailability($calendar){
 	

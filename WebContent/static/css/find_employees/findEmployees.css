@@ -23,18 +23,31 @@
 	padding-left: 60px;
 }
 
-.filter h3{
-	color: #197994;
-	font-size: 20px;
+.filter h3,
+#resultsContainer h3{
+    color: #163b3d;
+    font-size: 28px;
+    border-bottom: 2px solid #cacaca;
+    width: 300px;
+    padding-bottom: 12px;
+    margin: 20px auto;
 }
 
-#filtersContainer{
-	border-bottom: 1px solid #cacaca;
+#filtersContainer,
+#resultsContainer{
+	padding-bottom: 50px;
 	text-align: center;
 }
-
+#results{
+	padding-top: 45px;
+}
 #resultsContainer{
 	display: none;
+	width: 1000px;
+	margin: auto;
+	padding-top: 20px;
+	margin-top: 20px;
+/* 	border-top: 1px solid #cacaca; */
 }
 
 td.days-available{

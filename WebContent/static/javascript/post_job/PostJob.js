@@ -460,6 +460,7 @@ function getJobDto(){
 	jobDto.job.city = $("#city").val();
 	jobDto.job.state = $("#state").val();
 	jobDto.job.zipCode = $("#zipCode").val();
+	jobDto.job.positionsPerDay = $("#positionsContainer input").val();
 	
 	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
 	else jobDto.job.isPartialAvailabilityAllowed = 0;

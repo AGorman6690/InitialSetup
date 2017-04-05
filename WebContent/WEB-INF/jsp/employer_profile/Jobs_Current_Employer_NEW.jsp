@@ -5,19 +5,29 @@
 		<div>You have no jobs waiting to start</div>	
 	</c:when>
 	<c:otherwise>
-		<table id="table_jobsWaitingToStart" class="main-table-style">
+		<table id="table_jobsWaitingToStart" class="main-table-style shadow">
 			<thead>
-
+<!-- 				<tr class=""> -->
+<!-- 					<th id="" ></th> -->
+<!-- 					<th id="" ></th> -->
+<!-- 					<th id="" class=""></th> -->
+<!-- 					<th id="" class=""></th> -->
+<!-- 					<th id=""></th>								 -->
+<!-- 					<th id="" colspan="2">Offers</th>					 -->
+<!-- 					<th id="" colspan="2">Positions</th> -->
+					
+<!-- 				</tr> -->
 				<tr class="">
-					<th id="job-name" >Job</th>
+					<th id="job-name" ></th>
 					<th id="" >Start date</th>
 					<th id="" class="">End date</th>
 					<th id="" class="">Location</th>
-					<th id="" class="">Total applicants</th>								
-					<th id="" class="">Offers waiting on applicant</th>
-					<th id="" class=" ">Offers waiting on you</th>
-					<th id="" class=" ">Positions filled</th>
-					<th id="" class="">Positions available</th>
+					<th id="" class="job-status first">Total applicants</th>								
+					<th id="" class="job-status">Offers waiting on applicant</th>
+					<th id="" class="job-status">Offers waiting on you</th>
+					<th id="" class="job-status">Positions filled</th>
+					<th id="" class="job-status">Positions available</th>
+					<th id="" class="job-status"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,7 +40,7 @@
 						</td>						
 						<td class="job-details"><span>${jobDto.job.stringStartDate }</span></td>
 						<td class="job-details"><span>${jobDto.job.stringEndDate }</span></td>
-						<td class="job-details"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
+						<td class="job-details job-location"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
 						
 						
 						
@@ -91,8 +101,14 @@
 							</c:choose>														
 						</td>																					
 						<td>
-							8								
+							${jobDto.job.positionsPerDay }
+										
 						</td>	
+						<td>
+							<c:if test="${jobDto.countEmployees_hired == jobDto.job.positionsPerDay }">
+								<a href="/JobSearch/job/${jobDto.job.id}/replace-employee" class="sqr-btn replace-an-employee">Replace an employee</a>
+							</c:if>
+						</td>
 					</tr>
 				</c:forEach>
 			</tbody>

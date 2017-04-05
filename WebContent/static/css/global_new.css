@@ -1,3 +1,8 @@
+
+.page-container{
+	text-align: center;
+}
+
 .selected-blue{
     background-color: #337ab7;
     color: #ffffff;
@@ -5,6 +10,9 @@
 
 .pad-top{
 	padding-top: 25px;
+}
+.pad-top-2{
+	padding-top: 50px;
 }
 .linky-hover:hover{
 	text-decoration: underline;
@@ -30,6 +38,7 @@ input, select, textarea{
     color: #000000;
     border: 1px solid #bbbbbb;
     padding:5px 10px;
+    display: inline-block;    
 }
 
 .sqr-btn.teal{
@@ -50,7 +59,10 @@ input, select, textarea{
     padding: 2px 10px;
     background: #f4f4f4;
 }
-
+.sqr-btn.gray-2.selected{
+	color: #fff;
+	background: #163b3d;
+}
 .sqr-btn.teal.sm{
 	padding: 9px 13px;
 	font-size: 16px;
@@ -132,7 +144,16 @@ span.dollar-sign{
 	border-radius:3px;
 	padding:20px;
 }
-
+.dropdown-style p{
+	padding: 10px;
+}
+.dropdown-style p:hover{
+	background: #cacaca;
+	cursor: pointer;
+}
+.marg-left{
+	margin-left: 20px;
+}
 .show-disabled{
 	background-color: rgb(235, 235, 228);
     border: 2px solid rgb(200, 197, 197);

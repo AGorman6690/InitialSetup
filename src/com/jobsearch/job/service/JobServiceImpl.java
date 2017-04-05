@@ -422,6 +422,7 @@ public class JobServiceImpl {
 		Job job = this.getJob(jobId);
 		jobDto.setJob(job);
 		jobDto.setWorkDays(this.getWorkDays(jobId));
+		jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
 		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 		jobDto.setSkillsRequired(this.getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
 		jobDto.setSkillsDesired(this.getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
@@ -431,8 +432,8 @@ public class JobServiceImpl {
 												job.getStartTime_local(),
 									job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
 		
-		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
-		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+		
+		setCalendarInitData(jobDto, jobDto.getWorkDays());
 		
 		return jobDto;
 	}
@@ -1004,7 +1005,9 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
+			
 			jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
+			
 			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
 			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
 			
@@ -1058,7 +1061,7 @@ public class JobServiceImpl {
 			workDayDto.setWorkDay(workDay);
 			workDayDto.setCount_applicants(applicationService.getCount_applicantsByDay(workDay.getDateId(), jobId));
 			workDayDto.setCount_positionsFilled(applicationService.getCount_positionsFilledByDay(workDay.getDateId(), jobId));
-			workDayDto.setCount_totalPositions(4);
+			workDayDto.setCount_totalPositions(getJob(jobId).getPositionsPerDay());
 			workDayDtos.add(workDayDto);
 		}
 		
@@ -1397,6 +1400,21 @@ public class JobServiceImpl {
 	public List<String> getWorkDayDateStrings(int jobId) {
 		
 		return repository.getWorkDayDateStrings(jobId);
+	}
+
+	public boolean setModel_viewReplaceEmployees(Model model, HttpSession session, int jobId) {
+		
+		boolean isValidRequest = true;
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			
+			List<JobSearchUser> users_employees = userService.getEmployeesByJob(jobId);
+			if(users_employees != null){
+				model.addAttribute("users_employees", users_employees);
+			}else isValidRequest = false;
+
+		}else isValidRequest = false;
+		
+		return isValidRequest;
 	}
 	
 }

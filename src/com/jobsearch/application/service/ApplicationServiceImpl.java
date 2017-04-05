@@ -22,6 +22,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.EmploymentProposalDTO;
@@ -1182,6 +1183,7 @@ public class ApplicationServiceImpl {
 			categorizeConflictingApplicationDtos(session, applicationDto, applicationDtos_conflicting);
 	
 			// Model
+			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);
 			model.addAttribute("user", sessionUser);
 			

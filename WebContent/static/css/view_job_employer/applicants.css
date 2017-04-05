@@ -83,7 +83,7 @@
 	width: 1100px;
 }
 
-table#applicantsTable.table-view th{
+table#applicantsTable.table-view > thead > th{
 	width: 20%;
 }
 
@@ -98,16 +98,16 @@ table td span.glyphicon-star-empty{
 .glyphicon-star-empty{
 	color: #c4c4c4;
 }
-table#applicantsTable.table-view.has-answers th,
-table#applicantsTable.table-view.has-work-days th{
+table#applicantsTable.table-view.has-answers > thead > th,
+table#applicantsTable.table-view.has-work-days > thead > th{
 	width: 16.7%;
 }
 
-table#applicantsTable.table-view.has-work-days.has-answers th{
+table#applicantsTable.table-view.has-work-days.has-answers > thead > th{
 	width: 14.2%;
 }
 
-table#applicantsTable th{
+table#applicantsTable > thead > th{
 /*     font-size: 17px; */
 /*     color: #555555; */
 /*     font-weight: normal; */
@@ -121,7 +121,7 @@ td div.name-container{
 }
 td div.name-container span{
     position: absolute;
-    left: 7px;
+    left: -30px;
     top: 1px;
     display: inline-block;
     width: 30px;
@@ -133,7 +133,9 @@ td div.name-container a{
 	line-height: 30px;	
 }
 
-
+#applicantsTable th#questions{
+	width: 300px;
+}
 td span.glyphicon{
 	font-size:11px;
 }
@@ -168,7 +170,7 @@ table .question-container.not-first{
 }
 
 table .question-container .question{
-    /* font-weight: bold; */
+    font-weight: bold;
     font-style: italic;
 }
 
@@ -183,7 +185,7 @@ label.display-question{
     width: 35px;
 }
 
-#modal_applicants .mod-content{
+#modal_applicants > .mod-content{
 	width: 850px;
 	margin-left: -425px;
     max-height: 800px;

@@ -52,11 +52,16 @@
 	margin: 0;
 }
 
-h1{
+.present-proposal h1{
 	font-size: 22px;
 	font-weight: bold;
 	color: #197994;
 	margin-bottom: 25px;
+    display: inline-block;
+    /* border-left: 2px solid #163b3d; */
+    padding: 10px 10px;
+    border-bottom: 2px solid #163b3d;
+    width: 300px;
 }
 
 .button-group button.selected{
@@ -83,7 +88,7 @@ input.counter-wage-amount{
 
 .proposal{
     padding-bottom: 15px;
-    border-bottom: 2px solid #cacaca;
+/*     border-bottom: 2px solid #e4e4e4; */
 /*     width: 500px; */
     margin: auto;
 }
@@ -126,7 +131,9 @@ input.counter-wage-amount{
 .time-container input{
 	width: 65px;
 }
-
+.time-container p{
+/* 	display: block; */
+}
 .applicant-expiration-clock h1{
 	color: #163b3d;
 	margin-bottom: 10px;
@@ -161,13 +168,25 @@ input.counter-wage-amount{
 	width: 25%;
 }
 .proposal-item.status{
-	width: 50%;
+	width: 20%;
+}
+.proposal-item.respond{
+	width: 20%;
 }
 .proposal-item.status p{
-	display: inline-block
+/* 	display: inline-block */
 }
-
-
+.application-proposal-container.alert{
+/* 	background: #bb6f6f; */
+    border: 2px solid #bb6f6f;
+	padding: 20px 0px;
+	border-radius: 10px;
+}
+.application-proposal-container.alert .proposal-item > p{
+/* .application-proposal-container.alert .proposal-item > button{ */
+/* 	color: #fff; */
+	color: #000;
+}
 
 
 .conflicting-applications{

@@ -82,6 +82,7 @@ public class JobRepository {
 					e.setLng(rs.getFloat("Lng"));
 					e.setStatus(rs.getInt("Status"));
 					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
+					e.setPositionsPerDay(rs.getInt("PositionsPerDay"));
 					
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
@@ -293,7 +294,7 @@ public class JobRepository {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJob().getJobName());
 			 cStmt.setInt(2, user.getUserId());
@@ -306,6 +307,7 @@ public class JobRepository {
 			 cStmt.setFloat(9,  jobDto.getJob().getLng());
 			 cStmt.setInt(10,  Job.STATUS_FUTURE);
 			 cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
+			 cStmt.setInt(12, jobDto.getJob().getPositionsPerDay());
 
 			 ResultSet result = cStmt.executeQuery();
 
