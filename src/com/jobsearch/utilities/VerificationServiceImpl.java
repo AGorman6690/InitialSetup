@@ -142,27 +142,15 @@ public class VerificationServiceImpl {
 			return true;
 		} else return false;
 	}
-	
 
-	public boolean isWageProposalCurrentlyPendingApplicantsApproval(int wageProposalId, HttpSession session) {
+	public boolean isCurrentProposalProposedToSessionUser(int applicationId, HttpSession session) {
 		
-		JobSearchUser user = SessionContext.getUser(session);
-		WageProposal wp = applicationService.getWageProposal(wageProposalId);
-		
-		// This is a somewhat counter intuitive.
-		// Because a new wage proposal is NOT created when the employer 
-		// accepts the applicant's proposal (and and expiration date is set),
-		// but rather the status of the wage proposal sent BY the applicant is changed,
-		// the wage proposal's "ProposedByUserId" will still be the
-		// applicant's (i.e. the session user) user id.
-		if(wp.getStatus() == WageProposal.STATUS_PENDING_APPLICANT_APPROVAL &&
-				wp.getProposedByUserId() == user.getUserId()){
-			
+		EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(applicationId);
+		if(currentProposal.getProposedToUserId() == SessionContext.getUser(session).getUserId())
 			return true;
-
-		}
 		else return false;
 	}
+	
 
 
 

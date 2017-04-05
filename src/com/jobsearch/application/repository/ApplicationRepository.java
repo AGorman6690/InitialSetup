@@ -155,49 +155,15 @@ public class ApplicationRepository {
 		return this.ApplicationRowMapper(sql, new Object[] { userId });
 	}
 
-	public List<Application> getApplications_ByUserAndStatuses_OpenJobs(int userId, List<Integer> statuses) {
-
-		List<Object> argsList = new ArrayList<Object>();
-
-		String sql = "SELECT * FROM application a"
-				+ " INNER JOIN job j ON j.JobId = a.JobId"
-				+ " WHERE a.UserId = ? AND j.Status < 2";
-
-		argsList.add(userId);
-
-
-		// Build or string for statuses
-		boolean isFirst = true;
-		for (int status : statuses) {
-			if (isFirst) {
-				sql += " AND (a.Status = ?";
-				isFirst = false;
-			} else {
-				sql += " OR a.Status = ?";
-			}
-
-			argsList.add(status);
-		}
-
-		sql += ")";
-
-		return this.ApplicationRowMapper(sql, argsList.toArray());
-	}
 
 	public List<Application> getApplicationDtos_ByJob_OpenApplications(int jobId) {
 
 		String sql = "SELECT * FROM application a"
 						+ " INNER JOIN user u ON u.UserId = a.UserId"
 						+ " WHERE a.JobId = ?"
-						+ " AND (a.Status != ?"
-						+ " AND a.Status != ?"
-						+ " AND a.Status != ?"
-						+ " AND a.Status != ? )";
+						+ " AND a.IsOpen = 1";
 
-		return ApplicationRowMapper(sql, new Object[] { jobId, Application.STATUS_PROPOSED_BY_EMPLOYER,
-																Application.STATUS_ACCEPTED,
-																Application.STATUS_DECLINED,
-																Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT});
+		return ApplicationRowMapper(sql, new Object[] { jobId });
 
 	}
 
@@ -443,22 +409,6 @@ public class ApplicationRepository {
 			cStmt.setInt(2, applicationDto.getJobId());
 			cStmt.setInt(3, applicationDto.getApplication().getStatus());
 	
-			// ************************************************************************			
-//			// When the employer initiates contact and makes an offer, these will not be null
-//			if(applicationDto.getApplication().getEmployerAcceptedDate() != null){
-//				cStmt.setTimestamp(4, Timestamp.valueOf(applicationDto.getApplication().getEmployerAcceptedDate()));	
-//			}
-//			else{
-//				cStmt.setTimestamp(4, null);
-//			}
-//			
-//			if(applicationDto.getApplication().getExpirationDate() != null){
-//				cStmt.setTimestamp(5, Timestamp.valueOf(applicationDto.getApplication().getExpirationDate()));	
-//			}
-//			else{
-//				cStmt.setTimestamp(5, null);
-//			}
-			// ************************************************************************
 			
 			ResultSet result = cStmt.executeQuery();
 
@@ -519,8 +469,7 @@ public class ApplicationRepository {
 
 	public EmploymentProposalDTO getCurrentEmploymentProposal(Integer applicationId) {
 	
-		String sql = "SELECT * FROM wage_proposal WHERE WageProposalId = "
-				+ "(SELECT MAX(WageProposalId) FROM wage_proposal WHERE ApplicationId = ?)";
+		String sql = "SELECT * FROM wage_proposal WHERE IsCurrentProposal = 1 AND ApplicationId = ?";
 
 		List<EmploymentProposalDTO> result = this.EmploymentProposalDTOMapper(sql, new Object[] { applicationId });
 		
@@ -606,57 +555,68 @@ public class ApplicationRepository {
 
 	public int getCountWageProposal_Sent(Integer jobId, int userId) {
 
-		String sql = "SELECT COUNT(*) FROM wage_proposal w"
-					+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
+					+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
 					+ " INNER JOIN job j ON j.jobId = a.JobId"
-					+ " WHERE j.JobId = ? AND w.ProposedByUserId = ?"
-					+ " AND ( w.Status = ? OR w.Status = ? )";
+					+ " WHERE j.JobId = ?"
+					+ " AND wp.ProposedByUserId = ?"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND a.IsOpen = 1";
 		
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
-											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED,
-											WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN },
-											Integer.class);
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, Integer.class);
 	}
 
 	public int getCountWageProposal_Received(Integer jobId, int userId) {
 	
 		// This includes the "New" wage proposals
 		
-		String sql = "SELECT COUNT(*) FROM wage_proposal w"
-				+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
+				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
 				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ?"
-				+ " AND ( w.Status = ? OR w.status = ? )";
+				+ " WHERE j.JobId = ?"
+				+ " AND wp.ProposedToUserId = ?"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND a.IsOpen = 1";
+				
 	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
-											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED,
-											WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN },
-											Integer.class);
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, Integer.class);
 	}
 	
 
 	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
 	
-		String sql = "SELECT COUNT(*) FROM wage_proposal w"
-				+ " INNER JOIN application a ON a.applicationId = w.applicationId"
+		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
+				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
 				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ? AND w.ProposedToUserId = ?"
-				+ " AND w.Status = ?";
+				+ " WHERE j.JobId = ?"
+				+ " AND wp.ProposedToUserId = ?"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND wp.IsNew = 1"
+				+ " AND a.IsOpen = 1";
 	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId,
-											WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId },
 											Integer.class);
 
 	}
 	
 	
+
+
+	public int getCountApplications_total(Integer jobId) {
+		String sql = "SELECT COUNT(*) FROM application a"
+				+ " WHERE a.JobId = ?"
+				+ " AND a.IsOpen = 1";
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
+	}
 
 
 	public int getCountApplications_new(Integer jobId) {
 		
 		String sql = "SELECT COUNT(*) FROM application a"
 				+ " WHERE a.JobId = ?"
-				+ " AND a.HasBeenViewed = 0";
+				+ " AND a.HasBeenViewed = 0"
+				+ " AND a.IsOpen = 1";
 	
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
 	}
@@ -746,18 +706,19 @@ public class ApplicationRepository {
 		
 		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
 					+ " SELECT DISTINCT a.ApplicationId FROM application a"
-					+ " INNER JOIN job j on j.JobId = a.JobId"
-					+ " INNER JOIN work_day wd on wd.JobId = j.JobId"
-					+ " WHERE a.UserId = ? AND a.ApplicationId != ?"
-					+ " AND ( a.Status = ? OR a.Status = ? OR a.Status = ? )"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				    + " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				    + " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE a.UserId = ?"
+				    + " AND a.ApplicationId != ?"
+					+ " AND a.IsOpen = 1"
+					+ " AND wp.IsCurrentProposal = 1"
 					+ " AND (";
 			
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
 		args.add(reference_applicationId);
-		args.add(Application.STATUS_SUBMITTED);
-		args.add(Application.STATUS_CONSIDERED);
-		args.add(Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL);
+
 		
 		boolean isFirst = true;
 		for(WorkDay wd : workDays){
@@ -827,7 +788,6 @@ public class ApplicationRepository {
 		return this.EmploymentProposalDTOMapper(sql, new Object[]{ employmentProposalId }).get(0);
 	}
 
-
 	public Integer getCount_applicantsByDay(int dateId, int jobId) {
 
 		String sql = "SELECT COUNT(a.ApplicationId)";
@@ -863,9 +823,8 @@ public class ApplicationRepository {
 
 	public void updateWageProposal_isCurrentProposal(Integer employmentProposalId, int isCurrentProposal) {
 		String sql = "UPDATE wage_proposal SET IsCurrentProposal = ? WHERE WageProposalId = ?";
-		jdbcTemplate.update(sql, new Object[]{ employmentProposalId, isCurrentProposal });		
+		jdbcTemplate.update(sql, new Object[]{ isCurrentProposal, employmentProposalId });		
 	}
-
 
 	public List<Application> getApplications_byJobAndDate(int jobId, int dateId) {
 		String sql = "SELECT * FROM application a";
@@ -880,9 +839,33 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, new Object[]{ jobId, dateId });
 	}
 
+	public Integer getCount_ProposedDay_byApplicationAndWorkDay(int applicationId, int workDayId) {
+		
+		String sql = "SELECT COUNT(Id) FROM employment_proposal_work_day ep";
+		sql += " INNER JOIN wage_proposal wp ON ep.EmploymentProposalId = wp.WageProposalId";
+		sql += " WHERE wp.ApplicationId = ?";
+		sql += " AND wp.IsCurrentProposal = 1";
+		sql += " AND ep.WorkDayId = ?";
+		
+		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId, workDayId }, Integer.class);
+	}
 
 
+	public List<Application> getOpenApplications_forOpenJobs_byUser(int userId) {
+		String sql = "SELECT * FROM application a"
+					+ " JOIN job j ON a.JobId = j.JobId"
+					+ " WHERE j.Status = ?"
+					+ " AND a.UserId = ?"
+					+ " AND a.IsOpen = 1";
+		
+		return ApplicationRowMapper(sql, new Object[]{ Job.STATUS_FUTURE, userId });
+	}
 
 
+	public void closeApplication(int applicationId) {
+		String sql = "UPDATE application SET IsOpen = 0 WHERE ApplicationId = ?";
+		jdbcTemplate.update(sql, new Object[]{ applicationId });
+		
+	}
 
 }

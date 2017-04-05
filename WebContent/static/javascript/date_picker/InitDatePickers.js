@@ -1,51 +1,72 @@
 $(document).ready(function(){
 	
-	
-	// ****************************************************
-	// Is this the proper place for this initialization???
-	// Should it be placed with the page's js file???
-	// ****************************************************
-//	$("html").on("click", ".availability-calendar-container", function(){
-//		
-//		var $calendarContainer = $(this).find(".calendar-container").eq(0);
-//		var $calendar = $calendarContainer.find(".calendar").eq(0);
-//		
-//		// Toggle calendar visibility
-//		if($calendarContainer.is(":visible")){
-//			$calendarContainer.hide();
-//		}
-//		else{
-//			
-//			// Only set the calendar once
-//			if($calendar.hasClass("hasDatepicker") == 0){
-//			
-//				// Get the available dates
-//				var dates_available = [];
-//				$(this).find(".dates-available div[data-date]").each(function(){
-//					dates_available.push(new Date($(this).attr("data-date").replace(/-/g, "/")));
-//				})
-//				
-//				// Get the dates in question (i.e. the dates that can be available)
-//				var dates_inQuestion = [];
-//				$(this).find(".dates-in-question div[data-date]").each(function(){
-//					dates_inQuestion.push(new Date($(this).attr("data-date")));
-//				})		
-//				
-//				initCalendar_showAvailability($calendar, dates_available, dates_inQuestion);
-//				
-//				$calendar.datepicker("setDate", new Date($calendar.attr("data-first-date").replace(/-/g, "/")));
-//			}		
-//			
-//			$calendarContainer.show();
-//		}
-//
-//		toggleClasses($(this).find(".glyphicon").eq(0), "glyphicon-menu-up", "glyphicon-menu-down");
-//		
-//		
-//	})
-
 
 })
+
+function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable, dates_proposed,
+						dates_other_applications, workDayDtos){
+
+	var firstDate = getMinDate($calendar)
+
+	$calendar.datepicker({
+//		minDate: firstDate,
+		numberOfMonths: getNumberOfMonths($calendar),
+		onSelect: function(dateText, inst){
+			
+			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
+			
+				
+				var workDayDto = getWorkDayDtoByDate(dateify(dateText), workDayDtos);
+				
+				if(workDayDto != undefined){
+					
+					if(workDayDto.hasConflictingEmployment != "1"){
+						if(workDayDto.isProposed == "1") workDayDto.isProposed = "0";
+						else workDayDto.isProposed = "1";
+					}
+					
+				}
+			}
+			
+		},
+		beforeShowDay: function(date){
+			
+			var classNameToAdd = "";
+			var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
+			
+			if(workDayDto != undefined){
+				
+				classNameToAdd += "job-work-day";
+				if(workDayDto.isProposed == "1") classNameToAdd += " proposed-work-day";
+				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment";
+				if(workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
+			}
+
+			return [true, classNameToAdd];
+		},
+		afterShow: function(){
+			var html = "";
+			$(workDayDtos).each(function(){
+				
+				var td = getTdByDate($calendar, this.date);
+				
+				html = "<div class='added-content'>";
+				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "<div class='select-work-day'>";
+				html += "<span class='glyphicon glyphicon-ok'></span>";
+				html += "</div>";	
+				html += "<div class='other-application'></div>";
+				html += "</div>"
+				
+				$(td).append(html);
+			})	
+			
+		}
+	})
+	
+	$calendar.datepicker("setDate", firstDate);
+
+}
 
 
 function getDateFromContainer($container){
@@ -86,7 +107,9 @@ function getWorkDayDtosFromContainer($container){
 		workDayDto.count_applicants = $(this).attr("data-count-applicants");
 		workDayDto.count_positionsFilled = $(this).attr("data-count-positions-filled");
 		workDayDto.count_totalPositions = $(this).attr("data-count-total-positions");
-		
+		workDayDto.isProposed = $(this).attr("data-is-proposed");
+		workDayDto.hasConflictingEmployment = $(this).attr("data-has-conflicting-employment");
+		workDayDto.hasConflictingApplications = $(this).attr("data-has-conflicting-applications");
 		workDayDtos.push(workDayDto);
 	})
 	
@@ -139,78 +162,7 @@ function initCalendar_showAvailability($calendar, dates_application, dates_job){
 	
 }
 
-function initCalendar_showWorkDays($calendar, dates_workDays, dates_unavailable, dates_proposed,
-						dates_other_applications){
 
-	var firstDate = getMinDate($calendar)
-
-	$calendar.datepicker({
-//		minDate: firstDate,
-		numberOfMonths: getNumberOfMonths($calendar),
-		onSelect: function(dateText, inst){
-			
-			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
-				var date = dateify(dateText);
-				
-				
-				
-				
-				if(doesDateArrayContainDate(date, dates_unavailable)){}
-				else if(doesDateArrayContainDate(date, dates_proposed)){				
-					dates_proposed = removeDateFromArray(date, dates_proposed);				
-				}	
-				else if(doesDateArrayContainDate(date, dates_workDays)){				
-					dates_proposed.push(date);				
-				}
-			}
-			
-		},
-		beforeShowDay: function(date){
-			
-			var classNameToAdd = "";
-			
-			if(doesDateArrayContainDate(date, dates_unavailable))classNameToAdd = "unavailable";
-			else{
-				if(doesDateArrayContainDate(date, dates_proposed)) classNameToAdd = "proposed-work-day";
-				if(doesDateArrayContainDate(date, dates_workDays)) classNameToAdd += " job-work-day";
-				if(doesDateArrayContainDate(date, dates_other_applications)) classNameToAdd += " other-application-work-day";
-			}
-
-			return [true, classNameToAdd];
-		},
-		afterShow: function(){
-			var html = "";
-			$(dates_workDays).each(function(){
-				
-				var td = getTdByDate($calendar, this);
-				
-				html = "<div class='start-and-end-times'>";
-				html += "<p>7:30a</p><p>5:30p</p>";
-				html += "<div class='select-work-day'>";
-				html += "<span class='glyphicon glyphicon-ok'></span>";
-				html += "</div>";				
-				html += "</div>"
-				
-				$(td).append(html);
-			})	
-			$(dates_other_applications).each(function(){
-				
-				var td = getTdByDate($calendar, this);
-				
-				if($(td).find(".start-and-end-times").size() == 0){
-					html = "<div class='start-and-end-times'>";				
-					html += "</div>"
-					
-					$(td).append(html);
-				}
-
-			})				
-		}
-	})
-	
-	$calendar.datepicker("setDate", firstDate);
-
-}
 
 function initCalendar_showWorkDays_counterProposal($calendar, dates_workDays, dates_unavailable, dates_proposed){
 	

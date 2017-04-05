@@ -125,6 +125,7 @@
 
 <%-- 							<td>${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</td> --%>
 							<td class="${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'alert' : '' }">
+								<c:set var="jobDto" value="${applicationDto.jobDto }" />
 								<%@ include file="../wage_proposal/Proposal_Main.jsp" %>
 							</td>
 						</tr>

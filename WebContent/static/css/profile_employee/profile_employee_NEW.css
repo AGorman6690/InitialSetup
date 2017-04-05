@@ -29,10 +29,11 @@ td div.job.application{
 }
 
 td.alert{
-	background: #a75454;
+	background: #a75454;	
+}
+td.alert .proposal-item > p{
 	color: #fff;
 }
-
 
 #applications_calendar_view .calendar td{
     position: relative;

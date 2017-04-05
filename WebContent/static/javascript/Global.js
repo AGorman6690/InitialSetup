@@ -15,7 +15,7 @@ $(document).ready(function(){
 		}
 	})
 	
-	$(".button-group button").click(function(){
+	$("body").on("click", ".button-group button", function(){
 	
 		selectButton($(this))
 		

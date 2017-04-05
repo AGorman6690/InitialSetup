@@ -8,34 +8,98 @@
 }
 .proposal-container .calendar td:not(.ui-datepicker-other-month){
     border: 1px solid #e4e4e4;	
+    height: 103px;
 }
-.proposal-container .calendar-container .calendar a,
+.calendar a,
 span.ui-state-default{
 	color: #000;
 }
-.select-work-day{
+.job-work-day .select-work-day{
     position: absolute;
-    width: 44px;
-    height: 34px;
-    background: #252525;
-/*     top: 6px; */
+    width: 33px;
+    height: 29px;
+    background: #888888;
+    /* top: 6px; */
     top: 40px;
-    left: 8px;
+    left: 15px;
     opacity: .5;
-    box-shadow: 5px 5px 2px #444242;
-    border-radius: 3px
+    box-shadow: 4px 4px 3px #717171;
+    border-radius: 3px;    
 }
-.select-work-day .glyphicon-ok{
-    color: #53bf53;
-    opacity: 1;
-    font-size: 31px;
-    font-weight: bold;
+.job-work-day .select-work-day{
+/* 	background: #65a765; */
+	opacity: 1;
+	z-index: 1000;
 }
-.calendar td.job-work-day .start-and-end-times{
+td.job-work-day{
+    cursor: pointer;
+}
+.calendar td.job-work-day.proposed-work-day{
+	opacity: 1;
+}
+.proposal.work-day-container td.job-work-day{
+	opacity: 0.6;
+}
+td.job-work-day.has-conflicting-employment{
+	cursor: default;
+}
+td.job-work-day.has-conflicting-employment .select-work-day{
+	background: red;
+	cursor: default;
+}
+td.job-work-day{
+/* 	background: #f3f3f3; */
+}
+.calendar-container td.job-work-day.proposed-work-day{
+	background: #fff;
+/* 	border: 2px solid #99ce99; */
+	border: 2px solid #163b3d;
+}
+.added-content .glyphicon-ok{
+	font-size: 28px;
+/* 	display: none; */
+}
+td.job-work-day.proposed-work-day .added-content .glyphicon-ok{
+	color: #163b3d;
+}
+td.job-work-day .added-content .glyphicon-ok{
+	color: #737373;
+}
+td.job-work-day.proposed-work-day a{
+	display: block;
+	width: 100%;
+/*  	background: #99ce99; */
+	background: #163b3d;
+	color: #fff;
+	
+}
+.calendar td.job-work-day .added-content{
 	position: relative;
 }
-td.other-application-work-day .start-and-end-times{
-	border: 2px solid  #7389b3;
+.calendar td.job-work-day.has-conflicting-applications .added-content{
+/* 	background: #6e8cc5; */
+/*     border-radius: 4px; */
+}
+.job-work-day .added-content p{
+	font-weight: bold;
+	font-size: 14px;
+	color: #4e4a4a;
+}
+.job-work-day.proposed-work-day .added-content p{
+	font-weight: bold;
+	font-size: 14px;
+	color: #000;
+}
+.job-work-day.has-conflicting-applications .added-content .other-application{
+    height: 30px;
+    width: 100%;
+    background: #6e8cc5;
+    position: absolute;
+    bottom: 3px;
+    opacity: 0.6;
+}
+.job-work-day.has-conflicting-applications.proposed-work-day .added-content .other-application{
+	opacity: 1;
 }
 td.other-application-work-day a,
 td.other-application-work-day span.ui-state-default{
@@ -47,11 +111,11 @@ td.other-application-work-day span.ui-state-default{
 /* td.other-application-work-day{ */
 /* 	border: 2px solid  #7389b3; */
 /* } */
-.response-container .start-and-end-times p:first-of-type{
+.response-container .added-content p:first-of-type{
 /* 	margin-bottom: 20px; */
 	margin-bottom: 0px;
 }
-.response-container .start-and-end-times p:nth-of-type(2){
+.response-container .added-content p:nth-of-type(2){
 /* 	margin-bottom: 0px; */
 	margin-bottom: 35px;
 }

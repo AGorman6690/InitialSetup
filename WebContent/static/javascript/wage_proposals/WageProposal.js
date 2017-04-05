@@ -3,165 +3,93 @@
 
 $(document).ready(function(){
 	
+//	initCalendar_proposedWorkDays();
+	
+	$("body").on("click", "td td", function(){
+//	$("td").click(function(){
+//		if($(this).hasClass("proposed-work-day") == 1) $(this).removeClass("proposed-work-day");
+//		else $(this).addClass("proposed-work-day");
+	})
+	
 	$("body").on("click", ".show-mod", function(){
-		$(this).parent().find(".mod").eq(0).show();
+	
+		var applicationId = $(this).closest("tr").attr("data-application-id");
+		var $renderHtml = $(this).siblings(".present-proposal").eq(0);
+		var $proposalMod = $renderHtml.find(".mod").eq(0);
+		
+	
+		if($proposalMod.length > 0) $proposalMod.show();
+		else executeAjaxCall_getProposal(applicationId, $renderHtml);
+		
 	})
 	
 	
-	$(".wage-container button.accept").click(function() {
+	$("body").on("click", ".wage-container button.accept", function() {
 		hideCounterContainer($(this), true);
 	})
 	
-	$(".wage-container button.counter").click(function() {
+	$("body").on("click", ".wage-container button.counter", function() {
 		hideCounterContainer($(this), false);
 	})
 
-	$(".work-day-container button.accept").click(function() {
+	$("body").on("click", ".work-day-container button.accept", function() {
 		hideProposalContainer($(this), false);
 		hideCounterContainer($(this), true);
 		
 	})
 	
-	$(".work-day-container button.counter").click(function() {
+	$("body").on("click", ".work-day-container button.counter", function() {
 		hideCounterContainer($(this), false);
 		hideProposalContainer($(this), true);
 	})
 
 	
-	$(".proceed-to-confirmation-container .confirm").click(function (){
+	$("body").on("click", ".proceed-to-confirmation-container .confirm", function (){
 		setExpirationTimeToConfirm($(this));
 		showConfirmationContainer($(this));			
 		
 	})
 	
-	$(".send-proposal-container .send").click(function() { sendEmploymentProposal($(this)) })
+	$("body").on("click", ".send-proposal-container .send", function() { sendEmploymentProposal($(this)) })
 	
-	$(".cancel").click(function() { $(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click() })
+	$("body").on("click", ".cancel", function() { $(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click() })
 	
-	$(".send-proposal-container .edit").click(function() { hideConfirmationContainer($(this)) })
+	$("body").on("click", ".send-proposal-container .edit", function() { hideConfirmationContainer($(this)) })
 	
-	$(".approve-by-applicant").click( function() { sendApplicantApproval($(this)) });
+	$("body").on("click", ".approve-by-applicant", function() { sendApplicantApproval($(this)) });
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	$(".cancel").click(function(){		
+
+	$("body").on(".cancel", function(){		
 		$(this).closest(".proposal-actions-container").hide();		
 	})
+
 	
-	$(".accept-employer").click(function(){
-		
-		var $acceptActionsContainer = $(this).parents(".accept-actions-container").eq(0);
 
-		//Get the wage proposal id and proposal amount
-		var wageProposalId = $(this).parents("[data-wage-proposal-id]")
-									.eq(0)
-									.attr("data-wage-proposal-id");
-		
-		var days = $acceptActionsContainer.find(".time-container input.days-pre-hire").val();
-		var hours = $acceptActionsContainer.find(".time-container input.hours-pre-hire").val();
-		var minutes = $acceptActionsContainer.find(".time-container input.minutes-pre-hire").val();
-		
-		if(days == undefined) days = 0;
-		if(hours == undefined) hours = 0;
-		if(minutes == undefined) minutes = 0;
-		
-		broswerIsWaiting(true);
-		$.ajax({
-			type : "POST",
-			url :"/JobSearch/wage-proposal/accept/employer?wageProposalId=" + wageProposalId + "&days=" + days
-										+ "&hours=" + hours + "&minutes=" + minutes,			
-			headers : getAjaxHeaders(),
-			contentType : "application/json",	
-			dataType : "json",
-		}).done(function(wageProposal) {			
-
-			broswerIsWaiting(false);
-			location.reload(true);
-			
-		}).error(function() {
-			broswerIsWaiting(false);
-		});	
-	})
 	
-	$(".confirm-counter").click(function(){
-		
-		var $e = $(this);
-		var $calendar = $e.closest(".proposal-actions-container").find(".counter-calendar .calendar").eq(0);	
 
-		
-		var employmentProposalDto = {};
-		employmentProposalDto.applicationId = $e.closest("tr").attr("data-application-id");
-		employmentProposalDto.amount = $e.closest(".proposal-actions-container")
-													.find("input.counter-amount").eq(0).val();	
-		employmentProposalDto.employmentProposalId = $e.parents("[data-wage-proposal-id]")
-															.eq(0)
-															.attr("data-wage-proposal-id");
-
-		employmentProposalDto.dateStrings_proposedDates = getSelectedDates($calendar, "yy-mm-dd", "proposed");;
-		
-		
-
-
-		// Update the table's row attribute
-//		$(this).closest("tr").attr("data-is-sent-proposal", "1");
-		
-		broswerIsWaiting(true);
-		$.ajax({
-			type : "POST",
-			url :"/JobSearch/employment-proposal/counter",
-			headers : getAjaxHeaders(),
-			contentType : "application/json",
-			data : JSON.stringify(employmentProposalDto)			
-		}).done(function() {	
-			
-			broswerIsWaiting(false);
-			location.reload(true);
-
-		}).error(function() {
-			
-			broswerIsWaiting(false);
-		});	
-	})
-	
-//	initCalendars_counterCalendars();
-	initCalendar_proposedWorkDays();
-//	initCalendar_counterWorkDays()
 })
 
-//function getDateStrings_proposedDates($e){
-//	
-//	var dateStrings_proposedDates = [];
-//	var workDayProposalDto = {};
-//
-//	var $calendar = $e.closest(".proposal-actions-container").find(".counter-calendar .calendar").eq(0);	
-//	var proposedDates = getSelectedDates($calendar, "yy-mm-dd", "proposed");
-//	
-//	$(proposedDates).each(function(){
-//		dateStrings_proposedDates.push(this);
-//	})
-//	
-//	return workDayProposalDtos;
-//}
-//
-//function getWageProposalDto($e){
-//	
-//	var wageProposalDto = {};
-//	
-//	wageProposalDto.wageProposalIdToCounter = $e.parents("[data-wage-proposal-id]")
-//														.eq(0)
-//														.attr("data-wage-proposal-id");
-//
-//	wageProposalDto.counterAmount = $e.closest(".proposal-actions-container")
-//											.find("input.counter-amount").eq(0).val();;	
-//
-//	return wageProposalDto;
-//}
+function executeAjaxCall_getProposal(applicationId, $e){
+
+	broswerIsWaiting(true);
+	
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/application/" + applicationId + "/current-proposal",
+		header: getAjaxHeaders(),
+		dataType: "html",
+		success: function(html) {
+			$e.html(html);
+			$e.find(".mod").eq(0).show();	
+			initCalendar_proposedWorkDays();
+			broswerIsWaiting(false);
+		},
+		error: function() {
+			broswerIsWaiting(false);
+		}
+	})
+}
+
 
 function getEmploymentProposalDto($responseContainer){
 
@@ -208,9 +136,9 @@ function isSessionUserAnEmployer($responseContainer){
 function getContext($responseContainer){
 	
 	if(isAmountBeingCountered($responseContainer) || areWorkDaysBeingCountered($responseContainer))
-		return "counter";
+		return "counter-by-applicant";
 	else if(isSessionUserAnEmployer($responseContainer))
-		return "accept-by-employer";
+		return "acknowledge-by-employer";
 	else return "approve-by-applicant";
 	
 }
@@ -429,10 +357,15 @@ function initCalendar_proposedWorkDays(){
 	
 	$(".work-day-container .calendar").each(function(){
 		
+		
+		
+		
 		var $responseContainer = $(this).closest(".response-container"); 
 		var applicationId = $responseContainer.attr("data-application-id");
 		var $allDaysContainer = $responseContainer.find(".dates-container").eq(0);		
-		
+				
+		var workDayDtos = getWorkDayDtosFromContainer($responseContainer.find(".work-day-dtos"));
+				
 		var dates_proposed = getDateFromContainer($allDaysContainer.find(".proposal-work-days"));
 		var dates_workDays = getDateFromContainer($allDaysContainer.find(".job-work-days"));
 		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));	
@@ -443,38 +376,40 @@ function initCalendar_proposedWorkDays(){
 									})
 		
 		initCalendar_showWorkDays($(this), dates_workDays, dates_unavailable, dates_proposed,
-				dates_other_applications);	
+				dates_other_applications, workDayDtos);	
 	})
 
 	
 }
 
-//function initCalendar_counterWorkDays(){
-//	
-//	$(".work-day-container .calendar").each(function(){
-//		var $allDaysContainer = $(this).closest(".response-container").find(".dates-container").eq(0);
-//
-//		var dates_proposed = getDateFromContainer($allDaysContainer.find(".proposal-work-days"));
-//		var dates_workDays = getDateFromContainer($allDaysContainer.find(".job-work-days"));
-//		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));	
-//		
-//		initCalendar_showWorkDays_counterProposal($(this), dates_workDays, dates_unavailable, dates_proposed);	
-//	})
-//
-//	
-//}
+function isDateProposed(date, workDayDtos) {
+	var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
+	if(workDtoDto != undefined){
+		if(workDayDto.isProposed == "1") return true;
+		else return false;
+	}else return false;
+	
+}
 
-//function initCalendars_counterCalendars(){
-//	
-//	$(".counter-calendar .calendar").each(function(){
-//		
-//		var $allDaysContainer = $(this).closest(".calendar-container-proposed-work-days");
-//		
-//		
-//		var dates_application = getDateFromContainer($allDaysContainer.find(".work-days-application"));
-//		var dates_job = getDateFromContainer($allDaysContainer.find(".work-days-job"));
-//		var dates_unavailable = getDateFromContainer($allDaysContainer.find(".days-unavailable"));
-//		
-//		initCalendar_counterApplicationDays($(this), dates_application, dates_job, dates_unavailable)
-//	})
-//}
+function isDateAJobWorkDay(date, workDayDtos){
+	
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(workDayDto.date.getTime() == dateToFind.getTime()) return true;
+	})
+	
+	return false;
+}
+
+function getWorkDayDtoByDate(dateToFind, workDayDtos) {
+	var result = false;
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(workDayDto.date.getTime() == dateToFind.getTime()){
+			result = workDayDto;
+			return false;
+		}
+	})
+	
+	if(!result) return undefined;
+	else return result;
+}
+

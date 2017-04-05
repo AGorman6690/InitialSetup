@@ -61,7 +61,7 @@
 }
 
 #changeLayout_applicants{
-    padding-bottom: 40px;
+    padding: 40px 0px;
     text-align: center;
     color: #163b3d;
     font-weight: bold;
@@ -108,9 +108,11 @@ table#applicantsTable.table-view.has-work-days.has-answers th{
 }
 
 table#applicantsTable th{
-    font-size: 17px;
-    color: #555555;
-    font-weight: normal;
+/*     font-size: 17px; */
+/*     color: #555555; */
+/*     font-weight: normal; */
+    font-weight: bold;
+    color: #163b3d;
 }  
 
 td div.name-container{
@@ -184,4 +186,12 @@ label.display-question{
 #modal_applicants .mod-content{
 	width: 850px;
 	margin-left: -425px;
+    max-height: 800px;
+    top: 20px;
+}
+
+#otherUsersWhoHaveNotApplied p{
+    text-decoration: underline;
+    color: #163b3d;
+    font-weight: bold;
 }

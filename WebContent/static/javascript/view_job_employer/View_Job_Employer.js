@@ -31,6 +31,7 @@ function initCalendar_employerViewJob_applicantSummary() {
 		onSelect: function(dateString, inst){
 			var jobId = $("#jobId").val();
 			var date = new Date(dateString);
+			broswerIsWaiting(true);
 			$.ajax({
 				type: "GET",
 				url: "/JobSearch/job/" + jobId + "/work-day/" + $.datepicker.formatDate("yy-mm-dd", date) + "/applicants",
@@ -39,6 +40,10 @@ function initCalendar_employerViewJob_applicantSummary() {
 				success: function(html) {
 					$("#modal_applicants .mod-content").html(html);
 					$("#modal_applicants.mod").show();
+					broswerIsWaiting(false);
+				},
+				error: function() {
+					broswerIsWaiting(false);
 				}
 			})
 		},

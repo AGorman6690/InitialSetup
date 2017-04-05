@@ -35,6 +35,9 @@ class ApplicationDTO {
 	int applicantId
 		
 	List<ApplicationDTO> applicationDtos_conflicting
+	List<ApplicationDTO> applicationDtos_conflicting_willBeRemoved
+	List<ApplicationDTO> applicationDtos_conflicting_willBeSentBackToEmployer
+	List<ApplicationDTO> applicationDtos_conflicting_willBeModifiedButRemainAtEmployer
 	
 	String time_untilEmployerApprovalExpires
 	
@@ -64,6 +67,9 @@ class ApplicationDTO {
 		this.applicantDto = new JobSearchUserDTO();
 		this.jobDto = new JobDTO();
 		this.application = new Application();
+		this.applicationDtos_conflicting_willBeRemoved = new ArrayList<ApplicationDTO>();
+		this.applicationDtos_conflicting_willBeSentBackToEmployer = new ArrayList<ApplicationDTO>();
+		this.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer = new ArrayList<ApplicationDTO>();
 	}
 
 

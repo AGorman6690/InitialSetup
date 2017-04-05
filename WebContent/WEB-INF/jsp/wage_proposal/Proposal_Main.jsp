@@ -2,16 +2,16 @@
 
 <div class="application-proposal-container">
 	<div class="proposal-item amount">		
-		<%@ include file="../wage_proposal/History_WageProposals.jsp" %>
+		<p><%@ include file="../wage_proposal/History_WageProposals.jsp" %></p>
 	</div>
 	
 	<div class="proposal-item work-days">
 		<c:choose>
-			<c:when test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
-				<p>${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${applicationDto.jobDto.workDays.size() } days</p>
+			<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
+				<p>${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days</p>
 			</c:when>
 			<c:otherwise>
-				<p>${applicationDto.jobDto.workDays.size() } days</p>
+				<p>${jobDto.workDays.size() } days</p>
 			</c:otherwise>
 		</c:choose>
 	</div>
@@ -22,7 +22,8 @@
 					<p>${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</p>
 				</c:if>
 				<button class="sqr-btn gray-2 show-mod">Respond</button>	
-				<%@ include file="../wage_proposal/WageProposal.jsp" %>										
+				<div class="present-proposal"></div>
+<%-- 				<%@ include file="../wage_proposal/WageProposal.jsp" %>										 --%>
 			</c:when>
 			<c:otherwise>
 				<p>Waiting for ${user.profileId == 1 ? 'employer' : 'applicant'}</p>

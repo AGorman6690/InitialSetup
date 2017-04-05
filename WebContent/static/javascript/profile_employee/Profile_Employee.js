@@ -43,7 +43,7 @@ function initCalendar_employeeProfile_applicantSummary() {
 //		minDate: firstDate,
 		numberOfMonths: getNumberOfMonths($calendar),
 		beforeShowDay: function(date){
-			if(doesDateArrayContainDate(date, workDays)) return [true, "active111"];
+			if(doesDateArrayContainDate(date, workDays)) return [true, "job-work-day"];
 			else return [true, ""];
 		},
 		afterShow: function(){

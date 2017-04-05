@@ -10,13 +10,14 @@
 
 				<tr class="">
 					<th id="job-name" >Job</th>
-					<th id="" >Start Date</th>
-					<th id="" class="">End Date</th>
-					<th id="" class="">Location</th>								
-					<th id="" class="">Offers Made</th>
-					<th id="" class=" ">Offers Received</th>
-					<th id="" class=" ">Positions Filled</th>
-					<th id="" class="">Positions Available</th>
+					<th id="" >Start date</th>
+					<th id="" class="">End date</th>
+					<th id="" class="">Location</th>
+					<th id="" class="">Total applicants</th>								
+					<th id="" class="">Offers waiting on applicant</th>
+					<th id="" class=" ">Offers waiting on you</th>
+					<th id="" class=" ">Positions filled</th>
+					<th id="" class="">Positions available</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,6 +31,26 @@
 						<td class="job-details"><span>${jobDto.job.stringStartDate }</span></td>
 						<td class="job-details"><span>${jobDto.job.stringEndDate }</span></td>
 						<td class="job-details"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
+						
+						
+						
+						<td>	
+							<div class="new-container">
+								<c:choose>
+									<c:when test="${jobDto.countApplications_total > 0 }">
+										<a class="accent" href="../job/${jobDto.job.id}/?c=waiting&d=applicants">
+											${jobDto.countApplications_total }</a>
+									</c:when>
+									<c:otherwise>
+										-
+									</c:otherwise>
+								</c:choose>									
+								<c:if test="${jobDto.countApplications_new > 0 }">
+									<a class="new-offers-received" href="../job/${jobDto.job.id}/?c=waiting&d=applicants-new">
+										${jobDto.countApplications_new }</a>
+								</c:if>		
+							</div>																											
+						</td>						
 						<td>	
 							<c:choose>
 								<c:when test="${jobDto.countWageProposals_sent > 0 }">
@@ -42,7 +63,7 @@
 							</c:choose>																								
 						</td>
 						<td>							
-							<div class="offers-received-container">
+							<div class="new-container">
 								<c:choose>
 									<c:when test="${jobDto.countWageProposals_received > 0 }">
 										<a class="accent" href="../job/${jobDto.job.id}/?c=waiting&d=received-proposals">
@@ -53,7 +74,7 @@
 									</c:otherwise>
 								</c:choose>									
 								<c:if test="${jobDto.countWageProposals_received_new > 0 }">
-									<a class="new-offers-received" href="../job/${jobDto.job.id}/?c=waiting&d=received-proposals-new">
+									<a class="new" href="../job/${jobDto.job.id}/?c=waiting&d=received-proposals-new">
 										${jobDto.countWageProposals_received_new }</a>
 								</c:if>
 							</div>																

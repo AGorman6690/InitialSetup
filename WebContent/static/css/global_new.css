@@ -155,3 +155,7 @@ span.glyphicon-menu-down{
 [data-toggle-id]{
 	cursor: pointer;
 }
+
+div.work-day-dtos{
+	display: none;
+}

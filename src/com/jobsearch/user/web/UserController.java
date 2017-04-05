@@ -24,6 +24,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.session.SessionContext;
@@ -140,9 +141,9 @@ public class UserController {
 	
 
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
-	public String findEmployees(@RequestBody JobDTO jobDto, Model model) {
+	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
 
-		userService.setModel_FindEmployees_Results(model, jobDto);
+		userService.setModel_FindEmployees_Results(model, employeeSearch);
 
 		return"/find_employees/Results_Find_Employees";
 	}

@@ -5,7 +5,7 @@
 	href="/JobSearch/login-signup?login=true">You must be logged in to apply for a job
 </a>	
 
-
+<input id="isWorkDaySelectedRequired" type="hidden" value="${jobDto.job.isPartialAvailabilityAllowed }">
 <div class="apply-action">
 		<p>Propose a desired hourly wage</p>
 		<input id="amount" class="form-control">		

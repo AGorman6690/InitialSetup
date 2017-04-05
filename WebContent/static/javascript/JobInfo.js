@@ -118,11 +118,10 @@ function initCalendar_apply_workDays(){
 }
 
 
-function doesApplicantNeedToSelectWorkDays(){
+function doesApplicantNeedToSelectWorkDays(){	
 	
-	var $calendar = $("#apply-work-days-calendar-container .calendar");
-	if($calendar != undefined) return true;
-	else return false;
+	if($("#isWorkDaySelectedRequired").val() == "false") return false;
+	else return true;
 }
 
 function setWorkDays(){

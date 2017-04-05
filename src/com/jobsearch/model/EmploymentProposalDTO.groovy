@@ -17,12 +17,20 @@ class EmploymentProposalDTO {
 	Integer minutes_offerExpires
 	String time_untilEmployerApprovalExpires
 
-	
+//	List<WorkDayDto> workDayDtos_proposed
 	List<String> dateStrings_proposedDates
 	Boolean isProposedToSessionUser
+	
+	// *******************************************************************
+	// *******************************************************************
+	// I believe these statuses can be eliminated not that IsCurrentProposal is a column,
+	// and 
+	// *******************************************************************
+	// *******************************************************************
 
 		
 	Integer status
+	public static Integer STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT = -3
 	public static Integer STATUS_SUBMITTED_BUT_NOT_VIEWED = -2
 	public static Integer STATUS_VIEWED_BUT_NO_ACTION_TAKEN = -1
 	public static Integer STATUS_COUNTERED = 0

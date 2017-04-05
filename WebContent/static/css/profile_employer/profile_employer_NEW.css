@@ -3,11 +3,11 @@
 	width: 1200px;
 }
 
-.offers-received-container{
+.new-container{
 	position: relative;
 	display: inline-block;
 }
-a.new-offers-received{
+a.new{
     position: absolute;
     top: -21px;
     right: -39px;

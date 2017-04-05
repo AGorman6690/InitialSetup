@@ -37,7 +37,11 @@ public class JobDTO {
 	 Integer durationDays
 	 double durationHours
 	 
+	 // **************************************************************
+	 // DO AWAY WITH THIS.
+	 // WorkDayDtos is suffice.
 	 List<WorkDay> workDays
+	 // **************************************************************
 	 List<WorkDayDto> workDayDtos
 	 String date_firstWorkDay
 	 int months_workDaysSpan
@@ -47,6 +51,7 @@ public class JobDTO {
 	 int countWageProposals_received
 	 int countWageProposals_received_new
 	 
+	 int countApplications_total
 	 int countApplications_new
 	 int countApplications_received
 	 int countApplications_declined
@@ -54,7 +59,6 @@ public class JobDTO {
 	 int countEmployees_hired
 	 
 	 List<Question> questions
-	 int newApplicationCount
 	 List<JobSearchUser> applicants
 	 List<Application> applications
 	 Application application

@@ -141,7 +141,7 @@ public class JobController {
 
 		jobService.setModel_getApplicants_byJobAndDate(model, session, jobId, dateString);
 		
-		return "/view_job_employer/Applicants_ByJobAndDate";
+		return "/view_job_employer/ApplicationSummary_ByWorkDay";
 	}
 	
 	

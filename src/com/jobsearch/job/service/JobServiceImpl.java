@@ -3,6 +3,7 @@ package com.jobsearch.job.service;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -26,6 +27,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
@@ -168,28 +170,6 @@ public class JobServiceImpl {
 		return repository.getDateId(date);
 	}
 
-//	public List<JobDTO> getJobDtos_JobsWaitingToStart_Employer(int userId) {
-//
-//		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-//
-//		// Query the database
-//		List<Job> jobsWaitingToStart = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_FUTURE);
-//		
-//		if(jobsWaitingToStart != null){
-//			// Set the job Dtos
-//			for(Job job : jobsWaitingToStart){
-//				
-//				JobDTO jobDto = new JobDTO();
-//				jobDto = this.getJobDTO_JobWaitingToStart_Employer(job.getId(), userId);
-//				jobDtos.add(jobDto);
-//			}
-//
-//			return jobDtos;		
-//		}
-//
-//		return null;
-//
-//	}
 	
 	public List<JobDTO> getJobDtos_employerProfile(int userId) {
 
@@ -262,12 +242,6 @@ public class JobServiceImpl {
 
 	}
 
-	public int getNewApplicationCount(List<ApplicationDTO> applicationDtos) {
-		
-		return (int) applicationDtos.stream().filter(a -> a.getApplication()
-															.getHasBeenViewed() == 0)
-															.count();
-	}
 
 	public int getJobCountByCategory(int categoryId) {
 		return repository.getJobCountByCategory(categoryId);
@@ -487,6 +461,9 @@ public class JobServiceImpl {
 				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
 		
 		// Applications
+		jobDto.setCountApplications_total(
+				applicationService.getCountApplications_total(job.getId()));		
+		
 		jobDto.setCountApplications_new(
 				applicationService.getCountApplications_new(job.getId()));
 		
@@ -1076,6 +1053,7 @@ public class JobServiceImpl {
 		List<WorkDay> workDays = getWorkDays(jobId);
 		
 		for(WorkDay workDay : workDays){
+			
 			WorkDayDto workDayDto = new WorkDayDto();
 			workDayDto.setWorkDay(workDay);
 			workDayDto.setCount_applicants(applicationService.getCount_applicantsByDay(workDay.getDateId(), jobId));
@@ -1339,29 +1317,86 @@ public class JobServiceImpl {
 	public void setModel_getApplicants_byJobAndDate(Model model, HttpSession session, int jobId, String dateString) {
 		
 		if(verificationService.didSessionUserPostJob(session, jobId)){
-			List<Application> applications = applicationService.getApplications_byJobAndDate(jobId, dateString);
-		
-			List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos(applications, session);
-			
-			JobDTO jobDto_findEmployees = new JobDTO();
-			jobDto_findEmployees.setJob(getJob(jobId));
-			
-			WorkDay workDay = new WorkDay();
-			workDay.setStringDate(dateString);
-			jobDto_findEmployees.getWorkDays().add(workDay);
-			
-			List<JobSearchUser> otherApplicantsWhoAreAvailable = userService.getUsers_ByFindEmployeesSearch(jobDto_findEmployees);
 			
 			JobDTO jobDto = getJobDTO_DisplayJobInfo(jobId);
+			
+			List<Application> applications = applicationService.getApplications_byJobAndDate(jobId, dateString);		
+			List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos(applications, session);
 			jobDto.setApplicationDtos(applicationDtos);
+			
+			List<JobSearchUser> applicants_whoAreAvailableButDidNotApplyForDate = userService.getApplicants_whoAreAvailableButDidNotApplyForDate(jobId, dateString);
+			List<ApplicationDTO> applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate =
+												applicationService.getApplicationDtos_byApplicants(jobId, applicants_whoAreAvailableButDidNotApplyForDate, session);
+			
+			List<JobSearchUser> users_whoAreAvailableButHaveNotApplied = userService.getUsers_whoAreAvailableButHaveNotApplied(jobId, dateString);
+			
 
+			model.addAttribute("date", LocalDate.parse(dateString).format(DateTimeFormatter.ofPattern("E MMM d, y")));
 			model.addAttribute("jobDto", jobDto);
+			model.addAttribute("applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate",
+					applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate);
+			model.addAttribute("count_userswhoAreAvailableButHaveNotApplied",
+					users_whoAreAvailableButHaveNotApplied.size());
 		}
 
 	}
 
+	public List<WorkDayDto> getWorkDayDtos_employeeViewWageProposal(int jobId, int applicationId, int userId) {
+		
+		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
+		List<WorkDay> workDays = getWorkDays(jobId);
+		
+		for(WorkDay workDay: workDays){
+			WorkDayDto workDayDto = new WorkDayDto();
+			
+			workDayDto.setWorkDay(workDay);
+			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(workDay.getWorkDayId(), applicationId));
+			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(userId, workDay.getWorkDayId()));
+			workDayDto.setApplicationDtos_conflictingApplications(applicationService.getApplicationDtos_Conflicting(userId, applicationId, Arrays.asList(workDay)));
+			workDayDtos.add(workDayDto);
+		}
+		return workDayDtos;
+	}
 
+	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int workDayId) {
+		
+		return repository.getConflictingEmployment_byUserAndWorkDay(userId, workDayId);
+	}
 
+	
 
+	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
+		
+		return repository.getWorkDays_byProposalId(employmentProposalId);
+	}
 
+	public List<String> removeConflictingWorkDays(List<String> dateStrings_toInspect,
+														List<WorkDay> workDays_toInspectAgainst) {
+		
+		List<String> dateStrings_conflictsRemoved = new ArrayList<String>();
+		
+		for(String dateString_toInspect : dateStrings_toInspect){
+			Integer dateId_toInspect = getDateId(dateString_toInspect);
+			
+			Boolean isConflicting = false;
+			for(WorkDay workDay_toInspectAgainst : workDays_toInspectAgainst){
+				if(workDay_toInspectAgainst.getDateId() == dateId_toInspect) {
+					isConflicting = true;
+					break;
+				}
+			}
+			
+			if(!isConflicting) dateStrings_conflictsRemoved.add(dateString_toInspect);
+			
+		}
+		
+		
+		return dateStrings_conflictsRemoved;
+	}
+
+	public List<String> getWorkDayDateStrings(int jobId) {
+		
+		return repository.getWorkDayDateStrings(jobId);
+	}
+	
 }

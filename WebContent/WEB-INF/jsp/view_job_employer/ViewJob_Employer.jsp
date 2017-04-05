@@ -63,6 +63,9 @@
 					<%@ include file="./Applicants.jsp" %>
 				</div>
 			</div>	
+			<div id="job-calendar-application-summary" class="job-info-calendar calendar-container page-section">
+				<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+			</div>
 		</c:if>	
 		
 		

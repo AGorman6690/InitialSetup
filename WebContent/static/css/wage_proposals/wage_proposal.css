@@ -166,3 +166,44 @@ input.counter-wage-amount{
 .proposal-item.status p{
 	display: inline-block
 }
+
+
+
+
+.conflicting-applications{
+	width: 500px;
+    margin: auto;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #cacaca;
+}
+.conflicting-applications p.if-you-accept{
+/* 	font-weight: bold; */
+}
+.conflicting-applications h6{
+/*     font-weight: bold; */
+    padding-left: 60px;
+	display: inline-block;
+	line-height: 25px;
+}
+.conflicting-applications h6,
+.conflicting-applications span.bold{
+	font-size: 15px;
+	text-decoration: none;
+}
+.conflicting-applications span.why{
+	color: #5959ad;
+	text-decoration: underline;
+	font-size: 14px;
+	margin-left: 10px;
+}
+.conflicting-applications .disposition{
+	text-align: left;
+}
+.conflicting-applications .applications{
+	padding-left: 75px;
+/* 	text-align: center; */
+}
+.conflicting-applications .applications li{
+	color: #337ab7;
+	font-weight: bold;
+}

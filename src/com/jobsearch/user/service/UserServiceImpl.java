@@ -32,6 +32,7 @@ import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
@@ -635,14 +636,10 @@ public class UserServiceImpl {
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
 		
-		List<ApplicationDTO> applicationDtos = applicationService.
-												getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
-															session,
-															employee.getUserId(), 
-															applicationService.getApplicationStatuses_openOrAccepted());
+		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(employee.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
 		
 //		List<JobDTO> jobDtos_applicationInvites = this.getJobDtos_ApplicationInvites(employee.getUserId());
-		
 		
 		int failedApplicationCount = applicationService.getFailedApplicationCount(applicationDtos);
 		int openApplicationCount = applicationService.getOpenApplicationCount(applicationDtos);
@@ -872,16 +869,8 @@ public class UserServiceImpl {
 		userDto.setAvailableDays(this.getAvailableDays(userId));
 		
 		
-		
-		List<ApplicationDTO> applicationDtos = applicationService.
-				getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
-							session,
-							userId, 
-							Arrays.asList(Application.STATUS_PROPOSED_BY_EMPLOYER,
-										Application.STATUS_SUBMITTED,
-										Application.STATUS_CONSIDERED,
-										Application.STATUS_ACCEPTED,
-										Application.STATUS_WAITING_FOR_APPLICANT_APPROVAL));
+		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(userId);
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
 
 
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(userId);
@@ -911,21 +900,21 @@ public class UserServiceImpl {
 		
 	}
 
-	public void setModel_FindEmployees_Results(Model model, JobDTO jobDto) {
+	public void setModel_FindEmployees_Results(Model model, EmployeeSearch employeeSearch) {
 		
 		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
 		
-		if(verificationService.isValidLocation(jobDto.getJob())){
-			Coordinate coordinate = GoogleClient.getCoordinate(jobDto.getJob());
+		if(verificationService.isValidLocation(employeeSearch.getJobDto().getJob())){
+			Coordinate coordinate = GoogleClient.getCoordinate(employeeSearch.getJobDto().getJob());
 			
 			// Search location must return a result
 			if(coordinate != null){
 				
-				jobDto.getJob().setLat(coordinate.getLatitude());
-				jobDto.getJob().setLng(coordinate.getLongitude());
+				employeeSearch.getJobDto().getJob().setLat(coordinate.getLatitude());
+				employeeSearch.getJobDto().getJob().setLng(coordinate.getLongitude());
 				
 				// Get the users that match the search request 
-				List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(jobDto);
+				List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(employeeSearch);
 				
 				for(JobSearchUser user : users){
 					JobSearchUserDTO userDto = new JobSearchUserDTO();
@@ -938,26 +927,26 @@ public class UserServiceImpl {
 					
 					userDto.setCount_availableDays_perFindEmployeesSearch(
 												jobService.getCount_availableDays_ByUserAndWorkDays(
-															user.getUserId(), jobDto.getWorkDays()));
+															user.getUserId(), employeeSearch.getJobDto().getWorkDays()));
 					
-					userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(), jobDto.getWorkDays()));
+					userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(), employeeSearch.getJobDto().getWorkDays()));
 				}
 					
 			}
 			
-			jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
-			jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+			employeeSearch.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(employeeSearch.getJobDto().getWorkDays()).toString());
+			employeeSearch.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(employeeSearch.getJobDto().getWorkDays()));
 			
-			model.addAttribute("jobDto", jobDto);
+			model.addAttribute("jobDto", employeeSearch);
 			model.addAttribute("userDtos", userDtos);
 		}
 		
 	}
 
 
-	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(JobDTO jobDto) {
+	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
 		
-		return repository.getUsers_ByFindEmployeesSearch(jobDto);
+		return repository.getUsers_ByFindEmployeesSearch(employeeSearch);
 	}
 
 	public JobSearchUserDTO getUserDTO_Availability(HttpSession session) {
@@ -1014,10 +1003,10 @@ public class UserServiceImpl {
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByUserAndApplicationStatus_OpenJobs(
-																session,
-																sessionUser.getUserId(),
-																applicationService.getApplicationStatuses_openOrAccepted());
+	
+		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(sessionUser.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
+
 		
 		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(sessionUser.getUserId());
 		
@@ -1027,6 +1016,37 @@ public class UserServiceImpl {
 		model.addAttribute("jobDtos_employment", jobDtos_employment);
 		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
 			
+	}
+
+	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
+		
+		EmployeeSearch employeeSearch = new EmployeeSearch();
+		
+		JobDTO jobDto_findEmployees = new JobDTO();
+		jobDto_findEmployees.setJob(jobService.getJob(jobId));		
+		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
+		
+		employeeSearch.setJobDto(jobDto_findEmployees);
+//		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
+		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
+		
+		return getUsers_ByFindEmployeesSearch(employeeSearch);
+		
+		
+	}
+
+	public List<JobSearchUser> getUsers_whoAreAvailableButHaveNotApplied(int jobId, String dateString) {
+	
+		EmployeeSearch employeeSearch = new EmployeeSearch();
+		
+		JobDTO jobDto_findEmployees = new JobDTO();
+		jobDto_findEmployees.setJob(jobService.getJob(jobId));	
+		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
+		
+		employeeSearch.setJobDto(jobDto_findEmployees);
+		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
+		
+		return getUsers_ByFindEmployeesSearch(employeeSearch);
 	}
 
 }

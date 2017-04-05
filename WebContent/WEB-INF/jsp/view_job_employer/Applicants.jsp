@@ -14,9 +14,7 @@
 			</c:forEach>								
 		</div>
 
-		<div id="job-calendar-application-summary" class="job-info-calendar calendar-container">
-			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-		</div>
+
 		<div id="changeLayout_applicants">
 <!-- 			<span id="tileView_applicants" class="glyphicon glyphicon-th-large"></span> -->
 <!-- 			<span id="tableView_applicants" class="glyphicon glyphicon-th-list"></span> -->

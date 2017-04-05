@@ -33,23 +33,23 @@
 							</div>
 							
 							<div class="mod-body">
-								<div class="dates-container">
-									<div class="job-work-days">
-										<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
-											<div data-date="${workDay.stringDate }"></div>
-										</c:forEach>
-									</div>
-									<div class="proposal-work-days">
-										<c:forEach items="${applicationDto.employmentProposalDto.dateStrings_proposedDates }" var="dateString">
-											<div data-date="${dateString }"></div>
-										</c:forEach>
-									</div>
-									<div class="days-unavailable">
-										<c:forEach items="${applicationDto.dateStrings_unavailableWorkDays }" var="dateString">
-											<div data-date="${dateString }"></div>
-										</c:forEach>
-									</div>
-								</div>	
+<!-- 								<div class="dates-container"> -->
+<!-- 									<div class="job-work-days"> -->
+<%-- 										<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay"> --%>
+<%-- 											<div data-date="${workDay.stringDate }"></div> --%>
+<%-- 										</c:forEach> --%>
+<!-- 									</div> -->
+<!-- 									<div class="proposal-work-days"> -->
+<%-- 										<c:forEach items="${applicationDto.employmentProposalDto.dateStrings_proposedDates }" var="dateString"> --%>
+<%-- 											<div data-date="${dateString }"></div> --%>
+<%-- 										</c:forEach> --%>
+<!-- 									</div> -->
+<!-- 									<div class="days-unavailable"> -->
+<%-- 										<c:forEach items="${applicationDto.dateStrings_unavailableWorkDays }" var="dateString"> --%>
+<%-- 											<div data-date="${dateString }"></div> --%>
+<%-- 										</c:forEach> --%>
+<!-- 									</div> -->
+<!-- 								</div>	 -->
 													
 								<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>							
 								<div class="proposal wage-container">	
@@ -86,7 +86,17 @@
 									</div>										
 								</div>
 	
-								<div class="proposal work-day-container pad-top">						
+								<div class="proposal work-day-container pad-top">		
+									<div class="work-day-dtos">
+										<c:forEach items="${applicationDto.jobDto.workDayDtos }" var="workDayDto">
+											<div class="work-day-dto" data-date="${workDayDto.workDay.stringDate }"
+												 data-is-proposed="${workDayDto.isProposed == true ? '1' : '0'}"
+												 data-has-conflicting-applications=${!empty workDayDto.applicationDtos_conflictingApplications ? '1' : '0' }
+												 data-has-conflicting-employment=${!empty workDayDto.job_conflictingEmployment ? '1' : '0' }>
+											${workDayDto.isProposed}
+											 </div>
+										</c:forEach>	
+									</div>													
 									<h1>Work Days</h1>
 									<div class="button-group">
 										<button class="sqr-btn gray-2 accept">Accept</button>
@@ -95,7 +105,7 @@
 									<div class="confirmation-container">
 										<p class="accept">You are <span class="bold">accepting</span> the following work days</p>
 										<p class="counter">You are <span class="bold">proposing</span> the following work days</p>
-									</div>																	
+									</div>																										
 <%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
 									<div class="proposal-container">						
 										<div class="calendar-container hide-prev-next read-only">
@@ -105,7 +115,7 @@
 											</div>										
 										</div>
 									</div>
-									<div class="counter-container">
+									<div class="counter-container">									
 										<div class="job-info-calendar calendar-container hide-prev-next">									
 											<div class="calendar"
 												data-min-date="${applicationDto.jobDto.date_firstWorkDay }"

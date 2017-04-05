@@ -23,7 +23,7 @@ td .application-count span{
     margin-top: 5px;
     display: inline-block;
     color: #000;
-    font-weight: bold;  
+/*     font-weight: bold;   */
 /*     color: #fff; */
 /* 	left: 33%; */
 /*     background: #fff; */
@@ -48,11 +48,11 @@ td.job-work-day:hover{
     text-align: center;
     height: 75px;
     width: 70px;
-    border-bottom: 2px solid #bbbbbb;
+    border-bottom: 2px solid #e4e4e4;
 }
 .calendar td a{
 /* 	font-size: 18px; */
-/* 	font-weight: bold; */
+	font-weight: bold;
 }
 .job-info-calendar.calendar-container .calendar td{
 	height: 100px;

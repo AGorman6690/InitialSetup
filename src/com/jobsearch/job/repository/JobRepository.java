@@ -31,6 +31,7 @@ import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
+import ch.qos.logback.core.joran.conditional.IfAction;
 import io.codearte.catchexception.shade.mockito.internal.verification.Only;
 import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 
@@ -170,10 +171,10 @@ public class JobRepository {
 					
 					WorkDay e = new WorkDay();
 					
+					e.setWorkDayId(rs.getInt("WorkDayId"));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
-					e.setDateId(rs.getInt("DateId"));
-					
+					e.setDateId(rs.getInt("DateId"));					
 					
 					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
 					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
@@ -1262,6 +1263,40 @@ public class JobRepository {
 		
 		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
 	}
+
+	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int workDayId) {
+		String sql = "SELECT * FROM job"
+					+ " JOIN employment e ON j.JobId = e.JobId"
+					+ " JOIN application a ON e.JobId = a.JobId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+					+ " JOIN employment_proposal_work_days ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " WHERE e.UserId = ?"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND ep.WorkDayId = ?";
+		
+		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, workDayId });
+		if(verificationService.isListPopulated(jobs))
+			return jobs.get(0);
+		else return null;
+	}
+	
+
+	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
+		String sql = "SELECT * FROM work_day wd"
+					+ " JOIN employment_proposal_work_day ep ON wd.WorkDayId = ep.WorkDayId"
+					+ " WHERE ep.EmploymentProposalId = ?";
+		
+		return WorkDayMapper(sql, new Object[]{ employmentProposalId });
+	}
+
+	public List<String> getWorkDayDateStrings(int jobId) {
+		String sql = "SELECT d.Date FROM date d"
+					+ " JOIN work_day wd ON d.Id = wd.DateID"
+					+ " WHERE wd.JobId = ?";
+		
+		return jdbcTemplate.queryForList(sql, new Object[]{ jobId }, String.class);
+	}
+
 
 
 
