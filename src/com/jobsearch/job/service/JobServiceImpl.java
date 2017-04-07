@@ -1344,18 +1344,36 @@ public class JobServiceImpl {
 
 	}
 
-	public List<WorkDayDto> getWorkDayDtos_employeeViewWageProposal(int jobId, int applicationId, int userId) {
+	public List<WorkDayDto> getWorkDayDtos_byProposal(int applicationId) {
 		
 		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
-		List<WorkDay> workDays = getWorkDays(jobId);
+		
+		Application application = applicationService.getApplication(applicationId);
+		Job job = getJob_ByApplicationId(applicationId);
+		List<WorkDay> workDays = getWorkDays(job.getId());
 		
 		for(WorkDay workDay: workDays){
 			WorkDayDto workDayDto = new WorkDayDto();
 			
-			workDayDto.setWorkDay(workDay);
-			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(workDay.getWorkDayId(), applicationId));
-			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(userId, workDay.getWorkDayId()));
-			workDayDto.setApplicationDtos_conflictingApplications(applicationService.getApplicationDtos_Conflicting(userId, applicationId, Arrays.asList(workDay)));
+			int positionsFilled = applicationService.getCount_positionsFilledByDay(
+					workDay.getDateId(), job.getId());
+			if(positionsFilled < job.getPositionsPerDay()) workDayDto.setHasOpenPositions(true);
+			else workDayDto.setHasOpenPositions(false);
+			
+			workDayDto.setWorkDay(workDay);			
+			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(
+					workDay.getWorkDayId(), applicationId));
+			
+			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
+					application.getUserId(), workDay.getDateId()));
+			if(workDayDto.getJob_conflictingEmployment() != null)
+				workDayDto.setHasConflictingEmployment(true);
+			else workDayDto.setHasConflictingEmployment(false);
+			
+			
+			workDayDto.setApplicationDtos_conflictingApplications(
+					applicationService.getApplicationDtos_Conflicting(
+							application.getUserId(), applicationId, Arrays.asList(workDay)));
 			workDayDtos.add(workDayDto);
 		}
 		return workDayDtos;
@@ -1392,8 +1410,7 @@ public class JobServiceImpl {
 			if(!isConflicting) dateStrings_conflictsRemoved.add(dateString_toInspect);
 			
 		}
-		
-		
+				
 		return dateStrings_conflictsRemoved;
 	}
 
@@ -1409,12 +1426,22 @@ public class JobServiceImpl {
 			
 			List<JobSearchUser> users_employees = userService.getEmployeesByJob(jobId);
 			if(users_employees != null){
+				model.addAttribute("jobId", jobId);
 				model.addAttribute("users_employees", users_employees);
 			}else isValidRequest = false;
 
 		}else isValidRequest = false;
 		
 		return isValidRequest;
+	}
+
+	public void replaceEmployee(HttpSession session, int jobId, int userId) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			repository.replaceEmployee(jobId, userId);
+		}
+
+		
 	}
 	
 }

@@ -157,7 +157,7 @@
 	
 					</c:if>									
 
-					<th class="teal first">Proposal</th>
+					<th class="proposal teal first">Proposal</th>
 <!-- 					<th id="wageNegotiation_status" class="header-dropdown table-view tile-view" data-filter-attr="data-is-sent-proposal"> -->
 <!-- 						<span data-toggle-id="filterWageProposalStatus" > -->
 <!-- 							Status<span class="glyphicon glyphicon-menu-down"></span> -->

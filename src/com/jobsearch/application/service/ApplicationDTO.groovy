@@ -20,11 +20,16 @@ class ApplicationDTO {
 	List<Answer> answers
 	List<Integer> answerOptionIds_Selected
 	
+	
+	EmploymentProposalDTO previousProposal
+	EmploymentProposalDTO employmentProposalDto
+	
 	WageProposal currentWageProposal
 	List<WageProposal> wageProposals
 	
 	// ******************************
 	// Can this be removed????
+	// Phase out all WagePropsal objects and replace with EmploymentProposalDTO
 	// ******************************
 	WageProposal wageProposal
 		
@@ -60,8 +65,7 @@ class ApplicationDTO {
 		
 	List<String> dateStrings_unavailableWorkDays
 	
-	
-	EmploymentProposalDTO employmentProposalDto
+
 	
 	ApplicationDTO(){
 		this.applicantDto = new JobSearchUserDTO();

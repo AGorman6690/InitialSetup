@@ -16,8 +16,10 @@
 </c:if>
 	
 <div class="select-page-section-container">
-	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Information</span>
-	<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span>
+	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Post</span>
+	<c:if test="${context == 'find' }">
+		<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span>
+	</c:if>
 </div>
 
 

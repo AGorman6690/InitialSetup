@@ -17,7 +17,10 @@ public class WorkDayDto {
 	Integer count_positionsFilled
 	Integer count_totalPositions
 	
+	Boolean hasConflictingEmployment
+	Boolean hasOpenPositions
 	Boolean isProposed
 	Job job_conflictingEmployment
 	List<ApplicationDTO> applicationDtos_conflictingApplications
 }
+ 

@@ -69,6 +69,7 @@ function initCalendar_employerViewJob_applicantSummary() {
 //				html += "</div>"
 				
 				html = "<div class='employment-fraction'>" + workDayDto.count_positionsFilled + " / " + workDayDto.count_totalPositions + "</div>";
+				html += "<div class='col-cont'><div class='employment-col'></div></div>";
 				html += "<div class='application-count'>";
 				html += "<span>";
 				if(workDayDto.count_applicants > 0) html += workDayDto.count_applicants;

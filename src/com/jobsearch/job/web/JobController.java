@@ -323,5 +323,15 @@ public class JobController {
 			return "ReplaceAnEmployee";
 		else return SessionContext.get404Page();
 	}
+	
+	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
+	public String replaceEmployee(HttpSession session,
+									@PathVariable(value = "jobId") int jobId,
+									@PathVariable(value = "userId") int userId){	
+
+		jobService.replaceEmployee(session, jobId, userId);
+		return "";
+
+	}
 
 }

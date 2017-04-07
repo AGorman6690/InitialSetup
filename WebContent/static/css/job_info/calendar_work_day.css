@@ -47,10 +47,35 @@ td.job-work-day .start-and-end-times{
 
 }
 .job-info-calendar .calendar td{
-	padding: 2px ;
+	padding: 0px ;
 	vertical-align: top;
 	text-align: center;
 	height: 75px;
 	width: 70px;	
 }
 
+
+
+
+
+
+
+
+
+
+td.job-work-day.no-available-positions{
+	opacity: 1;
+	background: #3d8457;
+	color: #fff;
+	cursor: default;
+}
+td.job-work-day.has-conflicting-employment a,
+td.job-work-day.has-conflicting-employment .added-content p,
+td.job-work-day.no-available-positions a,
+td.job-work-day.no-available-positions .added-content p{
+	color: #fff;
+}
+td.job-work-day.has-conflicting-employment .added-content p,
+td.job-work-day.no-available-positions .added-content p{
+	font-weight: normal;
+}

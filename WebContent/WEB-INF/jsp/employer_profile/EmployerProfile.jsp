@@ -17,9 +17,9 @@
 <!-- 	<span class="select-page-section" data-perspective="employee">Employees</span> -->
 <!-- </div> -->
 
-
+<div class="left-bar"></div>
 <div class="container">
-
+	
 	<%@ include file="./Jobs_Current_Employer_NEW.jsp" %>
 
 </div>

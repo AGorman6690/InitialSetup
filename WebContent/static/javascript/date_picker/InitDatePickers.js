@@ -30,9 +30,14 @@ function initCalendar_showWorkDays($calendar, workDayDtos){
 			
 			if(workDayDto != undefined){				
 				classNameToAdd += "job-work-day";
-				if(workDayDto.isProposed == "1") classNameToAdd += " proposed-work-day";
+				
 				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment";
 				if(workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
+				
+				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions";
+				else{
+					if(workDayDto.isProposed == "1") classNameToAdd += " proposed-work-day";
+				}
 			}
 			return [true, classNameToAdd];
 		},

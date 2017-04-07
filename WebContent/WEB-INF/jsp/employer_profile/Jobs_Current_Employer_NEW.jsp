@@ -22,9 +22,9 @@
 					<th id="" >Start date</th>
 					<th id="" class="">End date</th>
 					<th id="" class="">Location</th>
-					<th id="" class="job-status first">Total applicants</th>								
-					<th id="" class="job-status">Offers waiting on applicant</th>
-					<th id="" class="job-status">Offers waiting on you</th>
+					<th id="" class="job-status first applicant-perspective">Total applicants</th>								
+					<th id="" class="job-status applicant-perspective">Offers waiting on applicant</th>
+					<th id="" class="job-status applicant-perspective">Offers waiting on you</th>
 					<th id="" class="job-status">Positions filled</th>
 					<th id="" class="job-status">Positions available</th>
 					<th id="" class="job-status"></th>
@@ -41,9 +41,6 @@
 						<td class="job-details"><span>${jobDto.job.stringStartDate }</span></td>
 						<td class="job-details"><span>${jobDto.job.stringEndDate }</span></td>
 						<td class="job-details job-location"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
-						
-						
-						
 						<td>	
 							<div class="new-container">
 								<c:choose>
@@ -56,7 +53,7 @@
 									</c:otherwise>
 								</c:choose>									
 								<c:if test="${jobDto.countApplications_new > 0 }">
-									<a class="new-offers-received" href="../job/${jobDto.job.id}/?c=waiting&d=applicants-new">
+									<a class="new" href="../job/${jobDto.job.id}/?c=waiting&d=applicants-new">
 										${jobDto.countApplications_new }</a>
 								</c:if>		
 							</div>																											

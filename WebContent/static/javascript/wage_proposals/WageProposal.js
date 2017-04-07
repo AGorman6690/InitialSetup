@@ -5,6 +5,20 @@ $(document).ready(function(){
 	
 //	initCalendar_proposedWorkDays();
 
+	$(".application-proposal-container .proposal-item.work-days p").click(function() {
+	
+		var applicationId = $(this).closest("tr").attr("data-application-id");
+		var $calendar = $(this).closest(".proposal-item").find(".calendar").eq(0);
+		
+		if($calendar.hasClass("hasDatepicker") == 0)
+			executeAjaxCall_getProposedWorkDays(applicationId, $calendar);
+		else
+			$calendar.closest(".mod").show();
+		
+		
+	})
+	
+	
 	
 	$("body").on("click", ".show-mod", function(){
 	
@@ -59,6 +73,24 @@ $(document).ready(function(){
 	})
 })
 
+function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/application/" + applicationId + "/proposed-work-days",
+		dataType: "json",
+		success: function(workDayDtos) {
+			broswerIsWaiting(false);
+			initCalendar_showWorkDays($calendar, workDayDtos);
+			$calendar.closest(".mod").show();
+		},
+		error: function() {
+			broswerIsWaiting(false);
+		}
+	})
+}
 
 function initCalendar_proposedWorkDays(workDayDtos){
 	

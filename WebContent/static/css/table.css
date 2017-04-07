@@ -127,3 +127,19 @@ td.left *{
 }
 
 
+.main-table-style.shadow > thead > tr th.job-status{
+/*     padding-top: 8px; */
+/*     border-top: 2px solid #163b3d; */
+/*     border-bottom: 2px solid #163b3d; */
+/*     color: #000; */
+/*     font-weight: bold; */
+/*     background: #163b3d; */
+	background: #197994;	
+    color: #fff;
+}
+.main-table-style.shadow > thead > tr > th:not(.job-status){
+	font-weight: bold;
+}
+.main-table-style.shadow > thead > tr > th.job-status.first{
+	border-top-left-radius: 7px;
+}

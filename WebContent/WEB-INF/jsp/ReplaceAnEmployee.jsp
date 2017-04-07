@@ -8,7 +8,7 @@
 		<button class="sqr-btn teal" data-toggle-id="employees">Selected An Employee To Replace</button>
 		<div id="employees" class="dropdown-style">
 			<c:forEach items="${users_employees }" var="user">
-				<p>${user.firstName } ${user.lastName }</p>
+				<p data-user-id="${user.userId }">${user.firstName } ${user.lastName }</p>
 			</c:forEach>
 		</div>
 	</div>
@@ -31,3 +31,4 @@
 		</div>
 	</div>
 </div>
+<input id="jobId" type="hidden" value="${jobId }">

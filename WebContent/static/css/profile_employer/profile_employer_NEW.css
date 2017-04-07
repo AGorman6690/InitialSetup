@@ -10,12 +10,12 @@
 a.new{
     position: absolute;
     top: -21px;
-    right: -39px;
+    right: -29px;
     font-weight: bold;
     font-size: 16px;
-    border: 3px solid #bd3131;
+    border: 2px solid #bd3131;
     color: #bd3131;
-    padding: 0px 6px;
+    padding: 0px 4px;
     /* border-radius: 23px; */
     /* text-decoration: underline; */
 }
@@ -23,17 +23,23 @@ a.new{
 #table_jobsWaitingToStart thead tr th.job-status.first{
 	border-top-left-radius: 7px;
 }
-#table_jobsWaitingToStart thead tr th.job-status{
+#table_jobsWaitingToStart thead tr th.job-status.applicant-perspective{
+	background: #429cb5;	
+}
+/* #table_jobsWaitingToStart thead tr th.job-status{ */
 /*     padding-top: 8px; */
 /*     border-top: 2px solid #163b3d; */
 /*     border-bottom: 2px solid #163b3d; */
 /*     color: #000; */
 /*     font-weight: bold; */
 /*     background: #163b3d; */
-	background: #197994;	
-    color: #fff;
+/* 	background: #197994;	 */
+/*     color: #fff; */
+/* } */
+#table_jobsWaitingToStart thead tr th:not(.job-status){
+	font-weight: bold;
+	white-space: nowrap;
 }
-
 #table_jobsWaitingToStart thead tr{
 /*     box-shadow: 3px 3px 5px #e0cfcf; */
     box-shadow: 3px 3px 5px #848484;
@@ -44,9 +50,9 @@ table.main-table-style thead {
 }
 
 #table_jobsWaitingToStart thead tr th{
-    color: #000;
+/*     color: #000; */
 /*     font-weight: bold; */
-    letter-spacing: 0.12em;
+/*     letter-spacing: 0.12em; */
 }
 
 td.job-location span{
@@ -58,3 +64,12 @@ td button.replace-an-employee{
 	width: 140px;
 }
 
+#table_jobsWaitingToStart td a{
+	padding: 20px;
+}
+#table_jobsWaitingToStart td a:hover{
+	background: #efefef;
+	border: 1px solid #cacaca;
+	text-decoration: none;
+	border-radius: 60px;
+}

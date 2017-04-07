@@ -28,12 +28,6 @@ td div.job.application{
 	width: 100%
 }
 
-td.alert{
-/* 	background: #a75454;	 */
-}
-td.alert .proposal-item > p{
-	color: #fff;
-}
 
 #applications_calendar_view .calendar td{
     position: relative;
@@ -107,6 +101,9 @@ td.alert .proposal-item > p{
 	
 }
 
+th.proposal{
+	width: 580px;
+}
 
 
 

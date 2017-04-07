@@ -48,114 +48,118 @@
 			</div>
 
 			<div class="proposal work-day-container pad-top">		
-				<div class="work-day-dtos">
-					<c:forEach items="${applicationDto.jobDto.workDayDtos }" var="workDayDto">
-						<div class="work-day-dto" data-date="${workDayDto.workDay.stringDate }"
-							 data-is-proposed="${workDayDto.isProposed == true ? '1' : '0'}"
-							 data-has-conflicting-applications=${!empty workDayDto.applicationDtos_conflictingApplications ? '1' : '0' }
-							 data-has-conflicting-employment=${!empty workDayDto.job_conflictingEmployment ? '1' : '0' }>
-						${workDayDto.isProposed}
-						 </div>
-					</c:forEach>	
-				</div>													
-				<h1>Work Days</h1>
-				<c:if test="${user.profileId == 1 }">
-					<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0  ||
-									applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0  ||
-									applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer.size() > 0 }">
-							
-						<div class="conflicting-applications">
-							<p class="if-you-accept">If you <span class="bold">accept</span> this proposal, your following applications:</p>
-							<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0 }">
-								<div class="disposition">
-									<h6>will be <span class="bold">removed</span><span class="why">why?</span></h6>
-									<div class="applications">
-										<ul>
-											<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeRemoved }"
-												var="applicationDto">
-												<li>${applicationDto.jobDto.job.jobName }</li>
-											</c:forEach>
-										</ul>
+<!-- 				<div class="work-day-dtos"> -->
+<%-- 					<c:forEach items="${applicationDto.jobDto.workDayDtos }" var="workDayDto"> --%>
+<%-- 						<div class="work-day-dto" data-date="${workDayDto.workDay.stringDate }" --%>
+<%-- 							 data-is-proposed="${workDayDto.isProposed == true ? '1' : '0'}" --%>
+<%-- 							 data-has-conflicting-applications=${!empty workDayDto.applicationDtos_conflictingApplications ? '1' : '0' } --%>
+<%-- 							 data-has-conflicting-employment=${!empty workDayDto.job_conflictingEmployment ? '1' : '0' }> --%>
+<%-- 						${workDayDto.isProposed} --%>
+<!-- 						 </div> -->
+<%-- 					</c:forEach>	 --%>
+<!-- 				</div>													 -->
+				<h1 data-toggle-id="work-day-proposal-input">Work Days<span class="glyphicon glyphicon-menu-down"></span></h1>
+				<div id="work-day-proposal-input" class="proposal-input">
+					<c:if test="${user.profileId == 1 }">
+						<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0  ||
+										applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0  ||
+										applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer.size() > 0 }">
+								
+							<div class="conflicting-applications">
+								<p class="if-you-accept">If you <span class="bold">accept</span> this proposal, your following applications:</p>
+								<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0 }">
+									<div class="disposition">
+										<h6>will be <span class="bold">removed</span><span class="why">why?</span></h6>
+										<div class="applications">
+											<ul>
+												<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeRemoved }"
+													var="applicationDto">
+													<li>${applicationDto.jobDto.job.jobName }</li>
+												</c:forEach>
+											</ul>
+										</div>
 									</div>
-								</div>
-							</c:if>
-							<c:if test="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0 }">
-								<div class="disposition">
-									<h6>will be <span class="bold">modified</span><span class="why">why?</span></h6>
-									<div class="applications">
-										<ul>
-											<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer }"
-		 										var="applicationDto">
-		 										<li>${applicationDto.jobDto.job.jobName }</li>
-											</c:forEach>
-										</ul>
+								</c:if>
+								<c:if test="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0 }">
+									<div class="disposition">
+										<h6>will be <span class="bold">modified</span><span class="why">why?</span></h6>
+										<div class="applications">
+											<ul>
+												<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer }"
+			 										var="applicationDto">
+			 										<li>${applicationDto.jobDto.job.jobName }</li>
+												</c:forEach>
+											</ul>
+										</div>
 									</div>
-								</div>
-							</c:if>
-							<c:if test="${applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer.size() > 0 }">
-								<div class="disposition">
-									<h6>will be <span class="bold">modified</span> to resolve the time conflicts and <span class="bold">sent back</span> to the employer<span class="why">why?</span></h6>
-									<div class="applications">
-										<ul>
-											<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer }"
-		 										var="applicationDto">
-												<li>${applicationDto.jobDto.job.jobName }</li>
-		 									</c:forEach>
-	 									</ul>
+								</c:if>
+								<c:if test="${applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer.size() > 0 }">
+									<div class="disposition">
+										<h6>will be <span class="bold">modified</span> to resolve the time conflicts and <span class="bold">sent back</span> to the employer<span class="why">why?</span></h6>
+										<div class="applications">
+											<ul>
+												<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer }"
+			 										var="applicationDto">
+													<li>${applicationDto.jobDto.job.jobName }</li>
+			 									</c:forEach>
+		 									</ul>
+										</div>
 									</div>
-								</div>
-							</c:if>												
-						</div>
-					</c:if>
-				</c:if>
-				<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
-					<div class="button-group">
-						<button class="sqr-btn gray-2 accept">Accept</button>
-						<button class="sqr-btn gray-2 counter">Counter</button>
-					</div>	
-					<div class="confirmation-container">
-						<p class="accept">You are <span class="bold">accepting</span> the following work days</p>
-						<p class="counter">You are <span class="bold">proposing</span> the following work days</p>
-					</div>																										
-	<%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
-					<div class="proposal-container">						
-						<div class="calendar-container wage-proposal-calendar hide-prev-next read-only">
-							<div class="calendar"
-								data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
-								data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
-							</div>										
-						</div>
-					</div>
-					<div class="counter-container">									
-						<div class="job-info-calendar calendar-container wage-proposal-calendar hide-prev-next">									
-							<div class="calendar"
-								data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
-								data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
+								</c:if>												
 							</div>
-						</div>		
-					</div>	
-				</c:if>
+						</c:if>
+					</c:if>
+					<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
+						<div class="button-group">
+							<button class="sqr-btn gray-2 accept">Accept</button>
+							<button class="sqr-btn gray-2 counter">Counter</button>
+						</div>	
+						<div class="confirmation-container">
+							<p class="accept">You are <span class="bold">accepting</span> the following work days</p>
+							<p class="counter">You are <span class="bold">proposing</span> the following work days</p>
+						</div>																										
+		<%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
+						<div class="proposal-container">						
+							<div class="calendar-container wage-proposal-calendar hide-prev-next read-only">
+								<div class="calendar"
+									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
+									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
+								</div>										
+							</div>
+						</div>
+						<div class="counter-container">									
+							<div class="job-info-calendar calendar-container wage-proposal-calendar hide-prev-next">									
+								<div class="calendar"
+									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
+									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
+								</div>
+							</div>		
+						</div>	
+					</c:if>
+				</div>
 			</div>
 			<c:if test="${user.profileId == 2 }">
-				<div class="expiration-container">
-					<h1>This Proposal Expires In</h1>
-					<div class="proposal set-expiration">
-						<div class="time-container">
-							<p>Days</p>
-							<input class="days" type="text" value="0"/>
+				<div class="proposal expiration-container">
+					<h1 data-toggle-id="expiration-input-cont">This Proposal Expires In<span class="glyphicon glyphicon-menu-down"></span></h1>
+					<div id="expiration-input-cont" class="proposal-input">
+						<div class="proposal set-expiration">
+							<div class="time-container">
+								<p>Days</p>
+								<input class="days" type="text" value="0"/>
+							</div>
+							<div class="time-container">
+								<p>Hours</p>
+								<input class="hours" type="text" value="0"/>
+							</div>
+							<div class="time-container">
+								<p>Minutes</p>
+								<input class="minutes" type="text" value="0"/>
+							</div>									
 						</div>
-						<div class="time-container">
-							<p>Hours</p>
-							<input class="hours" type="text" value="0"/>
-						</div>
-						<div class="time-container">
-							<p>Minutes</p>
-							<input class="minutes" type="text" value="0"/>
-						</div>									
+						<div class="proposal confirmation-container">
+							<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>						
+						</div>		
 					</div>
-					<div class="proposal confirmation-container">
-						<p>Your proposal will expire in <span class="bold confirm-expiration"></span></p>						
-					</div>		
 				</div>
 			</c:if>	
 			<div class="action-button-container">

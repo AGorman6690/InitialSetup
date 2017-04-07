@@ -1,5 +1,7 @@
 package com.jobsearch.application.web;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WageProposalDTO;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -69,6 +72,17 @@ public class ApplicationController {
 		applicationService.setModel_ViewCurrentProposal(model, session, applicationId);
 		return "/wage_proposal/AjaxResponse_Proposal";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/application/{applicationId}/proposed-work-days", method = RequestMethod.GET)
+	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "applicationId") int applicationId,
+													HttpSession session) {
+		
+		List<WorkDayDto> workDayDtos = applicationService.getWorkDayDtos_proposedWorkDays(applicationId, session);
+		
+		return JSON.stringify(workDayDtos);
+	}
+	
 	
 	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)
 	@ResponseBody
