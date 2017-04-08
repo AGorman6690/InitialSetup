@@ -28,6 +28,7 @@ import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.model.EmployeeSearch;
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
@@ -1082,6 +1083,11 @@ public class JobServiceImpl {
 			jobDto.setJob(job);
 			jobDto.setWorkDays(this.getWorkDays(job.getId()));
 			
+			Application application = applicationService.getApplication(job.getId(), userId_employee);
+			EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(
+					application.getApplicationId());
+			jobDto.setWorkDayDtos(getWorkDayDtos_byProposal(currentProposal));
+			
 			jobDtos.add(jobDto);
 		}
 		
@@ -1344,36 +1350,40 @@ public class JobServiceImpl {
 
 	}
 
-	public List<WorkDayDto> getWorkDayDtos_byProposal(int applicationId) {
+	public List<WorkDayDto> getWorkDayDtos_byProposal(EmploymentProposalDTO proposal) {
 		
 		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
 		
-		Application application = applicationService.getApplication(applicationId);
-		Job job = getJob_ByApplicationId(applicationId);
-		List<WorkDay> workDays = getWorkDays(job.getId());
+		Application application = applicationService.getApplication(proposal.getApplicationId());
+		Job job = getJob_ByApplicationId(proposal.getApplicationId());
+//		List<WorkDay> workDays = getWorkDays_byProposalId(proposal.getEmploymentProposalId());
+		List<WorkDay> workDays = getWorkDays(getJob_ByApplicationId(proposal.getApplicationId()).getId());
 		
 		for(WorkDay workDay: workDays){
 			WorkDayDto workDayDto = new WorkDayDto();
 			
+			// Positions filled
 			int positionsFilled = applicationService.getCount_positionsFilledByDay(
 					workDay.getDateId(), job.getId());
 			if(positionsFilled < job.getPositionsPerDay()) workDayDto.setHasOpenPositions(true);
 			else workDayDto.setHasOpenPositions(false);
 			
+			// Is proposed
 			workDayDto.setWorkDay(workDay);			
 			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(
-					workDay.getWorkDayId(), applicationId));
+					workDay.getWorkDayId(), proposal.getApplicationId()));
 			
+			// Conflicting employment
 			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
 					application.getUserId(), workDay.getDateId()));
 			if(workDayDto.getJob_conflictingEmployment() != null)
 				workDayDto.setHasConflictingEmployment(true);
 			else workDayDto.setHasConflictingEmployment(false);
 			
-			
+			// Conflicting applications
 			workDayDto.setApplicationDtos_conflictingApplications(
 					applicationService.getApplicationDtos_Conflicting(
-							application.getUserId(), applicationId, Arrays.asList(workDay)));
+							application.getUserId(), proposal.getApplicationId(), Arrays.asList(workDay)));
 			workDayDtos.add(workDayDto);
 		}
 		return workDayDtos;

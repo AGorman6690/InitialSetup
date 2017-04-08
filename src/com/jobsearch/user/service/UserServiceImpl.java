@@ -1012,11 +1012,14 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
 	
-		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(sessionUser.getUserId());
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
+		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(
+				sessionUser.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(
+				applications, session);
 
 		
-		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(sessionUser.getUserId());
+		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(
+				sessionUser.getUserId());
 		
 		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
 		
@@ -1026,7 +1029,8 @@ public class UserServiceImpl {
 			
 	}
 
-	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
+	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(
+			int jobId, String dateString) {
 		
 		EmployeeSearch employeeSearch = new EmployeeSearch();
 		
@@ -1036,7 +1040,8 @@ public class UserServiceImpl {
 		
 		employeeSearch.setJobDto(jobDto_findEmployees);
 //		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
-		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
+		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(
+				jobId);
 		
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
 		

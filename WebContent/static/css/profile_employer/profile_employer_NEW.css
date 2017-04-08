@@ -10,7 +10,7 @@
 a.new{
     position: absolute;
     top: -21px;
-    right: -29px;
+    right: -12px;
     font-weight: bold;
     font-size: 16px;
     border: 2px solid #bd3131;
@@ -48,7 +48,9 @@ a.new{
 table.main-table-style thead {
 	border-bottom: 0;
 }
-
+#table_jobsWaitingToStart tbody tr:hover{
+	background: #f4f4f4;
+}
 #table_jobsWaitingToStart thead tr th{
 /*     color: #000; */
 /*     font-weight: bold; */
@@ -64,12 +66,17 @@ td button.replace-an-employee{
 	width: 140px;
 }
 
-#table_jobsWaitingToStart td a{
+#table_jobsWaitingToStart td a.accent{
 	padding: 20px;
 }
-#table_jobsWaitingToStart td a:hover{
-	background: #efefef;
+#table_jobsWaitingToStart td a.accent:hover{
+	background: #e4e4e4;
 	border: 1px solid #cacaca;
 	text-decoration: none;
 	border-radius: 60px;
+}
+#table_jobsWaitingToStart td a.new:hover{
+	background: #e4e4e4;
+/* 	border: 1px solid #cacaca; */
+	text-decoration: none;
 }

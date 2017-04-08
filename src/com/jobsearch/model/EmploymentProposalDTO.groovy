@@ -23,6 +23,8 @@ class EmploymentProposalDTO {
 	List<String> dateStrings_proposedDates
 	Boolean isProposedToSessionUser
 	
+	List<WorkDayDto> proposedWorkDays
+	
 	// *******************************************************************
 	// *******************************************************************
 	// I believe these statuses can be eliminated not that IsCurrentProposal is a column,

@@ -106,7 +106,7 @@ public class ApplicationServiceImpl {
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
-											application.getApplicationId()));
+											applicationDto.getEmploymentProposalDto()));
 			
 			// **********************************************************************
 			// **********************************************************************
@@ -553,6 +553,14 @@ public class ApplicationServiceImpl {
 	public void resolveApplicationConflicts(HttpSession session, Integer reference_applicationId,
 											List<WorkDay> workDays_toFindConflictsWith) {
 	
+		// **************************************************************
+		// **************************************************************
+		// Design note: two of the three below "for" loops are very, very similar.
+		// The only difference is that the ProposedTo and ProposedBy are switched.
+		// Consider combining these somehow.
+		// **************************************************************
+		// **************************************************************
+		
 
 		List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
 												SessionContext.getUser(session).getUserId(),
@@ -624,8 +632,9 @@ public class ApplicationServiceImpl {
 				newProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
 						currentProposal.getDateStrings_proposedDates(), workDays_toFindConflictsWith));				
 			
+				updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(currentProposal.getEmploymentProposalId());
 				insertEmploymentProposal(newProposal);				
-				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
+//				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
 								
 			}
 		}
@@ -745,7 +754,7 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setApplication(application);
 			
-			// Wage proposal
+			// Proposal
 			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(application.getApplicationId()));
 			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
 					getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
@@ -753,12 +762,14 @@ public class ApplicationServiceImpl {
 					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
 					application.getApplicationId()));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			applicationDto.getEmploymentProposalDto().setProposedWorkDays(
+					jobService.getWorkDayDtos_byProposal(applicationDto.getEmploymentProposalDto()));
 			
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
 			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
-						application.getApplicationId()));
+						applicationDto.getEmploymentProposalDto()));
 			applicationDto.getJobDto().setMilliseconds_startDate(
 										applicationDto.getJobDto().getJob().getStartDate_local().toEpochDay());
 			applicationDto.getJobDto().setMilliseconds_endDate(
@@ -1255,10 +1266,13 @@ public class ApplicationServiceImpl {
 			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(applicationId));
 			applicationDto.setWageProposals(getWageProposals(applicationId));
 			
+			// 
+			
+			
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
-											applicationId));
+											applicationDto.getEmploymentProposalDto()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 			
 			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
@@ -1293,7 +1307,7 @@ public class ApplicationServiceImpl {
 			( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
 			verificationService.didSessionUserPostJob(session, jobService.getJob_ByApplicationId(applicationId)) ) ){
 			
-			return jobService.getWorkDayDtos_byProposal(applicationId);	
+			return jobService.getWorkDayDtos_byProposal(getCurrentEmploymentProposal(applicationId));	
 		}else return null;
 	}
 

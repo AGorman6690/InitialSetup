@@ -32,6 +32,27 @@ $(document).ready(function(){
 //    	setRateCriterionValue($(this), "0");
       });
 
+  
 
+    $("#employees p").click(function(){
+    	
+    	showEmployee($(this));
+    	
+    	
+    })
+    
+    
+    initPage();
 	
 })
+
+function initPage() {
+//	var s = $("#employees p.select-on-load");
+	$("#employees p.select-on-load").eq(0).click();
+}
+function showEmployee($e) {
+	highlightArrayItem($e, $("#employees p"), "selected");
+	var name = $e.attr("data-name");
+	$("#selected-employee").html(name);
+	
+}

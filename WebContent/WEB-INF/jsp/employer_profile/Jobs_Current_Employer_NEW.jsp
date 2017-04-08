@@ -103,7 +103,7 @@
 						</td>	
 						<td>
 							<c:if test="${jobDto.countEmployees_hired == jobDto.job.positionsPerDay }">
-								<a href="/JobSearch/job/${jobDto.job.id}/replace-employee" class="sqr-btn replace-an-employee">Replace an employee</a>
+								<a href="/JobSearch/job/${jobDto.job.id}/replace-employee" class="accent sqr-btn replace-an-employee">Replace an employee</a>
 							</c:if>
 						</td>
 					</tr>

@@ -15,8 +15,10 @@
 				 data-job-id="${applicationDto.jobDto.job.id}"
 				 data-job-status="${applicationDto.jobDto.job.status}">
 						
-			<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
-				<div data-date="${workDay.stringDate }"></div>
+			<c:forEach items="${applicationDto.jobDto.workDayDtos }" var="workDay">
+				<c:if test="${workDay.isProposed }">
+					<div data-date="${workDay.workDay.stringDate }"></div>
+				</c:if>
 			</c:forEach>		
 		</div>
 	</c:forEach>				
@@ -29,8 +31,10 @@
 				 data-job-id="${jobDto.job.id}"
 				 data-job-name="${jobDto.job.jobName}">
 						
-			<c:forEach items="${jobDto.workDays }" var="workDay">
-				<div data-date="${workDay.stringDate }"></div>
+			<c:forEach items="${jobDto.workDayDtos }" var="workDay">
+				<c:if test="${workDay.isProposed }">
+					<div data-date="${workDay.workDay.stringDate }"></div>
+				</c:if>
 			</c:forEach>		
 		</div>
 	</c:forEach>		

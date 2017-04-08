@@ -79,8 +79,18 @@ function initCalendar_employerViewJob_applicantSummary() {
 					
 				$(td).append(html);
 				var $addedDiv = $(td).find(".application-count");
-				var maxHeightPercentage = 32;
-				$addedDiv.css("height", maxHeightPercentage * ( workDayDto.count_applicants / max ) + "%");
+				var maxHeightPercentage = 73;
+				var minHeight_compensation = 0;
+				var minHeight = 19;
+				
+//				if(workDayDto.count_applicants > 1) minHeight_compensation = 19;
+//				else minHeight_compensation = 0;
+				 
+//				var oneApplicantHeight = minHeight_compensation + maxHeightPercentage * ( 1 / max );
+//				if(oneApplicantHeight < minHeight) minHeight_compensation = minHeight;
+//				else minHeight_compensation = 0;
+				
+				$addedDiv.css("height", minHeight_compensation + maxHeightPercentage * ( workDayDto.count_applicants / max ) + "%");
 				
 				var $tr = $(td).closest("tr");
 				if($tr.hasClass("show-row") == 0) $tr.addClass("show-row");
