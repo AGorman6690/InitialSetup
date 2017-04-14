@@ -1,5 +1,5 @@
 var $calendar_applicationWorkDays;
-
+//var workDayDtos = [];
 
 $(document).ready(function() {
 	
@@ -25,43 +25,14 @@ $(document).ready(function() {
 		
 	})
 
-	initCalendar_jobInfo_workDays();
+	
+	var workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+	initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos);
 	initCalendar_apply_workDays();
 
-})
+}) 
 
 
-function initCalendar_jobInfo_workDays(){
-
-	var workDays = getDateFromContainer($("#work-days-calendar-container .work-days"));
-	var $calendar = $("#work-days-calendar-container .calendar");
-	var firstDate = getMinDate($calendar)
-
-	$calendar.datepicker({
-		minDate: firstDate,
-		numberOfMonths: getNumberOfMonths($calendar),
-		beforeShowDay: function(date){
-			if(doesDateArrayContainDate(date, workDays)) return [true, "active111"];
-			else return [true, ""];
-		},
-		afterShow: function(){
-			var html = "";
-			$(workDays).each(function(){
-				
-				var td = getTdByDate($calendar, this);
-				
-				html = "<div class='start-and-end-times'>";
-				html += "<p>7:30a</p><p>5:30p</p>";
-				html += "</div>"
-				
-				$(td).append(html);
-			})				
-		}
-	})
-	
-	$calendar.datepicker("setDate", firstDate);
-
-}
 
 function initCalendar_apply_workDays(){
 	

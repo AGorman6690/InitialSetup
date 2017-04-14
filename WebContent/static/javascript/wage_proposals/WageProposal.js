@@ -95,9 +95,6 @@ function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 function initCalendar_proposedWorkDays(workDayDtos){
 	
 	$(".work-day-container .calendar").each(function(){
-//		var $responseContainer = $(this).closest(".response-container"); 				
-//		var workDayDtos = getWorkDayDtosFromContainer($responseContainer.find(".work-day-dtos"));
-
 		initCalendar_showWorkDays($(this), workDayDtos);	
 	})
 }

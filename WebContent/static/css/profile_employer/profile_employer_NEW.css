@@ -9,14 +9,16 @@
 }
 a.new{
     position: absolute;
-    top: -21px;
-    right: -12px;
-    font-weight: bold;
+    top: -23px;
+    right: -7px;
+/*     font-weight: bold; */
     font-size: 16px;
     border: 2px solid #bd3131;
-    color: #bd3131;
-    padding: 0px 4px;
-    /* border-radius: 23px; */
+    background: #bd3131;
+    color: #fff;
+/*     color: #bd3131; */
+    padding: 0px 5px;
+    border-radius: 23px;
     /* text-decoration: underline; */
 }
 
@@ -26,6 +28,10 @@ a.new{
 #table_jobsWaitingToStart thead tr th.job-status.applicant-perspective{
 	background: #429cb5;	
 }
+#table_jobsWaitingToStart thead tr th#offers-waiting-on.job-status.applicant-perspective{
+	background: #2089a7;	
+}
+
 /* #table_jobsWaitingToStart thead tr th.job-status{ */
 /*     padding-top: 8px; */
 /*     border-top: 2px solid #163b3d; */
@@ -79,4 +85,26 @@ td button.replace-an-employee{
 	background: #e4e4e4;
 /* 	border: 1px solid #cacaca; */
 	text-decoration: none;
+	color: #bd3131;
+}
+
+th#offers-waiting-on span{
+	display: inline-block;
+    width: 50%;
+}
+th#offers-waiting-on{
+	width: 300px;
+	
+}
+th{
+/* 	width: 150px; */
+}
+td.job-name{
+	position: relative;
+}
+td.job-name .glyphicon-pencil{
+    position: absolute;
+    top: 8px;
+    left: 5px;
+    color: #bbb;
 }

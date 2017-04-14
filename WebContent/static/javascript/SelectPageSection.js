@@ -3,7 +3,7 @@
 
 $(document).ready(function(){
 	
-	$(".select-page-section-container .select-page-section:not(.override-click-event)").click(function(){
+	$(".select-page-section:not(.override-click-event)").click(function(){
 
 		
 		

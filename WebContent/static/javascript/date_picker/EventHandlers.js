@@ -16,6 +16,13 @@ $(function() {
 
 
 function onSelect_multiDaySelect_withRange(dateText, days){
+	
+	// **************************************
+	// **************************************
+	// Phase this out
+	// **************************************
+	// **************************************
+	
 	    
         var date = new Date(dateText);
         
@@ -31,6 +38,22 @@ function onSelect_multiDaySelect_withRange(dateText, days){
         				
 }
 
+function onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos){
+    
+    var date = new Date(dateText);
+
+    if(workDayDtos.length == 1){
+    	if(date.getTime() == workDayDtos[0].date.getTime())
+    		workDayDtos = removeWorkDayDto(date, workDayDtos);
+    	else attemptToAddDateRange_workDayDtos(date, workDayDtos);
+    }
+    else {
+    	workDayDtos = addOrRemoveWorkDayDtoByDate(date, workDayDtos);      	
+    }
+    
+    return workDayDtos;
+    				
+}
 
 function beforeShowDay_ifSelected(date, days){
 	if(isDateAlreadySelected(date, days)) return [true, "active111"];

@@ -1,4 +1,4 @@
-<%@ include file="./includes/Header.jsp"%>
+<%@ include file="../includes/Header.jsp"%>
 <link href="/JobSearch/static/css/replace_an_employee.css" rel="stylesheet" />	
 <script src="<c:url value="/static/javascript/ReplaceAnEmployee.js" />"></script>		
 

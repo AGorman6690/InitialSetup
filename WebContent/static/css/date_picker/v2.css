@@ -34,3 +34,26 @@
 .v2.hide-unused-rows tbody tr.show-row{
 	display: table-row;
 }
+.v2 .start-and-end-times{
+	color: #000;   
+	padding: 2px;
+	text-align: center;
+	font-size: 13px;
+	position: relative;
+	border: 2px solid #163b3d;	
+}
+.v2 .start-and-end-times p{
+	margin: 2px;
+/* 	font-weight: bold */
+}
+.v2 .ui-datepicker-inline.ui-datepicker-multi{
+	width: 1100px !important;
+}
+.v2 .calendar{
+/* 	margin: auto; */
+}
+.v2 .ui-datepicker-inline{
+/* 	width: 500px !important; */
+	width: 500px;
+	margin: auto;
+}

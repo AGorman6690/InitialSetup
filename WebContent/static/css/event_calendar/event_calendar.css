@@ -76,6 +76,7 @@ td.employment .start-and-end-times{
 	font-size: 18px;
 	font-weight: bold;
 	color: #197994;
+	top: -300px;
 }
 .ui-datepicker-group-middle .ui-datepicker-title{
 	font-size:22px;
@@ -141,7 +142,20 @@ td.application-hover .application-count{
 }
 
 
-
+#event-calendar-mod .ui-datepicker-today{
+	background: #cacaca;
+}
 #event-calendar-mod{
 	display: block;
+}
+#event-calendar-mod .mod-header{
+	background: #f4f4f4;
+}
+#event-calendar-mod .ui-datepicker-group-first,
+#event-calendar-mod .ui-datepicker-group-last{
+	position: absolute;
+	top: 300px;
+}
+#event-calendar-mod .ui-datepicker-group-middle{
+	margin-left: 300px;
 }

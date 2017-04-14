@@ -738,6 +738,7 @@ public class UserServiceImpl {
 	}
 
 	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
+
 		
 		// Query the database
 		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
@@ -745,13 +746,16 @@ public class UserServiceImpl {
 		// Create user dtos
 		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();		
 		for(JobSearchUser employee : employees){
+			
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
-			employeeDto.setUser(employee);
 			
-			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));
-//			employeeDto.setRatingDto(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
-			employeeDto.setWage(applicationService.getWage(employee.getUserId(), jobId));
-			
+			employeeDto.setUser(employee);			
+			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));			
+			Application application = applicationService.getApplication(jobId, employee.getUserId());
+			employeeDto.setAcceptedProposal(applicationService.getCurrentEmploymentProposal(
+					application.getApplicationId()));
+			employeeDto.setTotalPayment(applicationService.getTotalPayment(employeeDto.getAcceptedProposal()));
+
 			employeeDtos.add(employeeDto);			
 		}
 		
@@ -1021,11 +1025,11 @@ public class UserServiceImpl {
 		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(
 				sessionUser.getUserId());
 		
-		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
+//		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
 		
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("jobDtos_employment", jobDtos_employment);
-		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
+//		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
 			
 	}
 

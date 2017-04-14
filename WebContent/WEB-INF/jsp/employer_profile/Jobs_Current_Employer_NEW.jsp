@@ -7,33 +7,32 @@
 	<c:otherwise>
 		<table id="table_jobsWaitingToStart" class="main-table-style shadow">
 			<thead>
-<!-- 				<tr class=""> -->
-<!-- 					<th id="" ></th> -->
-<!-- 					<th id="" ></th> -->
-<!-- 					<th id="" class=""></th> -->
-<!-- 					<th id="" class=""></th> -->
-<!-- 					<th id=""></th>								 -->
-<!-- 					<th id="" colspan="2">Offers</th>					 -->
-<!-- 					<th id="" colspan="2">Positions</th> -->
-					
-<!-- 				</tr> -->
 				<tr class="">
 					<th id="job-name" ></th>
 					<th id="" >Start date</th>
 					<th id="" class="">End date</th>
 					<th id="" class="">Location</th>
-					<th id="" class="job-status first applicant-perspective">Total applicants</th>								
-					<th id="" class="job-status applicant-perspective">Offers waiting on applicant</th>
-					<th id="" class="job-status applicant-perspective">Offers waiting on you</th>
+					<th id="" class="job-status first applicant-perspective">Total applicants</th>		
+					<th id="offers-waiting-on" colspan="2" class="job-status applicant-perspective">
+						<div>
+							<p>Offers waiting on...</p>
+							<p><span>Applicant</span><span>You</span></p>
+						</div>
+					</th>						
+<!-- 					<th id="" class="job-status applicant-perspective">Offers waiting on applicant</th> -->
+<!-- 					<th id="" class="job-status applicant-perspective">Offers waiting on you</th> -->
 					<th id="" class="job-status">Positions filled</th>
 					<th id="" class="job-status">Positions available</th>
-					<th id="" class="job-status"></th>
+
 				</tr>
 			</thead>
 			<tbody>
 				<c:forEach items="${jobDtos }" var="jobDto">
 					<tr id="${jobDto.job.id }">
-						<td class="job-details perm1 perm perm-first">
+						<td class="job-name job-details perm1 perm perm-first">
+							<span class="glyphicon glyphicon-pencil">
+								<a class="accent" href="/JobSearch/job/${jobDto.job.id}/edit" ></a>
+							</span>
 							<a class="accent" href="../job/${jobDto.job.id}?c=waiting&p=2&d=all-apps" >
 								${jobDto.job.jobName }
 							</a>
@@ -101,11 +100,11 @@
 							${jobDto.job.positionsPerDay }
 										
 						</td>	
-						<td>
-							<c:if test="${jobDto.countEmployees_hired == jobDto.job.positionsPerDay }">
-								<a href="/JobSearch/job/${jobDto.job.id}/replace-employee" class="accent sqr-btn replace-an-employee">Replace an employee</a>
-							</c:if>
-						</td>
+<!-- 						<td> -->
+<%-- 							<c:if test="${jobDto.countEmployees_hired == jobDto.job.positionsPerDay }"> --%>
+<%-- 								<a href="/JobSearch/job/${jobDto.job.id}/replace-employee" class="accent sqr-btn replace-an-employee">Replace an employee</a> --%>
+<%-- 							</c:if> --%>
+<!-- 						</td> -->
 					</tr>
 				</c:forEach>
 			</tbody>

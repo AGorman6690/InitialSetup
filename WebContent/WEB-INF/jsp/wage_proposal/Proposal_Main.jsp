@@ -2,15 +2,90 @@
 
 <div class="application-proposal-container ${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'action-required' : '' }">
 	<div class="expiration-time-cont"> 
+		
 		<c:if test="${applicationDto.previousProposal.isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
 			<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment: time conflicts resolved</p>
 		</c:if>	
+		
 		<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
 			<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select days: time conflicts resolved</p>
-		</c:if>			
-		<c:choose>
-			<c:when test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">	
+		</c:if>		
 
+		<c:choose>	
+			<c:when test="${ applicationDto.previousProposal.flag_applicationWasReopened == 1 }">
+			
+				<c:choose>
+					<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">
+						
+						<c:choose>
+							<c:when test="${user.profileId == 1 }">
+								<p>The employer deleted work days from the job posting that affect your employment.</p>
+								<p>The employer is required to submit you a new proposal.</p>
+								<p>Please review.</p>							
+							</c:when>	
+							<c:otherwise>
+								<p>You deleted work days from the agreed upon proposal.</p>
+								<p>The applicant is reviewing your new proposal.</p>	
+							</c:otherwise>
+						</c:choose>
+
+					</c:when>				
+					<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">
+						
+						<c:choose>
+							<c:when test="${user.profileId == 1 }">
+								<p>The employer edited the start and end times that affect your employment.</p>
+								<p>The employer is required to submit you a new proposal.</p>
+								<p>Please review.</p>							
+							</c:when>	
+							<c:otherwise>
+								<p>You edited the start and end times that affect your employment.</p>
+								<p>The applicant is reviewing your new proposal.</p>	
+							</c:otherwise>
+						</c:choose>
+
+					</c:when>				
+				</c:choose>				
+<!-- 				********************************************** -->
+<!-- 				**********************************************		 -->
+<!-- 				Add flags to the job table when dates are added or removed. -->
+<!-- 				Notify applicant that dates have changed that do not affect their current proposal -->
+<!-- 				********************************************** -->
+<!-- 				**********************************************				 -->
+			</c:when>	
+			<c:otherwise>
+<%-- 				<c:choose> --%>
+					<c:if test="${ applicationDto.employmentProposalDto.flag_aProposedWorkDayWasRemoved == 1 ||
+									applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">
+						
+						<c:choose>
+							<c:when test="${user.profileId == 1 }">
+								<p>The employer deleted work days from the job posting that affected your proposal.</p>	
+							</c:when>	
+							<c:otherwise>
+								<p>You deleted work days from the job posting that affected the applicant's proposal.</p>
+							</c:otherwise>
+						</c:choose>
+
+					</c:if>				
+					<c:if test="${ applicationDto.employmentProposalDto.flag_aProposedWorkDayTimeWasEdited == 1 ||
+									applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">
+						
+						<c:choose>
+							<c:when test="${user.profileId == 1 }">
+								<p>The employer updated times for work days on the current proposal.</p>	
+							</c:when>	
+							<c:otherwise>
+								<p>You  updated times for work days on the current proposal.</p>	
+							</c:otherwise>
+						</c:choose>
+
+					</c:if>				
+<%-- 				</c:choose>				 --%>
+			</c:otherwise>
+		</c:choose>			
+		<c:choose>
+			<c:when test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">
 				<c:if test="${user.profileId == 1 }">						
 					<p>
 						<span>Employer's offer expires in:</span>								
@@ -20,8 +95,7 @@
 			</c:when>
 			<c:otherwise>
 				<c:choose>
-					<c:when test="${user.profileId == 2 }">
-					
+					<c:when test="${user.profileId == 2 }">					
 						<p>
 							<span>Your offer expires in:</span>								
 							<span class="expiration-time">${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</span>

@@ -46,7 +46,6 @@ $(document).ready(function(){
 		$(this).closest(".edit-container").siblings("[data-toggle-id]").eq(0).click();
 	})
 	
-	initCalendar_availability();
 	
 	$(".days-of-week-container input").change(function(){
 		disableFirstAndLastCalendars();
@@ -108,26 +107,7 @@ function selectCalendarDays_byDaysOfWeek(){
 	
 }
 
-function initCalendar_availability(){
 
-	var dates_applications = getDateFromContainer($("#applicationDetails"));
-	var dates_employment = getDateFromContainer($("#employmentDetails"));
-	var dates_available = getDateFromContainer($("#availabilityDetails"));
-	
-	$(".availability-container .calendar").datepicker({
-		numberOfMonths: 3,
-		beforeShowDay: function(date){
-			
-			if(doesDateArrayContainDate(date, dates_employment)) return [true, "employment"];
-			else if(doesDateArrayContainDate(date, dates_applications)) return [true, "application"];
-			else if(doesDateArrayContainDate(date, dates_editedAvailability)) return [true, "application edited-availability"]
-			else if(doesDateArrayContainDate(date, dates_available)) return [true, "available"];
-			else return [true, ""];
-			
-		}
-	})
-
-}
 
 function executeAjaxCall_updateUserSettings(user_edited){
 	

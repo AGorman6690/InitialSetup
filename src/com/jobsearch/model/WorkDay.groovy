@@ -1,9 +1,13 @@
 package com.jobsearch.model
-
+import org.codehaus.jackson.annotate.JsonCreator;
 import java.awt.TexturePaintContext.Int;
 import java.time.LocalDate
 
 import org.codehaus.jackson.annotate.JsonProperty
+import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTestVisitor
+
+import com.fasterxml.jackson.core.sym.Name;
+import com.sun.org.apache.bcel.internal.generic.NEW;;
 
 
 public class WorkDay {
@@ -15,6 +19,7 @@ public class WorkDay {
 
 //	@JsonProperty("date")
 //	Date date
+	
 	
 	@JsonProperty("date")
 	LocalDate date
@@ -32,9 +37,9 @@ public class WorkDay {
 	String stringEndTime
 	
 	WorkDay(){
-		
+		this.date = LocalDate.now()
 	}
 	WorkDay(String stringDate){
-		this.setStringDate(stringDate);
+		this.setStringDate(stringDate);		
 	}
 }

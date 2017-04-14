@@ -157,14 +157,13 @@ thead .master-row{
 
 #initial-time-question,
 #set-one-start-and-end-time,
-#timesTableContainer{
+#times-cont{
 	display: none;
 }
-
-
-#timesTableContainer{
-    width: 700px;
+#initial-time-question{
+	border-bottom: 1px solid #cacaca;
     margin: auto;
+    width: 600px;	
 }
 
 #initial-time-question p{
@@ -221,4 +220,22 @@ input#maxPay{
 	display: block;
 	width: 75px;
 	margin: 5px auto;
+}
+#datesContainer .radio-container{
+    padding-bottom: 20px;
+    width: 75px;
+    margin: auto;
+    text-align: left;	
+}
+#post-job-container{
+	padding-bottom: 75px;
+}
+
+#prev-or-next span{
+	cursor: pointer;
+	margin: 2px 20px;
+	font-size: 23px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #163b3d;
 }

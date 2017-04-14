@@ -6,11 +6,13 @@
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/post_job/post_job_new.css" />
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/post_job/post_job_work_days_and_times.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/post_job/questions.css" />			
 
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
+<script	src="<c:url value="/static/javascript/post_job/PostJob_WorkDaysAndTimes.js" />"></script>
 <script	src="<c:url value="/static/javascript/post_job/SubmitValidation.js" />"></script>
 <script	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
 
@@ -32,7 +34,7 @@
 <div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
 	<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
 	<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Work Days</span>
-	<span class="select-page-section" data-page-section-id="timesContainer">Times</span>
+	<span id="select-times" class="select-page-section" data-page-section-id="timesContainer">Times</span>
 	<span class="select-page-section" data-page-section-id="positionsContainer">Positions</span>
 	<span class="select-page-section" data-page-section-id="locationContainer">Location</span>
 	<span class="select-page-section" data-page-section-id="categoriesContainer">Categories</span>
@@ -55,8 +57,8 @@
 	<div id="post-job-container">
 		<div id="previous-next-container">
 			<button id="proceed-to-preview-job-posting" class="sqr-btn">Review Job Posting</button>
-			<span id="previous-section">Previous</span>
-			<span id="next-section">Next</span>
+<!-- 			<span id="previous-section">Previous</span> -->
+<!-- 			<span id="next-section">Next</span> -->
 		</div>
 	
 		<div id="generalContainer" class="page-section">
@@ -85,27 +87,33 @@
 
 			<div class="row">
 				<div class="item">
-					<p>Partial Availability</p>
-					<label><input id="partialAvailabilityAllowed" type="checkbox">Allowed</label>
+					<p>Is Partial Availability Allowed?</p>
+					<div class="radio-container">
+						<label><input id="yes-partial" type="radio" name="partial-availability">Yes</label>
+						<label><input id="no-partial" type="radio" name="partial-availability">No</label>
+					</div>
 				</div>					
 				<div class="item calendar-container teal-navigation v2">
 					<p>Work Days</p>
+					<div class="pad-top">
+						<button class="" id="clearCalendar">Clear</button>
+					</div>
 					<div id="workDaysCalendar_postJob" class="calendar" data-is-showing-job="0">
 					</div>											
-					<button class="" id="clearCalendar">Clear</button>
+					
 				</div>
 			</div>			
 		</div>		
 		
 		<div id="timesContainer" class="page-section">
 		
-			<p id="no-dates-selected" class="linky-hover">Please select one or more dates</p>
-			<div id="initial-time-question">
+			<p id="no-dates-selected" class="linky-hover pad-top">Please select one or more work days</p>
+			<div id="initial-time-question" class="pad-top">
 				<p>The start time and the end time for each date ...</p>
 				<button id="times-are-the-same" class="sqr-btn gray sm">is the same</button>
 				<button id="times-are-not-the-same" class="sqr-btn gray sm">is NOT the same</button>
 			</div>
-			<div id="set-one-start-and-end-time">
+			<div id="set-one-start-and-end-time" class="pad-top">
 				<div>
 					<p>Start Time</p>
 					<select id="single-start-time" class="time start-time"></select>
@@ -114,39 +122,32 @@
 					<p>End Time</p>
 					<select id="single-end-time" class="time end-time"></select>
 				</div>
-			</div>
-			<div id="timesTableContainer" >
-				<table id="timesTable" class="main-table-style">
-					<thead>
-						<tr>
-							<th>Date</th>
-							<th>Selection</th>
-							<th>Start Time</th>
-							<th>End Time</th>
-						</tr>
-<!-- 							These elements are only to be cloned -->
-<!-- 					************************************ -->
-						<tr class="master-row-multi-select">
-							<td colspan="1">Set Selected Dates</td>
-							<td></td>
-							<td><label><input class="select-all" type="checkbox" name="time">Set Times For Multiple Dates</label></td>
-							<td><select   class="time start-time select-all"></select></td>
-							<td><select  class="time end-time select-all"></select></td>							
-						</tr>
-						<tr class="master-row work-day-row">
-							<td class="date"></td>
-							<td><input type="checkbox" name="time"></td>
-							<td><select class="time start-time"></select></td>
-							<td><select class="time end-time"></select></td>
-						</tr>
-<!-- 					************************************ -->							
-					</thead>
 					
-					<tbody>
-
-					</tbody>				
-				</table>
-			
+			</div>
+			<div id="times-cont">
+				
+				<div class="radio-container pad-top">
+					<label><input id="select-all-dates" type="radio" name="set-times">Select all dates</label>
+					<label><input id="deselect-all-dates" type="radio" name="set-times">Deselect all dates</label>
+				</div>
+				<div id="multiple-time-cont">
+					<div>
+						<p>Start Time</p>
+						<select id="multiple-start-times" class="time start-time"></select>
+					</div>
+					<div>
+						<p>End Time</p>
+						<select id="multiple-end-times" class="time end-time"></select>
+					</div>
+					<div>
+						<button id="apply-multiple-times" class="sqr-btn gray-2">Apply</button>
+					</div>					
+				</div>				
+				<div class="item calendar-container teal-navigation v2">
+					<div id="select-times-cal" class="calendar">
+					</div>											
+				</div>	
+	
 			</div>
 		</div>	
 		<div id="positionsContainer" class="page-section">
@@ -296,7 +297,11 @@
 				</div>		
 				<span class="add-list-item glyphicon glyphicon-plus"></span>								
 			</div>											
-		</div>											
+		</div>
+		<div id="prev-or-next" class="pad-top-2 center button-container">
+			<span id="previous-section" class="sqr-btnz greenz">Previous</span>
+			<span id="next-section" class="sqr-btnz greenz">Next</span>
+		</div>
 	</div>
 </div>
 

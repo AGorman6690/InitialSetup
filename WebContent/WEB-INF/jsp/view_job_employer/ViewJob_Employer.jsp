@@ -38,24 +38,17 @@
 		<script src="<c:url value="/static/javascript/view_job_employer/Employee_Ratings.js" />"></script>
 	</c:if>
 	
+
+	
 	<div class="select-page-section-container">	
 		<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
 	</div>	
+	<div id="job-calendar-application-summary" class="pad-top-2 v2 hide-unused-rows calendar-container">
+		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+	</div>		
 	<div class="container">	
-
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 		<input id="data_pageInit" type="hidden" value="${data_pageInit }">
-		
-		<div id="work-day-dtos">
-			<c:forEach items="${jobDto.workDayDtos }" var="workDayDto">
-				<div class="work-day-dto" data-date="${workDayDto.workDay.stringDate }"
-					 data-count-applicants="${workDayDto.count_applicants }"
-					 data-count-positions-filled="${workDayDto.count_positionsFilled }"
-					 data-count-total-positions="${workDayDto.count_totalPositions }">
-				 </div>
-			</c:forEach>
-		</div>
-		
 		<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
 			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
 		</c:if>
@@ -65,39 +58,25 @@
 					<%@ include file="./Applicants.jsp" %>
 				</div>
 			</div>	
-			<div id="job-calendar-application-summary" class="v2 hide-unused-rows calendar-container page-section">
-				<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-			</div>
+<!-- 			<div id="job-calendar-application-summary" class="v2 hide-unused-rows calendar-container page-section"> -->
+<%-- 				<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div> --%>
+<!-- 			</div> -->
 		</c:if>	
-		
-		
 		<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-		<div id="employeesContainer" class="page-section">				
-			<div id="employees" class="">
-			<c:choose>
-				<c:when test="${context == 'complete' }">
-<%-- 							<%@ include file="./Employee_Ratings.jsp" %> --%>
-				</c:when>
-				<c:otherwise>	
+			<div id="employeesContainer" class="page-section pad-top-2">				
+				<div id="employees" class="">
 					<%@ include file="./Employees.jsp" %>					
-				</c:otherwise>
-			</c:choose>
-			</div>			
-		</div>	
+				</div>			
+			</div>	
 		</c:if>
-		
 		<div id="jobInfoContainer" class="page-section">
 			<%@include file="../templates/JobInformation.jsp"%>
 		</div>	
 		
 		<div id="modal_applicants" class="mod">
-			<div class="mod-content">
-				
-			</div>
+			<div class="mod-content"></div>
 		</div>			
 	</div>	
-
-
 <script
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
 </script>

@@ -1,7 +1,9 @@
+var global_workDayDtos = [];
+
 $(document).ready(function(){
 //	
 	$("html").click(function(e){
-		
+
 		// Close all dropdowns if user clicked outside of a dropdown		
 		if($(e.target).closest(".dropdown-container").length == 0 &&
 				$(e.target).hasClass("dropdown-container") == 0 && 
@@ -80,17 +82,47 @@ $(document).ready(function(){
 		}
 		
 	})
-		
 	
-	
-	
-			
 })
+
+
+function parseWorkDayDtosFromDOM($e) {
+	
+	// ****************************************************
+	// ****************************************************
+	// I don't think this is the best way to get work day objects when a page loads.
+	// Is it a security risk to show the user how our data is structured?
+	// This div containing json is not deleted after the work day objects are initialized
+	// because some pages load work day objects more than once.
+	// i.e. The ViewJob_Employer page needs work day dtos for the job posting calendar
+	// and the summary calendars.
+	// After the code is "finalized", this structer can be revisited and perhaps 
+	// a global variable can be used for ALL calendars on a page. 
+	//______________________________________________________________________
+	// An alternative is to make an ajax call after the page loads and retrieve the work day dtos
+	// Revisit this.
+	// ****************************************************
+	// ****************************************************
+	
+	var workDayDtos = [];
+	if($e.length > 0){
+		workDayDtos = JSON.parse($e.html());
+//		$e.empty();	
+	}
+	
+	$(workDayDtos).each(function() {
+		this.date = dateify(this.workDay.stringDate);
+	})
+	
+	return workDayDtos;
+	
+}
+
 
 function selectButton($button){
 	
 	var $buttonGroup = $button.closest(".button-group");
-	var className = $buttonGroup.attr("class-name");
+	var className = $buttonGroup.attr("data-class-name");
 	if(className == undefined) className = "selected";
 	
 	if($button.hasClass(className)) $button.removeClass(className);

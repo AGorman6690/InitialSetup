@@ -2,6 +2,7 @@ package com.jobsearch.application.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -971,12 +972,6 @@ public class ApplicationServiceImpl {
 		return userService.getUser(otherUserId);
 	}
 
-	public double getWage(int userId, int jobId) {
-
-		Application application = repository.getApplication(jobId, userId);
-
-		return repository.getWage(application.getApplicationId());
-	}
 
 
 	public void addAnswer(Answer answer) {
@@ -1309,6 +1304,59 @@ public class ApplicationServiceImpl {
 			
 			return jobService.getWorkDayDtos_byProposal(getCurrentEmploymentProposal(applicationId));	
 		}else return null;
+	}
+
+
+	public List<Application> getApplications_byJobAndAtLeastOneWorkDay(int jobId,
+			List<WorkDay> workDays) {
+		
+		return repository.getApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+
+	}
+	
+	public List<Application> getAcceptedApplications_byJobAndAtLeastOneWorkDay(int jobId,
+			List<WorkDay> workDays) {
+		
+		return repository.getAcceptedApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+
+	}
+
+
+	public void updateProposalFlag(EmploymentProposalDTO currentProposal,
+			String proposalFlag, int value) {
+		
+		repository.updateProposalFlag(currentProposal.getEmploymentProposalId(),
+				proposalFlag, value);
+		
+	}
+
+
+	public void openApplication(int applicationId) {
+		repository.openApplication(applicationId);		
+	}
+
+
+	public void deleteEmployment(int userId, int jobId) {
+		repository.deleteEmployment(userId, jobId);
+	}
+
+
+	public String getTotalPayment(EmploymentProposalDTO acceptedProposal) {
+		
+		// ***********************************************************
+		// This assumes each work day starts and ends on the same calendar day
+		// ***********************************************************
+		
+		double totalMinutes = 0;
+		List<WorkDay> workDays = jobService.getWorkDays_byProposalId(acceptedProposal.getEmploymentProposalId());
+		for( WorkDay workDay : workDays){
+			totalMinutes += ChronoUnit.MINUTES.between(
+					LocalTime.parse(workDay.getStringStartTime()),
+					LocalTime.parse(workDay.getStringEndTime()));
+		}
+		
+		
+		return String.format("%.2f", (totalMinutes / 60) * Double.parseDouble(acceptedProposal.getAmount()));
 	}
 
 

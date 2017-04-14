@@ -1310,6 +1310,73 @@ public class JobRepository {
 		
 	}
 
+	public void deleteProposedWorkDays(List<WorkDay> workDays) {
+		String sql = "DELETE FROM employment_proposal_work_day"
+					+ " WHERE (";
+		
+		ArrayList<Object> args = new ArrayList<Object>();
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR";
+			sql += " WorkDayId = ?";
+			args.add(workDay.getWorkDayId());		
+			
+			isFirst = false;
+		}		
+		sql += " )";
+		
+		jdbcTemplate.update(sql, args.toArray());
+		
+	}
+
+	public void deleteWorkDays(List<WorkDay> workDays) {
+		String sql = "DELETE FROM work_day"
+				+ " WHERE (";
+	
+	ArrayList<Object> args = new ArrayList<Object>();
+	boolean isFirst = true;
+	for(WorkDay workDay : workDays){
+		
+		if(!isFirst) sql += " OR";
+		sql += " WorkDayId = ?";
+		args.add(workDay.getWorkDayId());		
+		
+		isFirst = false;
+	}
+	sql += " )";
+	
+	jdbcTemplate.update(sql, args.toArray());
+		
+	}
+
+	public void updateWorkDay(int workDayId, String stringStartTime, String stringEndTime) {
+		String sql = "UPDATE work_day SET StartTime = ?, EndTime = ? WHERE WorkDayId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{ stringStartTime, stringEndTime, workDayId });
+		
+	}
+
+	public List<WorkDay> getWorkDays_byJobAndDateStrings(int jobId, List<String> dateStrings) {
+		String sql = "SELECT * FROM work_day wd"
+					+ " JOIN date d ON wd.DateId = d.Id"
+					+ " WHERE wd.JobId = ?"
+					+ " AND (";
+					
+		ArrayList<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(String dateString : dateStrings){
+			if(!isFirst) sql += " OR";
+			sql += " d.Date = ?";
+			args.add(dateString);
+			isFirst = false;
+		}
+		sql += " )";
+		return WorkDayMapper(sql, args.toArray());
+	}
+
 
 
 

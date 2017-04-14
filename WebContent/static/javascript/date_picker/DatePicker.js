@@ -27,14 +27,33 @@ function isDateInWorkDayDtos(date, workDayDtos) {
 	else return false;
 }
 
-function getWorkDayDtoByDate(dateToFind, workDayDtos) {
+function getWorkDayDtoByDate_new(dateToFind, workDayDtos) {
 	
 	var result = false;
 	$(workDayDtos).each(function(i, workDayDto) {
-		if(dateify(workDayDto.workDay.stringDate).getTime() == dateToFind.getTime()){
+		if(workDayDto.date != undefined && workDayDto.date.getTime() == dateToFind.getTime()){
 			result = workDayDto;
 			return false;
 		}
+	})
+	
+	if(!result) return undefined;
+	else return result;
+}
+
+function getWorkDayDtoByDate(dateToFind, workDayDtos) {
+	// *****************************************************
+	// *****************************************************
+	// change function name to: getWorkDayDtoByDateString
+	// *****************************************************
+	// *****************************************************
+	
+	var result = false;
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(dateify(workDayDto.workDay.stringDate).getTime() == dateToFind.getTime()){		
+			result = workDayDto;
+			return false;
+		}		
 	})
 	
 	if(!result) return undefined;
@@ -62,7 +81,8 @@ function getDatesFromWorkDayDtos(workDayDtos, daysArray){
 	daysArray = [];
 	
 	$(workDayDtos).each(function(i, workDayDto){
-		daysArray.push(new Date(workDayDto.workDay.stringDate));
+		if(!isNaN(workDayDto.date.getTime())) daysArray.push(workDayDto.date);
+		else daysArray.push(new Date(workDayDto.workDay.stringDate));
 	})
 	
 	return daysArray;
@@ -160,6 +180,14 @@ function getNumberOfMonths($e){
 		
 }
 
+function getMonthsSpan(dateArray) {
+	
+	if(dateArray.length > 0){
+		var minDate = new Date(Math.min.apply(null, dateArray));
+		var maxDate = new Date(Math.max.apply(null, dateArray));
+		return maxDate.getMonth() - minDate.getMonth() + 1;
+	}	
+}
 
 function getMinDate($calendar){
 	
@@ -223,39 +251,74 @@ function addOrRemoveDate_SingeDateCalendar(date, days){
 
 function attemptToAddDateRange(date, days){
 	
-
 	var iDate = new Date();
 	var firstDate = new Date();
 	var i = 1;
 	var endDate = new Date();
 	
 	// If the user is toggling off the first clicked date
-	if(isDateAlreadySelected(date, days)) removeDay(date, days);
-	
+	if(isDateAlreadySelected(date, days)) removeDay(date, days);	
 	// Else set the date range
-	else {
-		
-		days.push(date);
-		
+	else {		
+		days.push(date);		
 		if(days[0].getTime() < date.getTime()){
 			firstDate = days[0];
 			endDate = date;
-		}
-		else{
+		}else{
 			firstDate = date;
 			endDate = days[0]; 	
 		}
 		
-
 		iDate = incrementDate(firstDate, i);
-		while(iDate < endDate){
-			
-			days.push(iDate);
+		while(iDate < endDate){			
+			days.push(iDate);			
+			i += 1;
+			iDate = incrementDate(firstDate, i);			
+		}		
+	}
+}
+
+function getNewWorkDayDto(initDate){
+	var newWorkDayDto = {};
+	newWorkDayDto.workDay = {};
+	newWorkDayDto.workDay.stringStartTime = "";
+	newWorkDayDto.workDay.stringEndTime = "";
+	newWorkDayDto.date = initDate;
+	return newWorkDayDto;
+	
+}
+
+function attemptToAddDateRange_workDayDtos(date, workDayDtos){
+	
+	var iDate = new Date();
+	var firstDate = new Date();
+	var i = 1;
+	var endDate = new Date();
+	
+	// If the user is toggling off the first clicked date
+	if(doesWorkDayDtoArrayContainDate(date, workDayDtos))
+		removeWorkDayDto(date, workDayDtos);	
+	// Else set the date range
+	else {		
+		
+		var newWorkDayDto = getNewWorkDayDto(date);
+		workDayDtos.push(newWorkDayDto);
+		
+		if(workDayDtos[0].date.getTime() < date.getTime()){
+			firstDate = workDayDtos[0].date;
+			endDate = date;
+		}else{
+			firstDate = date;
+			endDate = workDayDtos[0].date; 	
+		}
+		
+		iDate = incrementDate(firstDate, i);
+		while(iDate < endDate){		
+			newWorkDayDto = getNewWorkDayDto(iDate);
+			workDayDtos.push(newWorkDayDto);
 			
 			i += 1;
-			iDate = incrementDate(firstDate, i);
-			
-			
+			iDate = incrementDate(firstDate, i);			
 		}		
 	}
 }
@@ -269,6 +332,7 @@ function incrementDate(fromDate, i){
 }
 
 
+
 function removeDay(dateToRemove, days){
 	
 	var arr = [];
@@ -278,6 +342,39 @@ function removeDay(dateToRemove, days){
 	
 	return arr;
 
+}
+
+
+function removeWorkDayDto(dateToRemove, workDayDtos) {
+
+	var arr = [];
+	arr = $.grep(workDayDtos, function(workDayDto){
+		return workDayDto.date.getTime() != dateToRemove.getTime();
+	})		
+	
+	return arr;	
+}
+
+function addOrRemoveWorkDayDtoByDate(date, workDayDtos){
+	
+	if(!isDateAlreadySelected_workDayDtos(date, workDayDtos)){
+		
+		var workDayDto = getNewWorkDayDto(date);
+		workDayDtos.push(workDayDto);
+	} else workDayDtos = removeWorkDayDto(date, workDayDtos);
+	
+	return workDayDtos;
+}
+function isDateAlreadySelected_workDayDtos(dateToCheck, workDayDtos){
+	
+	var arr = [];	
+	arr = $.grep(workDayDtos, function(workDayDto){
+		return workDayDto.date.getTime() == dateToCheck.getTime();
+	})
+	
+	if(arr.length > 0) return true;
+	else return false;
+	
 }
 
 function isDateAlreadySelected(dateToCheck, days){

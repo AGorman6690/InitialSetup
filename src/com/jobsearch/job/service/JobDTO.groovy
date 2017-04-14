@@ -99,6 +99,7 @@ public class JobDTO {
 	 JobDTO(){
 		 this.job = new Job();	
 		 this.workDays = new ArrayList<WorkDay>();	 
+		 this.workDayDtos = new ArrayList<WorkDayDto>();
 	 }
 
 
