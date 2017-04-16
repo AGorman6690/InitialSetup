@@ -6,11 +6,12 @@ table.main-table-style{
 /*     border-bottom: 1px solid #ddd; */
 /*     border-top: 1px solid #ddd; */
 }
-
 .main-table-style.shadow > thead > tr:last-child{
 	box-shadow: 3px 3px 5px #848484;
 }
-
+.main-table-style.shadow.left-border > thead > tr:last-child{
+	border-left: 5px solid #163b3d;
+}
 .main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
 	margin: 0px 5px;
 	padding: 5px;
@@ -60,9 +61,12 @@ table.main-table-style{
 /*     color: #888888; */
 	color: #000;
     font-weight: normal;
+/*     color: #fff; */
+/*     background: #197994;     */
 }
 .main-table-style th.teal{
-	background: #197994;	
+/* 	background: #197994;	 */
+	background: #36595a;
     color: #fff;
 }
 .main-table-style th.teal.first{
@@ -127,3 +131,19 @@ td.left *{
 }
 
 
+.main-table-style.shadow > thead > tr th.job-status{
+/*     padding-top: 8px; */
+/*     border-top: 2px solid #163b3d; */
+/*     border-bottom: 2px solid #163b3d; */
+/*     color: #000; */
+/*     font-weight: bold; */
+/*     background: #163b3d; */
+	background: #197994;	
+    color: #fff;
+}
+.main-table-style.shadow > thead > tr > th:not(.job-status){
+	font-weight: bold;
+}
+.main-table-style.shadow > thead > tr > th.job-status.first{
+	border-top-left-radius: 7px;
+}

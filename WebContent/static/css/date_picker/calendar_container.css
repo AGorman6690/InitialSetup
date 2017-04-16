@@ -1,4 +1,13 @@
-
+.calendar-container.disabled{
+    background: #f4f4f4;
+    border: 2px solid #cec9c9;
+}
+.calendar-container.disabled .calendar{
+	opacity: 0.6;
+}
+.calendar-container.disabled *{
+	cursor: default !important;
+}
 button.clear-calendar{
 	margin-left: 35px;	
 }

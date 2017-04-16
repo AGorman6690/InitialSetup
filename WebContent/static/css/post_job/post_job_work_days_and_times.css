@@ -1,0 +1,65 @@
+td .time-display p{
+/* 	font-weight: bold; */
+	font-size: 15px;
+/* 	color: #000; */
+	color: #fff;
+	margin: 0px 0px;
+}
+td.a-date-to-set{
+	position: relative;
+/*     border: 2px solid #163b3d;	 */
+    background: #163b3d;
+    border: 1px solid #f4f4f4;
+}
+td .select-date-box{
+    background: #e4e4e4;
+    box-shadow: 4px 4px 5px #888;
+    width: 40px;
+    height: 35px;
+    margin: auto;
+    border-radius: 7px;
+    bottom: 8px;
+    position: absolute;
+    left: 50%;
+    margin-left: -20px;
+}
+.v2 .calendar td.a-date-to-set a{
+	color: #fff;
+}
+td.selected-date .select-date-box{
+/* 	background: #308e63; */
+	background: #48d293;
+}
+
+#select-times-cal td:hover{
+	cursor: default;
+}
+#select-times-cal td.a-date-to-set:hover{
+	cursor: pointer;
+}
+#multiple-time-cont div{
+	display: inline-block;
+	padding: 0px 10px;
+}
+#times-cont .radio-container{
+    padding-bottom: 20px;
+    width: 200px;
+    margin: auto;
+    text-align: left;
+}
+#datesContainer .checkbox-container label,
+#times-cont .radio-container label{
+	display: block;
+}
+.v2 .calendar td{
+	height: 110px;
+	width: 100px;
+}
+.v2 .ui-datepicker-inline.ui-datepicker-multi-2{
+	width: 1600px;
+	margin: auto;
+}
+.v2 .ui-datepicker-inline{
+	width: 700px;
+	margin: auto;
+}

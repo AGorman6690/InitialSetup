@@ -1,5 +1,5 @@
 .container{
-	padding-top: 50px;
+	padding: 50px 0px;
 }
 
 td div.job.application.drk{
@@ -28,12 +28,6 @@ td div.job.application{
 	width: 100%
 }
 
-td.alert{
-/* 	background: #a75454;	 */
-}
-td.alert .proposal-item > p{
-	color: #fff;
-}
 
 #applications_calendar_view .calendar td{
     position: relative;
@@ -107,6 +101,9 @@ td.alert .proposal-item > p{
 	
 }
 
+th.proposal{
+	width: 580px;
+}
 
 
 
@@ -134,5 +131,6 @@ td.alert .proposal-item > p{
     width: 424px;
     margin: auto;
     padding-bottom: 40px;
+    padding-top: 50px;
 }
 

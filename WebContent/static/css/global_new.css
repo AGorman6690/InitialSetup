@@ -1,4 +1,26 @@
-
+#json_work_day_dtos{
+	display: none;
+}
+.sqr-btn.teal-2{
+    padding: 11px 20px;
+    color: #197994;
+    background: #f9f9f9;
+    font-size: 19px;
+    margin: 0px 5px;
+    font-weight: bold;
+    border: 2px solid #cacaca;
+}
+.sqr-btn.teal-2.selected{
+    color: #fff;
+    background: #197994;
+    font-weight: normal;	
+}
+.selected-shadow{
+    box-shadow: 11px 11px 13px #545454;
+}
+.center{
+	text-align: center;
+}
 .page-container{
 	text-align: center;
 }
@@ -55,9 +77,10 @@ input, select, textarea{
     color: #163b3d;
     cursor: pointer;
     margin: 0px 7px;
-    border: 2px solid#bbbbbb;
+    border: 1px solid #bbbbbb;
     padding: 2px 10px;
-    background: #f4f4f4;
+/*     background: #f9f9f9; */
+	background: #fff;
 }
 .sqr-btn.gray-2.selected{
 	color: #fff;

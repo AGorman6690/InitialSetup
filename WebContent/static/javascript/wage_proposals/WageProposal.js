@@ -5,6 +5,20 @@ $(document).ready(function(){
 	
 //	initCalendar_proposedWorkDays();
 
+	$("body").on("click", ".application-proposal-container .proposal-item.work-days p", function() {
+	
+		var applicationId = $(this).closest("tr").attr("data-application-id");
+		var $calendar = $(this).closest(".proposal-item").find(".calendar").eq(0);
+		
+		if($calendar.hasClass("hasDatepicker") == 0)
+			executeAjaxCall_getProposedWorkDays(applicationId, $calendar);
+		else
+			$calendar.closest(".mod").show();
+		
+		
+	})
+	
+	
 	
 	$("body").on("click", ".show-mod", function(){
 	
@@ -42,14 +56,21 @@ $(document).ready(function(){
 	$("body").on("click", ".proceed-to-confirmation-container .confirm", function (){
 		setExpirationTimeToConfirm($(this));
 		showConfirmationContainer($(this));			
+		$(this).closest(".mod-body").addClass("reviewing");
 		
 	})
 	
 	$("body").on("click", ".send-proposal-container .send", function() { sendEmploymentProposal($(this)) })
 	
-	$("body").on("click", ".cancel", function() { $(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click() })
+	$("body").on("click", ".cancel", function() {
+		$(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click();
+			
+	})
 	
-	$("body").on("click", ".send-proposal-container .edit", function() { hideConfirmationContainer($(this)) })
+	$("body").on("click", ".send-proposal-container .edit", function() {
+		hideConfirmationContainer($(this));
+		$(this).closest(".mod-body").removeClass("reviewing");	
+	})
 	
 	$("body").on("click", ".approve-by-applicant", function() { sendApplicantApproval($(this)) });
 	
@@ -59,13 +80,28 @@ $(document).ready(function(){
 	})
 })
 
+function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/application/" + applicationId + "/proposed-work-days",
+		dataType: "json",
+		success: function(workDayDtos) {
+			broswerIsWaiting(false);
+			initCalendar_showWorkDays($calendar, workDayDtos);
+			$calendar.closest(".mod").show();
+		},
+		error: function() {
+			broswerIsWaiting(false);
+		}
+	})
+}
 
 function initCalendar_proposedWorkDays(workDayDtos){
 	
 	$(".work-day-container .calendar").each(function(){
-//		var $responseContainer = $(this).closest(".response-container"); 				
-//		var workDayDtos = getWorkDayDtosFromContainer($responseContainer.find(".work-day-dtos"));
-
 		initCalendar_showWorkDays($(this), workDayDtos);	
 	})
 }

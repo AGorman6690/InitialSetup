@@ -20,6 +20,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.job.service.EditJobDto;
 import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
@@ -28,6 +29,8 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
+import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -294,7 +297,8 @@ public class JobController {
 	public String viewRateEmployer(@PathVariable(value= "jobId") int jobId,
 									Model model, HttpSession session) {
 
-		if(jobService.setModel_ViewRateEmployer(jobId, model, session)) return "/ratings/RateEmployer";
+		if(jobService.setModel_ViewRateEmployer(jobId, model, session))
+			return "/ratings/RateEmployer";
 		else return SessionContext.get404Page();
 	}	
 
@@ -302,25 +306,51 @@ public class JobController {
 	public String viewRateEmployees(@PathVariable(value= "jobId") int jobId,
 									Model model, HttpSession session) {
 
-		if(jobService.setModel_ViewRateEmployees(jobId, model, session)) return "/ratings/RateEmployees";
+		if(jobService.setModel_ViewRateEmployees(jobId, model, session))
+			return "/ratings/RateEmployees";
 		else return SessionContext.get404Page();
 	}
 	
-	@RequestMapping(value = "/job/edit", method = RequestMethod.GET)
-	public ModelAndView viewEditJob(ModelAndView model) {
+	@RequestMapping(value = "/job/{jobId}/edit", method = RequestMethod.GET)
+	public String viewEditJob(Model model, HttpSession session,
+							@PathVariable(value = "jobId") int jobId) {
 
-		model.setViewName("EditJob");
-		return model;
+		if(jobService.setModel_viewReplaceEmployees(model, session, jobId))
+			return "/edit_job/Edit_Job";
+		else return SessionContext.get404Page();
 	}
 
 	
 	
-	@RequestMapping(value = "/job/{jobId}/replace-employee", method = RequestMethod.GET)
-	public String viewReplaceEmployee(Model model, HttpSession session,
-										@PathVariable(value = "jobId") int jobId){	
+	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
+	@ResponseBody
+	public String replaceEmployee(HttpSession session,
+									@PathVariable(value = "jobId") int jobId,
+									@PathVariable(value = "userId") int userId){	
 
-		if(jobService.setModel_viewReplaceEmployees(model, session, jobId))
-			return "ReplaceAnEmployee";
+		jobService.replaceEmployee(session, jobId, userId);
+		return "";
+
+	}
+		
+	@RequestMapping(value = "/job/edit/work-days", method = RequestMethod.POST)
+	@ResponseBody
+	public String editJob_workDays(HttpSession session,
+									@RequestBody EditJobDto editJobDto){	
+
+		jobService.editJob_workDays(session, editJobDto);
+		return "";
+
+	}	
+	
+	@RequestMapping(value = "/job/{jobId}/edit/work-days/pre-process", method = RequestMethod.POST)
+	public String edotditJob(Model model, HttpSession session,
+							@PathVariable(value = "jobId") int jobId,
+							@RequestBody List<String> dateStrings_remove) {
+
+		if(jobService.setModel_editJob_removeWorkDays_preProcess(model, session, jobId, dateStrings_remove))
+			return "/edit_job/RemoveWorkDays_AffectedEmployees";
+		
 		else return SessionContext.get404Page();
 	}
 

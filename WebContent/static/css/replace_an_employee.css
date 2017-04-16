@@ -31,3 +31,77 @@
 	display: none;
 }
 
+.calendar-container{
+/* 	width: 662px; */
+/* 	width: 1150px; */
+/*     margin: auto; */
+    
+}
+#edit-options{
+	padding-bottom: 30px;
+}
+#edit-options button{
+	line-height: normal;
+	width: 270px;
+}
+
+#save-edits:hover,
+#cancel-edits:hover{
+	text-decoration: underline;
+}
+#save-edits,
+#cancel-edits,
+#approve-work-day-removal{
+	color: #163b3d;
+	margin: 0px 7px;
+	cursor: pointer
+}
+#save-edits,
+#approve-work-day-removal{
+	font-size: 20px;
+	font-weight: bold;
+}
+#cancel-edits,
+#cancel-work-day-removal{
+	font-size: 16px
+}
+td.original.not-selected{
+	background: #881c1c;
+	color: #fff;
+	position: relative;
+}
+.v2 td.original.not-selected a{
+	color: #fff;
+}
+td.original.not-selected::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e014";
+    display: block;
+    position: absolute;
+    top: 36%;
+    font-size: 28px;
+    left: 50%;
+    margin-left: -14px;
+}
+td.active111:not(.original){
+/* 	background: #379c6a; */
+	position: relative;
+	color: #fff;
+}
+td.active111:not(.original)::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\2b";
+    display: block;
+    position: absolute;
+    top: 36%;
+    font-size: 28px;
+    left: 50%;
+    margin-left: -14px;
+}
+
+
+
+#affected-employees{
+	width: 550px;
+	margin: auto;
+}

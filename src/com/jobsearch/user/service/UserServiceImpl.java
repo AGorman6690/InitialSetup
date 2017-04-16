@@ -252,30 +252,25 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void insertRatings(SubmitRatingDTOs_Wrapper submitRatingDTOs_Wrapper) {
-
+	public void insertRatings(List<SubmitRatingDTO> submitRatingDTOs, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
 		// For each employee's rating
-		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()) {
+		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs) {
 
 			// Rate criterion
 			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
-				rc.setEmployeeId(submitRatingDto.getEmployeeId());
-				rc.setJobId(submitRatingDTOs_Wrapper.getJobId());
+				rc.setUserId_ratee(submitRatingDto.getUserId_ratee());
+				rc.setUserId_rater(sessionUser.getUserId());
+				rc.setJobId(submitRatingDto.getJobId());
 				repository.updateRating(rc);
 			}
 
-			// Endorsements
-			deleteEndorsements(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId());
-			for (Integer categoryId : submitRatingDto.getEndorsementCategoryIds()) {
-				Endorsement endorsement = new Endorsement(submitRatingDto.getEmployeeId(), categoryId,
-						submitRatingDTOs_Wrapper.getJobId());
-				repository.addEndorsement(endorsement);
-			}
-
 			// Comment
-			deleteComment(submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getEmployeeId());
+			deleteComment(submitRatingDto.getJobId(), submitRatingDto.getUserId_ratee());
 			if (submitRatingDto.getCommentString() != "") {
-				repository.addComment(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId(),
+				repository.addComment(submitRatingDto.getUserId_ratee(), submitRatingDto.getJobId(),
 						submitRatingDto.getCommentString());
 			}
 
@@ -655,6 +650,10 @@ public class UserServiceImpl {
 		// *************************************************************
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(employee.getUserId());
 		
+		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employee.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);	
+		
 		model.addAttribute("user", employee);
 		
 		model.addAttribute("applicationDtos", applicationDtos);
@@ -688,9 +687,12 @@ public class UserServiceImpl {
 		return jobDtos_applicationInvites;
 	}
 
-	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
+	public void setModel_EmployerProfile(JobSearchUser employer, Model model, HttpSession session) {
 
 		List<JobDTO> jobDtos = jobService.getJobDtos_employerProfile(employer.getUserId());
+		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employer.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);	
 
 		model.addAttribute("jobDtos", jobDtos);
 		
@@ -738,6 +740,7 @@ public class UserServiceImpl {
 	}
 
 	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
+
 		
 		// Query the database
 		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
@@ -745,13 +748,16 @@ public class UserServiceImpl {
 		// Create user dtos
 		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();		
 		for(JobSearchUser employee : employees){
+			
 			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
-			employeeDto.setUser(employee);
 			
-			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));
-//			employeeDto.setRatingDto(this.getRatingDtoByUserAndJob(employee.getUserId(), jobId));
-			employeeDto.setWage(applicationService.getWage(employee.getUserId(), jobId));
-			
+			employeeDto.setUser(employee);			
+			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));			
+			Application application = applicationService.getApplication(jobId, employee.getUserId());
+			employeeDto.setAcceptedProposal(applicationService.getCurrentEmploymentProposal(
+					application.getApplicationId()));
+			employeeDto.setTotalPayment(applicationService.getTotalPayment(employeeDto.getAcceptedProposal()));
+
 			employeeDtos.add(employeeDto);			
 		}
 		
@@ -795,12 +801,10 @@ public class UserServiceImpl {
 	
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
-		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
+		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) 
 			this.setModel_EmployeeProfile(sessionUser, model, session);
-		}
-		else{
-			this.setModel_EmployerProfile(sessionUser, model);
-		}
+		else
+			this.setModel_EmployerProfile(sessionUser, model, session);
 		
 	}
 
@@ -1012,21 +1016,25 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
 	
-		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(sessionUser.getUserId());
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
+		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(
+				sessionUser.getUserId());
+		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(
+				applications, session);
 
 		
-		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(sessionUser.getUserId());
+		List<JobDTO> jobDtos_employment = jobService.getJobDtos_employment_currentAndFuture(
+				sessionUser.getUserId());
 		
-		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
+//		List<String> stringDates_unavailability = getAvailableDays(sessionUser.getUserId());
 		
 		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("jobDtos_employment", jobDtos_employment);
-		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
+//		model.addAttribute("stringDates_unavailability", stringDates_unavailability);
 			
 	}
 
-	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
+	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(
+			int jobId, String dateString) {
 		
 		EmployeeSearch employeeSearch = new EmployeeSearch();
 		
@@ -1036,7 +1044,8 @@ public class UserServiceImpl {
 		
 		employeeSearch.setJobDto(jobDto_findEmployees);
 //		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
-		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
+		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(
+				jobId);
 		
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
 		

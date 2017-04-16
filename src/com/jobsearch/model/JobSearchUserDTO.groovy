@@ -21,7 +21,8 @@ class JobSearchUserDTO {
 	List<String> unavailableDays;
 	Integer count_availableDays_perFindEmployeesSearch
 	
-	double wage
+	String totalPayment
+	EmploymentProposalDTO acceptedProposal
 	
 	
 	List<JobDTO> jobDtos_jobsCompleted;

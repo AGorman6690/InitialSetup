@@ -20,7 +20,7 @@ $(document).ready(function(){
 		
 	})
 
-	$(".show-all-questions").click(function(){
+	$("body").on("click",".show-all-questions", function(){
 		showAllQuestions($(this));
 	})
 	
@@ -46,9 +46,7 @@ $(document).ready(function(){
 	
 	
 	
-	$(".favorite-flag").click(function(){ updateApplicationStatus($(this)) })
-	
-	initCalendars_applicantAvailability();
+	$("body").on("click", ".favorite-flag", function(){ updateApplicationStatus($(this)) })
 	
 })
 
@@ -93,31 +91,6 @@ function updateApplicationStatus($e){
 	}
 }
 
-
-function initCalendars_applicantAvailability(){
-	
-	
-	
-	$(".availability-calendar-container .calendar").each(function(){
-		var $container = $(this).closest(".calendar-container");
-		
-		var dateStrings_jobWorkDays = getDateFromContainer($container.find(".dates-job-work-days"));
-		var dateStrings_applicantProposal = getDateFromContainer($container.find(".dates-applicant-proposal"));
-	
-		
-		$(this).datepicker({
-			minDate: getMinDate($(this)),
-			numberOfMonths: getNumberOfMonths($(this)),
-			beforeShowDay: function (date) {
-				 return beforeShowDay_findEmployees_ifUserHasAvailability(
-						 						date, dateStrings_jobWorkDays, dateStrings_applicantProposal);
-			 }
-			
-		})
-		
-	})
-	
-}
 
 function showAllQuestions($e){
 	

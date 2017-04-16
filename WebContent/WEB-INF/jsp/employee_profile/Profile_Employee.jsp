@@ -20,15 +20,14 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee_NEW.css" />
 		
-<script src="<c:url value="/static/javascript/profile_employee/Calendar_Applications.js" />"></script>
 <script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>		
 		
-<div class="select-page-section-container">
-	<span data-page-section-id="applications_list_view" class="selected select-page-section">List</span>
-	<span data-page-section-id="applications_calendar_view"  class="select-page-section ">Calendar</span>
-	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view"
-		class="select-page-section override-click-event">List/Calendar</span>
-</div>
+<!-- <div class="select-page-section-container"> -->
+<!-- 	<span data-page-section-id="applications_list_view" class="selected select-page-section">List</span> -->
+<!-- 	<span data-page-section-id="applications_calendar_view"  class="select-page-section ">Calendar</span> -->
+<!-- 	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view" -->
+<!-- 		class="select-page-section override-click-event">List/Calendar</span> -->
+<!-- </div> -->
 	
 <div id="applicationDetails">	
 	<c:forEach items="${applicationDtos }" var="applicationDto">
@@ -78,54 +77,14 @@
 	</c:forEach>					
 </div>
 <div class="container">
-<!-- 	<div id="filter-buttons" class="button-group"> -->
-<!-- 		<button>10 Applications</button> -->
-<!-- 		<button>3 Offers Made</button> -->
-<!-- 		<button>7 Offers Received</button> -->
-<!-- 		<button>1 Invitation</button> -->
-<!-- 	</div> -->
-	<div id="job-calendar-application-summary" class="job-info-calendar calendar-container">
-		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-	</div>
-	<div id="summary-table">
-		<table class="main-table-style">
-			<thead>
-				<tr>
-					<th>Applications</th>
-					<th>Offers Made</th>
-					<th>Offers Received</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>10</td>
-					<td>3</td>
-					<td>7</td>
-				</tr>
-			</tbody>
-		</table>
-	
-	</div>
-	<div id="applications_list_view" class="page-section">
+	<div id="applications_list_view" class="">
 		<c:choose>
 			<c:when test="${applicationDtos.size() > 0 }">	
-				
-				
-					<%@ include file="./Applications_Employee.jsp" %>									
+				<%@ include file="./Applications_Employee.jsp" %>									
 			</c:when>
 			<c:otherwise>
 				<p id="noApplications">You have no open applications at this time.</p>
 			</c:otherwise>		
 		</c:choose>
-	</div>
-	<div id="applications_calendar_view" class="page-section">
-		<div class="calendar-container teal-title">
-			<div class="calendar"></div>
-		</div>
-	</div>
-	<div id="applications_list_calendar_view">
-		<div class="calendar-container">
-			<div class="calendar"></div>
-		</div>	
 	</div>
 </div>

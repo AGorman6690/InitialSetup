@@ -33,6 +33,7 @@ import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
+import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 import sun.launcher.resources.launcher;
 
 @Repository
@@ -60,6 +61,7 @@ public class ApplicationRepository {
 				application.setUserId(rs.getInt("UserId"));
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
+				application.setIsNew(rs.getInt("IsNew"));
 				application.setStatus(rs.getInt("Status"));
 				
 				
@@ -116,35 +118,39 @@ public class ApplicationRepository {
 			@Override
 			public EmploymentProposalDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
 
-				EmploymentProposalDTO employmentProposalDto = new EmploymentProposalDTO();
+				EmploymentProposalDTO e = new EmploymentProposalDTO();
 				
-				employmentProposalDto.setAmount(String.format("%.2f", rs.getFloat("Amount")));
-				employmentProposalDto.setApplicationId(rs.getInt("ApplicationId"));
-				employmentProposalDto.setEmploymentProposalId(rs.getInt("WageProposalId"));
-				employmentProposalDto.setStatus(rs.getInt("Status"));
-				employmentProposalDto.setProposedByUserId(rs.getInt("ProposedByUserId"));
-				employmentProposalDto.setProposedToUserId(rs.getInt("ProposedToUserId"));
-				
-				
+				e.setAmount(String.format("%.2f", rs.getFloat("Amount")));
+				e.setApplicationId(rs.getInt("ApplicationId"));
+				e.setEmploymentProposalId(rs.getInt("WageProposalId"));
+				e.setStatus(rs.getInt("Status"));
+				e.setProposedByUserId(rs.getInt("ProposedByUserId"));
+				e.setProposedToUserId(rs.getInt("ProposedToUserId"));				
+				e.setIsCanceledDueToApplicantAcceptingOtherEmployment(
+						rs.getInt("IsCanceledDueToApplicantAcceptingOtherEmployment"));
+				e.setIsCanceledDueToEmployerFillingAllPositions(
+						rs.getInt("IsCanceledDueToEmployerFillingAllPositions"));				
+				e.setFlag_applicationWasReopened(rs.getInt(EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED));
+				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
+				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
+								
 				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
 				if(ts_employerAcceptedDate != null)
-					employmentProposalDto.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
-				
-				
+					e.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
+								
 				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
 				if(ts_expirationDate != null)
-					employmentProposalDto.setExpirationDate(ts_expirationDate.toLocalDateTime());				
-
+					e.setExpirationDate(ts_expirationDate.toLocalDateTime());				
 				
-				employmentProposalDto.setDateStrings_proposedDates(
+				e.setDateStrings_proposedDates(
 										applicationService.getProposedWorkDays(
-												employmentProposalDto.getEmploymentProposalId()));
+												e.getEmploymentProposalId()));
 				
-				employmentProposalDto.setTime_untilEmployerApprovalExpires(
-						applicationService.getTime_untilEmployerApprovalExpires(employmentProposalDto.getExpirationDate()));
+				e.setTime_untilEmployerApprovalExpires(
+						applicationService.getTime_untilEmployerApprovalExpires(e.getExpirationDate()));
 
 				
-				return employmentProposalDto;
+				return e;
 			}
 		});
 	}
@@ -512,16 +518,6 @@ public class ApplicationRepository {
 		return WageProposalRowMapper(sql, new Object[] { jobId });
 	}
 
-	public double getWage(int applicationId) {
-		String sql = "SELECT Amount FROM Wage_Proposal WHERE ApplicationId = ? AND Status = 1";
-		
-		try {
-			return jdbcTemplate.queryForObject(sql, new Object[] { applicationId }, Double.class);	
-		} catch (Exception e) {
-			return -1;
-		}
-		
-	}
 
 	public List<WageProposal> getFailedWageProposalsByUser(int userId) {
 
@@ -548,8 +544,8 @@ public class ApplicationRepository {
 		return AnswerOptionRowMapper(sql, new Object[] { answerOptionId }).get(0);
 	}
 
-	public void updateHasBeenViewed(Integer jobId, int value) {
-		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
+	public void updateIsNew(Integer jobId, int value) {
+		String sql = "UPDATE application SET IsNew = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
@@ -591,10 +587,10 @@ public class ApplicationRepository {
 				+ " WHERE j.JobId = ?"
 				+ " AND wp.ProposedToUserId = ?"
 				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND wp.IsNew = 1"
+				+ " AND wp.Status = ?"
 				+ " AND a.IsOpen = 1";
 	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId },
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
 											Integer.class);
 
 	}
@@ -615,8 +611,7 @@ public class ApplicationRepository {
 		
 		String sql = "SELECT COUNT(*) FROM application a"
 				+ " WHERE a.JobId = ?"
-				+ " AND a.HasBeenViewed = 0"
-				+ " AND a.IsOpen = 1";
+				+ " AND a.IsNew = 1";
 	
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
 	}
@@ -648,7 +643,8 @@ public class ApplicationRepository {
 	public int getCountEmployees_hired(Integer jobId) {
 		
 		String sql = "SELECT COUNT(*) FROM employment e"
-				+ " WHERE e.JobId = ?";
+				+ " WHERE e.JobId = ?"
+				+ " AND e.WasTerminated = 0";
 				
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
 	}
@@ -701,6 +697,78 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForList(sql, new Object[]{ jobId, userId }, Integer.class);
 	}
 
+
+
+	public List<Application> getApplications_byJobAndAtLeastOneWorkDay(int jobId, List<WorkDay> workDays) {
+			
+		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
+					+ " SELECT DISTINCT a.ApplicationId FROM application a"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				    + " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				    + " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE a.JobId = ?"
+					+ " AND a.IsOpen = 1"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND (";
+			
+		List<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(WorkDay wd : workDays){
+			
+			if(!isFirst) sql += " OR ";			
+			sql += " ( wd.DateId = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
+			
+			args.add(wd.getDateId());
+			args.add(wd.getStringEndTime());
+			args.add(wd.getStringStartTime());
+			
+			isFirst = false;					
+		}
+		
+		sql += "))";
+		
+		return ApplicationRowMapper(sql, args.toArray());
+	
+	}
+	
+	public List<Application> getAcceptedApplications_byJobAndAtLeastOneWorkDay(int jobId, List<WorkDay> workDays) {
+		
+		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
+					+ " SELECT DISTINCT a.ApplicationId FROM application a"
+					+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				    + " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				    + " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE e.JobId = ?"
+					+ " AND e.WasTerminated = 0"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND (";
+			
+		List<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(WorkDay wd : workDays){
+			
+			if(!isFirst) sql += " OR ";			
+			sql += " ( wd.DateId = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
+			
+			args.add(wd.getDateId());
+			args.add(wd.getStringEndTime());
+			args.add(wd.getStringStartTime());
+			
+			isFirst = false;					
+		}
+		
+		sql += "))";
+		
+		return ApplicationRowMapper(sql, args.toArray());
+	
+	}	
+	
+
 	public List<Application> getApplications_WithAtLeastOneWorkDay(int userId, int reference_applicationId,
 			List<WorkDay> workDays) {
 		
@@ -738,7 +806,40 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, args.toArray());
 	}
 
-
+	public List<Application> getOpenApplications__byJob_withAtLeastOneWorkDay(int jobId, List<WorkDay> workDays) {
+		
+		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
+					+ " SELECT DISTINCT a.ApplicationId FROM application a"
+					+ " JOIN job j ON a.JobId = j.JobId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				    + " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				    + " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE j.JobId = ?"
+					+ " AND a.IsOpen = 1"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND (";
+			
+		List<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(WorkDay wd : workDays){
+			
+			if(!isFirst) sql += " OR ";			
+			sql += " ( wd.DateId = ? AND wd.StartTime <= ? AND wd.EndTime >= ? )";
+			
+			args.add(wd.getDateId());
+			args.add(wd.getStringEndTime());
+			args.add(wd.getStringStartTime());
+			
+			isFirst = false;					
+		}
+		
+		sql += "))";
+		
+		return ApplicationRowMapper(sql, args.toArray());
+	}
+	
 	public List<String> getProposedWorkDays(int employmentProposalId) {
 		
 		// **************************************************************************
@@ -809,7 +910,7 @@ public class ApplicationRepository {
 		
 		String sql = "SELECT COUNT(e.Id)";
 		sql += " FROM employment e";
-		sql += " INNER JOIN application a ON a.JobId = e.JobId";
+		sql += " INNER JOIN application a ON a.JobId = e.JobId AND a.UserId = e.UserId";
 		sql += " INNER JOIN wage_proposal wp ON wp.ApplicationId = a.ApplicationId";
 		sql += " INNER JOIN employment_proposal_work_day e_p ON e_p.EmploymentProposalId = wp.WageProposalId";
 		sql += " INNER JOIN work_day wd ON wd.WorkDayId = e_p.WorkDayId";
@@ -868,4 +969,57 @@ public class ApplicationRepository {
 		
 	}
 
+
+
+	public void openApplication(int applicationId) {
+		String sql = "UPDATE application SET IsOpen = 1 WHERE ApplicationId = ?";
+		jdbcTemplate.update(sql, new Object[]{ applicationId });
+	
+	}
+
+	public void updateProposal_isCanceledDueToEmployerFillingAllPositions(Integer employmentProposalId) {
+		String sql = "UPDATE wage_proposal"
+					+ " SET IsCurrentProposal = 0"
+					+ ", IsCanceledDueToEmployerFillingAllPositions = 1"
+					+ " WHERE WageProposalId = ?";
+		jdbcTemplate.update(sql, new Object[]{ employmentProposalId });
+		
+	}
+
+
+	public void updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(Integer employmentProposalId) {
+		String sql = "UPDATE wage_proposal"
+				+ " SET IsCurrentProposal = 0"
+				+ ", IsCanceledDueToApplicantAcceptingOtherEmployment = 1"
+				+ " WHERE WageProposalId = ?";
+		jdbcTemplate.update(sql, new Object[]{ employmentProposalId });
+	}
+
+
+	public EmploymentProposalDTO getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
+		String sql = "SELECT * FROM wage_proposal"
+					+ " WHERE WageProposalId IN ("
+					+ " SELECT MAX(WageProposalId) FROM wage_proposal"
+					+ " WHERE WageProposalId != ?"
+					+ " AND ApplicationId = ?"
+					+ ")";
+		
+		List<EmploymentProposalDTO> result = EmploymentProposalDTOMapper(sql, new Object[]{ referenceEmploymentProposalId, applicationId });
+		if(verificationService.isListPopulated(result)) return result.get(0);
+		else return null;
+	}
+
+	public void updateProposalFlag(Integer employmentProposalId, String proposalFlag, int value) {
+		String sql = "UPDATE wage_proposal wp"
+						+ " SET " + proposalFlag + " = ?"
+						+ " WHERE WageProposalId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{ value, employmentProposalId });
+		
+	}
+
+	public void deleteEmployment(int userId, int jobId) {
+		String sql = "DELETE FROM employment WHERE UserId = ? AND JobId = ?";
+		jdbcTemplate.update(sql, new Object[]{ userId, jobId });		
+	}
 }

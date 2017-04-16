@@ -2,6 +2,7 @@ package com.jobsearch.user.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -28,6 +29,7 @@ import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.session.SessionContext;
+import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -214,15 +216,15 @@ public class UserController {
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 	@ResponseBody
 	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
-
 		userService.editEmployeeSettings(user_edited, session);
 	}
 
 
-	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
-	public String rateEmployee(Model model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {
+	@RequestMapping(value = "/user/rate/employees", method = RequestMethod.POST)
+	public String rateEmployees(HttpSession session,
+									@RequestBody List<SubmitRatingDTO> submitRatingDtos) {
 
-		userService.insertRatings(submitRatingDtos_wrapper);
+		userService.insertRatings(submitRatingDtos, session);
 
 		return "redirect:/user/profile";
 	}

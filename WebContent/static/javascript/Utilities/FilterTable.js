@@ -35,6 +35,19 @@ $(document).ready(function(){
 		applyFilters($(this))
 	})
 	
+	$("th span.glyphicon-sort").click(function() {
+		var $table = $(this).closest("table");		
+		var sortAttr = $(this).attr("data-sort-attr");
+		var doSortAscending = $(this).attr("data-sort-ascending");
+		
+		var sortedRows = getSortedRows(doSortAscending, sortAttr, $table);		
+		sortTable(sortedRows, $table);
+		
+		if(doSortAscending == "1") $(this).attr("data-sort-ascending", "0");
+		else $(this).attr("data-sort-ascending", "1");
+
+	})
+	
 	$("th[data-sort-attr] input[type=radio]").change(function(){
 		
 		var $th = $(this).closest("th[data-sort-attr]");

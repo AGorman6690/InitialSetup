@@ -682,7 +682,9 @@ public class JobRepository {
 		
 		String sql = "SELECT * FROM job j"
 					+ " INNER JOIN employment e ON j.JobId = e.JobId"
-					+ " WHERE e.UserId = ? AND (";
+					+ " WHERE e.UserId = ?"
+					+ " AND e.WasTerminated = 0"
+					+ " AND (";
 		
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId_employee);
@@ -1266,17 +1268,19 @@ public class JobRepository {
 		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
 	}
 
-	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int workDayId) {
-		String sql = "SELECT * FROM job"
+	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int DateId) {
+		String sql = "SELECT * FROM job j"
 					+ " JOIN employment e ON j.JobId = e.JobId"
-					+ " JOIN application a ON e.JobId = a.JobId"
+					+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
 					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-					+ " JOIN employment_proposal_work_days ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
 					+ " WHERE e.UserId = ?"
+					+ " AND e.WasTerminated = 0"
 					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND ep.WorkDayId = ?";
+					+ " AND wd.DateId= ?";
 		
-		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, workDayId });
+		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, DateId });
 		if(verificationService.isListPopulated(jobs))
 			return jobs.get(0);
 		else return null;
@@ -1297,6 +1301,80 @@ public class JobRepository {
 					+ " WHERE wd.JobId = ?";
 		
 		return jdbcTemplate.queryForList(sql, new Object[]{ jobId }, String.class);
+	}
+
+	public void replaceEmployee(int jobId, int userId) {
+		
+		String sql = "UPDATE employment SET WasTerminated = 1 WHERE JobId = ? AND UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ jobId, userId });
+		
+	}
+
+	public void deleteProposedWorkDays(List<WorkDay> workDays) {
+		String sql = "DELETE FROM employment_proposal_work_day"
+					+ " WHERE (";
+		
+		ArrayList<Object> args = new ArrayList<Object>();
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			
+			if(!isFirst) sql += " OR";
+			sql += " WorkDayId = ?";
+			args.add(workDay.getWorkDayId());		
+			
+			isFirst = false;
+		}		
+		sql += " )";
+		
+		jdbcTemplate.update(sql, args.toArray());
+		
+	}
+
+	public void deleteWorkDays(List<WorkDay> workDays) {
+		String sql = "DELETE FROM work_day"
+				+ " WHERE (";
+	
+	ArrayList<Object> args = new ArrayList<Object>();
+	boolean isFirst = true;
+	for(WorkDay workDay : workDays){
+		
+		if(!isFirst) sql += " OR";
+		sql += " WorkDayId = ?";
+		args.add(workDay.getWorkDayId());		
+		
+		isFirst = false;
+	}
+	sql += " )";
+	
+	jdbcTemplate.update(sql, args.toArray());
+		
+	}
+
+	public void updateWorkDay(int workDayId, String stringStartTime, String stringEndTime) {
+		String sql = "UPDATE work_day SET StartTime = ?, EndTime = ? WHERE WorkDayId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{ stringStartTime, stringEndTime, workDayId });
+		
+	}
+
+	public List<WorkDay> getWorkDays_byJobAndDateStrings(int jobId, List<String> dateStrings) {
+		String sql = "SELECT * FROM work_day wd"
+					+ " JOIN date d ON wd.DateId = d.Id"
+					+ " WHERE wd.JobId = ?"
+					+ " AND (";
+					
+		ArrayList<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(String dateString : dateStrings){
+			if(!isFirst) sql += " OR";
+			sql += " d.Date = ?";
+			args.add(dateString);
+			isFirst = false;
+		}
+		sql += " )";
+		return WorkDayMapper(sql, args.toArray());
 	}
 
 

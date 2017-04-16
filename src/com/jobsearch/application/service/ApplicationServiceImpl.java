@@ -2,6 +2,7 @@ package com.jobsearch.application.service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.google.common.collect.Table;
 import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
@@ -31,12 +33,14 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.WorkDayProposal;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+import com.sun.xml.internal.ws.util.CompletedFuture;
 
 
 @Service
@@ -80,7 +84,10 @@ public class ApplicationServiceImpl {
 //			applicationDto.setCurrentWageProposal(this.getCurrentWageProposal(application));
 			applicationDto.setEmploymentProposalDto(this.getCurrentEmploymentProposal(application.getApplicationId()));
 			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
-							getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+					getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+			applicationDto.setPreviousProposal(getPreviousProposal(
+					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(), application.getApplicationId()));
+			
 			
 			applicationDto.setTime_untilEmployerApprovalExpires(
 							this.getTime_untilEmployerApprovalExpires(
@@ -99,8 +106,8 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
-			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_employeeViewWageProposal(
-											jobId, application.getApplicationId(), applicantId));
+			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
+											applicationDto.getEmploymentProposalDto()));
 			
 			// **********************************************************************
 			// **********************************************************************
@@ -363,13 +370,16 @@ public class ApplicationServiceImpl {
 											HttpSession session,
 											String context) {
 	   
-		JobSearchUser sessionUser = SessionContext.getUser(session);
 		
 		// Get the proposal being **RESPONDED TO**.
 		// Per the application id, get the most recent employment proposal in the database.
 		EmploymentProposalDTO proposalBeingRespondedTo = getCurrentEmploymentProposal(
 							employmentProposalDto.getApplicationId());
 
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Job job = jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId());
+
+				
 		// For all responses:
 		// 1) Is the proposal being responded to currently presented TO the session user
 		// 2) AND is this proposal not yet declined? 
@@ -388,106 +398,104 @@ public class ApplicationServiceImpl {
 	
 				case "counter-by-applicant":
 				case "acknowledge-by-employer":
+					
+					
+					
+					// ****************************************************
+					// ****************************************************
+					// Is it desired to have transparency into whether the employer is "accepting"
+					// or "countering" the applicant's proposal?
+					// I'm thinking so. Then we can say to the applicant: "the employer accepted your offer"
+					// or "the employer countered your offer". As an applicant, I think I
+					// would appreciate the distinction.
+					// ****************************************************
+					// ****************************************************
+					
 					// **Employers** must provide an expiration time for all acknowledgments they make.
 					// **Applicants** must counter before the employer's offer is expired.
 					if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
-							isValidExpirationTime(employmentProposalDto) ) || 
-							
-							(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE && 
-									isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
-						
-						// Offers that are pending the applicant's approval
-						// (i.e. the employer has accepted the applicant's proposal)
-						// cannot be countered.
-//						if(proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL){
-					    	
-							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-							
-							newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
-							newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
-							newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-							newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
-							
-							if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
-								newProposal.setEmployerAcceptedDate(LocalDateTime.now());
-								newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));	
-							}
-														
-							// ***********************************************************************************
-							// This needs to be verified
-							if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
-								newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
-							}
-							else{
-								newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
-							}
-							if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
-								newProposal.setAmount(employmentProposalDto.getAmount());
-							}else{
-								newProposal.setAmount(proposalBeingRespondedTo.getAmount());
-							}
-							// ***********************************************************************************
-							
-							this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
-									WageProposal.STATUS_COUNTERED);
-
-							this.insertEmploymentProposal(newProposal);			
-//						}
-					}					
-					break;
-				
-				case "acknowledge-by-employer-old":					
+							isValidExpirationTime(employmentProposalDto) ) || 							
+						(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE && 
+								isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
 					
-					// ****************************************************
-					// ****************************************************
-					// Review whether is makes most sense to place the expiration and accepted timestamps
-					// on the application or the proposal.
-					// As things have evolved, I think it makes more sense to place them on the proposal.
-					// Review this.
-					// ****************************************************
-					// ****************************************************					
-					
-					if(proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL ){
-
-						if(isValidExpirationTime(employmentProposalDto)){
-
-							LocalDateTime employerAcceptedDate = LocalDateTime.now();
-							LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
-																employmentProposalDto);
+						EmploymentProposalDTO newProposal = new EmploymentProposalDTO();						
+						newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
+						newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
+						newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
+						newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 						
-							EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-							
-							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
-							newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
-							newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
-							newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
-							newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);				
+						if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
+							newProposal.setEmployerAcceptedDate(LocalDateTime.now());
+							newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));	
+						}
+													
+						// ***********************************************************************************
+						// This needs to be verified
+						if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
+							newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+						}
+						else{
 							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
-							
-				
-							this.insertEmploymentProposal(newProposal);
-							
-							repository.updateApplication_PendingApplicantApproval(proposalBeingRespondedTo.getApplicationId(),
-																				employerAcceptedDate, expirationDate);				
-						}				
+						}
+						if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
+							newProposal.setAmount(employmentProposalDto.getAmount());
+						}else{
+							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
+						}
+						// ***********************************************************************************
+						
+						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
+								WageProposal.STATUS_COUNTERED);
+
+						this.insertEmploymentProposal(newProposal);		
+						
+						
+						
 					}					
 					break;
-				
+
 				case "approve-by-applicant":
 					
+					// ******************************************************
+					// ******************************************************
+					// Checking whether amount-hired is less than positions-to-be-filled-per-day is not adequate.
+					// Since queries are asynchronous, this condition can be met by two different requests,
+					// while there is only one position left to fill.
+					// This needs to be addressed.
+					// _________________________________________________________
+					// Also, it needs to be verified that each work day has at least one position available.
+					// I think creating a new table that links WorkDayId to UserId is best.
+					// So if Job 123 has WorkDayIds 4 and 5, is filling two positions per day, and hires UserIds 6 and 7:
+					// then the table will have four rows:
+					// 4 and 6;
+					// 5 and 6;
+					// 4 and 7;
+					// 5 and 7;
+					// __________________________________________________________
+					// Update: to verify each proposed work day does indeed have a position available,
+					// the "counts" are being compared. Essentially, we need to handle the situation
+					// where multiple, simultaneous requests for the same position are submitted.
+					// Do we process each request, include a time stamp, then do a post-insert query
+					// to ensure the work day's position's-per-day is not exceeded??? If it is exceeded,
+					// then delete the necessary records starting with the newest time stamps.
+					// ******************************************************
+					// ******************************************************
+					if(!isEmployerAcceptanceExpired(proposalBeingRespondedTo) && 
+							( verificationService.isAPositionAvaiableEachProposedWorkDay(
+									proposalBeingRespondedTo.getEmploymentProposalId(), job.getId())) ){
 		
-					if(!isEmployerAcceptanceExpired(proposalBeingRespondedTo) ){
-		
-//						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
-//														EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
+						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
+														EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
 		
 						this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
 													Application.STATUS_ACCEPTED);
 						
 						this.closeApplication(proposalBeingRespondedTo.getApplicationId());
 						
-						userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(),
-										jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId()).getId());
+						userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
+						
+						
+						resolveApplicationConflicts_withinApplicationsForAJob(job, proposalBeingRespondedTo);
 						
 						resolveApplicationConflicts(session, employmentProposalDto.getApplicationId(),
 											jobService.getWorkDays_byProposalId(proposalBeingRespondedTo.getEmploymentProposalId()));
@@ -499,9 +507,61 @@ public class ApplicationServiceImpl {
 	
 	
 
+	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job, EmploymentProposalDTO proposalDto_justAccepted) {
+		
+		List<WorkDay> workDays_toFindConflictsWith = jobService.getWorkDays_byProposalId(
+										proposalDto_justAccepted.getEmploymentProposalId());
+		List<WorkDay> workDays_withAllPositionsFilled = new ArrayList<WorkDay>();
+		
+		for ( WorkDay workDay_toFindConflictWith : workDays_toFindConflictsWith ){
+			int positions_filled = getCount_positionsFilledByDay(workDay_toFindConflictWith.getDateId(),
+												job.getId());
+			
+			// This condition should only be an equal sign.
+			// However, until we ensure the positions per day will never be exceeded (see note in respondToEmploymentProposal()),
+			// a greater-than-or-equal-to will be used.			
+			if(positions_filled >= job.getPositionsPerDay())
+				workDays_withAllPositionsFilled.add(workDay_toFindConflictWith);
+		}
+		
+		if(workDays_withAllPositionsFilled.size() > 0){
+			List<Application> applications_withConflicts = getOpenApplications_byJob_withAtLeastOneWorkDay(
+					job.getId(), workDays_withAllPositionsFilled);
+			
+			for ( Application application : applications_withConflicts ){
+
+				EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(application.getApplicationId());
+				EmploymentProposalDTO modifiedProposal = currentProposal;
+				
+				modifiedProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
+						currentProposal.getDateStrings_proposedDates(), workDays_withAllPositionsFilled));
+				
+				updateProposal_isCanceledDueToEmployerFillingAllPositions(currentProposal.getEmploymentProposalId());
+//				updateWageProposalStatus(currentProposal.getEmploymentProposalId(),
+//											EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
+				
+				insertEmploymentProposal(modifiedProposal);
+			}
+		}	
+	}
+
+
+	public void updateProposal_isCanceledDueToEmployerFillingAllPositions(Integer employmentProposalId) {
+		repository.updateProposal_isCanceledDueToEmployerFillingAllPositions(employmentProposalId);
+	}
+
+
 	public void resolveApplicationConflicts(HttpSession session, Integer reference_applicationId,
 											List<WorkDay> workDays_toFindConflictsWith) {
 	
+		// **************************************************************
+		// **************************************************************
+		// Design note: two of the three below "for" loops are very, very similar.
+		// The only difference is that the ProposedTo and ProposedBy are switched.
+		// Consider combining these somehow.
+		// **************************************************************
+		// **************************************************************
+		
 
 		List<ApplicationDTO> applicationDtos_conflicting = this.getApplicationDtos_Conflicting(
 												SessionContext.getUser(session).getUserId(),
@@ -546,9 +606,10 @@ public class ApplicationServiceImpl {
 				newProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
 						currentProposal.getDateStrings_proposedDates(), workDays_toFindConflictsWith));
 				
-				insertEmploymentProposal(newProposal);
+				updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(currentProposal.getEmploymentProposalId());
+				insertEmploymentProposal(newProposal);	
 				
-				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
+//				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
 								
 			}
 			
@@ -568,17 +629,25 @@ public class ApplicationServiceImpl {
 				newProposal.setProposedToUserId(currentProposal.getProposedToUserId());
 				newProposal.setAmount(currentProposal.getAmount());
 				newProposal.setStatus(EmploymentProposalDTO.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-				newProposal.setDateStrings_proposedDates(workDays_toFindConflictsWith.stream().map(wd -> wd.getStringDate()).collect(Collectors.toList()));
 				
-				insertEmploymentProposal(newProposal);
-				
-				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
+				newProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
+						currentProposal.getDateStrings_proposedDates(), workDays_toFindConflictsWith));				
+			
+				updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(currentProposal.getEmploymentProposalId());
+				insertEmploymentProposal(newProposal);				
+//				updateWageProposalStatus(currentProposal.getEmploymentProposalId(), EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT);
 								
 			}
 		}
 	
 
 
+		
+	}
+
+
+	public void updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(Integer employmentProposalId) {
+		repository.updateProposal_isCanceledDueToApplicantAcceptingOtherEmployment(employmentProposalId);
 		
 	}
 
@@ -686,17 +755,22 @@ public class ApplicationServiceImpl {
 			
 			applicationDto.setApplication(application);
 			
-			// Wage proposal
+			// Proposal
 			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(application.getApplicationId()));
 			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
 					getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+			applicationDto.setPreviousProposal(getPreviousProposal(
+					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
+					application.getApplicationId()));
 			applicationDto.setWageProposals(this.getWageProposals(application.getApplicationId()));
+			applicationDto.getEmploymentProposalDto().setProposedWorkDays(
+					jobService.getWorkDayDtos_byProposal(applicationDto.getEmploymentProposalDto()));
 			
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
-			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_employeeViewWageProposal(
-						application.getJobId(), application.getApplicationId(), application.getUserId()));
+			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
+						applicationDto.getEmploymentProposalDto()));
 			applicationDto.getJobDto().setMilliseconds_startDate(
 										applicationDto.getJobDto().getJob().getStartDate_local().toEpochDay());
 			applicationDto.getJobDto().setMilliseconds_endDate(
@@ -736,6 +810,12 @@ public class ApplicationServiceImpl {
 		
 		return applicationDtos;
 	}
+
+	public EmploymentProposalDTO getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
+		
+		return repository.getPreviousProposal(referenceEmploymentProposalId, applicationId);
+	}
+
 
 	public void categorizeConflictingApplicationDtos(HttpSession session, ApplicationDTO applicationDto,
 														List<ApplicationDTO> applicationDtos_conflicting) {
@@ -801,7 +881,8 @@ public class ApplicationServiceImpl {
 		
 		if(workDays != null && workDays.size() > 0){
 			
-			List<Application> applications_conflicting = repository.getApplications_WithAtLeastOneWorkDay(userId, reference_applicationId, workDays);
+			List<Application> applications_conflicting = getApplications_WithAtLeastOneWorkDay(
+															userId, reference_applicationId, workDays);
 			
 			for(Application application : applications_conflicting){
 				ApplicationDTO applicationDto = new ApplicationDTO();
@@ -817,6 +898,18 @@ public class ApplicationServiceImpl {
 		return applicationDtos_conflicting;
 	}
 
+
+	public List<Application> getOpenApplications_byJob_withAtLeastOneWorkDay(
+										int jobId, List<WorkDay> workDays){
+		return repository.getOpenApplications__byJob_withAtLeastOneWorkDay(jobId, workDays);
+	}
+	
+	public List<Application> getApplications_WithAtLeastOneWorkDay(int userId, int reference_applicationId,
+			List<WorkDay> workDays) {
+		
+		return repository.getApplications_WithAtLeastOneWorkDay(
+				userId, reference_applicationId, workDays);
+	}
 
 
 	public List<Application> getApplicationsByUser(int userId) {
@@ -879,12 +972,6 @@ public class ApplicationServiceImpl {
 		return userService.getUser(otherUserId);
 	}
 
-	public double getWage(int userId, int jobId) {
-
-		Application application = repository.getApplication(jobId, userId);
-
-		return repository.getWage(application.getApplicationId());
-	}
 
 
 	public void addAnswer(Answer answer) {
@@ -915,8 +1002,8 @@ public class ApplicationServiceImpl {
 		}
 	}
 
-	public void updateHasBeenViewed(Job job, int value) {
-		repository.updateHasBeenViewed(job.getId(), value);
+	public void updateIsNew(Job job, int value) {
+		repository.updateIsNew(job.getId(), value);
 		
 	}
 
@@ -1026,6 +1113,14 @@ public class ApplicationServiceImpl {
 		// *********************************************************
 		// *********************************************************
 		
+		
+		// *******************************************************************
+		// *******************************************************************
+		// If there is a soon-to-be-previous proposal, should this method also be responsible to set the
+		// status of this proposal in addition to setting its IsCurrentProposal = 0??
+		// It will help ensure statuses are always being updated...
+		// *******************************************************************
+		// *******************************************************************
 		// Before this new proposal is added, set the current proposal's IsCurrentProposal to 0
 		EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(employmentProposalDto.getApplicationId());
 		if(currentProposal != null) updateWageProposal_isCurrentProposal(currentProposal.getEmploymentProposalId(), 0);
@@ -1166,10 +1261,13 @@ public class ApplicationServiceImpl {
 			applicationDto.setEmploymentProposalDto(getCurrentEmploymentProposal(applicationId));
 			applicationDto.setWageProposals(getWageProposals(applicationId));
 			
+			// 
+			
+			
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
-			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_employeeViewWageProposal(
-											jobId, applicationId, sessionUser.getUserId()));
+			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
+											applicationDto.getEmploymentProposalDto()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 			
 			jobService.setCalendarInitData(applicationDto.getJobDto(), applicationDto.getJobDto().getWorkDays());
@@ -1189,6 +1287,76 @@ public class ApplicationServiceImpl {
 			
 		}
 		
+	}
+
+
+	public List<WorkDayDto> getWorkDayDtos_proposedWorkDays(int applicationId, HttpSession session) {
+		
+		JobSearchUser sessionUser =  SessionContext.getUser(session);
+		if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE &&
+				verificationService.didUserApplyForJob(jobService.getJob_ByApplicationId(applicationId).getId(),
+														sessionUser.getUserId() ) )
+				
+			||
+			
+			( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
+			verificationService.didSessionUserPostJob(session, jobService.getJob_ByApplicationId(applicationId)) ) ){
+			
+			return jobService.getWorkDayDtos_byProposal(getCurrentEmploymentProposal(applicationId));	
+		}else return null;
+	}
+
+
+	public List<Application> getApplications_byJobAndAtLeastOneWorkDay(int jobId,
+			List<WorkDay> workDays) {
+		
+		return repository.getApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+
+	}
+	
+	public List<Application> getAcceptedApplications_byJobAndAtLeastOneWorkDay(int jobId,
+			List<WorkDay> workDays) {
+		
+		return repository.getAcceptedApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+
+	}
+
+
+	public void updateProposalFlag(EmploymentProposalDTO currentProposal,
+			String proposalFlag, int value) {
+		
+		repository.updateProposalFlag(currentProposal.getEmploymentProposalId(),
+				proposalFlag, value);
+		
+	}
+
+
+	public void openApplication(int applicationId) {
+		repository.openApplication(applicationId);		
+	}
+
+
+	public void deleteEmployment(int userId, int jobId) {
+		repository.deleteEmployment(userId, jobId);
+	}
+
+
+	public String getTotalPayment(EmploymentProposalDTO acceptedProposal) {
+		
+		// ***********************************************************
+		// This assumes each work day starts and ends on the same calendar day
+		// ***********************************************************
+		
+		double totalMinutes = 0;
+		List<WorkDay> workDays = jobService.getWorkDays_byProposalId(acceptedProposal.getEmploymentProposalId());
+		for( WorkDay workDay : workDays){
+			totalMinutes += ChronoUnit.MINUTES.between(
+					LocalTime.parse(workDay.getStringStartTime()),
+					LocalTime.parse(workDay.getStringEndTime()));
+		}
+		
+		
+		return String.format("%.2f", (totalMinutes / 60) * Double.parseDouble(acceptedProposal.getAmount()));
 	}
 
 

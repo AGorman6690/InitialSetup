@@ -1,30 +1,93 @@
+td .employment-col{
+/* 	width: 20%; */
+	width: 100%;
+	display: inline-block;
+	height: 15%;
+/* 	background: #aad4aa; */
+/* 	background: #81c19b; */
+/* 	background: #c3ecd4; */
+	background: #7ec3b4;
+	position: absolute;
+/* 	right: 2px; */
+/* 	bottom: 2px; */
+	right: 0px;
+	bottom: 0px;
+}
+td .col-cont span{
+    bottom: 2px;
+    position: absolute;
+    width: 100%;
+    left: 0px;
+    font-weight: bold;
+}
+td .col-cont{
+	height: 37%;
+/* 	width: 20%; */
+/* 	border: 2px solid #aad4aa; */
+/* 	border: 2px solid #81c19b; */
+	border: 2px solid #7ec3b4;
+/* 	border: 2px solid #c3ecd4; */
+	position: absolute;
+	right: 2px;
+/* 	bottom: 2px; */
+	left: 20%;
+	width: 60%;
+}
+td.all-positions-filled .col-cont{
+/* 	left: 3px; */
+/* 	right: 3px; */
+/* 	width: auto;; */
+/* 	background: #81c19b; */
+/* 	display: none; */
+	
+}
+.v2 td.job-work-day.all-positions-filled .employment-col{
+	display: none;
+}
+.v2 td.job-work-day.all-positions-filled,
+.v2 .calendar td.job-work-day.all-positions-filled a {
+/* 	background: #81c19b; */
+	background: #7ec3b4;	
+}
+td.all-positions-filled .application-count{
+/* 	opacity: 0.6; */
+	display: none;
+}
 td .application-count{
+	display: inline-block;
 /* 	height: 80%; */
 	position: absolute;
-	width: 95%;
+/* 	width: 95%; */
+	width: 60%;
 /* 	height: 50%; */
- 	background: #6e8cc5;
-	bottom: 3px;
+/*  	background: #6e8cc5; */
+/*  	background: #617ea5; */
+ 	background: #36595a;
+/* 	bottoms: 3px; */
+	left: 20%;
 	text-align: center;
+/* 	min-height: 19px; */
 }
 td .employment-fraction{
 /* 	height: 15%; */
 /* 	position: absolute; */
 /* 	bottom: 65%; */
+	display: none;
     background: #aad4aa;
     color: #fff;
     border: 1px solid #6dad6d;
 /*     color: #6dad6d;	 */
 }
 td .application-count span{
-	bottom: 28px;
+/* 	bottom: 28px; */
+/* 	bottom: -2px; */
     left: 41%;
     position: absolute;
-    margin-top: 5px;
+    margin-top: 1px;
     display: inline-block;
-    color: #000;
+/*     color: #000; */
 /*     font-weight: bold;   */
-/*     color: #fff; */
+    color: #fff;
 /* 	left: 33%; */
 /*     background: #fff; */
 /*     border-radius: 29px; */
@@ -33,14 +96,29 @@ td .application-count span{
 }
 
 .calendar td{
-	border: 1px solid #e4e4e4;
+	border: 1px solid #8c8a8a;
 }
 
+td .popup{
+	top: -10px;
+}
+td .col-cont .popup .popuptext{
+	font-weight: normal;
+	background: #fff;
+/* 	display: inline-block; */
+	width: 170px;
+}
+.col-cont .popup .title{
+	display: block;
+}
 td.job-work-day{
 	position: relative;
 }
 td.job-work-day:hover{
 	background: #dcdccb;
+}
+.v2 .calendar td.job-work-day:hover a{
+/* 	background: #dcdccb; */
 }
 .calendar td{
 	padding: 2px;
@@ -48,7 +126,7 @@ td.job-work-day:hover{
     text-align: center;
     height: 75px;
     width: 70px;
-    border-bottom: 2px solid #e4e4e4;
+/*     border-bottom: 2px solid #e4e4e4; */
 }
 .calendar td a{
 /* 	font-size: 18px; */
@@ -57,23 +135,58 @@ td.job-work-day:hover{
 .job-info-calendar.calendar-container .calendar td{
 	height: 100px;
 }
+#job-calendar-application-summary{
+/*     background: #fff7f7; */
+}
+
+.v2 .calendar{
+	padding: 0px;
+}
+
+.v2 td:not(.job-work-day){
+/* 	background: #000; */
+}
+
+.v2.calendar-container td{
+	border-radius: 0px;
+}
+
+.v2 td.job-work-day span{
+	display: none;
+}
 
 
-
-
-
-
-
-
-
-
+.v2 .calendar .ui-datepicker-inline{
+	width: 725px !important;
+    margin: auto;
+/*     border-left: 2px solid #163b3d; */
+/*     border: 2px solid #163b3d; */
+    padding: 20px 26px;
+    background: #fff;
+    margin-top: 28px;
+    border-radius: 13px;    
+    border-top: 15px solid #197994;
+    border-bottom: 15px solid #197994;
+}
 .v2 .calendar td{
-	height: 100px;
+	height: 125px;
+	width: 100px;
 }
 .v2 .calendar td.job-work-day a {
     background: #fff;
     color: #000;
 }
 
+.v2 td.job-work-day:not(.all-positions-filled) {
+    border: 2px solid #163b3d;
 
+}
+.v2 td.job-work-day:not(.all-positions-filled),
+.v2 td.job-work-day:not(.all-positions-filled) a {
+
+    background: #f7f7f7;
+}
+.v2 td.job-work-day:not(.all-positions-filled) .col-cont{
+	background: #fff;
+}
 

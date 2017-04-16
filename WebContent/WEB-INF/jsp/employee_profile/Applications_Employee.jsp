@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 	
 
-		<table class="main-table-style">
+		<table class="main-table-style shadow">
 			<thead>
 <!-- 				<tr class="header-1">		 -->
 <!-- 					<th id="jobName" class="left-edge" colspan="1"></th>					 -->
@@ -76,7 +76,7 @@
 							</label>					
 						</div>					
 					</th>	
-					<th>Proposal</th>
+					<th class="job-status first proposal">Proposal</th>
 <!-- 					<th>Expiration</th> -->
 <!-- 					<th id="action-th" class="left-edge">Status</th>					 -->
 <!-- 					<th class="header-dropdown" data-sort-attr="data-employment-proposal-amount"> -->
@@ -124,7 +124,7 @@
 							<td class="hide-with-calendar">${applicationDto.jobDto.job.city }, ${applicationDto.jobDto.job.state }</td>
 
 <%-- 							<td>${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</td> --%>
-							<td class="${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'alert' : '' }">
+							<td>
 								<c:set var="jobDto" value="${applicationDto.jobDto }" />
 								<%@ include file="../wage_proposal/Proposal_Main.jsp" %>
 							</td>

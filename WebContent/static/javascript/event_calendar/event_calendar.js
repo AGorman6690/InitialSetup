@@ -205,6 +205,7 @@ function setEmploymentLines($calendar){
 			if(line_element.rightEndPoint.isLast) employmentLineWidth -= additionMargin_endPoint;
 			
 			if(j == 0) html += job.jobName;
+			else html += "... " + job.jobName;
 			
 			html += "</div>";
 			

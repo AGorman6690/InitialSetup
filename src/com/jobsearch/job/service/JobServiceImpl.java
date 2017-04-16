@@ -2,13 +2,17 @@ package com.jobsearch.job.service;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +31,9 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
+import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Question;
@@ -157,6 +163,13 @@ public class JobServiceImpl {
 	}
 
 	public void addWorkDays(int jobId, List<WorkDay> workDays) {
+		
+		// **************************************************************
+		// **************************************************************
+		// In order to alert all applicants of this job, 
+		// a flag on the job should be set
+		// **************************************************************
+		// **************************************************************
 
 		for(WorkDay workDay : workDays){
 			workDay.setDate(LocalDate.parse(workDay.getStringDate()));
@@ -944,6 +957,7 @@ public class JobServiceImpl {
 		
 		}	
 		
+		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("context", context);
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
@@ -1007,9 +1021,10 @@ public class JobServiceImpl {
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
 			jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
-			
-			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
-			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
+						
+			applicationService.updateIsNew(jobDto.getJob(), 0);
+			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(
+					jobDto.getJob().getId());
 			
 			break;
 
@@ -1019,9 +1034,9 @@ public class JobServiceImpl {
 														jobId, sessionUser.getUserId()));		
 			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-			break;
 			
-		
+			break;
+					
 		case "complete":
 			
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
@@ -1041,6 +1056,7 @@ public class JobServiceImpl {
 			break;
 		}	
 		
+		model.addAttribute("json_work_day_dtos", JSON.stringify(getWorkDayDtos(jobId)));
 		model.addAttribute("data_pageInit", data_pageInit);
 		model.addAttribute("context", context);
 //		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
@@ -1081,6 +1097,11 @@ public class JobServiceImpl {
 			
 			jobDto.setJob(job);
 			jobDto.setWorkDays(this.getWorkDays(job.getId()));
+			
+			Application application = applicationService.getApplication(job.getId(), userId_employee);
+			EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(
+					application.getApplicationId());
+			jobDto.setWorkDayDtos(getWorkDayDtos_byProposal(currentProposal));
 			
 			jobDtos.add(jobDto);
 		}
@@ -1156,12 +1177,9 @@ public class JobServiceImpl {
 			
 			Job job = this.getJob(jobId);
 			JobSearchUser employer = userService.getUser(this.getJob(jobId).getUserId());
-			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployer() ;
-					
+				
 			model.addAttribute("job", job);
-			model.addAttribute("employer", employer);
-			model.addAttribute("rateCriteria", rateCriteria);
-			
+			model.addAttribute("employer", employer);			
 			return true;
 		}
 		else return false;
@@ -1179,13 +1197,10 @@ public class JobServiceImpl {
 		if(verificationService.didSessionUserPostJob(session, job) && 
 				job.getStatus() == Job.STATUS_PAST){
 			
-			
-			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployee();
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 			
 			model.addAttribute("job", job);
 			model.addAttribute("employees", employees);
-			model.addAttribute("rateCriteria", rateCriteria);			
 			
 			return true;
 		}else return false;
@@ -1237,6 +1252,15 @@ public class JobServiceImpl {
 				.filter(s -> s.getType() == Skill.TYPE_REQUIRED_JOB_POSTING).collect(Collectors.toList()));
 
 		jobDto.setCategories(categoryService.getCategories(jobDto.getCategoryIds()));
+		
+
+		for( WorkDay workDay : jobDto.getWorkDays()){
+			WorkDayDto workDayDto = new WorkDayDto();
+			workDayDto.setWorkDay(workDay);
+			jobDto.getWorkDayDtos().add(workDayDto);
+		}
+		
+		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("jobDto", jobDto);
 		
 	}
@@ -1344,18 +1368,40 @@ public class JobServiceImpl {
 
 	}
 
-	public List<WorkDayDto> getWorkDayDtos_employeeViewWageProposal(int jobId, int applicationId, int userId) {
+	public List<WorkDayDto> getWorkDayDtos_byProposal(EmploymentProposalDTO proposal) {
 		
 		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
-		List<WorkDay> workDays = getWorkDays(jobId);
+		
+		Application application = applicationService.getApplication(proposal.getApplicationId());
+		Job job = getJob_ByApplicationId(proposal.getApplicationId());
+//		List<WorkDay> workDays = getWorkDays_byProposalId(proposal.getEmploymentProposalId());
+		List<WorkDay> workDays = getWorkDays(getJob_ByApplicationId(proposal.getApplicationId()).getId());
 		
 		for(WorkDay workDay: workDays){
 			WorkDayDto workDayDto = new WorkDayDto();
 			
-			workDayDto.setWorkDay(workDay);
-			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(workDay.getWorkDayId(), applicationId));
-			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(userId, workDay.getWorkDayId()));
-			workDayDto.setApplicationDtos_conflictingApplications(applicationService.getApplicationDtos_Conflicting(userId, applicationId, Arrays.asList(workDay)));
+			// Positions filled
+			int positionsFilled = applicationService.getCount_positionsFilledByDay(
+					workDay.getDateId(), job.getId());
+			if(positionsFilled < job.getPositionsPerDay()) workDayDto.setHasOpenPositions(true);
+			else workDayDto.setHasOpenPositions(false);
+			
+			// Is proposed
+			workDayDto.setWorkDay(workDay);			
+			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(
+					workDay.getWorkDayId(), proposal.getApplicationId()));
+			
+			// Conflicting employment
+			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
+					application.getUserId(), workDay.getDateId()));
+			if(workDayDto.getJob_conflictingEmployment() != null)
+				workDayDto.setHasConflictingEmployment(true);
+			else workDayDto.setHasConflictingEmployment(false);
+			
+			// Conflicting applications
+			workDayDto.setApplicationDtos_conflictingApplications(
+					applicationService.getApplicationDtos_Conflicting(
+							application.getUserId(), proposal.getApplicationId(), Arrays.asList(workDay)));
 			workDayDtos.add(workDayDto);
 		}
 		return workDayDtos;
@@ -1392,13 +1438,11 @@ public class JobServiceImpl {
 			if(!isConflicting) dateStrings_conflictsRemoved.add(dateString_toInspect);
 			
 		}
-		
-		
+				
 		return dateStrings_conflictsRemoved;
 	}
 
-	public List<String> getWorkDayDateStrings(int jobId) {
-		
+	public List<String> getWorkDayDateStrings(int jobId) {		
 		return repository.getWorkDayDateStrings(jobId);
 	}
 
@@ -1409,12 +1453,214 @@ public class JobServiceImpl {
 			
 			List<JobSearchUser> users_employees = userService.getEmployeesByJob(jobId);
 			if(users_employees != null){
+				model.addAttribute("json_work_day_dtos",	JSON.stringify(getWorkDayDtos(jobId)));
+				model.addAttribute("jobId", jobId);
 				model.addAttribute("users_employees", users_employees);
 			}else isValidRequest = false;
 
 		}else isValidRequest = false;
 		
 		return isValidRequest;
+	}
+
+	public void replaceEmployee(HttpSession session, int jobId, int userId) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			repository.replaceEmployee(jobId, userId);
+		}
+		
+	}
+
+	public void editJob_workDays(HttpSession session, EditJobDto editJobDto) {
+		
+		if ( verificationService.didSessionUserPostJob(session, editJobDto.getJobId()) &&
+				areValidWorkDays(editJobDto.getNewWorkDays()) ){
+			
+			for(WorkDay new_workDay : editJobDto.getNewWorkDays()){
+				new_workDay.setDate(LocalDate.parse(new_workDay.getStringDate()));
+			}
+			
+			
+			List<WorkDay> workDays_toDelete = new ArrayList<WorkDay>();
+			List<WorkDay> workDays_toAdd = new ArrayList<WorkDay>();
+			List<WorkDay> workDays_toEdit = new ArrayList<WorkDay>();
+			
+			List<WorkDay> current_workDays = getWorkDays(editJobDto.getJobId());
+			
+			// Delete or edit current work days
+			for(WorkDay current_workDay : current_workDays){
+				
+				boolean deleteCurrentWorkDay = true;
+				for(WorkDay new_workDay : editJobDto.getNewWorkDays()){
+					
+					if(new_workDay.getDate().equals(current_workDay.getDate())){
+						deleteCurrentWorkDay = false;
+						if(!new_workDay.getStringStartTime().matches(current_workDay.getStringStartTime()) ||
+								!new_workDay.getStringEndTime().matches(current_workDay.getStringEndTime())	){
+						
+							new_workDay.setWorkDayId(current_workDay.getWorkDayId());;
+							workDays_toEdit.add(new_workDay);
+						}						
+						break;
+					}
+				}
+				
+				if(deleteCurrentWorkDay) workDays_toDelete.add(current_workDay);
+			}
+			
+			// Add new work days
+			for(WorkDay new_workDay : editJobDto.getNewWorkDays()){			
+				
+				boolean addNewWorkDay = true;
+				for(WorkDay current_workDay : current_workDays){
+					
+					if(new_workDay.getDate().equals(current_workDay.getDate())){
+						addNewWorkDay = false;
+						break;
+					}
+				}
+				
+				if(addNewWorkDay) workDays_toAdd.add(new_workDay);
+			}	
+
+			
+		
+			this.addWorkDays(editJobDto.getJobId(), workDays_toAdd);
+			this.deleteWorkDays(editJobDto.getJobId(), workDays_toDelete, editJobDto.getProposalDto());
+			this.updateWorkDayTimes(editJobDto.getJobId(), workDays_toEdit);
+			
+			
+		}
+		
+	}
+
+	public void updateWorkDayTimes(int jobId, List<WorkDay> workDays) {
+		
+		//*************************************************************************
+		//*************************************************************************
+		// Need to check if the job's current employment is affected by the time change 
+		//*************************************************************************
+		//*************************************************************************
+		
+		if(verificationService.isListPopulated(workDays)){
+			
+			List<Application> affectedApplications = 
+					applicationService.getApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+			
+			for(Application affectedApplication : affectedApplications){
+				EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(
+						affectedApplication.getApplicationId());
+				
+	
+				applicationService.updateProposalFlag(currentProposal,
+						EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED, 1);
+						
+			}
+			
+			for(WorkDay workDay : workDays){
+				repository.updateWorkDay(workDay.getWorkDayId(), workDay.getStringStartTime(),
+						workDay.getStringEndTime());
+			}
+		}		
+	}
+
+	public void deleteWorkDays(int jobId, List<WorkDay> workDays_toDelete,
+									EmploymentProposalDTO proposalDto_withExpirationTime) {
+		
+		if(verificationService.isListPopulated(workDays_toDelete)){
+		
+			Job job = getJob(jobId);
+			
+			// Affected applications that are open (not accepted)
+			List<Application> affectedApplications = 
+					applicationService.getApplications_byJobAndAtLeastOneWorkDay(jobId, workDays_toDelete);
+			
+			for(Application affectedApplication : affectedApplications){
+				EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(
+						affectedApplication.getApplicationId());
+					
+				applicationService.updateProposalFlag(currentProposal,
+						EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED, 1);
+				
+//				repository.deleteProposedWorkDays(workDays_toDelete);			
+			}
+			
+			
+			// Affected employment			
+			List<Application> affectedApplications_employees = applicationService.
+					getAcceptedApplications_byJobAndAtLeastOneWorkDay(jobId, workDays_toDelete);			
+			
+			for(Application application : affectedApplications_employees){
+				
+				EmploymentProposalDTO acceptedProposal = applicationService.getCurrentEmploymentProposal(
+						application.getApplicationId());
+				
+				
+				// Update flags
+				applicationService.updateProposalFlag(acceptedProposal,
+						EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED, 1);
+				applicationService.updateProposalFlag(acceptedProposal,
+						EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED, 1);
+				
+				// Insert new proposal
+				EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
+				newProposal.setApplicationId(application.getApplicationId());
+				newProposal.setAmount(acceptedProposal.getAmount());
+				newProposal.setProposedByUserId(job.getUserId());
+				newProposal.setProposedToUserId(application.getUserId());
+				newProposal.setStatus(EmploymentProposalDTO.STATUS_PENDING_APPLICANT_APPROVAL);
+				newProposal.setEmployerAcceptedDate(LocalDateTime.now());				
+				newProposal.setExpirationDate(applicationService
+						.getExpirationDate(newProposal.getEmployerAcceptedDate(),
+								proposalDto_withExpirationTime));
+				newProposal.setDateStrings_proposedDates(
+						removeConflictingWorkDays(acceptedProposal.getDateStrings_proposedDates(),
+								workDays_toDelete));
+				
+				applicationService.insertEmploymentProposal(newProposal);
+				
+				// Undo this employment record
+				applicationService.openApplication(application.getApplicationId());
+				applicationService.deleteEmployment(application.getUserId(), application.getJobId());
+			}
+			
+			repository.deleteProposedWorkDays(workDays_toDelete);		
+			repository.deleteWorkDays(workDays_toDelete);
+		}
+	}
+
+	public boolean setModel_editJob_removeWorkDays_preProcess(Model model, HttpSession session, int jobId,
+			List<String> dateStrings_remove) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			
+			List<WorkDay> workDays = getWorkDays_byJobAndDateStrings(jobId, dateStrings_remove);
+			
+			List<Application> affectedApplications_employees = applicationService.
+					getAcceptedApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
+			
+			List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
+						
+			for(Application application : affectedApplications_employees){
+				ApplicationDTO applicationDto = new ApplicationDTO();
+				applicationDto.setApplication(application);
+				applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));
+				applicationDtos.add(applicationDto);
+			}
+			
+			model.addAttribute("applicationDtos", applicationDtos);
+			return true;
+			
+		}
+		
+		return false;
+	}
+
+	public List<WorkDay> getWorkDays_byJobAndDateStrings(int jobId, List<String> dateStrings) {
+		
+		if(verificationService.isListPopulated(dateStrings)){
+			return repository.getWorkDays_byJobAndDateStrings(jobId, dateStrings);
+		}else return null;
 	}
 	
 }

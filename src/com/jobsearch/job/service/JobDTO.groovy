@@ -42,7 +42,15 @@ public class JobDTO {
 	 // WorkDayDtos is suffice.
 	 List<WorkDay> workDays
 	 // **************************************************************
+
+	 // ****************************************************
+	 // ****************************************************
+	 // Remove the work day dtos. place them in the employment proposal Dto.
+	 // these dtos are always in the context of a proposal
 	 List<WorkDayDto> workDayDtos
+	 // ****************************************************
+	 // ****************************************************
+	 
 	 String date_firstWorkDay
 	 int months_workDaysSpan
 	 double daysUntilStart
@@ -91,6 +99,7 @@ public class JobDTO {
 	 JobDTO(){
 		 this.job = new Job();	
 		 this.workDays = new ArrayList<WorkDay>();	 
+		 this.workDayDtos = new ArrayList<WorkDayDto>();
 	 }
 
 

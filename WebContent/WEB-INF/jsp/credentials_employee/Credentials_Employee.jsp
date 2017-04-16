@@ -21,8 +21,10 @@
 		</div>
 		<div id="personalInfo">
 			<div class="info">
-				<p id="make-edits" class="linky-hover">Edit</p>
-				<p id="save-edits" class="">Save</p>
+				<c:if test="${isViewingOnesSelf }">
+					<p id="make-edits" class="linky-hover">Edit</p>
+					<p id="save-edits" class="">Save</p>
+				</c:if>
 				<div class="lbl">Home Location
 <!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
@@ -53,21 +55,18 @@
 					</div>
 				</c:if>				
 			</div>
-			<div class="info">
-				<div class="lbl">Minimum hourly wage
-<!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
-				</div>
-				<div class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">
-					$${userDto.user.stringMinimumDesiredPay } per hour</div>
+<!-- 			<div class="info"> -->
+<!-- 				<div class="lbl">Minimum hourly wage -->
+<!-- 				</div> -->
+<%-- 				<div class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }"> --%>
+<!-- 					$${userDto.user.stringMinimumDesiredPay } per hour</div> -->
 				
-				<c:if test="${isViewingOnesSelf }">
-					<div id="editMinimumPay" class="edit-container">
-						<div><span class="lbl">$ per hour</span><input id="dollarsPerHour" type="text" value="${userDto.user.stringMinimumDesiredPay }"></div>
-<!-- 						<button id="saveMinimumPay" class="save-changes square-button-green">Save</button> -->
-<!-- 						<div class="cancel-changes">Cancel</div> -->
-					</div>					
-				</c:if>
-			</div>
+<%-- 				<c:if test="${isViewingOnesSelf }"> --%>
+<!-- 					<div id="editMinimumPay" class="edit-container"> -->
+<%-- 						<div><span class="lbl">$ per hour</span><input id="dollarsPerHour" type="text" value="${userDto.user.stringMinimumDesiredPay }"></div> --%>
+<!-- 					</div>					 -->
+<%-- 				</c:if> --%>
+<!-- 			</div> -->
 			<div class="info">
 				<div data-toggle-id="aboutContainer" class="lbl">About
 					<span class="glyphicon glyphicon-menu-down"></span>
@@ -87,71 +86,71 @@
 					</p>
 				 </div>
 			</div>			
-			<div class="info">
-				<div data-toggle-id="availabilityCalendarContainer" class="lbl">
-					Availability<span class="glyphicon glyphicon-menu-down"></span>
-				</div>
-				<div id="availabilityCalendarContainer" class="value calendar-container">
-					<c:if test="${isViewingOnesSelf }">
-						<a id="editAvailability" class="accent" href="/JobSearch/availability">Edit</a>
-					</c:if>
-					<div id="availabilityCalendar" class="calendar"></div>
-				</div>					
-			</div>
+<!-- 			<div class="info"> -->
+<!-- 				<div data-toggle-id="availabilityCalendarContainer" class="lbl"> -->
+<!-- 					Availability<span class="glyphicon glyphicon-menu-down"></span> -->
+<!-- 				</div> -->
+<!-- 				<div id="availabilityCalendarContainer" class="value calendar-container"> -->
+<%-- 					<c:if test="${isViewingOnesSelf }"> --%>
+<!-- 						<a id="editAvailability" class="accent" href="/JobSearch/availability">Edit</a> -->
+<%-- 					</c:if> --%>
+<!-- 					<div id="availabilityCalendar" class="calendar"></div> -->
+<!-- 				</div>					 -->
+<!-- 			</div> -->
 
 		</div>
 	
 	</div>
 
-	<div class="availability-container calendar-container">
-		<div class="header-container">
-			<h3>Calendar<span class="glyphicon glyphicon-pencil"></span></h3>
-		</div>	
-		<div class="days-of-week-container checkbox-container">
-			<div><label><input class="select-all" type="checkbox">Select all</label></div>
-			<div class="options">
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="0">Su</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="1">Mo</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="2">Tu</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="3">We</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="4">Th</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="5">Fr</label>
-				<label><input type="checkbox" name="days-of-week" data-day-of-week="6">Sa</label>
-			</div>
-		</div>
-		<div class="calendar"></div>
+<!-- 	<div class="availability-container calendar-container"> -->
+<!-- 		<div class="header-container"> -->
+<!-- 			<h3>Calendar<span class="glyphicon glyphicon-pencil"></span></h3> -->
+<!-- 		</div>	 -->
+<!-- 		<div class="days-of-week-container checkbox-container"> -->
+<!-- 			<div><label><input class="select-all" type="checkbox">Select all</label></div> -->
+<!-- 			<div class="options"> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="0">Su</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="1">Mo</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="2">Tu</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="3">We</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="4">Th</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="5">Fr</label> -->
+<!-- 				<label><input type="checkbox" name="days-of-week" data-day-of-week="6">Sa</label> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 		<div class="calendar"></div> -->
 		
 		
-			<div id="applicationDetails">				
-				<c:forEach items="${applicationDtos }" var="applicationDto">
-					<div class="application" data-id="${applicationDto.application.applicationId }"
-							 data-job-name="${applicationDto.jobDto.job.jobName }"
-							 data-job-id="${applicationDto.jobDto.job.id}"
-							 data-job-status="${applicationDto.jobDto.job.status}">									
-						<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay">
-							<div class="work-day" data-date="${workDay.stringDate }"></div>
-						</c:forEach>
-					</div>
-				</c:forEach>				
-			</div>	
+<!-- 			<div id="applicationDetails">				 -->
+<%-- 				<c:forEach items="${applicationDtos }" var="applicationDto"> --%>
+<%-- 					<div class="application" data-id="${applicationDto.application.applicationId }" --%>
+<%-- 							 data-job-name="${applicationDto.jobDto.job.jobName }" --%>
+<%-- 							 data-job-id="${applicationDto.jobDto.job.id}" --%>
+<%-- 							 data-job-status="${applicationDto.jobDto.job.status}">									 --%>
+<%-- 						<c:forEach items="${applicationDto.jobDto.workDays }" var="workDay"> --%>
+<%-- 							<div class="work-day" data-date="${workDay.stringDate }"></div> --%>
+<%-- 						</c:forEach> --%>
+<!-- 					</div> -->
+<%-- 				</c:forEach>				 --%>
+<!-- 			</div>	 -->
 			
-			<div id="employmentDetails">
-				<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">				
-					<div class="job" data-job-id="${jobDto.job.id}"
-									data-job-name="${jobDto.job.jobName }">											 
-						<c:forEach items="${jobDto.workDays }" var="workDay">
-							<div class="work-day" data-date="${workDay.stringDate }"></div>
-						</c:forEach>					
-					</div>						
-				</c:forEach>				
-			</div>		
+<!-- 			<div id="employmentDetails"> -->
+<%-- 				<c:forEach items="${jobDtos_employment_currentAndFuture }" var="jobDto">				 --%>
+<%-- 					<div class="job" data-job-id="${jobDto.job.id}" --%>
+<%-- 									data-job-name="${jobDto.job.jobName }">											  --%>
+<%-- 						<c:forEach items="${jobDto.workDays }" var="workDay"> --%>
+<%-- 							<div class="work-day" data-date="${workDay.stringDate }"></div> --%>
+<%-- 						</c:forEach>					 --%>
+<!-- 					</div>						 -->
+<%-- 				</c:forEach>				 --%>
+<!-- 			</div>		 -->
 			
-			<div id="availabilityDetails">
-				<c:forEach items="${userDto.availableDays }" var="dateString">														 
-					<div class="work-day" data-date="${dateString }"></div>					
-				</c:forEach>				
-			</div>				
-	</div>
+<!-- 			<div id="availabilityDetails"> -->
+<%-- 				<c:forEach items="${userDto.availableDays }" var="dateString">														  --%>
+<%-- 					<div class="work-day" data-date="${dateString }"></div>					 --%>
+<%-- 				</c:forEach>				 --%>
+<!-- 			</div>				 -->
+<!-- 	</div> -->
 <c:if test="${!empty userDto.jobDtos_jobsCompleted }">
 	<div id="workHistoryContainer">
 		<div class="header-container">

@@ -1,10 +1,14 @@
-var selectedDays = [];
 var $calendar_workDays;
+var $calendar_times;
+//var workDayDtos = [];
+
 $(document).ready(function(){
 	
 	
 	$calendar_workDays = $("#workDaysCalendar_postJob");
-
+	$calendar_times= $("#select-times-cal");
+	
+	
 	
 	$("#next-section, #previous-section").click(function(){
 		
@@ -20,14 +24,18 @@ $(document).ready(function(){
 		$nextSection.click();				
 	})	
 	
+	$("#select-times.select-page-section").click(function(){
+		
+//		if($calendar_times.attr("data-required-updating") == "1")
+//			initCalendar_setStartAndEndTimes($calendar_times, workDayDtos);
+		
+	})
+	
 
 	$("#proceed-to-preview-job-posting").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
 //		if(arePostJobInputsValid()){
 			executeAjaxCall_previewJobPosting(getJobDto());
-			
-
-
 //		}
 	})
 	
@@ -55,50 +63,7 @@ $(document).ready(function(){
 	$("#startNewJob").click(function(){
 		showPostJobSections();
 	})
-	
-	$("#timesTable tbody").on("change", "select.select-all.start-time", function(){
-		
-		var time = $(this).val();
-		$("#timesTable tbody").find("tr.selected select.start-time:not(.select-all)").each(function(){
-			$(this).val(time);
-		})
-	})
-	
-	$("#timesTable tbody").on("change", "select.select-all.end-time", function(){
-		
-		var time = $(this).val();
-		$("#timesTable tbody").find("tr.selected select.end-time:not(.select-all)").each(function(){
-			$(this).val(time);
-		})
 
-	})
-	
-	$("#timesTable tbody").on("change", "input[type=checkbox]", function(){
-		
-		if($(this).is(":checked")) $(this).closest("tr").addClass("selected");
-		else $(this).closest("tr").removeClass("selected");
-		
-		if($("#timesTable tbody").find("input[type=checkbox][name=time]:checked").length > 1){
-			var k = $("#timesTable tbody").find(".start-time.select-all").eq(0);
-			$("#timesTable tbody").find(".start-time.select-all").eq(0).prop("disabled", false);
-			$("#timesTable tbody").find(".end-time.select-all").eq(0).prop("disabled", false);
-		}
-		else{
-			$("#timesTable tbody").find(".start-time.select-all").eq(0).prop("disabled", true);
-			$("#timesTable tbody").find(".end-time.select-all").eq(0).prop("disabled", true);
-		}
-	})
-	
-	$("#timesTable tbody").on("change", "input[type=checkbox].select-all", function(){
-		
-		var doCheck = $(this).is(":checked");
-
-		$("#timesTable tbody").find("input[type=checkbox]:not(.select-all)").each(function(){
-			$(this).prop("checked", doCheck).change();			
-		})
-		
-		
-	})
 	
 	$("#previous-job-posts div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));
@@ -126,33 +91,20 @@ $(document).ready(function(){
 		
 	})	
 	
-	$("#times-are-the-same").click(function(){
-		
-		if($(this).hasClass("gray")){
-			$("#set-one-start-and-end-time").show();
-			$("#timesTableContainer").hide();
-			highlightArrayItem(this, $("#initial-time-question").find("button"), "selected");
-		}
 
-	})
-	
-	$("#times-are-not-the-same").click(function(){
-		
-		if($(this).hasClass("gray")){
-			$("#set-one-start-and-end-time").hide();
-			$("#timesTableContainer").show();
-			highlightArrayItem(this, $("#initial-time-question").find("button"), "selected");
-		}
-
-	})	
 	
 	setStates();
 	setTimeOptions($("#single-start-time"), 30);
 	setTimeOptions($("#single-end-time"), 30);
+	setTimeOptions($("#multiple-start-times"), 30);
+	setTimeOptions($("#multiple-end-times"), 30);
 	setTimeOptions($("#startTime-singleDate"), 30);
 	setTimeOptions($("#endTime-singleDate"), 30);
+	setTimeOptions($("#endTime-singleDate"), 30);
 	
-	initCalendar_WorkDays();
+//	var workDayDtos = [];
+
+	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
 	
 	$("body").on("mouseover", "#workDaysCalendar_postJob.show-hover-range td", function(){
 		
@@ -166,90 +118,14 @@ $(document).ready(function(){
 })
 
 function resetCalendar(){
-	selectedDays = [];	
+	workDayDtos = [];	
 	$calendar_workDays.datepicker("refresh");
 	$calendar_workDays.removeClass("show-hover-range");
 }
 
-function initCalendar_WorkDays(){
-	
-	var $calendar = $("#workDaysCalendar_postJob");
-	
-	$calendar.datepicker({
-		minDate: new Date(),
-		numberOfMonths: 2, 
-		onSelect: function(dateText, inst) {	    
-			
-			var isThisTheFirstDateSelected = false;
-			var isThisTheSecondDateSelected = false;
-			
-			if(selectedDays.length == 0) isThisTheFirstDateSelected = true;
-			if(selectedDays.length == 1) isThisTheSecondDateSelected = true;
-			
-			selectedDays = onSelect_multiDaySelect_withRange(dateText, selectedDays);
-			
-			// Create the time elements
-			var tdDate;
-			var $clonedRow;
-			$("#timesTable tbody").empty();
-			$("#timesTable thead .master-row-multi-select").clone().appendTo("#timesTable tbody");
-			
-			$(selectedDays).each(function(){		
-			
-				$clonedRow = $("#timesTable thead .master-row").clone();
-				
-				tdDate = $clonedRow.find(".date").eq(0);
-				$(tdDate).html($.datepicker.formatDate("D M dd", this));
-				$(tdDate).attr("data-date", $.datepicker.formatDate("yy-mm-dd", this))
-				$("#timesTable tbody").append($clonedRow);
-				
-				
-			})
-			
-			$("#timesTable tbody tr select.time").each(function(){
-				setTimeOptions($(this), 30);
-			})
-			
-			if(isThisTheFirstDateSelected){
-				$calendar.addClass("show-hover-range");
-				$calendar.attr("data-first-date", dateText);
-			}
-			else $calendar.removeClass("show-hover-range");
-			
-			if(selectedDays.length == 0){
-				resetTimesSection();
-				resetCalendar();
-			}
-			
-			else if(isThisTheSecondDateSelected){
-				$("#no-dates-selected").hide();
-				$("#initial-time-question").show();
-				$("#set-one-start-and-end-time").hide();
-				$("#timesTableContainer").hide();
-			}
-			else if(selectedDays.length == 1){
-				$("#timesTableContainer").hide();
-				$("#no-dates-selected").hide();	
-				$("#initial-time-question").hide();
-				$("#set-one-start-and-end-time").show();
-			}
-//				$("#timesTableContainer").show();
-//				$("#no-dates-selected").hide();
-//				
-//				$("#timesTable tbody input.select-all").prop("checked", true).change();
-//			}
-
-		},		        
-        // This is run for every day visible in the datepicker.
-        beforeShowDay: function (date) {       
-        	return beforeShowDay_ifSelected(date, selectedDays);        	
-     	}
-    });	
-}
 
 function resetTimesSection(){
-	$("#timesTable tbody").empty();
-	$("#timesTableContainer").hide();
+	$("#times-cont").hide();
 	$("#no-dates-selected").show();	
 	$("#initial-time-question").hide();
 	$("#set-one-start-and-end-time").hide();
@@ -425,8 +301,7 @@ function resetSkills(){
 }
 
 function resetDatesAndTimes(){
-	selectedDays = [];
-	$("#timesTable tbody").empty();
+	workDayDtos = [];
 	$("#workDaysCalendar_postJob").datepicker("refresh");
 }
 
@@ -504,18 +379,32 @@ function getSkills(){
 }
 
 function getWorkDays(){
-	var dates = $("#timesTable tbody tr.work-day-row") //getSelectedDates($("#workDaysCalendar_postJob"), "yy-mm-dd");
+
 	var workDays = [];
+	if($("#times-are-the-same").hasClass("selected")){
+		var singleStartTime = $("#single-start-time").find("option:selected").attr("data-filter-value");
+		var singleEndTime = $("#single-end-time").find("option:selected").attr("data-filter-value");
 	
-	$(dates).each(function(){
-		
-		var workDay = {};
-		workDay.stringDate = $(this).find("td.date").eq(0).attr("data-date");
-		workDay.stringStartTime = $(this).find('select.start-time option:selected').eq(0).attr("data-filter-value");
-		workDay.stringEndTime = $(this).find('select.end-time option:selected').eq(0).attr("data-filter-value");
-		
-		workDays.push(workDay);
-	})
+		$(workDayDtos).each(function(){			
+			var workDay = {};
+			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
+			workDay.stringStartTime = singleStartTime;
+			workDay.stringEndTime = singlEndTime;			
+			workDays.push(workDay);
+		})
+	}else{
+	
+		$(workDayDtos).each(function(){
+			
+			var workDay = {};
+			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
+			workDay.stringStartTime = this.workDay.value_startTime;
+			workDay.stringEndTime = this.workDay.value_endTime;
+			
+			workDays.push(workDay);
+		})	
+	}
+
 	
 	return workDays;
 }
@@ -569,8 +458,11 @@ function executeAjaxCall_previewJobPosting(jobDto){
 	
 		$("#displayExample_jobInfo").html(html_jobInfo);
 		
-		setWorkDays();
-		initCalendar_jobInfo_workDays();
+		var $e = $("#json_work_day_dtos");
+		workDayDtos = JSON.parse($e.html());
+		$e.empty(); 
+//		setWorkDays();
+		initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos);
 		initMap();
 //		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
 	}		

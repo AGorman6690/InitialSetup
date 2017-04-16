@@ -12,11 +12,13 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.repository.UserRepository;
 
@@ -149,6 +151,26 @@ public class VerificationServiceImpl {
 		if(currentProposal.getProposedToUserId() == SessionContext.getUser(session).getUserId())
 			return true;
 		else return false;
+	}
+
+	public boolean isAPositionAvaiableEachProposedWorkDay(Integer employmentProposalId, int jobId) {
+		
+		
+		List<WorkDayDto> workDayDtos_jobWorkDay = jobService.getWorkDayDtos(jobId);
+		List<WorkDay> workDays_proposed = jobService.getWorkDays_byProposalId(employmentProposalId);
+		
+		for( WorkDay workDay_proposed : workDays_proposed){			
+			for(WorkDayDto workDayDto_jobWorkDay : workDayDtos_jobWorkDay){
+				if(workDay_proposed.getWorkDayId() ==
+						workDayDto_jobWorkDay.getWorkDay().getWorkDayId()){
+					if(workDayDto_jobWorkDay.getCount_positionsFilled() ==
+							workDayDto_jobWorkDay.getCount_totalPositions())
+						return false;
+				}
+			}			
+		}
+		
+		return true;
 	}
 	
 

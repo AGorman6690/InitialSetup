@@ -1,3 +1,14 @@
+.expiration-time-cont p:last-child{
+    border-bottom: 1px solid #cacaca;
+}
+.expiration-time-cont p{
+    margin: 14px auto;
+    width: 400px;
+}
+span.expiration-time{
+    font-weight: bold;
+    font-size: 17px;
+}
 .response-container .mod-content {
     top: 20px;
     width: 1200px;
@@ -20,9 +31,10 @@
 
 .current-wage-proposal{
 	width: 120px;
-	font-size: 20px;
-    background: #fcfdc1;
-    border: 2px solid #163b3d;
+/* 	font-size: 20px; */
+	font-size: 28px;
+/*     background: #fcfdc1; */
+/*     border: 2px solid #163b3d; */
     padding: 4px;
     margin: auto;
 }
@@ -45,23 +57,39 @@
     width: 100px;
     text-align: left;
 }
-
+.mod-content .mod-body{
+	background: #f9f9f9;
+}
 
 .button-group .sqr-btn.gray-2{
 	padding: 8px 13px;
 	margin: 0;
 }
-
+.mod-header h2{
+	font-size: 24;
+}
+.reviewing .proposal h1,
+.reviewing .proposed-work-day-count{
+	display: none;
+}
+.confirmation-container{
+	width: 500px;
+    margin: auto;
+    text-align: left;
+}
 .present-proposal h1{
-	font-size: 22px;
+	font-size: 21px;
 	font-weight: bold;
 	color: #197994;
 	margin-bottom: 25px;
     display: inline-block;
-    /* border-left: 2px solid #163b3d; */
-    padding: 10px 10px;
-    border-bottom: 2px solid #163b3d;
-    width: 300px;
+    border-left: 6px solid #163b3d;
+    padding: 5px 10px;
+/*     border-bottom: 2px solid #163b3d; */
+    width: 400px;
+    box-shadow: 3px 3px 3px #cacaca;
+/*     background: #f9f9f9; */
+	background: #fff;
 }
 
 .button-group button.selected{
@@ -152,38 +180,44 @@ input.counter-wage-amount{
 
 .application-proposal-container .proposal-item{
 	display: inline-block;
-	padding: 0px 10px;
+	padding: 0px 25px;
 	text-align: left;
 }
 .application-proposal-container{
-	width: 550px
+/* 	width: 550px */
 } 
 .proposal-item.amount{
-	width: 23%;
+/* 	width: 23%; */
 }
 .proposal-item.amount .show-wage-proposal-history {
 	margin: 0px;
 }
 .proposal-item.work-days{
-	width: 25%;
+/* 	width: 25%; */
 }
 .proposal-item.status{
-	width: 20%;
+/* 	width: 20%; */
 }
 .proposal-item.respond{
-	width: 20%;
+/* 	width: 20%; */
 }
 .proposal-item.status p{
 /* 	display: inline-block */
 }
-.application-proposal-container.alert{
+.application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
-    border: 2px solid #bb6f6f;
-	padding: 20px 0px;
-	border-radius: 10px;
+	background: #fff3f3;
+/* 	color: #fff; */
+    border: 2px solid #904d4d;
+
 }
-.application-proposal-container.alert .proposal-item > p{
-/* .application-proposal-container.alert .proposal-item > button{ */
+.application-proposal-container{
+	padding: 20px 0px;
+	border: 2px solid #cacaca;
+	border-radius: 4px;	
+}
+.application-proposal-container.action-required .proposal-item > p{
+/* .application-proposal-container.action-required .proposal-item > button{ */
 /* 	color: #fff; */
 	color: #000;
 }
@@ -225,4 +259,19 @@ input.counter-wage-amount{
 .conflicting-applications .applications li{
 	color: #337ab7;
 	font-weight: bold;
+}
+
+
+.proposal-input{
+/* 	display: none; */
+}
+.proposal h1 .glyphicon{
+	font-size: 20px;
+}
+.proposal-item.work-days .mod-content{
+    width: 1200px;
+    margin-left: -600px;
+}
+.proposal-item.work-days > p{
+	cursor: pointer;
 }
