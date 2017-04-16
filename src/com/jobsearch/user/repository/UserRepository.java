@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.google.Coordinate;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Endorsement;
@@ -25,8 +24,6 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.utilities.VerificationServiceImpl;
-
-import ch.qos.logback.core.joran.conditional.IfAction;
 
 @Repository
 public class UserRepository {

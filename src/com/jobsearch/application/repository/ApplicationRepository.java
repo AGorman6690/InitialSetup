@@ -4,17 +4,13 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.Application;
@@ -27,14 +23,9 @@ import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
-import com.jobsearch.model.WorkDayProposal;
 import com.jobsearch.model.application.ApplicationInvite;
-import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
-
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
-import sun.launcher.resources.launcher;
 
 @Repository
 public class ApplicationRepository {

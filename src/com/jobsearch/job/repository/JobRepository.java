@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -22,18 +21,14 @@ import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
-
-import ch.qos.logback.core.joran.conditional.IfAction;
-import io.codearte.catchexception.shade.mockito.internal.verification.Only;
-import jdk.nashorn.internal.runtime.regexp.joni.constants.Arguments;
 
 
 @Repository
