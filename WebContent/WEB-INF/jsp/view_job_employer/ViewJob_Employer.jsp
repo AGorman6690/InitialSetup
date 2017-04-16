@@ -15,6 +15,7 @@
 	<%@ include file="../includes/resources/Modal.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
+	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
 	
 	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>

@@ -46,7 +46,7 @@ $(document).ready(function(){
 	
 	
 	
-	$(".favorite-flag").click(function(){ updateApplicationStatus($(this)) })
+	$("body").on("click", ".favorite-flag", function(){ updateApplicationStatus($(this)) })
 	
 })
 

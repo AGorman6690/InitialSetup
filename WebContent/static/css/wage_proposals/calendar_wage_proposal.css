@@ -1,4 +1,4 @@
-.proposal-container .calendar td {
+.calendar-container .calendar td {
 	padding: 0px;
     vertical-align: top;
     text-align: center;
@@ -7,7 +7,7 @@
 /* 	background: #f9f9f9; */
 	background: #fff;
 }
-.proposal-container .calendar td:not(.ui-datepicker-other-month){
+.calendar td:not(.ui-datepicker-other-month){
     border: 1px solid #e4e4e4;	
     height: 103px;
 }
@@ -45,6 +45,7 @@ td.job-work-day{
 .proposal.work-day-container td.job-work-day.no-available-positions{
 /* 	background: #3d8457; */
 	background: #3d847b;
+	background: #7ec3b4;
 }
 td.job-work-day.has-conflicting-employment{
 	background: #a23030;
@@ -59,15 +60,17 @@ td.job-work-day.has-conflicting-employment{
 .job-work-day.has-conflicting-employment .select-work-day{
 	display: none;
 }
-.proposal.work-day-container td.job-work-day.has-conflicting-employment a,
-.proposal.work-day-container td.job-work-day.has-conflicting-employment .added-content p,
 .proposal.work-day-container td.job-work-day.no-available-positions a,
 .proposal.work-day-container td.job-work-day.no-available-positions .added-content p{
+	font-weight: bold;
+	color: #000;
+}
+.proposal.work-day-container td.job-work-day.has-conflicting-employment a,
+.proposal.work-day-container td.job-work-day.has-conflicting-employment .added-content p,
+{
 	color: #fff;
 }
-.proposal.work-day-container td.job-work-day.no-available-positions .added-content p{
-	font-weight: normal;
-}
+
 td.job-work-day.has-conflicting-employment{
 	cursor: default;
 }
@@ -78,11 +81,15 @@ td.job-work-day{
 	background: #fff;
 /* 	border: 2px solid #99ce99; */
 /* 	border: 2px solid #163b3d; */
-	border: 2px solid #245212;
+/* 	border: 2px solid #245212; */
+	border: 2px solid #36595a;
 }
 .added-content .glyphicon-ok{
 	font-size: 28px;
 /* 	display: none; */
+}
+#work-day-proposal-input .proposal-container .calendar *:hover{
+    cursor: not-allowed !important;
 }
 td.job-work-day.proposed-work-day .added-content .glyphicon-ok{
 /* 	color: #163b3d; */
@@ -95,7 +102,8 @@ td.job-work-day.proposed-work-day a{
 	display: block;
 	width: 100%;
 /*  	background: #99ce99; */
- 	background: #41a560;
+/*  	background: #41a560; */
+ 	background: #36595a;
 /*  	background: #245212; */
 /* 	background: #163b3d; */
 /* 	background: #197994; */

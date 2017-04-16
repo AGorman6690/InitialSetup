@@ -6,7 +6,6 @@ table.main-table-style{
 /*     border-bottom: 1px solid #ddd; */
 /*     border-top: 1px solid #ddd; */
 }
-
 .main-table-style.shadow > thead > tr:last-child{
 	box-shadow: 3px 3px 5px #848484;
 }
@@ -66,7 +65,8 @@ table.main-table-style{
 /*     background: #197994;     */
 }
 .main-table-style th.teal{
-	background: #197994;	
+/* 	background: #197994;	 */
+	background: #36595a;
     color: #fff;
 }
 .main-table-style th.teal.first{

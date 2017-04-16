@@ -7,7 +7,7 @@
 	
 	<c:otherwise>
 	
-		<table id="employeesTable" class="main-table-style shadow left-border">
+		<table id="employeesTable" class="main-table-style shadow">
 			<thead>
 				<tr>
 					<th id="Name">Name</th>

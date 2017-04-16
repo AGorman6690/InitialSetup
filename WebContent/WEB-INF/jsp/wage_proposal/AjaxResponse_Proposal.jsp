@@ -22,7 +22,7 @@
 				</c:if>							
 				<h1>Wage</h1>								
 				<div class="proposal-container">
-					<h2>${user.profileId == 1 ? "Employer's" : "Applicant's" } proposal</h2>
+					<h2>${user.profileId == 1 ? "Employer" : "Applicant" } proposed</h2>
 					<p class="current-wage-proposal">$ ${applicationDto.employmentProposalDto.amount }</p>											
 				</div>
 				<div class="button-group pad-top">
@@ -49,6 +49,7 @@
 			<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }"> 	
 				<div class="proposal work-day-container">		
 					<h1 data-toggle-id="work-day-proposal-input">Work Days<span class="glyphicon glyphicon-menu-down"></span></h1>
+						
 					<div id="work-day-proposal-input" class="proposal-input">
 						<c:if test="${user.profileId == 1 }">
 							<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0  ||
@@ -104,8 +105,9 @@
 								<p class="accept">You are <span class="bold">accepting</span> the following work days</p>
 								<p class="counter">You are <span class="bold">proposing</span> the following work days</p>
 							</div>																										
-			<%-- 									<p class="number-of-work-days">${applicationDto.dateStrings_availableWorkDays.size() } of ${applicationDto.jobDto.workDays.size() } days</p>	 --%>
-							<div class="proposal-container">						
+							
+							<div class="proposal-container">	
+								<h2 class="proposed-work-day-count">${user.profileId == 1 ? 'Employer' : 'Applicant' } proposed ${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } work days</h2>												
 								<div class="calendar-container wage-proposal-calendar hide-prev-next read-only">
 									<div class="calendar"
 										data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
@@ -114,7 +116,7 @@
 								</div>
 							</div>
 							<div class="counter-container">									
-								<div class="job-info-calendar calendar-container wage-proposal-calendar hide-prev-next">									
+								<div class="calendar-container wage-proposal-calendar hide-prev-next">									
 									<div class="calendar"
 										data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 										data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>

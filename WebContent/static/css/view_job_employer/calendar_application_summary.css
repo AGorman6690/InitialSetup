@@ -66,7 +66,7 @@ td .application-count{
 /* 	bottoms: 3px; */
 	left: 20%;
 	text-align: center;
-	min-height: 19px;
+/* 	min-height: 19px; */
 }
 td .employment-fraction{
 /* 	height: 15%; */
@@ -99,6 +99,18 @@ td .application-count span{
 	border: 1px solid #8c8a8a;
 }
 
+td .popup{
+	top: -10px;
+}
+td .col-cont .popup .popuptext{
+	font-weight: normal;
+	background: #fff;
+/* 	display: inline-block; */
+	width: 170px;
+}
+.col-cont .popup .title{
+	display: block;
+}
 td.job-work-day{
 	position: relative;
 }
@@ -106,7 +118,7 @@ td.job-work-day:hover{
 	background: #dcdccb;
 }
 .v2 .calendar td.job-work-day:hover a{
-	background: #dcdccb;
+/* 	background: #dcdccb; */
 }
 .calendar td{
 	padding: 2px;

@@ -15,7 +15,31 @@ $(document).ready(function(){
 		$(this).hide();
 	}})
 	
-	initCalendar_employerViewJob_applicantSummary()
+	initCalendar_employerViewJob_applicantSummary();
+	
+	$("body").on("mouseover", "td.job-work-day:not(.all-positions-filled) .col-cont", function() {
+		$(this).find(".popuptext").show()
+	})
+	
+	$("body").on("mouseout", "td.job-work-day:not(.all-positions-filled) .col-cont", function() {
+		$(this).find(".popuptext").hide()
+	})
+	
+	$("body").on("mouseover", "td.job-work-day.all-positions-filled", function() {
+		$(this).find(".col-cont .popuptext").show();
+	})
+	
+	$("body").on("mouseout", "td.job-work-day.all-positions-filled", function() {
+		$(this).find(".col-cont .popuptext").hide()
+	})
+	
+	$("body").on("mouseover", "td.job-work-day .application-count", function() {
+		$(this).find(".popuptext").show()
+	})
+	
+	$("body").on("mouseout", "td.job-work-day .application-count", function() {
+		$(this).find(".popuptext").hide()
+	})	
 	
 })
 
@@ -71,15 +95,28 @@ function initCalendar_employerViewJob_applicantSummary() {
 				
 //				html = "<div class='employment-fraction'>" + workDayDto.count_positionsFilled + " / " + workDayDto.count_totalPositions + "</div>";
 				html += "<div class='col-cont'>";
+				html += "<div class='popup'>"
+						+ "<div class='popuptext'>"
+						+ "<h4 class=''>Positions Filled</h4>" +
+						+ workDayDto.count_positionsFilled +
+									" of " + workDayDto.count_totalPositions
+						+ "</div></div>";
 				html += "<div class='employment-col'></div>";
 				html += "<span>" + workDayDto.count_positionsFilled +
 									" of " + workDayDto.count_totalPositions + "</span>";
 				html += "</div>";
 				html += "<div class='application-count'>";
+				html += "<div class='popup'>"
+					+ "<div class='popuptext'>"
+					+ "<h4 class=''>Applications</h4>"
+					+ workDayDto.count_applicants
+					+ "</div></div>";				
 				html += "<span>";
 				html += workDayDto.count_applicants;
 				html += "</span>";
-				html += "</div>"					
+				html += "</div>";		
+					
+				
 					
 					
 				$(td).append(html);

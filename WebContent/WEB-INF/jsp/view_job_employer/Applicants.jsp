@@ -40,7 +40,8 @@
 					 data-filter-attr="data-application-status" data-must-match-all-filter-values="0">
 					
 						<span data-toggle-id="filterApplicationStatus" >
-							Name<span class="glyphicon glyphicon-menu-down"></span>
+							<span class="favorite-flag glyphicon glyphicon glyphicon-star-empty"></span>						
+<!-- 							Name<span class="glyphicon glyphicon-menu-down"></span> -->
 						</span>
 						<div id="filterApplicationStatus" class="dropdown-container filter-container checkbox-container">
 <!-- 							<span class="approve-filter glyphicon glyphicon-ok"></span> -->
@@ -83,7 +84,7 @@
 							 data-filter-attr="data-answer-option-ids-seleted"
 							 data-must-match-all-filter-values="1">
 							<span data-toggle-id="filterAnswersContainer" >
-								Answers<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>
+								<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>
 							</span>					
 							<div id="filterAnswersContainer" class="dropdown-container dropdown-style filter-container" >
 								
@@ -140,7 +141,7 @@
 					</c:if>									
 
 					<th class="proposal teal first">
-						<p>Proposal</p>
+<!-- 						<p>Proposal</p> -->
 						<div>
 							<div class="sort-proposal-cont">
 								<span>Amount</span>						

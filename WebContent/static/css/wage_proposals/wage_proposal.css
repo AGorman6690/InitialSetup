@@ -68,7 +68,8 @@ span.expiration-time{
 .mod-header h2{
 	font-size: 24;
 }
-.reviewing .proposal h1{
+.reviewing .proposal h1,
+.reviewing .proposed-work-day-count{
 	display: none;
 }
 .confirmation-container{
@@ -77,7 +78,7 @@ span.expiration-time{
     text-align: left;
 }
 .present-proposal h1{
-	font-size: 18px;
+	font-size: 21px;
 	font-weight: bold;
 	color: #197994;
 	margin-bottom: 25px;

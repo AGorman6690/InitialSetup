@@ -11,3 +11,12 @@
 th.proposal{
 	width: 600px;
 }
+
+td .popuptext h4{
+	border-bottom: 1px solid #cacaca;
+}
+
+#applicantsTable > thead,
+#employeesTable > thead{
+    border-top: 10px solid #163b3d;
+}
