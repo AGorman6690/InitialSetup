@@ -1,3 +1,7 @@
+
+tr.in-process{
+	background: #a7cebc;
+}
 .container{
 	padding: 50px 0px;
 	width: 1200px;
@@ -29,7 +33,7 @@ a.new{
 	background: #429cb5;	
 }
 #table_jobsWaitingToStart thead tr th#offers-waiting-on.job-status.applicant-perspective{
-	background: #2089a7;	
+/* 	background: #2089a7;	 */
 }
 
 /* #table_jobsWaitingToStart thead tr th.job-status{ */
@@ -102,9 +106,6 @@ th{
 td.job-name{
 	position: relative;
 }
-td.job-name .glyphicon-pencil{
-    position: absolute;
-    top: 8px;
-    left: 5px;
-    color: #bbb;
+td .glyphicon-pencil{
+    color: #888;
 }

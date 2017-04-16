@@ -121,12 +121,21 @@ function parseWorkDayDtosFromDOM($e) {
 
 function selectButton($button){
 	
+	
 	var $buttonGroup = $button.closest(".button-group");
 	var className = $buttonGroup.attr("data-class-name");
 	if(className == undefined) className = "selected";
 	
-	if($button.hasClass(className)) $button.removeClass(className);
-	else highlightArrayItem($button, $buttonGroup.find("button"), className);
+	var doNotToggle = false;
+	if($buttonGroup.hasClass("no-toggle")) doNotToggle = true;
+	
+	if(doNotToggle){
+		highlightArrayItem($button, $buttonGroup.find("button"), className);
+	}else{
+		if($button.hasClass(className)) $button.removeClass(className);
+		else highlightArrayItem($button, $buttonGroup.find("button"), className);	
+	}
+	
 }
 
 

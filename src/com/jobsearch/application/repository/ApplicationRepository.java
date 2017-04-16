@@ -61,6 +61,7 @@ public class ApplicationRepository {
 				application.setUserId(rs.getInt("UserId"));
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
+				application.setIsNew(rs.getInt("IsNew"));
 				application.setStatus(rs.getInt("Status"));
 				
 				
@@ -543,8 +544,8 @@ public class ApplicationRepository {
 		return AnswerOptionRowMapper(sql, new Object[] { answerOptionId }).get(0);
 	}
 
-	public void updateHasBeenViewed(Integer jobId, int value) {
-		String sql = "UPDATE application SET HasBeenViewed = ? where jobId = ?";
+	public void updateIsNew(Integer jobId, int value) {
+		String sql = "UPDATE application SET IsNew = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
@@ -586,10 +587,10 @@ public class ApplicationRepository {
 				+ " WHERE j.JobId = ?"
 				+ " AND wp.ProposedToUserId = ?"
 				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND wp.IsNew = 1"
+				+ " AND wp.Status = ?"
 				+ " AND a.IsOpen = 1";
 	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId },
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
 											Integer.class);
 
 	}
@@ -610,8 +611,7 @@ public class ApplicationRepository {
 		
 		String sql = "SELECT COUNT(*) FROM application a"
 				+ " WHERE a.JobId = ?"
-				+ " AND a.HasBeenViewed = 0"
-				+ " AND a.IsOpen = 1";
+				+ " AND a.IsNew = 1";
 	
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
 	}

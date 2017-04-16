@@ -77,7 +77,7 @@ function initCalendar_employerViewJob_applicantSummary() {
 				html += "</div>";
 				html += "<div class='application-count'>";
 				html += "<span>";
-				if(workDayDto.count_applicants > 0) html += workDayDto.count_applicants;
+				html += workDayDto.count_applicants;
 				html += "</span>";
 				html += "</div>"					
 					
@@ -106,8 +106,8 @@ function initCalendar_employerViewJob_applicantSummary() {
 				if(workDayDto.count_positionsFilled == workDayDto.count_totalPositions )
 					$(td).addClass("all-positions-filled");
 				else{
-					$employmentDiv.css("height", minHeight_compensation + maxHeightPercentage 
-							* ( workDayDto.count_positionsFilled / workDayDto.count_totalPositions ) + "%");	
+					$employmentDiv.css("height", minHeight_compensation +
+							 100 * ( workDayDto.count_positionsFilled / workDayDto.count_totalPositions ) + "%");	
 				}
 					
 				
@@ -143,22 +143,21 @@ function initPage(){
 	
 	var data_initPage = $("#data_pageInit").val();
 
-	if(data_initPage != "all-apps"){
+	if(data_initPage == "hired") {
+		$(".select-page-section[data-page-section-id='employeesContainer']").eq(0).click();
+	}
+	else if(data_initPage != "all-apps"){
 	
 		var filters = [];
 		var filter = {};
 		filter.values = [];
 	
 		switch(data_initPage){
-		case "new-apps":
-			filter.attr = "data-is-old";
-			filter.values.push("0");
+		case "applicants-new":
+			filter.attr = "data-is-new";
+			filter.values.push("1");
 			break;
-		
-	// 	case "all-apps":
-	// 		showApplications(true, true, false, false );
-	// 		break;
-		
+			
 		case "sent-proposals":
 			filter.attr = "data-is-sent-proposal";
 			filter.values.push("1");
@@ -173,11 +172,16 @@ function initPage(){
 			filter.attr = "data-wage-proposal-status";
 			filter.values.push("-2");
 			break;		
+
 		}
 		
 		
 		filters.push(filter);
 		filterTableRows(filters, $("#applicantsTable"));
+		
+		var hiddenRows = $("#applicantsTable").find("tr:hidden").length;
+		var allRows = $("#applicantsTable").find("tr").length;
+		if(hiddenRows == allRows) $("#showAllApplicants").hide();
 		
 	}	
 }

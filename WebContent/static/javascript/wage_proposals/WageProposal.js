@@ -5,7 +5,7 @@ $(document).ready(function(){
 	
 //	initCalendar_proposedWorkDays();
 
-	$(".application-proposal-container .proposal-item.work-days p").click(function() {
+	$("body").on("click", ".application-proposal-container .proposal-item.work-days p", function() {
 	
 		var applicationId = $(this).closest("tr").attr("data-application-id");
 		var $calendar = $(this).closest(".proposal-item").find(".calendar").eq(0);
@@ -56,14 +56,21 @@ $(document).ready(function(){
 	$("body").on("click", ".proceed-to-confirmation-container .confirm", function (){
 		setExpirationTimeToConfirm($(this));
 		showConfirmationContainer($(this));			
+		$(this).closest(".mod-body").addClass("reviewing");
 		
 	})
 	
 	$("body").on("click", ".send-proposal-container .send", function() { sendEmploymentProposal($(this)) })
 	
-	$("body").on("click", ".cancel", function() { $(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click() })
+	$("body").on("click", ".cancel", function() {
+		$(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click();
+			
+	})
 	
-	$("body").on("click", ".send-proposal-container .edit", function() { hideConfirmationContainer($(this)) })
+	$("body").on("click", ".send-proposal-container .edit", function() {
+		hideConfirmationContainer($(this));
+		$(this).closest(".mod-body").removeClass("reviewing");	
+	})
 	
 	$("body").on("click", ".approve-by-applicant", function() { sendApplicantApproval($(this)) });
 	

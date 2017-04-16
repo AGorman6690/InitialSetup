@@ -252,30 +252,25 @@ public class UserServiceImpl {
 		return repository.getEmployeesByCategory(categoryId);
 	}
 
-	public void insertRatings(SubmitRatingDTOs_Wrapper submitRatingDTOs_Wrapper) {
-
+	public void insertRatings(List<SubmitRatingDTO> submitRatingDTOs, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
 		// For each employee's rating
-		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs_Wrapper.getSubmitRatingDtos()) {
+		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs) {
 
 			// Rate criterion
 			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
-				rc.setEmployeeId(submitRatingDto.getEmployeeId());
-				rc.setJobId(submitRatingDTOs_Wrapper.getJobId());
+				rc.setUserId_ratee(submitRatingDto.getUserId_ratee());
+				rc.setUserId_rater(sessionUser.getUserId());
+				rc.setJobId(submitRatingDto.getJobId());
 				repository.updateRating(rc);
 			}
 
-			// Endorsements
-			deleteEndorsements(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId());
-			for (Integer categoryId : submitRatingDto.getEndorsementCategoryIds()) {
-				Endorsement endorsement = new Endorsement(submitRatingDto.getEmployeeId(), categoryId,
-						submitRatingDTOs_Wrapper.getJobId());
-				repository.addEndorsement(endorsement);
-			}
-
 			// Comment
-			deleteComment(submitRatingDTOs_Wrapper.getJobId(), submitRatingDto.getEmployeeId());
+			deleteComment(submitRatingDto.getJobId(), submitRatingDto.getUserId_ratee());
 			if (submitRatingDto.getCommentString() != "") {
-				repository.addComment(submitRatingDto.getEmployeeId(), submitRatingDTOs_Wrapper.getJobId(),
+				repository.addComment(submitRatingDto.getUserId_ratee(), submitRatingDto.getJobId(),
 						submitRatingDto.getCommentString());
 			}
 
@@ -655,6 +650,10 @@ public class UserServiceImpl {
 		// *************************************************************
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(employee.getUserId());
 		
+		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employee.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);	
+		
 		model.addAttribute("user", employee);
 		
 		model.addAttribute("applicationDtos", applicationDtos);
@@ -688,9 +687,12 @@ public class UserServiceImpl {
 		return jobDtos_applicationInvites;
 	}
 
-	public void setModel_EmployerProfile(JobSearchUser employer, Model model) {
+	public void setModel_EmployerProfile(JobSearchUser employer, Model model, HttpSession session) {
 
 		List<JobDTO> jobDtos = jobService.getJobDtos_employerProfile(employer.getUserId());
+		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employer.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);	
 
 		model.addAttribute("jobDtos", jobDtos);
 		
@@ -799,12 +801,10 @@ public class UserServiceImpl {
 	
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
-		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
+		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) 
 			this.setModel_EmployeeProfile(sessionUser, model, session);
-		}
-		else{
-			this.setModel_EmployerProfile(sessionUser, model);
-		}
+		else
+			this.setModel_EmployerProfile(sessionUser, model, session);
 		
 	}
 

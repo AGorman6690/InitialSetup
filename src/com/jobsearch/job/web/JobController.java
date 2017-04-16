@@ -297,7 +297,8 @@ public class JobController {
 	public String viewRateEmployer(@PathVariable(value= "jobId") int jobId,
 									Model model, HttpSession session) {
 
-		if(jobService.setModel_ViewRateEmployer(jobId, model, session)) return "/ratings/RateEmployer";
+		if(jobService.setModel_ViewRateEmployer(jobId, model, session))
+			return "/ratings/RateEmployer";
 		else return SessionContext.get404Page();
 	}	
 
@@ -305,7 +306,8 @@ public class JobController {
 	public String viewRateEmployees(@PathVariable(value= "jobId") int jobId,
 									Model model, HttpSession session) {
 
-		if(jobService.setModel_ViewRateEmployees(jobId, model, session)) return "/ratings/RateEmployees";
+		if(jobService.setModel_ViewRateEmployees(jobId, model, session))
+			return "/ratings/RateEmployees";
 		else return SessionContext.get404Page();
 	}
 	

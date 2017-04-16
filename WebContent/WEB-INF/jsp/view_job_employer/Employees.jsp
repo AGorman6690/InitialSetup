@@ -7,13 +7,13 @@
 	
 	<c:otherwise>
 	
-		<table id="employeesTable" class="main-table-style shadow">
+		<table id="employeesTable" class="main-table-style shadow left-border">
 			<thead>
 				<tr>
 					<th id="Name">Name</th>
 					<th>Hourly Wage</th>
 					<th>Work Days</th>
-					<th>Total Payment</th>
+					<th>Total Wage</th>
 				</tr>
 			</thead>
 			<tbody>						

@@ -1,3 +1,40 @@
+#main-cont{
+	width: 830px;
+	margin: auto;	
+}
+.if-no{
+	display:none;
+	padding-left: 30px;
+    border-bottom: 1px solid #cacaca;	
+}
+button.selected{
+	color: #fff;
+}
+button.yes.selected{
+	background: #3c8c55;
+}
+button.no.selected{
+	background: #ab2929;
+}
+.button-group{
+	padding: 5px 0px 15px 30px;
+}
+.rate-criterion .radio-container label{
+	display: block;
+}
+.rating-criteria-cont{
+	display: none;
+}
+.rate-criterion p:first-of-type{
+	font-weight: bold;
+}
+.rate-criterion .button-group{
+/* 	display: inline-block; */
+}
+.star-rating-cont .caption,
+.star-rating-cont .clear-rating{
+	display: none;
+}
 h2{
 	font-weight: bold;
 	font-size: 18px;
@@ -22,42 +59,28 @@ p a{
 	color: #000000;	
 }
 
-.item > p,
-.my-rating-container{
+.item > p{
 /* 	padding-left: 50px;	 */
 }
-.my-rating-container > p{
-	font-weight: bold;
-	color: #197994;
-}
-.my-rating-container{
-    padding-bottom: 30px;
-    padding-left: 40px;
-}
+
 
 textarea{
 	width: 350px;
 }
 
 .rating-container{
-	padding-left: 30px;
+/* 	padding-left: 30px; */
 }
 
-.my-rating-container .rating-container .clear-rating{
-	display: none;
-}
+
 
 .item{
 /* 	padding-bottom: 25px; */
 }
 
-.my-container{
-	width: 700px;
-	margin: auto;
-	padding-top: 35px;
-}
+
 #ratings-cont{
-	float: right;
+/* 	float: right; */
 }
 #ratings-cont,
 #employee-list{

@@ -1021,9 +1021,10 @@ public class JobServiceImpl {
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
 			jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
-			
-			applicationService.updateHasBeenViewed(jobDto.getJob(), 1);
-			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(jobDto.getJob().getId());
+						
+			applicationService.updateIsNew(jobDto.getJob(), 0);
+			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(
+					jobDto.getJob().getId());
 			
 			break;
 
@@ -1033,9 +1034,9 @@ public class JobServiceImpl {
 														jobId, sessionUser.getUserId()));		
 			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-			break;
 			
-		
+			break;
+					
 		case "complete":
 			
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
@@ -1176,12 +1177,9 @@ public class JobServiceImpl {
 			
 			Job job = this.getJob(jobId);
 			JobSearchUser employer = userService.getUser(this.getJob(jobId).getUserId());
-			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployer() ;
-					
+				
 			model.addAttribute("job", job);
-			model.addAttribute("employer", employer);
-			model.addAttribute("rateCriteria", rateCriteria);
-			
+			model.addAttribute("employer", employer);			
 			return true;
 		}
 		else return false;
@@ -1199,13 +1197,10 @@ public class JobServiceImpl {
 		if(verificationService.didSessionUserPostJob(session, job) && 
 				job.getStatus() == Job.STATUS_PAST){
 			
-			
-			List<RateCriterion> rateCriteria = userService.getRatingCriteia_toRateEmployee();
 			List<JobSearchUser> employees = userService.getEmployeesByJob(jobId);
 			
 			model.addAttribute("job", job);
 			model.addAttribute("employees", employees);
-			model.addAttribute("rateCriteria", rateCriteria);			
 			
 			return true;
 		}else return false;

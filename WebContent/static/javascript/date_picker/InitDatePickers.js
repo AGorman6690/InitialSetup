@@ -200,7 +200,8 @@ function initCalendar_showWorkDays($calendar, workDayDtos){
 				var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
 				
 				html = "<div class='added-content'>";
-				html += "<p>7:30a</p><p>5:30p</p>";
+				html += "<p class='full'>Full</p>";
+				html += "<p class='time'>7:30a</p><p class='time'>5:30p</p>";
 				html += "<div class='select-work-day'>";
 				html += "<span class='glyphicon glyphicon-ok'></span>";
 				html += "</div>";	

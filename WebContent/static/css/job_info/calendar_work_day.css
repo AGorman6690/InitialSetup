@@ -1,3 +1,13 @@
+td .added-content p.full{
+	display: none;
+	padding-top: 20px;
+}
+td.no-available-positions .added-content p.full{
+	display: block;
+}
+td.no-available-positions .added-content p.time{
+	display: none;
+}
 td.active111.proposed-work-day .start-and-end-times{
 	border: 2px solid  #163b3d;
 	background: #fcfdc1;

@@ -292,10 +292,18 @@ public class UserRepository {
 	}
 
 	public void updateRating(RateCriterion rc) {
-		String sql = "UPDATE rating SET Value = ? WHERE RateCriterionId = ? AND UserId = ? AND JobId = ?";
+		String sql = "UPDATE rating SET Value = ?"
+					+ " WHERE RateCriterionId = ?"
+					+ " AND UserId = ?"
+					+ " AND RatedByUserId = ?"
+					+ " AND JobId = ?";
 
 		jdbcTemplate.update(sql,
-				new Object[] { rc.getValue(), rc.getRateCriterionId(), rc.getEmployeeId(), rc.getJobId() });
+				new Object[] { rc.getValue(),
+						rc.getRateCriterionId(),
+						rc.getUserId_ratee(),
+						rc.getUserId_rater(),
+						rc.getJobId() });
 
 	}
 

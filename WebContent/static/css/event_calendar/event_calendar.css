@@ -141,9 +141,11 @@ td.application-hover .application-count{
 	background: #e4e4e4;
 }
 
-
+#event-calendar-mod .ui-datepicker-today a{
+	color: #fff;
+}
 #event-calendar-mod .ui-datepicker-today{
-	background: #cacaca;
+	background: #197994;
 }
 #event-calendar-mod{
 	display: block;

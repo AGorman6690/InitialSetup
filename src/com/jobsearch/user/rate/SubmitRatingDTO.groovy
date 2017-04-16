@@ -7,14 +7,17 @@ import com.jobsearch.model.RateCriterion;
 
 class SubmitRatingDTO {
 
-	@JsonProperty("employeeId")
-	int employeeId
+	@JsonProperty("jobId")
+	int jobId
+	
+	@JsonProperty("userId_ratee")
+	int userId_ratee
 
 	@JsonProperty("rateCriteria")
 	List<RateCriterion> rateCriteria
 
-	@JsonProperty("endorsementCategoryIds")
-	List<Integer> endorsementCategoryIds
+//	@JsonProperty("endorsementCategoryIds")
+//	List<Integer> endorsementCategoryIds
 	
 	@JsonProperty("commentString")
 	String commentString

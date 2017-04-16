@@ -26,8 +26,7 @@
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants.css" />
-		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants_tileView.css" />
-			
+		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants_tileView.css" />	
 	</c:if>
 	
 	<c:if test="${context == 'complete' }">	
@@ -43,8 +42,10 @@
 	<div class="select-page-section-container">	
 		<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
 	</div>	
-	<div id="job-calendar-application-summary" class="pad-top-2 v2 hide-unused-rows calendar-container">
+	<div id="job-calendar-application-summary" class="v2 hide-unused-rows hide-prev-next calendar-container">
+		<div class="left-fill"></div>
 		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+		<div class="right-fill"></div>
 	</div>		
 	<div class="container">	
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
@@ -53,7 +54,7 @@
 			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
 		</c:if>
 		<c:if test="${context == 'waiting' }">
-			<div id="applicantsContainer" class="page-section">
+			<div id="applicantsContainer" class="page-section pad-top-2">
 				<div id="applicants" class="">
 					<%@ include file="./Applicants.jsp" %>
 				</div>

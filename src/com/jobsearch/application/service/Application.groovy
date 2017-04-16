@@ -16,6 +16,7 @@ public class Application {
 	int userId
 	int jobId
 	int hasBeenViewed
+	int isNew
 	
 	// ******************************
 	// Do away with these.

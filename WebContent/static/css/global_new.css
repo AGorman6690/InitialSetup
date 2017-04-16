@@ -77,9 +77,10 @@ input, select, textarea{
     color: #163b3d;
     cursor: pointer;
     margin: 0px 7px;
-    border: 2px solid#bbbbbb;
+    border: 1px solid #bbbbbb;
     padding: 2px 10px;
-    background: #f4f4f4;
+/*     background: #f9f9f9; */
+	background: #fff;
 }
 .sqr-btn.gray-2.selected{
 	color: #fff;

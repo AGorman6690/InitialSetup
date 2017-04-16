@@ -1002,8 +1002,8 @@ public class ApplicationServiceImpl {
 		}
 	}
 
-	public void updateHasBeenViewed(Job job, int value) {
-		repository.updateHasBeenViewed(job.getId(), value);
+	public void updateIsNew(Job job, int value) {
+		repository.updateIsNew(job.getId(), value);
 		
 	}
 

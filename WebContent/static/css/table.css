@@ -10,7 +10,9 @@ table.main-table-style{
 .main-table-style.shadow > thead > tr:last-child{
 	box-shadow: 3px 3px 5px #848484;
 }
-
+.main-table-style.shadow.left-border > thead > tr:last-child{
+	border-left: 5px solid #163b3d;
+}
 .main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
 	margin: 0px 5px;
 	padding: 5px;

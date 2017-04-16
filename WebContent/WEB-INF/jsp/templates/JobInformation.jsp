@@ -91,50 +91,18 @@
 </div>
 <div id="json_work_day_dtos">${json_work_day_dtos }</div>
 
-	<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Employment Type
-			</div>
-			<div class="info-value col-sm-8">
-				<div class="checkbox">
-					<label><input type="checkbox" checked disabled>Employee</label>					
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" disabled>Contractor</label>					
-				</div>
-			</div>
-		</div>					
-		<div class="info-container row">
-			<div class="info-label col-sm-4">
-				Compensation
-			</div>
-			<div class="info-value col-sm-8">
-				<div class="checkbox">
-					<label><input type="checkbox" disabled checked>Accepting all offers</label>					
-				</div>
-				<div class="checkbox">
-					<label><input type="checkbox" disabled >Specified pay range</label>
-	<!-- 								<div>Min: $15 / hr</div> -->
-	<!-- 								<div>Max: $25 / hr</div>					 -->
-				</div>
-			</div>
-		</div>	
-
-		
-	
-		
-		<a class="square-button-green" href="/JobSearch/job/${jobDto.job.id }/update/status/1">Start Job (for debugging)</a>	
-		<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<a class="square-button-green" href="/JobSearch/job/${jobDto.job.id }/update/status/1">Start Job (for debugging)</a>	
+<a href="/JobSearch/job/${jobDto.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
 
 
 		

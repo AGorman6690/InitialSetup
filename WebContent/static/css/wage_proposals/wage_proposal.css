@@ -57,7 +57,9 @@ span.expiration-time{
     width: 100px;
     text-align: left;
 }
-
+.mod-content .mod-body{
+	background: #f9f9f9;
+}
 
 .button-group .sqr-btn.gray-2{
 	padding: 8px 13px;
@@ -66,17 +68,27 @@ span.expiration-time{
 .mod-header h2{
 	font-size: 24;
 }
+.reviewing .proposal h1{
+	display: none;
+}
+.confirmation-container{
+	width: 500px;
+    margin: auto;
+    text-align: left;
+}
 .present-proposal h1{
-	font-size: 19px;
+	font-size: 18px;
 	font-weight: bold;
 	color: #197994;
 	margin-bottom: 25px;
     display: inline-block;
-    /* border-left: 2px solid #163b3d; */
-    padding: 10px 10px;
+    border-left: 6px solid #163b3d;
+    padding: 5px 10px;
 /*     border-bottom: 2px solid #163b3d; */
     width: 400px;
     box-shadow: 3px 3px 3px #cacaca;
+/*     background: #f9f9f9; */
+	background: #fff;
 }
 
 .button-group button.selected{
@@ -193,7 +205,7 @@ input.counter-wage-amount{
 }
 .application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
-	background: #ffd7d7;
+	background: #fff3f3;
 /* 	color: #fff; */
     border: 2px solid #904d4d;
 
@@ -250,7 +262,7 @@ input.counter-wage-amount{
 
 
 .proposal-input{
-	display: none;
+/* 	display: none; */
 }
 .proposal h1 .glyphicon{
 	font-size: 20px;

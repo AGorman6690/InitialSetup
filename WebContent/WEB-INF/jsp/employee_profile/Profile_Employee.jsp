@@ -22,12 +22,12 @@
 		
 <script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>		
 		
-<div class="select-page-section-container">
-	<span data-page-section-id="applications_list_view" class="selected select-page-section">List</span>
-	<span data-page-section-id="applications_calendar_view"  class="select-page-section ">Calendar</span>
-	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view"
-		class="select-page-section override-click-event">List/Calendar</span>
-</div>
+<!-- <div class="select-page-section-container"> -->
+<!-- 	<span data-page-section-id="applications_list_view" class="selected select-page-section">List</span> -->
+<!-- 	<span data-page-section-id="applications_calendar_view"  class="select-page-section ">Calendar</span> -->
+<!-- 	<span id="show_list_and_calendar" data-page-section-id="applications_list_calendar_view" -->
+<!-- 		class="select-page-section override-click-event">List/Calendar</span> -->
+<!-- </div> -->
 	
 <div id="applicationDetails">	
 	<c:forEach items="${applicationDtos }" var="applicationDto">
@@ -77,7 +77,7 @@
 	</c:forEach>					
 </div>
 <div class="container">
-	<div id="applications_list_view" class="page-section">
+	<div id="applications_list_view" class="">
 		<c:choose>
 			<c:when test="${applicationDtos.size() > 0 }">	
 				<%@ include file="./Applications_Employee.jsp" %>									
@@ -86,15 +86,5 @@
 				<p id="noApplications">You have no open applications at this time.</p>
 			</c:otherwise>		
 		</c:choose>
-	</div>
-	<div id="applications_calendar_view" class="page-section">
-		<div class="calendar-container teal-title">
-			<div class="calendar"></div>
-		</div>
-	</div>
-	<div id="applications_list_calendar_view">
-		<div class="calendar-container">
-			<div class="calendar"></div>
-		</div>	
 	</div>
 </div>

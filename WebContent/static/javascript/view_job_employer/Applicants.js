@@ -20,7 +20,7 @@ $(document).ready(function(){
 		
 	})
 
-	$(".show-all-questions").click(function(){
+	$("body").on("click",".show-all-questions", function(){
 		showAllQuestions($(this));
 	})
 	

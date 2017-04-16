@@ -15,12 +15,10 @@
 		</div>
 
 
-		<div id="changeLayout_applicants">
-<!-- 			<span id="tileView_applicants" class="glyphicon glyphicon-th-large"></span> -->
-<!-- 			<span id="tableView_applicants" class="glyphicon glyphicon-th-list"></span> -->
-			<span id="tableView_applicants">Table View</span>
-			<span id="tileView_applicants">Tile View</span>
-		</div>
+<!-- 		<div id="changeLayout_applicants"> -->
+<!-- 			<span id="tableView_applicants">Table View</span> -->
+<!-- 			<span id="tileView_applicants">Tile View</span> -->
+<!-- 		</div> -->
 	
 		<table id="applicantsTable" class="main-table-style table-view shadow
 			${jobDto.job.isPartialAvailabilityAllowed ? 'has-work-days' : '' }
@@ -76,24 +74,8 @@
 					
 					<th id="rating" class="header-dropdown table-view tile-view"
 						 data-sort-attr="data-applicant-rating">
-					
-						<span data-toggle-id="sortApplicantRating" >
-							Rating<span class="glyphicon glyphicon-menu-down"></span>
-						</span>
-						<div id="sortApplicantRating" class="dropdown-container sort-container">
-<!-- 							<span class="approve-sort glyphicon glyphicon-ok"></span> -->
-							
-							<label>
-								<input id="" type="radio"
-									name="applicant-rating"
-									data-sort-ascending="0">High to Low
-							</label>
-							<label>
-								<input id="" type="radio"
-									name="applicant-rating"
-									data-sort-ascending="1">Low to High
-							</label>					
-						</div>					
+						<span class="glyphicon glyphicon-sort" data-sort-ascending="0"
+								data-sort-attr="data-applicant-rating"></span>				
 					
 					</th>
 					<c:if test="${jobDto.questions.size() > 0 }">
@@ -157,79 +139,28 @@
 	
 					</c:if>									
 
-					<th class="proposal teal first">Proposal</th>
-<!-- 					<th id="wageNegotiation_status" class="header-dropdown table-view tile-view" data-filter-attr="data-is-sent-proposal"> -->
-<!-- 						<span data-toggle-id="filterWageProposalStatus" > -->
-<!-- 							Status<span class="glyphicon glyphicon-menu-down"></span> -->
-<!-- 						</span> -->
-<!-- 						<div id="filterWageProposalStatus" class="dropdown-container filter-container checkbox-container"> -->
-<!-- 							<span class="approve-filter glyphicon glyphicon-ok"></span> -->
-							
-<!-- 							<label class="select-all-container"> -->
-<!-- 								<input id="filterOption_wageProposal_selectAll" class="select-all" -->
-<!-- 									type="checkbox" name="wage-prpoposal-status" -->
-<!-- 									>Select All -->
-<!-- 							</label> -->
-<!-- 							<div class="options"> -->
-<!-- 								<label> -->
-<!-- 									<input id="" type="checkbox" -->
-<!-- 										name="wage-prpoposal-status" -->
-<!-- 										data-filter-attr-value="1">Waiting for applicant -->
-<!-- 								</label> -->
-<!-- 								<label> -->
-<!-- 									<input id="" type="checkbox" -->
-<!-- 										name="wage-prpoposal-status" -->
-<!-- 										data-filter-attr-value="0">Waiting for you -->
-<!-- 								</label> -->
-<!-- 							</div> -->
-						
-<!-- 						</div> -->
-<!-- 					</th> -->
-<!-- 					<th id="wageNegotiation_current_offer" class="header-dropdown table-view tile-view" data-sort-attr="data-wage-proposal-amount"> -->
-					
-<!-- 						<span data-toggle-id="sortWageProposalOffer" > -->
-<!-- 							Wage<span class="glyphicon glyphicon-menu-down"></span> -->
-<!-- 						</span> -->
-<!-- 						<div id="sortWageProposalOffer" class="dropdown-container sort-container"> -->
-<!-- <!-- 							<span class="approve-sort glyphicon glyphicon-ok"></span> --> 
-							
-<!-- 							<label> -->
-<!-- 								<input id="" type="radio" -->
-<!-- 									name="wage-prpoposal-current-offer" -->
-<!-- 									data-sort-ascending="0">High to Low -->
-<!-- 							</label> -->
-<!-- 							<label> -->
-<!-- 								<input id="" type="radio" -->
-<!-- 									name="wage-prpoposal-current-offer" -->
-<!-- 									data-sort-ascending="1">Low to High -->
-<!-- 							</label>					 -->
-<!-- 						</div>					 -->
-					
-					
-<!-- 					</th> -->
-<%-- 				<c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> --%>
-
-<!-- 					<th class="header-dropdown table-view tile-view" -->
-<!-- 						 data-sort-attr="data-proposed-work-day-count"> -->
-					
-<!-- 						<span data-toggle-id="sortProposedWorkDayCount" > -->
-<!-- 							Work Days<span class="glyphicon glyphicon-menu-down"></span> -->
-<!-- 						</span> -->
-<!-- 						<div id="sortProposedWorkDayCount" class="dropdown-container sort-container">		 -->
-<!-- 							<label> -->
-<!-- 								<input type="radio"	name="proposed-work-day-count" -->
-<!-- 									data-sort-ascending="0">High to Low -->
-<!-- 							</label> -->
-<!-- 							<label> -->
-<!-- 								<input type="radio"	name="proposed-work-day-count" -->
-<!-- 									data-sort-ascending="1">Low to High -->
-<!-- 							</label>					 -->
-<!-- 						</div>					 -->
-					
-<!-- 					</th>					 -->
-<%-- 				</c:if> --%>
-											
-
+					<th class="proposal teal first">
+						<p>Proposal</p>
+						<div>
+							<div class="sort-proposal-cont">
+								<span>Amount</span>						
+								<span class="glyphicon glyphicon-sort" data-sort-ascending="0"
+								data-sort-attr="data-wage-proposal-amount"></span>
+							</div>
+							<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
+								<div class="sort-proposal-cont">
+									<span>Work Days</span>						
+									<span class="glyphicon glyphicon-sort" data-sort-ascending="0"
+									data-sort-attr="data-proposed-work-day-count"></span>
+								</div>							
+							</c:if>
+							<div class="sort-proposal-cont">
+								<span>Status</span>						
+								<span class="glyphicon glyphicon-sort" data-sort-ascending="0"
+								data-sort-attr="data-is-sent-proposal"></span>
+							</div>													
+						</div>	
+					</th>
 				</tr>
 			</thead>
 			<tbody class="vertical-lines">
@@ -238,7 +169,7 @@
 					data-application-status="[0,${applicationDto.application.status }]"
 					data-applicant-rating="${applicationDto.applicantDto.ratingValue_overall}"
 					data-application-id="${applicationDto.application.applicationId }"
-					data-is-old="${applicationDto.application.hasBeenViewed }"
+					data-is-new="${applicationDto.application.isNew }"
 					data-wage-proposal-amount="${applicationDto.employmentProposalDto.amount }"
 					data-wage-proposal-status="${applicationDto.employmentProposalDto.status }"
 					data-is-sent-proposal="${applicationDto.employmentProposalDto.proposedToUserId ==
