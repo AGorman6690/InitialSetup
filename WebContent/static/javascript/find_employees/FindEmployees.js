@@ -8,6 +8,8 @@ $(document).ready(function(){
 	
 	initPage();
 	
+	
+	
 	// ********************************************************
 	// ********************************************************
 	// Address how the employer-initiated wage proposal fits into the
@@ -43,26 +45,16 @@ $(document).ready(function(){
 		
 	})
 	
-
-	
 	
 	$("#resultsContainer").on("click", "span.show-make-offer-modal", function(){
+		var $e_renderHtml = $(this).siblings(".make-offer-container").eq(0);
+		var jobId = $("#jobId_getOnPageLoad").val();
 		
-		resetModal();
-		
-		var $tr = $(this).closest("tr");
-		var prospectiveEmployeeId = $tr.attr("data-user-id");
-		var prospectiveEmployeeName = $tr.attr("data-user-name");
-		
-		$("#makeOfferModal").attr("data-user-id", prospectiveEmployeeId);
-		
-		// Show the clicked employee's name
-		$("#makeOfferModal").find("span.make-offer-to-name").each(function(){
-			$(this).html(prospectiveEmployeeName);
-		})
-		
+		if($e_renderHtml.find(".calendar.hasDatepicker").length == 0)
+			executeAjaxCall_getMakeOfferModal(jobId, $e_renderHtml);
+		else 
+			$e_renderHtml.find(".mod").show();
 
-		$("#makeOfferModal").show();		
 	})
 	
 	$("#resultsContainer").on("click", "td span.toggle-availability-calendar", function(){
@@ -90,8 +82,7 @@ $(document).ready(function(){
 		}
 
 		toggleClasses($(this).find(".glyphicon").eq(0), "glyphicon-menu-up", "glyphicon-menu-down");
-		
-		
+				
 	})
 	
 	$("#resultsContainer").on("mouseout", "td.days-available .calendar-container", function(){
@@ -150,6 +141,34 @@ $(document).ready(function(){
 	})
 	
 })
+
+
+function executeAjaxCall_getMakeOfferModal(jobId, $e){
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/job/" + jobId + "/make-an-offer/initialize",
+		headers: getAjaxHeaders(),
+		dataType: "html",
+		success: function(html) {
+			$e.empty();
+			$e.html(html);
+			$e.find(".mod").show();
+			workDayDtos = JSON.parse($("#json_workDayDtos").html());
+			$(workDayDtos).each(function() {
+				this.isProposed = "0";
+			})
+			var $calendar = $(".calendar.counter-calendar");
+			initCalendar_new($calendar, workDayDtos);	
+//			$calendar.find("tr").show();
+			$(".counter-container").show();
+			broswerIsWaiting(false);
+		},
+		error: function(html) {
+			broswerIsWaiting(false);
+		},
+	})
+}
 
 function initPage(){
 	var jobId_getOnPageLoad = $("#jobId_getOnPageLoad").val();
@@ -262,7 +281,7 @@ function showJobInfo(jobDto){
 	
 	$("#filtersContainer").show();
 	$("#job-info").show();
-	$("#job-info p").html(jobDto.job.jobName);
+	$("#job-info p a").html(jobDto.job.jobName);
 	
 	// Set the location
 	$("#street").val(jobDto.job.streetAddress);
@@ -284,6 +303,7 @@ function executeAjaxCall_findEmployees(){
 	var jobDto = {};
 	jobDto.job = {};
 	
+	jobDto.job.id = $("#jobId_getOnPageLoad").val();
 	jobDto.job.streetAddress = $("#street").val();
 	jobDto.job.city = $("#city").val();
 	jobDto.job.state = $("#state").val();
@@ -326,37 +346,7 @@ function executeAjaxCall_findEmployees(){
 	}
 }
 
-function executeAjaxCall_sendOffer(){
-	
-	var applicationDto = {};
-	applicationDto.application = {};
-	applicationDto.employmentProposalDto = {};
-	
-	applicationDto.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
-	applicationDto.applicantId = $("#makeOfferModal").attr("data-user-id");
-	applicationDto.employmentProposalDto.amount = $("#makeOfferModal input#amount").val();
-	applicationDto.employmentProposalDto.dateStrings_proposedDates = getSelectedDates($("#makerOffer_workDaysCalendar"), 
-										"yy-mm-dd", "apply-selected-work-day");
 
-	var $detialsContainer = $("#detailsContainer_makeAnOffer");
-	applicationDto.employmentProposalDto.days_offerExpires = $detialsContainer.find(".time-container input.days-pre-hire").val();
-	applicationDto.employmentProposalDto.hours_offerExpires = $detialsContainer.find(".time-container input.hours-pre-hire").val();
-	applicationDto.employmentProposalDto.minutes_offerExpires = $detialsContainer.find(".time-container input.minutes-pre-hire").val();
-
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/employer/initiate-contact",
-		headers : getAjaxHeaders(),
-		contentType : "application/json",	
-		data: JSON.stringify(applicationDto),
-		dataType : "json"
-		
-	}).done(function(){
-		broswerIsWaiting(false);
-	})	
-}
 
 function executeAjaxCall_sendInvite(){
 	

@@ -1,5 +1,6 @@
 package com.jobsearch.application.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -54,6 +55,8 @@ public class ApplicationController {
 
 	}
 	
+	
+	
 	@ResponseBody
 	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
 	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
@@ -71,6 +74,15 @@ public class ApplicationController {
 								Model model, HttpSession session) {
 		applicationService.setModel_ViewCurrentProposal(model, session, applicationId);
 		return "/wage_proposal/AjaxResponse_Proposal";
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/make-an-offer/initialize", method = RequestMethod.GET)
+	public String getHtml_employerMakeFirstOffer(Model model, HttpSession session,
+												@PathVariable(value = "jobId") int jobId) {
+		
+		if(applicationService.setModel_employerMakeFirstOffer(model, session, jobId))
+			return "/wage_proposal/AjaxResponse_Proposal";
+		else return SessionContext.get404Page();
 	}
 	
 	@ResponseBody
@@ -110,9 +122,11 @@ public class ApplicationController {
 	
 	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
 	@ResponseBody
-	public void initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+	public String initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
 		applicationService.initiateContact_byEmployer(applicationDto, session);
+		
+		return JSON.stringify("");
 	}
 
 	

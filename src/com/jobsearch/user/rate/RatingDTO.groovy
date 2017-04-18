@@ -24,4 +24,6 @@ public class RatingDTO {
 
 	@JsonProperty("comment")
 	String comment
+	
+	
 }

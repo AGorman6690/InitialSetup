@@ -16,6 +16,7 @@ import org.springframework.ui.Model;
 import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
+import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Answer;
@@ -1048,20 +1049,23 @@ public class ApplicationServiceImpl {
 			// Set the application
 			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
 			
+
+
+			// Set the wage proposal
 			LocalDateTime employerAcceptedDate = LocalDateTime.now();
 			LocalDateTime expirationDate = getExpirationDate(employerAcceptedDate,
 													applicationDto.getEmploymentProposalDto());
-			
-			applicationDto.getApplication().setEmployerAcceptedDate(employerAcceptedDate);
-			applicationDto.getApplication().setExpirationDate(expirationDate);
-			
-			
-			// Set the wage proposal
+			applicationDto.getEmploymentProposalDto().setEmployerAcceptedDate(employerAcceptedDate);
+			applicationDto.getEmploymentProposalDto().setExpirationDate(expirationDate);
 			applicationDto.getEmploymentProposalDto().setProposedToUserId(applicationDto.getApplicantId());
 			applicationDto.getEmploymentProposalDto().setProposedByUserId(SessionContext.getUser(session).getUserId());
 			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
 
-			this.insertApplication(applicationDto);	
+			this.insertApplication(applicationDto);
+			
+			Application newApplication = getApplication(applicationDto.getJobId(), applicationDto.getApplicantId());
+			EmploymentProposalDTO proposal = getCurrentEmploymentProposal(newApplication.getApplicationId());
+			updateProposalFlag(proposal, EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 						
 		}
 
@@ -1275,9 +1279,27 @@ public class ApplicationServiceImpl {
 			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);
 			model.addAttribute("user", sessionUser);
+			model.addAttribute("isEmployerMakingFirstOffer", false);
 			
 		}
 		
+	}
+
+	public boolean setModel_employerMakeFirstOffer(Model model, HttpSession session, int jobId) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			
+			ApplicationDTO applicationDto = new ApplicationDTO();
+			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
+			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos(jobId));
+			jobService.setCalendarInitData(applicationDto.getJobDto(), jobService.getWorkDays(jobId));
+			
+			model.addAttribute("applicationDto", applicationDto);
+			model.addAttribute("isEmployerMakingFirstOffer", true);
+			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
+			
+			return true;
+		}else return false;
 	}
 
 
@@ -1349,6 +1371,7 @@ public class ApplicationServiceImpl {
 		
 		return String.format("%.2f", (totalMinutes / 60) * Double.parseDouble(acceptedProposal.getAmount()));
 	}
+
 
 
 

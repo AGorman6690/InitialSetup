@@ -20,8 +20,8 @@
 <c:choose>
 	<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
 		<div class="center pad-top-2">
-			<p>You have completed jobs that require your rating.</p>
-			<p>Please rate your past employees before posting another job</p>
+			<p>You have ${sessionScope.jobs_needRating.size() == 1 ? 'a completed job that requires' : 'completed jobs that require' } your rating.</p>
+			<p>Please rate your past employees before posting another job.</p>
 		</div>
 	</c:when>
 	<c:otherwise>

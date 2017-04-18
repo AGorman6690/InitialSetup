@@ -23,12 +23,13 @@
 #resultsContainer h3{
     color: #163b3d;
     font-size: 25px;
-    border-bottom: 2px solid #cacaca;
+/*     border-bottom: 2px solid #cacaca; */
     width: 300px;
     padding-bottom: 8px;
     margin: 20px auto;
     box-shadow: 3px 3px 3px #cacaca;
     background: #f9f9f9;
+    border-left: 6px solid #163b3d;
 }
 #job-info{
 	width: 620px;

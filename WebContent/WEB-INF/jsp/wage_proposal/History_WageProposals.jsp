@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 							
 
-<c:if test="${applicationDto.application.status > -1 }">					
+<%-- <c:if test="${applicationDto.application.status > -1 }">					 --%>
 	<span class="dollar-sign">$</span>
 	<fmt:formatNumber type="number" minFractionDigits="2" 
 		maxFractionDigits="2" value="${applicationDto.employmentProposalDto.amount}"/>
@@ -34,4 +34,4 @@
 			</table>
 		</div>
 	</c:if>
-</c:if>
+<%-- </c:if> --%>

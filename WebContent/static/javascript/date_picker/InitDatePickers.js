@@ -36,8 +36,9 @@ function initCalendar_new($calendar, workDayDtos){
 				else{
 					if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
 				}
-			}
-			return [true, classNameToAdd];
+				return [true, classNameToAdd];
+			}else return [true, ""];
+			
 		},
 		afterShow: function(){
 			

@@ -2,6 +2,7 @@
 <%@ include file="../includes/resources/DatePicker.jsp"%>
 <%@ include file="../includes/resources/JobInformation.jsp"%>
 <%@ include file="../includes/resources/SelectPageSection.jsp"%>
+<%@ include file="../includes/resources/StarRatings.jsp"%>
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
@@ -50,10 +51,48 @@
 <div id="job-info-container" class="page-section">	
 	<%@include file="../templates/JobInformation.jsp"%>						
 </div>
-
+<div id="employer-info-container" class="page-section center">	
+<c:choose>
+	<c:when test="${!empty userDto_employer.jobDtos_jobsCompleted }">		
+		<div id="employer-header">
+			<h3>${userDto_employer.user.firstName } ${userDto_employer.user.lastName }</h3>
+			<p>
+				<input name="input-1" class="rating-loading"
+						value="${userDto_employer.ratingValue_overall }	">
+				${userDto_employer.ratingValue_overall }						
+			</p>		
+			<div id="employee-rating-details">
+				<c:forEach items="${userDto_employer.ratingDto.rateCriteria }" var="rateCriterion">
+					<div>
+						<span class="criteria-name">${rateCriterion.shortName }</span>
+						<span class="rating-value">
+							<input name="input-1" class="rating-loading"
+									value="${rateCriterion.stringValue }">${rateCriterion.stringValue }	
+						</span>
+					</div>
+				</c:forEach>
+			</div>
+		</div>		
+		<div id="employer-complted-jobs">
+			<h2>Completed Jobs</h2>
+			<c:forEach items="${userDto_employer.jobDtos_jobsCompleted }" var="jobDto">
+				<div class="completed-job">
+					<h3>${jobDto.job.jobName }</h3>
+					<input name="input-1" class="rating-loading"
+							value="${jobDto.ratingValue_overall }	">
+					${jobDto.ratingValue_overall }				
+				</div>
+			</c:forEach>
+		</div>		
+	</c:when>
+	<c:otherwise>
+		<p>${userDto_employer.user.firstName } ${userDto_employer.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
+	</c:otherwise>
+</c:choose>
+</div>
 <c:if test="${context == 'find' && empty jobDto.application &&
 			jobDto.availabilityStatus != 1 }">
-					
+			
 	<div id="apply-container" class="page-section ${!isLoggedIn ? 'not-logged-in' : '' }">
 		<%@ include file="./ApplyContainer.jsp" %>
 	</div>

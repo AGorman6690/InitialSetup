@@ -210,6 +210,7 @@ public class UserRepository {
 				e.setRateCriterionId(rs.getInt("RateCriterionId"));
 				e.setName(rs.getString("Name"));
 				e.setIsUsedToRateEmployee(rs.getBoolean("IsUsedToRateEmployee"));
+				e.setShortName(rs.getString("ShortName"));
 				
 				return e;
 			}
@@ -375,7 +376,7 @@ public class UserRepository {
 
 	public double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
 		
-		String sql = "SELECT Value FROM rating"
+		String sql = "SELECT AVG(Value) FROM rating"
 				+ " WHERE UserId = ?"
 				+ " AND JobId = ?"
 				+ " AND RateCriterionId = ?";
@@ -594,10 +595,10 @@ public class UserRepository {
 			}	
 			
 			// Exclude **ALL** applicants of this job
-			if(employeeSearch.getJobId_excludeApplicantsOfThisJob() != null){
+			if(employeeSearch.getJobDto().getJob().getId() != null){
 				subQuery_Dates += " UNION";
 				subQuery_Dates += " SELECT ap.UserId FROM application ap WHERE ap.JobId = ?";
-				argsList.add(employeeSearch.getJobId_excludeApplicantsOfThisJob());
+				argsList.add(employeeSearch.getJobDto().getJob().getId());
 			}
 			
 			
@@ -635,7 +636,7 @@ public class UserRepository {
 //			sql += ")";
 //		}
 
-
+		sql += " LIMIT 25";
 		return this.JobSearchUserProfileRowMapper(sql, argsList.toArray());
 	}
 
@@ -765,6 +766,26 @@ public class UserRepository {
 		String sql = "INSERT INTO employment ( UserId, JobId, WasTerminated ) VALUES( ?, ?, 0)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId } );
 		
+	}
+
+	public Double getRating_byJobAndUser(Integer jobId, int userId) {
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND JobId = ? AND Value > -1";
+
+		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId }, Double.class);
+
+		if (rating == null) return -1.0;
+		else return rating;
+
+	}
+
+	public Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
+		
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ? AND Value > -1";
+
+		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterionId }, Double.class);
+
+		if (rating == null) return null;
+		else return rating;
 	}
 
 }

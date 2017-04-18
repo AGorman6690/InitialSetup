@@ -11,7 +11,12 @@
 		<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
 			<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>
 		</c:if>		
-
+		<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
+			<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>
+		</c:if>	
+		<c:if test="${applicationDto.employmentProposalDto.flag_employerInitiatedContact == 1 }">
+			<p>${user.profileId == 2 ? 'You' : 'Employer'} initiated contact</p>
+		</c:if>			
 		<c:choose>	
 			<c:when test="${ applicationDto.previousProposal.flag_applicationWasReopened == 1 }">
 			

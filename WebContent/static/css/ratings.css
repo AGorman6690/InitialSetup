@@ -78,7 +78,9 @@ textarea.comment{
 	color:#0A5032;
 }
 
-
+.star{
+	font-size: 30px;
+}
 
 table#ratings{
 	width:100%;

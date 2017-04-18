@@ -4,7 +4,7 @@
 	<c:when test="${empty jobDto.employeeDtos}">
 		<div class="no-data">
 			<p>There are currently no employees for this job</p>
-			<a class="sqr-btn gray-2" href="/JobSearch/job/135/find-employees">Find Employees</a>	
+			<a class="sqr-btn gray-2" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>	
 		</div>
 	</c:when>
 	

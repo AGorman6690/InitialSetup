@@ -764,22 +764,52 @@ public class UserServiceImpl {
 		return employeeDtos;
 	}
 
-	public RatingDTO getRatingDtoByUserAndJob(int userId, int jobId) {
+	public RatingDTO getRatingDtoByUserAndJob(JobSearchUser user, int jobId) {
 		
 		RatingDTO ratingDto = new RatingDTO();
 		
-		ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployee());		
+		if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
+			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployee());
+		else
+			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployer());
 		
 		for(RateCriterion rateCriterion : ratingDto.getRateCriteria()){
 			rateCriterion.setValue(this.getRatingValue_ByUserAndJob(rateCriterion.getRateCriterionId(),
-																		userId, jobId));
+																		user.getUserId(), jobId));
 		}
 		
 		ratingDto.setValue(this.getRatingValueForJob(ratingDto));
-		ratingDto.setComment(this.getComment(jobId, userId));
-		ratingDto.setEndorsements(this.getUsersEndorsementsByJob(userId, jobId));
+		ratingDto.setComment(this.getComment(jobId, user.getUserId()));
+//		ratingDto.setEndorsements(this.getUsersEndorsementsByJob(user.getUserId(), jobId));
 		
 		return ratingDto;
+	}	
+
+	public RatingDTO getRatingDto_byUser(JobSearchUser user) {
+	
+		RatingDTO ratingDto = new RatingDTO();
+		
+		if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
+			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployee());
+		else
+			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployer());
+		
+		for(RateCriterion rateCriterion : ratingDto.getRateCriteria()){
+			
+			rateCriterion.setValue(this.getRatingValue_byCriteriaAndUser(
+					rateCriterion.getRateCriterionId(), user.getUserId()));
+			if(rateCriterion.getValue() != null)
+				rateCriterion.setStringValue(String.format("%.1f", rateCriterion.getValue()));
+		}	
+		
+		return ratingDto;
+		
+	}
+
+
+	private Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
+		
+		return repository.getRatingValue_byCriteriaAndUser(rateCriterionId, userId);
 	}
 
 	private Double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
@@ -935,13 +965,15 @@ public class UserServiceImpl {
 	
 					userDto.setRatingValue_overall(this.getRating(user.getUserId()));
 					userDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
-					userDtos.add(userDto);
+					
 					
 					userDto.setCount_availableDays_perFindEmployeesSearch(
 												jobService.getCount_availableDays_ByUserAndWorkDays(
 															user.getUserId(), employeeSearch.getJobDto().getWorkDays()));
 					
-					userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(), employeeSearch.getJobDto().getWorkDays()));
+//					userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(), employeeSearch.getJobDto().getWorkDays()));
+					
+					userDtos.add(userDto);
 				}
 					
 			}
@@ -1064,6 +1096,11 @@ public class UserServiceImpl {
 		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
 		
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
+	}
+
+	public Double getRating_byJobAndUser(Integer jobId, int userId) {
+		
+		return repository.getRating_byJobAndUser(jobId, userId);
 	}
 
 }

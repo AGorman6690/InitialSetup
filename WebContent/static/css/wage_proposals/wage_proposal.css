@@ -53,8 +53,8 @@ span.expiration-time{
 .action-button-container{
 	padding: 40px 0px 30px 0px;;
 }
-.confirm,
-.send{
+.sqr.btn.confirm,
+.sqr-btn.send{
 	display: inline-block;
 	width: 140px;
 }
@@ -85,7 +85,7 @@ span.expiration-time{
     margin: auto;
     text-align: left;
 }
-.present-proposal h1{
+.proposal h1{
 	font-size: 21px;
 	font-weight: bold;
 	color: #197994;
@@ -114,6 +114,7 @@ span.expiration-time{
 
 input.counter-wage-amount{
 	width: 62px;
+	font-size: 25px;
 }
 
 .bold{
@@ -151,6 +152,8 @@ input.counter-wage-amount{
 .response-container.confirm .wage-container .proposal-container,
 .response-container.confirm .wage-container .counter-container,
 .response-container.confirm .proceed-to-confirmation-container,
+.response-container.confirm .applicant-expiration-clock,
+.response-container.confirm .select-all-work-days,
 .response-container.confirm .set-expiration{
 	display: none !important;
 }
@@ -177,6 +180,7 @@ input.counter-wage-amount{
 .applicant-expiration-clock p{
 	font-weight: bold;
     margin-bottom: 0px;
+	font-size: 19px;    
 }
 
 

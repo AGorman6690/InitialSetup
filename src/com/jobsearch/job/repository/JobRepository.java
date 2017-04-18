@@ -1045,33 +1045,29 @@ public class JobRepository {
 																Integer.class);
 	}
 
-	public Integer getCount_availableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
+	public Integer getCount_unavailableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
 		
 		// Main query
-		String sql = "SELECT COUNT(*) FROM availability a0 WHERE a0.DateId NOT IN(";
-		
-		// Sub query.
-		// Exclude the user's available days that have turned into employment.
-		// I don't believe the job status needs to be verified as open or in-process.
-		// It is not possible to have a job in the future yet it is already completed...
-		sql += " SELECT a1.DateId FROM availability a1"
-				+ " INNER JOIN work_day wd ON wd.DateId = a1.DateId"
-				+ " INNER JOIN employment e ON e.JobId = wd.JobId"
-//				+ " INNER JOIN job j ON j.JobId = e.JobId"
-				+ " WHERE a1.UserId = ?"
-				+ " AND e.UserId = ?";
-//				 + " AND (j.Statsus = 0 OR j.Status = 1)"
+		String sql = "SELECT COUNT(e.Id) FROM employment e"
+					+ " JOIN job j ON e.JobId = e.JobId"
+					+ " JOIN application a ON j.JobId = a.JobId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE e.UserId = ?"
+					+ " AND e.WasTerminated = 0"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND j.Status";
+
 		
 		List<Object> args = new ArrayList<Object>();
-		args.add(userId);
 		args.add(userId);
 		
 		boolean isFirst = true;		
 		sql += " AND (";
 		for(WorkDay workDay : workDays){
 			
-			if(!isFirst) sql += " OR ";
-			
+			if(!isFirst) sql += " OR ";			
 			sql += " wd.DateId = ?";
 			isFirst = false;
 			
@@ -1082,26 +1078,7 @@ public class JobRepository {
 		
 		// Close the AND
 		sql += ")";
-		
-		// Close the sub query
-		sql += ")";
-		
-		// Finish the main query
-		sql += " AND a0.UserId = ?";
-		args.add(userId);
-		
-		isFirst = true;		
-		sql += " AND (";
-		for(WorkDay workDay : workDays){
-			
-			if(!isFirst) sql += " OR ";
-			
-			sql += " a0.DateId = ?";
-			isFirst = false;
-			
-			args.add(workDay.getDateId());
-		} 
-		sql += ")";
+	
 		
 		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
 	}

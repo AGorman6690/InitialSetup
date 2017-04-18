@@ -298,7 +298,7 @@ public class JobServiceImpl {
 
 			jobDto.setJob(job);
 			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-			jobDto.setRatingDto(userService.getRatingDtoByUserAndJob(userId, job.getId()));
+			jobDto.setRatingDto(userService.getRatingDtoByUserAndJob(userService.getUser(userId), job.getId()));
 			jobDto.setDurationDays(this.getDuration(job.getId()));
 			jobDto.setMilliseconds_endDate(job.getEndDate_local().toEpochDay());
 			jobDtos_jobsCompleted.add(jobDto);
@@ -917,14 +917,28 @@ public class JobServiceImpl {
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
 
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
-		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos())
+		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
 			setWorkDayDto_conflictingEmployment(workDayDto, sessionUser.getUserId());
+		}
 		
-
+		JobSearchUserDTO userDto_employer = new JobSearchUserDTO();
+		userDto_employer.setUser(userService.getUser(jobDto.getJob().getUserId()));
+		userDto_employer.setJobDtos_jobsCompleted(getJobDtos_JobsCompleted_Employer(
+				userDto_employer.getUser().getUserId()));
+		userDto_employer.setRatingValue_overall(userService.getRating(userDto_employer.getUser().getUserId()));
+		userDto_employer.setRatingDto(userService.getRatingDto_byUser(userDto_employer.getUser()));
+		
+		for( JobDTO jobDto_complete : userDto_employer.getJobDtos_jobsCompleted() ){
+			jobDto_complete.setRatingValue_overall(userService.getRating_byJobAndUser(
+					jobDto_complete.getJob().getId(), userDto_employer.getUser().getUserId()));
+//			jobDto_complete.setRatingDto(userService.getRatingDtoByUserAndJob(
+//					userDto_employer.getUser(), jobDto_complete.getJob().getId()));
+		}
+		
 
 		switch (context) {
 		case "find":
-			
+
 			jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
 			
 			if(sessionUser != null){
@@ -955,13 +969,14 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 					jobId, sessionUser.getUserId()));
 
-			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser.getUserId(), jobId));
+			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser, jobId));
 			
 			break;			
 	
 		
 		}	
 		
+		model.addAttribute("userDto_employer", userDto_employer);
 		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("context", context);
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
@@ -1308,7 +1323,8 @@ public class JobServiceImpl {
 		// *************************************************
 		
 		if(verificationService.isListPopulated(workDays)){
-			return repository.getCount_availableDays_ByUserAndWorkDays(userId, workDays);	
+			Integer count_unavailableDays = repository.getCount_unavailableDays_ByUserAndWorkDays(userId, workDays); 
+			return 	workDays.size() - count_unavailableDays;
 		}
 		else return -1;
 	}

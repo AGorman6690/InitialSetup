@@ -1,5 +1,5 @@
 <%@ include file="../includes/TagLibs.jsp" %>
-<%@ include file="../includes/resources/WageProposal.jsp" %>
+
 
 <c:choose>
 	<c:when test="${empty userDtos }" >
@@ -28,11 +28,7 @@
 							<span class="accent show-make-offer-modal">
 								Make An Offer
 							</span>
-<%-- 							<div id="make-offer-${userDto.user.userId }" class="show-make-offer-modal dropdown-style --%>
-<!-- 								accept-actions-container"> -->
-
-<%-- 								<%@ include file="../wage_proposal/AcceptWageProposal.jsp" %> --%>
-<!-- 							</div> -->
+							<div class="make-offer-container"></div>
 						</td>
 						<td>${userDto.user.firstName }</td>
 						<td>${userDto.ratingValue_overall }</td>
@@ -42,7 +38,7 @@
 						<td>${userDto.user.homeCity}, ${userDto.user.homeState }</td> 
 						<td class="days-available">
 							<span class="toggle-availability-calendar">
-								${userDto.availableDays.size() }<span class="glyphicon glyphicon-menu-up"></span>
+								${userDto.count_availableDays_perFindEmployeesSearch }<span class="glyphicon glyphicon-menu-up"></span>
 							</span>
 							<div class="calendar-container read-only">
 								<div class="calendar"></div>
@@ -51,8 +47,7 @@
 								<c:forEach items="${userDto.availableDays }" var="date">
 									<div data-date="${date }"></div>
 								</c:forEach>
-							</div>
-						
+							</div>						
 						</td>					
 					</tr>
 				</c:forEach>

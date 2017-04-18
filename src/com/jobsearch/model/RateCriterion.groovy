@@ -8,6 +8,9 @@ public class RateCriterion {
 	Integer jobId
 	boolean isUsedToRateEmployee
 	Double value
+	String shortName
+	
+	String stringValue
 	
 	public static int VALUE_NOT_YET_RATED = -1;
 }

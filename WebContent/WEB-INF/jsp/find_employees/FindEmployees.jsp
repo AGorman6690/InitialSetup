@@ -2,7 +2,7 @@
 <%@ include file="../includes/resources/DatePicker.jsp"%>
 <%@ include file="../includes/resources/Modal.jsp"%>
 <%@ include file="../includes/resources/InputValidation.jsp"%>
-
+<%@ include file="../includes/resources/WageProposal.jsp" %>
 
 
 <script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>
@@ -12,7 +12,7 @@
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <link href="/JobSearch/static/css/find_employees/findEmployees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/find_employees/make_offer_modal.css" rel="stylesheet" />
-<link href="/JobSearch/static/css/find_employees/cal_find_employees.css" rel="stylesheet" />
+<!-- <link href="/JobSearch/static/css/find_employees/cal_find_employees.css" rel="stylesheet" /> -->
 
 
 <c:if test="${!empty jobDtos_current}">
@@ -36,7 +36,7 @@
 <%-- 		<c:if test="${!empty job }"> --%>
 			<div id="job-info">
 				<h2>Job</h2>
-				<p>${job.jobName }</p>
+				<p><a href="/JobSearch/job/${job.id }?c=waiting&p=2&d=all-apps">${job.jobName }</a></p>
 			</div>
 <%-- 		</c:if> --%>
 		<div id="locationFilterContainer" class="filter">

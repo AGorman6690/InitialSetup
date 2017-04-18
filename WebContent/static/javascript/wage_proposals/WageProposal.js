@@ -4,6 +4,12 @@
 $(document).ready(function(){
 	
 //	initCalendar_proposedWorkDays();
+	
+	$("body").on("click", ".send-employer-make-first-offer", function() {
+		
+		executeAjaxCall_sendOffer($(this));
+
+	})
 
 	$("body").on("click", ".application-proposal-container .proposal-item.work-days p", function() {
 	
@@ -32,6 +38,13 @@ $(document).ready(function(){
 		
 	})
 	
+	$("body").on("click", "button.accept", function() {
+		$(this).closest(".proposal").attr("data-is-proposing", "0");
+	})
+	
+	$("body").on("click", "button.counter", function() {
+		$(this).closest(".proposal").attr("data-is-proposing", "1");
+	})	
 	
 	$("body").on("click", ".wage-container button.accept", function() {
 		hideCounterContainer($(this), true);
@@ -60,7 +73,9 @@ $(document).ready(function(){
 		
 	})
 	
-	$("body").on("click", ".send-proposal-container .send", function() { sendEmploymentProposal($(this)) })
+	$("body").on("click", ".send-proposal-container .send", function() {
+		sendEmploymentProposal($(this))
+	})
 	
 	$("body").on("click", ".cancel", function() {
 		$(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click();
@@ -134,6 +149,32 @@ function executeAjaxCall_getProposal(applicationId, $e){
 	})
 }
 
+function executeAjaxCall_sendOffer($e){
+	
+	var $responseContainer = $e.closest(".response-container");
+	
+	var applicationDto = {};
+	applicationDto.application = {};
+	applicationDto.employmentProposalDto = {};
+	
+	applicationDto.jobId = $("#jobId_getOnPageLoad").val();
+	applicationDto.applicantId = $e.closest("tr").attr("data-user-id");	
+	applicationDto.employmentProposalDto = getEmploymentProposalDto($responseContainer);
+	
+	broswerIsWaiting(true);
+	$.ajax({
+		type : "POST",
+		url :"/JobSearch/employer/initiate-contact",
+		headers : getAjaxHeaders(),
+		contentType : "application/json",	
+		data: JSON.stringify(applicationDto),
+		dataType : "json"
+		
+	}).done(function(response){
+		$responseContainer.hide();
+		broswerIsWaiting(false);
+	})	
+}
 
 function getEmploymentProposalDto($responseContainer){
 
@@ -148,7 +189,7 @@ function getEmploymentProposalDto($responseContainer){
 	if(areWorkDaysBeingCountered($responseContainer)){
 		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
 												$responseContainer.find(".work-day-container .counter-container .calendar"),
-													"yy-mm-dd", "proposed-work-day");
+													"yy-mm-dd", "is-proposed");
 	}	
 	
 	if(isSessionUserAnEmployer($responseContainer)){
@@ -161,13 +202,13 @@ function getEmploymentProposalDto($responseContainer){
 }
 
 function isAmountBeingCountered($responseContainer){
-	if($responseContainer.find(".wage-container button.counter.selected").size() > 0)
+	if($responseContainer.find(".proposal.wage-container").attr("data-is-proposing") == "1")
 		return true;
 	else return false;
 }
 
 function areWorkDaysBeingCountered($responseContainer){
-	if($responseContainer.find(".work-day-container button.counter.selected").size() > 0)
+	if($responseContainer.find(".proposal.work-day-container").attr("data-is-proposing") == "1")
 		return true;
 	else return false;
 }
@@ -330,36 +371,34 @@ function showConfirmationContainer($e){
 	var $workDayContainer = $responseContainer.find(".work-day-container").eq(0);
 	var counterWageAmount = 0;
 	
-	var doAcceptWage = -1;
-	if($wageContainer.find("button.accept.selected").size() > 0) doAcceptWage = 1;
-	else if($wageContainer.find("button.counter.selected").size() > 0){
-		doAcceptWage = 0;
-		counterWageAmount = $wageContainer.find(".counter-wage-amount").val()
-		$wageContainer.find(".new-proposed-amount").eq(0).html("$ " + counterWageAmount);
+	var isProposing_wage = $responseContainer.find(".proposal.wage-container").eq(0).attr("data-is-proposing");
+	if(isProposing_wage == "1"){
+//		counterWageAmount = $wageContainer.find(".counter-wage-amount").val()
+//		$wageContainer.find(".new-proposed-amount").eq(0).html("$ " + counterWageAmount);
 	}
 	
-	var doAcceptWorkDays = -1;
-	if($workDayContainer.find("button.accept.selected").size() > 0) doAcceptWorkDays = 1;
-	else if($workDayContainer.find("button.counter.selected").size() > 0) doAcceptWorkDays = 0;
+	var isProposing_workDays = $responseContainer.find(".proposal.work-day-container").eq(0).attr("data-is-proposing");
 	
-	if(doAcceptWage != -1){
-//		$wageContainer.find(".proposal-container").hide();
-//		$wageContainer.find(".counter-container").hide();
-//		$wageContainer.find(".button-group").hide();
-//		$wageContainer.find(".confirmation-container").show();
-		if(doAcceptWage == 1){
+	if(isProposing_wage == "1" || isProposing_wage == "0"){
+
+		if(isProposing_wage == "0"){
+
+
 			$wageContainer.find(".confirmation-container .accept").eq(0).show();
 			$wageContainer.find(".confirmation-container .counter").eq(0).hide();
 		}else{
+			counterWageAmount = $wageContainer.find(".counter-wage-amount").val()
+			$wageContainer.find(".new-proposed-amount").eq(0).html("$ " + counterWageAmount);
+			
 			$wageContainer.find(".confirmation-container .accept").eq(0).hide();
 			$wageContainer.find(".confirmation-container .counter").eq(0).show();
 		}	
 	}
 	
-	if(doAcceptWorkDays != -1){
+	if(isProposing_workDays == "1" || isProposing_workDays == "0"){
 //		$workDayContainer.find(".confirmation-container").show();
 //		$workDayContainer.find(".button-group").hide();
-		if(doAcceptWorkDays == 1){
+		if(isProposing_workDays == "0"){
 			$workDayContainer.find(".confirmation-container .accept").eq(0).show();
 			$workDayContainer.find(".confirmation-container .counter").eq(0).hide();
 		}else{

@@ -124,7 +124,9 @@ public class ApplicationRepository {
 				e.setFlag_applicationWasReopened(rs.getInt(EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED));
 				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
 				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
-								
+				e.setFlag_employerInitiatedContact(rs.getInt("Flag_EmployerInitiatedContact"));			
+				
+				
 				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
 				if(ts_employerAcceptedDate != null)
 					e.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
@@ -416,10 +418,10 @@ public class ApplicationRepository {
 			if(newApplicationId != null){
 			
 				// If this was NOT an invite to apply, insert the employment proposal
-				if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
+//				if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
 					applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
 					applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());	
-				}			
+//				}			
 	
 				// Add answers  
 				if(verificationService.isListPopulated(applicationDto.getAnswers())){
