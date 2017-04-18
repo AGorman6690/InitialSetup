@@ -90,8 +90,10 @@ function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 		dataType: "json",
 		success: function(workDayDtos) {
 			broswerIsWaiting(false);
-			initCalendar_showWorkDays($calendar, workDayDtos);
+//			initCalendar_showWorkDays($calendar, workDayDtos);
+			initCalendar_new($calendar, workDayDtos);
 			$calendar.closest(".mod").show();
+			console.log("executeAjaxCall_getProposedWorkDays");
 		},
 		error: function() {
 			broswerIsWaiting(false);
@@ -119,8 +121,12 @@ function executeAjaxCall_getProposal(applicationId, $e){
 			$e.html(html);
 			$e.find(".mod").eq(0).show();	
 			var workDayDtos = JSON.parse($("#json_workDayDtos").html());
-			initCalendar_proposedWorkDays(workDayDtos);
+//			initCalendar_proposedWorkDays(workDayDtos);
+			initCalendar_new($(".calendar.proposed-calendar"), workDayDtos);
+			initCalendar_new($(".calendar.counter-calendar"), workDayDtos);
+			
 			broswerIsWaiting(false);
+			console.log("executeAjaxCall_getProposal");
 		},
 		error: function() {
 			broswerIsWaiting(false);

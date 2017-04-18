@@ -28,10 +28,13 @@ td div.application[data-job-name]:first-of-type{
 }
 
 tr .job-line.application-job{
-	background: #7389b3;
+/* 	background: #7389b3; */
+	background: #36595a;
 }
 tr .job-line.employment-job{
-	background: #629a6f;	
+/* 	background: #629a6f;	 */
+/* 	background: #7ec3b4; */
+	background: #7ca79d;
 }
 tr .job-line{
 	color: #fff;

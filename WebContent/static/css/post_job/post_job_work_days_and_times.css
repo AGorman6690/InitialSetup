@@ -23,7 +23,7 @@ td .select-date-box{
     left: 50%;
     margin-left: -20px;
 }
-.v2 .calendar td.a-date-to-set a{
+.v2.post-job .calendar td.a-date-to-set a{
 	color: #fff;
 }
 td.selected-date .select-date-box{
@@ -51,15 +51,15 @@ td.selected-date .select-date-box{
 #times-cont .radio-container label{
 	display: block;
 }
-.v2 .calendar td{
+.v2.post-job .calendar td{
 	height: 110px;
 	width: 100px;
 }
-.v2 .ui-datepicker-inline.ui-datepicker-multi-2{
-	width: 1600px;
+.v2.post-job .ui-datepicker-inline.ui-datepicker-multi-2{
+	width: 1600px !important;
 	margin: auto;
 }
-.v2 .ui-datepicker-inline{
+.v2.post-job .ui-datepicker-inline{
 	width: 700px;
 	margin: auto;
 }

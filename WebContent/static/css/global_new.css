@@ -1,3 +1,6 @@
+body{
+	margin-bottom: 75px;
+}
 #json_work_day_dtos{
 	display: none;
 }

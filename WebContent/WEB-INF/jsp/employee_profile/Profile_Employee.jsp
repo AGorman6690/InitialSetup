@@ -76,7 +76,7 @@
 			</c:forEach>			
 	</c:forEach>					
 </div>
-<div class="container">
+<div class="container center">
 	<div id="applications_list_view" class="">
 		<c:choose>
 			<c:when test="${applicationDtos.size() > 0 }">	
@@ -84,6 +84,8 @@
 			</c:when>
 			<c:otherwise>
 				<p id="noApplications">You have no open applications at this time.</p>
+	
+				<a id="" href="/JobSearch/jobs/find" class="sqr-btn gray-2">Find Jobs</a>
 			</c:otherwise>		
 		</c:choose>
 	</div>

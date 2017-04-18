@@ -223,11 +223,9 @@ public class JobController {
 	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)
 	public String findEmployeesForJob(Model model, HttpSession session,
 										@PathVariable(value = "jobId") int jobId) {	
+
 		
-		
-//		model.addAttribute("doLoadJobAfterLoad", true);
-		model.addAttribute("jobId_getOnPageLoad", jobId);
-		
+		jobService.setModel_findEmployeesByJob(model, session, jobId);
 		
 		return "/find_employees/FindEmployees";
 			

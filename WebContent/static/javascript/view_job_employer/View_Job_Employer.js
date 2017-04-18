@@ -182,6 +182,7 @@ function initPage(){
 
 	if(data_initPage == "hired") {
 		$(".select-page-section[data-page-section-id='employeesContainer']").eq(0).click();
+		$("#showAllApplicants").hide();
 	}
 	else if(data_initPage != "all-apps"){
 	
@@ -216,9 +217,9 @@ function initPage(){
 		filters.push(filter);
 		filterTableRows(filters, $("#applicantsTable"));
 		
-		var hiddenRows = $("#applicantsTable").find("tr:hidden").length;
-		var allRows = $("#applicantsTable").find("tr").length;
-		if(hiddenRows == allRows) $("#showAllApplicants").hide();
+		var hiddenRows = $("#applicantsTable > tbody").find("> tr:hidden").length;
+		var allRows = $("#applicantsTable > tbody").find("> tr").length;
+		if(hiddenRows == 0) $("#showAllApplicants").hide();
 		
 	}	
 }

@@ -8,10 +8,6 @@
 .calendar-container.disabled *{
 	cursor: default !important;
 }
-button.clear-calendar{
-	margin-left: 35px;	
-}
-
 .calendar th{
 	border-bottom: 1px solid #cacaca;
 }
@@ -35,7 +31,7 @@ button.clear-calendar{
 
 .calendar-container td{
 	padding:3px 9px;
-	cursor: pointer;
+/* 	cursor: pointer; */
 }
 
 .calendar{

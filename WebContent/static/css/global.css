@@ -1,4 +1,4 @@
-html.waiting * {
+body.waiting * {
     cursor: progress !important;
 }
 

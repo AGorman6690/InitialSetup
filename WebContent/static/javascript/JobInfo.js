@@ -1,6 +1,6 @@
 var $calendar_applicationWorkDays;
 //var workDayDtos = [];
-
+var workDayDtos = [];
 $(document).ready(function() {
 	
 	$calendar_applicationWorkDays = $("#apply-work-days-calendar-container .calendar");
@@ -16,20 +16,21 @@ $(document).ready(function() {
 	})
 	
 	
-	$("#content_jobInfo").click(function(){
+	$(".show-job-post").click(function(){
 		
-		if($("#map").attr("data-is-init") != 1){
+		if($("#map").attr("data-do-init") == "1"){
 			initMap();
-			$("#map").attr("data-is-init", "1");	
+			$("#map").attr("data-do-init", "0");	
 		}
 		
 	})
 
 	
-	var workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
-	initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos);
-	initCalendar_apply_workDays();
-
+	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+//	initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos);
+	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);
+	initCalendar_new($("#apply-work-days-calendar-container .calendar"), workDayDtos);
+	
 }) 
 
 

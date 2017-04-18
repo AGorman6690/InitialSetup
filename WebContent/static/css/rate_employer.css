@@ -1,6 +1,7 @@
 #main-cont{
 	width: 830px;
 	margin: auto;	
+/* 	text-align: center; */
 }
 .if-no{
 	display:none;

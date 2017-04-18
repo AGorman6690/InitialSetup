@@ -30,10 +30,15 @@
 	</div>
 </c:if>
 
-<input id="jobId_getOnPageLoad" type="hidden" value="${jobId_getOnPageLoad }">
-	
+<input id="jobId_getOnPageLoad" type="hidden" value="${job.id }">
+		
 	<div id="filtersContainer" class="${!empty jobDtos_current ? 'hide-on-load' : ''}">
-
+<%-- 		<c:if test="${!empty job }"> --%>
+			<div id="job-info">
+				<h2>Job</h2>
+				<p>${job.jobName }</p>
+			</div>
+<%-- 		</c:if> --%>
 		<div id="locationFilterContainer" class="filter">
 			<h3>Location</h3>
 			<div id="location" class="filter-value">
@@ -48,19 +53,19 @@
 <!-- 			<div class="filter-value"> -->
 <!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
 <!-- 			</div> -->
-			<div class="v2 calendar-container filter-value work-day-filter">
+			<div class="v2 select-work-days calendar-container filter-value work-day-filter">
+				<button class="clear-calendar sqr-btn gray-2">Clear</button>
 				<div id="availabilityCalendar" class="calendar">
 				</div>
-				<button class="clear-calendar">Clear</button>
 			</div>
 		</div>
 		
-		<div id="categoriesFilterContainer" class="filter">
-			<h3>Categories</h3>
-			<div  class="filter-value"></div>
-		</div>	
+<!-- 		<div id="categoriesFilterContainer" class="filter"> -->
+<!-- 			<h3>Categories</h3> -->
+<!-- 			<div  class="filter-value"></div> -->
+<!-- 		</div>	 -->
 		
-		<div><button id="findEmployees" class="sqr-btn green">Get Employees</button></div>
+		<div><button id="findEmployees" class="sqr-btn teal">Get Employees</button></div>
 	</div>
 	<div id="resultsContainer">
 		<h3>Results</h3>
@@ -69,7 +74,7 @@
 		</div>
 	</div>
 	
-
+<%-- <div id="json_work_day_dtos">${json_job_work_days }</div> --%>
 
 <%@ include file="./MakeOfferModal.jsp"%>
 

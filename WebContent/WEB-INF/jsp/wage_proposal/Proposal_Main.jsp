@@ -4,7 +4,8 @@
 	<div class="expiration-time-cont"> 
 		
 		<c:if test="${applicationDto.previousProposal.isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
-			<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment: time conflicts resolved</p>
+			<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
+			<p>The proposed work days have been updated</p>
 		</c:if>	
 		
 		<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
@@ -126,7 +127,7 @@
 			<div class="mod">
 				<div class="mod-content">
 					<div class="mod-body">
-						<div class="job-info-calendar calendar-container wage-proposal-calendar hide-prev-next read-only">
+						<div class="v2 calendar-container hide-unused-rows hide-prev-next read-only">
 							<div class="calendar"
 								data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 								data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>

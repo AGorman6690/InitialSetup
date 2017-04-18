@@ -2,7 +2,7 @@ table.main-table-style{
 	width:100%;
 } 
 
-.main-table-style thead{
+.main-table-style > thead{
 /*     border-bottom: 1px solid #ddd; */
 /*     border-top: 1px solid #ddd; */
 }
@@ -26,11 +26,11 @@ table.main-table-style{
 	border-bottom:1px solid #ddd;
 }
 
-.main-table-style tbody tr:first-child{
+.main-table-style > tbody > tr:first-child{
 /* 	border-bottom: 0; */
 }
 
-.main-table-style tbody tr{
+.main-table-style > tbody > tr{
 	height:30px;
 }
 
@@ -48,14 +48,14 @@ table.main-table-style{
 
 
 
-.main-table-style td{
+.main-table-style > tbody > tr > td{
 	padding:15px;
 	text-align:center;
 	font-size:15px;
 	vertical-align:top;
 }
 
-.main-table-style th{
+.main-table-style > thead > tr > th{
 	padding:13px 8px;
     font-size: 16px;
 /*     color: #888888; */
@@ -111,9 +111,9 @@ th.right-edge{
 
 }
 
-th{
+.main-table-style > thead > tr > th{
 	font-weight:100;
-	font-size:18px;
+	font-size: 16px;
 	text-align:center;
 }
 
@@ -126,7 +126,7 @@ td.left *{
 	text-align:left;
 }
 
-.main-table-style td{
+.main-table-style > tbody > tr > td{
 	vertical-align:middle;
 }
 

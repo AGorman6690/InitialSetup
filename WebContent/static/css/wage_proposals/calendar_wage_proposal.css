@@ -88,9 +88,7 @@ td.job-work-day{
 	font-size: 28px;
 /* 	display: none; */
 }
-#work-day-proposal-input .proposal-container .calendar *:hover{
-    cursor: not-allowed !important;
-}
+
 td.job-work-day.proposed-work-day .added-content .glyphicon-ok{
 /* 	color: #163b3d; */
 	color: #043e04;

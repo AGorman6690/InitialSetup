@@ -912,10 +912,15 @@ public class JobServiceImpl {
 		// Need to add verification for all contexts
 		// **************************************************
 		// **************************************************
-
-		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
+		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		JobSearchUserDTO userDto = new JobSearchUserDTO();
+
+		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
+		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos())
+			setWorkDayDto_conflictingEmployment(workDayDto, sessionUser.getUserId());
+		
+
 
 		switch (context) {
 		case "find":
@@ -969,21 +974,29 @@ public class JobServiceImpl {
 	private int getAvailabilityStatus(boolean isPartialAvailabilityAllowed, int userId,
 										List<WorkDay> workDays) {
 		
+		// ***********************************************************
+		// ***********************************************************
+		// It has been decided, for the initial release, that employees
+		// cannot set their availability.
+		// This is a beneficial feature we will include include in the future.
+		// ***********************************************************
+		// ***********************************************************
+		
 		
 		if(verificationService.isListPopulated(workDays)){			
 			
-			Integer count_availableDays = this.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
+//			Integer count_availableDays = this.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
 			Integer count_employmentDays = this.getCount_employmentDays_byUserAndWorkDays(userId, workDays);
 			
 			// If the user has **NO EMPLOYMENT** on these work days
 			if(count_employmentDays <= 0) {
 				
-				if(count_availableDays == 0) return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET;
-				else if(count_availableDays == workDays.size()) return JobDTO.AVAILABILITY_STATUS_COMPLETELY;
-				else {
+//				if(count_availableDays == 0) return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET;
+//				else if(count_availableDays == workDays.size()) return JobDTO.AVAILABILITY_STATUS_COMPLETELY;
+//				else {
 					if(isPartialAvailabilityAllowed) return JobDTO.AVAILABILITY_STATUS_PARTIAL_DUE_TO_AVAILABILITY_NOT_SET;
 					else return JobDTO.AVAILABILITY_STATUS_NONE_DUE_TO_AVAILABILITY_NOT_SET;
-				}
+//				}
 				
 			}
 			// Else the user has at least one employment day within these work days
@@ -1379,6 +1392,7 @@ public class JobServiceImpl {
 		
 		for(WorkDay workDay: workDays){
 			WorkDayDto workDayDto = new WorkDayDto();
+			workDayDto.setWorkDay(workDay);	
 			
 			// Positions filled
 			int positionsFilled = applicationService.getCount_positionsFilledByDay(
@@ -1386,17 +1400,12 @@ public class JobServiceImpl {
 			if(positionsFilled < job.getPositionsPerDay()) workDayDto.setHasOpenPositions(true);
 			else workDayDto.setHasOpenPositions(false);
 			
-			// Is proposed
-			workDayDto.setWorkDay(workDay);			
+			// Is proposed					
 			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(
 					workDay.getWorkDayId(), proposal.getApplicationId()));
 			
 			// Conflicting employment
-			workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
-					application.getUserId(), workDay.getDateId()));
-			if(workDayDto.getJob_conflictingEmployment() != null)
-				workDayDto.setHasConflictingEmployment(true);
-			else workDayDto.setHasConflictingEmployment(false);
+			setWorkDayDto_conflictingEmployment(workDayDto, application.getUserId());
 			
 			// Conflicting applications
 			workDayDto.setApplicationDtos_conflictingApplications(
@@ -1412,7 +1421,14 @@ public class JobServiceImpl {
 		return repository.getConflictingEmployment_byUserAndWorkDay(userId, workDayId);
 	}
 
+	public void setWorkDayDto_conflictingEmployment(WorkDayDto workDayDto, int userId ){
 	
+		workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
+				userId, workDayDto.getWorkDay().getDateId()));
+		if(workDayDto.getJob_conflictingEmployment() != null)
+			workDayDto.setHasConflictingEmployment(true);
+		else workDayDto.setHasConflictingEmployment(false);
+	}
 
 	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
 		
@@ -1661,6 +1677,13 @@ public class JobServiceImpl {
 		if(verificationService.isListPopulated(dateStrings)){
 			return repository.getWorkDays_byJobAndDateStrings(jobId, dateStrings);
 		}else return null;
+	}
+
+	public void setModel_findEmployeesByJob(Model model, HttpSession session, int jobId) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			model.addAttribute("job", getJob(jobId));
+		}
 	}
 	
 }

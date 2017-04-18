@@ -1,6 +1,8 @@
 var $calendar_workDays;
 var $calendar_times;
 //var workDayDtos = [];
+var workDayDtos_original = [];
+var workDayDtos = [];
 
 $(document).ready(function(){
 	
@@ -337,7 +339,7 @@ function getJobDto(){
 	jobDto.job.zipCode = $("#zipCode").val();
 	jobDto.job.positionsPerDay = $("#positionsContainer input").val();
 	
-	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
+	if($("#yes-partial").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
 	else jobDto.job.isPartialAvailabilityAllowed = 0;
 
 	
@@ -389,7 +391,7 @@ function getWorkDays(){
 			var workDay = {};
 			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
 			workDay.stringStartTime = singleStartTime;
-			workDay.stringEndTime = singlEndTime;			
+			workDay.stringEndTime = singleEndTime;			
 			workDays.push(workDay);
 		})
 	}else{
@@ -398,8 +400,8 @@ function getWorkDays(){
 			
 			var workDay = {};
 			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
-			workDay.stringStartTime = this.workDay.value_startTime;
-			workDay.stringEndTime = this.workDay.value_endTime;
+			workDay.stringStartTime = this.workDay.stringStartTime;
+			workDay.stringEndTime = this.workDay.stringEndTime;
 			
 			workDays.push(workDay);
 		})	
@@ -459,11 +461,12 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		$("#displayExample_jobInfo").html(html_jobInfo);
 		
 		var $e = $("#json_work_day_dtos");
-		workDayDtos = JSON.parse($e.html());
+		workDayDtos_preview = JSON.parse($e.html());
 		$e.empty(); 
 //		setWorkDays();
-		initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos);
+		initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos_preview);
 		initMap();
+		$("[data-toggle-id]").click();
 //		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
 	}		
 

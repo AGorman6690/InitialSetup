@@ -18,9 +18,9 @@
 				<thead>
 					<tr class="">
 						<th id="job-name" ></th>
-						<th id="" >Start date</th>
-						<th id="" class="">End date</th>
-						<th id="" class="">Location</th>
+						<th id="start-date" >Start date</th>
+						<th id="end-date" class="">End date</th>
+						<th id="location" class="">Location</th>
 						<th id="" class="job-status first applicant-perspective">Total applicants</th>		
 						<th id="offers-waiting-on" colspan="2" class="job-status applicant-perspective">
 							<div>

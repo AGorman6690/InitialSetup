@@ -4,7 +4,10 @@
 <c:choose>			
 
 	<c:when test="${empty jobDto.applicationDtos}">
-		<div class="no-data">There are currently no applicants for this job</div>
+		<div class="no-data">
+			<p>There are currently no applicants for this job</p>
+			<a class="sqr-btn gray-2" href="/JobSearch/job/135/find-employees">Find Employees</a>
+		</div>
 	</c:when>
 
 	<c:otherwise>

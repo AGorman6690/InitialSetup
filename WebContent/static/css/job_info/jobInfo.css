@@ -186,7 +186,7 @@ span.category{
 #middle-container,
 #map-section,
 #questions-container{
-	padding-top: 35px;
+/* 	padding-top: 35px; */
     margin: auto;	
 }
 
@@ -252,20 +252,6 @@ span.category{
 	background: #fcfdc1;
 }
 
-
-#apply-work-days-calendar-container td:not(.active111):hover,
-#apply-work-days-calendar-container td:not(.active111) a:hover{
-	cursor: default;
-}
-#apply-work-days-calendar-container td.active111:hover{
-	cursor: pointer;
-}
-/* #apply-work-days-calendar-container.job-info-calendar .ui-datepicker-inline.ui-datepicker-multi{ */
-/* 	width: 1100px !important; */
-/* } */
-#apply-work-days-calendar-container .ui-datepicker-group:not(:first-child){
-	padding-top: 20px;
-}
 
 
 

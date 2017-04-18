@@ -20,3 +20,6 @@ td .popuptext h4{
 #employeesTable > thead{
     border-top: 10px solid #163b3d;
 }
+.no-data p{
+	font-size: 25px;
+}

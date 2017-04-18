@@ -1150,12 +1150,15 @@ public class JobRepository {
 		
 		// Main query
 		String sql = "SELECT COUNT(*) FROM work_day wd"
-						+ " INNER JOIN employment e ON e.JobId = wd.JobId"
+						+ " JOIN employment e ON e.JobId = wd.JobId"
+						+ " JOIN job j ON e.JobId = j.JobId"
 						+ " WHERE e.UserId = ?"
+						+ " AND j.Status != ?"
 						+ " AND (";
 		
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
+		args.add(Job.STATUS_PAST);
 		
 		boolean isFirst = true;
 		for(WorkDay workDay : workDays){
@@ -1278,9 +1281,10 @@ public class JobRepository {
 					+ " WHERE e.UserId = ?"
 					+ " AND e.WasTerminated = 0"
 					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND wd.DateId= ?";
+					+ " AND wd.DateId= ?"
+					+ " AND j.Status != ?";
 		
-		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, DateId });
+		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, DateId, Job.STATUS_PAST });
 		if(verificationService.isListPopulated(jobs))
 			return jobs.get(0);
 		else return null;

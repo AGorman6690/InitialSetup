@@ -108,16 +108,16 @@
 							
 							<div class="proposal-container">	
 								<h2 class="proposed-work-day-count">${user.profileId == 1 ? 'Employer' : 'Applicant' } proposed ${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } work days</h2>												
-								<div class="calendar-container wage-proposal-calendar hide-prev-next read-only">
-									<div class="calendar"
+								<div class="v2 proposal-calendar hide-unused-rows calendar-container wage-proposal-calendar hide-prev-next read-only">
+									<div class="calendar proposed-calendar"
 										data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 										data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
 									</div>										
 								</div>
 							</div>
 							<div class="counter-container">									
-								<div class="calendar-container wage-proposal-calendar hide-prev-next">									
-									<div class="calendar"
+								<div class="v2 proposal-calendar hide-unused-rows calendar-container wage-proposal-calendar hide-prev-next">									
+									<div class="calendar counter-calendar"
 										data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 										data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
 									</div>

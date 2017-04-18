@@ -2,7 +2,8 @@ var selectedDays = [];
 var dates_employeeAvailability = [];
 var dates_selectedAvailability_makeOffer;
 
-
+var workDayDtos= [];
+var workDayDtos_original = [];
 $(document).ready(function(){
 	
 	initPage();
@@ -23,7 +24,7 @@ $(document).ready(function(){
 	
 	$("#job-i-might-post").click(function(){
 		$("#filtersContainer").show();
-//		$(this).hide();
+		$("#what-kind-of-job-container").hide();
 	})
 	
 	$("#makeOfferModal #sendInvite").click(function(){
@@ -112,12 +113,17 @@ $(document).ready(function(){
 		var selectedJobId = $(this).attr("data-posted-job-id");
 		
 		executeAjaxCall_loadJobDto(selectedJobId);
+		
+		$("#what-kind-of-job-container").hide();
 	})
 	
 	$("#findEmployees").click(function(){
-		
+//		
 		executeAjaxCall_findEmployees();
-		
+//		$("#resultsContainer").show();
+//		$('html, body').animate({
+//	        scrollTop: $("#results").offset().top -100
+//	    }, 2000);
 	})
 	
 	$("#makeAnOffer").click(function(){
@@ -136,8 +142,8 @@ $(document).ready(function(){
 	
 	setStates();
 	var workDayDtos = [];
-	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), workDayDtos);
-
+//	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), workDayDtos);
+	initCalendar_selectWorkDays($(".calendar"), undefined, 2);
 	$("button.clear").click(function(){
 		clearCalendar($("#makerOffer_workDaysCalendar"), "apply-selected-work-day");
 		dates_selectedAvailability_makeOffer = [];
@@ -255,6 +261,8 @@ function executeAjaxCall_loadJobDto(jobId) {
 function showJobInfo(jobDto){
 	
 	$("#filtersContainer").show();
+	$("#job-info").show();
+	$("#job-info p").html(jobDto.job.jobName);
 	
 	// Set the location
 	$("#street").val(jobDto.job.streetAddress);
@@ -262,12 +270,13 @@ function showJobInfo(jobDto){
 	$("#state").val(jobDto.job.state);
 	$("#zipCode").val(jobDto.job.zipCode);
 		
-	// Set the availability calendar
-	selectedDays = getDatesFromWorkDayDtos(jobDto.workDayDtos, selectedDays);
 
 	$("#availabilityCalendar").datepicker("destroy");
-	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), jobDto.workDayDtos);
-		
+//	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), jobDto.workDayDtos);
+//	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+	workDayDtos = jobDto.workDayDtos;
+	initCalendar_selectWorkDays($(".calendar"), undefined, 2);
+
 }
 
 function executeAjaxCall_findEmployees(){
@@ -305,6 +314,11 @@ function executeAjaxCall_findEmployees(){
 		$("#resultsContainer").show();
 		$("#results").empty();
 		$("#results").append(html_findEmployee_results);
+	   
+		$('html, body').animate({
+	        scrollTop: $("#results").offset().top - 100
+	    }, 1000);
+
 	}
 	
 	function _error(){

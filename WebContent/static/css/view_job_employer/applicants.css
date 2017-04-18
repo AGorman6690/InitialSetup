@@ -153,7 +153,7 @@ td div.name-container a{
 	width: 300px;
 }
 td span.glyphicon{
-	font-size:11px;
+/* 	font-size:11px; */
 }
 
 .availability-calendar-container{
@@ -189,7 +189,10 @@ table .question-container .question{
     font-weight: bold;
     font-style: italic;
 }
-
+#applicantsTable{
+    width: 1200px;
+    margin: auto;
+}
 #applicantsTable .show-all-questions{
     margin: auto;
     display: block;

@@ -145,8 +145,8 @@ function redirectToProfile(){
 
 
 function broswerIsWaiting(isWaiting){
-	if(isWaiting) $("html").addClass("waiting");
-	else $("html").removeClass("waiting");
+	if(isWaiting) $("body").addClass("waiting");
+	else $("body").removeClass("waiting");
 }
 
 

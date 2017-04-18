@@ -11,7 +11,8 @@
 				<p class="accent">${jobDto.job.city}, ${jobDto.job.state }</p>
 				<p class="accent">${jobDto.job.zipCode }</p>		
 			</div>	
-			<div id="map" class="right-border corner" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
+			<div id="map" class="right-border corner" data-do-init="1"
+				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
 		</div>
 	</div>
 	
@@ -79,13 +80,8 @@
 
 	</div>
 	<div id="middle-container">		
-		<div id="work-days-calendar-container" class="calendar-container read-only job-info-calendar ">
+		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container read-only">
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-			<div class="work-days">
-				<c:forEach items="${jobDto.workDays }" var="workDay">
-					<div data-date="${workDay.stringDate }"></div>
-				</c:forEach>
-			</div>
 		</div>		
 	</div>
 </div>

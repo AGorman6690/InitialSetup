@@ -8,6 +8,12 @@
 		
 	$(document).ready(function() {
 
+		$("#select-all-work-days").click(function() {
+			$(workDayDtos).each(function() {
+				this.isProposed = "1";
+			})
+			$("#apply-work-days-calendar-container .calendar").datepicker("refresh");
+		})
 		
 		$(".single").click(function(){
 			var container = $(this).closest(".answer-container");
@@ -46,8 +52,8 @@
 		
 		// Work days
 		if(doesApplicantNeedToSelectWorkDays()){
-			var count_selectedWorkDays = $calendar_applicationWorkDays.find(".selected-work-day").size();
-			var count_allWorkDays = $calendar_applicationWorkDays.find(".active111").size();			
+			var count_selectedWorkDays = $calendar_applicationWorkDays.find(".is-proposed").size();
+			var count_allWorkDays = $calendar_applicationWorkDays.find(".job-work-day").size();			
 			
 			$e = $calendar_applicationWorkDays.find(".ui-datepicker-inline").eq(0);
 			if(count_selectedWorkDays == 0){
@@ -159,7 +165,7 @@
 		if(doesApplicantNeedToSelectWorkDays){
 			
 			employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
-										$("#apply-work-days-calendar-container .calendar"), "yy-mm-dd", "selected-work-day");
+										$("#apply-work-days-calendar-container .calendar"), "yy-mm-dd", "is-proposed");
 		}
 
 		return employmentProposalDto;

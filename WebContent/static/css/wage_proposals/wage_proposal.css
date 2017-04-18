@@ -1,3 +1,11 @@
+.proposed-calendar *:hover{
+    cursor: not-allowed !important;
+}
+
+
+
+
+
 .expiration-time-cont p:last-child{
     border-bottom: 1px solid #cacaca;
 }
@@ -206,7 +214,7 @@ input.counter-wage-amount{
 }
 .application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
-	background: #fff3f3;
+	background: #e0d5d5;
 /* 	color: #fff; */
     border: 2px solid #904d4d;
 

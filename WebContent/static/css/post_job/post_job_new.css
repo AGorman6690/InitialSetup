@@ -106,7 +106,7 @@ thead .master-row{
 
 #previous-job-posts{
 	margin-left: 20px;
-	width: 374px;
+	width: 400px;
 }
 #previous-job-posts [data-posted-job-id],
 #postedQuestions [data-question-id]{
@@ -140,6 +140,7 @@ thead .master-row{
 	padding: 10px 20px;
 	background: #197994;
 	color: #ffffff;
+	width: 250px;
 }
 
 #copy-question-container{
@@ -214,7 +215,9 @@ thead .master-row{
 #compensationContainer .radio-container .radio:first-child{
 	margin-bottom: 13px;
 }
-
+.calendar td:not(.ui-datepicker-unselectable):hover{
+	cursor: pointer;
+}
 
 input#maxPay{
 	display: block;
@@ -223,14 +226,21 @@ input#maxPay{
 }
 #datesContainer .radio-container{
     padding-bottom: 20px;
-    width: 75px;
+    width: 440px;
     margin: auto;
     text-align: left;	
 }
 #post-job-container{
 	padding-bottom: 75px;
 }
-
+.selected-date .select-date-box .glyphicon-ok{
+	font-size: 30px;
+	display: block;
+	color: #627071;
+}
+.select-date-box .glyphicon-ok{
+	display: none;
+}
 #prev-or-next span{
 	cursor: pointer;
 	margin: 2px 20px;

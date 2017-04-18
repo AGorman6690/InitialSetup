@@ -20,12 +20,14 @@
 	<div id="main-cont" class="item pad-top">	
 		<div id="ratings-cont">
 			<div class="user-cont" data-user-id="${employer.userId}">
-				<h2>Rate <span>${employer.firstName} ${employer.lastName}</span></h2>	
-				<div class="star-rating-cont">
-					<input class="star-rating" name="" class="rating-loading"
-						value="0" data-size="xs">
-				</div>		
-				<div class="rating-criteria-cont">
+				<div class="">
+					<h2>Rate <span>${employer.firstName} ${employer.lastName}</span></h2>	
+					<div class="star-rating-cont">
+						<input class="star-rating" name="" class="rating-loading"
+							value="0" data-size="xs">
+					</div>		
+				</div>
+				<div class="rating-criteria-cont pad-top-2">
 					<div class="on-time rate-criterion" data-rate-criterion-id="4">
 						<p>Did ${employer.firstName} pay you as agreed upon?</p>
 						<div class="rating-answer button-group no-toggle">
@@ -77,12 +79,13 @@
 							<button class="sqr-btn yes">Yes</button>
 							<button class="sqr-btn no" data-rating-value="1">No</button>
 						</div>
-					</div>														
+					</div>		
+					<div class="pad-top">
+						<p>Comment</p>
+						<textarea class="comment" rows="4"></textarea>
+					</div>																	
 				</div>			
-				<div class="pad-top">
-					<p>Comment</p>
-					<textarea class="comment" rows="4"></textarea>
-				</div>
+
 			</div>
 		</div>
 	</div>

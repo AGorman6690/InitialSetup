@@ -17,6 +17,7 @@
 	
 <div class="select-page-section-container">
 	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Post</span>
+	<span data-page-section-id="employer-info-container" class="select-page-section">Employer</span>
 	<c:if test="${context == 'find' }">
 		<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span>
 	</c:if>
@@ -27,18 +28,19 @@
 	<div id="applicationStatus">	
 		<c:choose>					
 			<c:when test="${context == 'find' && !empty jobDto.application}">		
-					${jobDto.application.status == 0 || jobDto.application.status == 2 ? "Application has been submitted" :
+					${jobDto.application.status == 0 ||
+						 jobDto.application.status == 2 ||
+						 jobDto.application.status == 4 ? "Application has been submitted" :
 						jobDto.application.status == 1 ? "Application has been declined" :
-						jobDto.application.status == 4 ? "Application is waiting for your approval" :
-						jobDto.application.status == 5 ? "Application has been withdrawn" :
+						jobDto.application.status == 5 ? "You have withdrawn your application" :
 						"Application has been accepted" }						
 				
 			</c:when>
 			<c:when test="${context == 'find' }">
-					${jobDto.availabilityStatus == 0 ? "Per your availability calendar, you are NOT available" :
-						jobDto.availabilityStatus == 1 ? "You are NOT available due to other employment. You cannot apply for this job." :	
-						jobDto.availabilityStatus == 2 ? "Per your availability calendar, you are PARTIALLY available" :						
-						jobDto.availabilityStatus == 3 ? "You are PARTIALLY available due to other employment" :
+					${
+						jobDto.availabilityStatus == 1 ? "You are not available due to other employment. You cannot apply for this job." :	
+												
+						jobDto.availabilityStatus == 3 ? "You are partially available due to other employment" :
 						jobDto.availabilityStatus == 4 ? "You are available" : "" }							
 			</c:when>					
 		</c:choose>

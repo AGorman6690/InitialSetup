@@ -12,7 +12,11 @@
     width: 100%;
     display: inline-block;
 }
-
+.mod .mod-header .glyphicon-remove{
+	float: none;
+	margin: 10px;
+	font-size: 25px;
+}
 .start-and-end-times,
 .application-count {
     color: #000;    
@@ -36,12 +40,14 @@ td.employment .start-and-end-times{
 .application-count span,
 .calendar-container .calendar td.application,
 .calendar-container .calendar .ui-datepicker-group-middle td.application a{
-	background: #7389b3;
+/* 	background: #7389b3; */
+	background: #36595a;
 	cursor: pointer;
 }
 .calendar-container .calendar td.employment,
 .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
-	background: #629a6f;
+/* 	background: #629a6f; */
+	background: #7ec3b4;
 	cursor: pointer;
 }
 
