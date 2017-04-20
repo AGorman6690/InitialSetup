@@ -90,6 +90,7 @@ td.employment .start-and-end-times{
 .ui-datepicker-title{
     font-weight: bold;
     color: #163b3d;
+    font-size: 22px;
 }
 .start-and-end-times p {
     margin: 2px;
@@ -162,8 +163,11 @@ td.application-hover .application-count{
 #event-calendar-mod .ui-datepicker-group-first,
 #event-calendar-mod .ui-datepicker-group-last{
 	position: absolute;
-	top: 300px;
+	top: 246px;
 }
 #event-calendar-mod .ui-datepicker-group-middle{
 	margin-left: 300px;
+}
+td.ui-datepicker-other-month{
+	border: 0;
 }

@@ -182,18 +182,6 @@ public class UserController {
 	}
 
 		
-	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
-									 Model model, HttpSession session) {
-
-		if (SessionContext.isLoggedIn(session)) {
-			userService.setModel_WorkHistoryByUser(model, userId);
-			return "templates/WorkHistory";
-		} else {
-			return "NotLoggedIn";
-		}
-
-	}
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,
@@ -211,10 +199,15 @@ public class UserController {
 
 	}
 
-	
+	@RequestMapping(value = "/user/{userId}/ratings", method = RequestMethod.GET)
+	public String getRatings_byUser(Model model, @PathVariable(value = "userId") int userId) {
+		
+		userService.setModel_getRatings_byUser(model, userId);
+		
+		return "/ratings/RatingsByUser";
+	}	
 	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
-	@ResponseBody
 	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
 		userService.editEmployeeSettings(user_edited, session);
 	}

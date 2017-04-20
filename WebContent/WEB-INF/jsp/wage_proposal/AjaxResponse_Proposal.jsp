@@ -1,18 +1,20 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 <div id="response-container-${applicationDto.application.applicationId }"
-	 class="response-container mod"
+	 class="response-container mod simple-header"
 	 data-application-id="${applicationDto.application.applicationId}"
 	 data-session-user-is-employer=${user.profileId == 2 ? '1' : '0' }>
 	 
 	<div class="mod-content">
 		<div class="mod-header">
 			<span class="glyphicon glyphicon-remove"></span>
-			<h2>Employment Proposal</h2>
+			<h2></h2>
 		</div>
 		
 		<div class="mod-body">
-			<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>							
+			<c:if test="${!isEmployerMakingFirstOffer }">
+				<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>
+			</c:if>							
 			<div class="proposal wage-container" data-is-proposing="${isEmployerMakingFirstOffer ? '1' : '-1' }">	
 
 				<c:if test="${user.profileId == 1 }">
@@ -120,7 +122,18 @@
 						<div class="confirmation-container">
 							<p class="accept">You are <span class="bold">accepting</span> the following work days</p>
 							<p class="counter">You are <span class="bold">proposing</span> the following work days</p>
-						</div>							
+						</div>		
+		
+						<div class="counter-container pad-top">	
+							<div class="v2 proposal-calendar calendar-container wage-proposal-calendar
+								 hide-prev-next hide-unused-rows">	
+								<button class="sqr-btn gray-2 select-all-work-days">Select All</button>								
+								<div class="calendar counter-calendar"
+									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
+									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
+								</div>
+							</div>		
+						</div>												
 						<c:choose>	
 							<c:when test="${!isEmployerMakingFirstOffer }">
 								<div class="proposal-container">	
@@ -141,17 +154,7 @@
 								<h2 class="proposed-work-day-count">Propose work days</h2>
 							</c:otherwise>
 						</c:choose>
-		
-						<div class="counter-container pad-top">	
-							<div class="v2 proposal-calendar calendar-container wage-proposal-calendar
-								 hide-prev-next hide-unused-rows">	
-								<button class="sqr-btn gray-2 select-all-work-days">Select All</button>								
-								<div class="calendar counter-calendar"
-									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
-									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
-								</div>
-							</div>		
-						</div>						
+					
 					</div>
 				</div>
 			</c:if>

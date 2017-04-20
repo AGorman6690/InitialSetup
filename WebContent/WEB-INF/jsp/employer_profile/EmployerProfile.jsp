@@ -11,7 +11,10 @@
 <div class="container">	
 	<c:choose>
 		<c:when test="${jobDtos.size() == 0 }">
-			<div>You have no jobs waiting to start</div>	
+			<div class="center">
+			<p>You have no jobs waiting to start</p>
+			<a id="nav_postJob" class="sqr-btn teal" href="/JobSearch/post-job">Post Job</a>
+			</div>	
 		</c:when>
 		<c:otherwise>
 			<table id="table_jobsWaitingToStart" class="main-table-style shadow">

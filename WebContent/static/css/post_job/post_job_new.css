@@ -36,7 +36,7 @@
 
 #edit-or-submit-container,
 #previous-next-container{
-    padding: 25px 0px 35px 0px;
+    padding: 25px 0px 0px 0px;
     text-align: center;
     border-bottom: 1px solid #cacaca;	
     margin: auto;
@@ -62,6 +62,7 @@
 	font-size: 20px;
     width: 270px;
 }
+#edit-or-submit-container button,
 #proceed-to-preview-job-posting{
 	margin: 0px auto 20px;
 }
@@ -140,7 +141,7 @@ thead .master-row{
 	padding: 10px 20px;
 	background: #197994;
 	color: #ffffff;
-	width: 250px;
+	width: 320px;
 }
 
 #copy-question-container{

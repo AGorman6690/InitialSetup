@@ -240,7 +240,7 @@ public class JobServiceImpl {
 		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 
 		//Query the database
-		List<Job> jobsCompleted = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_PAST);
+		List<Job> jobsCompleted = getJobs_byStatusAndByEmployer(userId, Job.STATUS_PAST);
 		
 		//Set the job Dtos
 		if(jobsCompleted != null){
@@ -255,6 +255,11 @@ public class JobServiceImpl {
 
 	}
 
+
+	public List<Job> getJobs_byStatusAndByEmployer(int userId, Integer status) {
+		
+		return repository.getJobsByStatusAndByEmployer(userId, status);
+	}
 
 	public int getJobCountByCategory(int categoryId) {
 		return repository.getJobCountByCategory(categoryId);
@@ -921,19 +926,22 @@ public class JobServiceImpl {
 			setWorkDayDto_conflictingEmployment(workDayDto, sessionUser.getUserId());
 		}
 		
-		JobSearchUserDTO userDto_employer = new JobSearchUserDTO();
-		userDto_employer.setUser(userService.getUser(jobDto.getJob().getUserId()));
-		userDto_employer.setJobDtos_jobsCompleted(getJobDtos_JobsCompleted_Employer(
-				userDto_employer.getUser().getUserId()));
-		userDto_employer.setRatingValue_overall(userService.getRating(userDto_employer.getUser().getUserId()));
-		userDto_employer.setRatingDto(userService.getRatingDto_byUser(userDto_employer.getUser()));
+//		JobSearchUserDTO userDto_employer = new JobSearchUserDTO();
+//		userDto_employer.setUser(userService.getUser(jobDto.getJob().getUserId()));
+//		userDto_employer.setJobDtos_jobsCompleted(getJobDtos_JobsCompleted_Employer(
+//				userDto_employer.getUser().getUserId()));
+//		userDto_employer.setRatingValue_overall(userService.getRating(userDto_employer.getUser().getUserId()));
+//		userDto_employer.setRatingDto(userService.getRatingDto_byUser(userDto_employer.getUser()));
+//		
+//		for( JobDTO jobDto_complete : userDto_employer.getJobDtos_jobsCompleted() ){
+//			jobDto_complete.setRatingValue_overall(userService.getRating_byJobAndUser(
+//					jobDto_complete.getJob().getId(), userDto_employer.getUser().getUserId()));
+//			
+//			jobDto_complete.setComments(getCommentsGivenToUser_byJob(
+//					userDto_employer.getUser().getUserId(), jobDto_complete.getJob().getId()));
+//		}
 		
-		for( JobDTO jobDto_complete : userDto_employer.getJobDtos_jobsCompleted() ){
-			jobDto_complete.setRatingValue_overall(userService.getRating_byJobAndUser(
-					jobDto_complete.getJob().getId(), userDto_employer.getUser().getUserId()));
-//			jobDto_complete.setRatingDto(userService.getRatingDtoByUserAndJob(
-//					userDto_employer.getUser(), jobDto_complete.getJob().getId()));
-		}
+		userService.setModel_getRatings_byUser(model, jobDto.getJob().getUserId());
 		
 
 		switch (context) {
@@ -976,7 +984,6 @@ public class JobServiceImpl {
 		
 		}	
 		
-		model.addAttribute("userDto_employer", userDto_employer);
 		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("context", context);
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
@@ -984,6 +991,11 @@ public class JobServiceImpl {
 		model.addAttribute("userDto", userDto);
 
 				
+	}
+
+	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
+		
+		return repository.getCommentsGivenToUser_byJob(userId, jobId);
 	}
 
 	private int getAvailabilityStatus(boolean isPartialAvailabilityAllowed, int userId,

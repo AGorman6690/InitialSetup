@@ -116,6 +116,7 @@
 }
 #job-calendar-application-summary td.job-work-day:hover{
 	background: #dcdccb;
+	cursor: pointer;
 }
 #job-calendar-application-summary.v2 .calendar td.job-work-day:hover a{
 /* 	background: #dcdccb; */

@@ -41,6 +41,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
@@ -271,7 +272,7 @@ public class UserServiceImpl {
 			deleteComment(submitRatingDto.getJobId(), submitRatingDto.getUserId_ratee());
 			if (submitRatingDto.getCommentString() != "") {
 				repository.addComment(submitRatingDto.getUserId_ratee(), submitRatingDto.getJobId(),
-						submitRatingDto.getCommentString());
+						submitRatingDto.getCommentString(), sessionUser.getUserId());
 			}
 
 		}
@@ -711,19 +712,6 @@ public class UserServiceImpl {
 
 	}
 
-
-
-	public void setModel_WorkHistoryByUser(Model model, int userId) {
-		
-		
-		
-		JobSearchUserDTO userDto = new JobSearchUserDTO();
-		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userId));
-		
-		model.addAttribute("userDto", userDto);
-
-	}
-	
 	
 
 	public void setModel_Applicants(Model model, int jobId) {
@@ -731,12 +719,6 @@ public class UserServiceImpl {
 		List<JobSearchUser> applicants = this.getApplicantsByJob_SubmittedOrConsidered(jobId);
 		model.addAttribute("applicants", applicants);
 		
-	}
-
-	public void setModel_WorkHistoryForAllApplicants(Model model, int userId, int jobId) {
-		this.setModel_Applicants(model, jobId);
-		this.setModel_WorkHistoryByUser(model, userId);
-		model.addAttribute("clickedUserId", userId);
 	}
 
 	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
@@ -1101,6 +1083,41 @@ public class UserServiceImpl {
 	public Double getRating_byJobAndUser(Integer jobId, int userId) {
 		
 		return repository.getRating_byJobAndUser(jobId, userId);
+	}
+
+	public void setModel_getRatings_byUser(Model model, int userId) {
+	
+
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setUser(getUser(userId));
+
+		List<Job> jobs_completed = new ArrayList<Job>();
+		if(userDto.getUser().getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			jobs_completed = jobService.getCompletedJobsByEmployee(userDto.getUser().getUserId());
+		}else{
+			jobs_completed = jobService.getJobs_byStatusAndByEmployer(userId, Job.STATUS_PAST);
+		}
+		
+		userDto.setRatingValue_overall(getRating(userDto.getUser().getUserId()));
+		userDto.setRatingDto(getRatingDto_byUser(userDto.getUser()));
+		
+		userDto.setJobDtos_jobsCompleted(new ArrayList<JobDTO>());
+		for( Job job_complete : jobs_completed ){
+			JobDTO jobDto = new JobDTO();
+			
+			jobDto.setJob(job_complete);
+			jobDto.setRatingValue_overall(getRating_byJobAndUser(
+					job_complete.getId(), userDto.getUser().getUserId()));
+			
+			jobDto.setComments(jobService.getCommentsGivenToUser_byJob(
+					userDto.getUser().getUserId(), job_complete.getId()));
+			
+			userDto.getJobDtos_jobsCompleted().add(jobDto);
+		}
+		
+		model.addAttribute("userDto_ratings", userDto);
+		
+		
 	}
 
 }

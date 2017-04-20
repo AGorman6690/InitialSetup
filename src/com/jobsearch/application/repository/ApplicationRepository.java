@@ -55,6 +55,11 @@ public class ApplicationRepository {
 				application.setIsNew(rs.getInt("IsNew"));
 				application.setStatus(rs.getInt("Status"));
 				
+				application.setFlag_employerInitiatedContact(
+						rs.getInt(Application.FLAG_EMPLOYER_INITIATED_CONTACT));
+				application.setFlag_closedDueToAllPositionsFilled(
+						rs.getInt(Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED));
+				
 				
 //				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
 //				if(ts_employerAcceptedDate != null)
@@ -1014,5 +1019,11 @@ public class ApplicationRepository {
 	public void deleteEmployment(int userId, int jobId) {
 		String sql = "DELETE FROM employment WHERE UserId = ? AND JobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId });		
+	}
+
+
+	public void updateApplicationFlag(int applicationId, String flag, int value) {
+		String sql = "UPDATE application SET " + flag + " = ? WHERE ApplicationId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, applicationId });		
 	}
 }

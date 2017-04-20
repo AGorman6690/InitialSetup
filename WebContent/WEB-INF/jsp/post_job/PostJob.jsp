@@ -201,7 +201,7 @@
 				
 				<div id="questionsContainer" class="page-section">
 					<div id="addedQuestionsContainer" class="item">			
-						<p>Questions (optional)</p>
+						<p>Questions</p>
 						<div class="question-actions-container">
 							<button id="deleteQuestion" class="btn-sqr">Delete</button>
 							<button id="editQuestion" class="btn-sqr">Edit</button>	
@@ -213,45 +213,24 @@
 					<div id="addedQuestions"></div>
 				</div>		
 				<div id="copy-or-new-question" class="item">
-					<div id="copy-question-container">
-						<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">
-							Copy a question</button>
-							<div id="postedQuestions" class="dropdown-style">
-								<c:forEach items="${postedQuestions }" var="question">
-									<div data-question-id="${question.questionId }">${question.text }</div>
-								</c:forEach>
-							</div>					
-						</div>
-						<button id="create-new-question" class="sqr-btn">Create a new question</button>
+					<c:if test="${postedQuestions.size() > 0 }">
+						<div id="copy-question-container">
+							<button id="copy-previous-question" class="sqr-btn" data-toggle-id="postedQuestions">
+								Begin with a previous question</button>
+								<div id="postedQuestions" class="dropdown-style">
+									<c:forEach items="${postedQuestions }" var="question">
+										<div data-question-id="${question.questionId }">${question.text }</div>
+									</c:forEach>
+								</div>					
+							</div>
+						</c:if>
+						<button id="create-new-question" class="sqr-btn">Create a new question</button>						
 					</div>
 				
 		
 					<div id="create-question-container" class="item">
-						<div id="questionActions" class="question-actions-container">
-		<!-- 					<button id="newQuestion" class="clickable btn-sqr">Clear</button> -->
-							<button id="addQuestion" class="clickable btn-sqr">Add</button>
-		<!-- 					<button id="deleteQuestion" class="btn-sqr">Delete</button> -->
-		<!-- 					<button id="editQuestion" class="btn-sqr">Edit</button>							 -->
-		<!-- 					<span id="editQuestionResponses"> -->
-		<!-- 						<span id="saveEditQuestionChanges" class="glyphicon glyphicon-ok"></span> -->
-		<!-- 						<span id="cancelEditQuestionChanges" class="glyphicon glyphicon-remove"></span> -->
-		<!-- 					</span> -->
-							<c:if test="${!empty postedQuestions }">
-								<div id="postedQuestionsContainer">
-		<!-- 							<span id="copyPreviousQuestion" data-toggle-id="postedQuestions"> -->
-		<!-- 								Copy a previous question</span> -->
-									<div id="postedQuestions" class="dropdown-style">
-										<c:forEach items="${postedQuestions }" var="question">
-											<div data-question-id="${question.questionId }">${question.text }</div>
-										</c:forEach>
-									</div>
-								</div>
-							</c:if>
-							<div id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</div>
-						</div>		
-						
-						
-						<div class="item">
+
+						<div class="">
 							<p>Question Format</p>						
 							<select id="questionFormat" class="question-formats">
 							  <option class="answer-format-item" data-format-id="0">Yes or No</option>
@@ -279,7 +258,11 @@
 									</div>
 								</div>
 								<span id="addAnswer" class="add-list-item glyphicon glyphicon-plus"></span>			
-						</div>										
+						</div>
+						<div id="questionActions" class="question-actions-container pad-top">
+							<button id="addQuestion" class="clickable btn-sqr">Add</button>
+							<div id="invalidAddQuestion" class="invalid-message">Please fill in all required fields</div>
+						</div>																	
 						
 					</div>
 				</div>

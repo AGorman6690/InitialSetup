@@ -103,15 +103,15 @@ table#applicantsTable.table-view > thead > th{
 	width: 20%;
 }
 
-table span.glyphicon-star,
-table span.glyphicon-star-empty{
+table span.glyphicon-star.favorite-flag,
+table span.glyphicon-star-empty.favorite-flag{
     font-size: 25px;
     margin-right: 15px;
 }
-.glyphicon-star{
+.favorite-flag.glyphicon-star{
 	color: #000;
 }
-.glyphicon-star-empty{
+.favorite-flag.glyphicon-star-empty{
 	color: #c4c4c4;
 }
 table#applicantsTable.table-view.has-answers > thead > th,
@@ -130,7 +130,11 @@ table#applicantsTable > thead > th{
     font-weight: bold;
     color: #163b3d;
 }  
-
+.applicant-name{
+    font-size: 18px;
+    color: #197994;
+    font-weight: bold;
+}
 td div.name-container{
     height: 30px;
     position: relative;
@@ -215,4 +219,16 @@ label.display-question{
     text-decoration: underline;
     color: #163b3d;
     font-weight: bold;
+}
+
+#applicantsTable .ratings-mod-container .mod-content{
+    width: 700px;
+    margin-left: -350px;
+    top: 100px;
+    border: 5px solid #163b3d;
+}
+.show-applicant-ratings-mod:hover{
+	cursor: pointer;
+/* 	background: #f4f4f4; */
+/* 	border: 1px solid #cacaca; */
 }

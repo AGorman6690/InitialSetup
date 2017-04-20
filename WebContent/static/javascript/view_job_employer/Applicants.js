@@ -1,5 +1,12 @@
 $(document).ready(function(){
 	
+	$("body").on("click", ".show-applicant-ratings-mod", function() {		
+		var $tr = $(this).closest("tr");
+		var userId_applicant = $tr.attr("data-user-id");
+		var $e_renderHtml = $tr.find(".ratings-mod-container .mod-body").eq(0);
+		executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);
+	})
+	
 	$("#table_headerAnswers td input.show-question-and-answers").change(function(){
 		
 		var doShow = $(this).prop("checked");
@@ -43,7 +50,22 @@ $(document).ready(function(){
 	
 })
 
-
+function executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml) {
+	
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/user/" + userId_applicant + "/ratings",
+		headers: getAjaxHeaders(),
+		dataType: "html",
+	}).done(function (html) {
+		$e_renderHtml.html(html);
+		renderStars($e_renderHtml);
+		$e_renderHtml.closest(".mod").show();
+		
+		
+	})
+	
+}
 function updateApplicationStatus($e){
 
 

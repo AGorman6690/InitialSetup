@@ -178,7 +178,7 @@ function initPage(){
 
 function resetCal_findEmplyees(){
 	var $calendar = $("#availabilityCalendar");
-	selectedDays = [];	
+	workDayDtos = [];	
 	
 	$calendar.datepicker("refresh");
 	$calendar.removeClass("show-hover-range");	
@@ -269,6 +269,7 @@ function executeAjaxCall_loadJobDto(jobId) {
 	
 	function _success(jobDto){			
 		showJobInfo(jobDto);
+		$("#findEmployees").click();
 	}
 
 	function _error(){

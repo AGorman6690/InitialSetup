@@ -1353,6 +1353,11 @@ public class JobRepository {
 		return WorkDayMapper(sql, args.toArray());
 	}
 
+	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
+		String sql = "SELECT Comment FROM comment WHERE UserId = ? and JobId = ?";
+		return jdbcTemplate.queryForList(sql, new Object[]{ userId,  jobId }, String.class );
+	}
+
 
 
 

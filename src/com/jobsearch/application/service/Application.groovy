@@ -18,6 +18,9 @@ public class Application {
 	int hasBeenViewed
 	int isNew
 	
+	int flag_employerInitiatedContact
+	int flag_closedDueToAllPositionsFilled
+	
 	// ******************************
 	// Do away with these.
 	// They are moving to the employment proposal dto
@@ -47,4 +50,10 @@ public class Application {
 	public static Integer STATUS_ACCEPTED = 3;
 	public static Integer STATUS_WAITING_FOR_APPLICANT_APPROVAL = 4;
 	public static Integer STATUS_CANCELLED_DUE_TO_TIME_CONFLICT = 5;
+	public static Integer STATUS_CANCELLED_DUE_TO_EMPLOYER_FILLED_ALL_POSITIONS = 6;
+	
+	public static String FLAG_EMPLOYER_INITIATED_CONTACT = "Flag_EmployerInitiatedContact";
+	public static String FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED = "Flag_ClosedDueToAllPositionsFilled"
 }
+
+

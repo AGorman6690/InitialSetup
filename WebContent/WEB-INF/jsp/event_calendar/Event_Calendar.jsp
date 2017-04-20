@@ -46,7 +46,7 @@
 	</c:forEach>		
 </div>
 
-<div id="event-calendar-mod" class="mod container calendar-container employment-line">
+<div id="event-calendar-mod" class="mod container calendar-container employment-line hide-prev-next">
 	<div class="mod-content">
 		<div class="mod-header">
 		<span class="glyphicon glyphicon-remove"></span>

@@ -6,7 +6,7 @@
 	<c:when test="${empty jobDto.applicationDtos}">
 		<div class="no-data">
 			<p>There are currently no applicants for this job</p>
-			<a class="sqr-btn gray-2" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
+			<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
 		</div>
 	</c:when>
 
@@ -170,6 +170,7 @@
 			<tbody class="vertical-lines">
 			<c:forEach items="${jobDto.applicationDtos }" var="applicationDto">
 				<tr class=""
+					data-user-id="${applicationDto.application.userId }"
 					data-application-status="[0,${applicationDto.application.status }]"
 					data-applicant-rating="${applicationDto.applicantDto.ratingValue_overall}"
 					data-application-id="${applicationDto.application.applicationId }"
@@ -182,37 +183,56 @@
 					data-proposed-work-day-count="${applicationDto.dateStrings_availableWorkDays.size() }"
 					>
 					
-					<td class="table-view">
+					
+					<td class="table-view ">
 						<div class="vert-border name-container">
-							<span class="favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
-							<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
-										 ${applicationDto.applicantDto.user.firstName }</a>
+							<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
+							<p class="applicant-name show-applicant-ratings-mod">
+							 ${applicationDto.applicantDto.user.firstName }</p>
+						</div>
+						<div class="ratings-mod-container">
+							<div class="mod simple-header">
+								<div class="mod-content">
+									<div class="mod-header">
+										<span class="glyphicon glyphicon-remove"></span>
+									</div>
+									<div class="mod-body">	
+									</div>
+								</div>
+							</div>						
 						</div>
 					</td>
 					<td class="table-view">
-						<div class="vert-border">
+						<div class="show-applicant-ratings-mod vert-border">
 						 	${applicationDto.applicantDto.ratingValue_overall}
 						 </div>
 					</td>
 	
 					<c:if test="${jobDto.questions.size() > 0 }">
 						<td class="left table-view">
-							<div class="vert-border">
-							<c:forEach items="${applicationDto.questions }" var="question" varStatus="status_questions">
-								<div data-question-id="${question.questionId }"
-									class="question-container ${status_questions.first ? 'displayed' : 'not-first' }">
-									<p class="question">${question.text }</p>										
-									<p class="answer">
-										<c:forEach items="${question.answers }" var="answer" varStatus="status">
-											${answer.text}${!status.last ? ',' : '' }										
-										</c:forEach>									
-									</p>
-								</div>
-								<c:if test="${!status_questions.first && status_questions.last }">
-									<span class="glyphicon glyphicon-menu-down show-all-questions"></span>
-								</c:if>
-							</c:forEach>
-							</div>
+							<c:choose>
+								<c:when test="${applicationDto.application.flag_employerInitiatedContact == 1 }">
+									<p>You initiated contact. Applicant did not answer questions.</p>
+								</c:when>
+								<c:otherwise>
+									<div class="vert-border">
+									<c:forEach items="${applicationDto.questions }" var="question" varStatus="status_questions">
+										<div data-question-id="${question.questionId }"
+											class="question-container ${status_questions.first ? 'displayed' : 'not-first' }">
+											<p class="question">${question.text }</p>										
+											<p class="answer">
+												<c:forEach items="${question.answers }" var="answer" varStatus="status">
+													${answer.text}${!status.last ? ',' : '' }										
+												</c:forEach>									
+											</p>
+										</div>
+										<c:if test="${!status_questions.first && status_questions.last }">
+											<span class="glyphicon glyphicon-menu-down show-all-questions"></span>
+										</c:if>
+									</c:forEach>
+									</div>								
+								</c:otherwise>
+							</c:choose>
 						</td>
 					</c:if>							
 

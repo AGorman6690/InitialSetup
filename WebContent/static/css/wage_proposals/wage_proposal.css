@@ -107,7 +107,7 @@ span.expiration-time{
 }
 
 .proposal h2{
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: bold;
 	color: #163b3d;
 }
@@ -173,10 +173,6 @@ input.counter-wage-amount{
 .time-container p{
 /* 	display: block; */
 }
-.applicant-expiration-clock h1{
-	color: #163b3d;
-	margin-bottom: 10px;
-}
 .applicant-expiration-clock p{
 	font-weight: bold;
     margin-bottom: 0px;
@@ -218,7 +214,8 @@ input.counter-wage-amount{
 }
 .application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
-	background: #e0d5d5;
+/* 	background: #e0d5d5; */
+	background: #f3efef;
 /* 	color: #fff; */
     border: 2px solid #904d4d;
 

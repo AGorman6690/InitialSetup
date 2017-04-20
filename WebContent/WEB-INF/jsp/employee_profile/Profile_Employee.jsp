@@ -85,7 +85,7 @@
 			<c:otherwise>
 				<p id="noApplications">You have no open applications at this time.</p>
 	
-				<a id="" href="/JobSearch/jobs/find" class="sqr-btn gray-2">Find Jobs</a>
+				<a id="" href="/JobSearch/jobs/find" class="sqr-btn teal">Find Jobs</a>
 			</c:otherwise>		
 		</c:choose>
 	</div>

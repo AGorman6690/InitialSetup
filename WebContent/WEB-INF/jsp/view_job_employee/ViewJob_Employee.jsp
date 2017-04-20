@@ -19,7 +19,7 @@
 <div class="select-page-section-container">
 	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Post</span>
 	<span data-page-section-id="employer-info-container" class="select-page-section">Employer</span>
-	<c:if test="${context == 'find' }">
+	<c:if test="${context == 'find' && empty jobDto.application}">
 		<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span>
 	</c:if>
 </div>
@@ -34,6 +34,7 @@
 						 jobDto.application.status == 4 ? "Application has been submitted" :
 						jobDto.application.status == 1 ? "Application has been declined" :
 						jobDto.application.status == 5 ? "You have withdrawn your application" :
+						jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
 						"Application has been accepted" }						
 				
 			</c:when>
@@ -52,43 +53,7 @@
 	<%@include file="../templates/JobInformation.jsp"%>						
 </div>
 <div id="employer-info-container" class="page-section center">	
-<c:choose>
-	<c:when test="${!empty userDto_employer.jobDtos_jobsCompleted }">		
-		<div id="employer-header">
-			<h3>${userDto_employer.user.firstName } ${userDto_employer.user.lastName }</h3>
-			<p>
-				<input name="input-1" class="rating-loading"
-						value="${userDto_employer.ratingValue_overall }	">
-				${userDto_employer.ratingValue_overall }						
-			</p>		
-			<div id="employee-rating-details">
-				<c:forEach items="${userDto_employer.ratingDto.rateCriteria }" var="rateCriterion">
-					<div>
-						<span class="criteria-name">${rateCriterion.shortName }</span>
-						<span class="rating-value">
-							<input name="input-1" class="rating-loading"
-									value="${rateCriterion.stringValue }">${rateCriterion.stringValue }	
-						</span>
-					</div>
-				</c:forEach>
-			</div>
-		</div>		
-		<div id="employer-complted-jobs">
-			<h2>Completed Jobs</h2>
-			<c:forEach items="${userDto_employer.jobDtos_jobsCompleted }" var="jobDto">
-				<div class="completed-job">
-					<h3>${jobDto.job.jobName }</h3>
-					<input name="input-1" class="rating-loading"
-							value="${jobDto.ratingValue_overall }	">
-					${jobDto.ratingValue_overall }				
-				</div>
-			</c:forEach>
-		</div>		
-	</c:when>
-	<c:otherwise>
-		<p>${userDto_employer.user.firstName } ${userDto_employer.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
-	</c:otherwise>
-</c:choose>
+	<%@ include file="../ratings/RatingsByUser.jsp"%>
 </div>
 <c:if test="${context == 'find' && empty jobDto.application &&
 			jobDto.availabilityStatus != 1 }">

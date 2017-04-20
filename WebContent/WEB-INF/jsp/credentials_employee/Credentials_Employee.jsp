@@ -189,7 +189,7 @@
 								
 								<td class="past-job">
 									<div>
-										<a class="job-name accent" href="/JobSearch/job/${jobDto.job.id }?c=profile-complete&p=1">${jobDto.job.jobName }</a>
+										<h3>${jobDto.job.jobName }</h3>
 										<span>
 	<!-- 									<div class="item categoryContainer"> -->
 											<c:forEach items="${jobDto.categories }" var="category" varStatus="status">

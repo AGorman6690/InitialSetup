@@ -324,10 +324,10 @@ public class UserRepository {
 
 	}
 
-	public void addComment(int userId, int jobId, String comment) {
-		String sql = "INSERT INTO comment (JobId, UserId, Comment) VALUES (?, ?, ?)";
+	public void addComment(int userId, int jobId, String comment, int userId_commenter) {
+		String sql = "INSERT INTO comment (JobId, UserId, Comment, UserId_Commenter) VALUES (?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment });
+		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment, userId_commenter });
 
 	}
 

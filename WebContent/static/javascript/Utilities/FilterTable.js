@@ -224,23 +224,29 @@ function filterTableRows(appliedFilters, $table){
 				// Get the array of values
 				filterValue_currentRow = getArrayFromString(filterValue_currentRow);
 
+				// This condition is a work around for the case when the employer initiates
+				// contact with the applicant.
+				// In this scenario, the applicant does not answer any questions, hence this
+				// applicant's "anwer array" will be empty.
+				// Pretty this later.
+				if(filterValue_currentRow[0] != ""){
 			
-				// If the filter requires the row to satisfy ALL the applied filter values
-				if(appliedFilter.mustMatchAllValues == "1"){
-					if(!doesArrayContainAllValues(filterValue_currentRow, appliedFilter.values)){
-						doShowRow = false;
-						return false; // exit
+					// If the filter requires the row to satisfy ALL the applied filter values
+					if(appliedFilter.mustMatchAllValues == "1"){
+						if(!doesArrayContainAllValues(filterValue_currentRow, appliedFilter.values)){
+							doShowRow = false;
+							return false; // exit
+						}
 					}
-				}
-				
-				// or if the filter only requires the row to satisfy at least one applied filter value
-				else{
-					if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
-						doShowRow = false;
-						return false; // exit
+					
+					// or if the filter only requires the row to satisfy at least one applied filter value
+					else{
+						if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
+							doShowRow = false;
+							return false; // exit
+						}
 					}
-				}
-
+				}		
 			}
 			else if(!doesArrayContainValue(filterValue_currentRow, appliedFilter.values)){
 				doShowRow = false;

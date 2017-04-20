@@ -78,7 +78,9 @@ public class JobDTO {
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
 	 RatingDTO ratingDto
+//	 List<RatingDTO> ratingDtos
 	 Double ratingValue_overall
+	 List<String> comments
 	 
 	 List<Category> categories
 	 List<Integer> categoryIds

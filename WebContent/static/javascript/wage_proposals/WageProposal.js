@@ -1,4 +1,4 @@
-
+var workDayDtos = [];
 
 
 $(document).ready(function(){
@@ -135,7 +135,7 @@ function executeAjaxCall_getProposal(applicationId, $e){
 		success: function(html) {
 			$e.html(html);
 			$e.find(".mod").eq(0).show();	
-			var workDayDtos = JSON.parse($("#json_workDayDtos").html());
+			workDayDtos = JSON.parse($("#json_workDayDtos").html());
 //			initCalendar_proposedWorkDays(workDayDtos);
 			initCalendar_new($(".calendar.proposed-calendar"), workDayDtos);
 			initCalendar_new($(".calendar.counter-calendar"), workDayDtos);

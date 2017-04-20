@@ -408,7 +408,7 @@ public class ApplicationServiceImpl {
 					if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
 							isValidExpirationTime(employmentProposalDto) ) || 							
 						(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE && 
-								isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
+								!isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
 					
 						EmploymentProposalDTO newProposal = new EmploymentProposalDTO();						
 						newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
@@ -533,6 +533,10 @@ public class ApplicationServiceImpl {
 //											EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
 				
 				insertEmploymentProposal(modifiedProposal);
+				
+				updateApplicationStatus(application.getApplicationId(), Application.STATUS_CANCELLED_DUE_TO_EMPLOYER_FILLED_ALL_POSITIONS);
+				updateApplicationFlag(application, Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED, 1);
+				closeApplication(application.getApplicationId());
 			}
 		}	
 	}
@@ -1061,15 +1065,21 @@ public class ApplicationServiceImpl {
 			applicationDto.getEmploymentProposalDto().setProposedByUserId(SessionContext.getUser(session).getUserId());
 			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
 
-			this.insertApplication(applicationDto);
 			
 			Application newApplication = getApplication(applicationDto.getJobId(), applicationDto.getApplicantId());
 			EmploymentProposalDTO proposal = getCurrentEmploymentProposal(newApplication.getApplicationId());
+			
+			updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			updateProposalFlag(proposal, EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 						
 		}
 
 	}
+
+	public void updateApplicationFlag(Application newApplication, String flag, int value) {
+		repository.updateApplicationFlag(newApplication.getApplicationId(), flag, value );		
+	}
+
 
 	public Integer getApplicationStatus(int jobId, int userId, HttpSession session) {
 		

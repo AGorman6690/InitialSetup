@@ -4,7 +4,7 @@
 	<c:when test="${empty jobDto.employeeDtos}">
 		<div class="no-data">
 			<p>There are currently no employees for this job</p>
-			<a class="sqr-btn gray-2" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>	
+			<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>	
 		</div>
 	</c:when>
 	
@@ -22,8 +22,7 @@
 			<tbody>						
 			<c:forEach items="${jobDto.employeeDtos }" var="userDto">
 				<tr>
-					<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/
-							${userDto.user.userId}/jobs/completed"> ${userDto.user.firstName }</a></td>
+					<td>${userDto.user.firstName} ${userDto.user.lastName }</td>
 					<td>$ ${userDto.acceptedProposal.amount }</td>
 					<td>${userDto.acceptedProposal.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days</td>
 					<td>$ ${userDto.totalPayment }</td>
