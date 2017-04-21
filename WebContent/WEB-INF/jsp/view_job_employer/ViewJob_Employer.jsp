@@ -29,7 +29,13 @@
 	<div class="select-page-section-container">	
 		<%@ include file="./ContentBar_EmployerViewJob.jsp" %>	
 	</div>	
-	<div id="job-calendar-application-summary" class="v2 hide-unused-rows hide-prev-next calendar-container">
+
+	<div id="job-calendar-application-summary" class="pad-top v2 hide-unused-rows hide-prev-next calendar-container">
+		<c:if test="${jobDto.job.flag_isNotAcceptingApplications == 1 }">
+			<div id="all-positions-are-filled">
+				<p>All Positions Are Filled</p>
+			</div>
+		</c:if>		
 		<div class="left-fill"></div>
 		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 		<div class="right-fill"></div>
@@ -42,9 +48,11 @@
 		</c:if>
 		<c:if test="${context == 'waiting' }">
 			<div id="applicantsContainer" class="page-section pad-top-2">
-				<div id="applicants" class="">
-					<%@ include file="./Applicants.jsp" %>
-				</div>
+				<c:if test="${jobDto.job.flag_isNotAcceptingApplications == 0 }">
+					<div id="applicants" class="">
+						<%@ include file="./Applicants.jsp" %>
+					</div>
+				</c:if>
 			</div>	
 		</c:if>	
 		<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">

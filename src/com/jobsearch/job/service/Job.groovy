@@ -1,16 +1,12 @@
 package com.jobsearch.job.service
 
-import com.jobsearch.application.service.Application
-import com.jobsearch.model.JobSearchUser
-import com.jobsearch.model.Question
-import com.jobsearch.model.WorkDay
-import com.jobsearch.category.service.Category
 import java.sql.Time
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.Date
-import java.util.List
+
+import com.jobsearch.category.service.Category
+import com.jobsearch.model.JobSearchUser
+import com.jobsearch.model.WorkDay
 
 
 public class Job {
@@ -29,6 +25,8 @@ public class Job {
 	Float lng
 	Boolean isPartialAvailabilityAllowed
 	int positionsPerDay
+	
+	int flag_isNotAcceptingApplications
 	
 	//******************************************************
 	//******************************************************
@@ -51,7 +49,7 @@ public class Job {
 	String stringStartDate
 	String stringEndDate
 	
-	
+
 	
 	Double distanceFromFilterLocation
 	List<Integer> categoryIds
@@ -70,6 +68,8 @@ public class Job {
 	public static Integer STATUS_FUTURE = 0;
 	public static Integer STATUS_PRESENT = 1;
 	public static Integer STATUS_PAST = 2;
+	
+	public static String FLAG_IS_NOT_ACCEPTING_APPLICATIONS = "Flag_IsNotAcceptingApplications"
 	
 	// Do away with work days from the job lass
 	List<WorkDay> workDays;

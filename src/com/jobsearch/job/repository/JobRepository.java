@@ -78,11 +78,15 @@ public class JobRepository {
 					e.setStatus(rs.getInt("Status"));
 					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
 					e.setPositionsPerDay(rs.getInt("PositionsPerDay"));
+										
+					e.setFlag_isNotAcceptingApplications(rs.getInt(Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS));
 					
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
 					e.setStartTime(jobService.getStartTime(jobId));
 					e.setEndTime(jobService.getEndTime(jobId));
+					
+					
 
 					//************************************************************************					
 					//Once the method of storing work days is decided,
@@ -1356,6 +1360,11 @@ public class JobRepository {
 	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
 		String sql = "SELECT Comment FROM comment WHERE UserId = ? and JobId = ?";
 		return jdbcTemplate.queryForList(sql, new Object[]{ userId,  jobId }, String.class );
+	}
+
+	public void updateJobFlag(int jobId, String flag, int value) {
+		String sql = "UPDATE job SET " + flag + " = ? WHERE JobId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, jobId });
 	}
 
 

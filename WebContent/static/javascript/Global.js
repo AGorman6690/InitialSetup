@@ -17,6 +17,11 @@ $(document).ready(function(){
 		}
 	})
 	
+	$("[data-show-id-on-click]").click(function() {
+		var idToShow = $(this).attr("data-show-id-on-click");
+		$("body").find("#" + idToShow).show();
+	})
+	
 	$("body").on("click", ".button-group button", function(){
 	
 		selectButton($(this))

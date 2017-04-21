@@ -22,10 +22,10 @@
 }
 
 .completed-job h3{
-	display: inline-block;
-	margin-right: 10px;
-	width: 175px;
-	text-align: left;
+/* 	display: inline-block; */
+/* 	margin-right: 10px; */
+/* 	width: 175px; */
+/* 	text-align: left; */
 }
 .completed-job{
 	padding: 15px 0px;

@@ -97,14 +97,19 @@
 					<div class="row">
 						<div class="item">
 							<p>Can applicants apply for particular work days?</p>
+<!-- 							<div class=" button-group"> -->
 							<div class="radio-container">
-								<label><input id="yes-partial" type="radio" name="partial-availability">
+								<label data-show-id-on-click="work-days-calendar"><input id="yes-partial" type="radio" name="partial-availability">
 								Yes, they can apply for one or more work days</label>
-								<label><input id="no-partial" type="radio" name="partial-availability">
+								<label data-show-id-on-click="work-days-calendar"><input id="no-partial" type="radio" name="partial-availability">
 								No, they have to apply for all work days</label>
+<!-- 								<button id="yes-partial" class="sqr-btn gray-2" data-show-id-on-click="work-days-calendar"> -->
+<!-- 									Yes, they can apply for one or more work days</button> -->
+<!-- 								<button id="no-partial" class="sqr-btn gray-2" data-show-id-on-click="work-days-calendar"> -->
+<!-- 									No, they have to apply for all work days</button> -->
 							</div>
 						</div>					
-						<div class="item calendar-container teal-navigation v2 post-job">
+						<div id="work-days-calendar" class="item calendar-container teal-navigation v2 post-job">
 							<p>Work Days</p>
 							<div class="pad-top">
 								<button class="" id="clearCalendar">Clear</button>

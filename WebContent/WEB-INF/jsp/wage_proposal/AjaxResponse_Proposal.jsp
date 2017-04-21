@@ -68,7 +68,7 @@
 			<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed ||
 							isEmployerMakingFirstOffer}"> 	
 				<div class="proposal work-day-container" data-is-proposing="${isEmployerMakingFirstOffer ? '1' : '-1' }">		
-					<h1 data-toggle-id="work-day-proposal-input">Work Days<span class="glyphicon glyphicon-menu-down"></span></h1>
+					<h1 data-toggle-id="work-day-proposal-input">Work Days</h1>
 					<div id="work-day-proposal-input" class="proposal-input">
 						<c:if test="${user.profileId == 1 }">
 							<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0  ||
@@ -160,7 +160,7 @@
 			</c:if>
 			<c:if test="${user.profileId == 2 }">
 				<div class="proposal expiration-container">
-					<h1 data-toggle-id="expiration-input-cont">This Proposal Expires In<span class="glyphicon glyphicon-menu-down"></span></h1>
+					<h1 data-toggle-id="expiration-input-cont">This Proposal Expires In</span></h1>
 					<div id="expiration-input-cont" class="proposal-input">
 						<div class="proposal set-expiration">
 							<div class="time-container">
@@ -184,11 +184,11 @@
 			</c:if>	
 			<div class="action-button-container">
 				<div class="proceed-to-confirmation-container">
-					<span class="confirm sqr-btn teal">Review</span>
+					<span class="confirm sqr-btn green">Review</span>
 					<span class="cancel">Cancel</span>
 				</div>
 				<div class="send-proposal-container">
-					<span class="sqr-btn teal ${isEmployerMakingFirstOffer ? 'send-employer-make-first-offer' : 'send' }">Send</span>
+					<span class="sqr-btn green ${isEmployerMakingFirstOffer ? 'send-employer-make-first-offer' : 'send' }">Send</span>
 					<span class="edit">Edit</span>
 				</div>
 			</div>													

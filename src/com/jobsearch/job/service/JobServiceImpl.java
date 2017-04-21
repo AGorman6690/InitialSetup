@@ -919,13 +919,14 @@ public class JobServiceImpl {
 		// **************************************************
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		JobSearchUserDTO userDto = new JobSearchUserDTO();
+//		JobSearchUserDTO userDto = new JobSearchUserDTO();
 
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
 			setWorkDayDto_conflictingEmployment(workDayDto, sessionUser.getUserId());
 		}
 		
+		jobDto.setRatingValue_overall(userService.getRating(jobDto.getJob().getUserId()));
 //		JobSearchUserDTO userDto_employer = new JobSearchUserDTO();
 //		userDto_employer.setUser(userService.getUser(jobDto.getJob().getUserId()));
 //		userDto_employer.setJobDtos_jobsCompleted(getJobDtos_JobsCompleted_Employer(
@@ -977,7 +978,7 @@ public class JobServiceImpl {
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 					jobId, sessionUser.getUserId()));
 
-			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser, jobId));
+//			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser, jobId));
 			
 			break;			
 	
@@ -988,7 +989,8 @@ public class JobServiceImpl {
 		model.addAttribute("context", context);
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
-		model.addAttribute("userDto", userDto);
+//		model.addAttribute("userDto", userDto);
+//		model.addAttribute("user", sessionUser);
 
 				
 	}
@@ -1101,7 +1103,7 @@ public class JobServiceImpl {
 		model.addAttribute("context", context);
 //		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
-		model.addAttribute("user", sessionUser);
+//		model.addAttribute("user", sessionUser);
 //		model.addAttribute("userDto", userDto);
 				
 	}
@@ -1432,6 +1434,12 @@ public class JobServiceImpl {
 			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(
 					workDay.getWorkDayId(), proposal.getApplicationId()));
 			
+			if(workDayDto.getIsProposed() && application.getIsAccepted() == 1)
+				workDayDto.setIsAccepted(true);
+			else
+				workDayDto.setIsAccepted(false);
+			
+			
 			// Conflicting employment
 			setWorkDayDto_conflictingEmployment(workDayDto, application.getUserId());
 			
@@ -1712,6 +1720,27 @@ public class JobServiceImpl {
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 			model.addAttribute("job", getJob(jobId));
 		}
+	}
+
+	public void inspectJob_isStillAcceptingApplications(int jobId) {
+		
+		boolean atLeastOneWorkDayIsNotFilled = false;
+		List<WorkDayDto> workDayDtos = getWorkDayDtos(jobId);
+		for( WorkDayDto workDayDto : workDayDtos){
+			if( workDayDto.getCount_positionsFilled() < workDayDto.getCount_totalPositions() ){
+				atLeastOneWorkDayIsNotFilled = true;
+				break;
+			}				
+		}
+		
+		if(!atLeastOneWorkDayIsNotFilled)
+			updateJobFlag(jobId, Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS, 1);
+	}
+
+	private void updateJobFlag(int jobId, String flag, int value) {
+		
+		repository.updateJobFlag(jobId, flag, value);
+		
 	}
 	
 }

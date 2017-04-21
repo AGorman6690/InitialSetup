@@ -88,16 +88,18 @@ span.expiration-time{
 .proposal h1{
 	font-size: 21px;
 	font-weight: bold;
-	color: #197994;
+/* 	color: #197994; */
+	color: #fff;
 	margin-bottom: 25px;
     display: inline-block;
-    border-left: 6px solid #163b3d;
+/*     border-left: 6px solid #163b3d; */
     padding: 5px 10px;
 /*     border-bottom: 2px solid #163b3d; */
     width: 400px;
     box-shadow: 3px 3px 3px #cacaca;
 /*     background: #f9f9f9; */
-	background: #fff;
+/* 	background: #fff; */
+	background: #197994;
 }
 
 .button-group button.selected{
@@ -215,10 +217,18 @@ input.counter-wage-amount{
 .application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
 /* 	background: #e0d5d5; */
-	background: #f3efef;
+/* 	background: #f3efef; */
+	background: #e2dddd;
 /* 	color: #fff; */
-    border: 2px solid #904d4d;
+    border: 7px solid #904d4d;
+    
 
+}
+td .application-proposal-container.accepted{
+/*     background: #ccdad3; */
+/*     border: 2px solid #002f0f; */
+	background: #fff;
+    border: 7px solid #7ca79d;   
 }
 .application-proposal-container{
 	padding: 20px 0px;
@@ -280,6 +290,7 @@ input.counter-wage-amount{
 .proposal-item.work-days .mod-content{
     width: 1200px;
     margin-left: -600px;
+    top: 100px;
 }
 .proposal-item.work-days > p{
 	cursor: pointer;

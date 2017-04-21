@@ -71,7 +71,9 @@ table#employeesTable{
 	margin: 0px 15px;
    	font-size: 8px;
 }
-
+#employer-rating .star{
+	font-size: 23px;
+}
 .no-data{
 	text-align:center;
 }

@@ -629,11 +629,17 @@ public class UserServiceImpl {
 		
 		repository.insertEmployment(userId, jobId);
 		
+		Application application = applicationService.getApplication(jobId, userId);
+		applicationService.updateApplicationFlag(application, "IsAccepted", 1);
+		
+		jobService.inspectJob_isStillAcceptingApplications(jobId);
+		
 	}
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
 		
-		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(employee.getUserId());
+//		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(employee.getUserId());
+		List<Application> applications = applicationService.getApplications_byUser_openAndAccepted(employee.getUserId());
 		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
 		
 //		List<JobDTO> jobDtos_applicationInvites = this.getJobDtos_ApplicationInvites(employee.getUserId());
@@ -884,15 +890,10 @@ public class UserServiceImpl {
 		userDto.setJobDtos_jobsCompleted(jobService.getJobDtos_JobsCompleted_Employee(userDto.getUser().getUserId()));;
 		
 		userDto.setAvailableDays(this.getAvailableDays(userId));
-		
-		
-		List<Application> applications = applicationService.getOpenApplications_forOpenJobs_byUser(userId);
-		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByApplications(applications, session);
-
+			
 
 		List<JobDTO> jobDtos_employment_currentAndFuture = jobService.getJobDtos_employment_currentAndFuture(userId);
 		
-		model.addAttribute("applicationDtos", applicationDtos);
 		model.addAttribute("jobDtos_employment_currentAndFuture", jobDtos_employment_currentAndFuture);
 		model.addAttribute("userDto", userDto);
 		

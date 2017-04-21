@@ -53,14 +53,16 @@ public class ApplicationRepository {
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setIsNew(rs.getInt("IsNew"));
+				application.setIsAccepted(rs.getInt("IsAccepted"));
 				application.setStatus(rs.getInt("Status"));
 				
 				application.setFlag_employerInitiatedContact(
 						rs.getInt(Application.FLAG_EMPLOYER_INITIATED_CONTACT));
 				application.setFlag_closedDueToAllPositionsFilled(
 						rs.getInt(Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED));
-				
-				
+				application.setFlag_applicantAcknowledgedAllPositionsAreFilled(
+						rs.getInt(Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED));
+								
 //				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
 //				if(ts_employerAcceptedDate != null)
 //					application.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
@@ -951,6 +953,14 @@ public class ApplicationRepository {
 
 
 	public List<Application> getOpenApplications_forOpenJobs_byUser(int userId) {
+		
+		// *********************************************************
+		// *********************************************************
+		// This method can probably go away with the advent of getApplications_byUser_openAndAccepted()
+		// *********************************************************
+		// *********************************************************
+		
+		
 		String sql = "SELECT * FROM application a"
 					+ " JOIN job j ON a.JobId = j.JobId"
 					+ " WHERE j.Status = ?"
@@ -958,6 +968,20 @@ public class ApplicationRepository {
 					+ " AND a.IsOpen = 1";
 		
 		return ApplicationRowMapper(sql, new Object[]{ Job.STATUS_FUTURE, userId });
+	}
+	
+	
+
+
+	public List<Application> getApplications_byUser_openAndAccepted(int userId) {
+		
+		String sql = "SELECT * FROM application a"
+					+ " JOIN job j ON a.JobId = j.JobId"
+					+ " WHERE j.Status != ?"
+					+ " AND a.UserId = ?"
+					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1 )";
+		
+		return ApplicationRowMapper(sql, new Object[]{ Job.STATUS_PAST, userId });
 	}
 
 
@@ -1026,4 +1050,5 @@ public class ApplicationRepository {
 		String sql = "UPDATE application SET " + flag + " = ? WHERE ApplicationId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, applicationId });		
 	}
+
 }

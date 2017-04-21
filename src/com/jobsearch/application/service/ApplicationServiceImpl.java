@@ -1081,16 +1081,16 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public Integer getApplicationStatus(int jobId, int userId, HttpSession session) {
-		
-		if(verificationService.didSessionUserPostJob(session, jobId)){
-			Application application = this.getApplication(jobId, userId);
-			if(application == null) return Application.STATUS_DOES_NOT_EXIST;
-			return application.getStatus();
-		}
-		else return null;
-		
-	}
+//	public Integer getApplicationStatus(int jobId, int userId, HttpSession session) {
+//		
+//		if(verificationService.didSessionUserPostJob(session, jobId)){
+//			Application application = this.getApplication(jobId, userId);
+//			if(application == null) return Application.STATUS_DOES_NOT_EXIST;
+//			return application.getStatus();
+//		}
+//		else return null;
+//		
+//	}
 
 	public void insertEmploymentProsalWorkDays(EmploymentProposalDTO employmentProposalDTO) {
 		
@@ -1380,6 +1380,23 @@ public class ApplicationServiceImpl {
 		
 		
 		return String.format("%.2f", (totalMinutes / 60) * Double.parseDouble(acceptedProposal.getAmount()));
+	}
+
+
+	public List<Application> getApplications_byUser_openAndAccepted(int userId) {
+		return repository.getApplications_byUser_openAndAccepted(userId);
+	}
+
+
+	public void updateFlag_applicantAcknowledgesAllPositionsAreFilled(HttpSession session, int applicationId) {
+		
+		Application application = getApplication(applicationId);
+		
+		if(application.getUserId() == SessionContext.getUser(session).getUserId()){
+			updateApplicationFlag(application,
+					Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED, 1);
+		}
+		
 	}
 
 

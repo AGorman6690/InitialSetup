@@ -37,7 +37,7 @@
 						<input class="star-rating" name="" class="rating-loading"
 							value="0" data-size="xs">
 					</div>		
-					<div class="rating-criteria-cont pad-top-2">
+					<div class="rating-criteria-cont">
 						<div class="on-time rate-criterion" data-rate-criterion-id="2">
 							<p>Did ${employee.firstName}'s timeliness meet your expectations?</p>
 							<div class="rating-answer button-group no-toggle">
@@ -89,12 +89,12 @@
 								<button class="sqr-btn yes">Yes</button>
 								<button class="sqr-btn no" data-rating-value="1">No</button>
 							</div>
-						</div>														
-					</div>			
-					<div class="pad-top">
-						<p>Comment</p>
-						<textarea class="comment" rows="4"></textarea>
-					</div>
+						</div>	
+						<div class="">
+							<p>Comment</p>
+							<textarea class="comment" rows="4"></textarea>
+						</div>													
+					</div>		
 				</div>
 			</c:forEach>
 		</div>

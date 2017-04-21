@@ -306,7 +306,7 @@ public class UserRepository {
 	}
 
 	public List<RateCriterion> getRatingCriteia_toRateEmployee() {
-		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 1";
+		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 1 ORDER BY DisplayOrder ASC";
 		return this.RateCriterionRowMapper(sql, new Object[] {});
 	}
 
@@ -747,7 +747,7 @@ public class UserRepository {
 	}
 
 	public List<RateCriterion> getRateCriteria_toRateEmployer() {
-		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 0 ORDER BY RateCriterionId ASC";
+		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 0 ORDER BY DisplayOrder ASC";
 		return this.RateCriterionRowMapper(sql, new Object[]{});
 	}
 

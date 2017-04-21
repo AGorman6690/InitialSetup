@@ -1,5 +1,6 @@
 package com.jobsearch.application.service
 
+import java.awt.TexturePaintContext.Int;
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.List
@@ -17,9 +18,11 @@ public class Application {
 	int jobId
 	int hasBeenViewed
 	int isNew
+	int isAccepted
 	
 	int flag_employerInitiatedContact
 	int flag_closedDueToAllPositionsFilled
+	int flag_applicantAcknowledgedAllPositionsAreFilled
 	
 	// ******************************
 	// Do away with these.
@@ -42,7 +45,7 @@ public class Application {
 	// *************************************************************************
 	
 	int status	
-	public static Integer STATUS_DOES_NOT_EXIST = -999;
+//	public static Integer STATUS_DOES_NOT_EXIST = -999;
 	public static Integer STATUS_PROPOSED_BY_EMPLOYER = -1;	
 	public static Integer STATUS_SUBMITTED = 0;
 	public static Integer STATUS_DECLINED = 1;
@@ -54,6 +57,7 @@ public class Application {
 	
 	public static String FLAG_EMPLOYER_INITIATED_CONTACT = "Flag_EmployerInitiatedContact";
 	public static String FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED = "Flag_ClosedDueToAllPositionsFilled"
+	public static String FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED = "Flag_ApplicantAcknowledgedAllPositionsAreFilled"
 }
 
 

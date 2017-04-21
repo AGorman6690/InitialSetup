@@ -27,7 +27,7 @@
 							value="0" data-size="xs">
 					</div>		
 				</div>
-				<div class="rating-criteria-cont pad-top-2">
+				<div class="rating-criteria-cont">
 					<div class="on-time rate-criterion" data-rate-criterion-id="4">
 						<p>Did ${employer.firstName} pay you as agreed upon?</p>
 						<div class="rating-answer button-group no-toggle">
@@ -80,7 +80,7 @@
 							<button class="sqr-btn no" data-rating-value="1">No</button>
 						</div>
 					</div>		
-					<div class="pad-top">
+					<div class="">
 						<p>Comment</p>
 						<textarea class="comment" rows="4"></textarea>
 					</div>																	

@@ -21,7 +21,13 @@
 	font-weight: bold;
 	color: #197994;
 }
-
+#datesContainer .button-group button{
+	width: 275px;
+	margin: 0px 10px;
+} 
+#datesContainer .calendar-container{
+	display: none;
+}
 #preview-job-posting-container{
 	display: none;
 }

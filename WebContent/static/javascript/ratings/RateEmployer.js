@@ -44,6 +44,9 @@ $(document).ready(function(){
 		
 	$('.star-rating').on('rating.change', function(event, value, caption) {
 		
+		$(this).closest(".star-rating-cont").hide();
+		
+		
 		var $userCont = $(this).closest(".user-cont");		
 		if(value == "5") $userCont.find("button.yes").click();
 		else {

@@ -46,8 +46,8 @@
 }
 
 .calendar-container.read-only td a:hover{
-	cursor:default !important;
-	color:#777171;
+/* 	cursor:default !important; */
+/* 	color:#777171; */
 /* 	text-decoration: none; */
 }
 

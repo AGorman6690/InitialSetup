@@ -1,4 +1,6 @@
 
+
+
 /* Override plugin */
 .rating-container{
 	display:inline-block !important;
@@ -96,21 +98,25 @@ table#ratings{
 
 
 
-
+.criteria-cont{
+	padding: 5px 0px;
+}
 #user-header{
     width: 550px;
-    border-bottom: 2px solid #cacaca;
+/*     border-bottom: 2px solid #cacaca; */
     margin: auto;
     padding-bottom: 11px;
 }
 #user-rating-details .criteria-name{
-	width: 170px;
+	width: 230px;
     display: inline-block;
-    text-align: left;
+    text-align: right;
+    color: #163b3d;
+    font-weight: bold;    
 }
 
 #user-rating-details .rating-value .star{
-	font-size: 24px;
+	font-size: 22px;
 }
 
 .completed-job h3{
@@ -118,6 +124,7 @@ table#ratings{
 	margin-right: 10px;
 	width: 175px;
 	text-align: left;
+	font-size: 19px;
 }
 .completed-job{
 	padding: 15px 0px;
@@ -141,4 +148,8 @@ table#ratings{
 	padding-bottom: 10px;
 	border-bottom: 1px solid #cacaca;
 	margin-bottom: 10px;
+}
+.details{
+	display: none;
+    border-bottom: 2px solid #cacaca;
 }

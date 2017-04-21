@@ -23,3 +23,11 @@ td .popuptext h4{
 .no-data p{
 	font-size: 25px;
 }
+#all-positions-are-filled{
+	width: 500px;
+	margin: auto;
+	text-align: center;
+	font-size: 26px;
+	color: #163b3d;
+	font-weight: bold;
+}

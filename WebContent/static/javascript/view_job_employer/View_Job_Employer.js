@@ -114,7 +114,9 @@ function initCalendar_employerViewJob_applicantSummary() {
 				html += "<span>" + workDayDto.count_positionsFilled +
 									" of " + workDayDto.count_totalPositions + "</span>";
 				html += "</div>";
-				html += "<div class='application-count'>";
+				html += "<div class='spacer'></div>";
+				if(workDayDto.count_applicants == 0) html += "<div class='application-count zero-applications'>";
+				else html += "<div class='application-count'>";
 				html += "<div class='popup'>"
 					+ "<div class='popuptext'>"
 					+ "<h4 class=''>Applications</h4>"

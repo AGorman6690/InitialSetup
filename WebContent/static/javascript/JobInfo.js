@@ -15,6 +15,9 @@ $(document).ready(function() {
 		win.focus();
 	})
 	
+	$("body").on("click", "#employer-rating", function(){
+//		$("[data-page-section-id='employer-info-container']").click();
+	})
 	
 	$(".show-job-post").click(function(){
 		
@@ -24,6 +27,8 @@ $(document).ready(function() {
 		}
 		
 	})
+	
+
 
 	
 	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));

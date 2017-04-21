@@ -23,6 +23,13 @@
 				<span class="category">${category.name}</span>
 			</c:forEach>	
 		</p>
+		<c:if test="${sessionScope.user.profileId == 1 }">
+		<div id="employer-rating" class="center">
+			<p class="detail-header-lbl">Employer Rating</p>
+			<input name="input-1" class="rating-loading"
+				value="${jobDto.ratingValue_overall }">${jobDto.ratingValue_overall }
+			</div>				
+		</c:if>
 		<p id="job-description">
 			${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
 		</p>
@@ -79,7 +86,20 @@
 		</c:if>		
 
 	</div>
-	<div id="middle-container">		
+	<div id="middle-container" class="center">		
+	
+		<c:if test="${jobDto.workDayDtos.size() > 1 }">
+			<p class="detail-header-lbl">
+				<c:choose>
+					<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
+						Applicants can apply for one or more days
+					</c:when>
+					<c:otherwise>
+						Applicants must apply for all days
+					</c:otherwise>
+				</c:choose>
+			</p> 
+		</c:if>
 		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container read-only">
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 		</div>		

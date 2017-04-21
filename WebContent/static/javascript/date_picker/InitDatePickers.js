@@ -31,6 +31,7 @@ function initCalendar_new($calendar, workDayDtos){
 				
 				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment";
 				if(workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
+				if(workDayDto.isAccepted == "1") classNameToAdd += " is-accepted";
 				
 				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions";
 				else{

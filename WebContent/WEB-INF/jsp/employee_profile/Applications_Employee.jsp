@@ -101,7 +101,7 @@
 			<tbody>
 			
 				<c:forEach items="${applicationDtos }" var="applicationDto">
-<%-- 					<c:if test="${applicationDto.application.status <= 3 }"> --%>
+					<c:if test="${applicationDto.application.flag_applicantAcknowledgedAllPositionsAreFilled == 0 }">
 						<tr class="application"
 							data-application-status="${applicationDto.application.status }"
 							data-application-id="${applicationDto.application.applicationId }"
@@ -129,7 +129,7 @@
 								<%@ include file="../wage_proposal/Proposal_Main.jsp" %>
 							</td>
 						</tr>
-<%-- 					</c:if> --%>
+					</c:if>
 				</c:forEach>
 										
 			</tbody>

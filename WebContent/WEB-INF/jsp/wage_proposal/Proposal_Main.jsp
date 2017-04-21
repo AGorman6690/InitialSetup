@@ -1,29 +1,41 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
-<div class="application-proposal-container ${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'action-required' : '' }">
+<div class="application-proposal-container
+	 ${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'action-required' : '' }
+	 ${applicationDto.application.isAccepted == 1 ? 'accepted' : '' }">
 	<div class="expiration-time-cont"> 
 		<c:set var="doSkipRemaingHtml" value="false"></c:set>
 		
-		<c:if test="${applicationDto.previousProposal.isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
-			<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
-			<p>The proposed work days have been updated</p>
-		</c:if>	
+		<c:choose>
+			<c:when test="${applicationDto.application.isAccepted == 1 }">
+				<p>Accepted</p>
+			</c:when>
+			<c:otherwise>
+				<c:if test="${applicationDto.previousProposal.isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
+					<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
+					<p>The proposed work days have been updated</p>
+				</c:if>	
+				
+				<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
+					<c:choose>
+						<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">		
+							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>
+						</c:when>
+						<c:otherwise>
+							<c:set var="doSkipRemaingHtml" value="true"></c:set>
+							<c:if test="${applicationDto.application.flag_applicantAcknowledgedAllPositionsAreFilled == 0}">
+								<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions</p>
+								<p>${user.profileId == 2 ? "The applicant's" : 'Your' } proposal will remain in ${user.profileId == 2 ? "your" : "the employer's"} proposal inbox</p>
+								<a class="sqr-btn gray-2" href="/JobSearch/application/${applicationDto.application.applicationId}/all-positions-filled/acknowledge">OK</a>
+							</c:if>							
+						</c:otherwise>	
+					</c:choose>		
+				</c:if>				
+			</c:otherwise>
+		</c:choose>
+	
 		
-		<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
-			<c:choose>
-				<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">		
-					<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>
-				</c:when>
-				<c:otherwise>
-					<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions</p>
-					<p>${user.profileId == 2 ? "The applicant's" : 'Your' } proposal will remain in ${user.profileId == 2 ? "your" : "the employer's"} proposal inbox</p>
-					
-					<c:set var="doSkipRemaingHtml" value="true"></c:set>
-				</c:otherwise>	
-			</c:choose>		
-		</c:if>		
-		
-		<c:if test="${!doSkipRemaingHtml }">	
+		<c:if test="${!doSkipRemaingHtml && applicationDto.application.isAccepted == 0 }">	
 		
 			<c:if test="${applicationDto.employmentProposalDto.flag_employerInitiatedContact == 1 }">
 				<p>${user.profileId == 2 ? 'You' : 'Employer'} initiated contact</p>
@@ -150,7 +162,7 @@
 							<span class="glyphicon glyphicon-remove"></span>
 						</div>
 						<div class="mod-body">
-							<div class="v2 calendar-container hide-unused-rows hide-prev-next read-only">
+							<div class="v2 calendar-container proposal-calendar hide-unused-rows hide-prev-next read-only">
 								<div class="calendar"
 									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
 									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
@@ -162,7 +174,8 @@
 		
 			</div>
 		</c:if>
-		<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">	
+		<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
+						applicationDto.application.isAccepted == 0}">	
 			<div class="proposal-item respond">
 				<button class="sqr-btn gray-2 show-mod">Respond</button>	
 				<div class="present-proposal"></div>

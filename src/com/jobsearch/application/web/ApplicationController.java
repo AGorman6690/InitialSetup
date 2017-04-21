@@ -1,6 +1,5 @@
 package com.jobsearch.application.web;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -15,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmploymentProposalDTO;
-import com.jobsearch.model.WageProposal;
-import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
@@ -69,6 +67,17 @@ public class ApplicationController {
 
 	}
 	
+	@RequestMapping(value = "/application/{applicationId}/all-positions-filled/acknowledge", method = RequestMethod.GET)
+	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
+								HttpSession session) {
+		
+		applicationService.updateFlag_applicantAcknowledgesAllPositionsAreFilled(session, applicationId);
+
+		
+		return "redirect:/user/profile/";
+		
+	}
+	
 	@RequestMapping(value = "/application/{applicationId}/current-proposal", method = RequestMethod.GET)
 	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
 								Model model, HttpSession session) {
@@ -96,6 +105,7 @@ public class ApplicationController {
 	}
 	
 	
+	/*
 	@RequestMapping(value = "/application/{jobId}/user/{userId}/status", method = RequestMethod.GET)
 	@ResponseBody
 	public String getApplicationStatus_ByUserAndJob(@PathVariable(value = "jobId") int jobId,
@@ -119,6 +129,7 @@ public class ApplicationController {
 //		else return SessionContext.get404Page();
 
 	}
+	*/
 	
 	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
 	@ResponseBody

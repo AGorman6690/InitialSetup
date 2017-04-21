@@ -339,8 +339,8 @@ function getJobDto(){
 	jobDto.job.zipCode = $("#zipCode").val();
 	jobDto.job.positionsPerDay = $("#positionsContainer input").val();
 	
-	if($("#yes-partial").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
-	else jobDto.job.isPartialAvailabilityAllowed = 0;
+	if($("#no-partial").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 0;
+	else jobDto.job.isPartialAvailabilityAllowed = 1;
 
 	
 	return jobDto;

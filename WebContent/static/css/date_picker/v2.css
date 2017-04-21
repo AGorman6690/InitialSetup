@@ -101,6 +101,9 @@
 .v2 .added-content{
 	height: 90px;
 }
+.v2 .is-accepted .added-content {
+	display: none;
+}
 .v2.hide-select-work-day .added-content{
 	height: auto;
 }
@@ -120,10 +123,17 @@
 	background: #000;
 	color: #fff;
 }
-
-.v2.proposal-calendar td.job-work-day:not(.has-conflicting-employment):hover{
+.v2 td.job-work-day.has-conflicting-employment.is-accepted,
+.v2 td.job-work-day.has-conflicting-employment.is-accepted *{
+	background: #7ec3b4;
+	color: #fff;
+}
+.v2.proposal-calendar td.job-work-day:not(.has-conflicting-employment):not(.read-only):hover{
 	cursor: pointer;
 }
 .v2.select-work-days td:not(.ui-datepicker-unselectable):hover{
 	cursor: pointer;
+}
+.v2.read-only *:hover{
+	cursor: default;
 }
