@@ -60,6 +60,16 @@ public class JobController {
 //		return "redirect:/user/profile";
 
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/job/{jobId}/work-days", method = RequestMethod.GET)
+	public String getWorkDayDtos_jobInfo(@PathVariable(value = "jobId") int jobId,
+													HttpSession session) {
+		
+		List<WorkDayDto> workDayDtos = jobService.getWorkDayDtos(jobId);
+		
+		return JSON.stringify(workDayDtos);
+	}
 
 	@RequestMapping(value = "/jobs/filtered/sort", method = RequestMethod.GET)
 	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,

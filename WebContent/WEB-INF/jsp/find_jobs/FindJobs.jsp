@@ -1,14 +1,13 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp" %>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
+<%-- <%@ include file="../includes/resources/Modal.jsp" %> --%>
 
 
 <script src="<c:url value="/static/javascript/Utilities.js" />"></script>
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>
 <script src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
-<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>	
 <link rel="stylesheet" type="text/css"	href="../static/css/inputValidation.css" />
-<link rel="stylesheet" type="text/css"	href="../static/css/Templates/Modal.css" />
-	
+
 <script src="<c:url value="/static/javascript/find_jobs/Filters.js" />"></script>
 <script src="<c:url value="/static/javascript/find_jobs/AjaxCall.js" />"></script>
 <script src="<c:url value="/static/javascript/find_jobs/Map.js" />"></script>

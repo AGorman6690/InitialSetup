@@ -3,6 +3,15 @@ $(document).ready(function(){
 	
 	initPage();
 
+	$("#toggle-calendar-numbers").change(function() {
+		var doShow = false;
+		if($(this).is(":checked")) doShow = true;
+		
+		if(doShow)
+			$("#job-calendar-application-summary td.job-work-day span").show();
+		else
+			$("#job-calendar-application-summary td.job-work-day span").hide();
+	})
 	
 	$("#questionListContainer input[type='checkbox']").click(function(){
 		$("#selectAllQuestions").prop("checked", false);

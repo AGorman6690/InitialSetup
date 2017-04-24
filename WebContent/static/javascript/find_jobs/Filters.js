@@ -17,6 +17,12 @@ $(document).ready(function(){
 
 	}
 	
+	$("body").on("click", ".show-cal-mod", function() {
+		var jobId = $(this).closest(".job").attr("data-job-id");
+		var $calendar = $(this).closest(".job").find(".mod-body .calendar").eq(0);
+		executeAjaxCall_getJobWorkDays(jobId, $calendar);
+	})
+		
 	$(window).scroll(function(){
 		
 		$e = $("#headerRow");
@@ -26,7 +32,17 @@ $(document).ready(function(){
 	})
 })
 
-
+function executeAjaxCall_getJobWorkDays(jobId, $calendar) {
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/job/" + jobId + "/work-days",
+		headers: getAjaxHeaders(),
+		dataType: "json",			
+	}).done(function(workDayDtos){
+		initCalendar_new($calendar, workDayDtos);
+		$calendar.closest(".mod").show();
+	})
+}
 
 function attachEventHandles_Filters(){
 	

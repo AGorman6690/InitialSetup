@@ -157,7 +157,7 @@
 }
 
 #job-calendar-application-summary.v2 .calendar{
-	padding: 0px;
+	padding: 15px 0px 0px 0px;
 }
 
 #job-calendar-application-summary.v2 td:not(.job-work-day){

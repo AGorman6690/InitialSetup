@@ -17,14 +17,14 @@ $(document).ready(function(){
 
 	})
 	
-	$(".calendar").on("mousedown", ".ui-datepicker-group-last *", function(e){
+	$("body").on("mousedown", "#user-event-calendar .calendar .ui-datepicker-group-last *", function(e){
 		if(e.which == 1){
 			e.stopPropagation();
 			$(".calendar").find(".ui-datepicker-next").eq(0).click();
 		}
 	})
 	
-	$(".calendar").on("mousedown", ".ui-datepicker-group-first *", function(e){
+	$("body").on("mousedown", "#user-event-calendar .calendar .ui-datepicker-group-first *", function(e){
 		if(e.which == 1){
 			e.stopPropagation();
 			$(".calendar").find(".ui-datepicker-prev").eq(0).click();
@@ -32,7 +32,7 @@ $(document).ready(function(){
 	})
 	
 	var workDays_hoveredApplication = [];
-	$("body").on("mouseover", ".popuptext p", function(e){
+	$("body").on("mouseover", "#user-event-calendar .popuptext p", function(e){
 		
 		var applicationId = $(this).attr("data-application-id");
 		var $application = $("#application-details").find(".application[data-id='" + applicationId + "']").eq(0);
@@ -48,12 +48,12 @@ $(document).ready(function(){
 		})
 	})
 	
-	$("body").on("mouseout", ".popuptext", function(e){
+	$("body").on("mouseout", "#user-event-calendar .popuptext", function(e){
 		hidePopup();
 		removeApplicationHoverStyles();
 	});
 	
-	$(".calendar").on("mouseout", ".ui-datepicker-group-middle td", function(e){
+	$("body").on("mouseout", "#user-event-calendar .calendar .ui-datepicker-group-middle td", function(e){
 //		if($(e.target).hasClass("ui-datepicker-group-middle")){
 		if($(e.target).hasClass("application")){
 			hidePopup();
@@ -81,7 +81,7 @@ function initCalendar_eventCalendar(){
 	var dates_employment = getDateFromContainer($("#employment-details"));
 	var dates_applications = getDateFromContainer($("#application-details"));
 	var dates_unavailable = getDateFromContainer($("#unavailability-details"));
-	var $calendar_events = $(".calendar").eq(0);
+	var $calendar_events = $("#user-event-calendar .calendar").eq(0);
 	
 	var date_lastMonth = new Date();
 	date_lastMonth.setMonth((new Date()).getMonth() - 1);

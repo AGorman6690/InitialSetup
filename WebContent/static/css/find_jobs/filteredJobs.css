@@ -33,14 +33,41 @@
 	cursor:pointer;
 	font-size:16px;
 }
-
+.times{
+	padding-left: 25px;
+}
+.job-dates-times p{
+	margin: 0px 0px 2px;;
+}
 #mainBottom{
 	padding-top:50px;
 	display:none;
 }
-
+.job .mod-content{
+    width: 1200px;
+    margin-left: -600px;
+    top: 100px;
+}
+.job .v2 .added-content{
+	height: 55px;
+}
+.job .v2.proposal-calendar .job-work-day {
+    opacity: 1.0;
+}
+td .select-work-day{
+	display: none;
+}
+.glyphicon-calendar{
+	color: #b3b2b2;
+	margin-left: 4px;
+}
+.job-dates-times{
+	margin-bottom: 15px;
+}
+.job-body{
+	padding-left: 45px;
+}
 .job-header,
-.job-body,
 .job-footer{
 	padding: 0px 20px 15px 20px;
 }
@@ -50,16 +77,23 @@
 	font-size:12px;
 	cursor:pointer;
 }
-
+.job-name{
+	font-size: 18px;
+}
 .show-desc .glyphicon{
 	margin-right:6px;
 }
-
-.less-description{
-	height:60px;
-	overflow: hidden;
+.job-description{
+	margin-bottom: 10px;
 }
-
+.less-description{
+	max-height:100px;
+	overflow: auto;
+}
+.body-details{
+	padding-top: 5px;
+/*     border-top: 1px solid #cacaca;	 */
+}
 .bold{
 	font-weight:bold;
 }

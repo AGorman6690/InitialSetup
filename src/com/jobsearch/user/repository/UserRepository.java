@@ -106,6 +106,14 @@ public class UserRepository {
 	}
 
 	public List<JobSearchUser> JobSearchUserRowMapper(String sql, Object[] args) {
+		// *******************************************************
+		// *******************************************************
+		// Why are there two row mappers for job search user????
+		// Address this later.
+		// *******************************************************
+		// *******************************************************
+		
+		
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -117,13 +125,19 @@ public class UserRepository {
 				e.setProfileId(rs.getInt(9));
 				e.setHomeLat(rs.getFloat("HomeLat"));
 				e.setHomeLng(rs.getFloat("HomeLng"));
+				e.setAbout(rs.getString("About"));
 				return e;
 			}
 		});
 	}
 
 	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
-
+		//*******************************************************
+		// *******************************************************
+		// Why are there two row mappers for job search user????
+		// Address this later.
+		// *******************************************************
+		// *******************************************************
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -144,7 +158,7 @@ public class UserRepository {
 					e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 					e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
 					e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
-
+					e.setAbout(rs.getString("About"));
 //					Profile profile = new Profile();
 //					profile.setName(rs.getString("p.ProfileType"));
 
@@ -786,6 +800,12 @@ public class UserRepository {
 
 		if (rating == null) return null;
 		else return rating;
+	}
+
+	public void updateAbout(int userId, String about) {
+		String sql = "UPDATE user SET About = ? WHERE UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ about, userId });
+		
 	}
 
 }

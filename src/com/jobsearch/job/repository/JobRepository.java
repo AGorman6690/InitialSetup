@@ -129,11 +129,17 @@ public class JobRepository {
 					
 					//The default **string" date format is, for example,: "Sun Dec 25, 2017"
 					if (e.getStartTime() != null){
-						e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d, y"));	
+						if(e.getStartDate_local().getYear() == LocalDate.now().getYear())
+							e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d"));
+						else
+							e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d, y"));
 					}
 					
 					if(e.getEndDate() != null){
-						e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d, y"));	
+						if(e.getEndDate_local().getYear() == LocalDate.now().getYear())
+							e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d"));
+						else
+							e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d, y"));
 					}					
 					
 

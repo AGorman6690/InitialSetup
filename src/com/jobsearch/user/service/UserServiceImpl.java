@@ -511,8 +511,25 @@ public class UserServiceImpl {
 		this.updateHomeLocation(user_edited);		
 		this.updateMaxDistanceWillingToWork(user_edited);
 		this.updateMinimumDesiredPay(user_edited);
+		this.updateAbout(user_edited, session);
 		
 		this.updateSessionUser(session);
+	}
+
+	public void updateAbout(JobSearchUser user_edited, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
+		if(user_edited.getAbout() == null ){
+			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());	
+		}
+		else if(sessionUser.getAbout() == null){
+			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());	
+		}
+		else if(!sessionUser.getAbout().matches(user_edited.getAbout())){
+			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());	
+		}
+		
 	}
 
 	public void updateMinimumDesiredPay(JobSearchUser user_edited) {

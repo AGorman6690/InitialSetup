@@ -118,7 +118,7 @@ function executeAjaxCall_updateUserSettings(user_edited){
 	user_edited.homeZipCode = $("#zipCode").val();
 	user_edited.maxWorkRadius = $("#miles").val();;
 	user_edited.minimumDesiredPay = $("#dollarsPerHour").val();;	
-	
+	user_edited.about = $("#about").val();
 	
 	broswerIsWaiting(true);
 	$.ajax({
@@ -127,18 +127,18 @@ function executeAjaxCall_updateUserSettings(user_edited){
 		headers : getAjaxHeaders(),
 		contentType : "application/json",
 		data : JSON.stringify(user_edited),
-//			dataType : "json",		
+			dataType : "text",		
 		success : _success,
 		error : _error,
 		cache: true
 	});
 
-	function _success() {
+	function _success(response) {
 		broswerIsWaiting(false);	
 		location.reload();
 	}	
 
-	function _error() {
+	function _error(response) {
 		broswerIsWaiting(false);	
 	}
 }

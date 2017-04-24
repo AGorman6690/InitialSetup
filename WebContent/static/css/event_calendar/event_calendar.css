@@ -1,4 +1,4 @@
-.ui-datepicker-group-middle td{
+#user-event-calendar .ui-datepicker-group-middle td{
     padding: 2px;
     vertical-align: top;
     text-align: center;
@@ -8,86 +8,86 @@
 }
 
 
-.calendar-container .calendar td a{
+#user-event-calendar .calendar-container .calendar td a{
     width: 100%;
     display: inline-block;
 }
-.mod .mod-header .glyphicon-remove{
+#user-event-calendar .mod .mod-header .glyphicon-remove{
 	float: none;
 	margin: 10px;
 	font-size: 25px;
 }
-.start-and-end-times,
+#user-event-calendar .start-and-end-times,
 .application-count {
     color: #000;    
     padding: 2px;
     text-align: center;
     font-size: 13px;
 }
-td.application .application-count{
+#user-event-calendar td.application .application-count{
 	border: 2px solid #7389b3;
 }
-td.employment .start-and-end-times{
+#user-event-calendar td.employment .start-and-end-times{
 	border: 2px solid #629a6f;
 }
 
 /* .calendar-container .calendar td.application{ */
 /* 	background: #7389b3;	 */
 /* } */
-.calendar-container .calendar td.unavailable{
+#user-event-calendar .calendar-container .calendar td.unavailable{
 	background: #bbbbbb;
 }
-.application-count span,
-.calendar-container .calendar td.application,
-.calendar-container .calendar .ui-datepicker-group-middle td.application a{
+#user-event-calendar .application-count span,
+#user-event-calendar .calendar-container .calendar td.application,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application a{
 /* 	background: #7389b3; */
 	background: #36595a;
 	cursor: pointer;
 }
-.calendar-container .calendar td.employment,
-.calendar-container .calendar .ui-datepicker-group-middle td.employment a{
+#user-event-calendar .calendar-container .calendar td.employment,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
 /* 	background: #629a6f; */
 	background: #7ec3b4;
 	cursor: pointer;
 }
 
-.calendar-container .calendar .ui-datepicker-group-middle td.application,
-.calendar-container .calendar .ui-datepicker-group-middle td.employment{
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment{
 	background: #fff;
 	cursor: pointer;
 }
-.calendar-container .calendar .ui-datepicker-middle td{
+#user-event-calendar .calendar-container .calendar .ui-datepicker-middle td{
 	background: #fff;
 }
 
-.ui-datepicker-group-first,
-.ui-datepicker-group-last{
+#user-event-calendar .ui-datepicker-group-first,
+#user-event-calendar .ui-datepicker-group-last{
 	font-size: 14px;
 }
-.ui-datepicker-header{
+#user-event-calendar .ui-datepicker-header{
 	border-bottom: 0;
 	position: static
 }
-.ui-datepicker{
+#user-event-calendar .ui-datepicker{
 	position: relative;
 }
-.ui-datepicker-next{
+#user-event-calendar .ui-datepicker-next{
 	right: 355px
 }
-.ui-datepicker-prev{
+#user-event-calendar .ui-datepicker-prev{
 	left: 335px
 }
-.ui-datepicker-next,
-.ui-datepicker-prev{
+#user-event-calendar .ui-datepicker-next,
+#user-event-calendar .ui-datepicker-prev{
 	font-size: 18px;
 	font-weight: bold;
 	color: #197994;
 	top: -300px;
 }
-.ui-datepicker-group-middle .ui-datepicker-title{
+#user-event-calendar .ui-datepicker-group-middle .ui-datepicker-title{
 	font-size:22px;
 }
-.ui-datepicker-title{
+#user-event-calendar .ui-datepicker-title{
     font-weight: bold;
     color: #163b3d;
     font-size: 22px;
@@ -96,18 +96,18 @@ td.employment .start-and-end-times{
     margin: 2px;
 }
 
-.calendar .ui-datepicker-group {
+#user-event-calendar .calendar .ui-datepicker-group {
 	padding: 10px;
 }
-.calendar .ui-datepicker-group{
+#user-event-calendar .calendar .ui-datepicker-group{
 	border: 2px solid #fff;
 }
-.calendar .ui-datepicker-group:not(.ui-datepicker-group-middle):hover{
+#user-event-calendar .calendar .ui-datepicker-group:not(.ui-datepicker-group-middle):hover{
 	background: #f8ffe3;
 	border: 2px solid #bbbbbb;
 	cursor: pointer;
 }
-.application-count span{
+#user-event-calendar .application-count span{
     display: inline-block;
     /* margin: auto; */
     height: 20px;
@@ -122,52 +122,54 @@ td.employment .start-and-end-times{
     /* vertical-align: middle; */
 }
 
-.popup{
+#user-event-calendar .popup{
 	top: -78px;	
 }
 
 
-td.application-hover .application-count{
+#user-event-calendar td.application-hover .application-count{
 	background: #ccd8f5 !important;
 }
 
 
-#event-calendar-mod .mod-content {
+#user-event-calendar #event-calendar-mod .mod-content {
 	top: 20px;
     width: 1500px;
     /* height: 420px; */
     /* margin: -210px 0 0 -200px; */
     margin-left: -750px;    
 }
-
-.popuptext p{
+#user-event-calendar .mod{
+    text-align: left;
+}
+#user-event-calendar .popuptext p{
 	margin: 0;
 	padding: 5px;
 }
-.popuptext p:hover{
+#user-event-calendar .popuptext p:hover{
 	background: #e4e4e4;
 }
 
-#event-calendar-mod .ui-datepicker-today a{
+#user-event-calendar #event-calendar-mod .ui-datepicker-today a{
 	color: #fff;
 }
-#event-calendar-mod .ui-datepicker-today{
+#user-event-calendar #event-calendar-mod .ui-datepicker-today{
 	background: #197994;
 }
-#event-calendar-mod{
+#user-event-calendar #event-calendar-mod{
 	display: block;
 }
-#event-calendar-mod .mod-header{
+#user-event-calendar #event-calendar-mod .mod-header{
 	background: #f4f4f4;
 }
-#event-calendar-mod .ui-datepicker-group-first,
-#event-calendar-mod .ui-datepicker-group-last{
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-first,
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-last{
 	position: absolute;
 	top: 246px;
 }
-#event-calendar-mod .ui-datepicker-group-middle{
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-middle{
 	margin-left: 300px;
 }
-td.ui-datepicker-other-month{
+#user-event-calendar td.ui-datepicker-other-month{
 	border: 0;
 }

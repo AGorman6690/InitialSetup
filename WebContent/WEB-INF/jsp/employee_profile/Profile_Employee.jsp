@@ -1,11 +1,11 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp" %>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 <%-- <%@ include file="../includes/resources/JobInfoModal.jsp" %> --%>
 <%@ include file="../includes/resources/JobInformation.jsp" %>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 <%@ include file="../includes/resources/TableFilter.jsp" %>
-<%@ include file="../includes/resources/Modal.jsp" %>
+<%-- <%@ include file="../includes/resources/Modal.jsp" %> --%>
 
 
 

@@ -1,5 +1,5 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp"%>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp"%> --%>
 <%@ include file="../includes/resources/JobInformation.jsp"%>
 <%@ include file="../includes/resources/SelectPageSection.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>

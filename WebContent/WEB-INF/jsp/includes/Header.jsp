@@ -8,8 +8,8 @@
 
 <html>
 	<head>
-	
 
+	
 <!-- 		Global Scripts - External -->
 		<script
 			src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"
@@ -95,9 +95,16 @@
 		
 		<meta name="_csrf" content="${_csrf.token}" />
 		<meta name="_csrf_header" content="${_csrf.headerName}" />
+		
+		
+		<%@ include file="../includes/resources/DatePicker.jsp" %>
+		<%@ include file="../includes/resources/Modal.jsp"%>	
+		<%@ include file="../includes/resources/EventCalendar.jsp"%>	
+		
 	</head>
 
 	<body>
+		<div id="user-event-calendar"></div>
 		
 		<c:set var="LaborVaultHost" scope="session" value="${url}"/>
 		
@@ -109,12 +116,9 @@
 			<div id="navItemsContainer">					
 				<c:choose>
 					<c:when test="${!empty sessionScope.user }">
-					<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>					
-					
-							
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
-								<a id="nav_calendar" class="" href="/JobSearch/user/calendar">Calendar</a>
+								<a id="nav_calendar" class="" href="#">Calendar</a>
 <!-- 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a> -->
 								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications</a>
 <!-- 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							 -->
@@ -126,9 +130,9 @@
 								<a id="nav_jobs" href="/JobSearch/user/profile">Jobs</a>	
 								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
 								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
-
 							</c:when>
 						</c:choose>				
+						<a id="nav_credentials" class="" href="/JobSearch/user/credentials">Profile</a>						
 						<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>		
 					</c:when>
 					<c:otherwise>

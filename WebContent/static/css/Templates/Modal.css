@@ -129,4 +129,6 @@
 .mod.simple-header .mod-header{
     background: #f4f4f4;
 }
-
+.mod.simple-header .mod-header:hover{
+    cursor: pointer;
+}

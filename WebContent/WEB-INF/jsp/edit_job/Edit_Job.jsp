@@ -1,5 +1,5 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp"%>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp"%> --%>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/post_job/post_job_work_days_and_times.css" />

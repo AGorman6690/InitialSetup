@@ -648,7 +648,9 @@ public class JobServiceImpl {
 								
 				double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
 				distance = MathUtility.round(distance, 1, 0);
-				jobDto.setDistanceFromFilterLocation(distance);			
+				jobDto.setDistanceFromFilterLocation(distance);		
+				
+				setCalendarInitData(jobDto, getWorkDays(job.getId()));
 				
 				jobDtos.add(jobDto);
 			}

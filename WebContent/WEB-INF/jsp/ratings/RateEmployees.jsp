@@ -63,7 +63,7 @@
 								<label><input type="radio" value="3" name="work-${employee.userId }">
 									${employee.firstName}'s work ethic was OK, but I expected more
 								</label>
-								<label><input type="radio" value="1" name="on-time-${employee.userId }">
+								<label><input type="radio" value="1" name="work-${employee.userId }">
 									${employee.firstName}'s work ethic was poor
 								</label>							
 							</div>
@@ -75,10 +75,10 @@
 								<button class="sqr-btn no">No</button>
 							</div>
 							<div class="if-no radio-container">
-								<label><input type="radio" value="3" name="on-time-${employee.userId }">
+								<label><input type="radio" value="3" name="experience-${employee.userId }">
 									${employee.firstName}'s experience level was OK, but I was expected more
 								</label>
-								<label><input type="radio" value="1" name="on-time-${employee.userId }">
+								<label><input type="radio" value="1" name="experience-${employee.userId }">
 									${employee.firstName}'s experience level was far less than I expected
 								</label>							
 							</div>

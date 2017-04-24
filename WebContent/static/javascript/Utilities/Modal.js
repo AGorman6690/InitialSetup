@@ -5,6 +5,11 @@ $(document).ready(function(){
 	    }
 	}	
 	
+	$(document).on("click", ".mod.simple-header .mod-header", function(){
+//		closeModal($(".mod"));
+		$(this).closest(".mod").hide();
+	})
+	
 	$(document).on("click", ".mod-header .glyphicon-remove", function(){
 //		closeModal($(".mod"));
 		$(this).closest(".mod").hide();
@@ -23,5 +28,5 @@ $(document).ready(function(){
 
 function closeModal($modal){
 	$modal.hide();
-	removeInvalidCss($modal);
+//	removeInvalidCss($modal);
 }

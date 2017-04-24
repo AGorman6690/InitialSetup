@@ -102,8 +102,8 @@ public class GoogleClient {
 
 	
 	private static boolean isValidResult(GeocodingResult[] results) {
-		if (results.length == 1) return true;
-		else return false;
+		if (results == null || results.length != 1) return false;
+		else return true;
 	}
 
 	public static Coordinate getCoordinate(Job job) {

@@ -39,4 +39,6 @@ class JobSearchUser {
 //	double wage
 	Double minimumDesiredPay
 	String stringMinimumDesiredPay
-}
+	String about
+	
+}	

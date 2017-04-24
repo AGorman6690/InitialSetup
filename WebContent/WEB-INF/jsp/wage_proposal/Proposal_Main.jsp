@@ -35,8 +35,7 @@
 		</c:choose>
 	
 		
-		<c:if test="${!doSkipRemaingHtml && applicationDto.application.isAccepted == 0 }">	
-		
+		<c:if test="${!doSkipRemaingHtml && applicationDto.application.isAccepted == 0 }">			
 			<c:if test="${applicationDto.employmentProposalDto.flag_employerInitiatedContact == 1 }">
 				<p>${user.profileId == 2 ? 'You' : 'Employer'} initiated contact</p>
 			</c:if>			

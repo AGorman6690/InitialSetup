@@ -20,9 +20,7 @@
 						<a href="/JobSearch/login-signup?login=true" class="error-message"></a>
 					</div>		
 				</c:if>
-			
-		
-				
+
 				<div id="load_save">
 					<div class="group filter-container">
 						<div id="loadSavedFilterContainer" data-trigger-dropdown-id="savedFindJobFiltersContainer"
@@ -270,7 +268,7 @@
 				</div>
 				
 				<div id="work-days-dropdown" class="dropdown" data-units="days selected">
-					<label><input id="importAvailability" type="checkbox">Import Your Personal Availability</label>
+<!-- 					<label><input id="importAvailability" type="checkbox">Import Your Personal Availability</label> -->
 					
 <!-- 					<div class="note">Return jobs with:</div> -->
 <!-- 					<div class="radio-container"> -->

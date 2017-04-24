@@ -99,7 +99,9 @@ public class UserController {
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
 	public String viewCredentials(Model model, HttpSession session) {
 
-		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId(), session);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		userService.setModel_Credentials_Employee(model, sessionUser.getUserId(), session);
+		userService.setModel_getRatings_byUser(model, sessionUser.getUserId());
 		model.addAttribute("isViewingOnesSelf", true);
 		return "/credentials_employee/Credentials_Employee";
 	}
@@ -208,8 +210,10 @@ public class UserController {
 	}	
 	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
-	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
+	@ResponseBody
+	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
 		userService.editEmployeeSettings(user_edited, session);
+		return "";
 	}
 
 

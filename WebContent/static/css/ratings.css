@@ -103,14 +103,14 @@ table#ratings{
 }
 #user-header{
     width: 550px;
-/*     border-bottom: 2px solid #cacaca; */
+    border-bottom: 1px solid #cacaca;
     margin: auto;
-    padding-bottom: 11px;
+    padding-bottom: 50px;
 }
 #user-rating-details .criteria-name{
 	width: 230px;
     display: inline-block;
-    text-align: right;
+    text-align: left;
     color: #163b3d;
     font-weight: bold;    
 }
@@ -118,7 +118,9 @@ table#ratings{
 #user-rating-details .rating-value .star{
 	font-size: 22px;
 }
-
+#user-complted-jobs{
+/* 	    border-top: 1px solid #cacaca; */
+}
 .completed-job h3{
 	display: inline-block;
 	margin-right: 10px;
@@ -149,7 +151,10 @@ table#ratings{
 	border-bottom: 1px solid #cacaca;
 	margin-bottom: 10px;
 }
+.comments span:last-child{
+	border-bottom: 0;
+}
 .details{
 	display: none;
-    border-bottom: 2px solid #cacaca;
+/*     border-bottom: 2px solid #cacaca; */
 }

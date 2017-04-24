@@ -1,5 +1,5 @@
 	<%@ include file="../includes/Header.jsp"%>
-	<%@ include file="../includes/resources/DatePicker.jsp" %>
+<%-- 	<%@ include file="../includes/resources/DatePicker.jsp" %> --%>
 	<%@ include file="../includes/resources/TableFilter.jsp" %>
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
 	<%@ include file="../includes/resources/StarRatings.jsp" %>
@@ -39,6 +39,9 @@
 		<div class="left-fill"></div>
 		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 		<div class="right-fill"></div>
+		<div class="checkbox-container center">
+			<label><input id="toggle-calendar-numbers" type="checkbox" name="toggle-calendar-numbers" >Toggle calendar numbers</label>
+		</div>
 	</div>		
 	<input id="jobId" type="hidden" value="${jobDto.job.id }">
 	<input id="data_pageInit" type="hidden" value="${data_pageInit }">

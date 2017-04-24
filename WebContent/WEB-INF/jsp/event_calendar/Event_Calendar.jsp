@@ -1,12 +1,12 @@
-<%@ include file="../includes/Header.jsp"%>	
-<%@ include file="../includes/resources/DatePicker.jsp"%>	
-<%@ include file="../includes/resources/Modal.jsp"%>	
+<%-- <%@ include file="../includes/Header.jsp"%>	 --%>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp"%>	 --%>
+<%-- <%@ include file="../includes/resources/Modal.jsp"%>	 --%>
+<%@ include file="../includes/TagLibs.jsp"%>	
+<!-- <script src="/JobSearch/static/javascript/event_calendar/event_calendar.js" type="text/javascript"></script> -->
 
-<script src="/JobSearch/static/javascript/event_calendar/event_calendar.js" type="text/javascript"></script>
-
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/event_calendar/event_calendar.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/event_calendar/employment_line.css" />	
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/event_calendar/event_calendar.css" /> -->
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/event_calendar/employment_line.css" />	 -->
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" /> -->
 
 <div id="application-details">	
 	<c:forEach items="${applicationDtos }" var="applicationDto">
@@ -46,7 +46,7 @@
 	</c:forEach>		
 </div>
 
-<div id="event-calendar-mod" class="mod container calendar-container employment-line hide-prev-next">
+<div id="event-calendar-mod" class="mod simple-header container calendar-container employment-line hide-prev-next">
 	<div class="mod-content">
 		<div class="mod-header">
 		<span class="glyphicon glyphicon-remove"></span>

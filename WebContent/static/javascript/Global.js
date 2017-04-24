@@ -2,6 +2,13 @@ var global_workDayDtos = [];
 
 $(document).ready(function(){
 //	
+	$("#nav_calendar").click(function() {
+		executeAjaxCall_getEventCalendar();
+	})
+	
+	$("a").click(function(){
+		broswerIsWaiting(true);
+	})
 	$("html").click(function(e){
 
 		// Close all dropdowns if user clicked outside of a dropdown		
@@ -90,6 +97,19 @@ $(document).ready(function(){
 	
 })
 
+function executeAjaxCall_getEventCalendar() {
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/user/calendar",
+		headers: getAjaxHeaders(),
+		dataType: "html"
+	}).done(function(html) {
+		broswerIsWaiting(false);
+		$("#user-event-calendar").html(html);
+		initCalendar_eventCalendar();
+	})
+}
 
 function parseWorkDayDtosFromDOM($e) {
 	

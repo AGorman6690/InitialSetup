@@ -1,6 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/DatePicker.jsp"%>
-<%@ include file="../includes/resources/Modal.jsp"%>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp"%> --%>
+<%-- <%@ include file="../includes/resources/Modal.jsp"%> --%>
 <%@ include file="../includes/resources/InputValidation.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 
