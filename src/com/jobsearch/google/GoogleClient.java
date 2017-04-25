@@ -9,7 +9,6 @@ import com.google.maps.model.AddressComponent;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 
@@ -101,6 +100,7 @@ public class GoogleClient {
 	}
 
 	
+	
 	private static boolean isValidResult(GeocodingResult[] results) {
 		if (results == null || results.length != 1) return false;
 		else return true;
@@ -108,16 +108,8 @@ public class GoogleClient {
 
 	public static Coordinate getCoordinate(Job job) {
 	
-			String address = buildAddress(job.getStreetAddress(), job.getCity(), job.getState(), job.getZipCode());
-
-//			if(job.getStreetAddress() != null) address += job.getStreetAddress();
-//			if(job.getCity() != null) address += job.getCity();
-//			if(job.getState() != null) address += job.getState();
-//			if(job.getZipCode() != null) address += job.getZipCode();
-
-			return getCoordinate(address);
-
-
+		String address = buildAddress(job.getStreetAddress(), job.getCity(), job.getState(), job.getZipCode());
+		return getCoordinate(address);
 	}
 
 	private static String buildAddress(String streetAddress, String city, String state, String zipCode) {
@@ -125,7 +117,7 @@ public class GoogleClient {
 		String address = "";
 		
 		if(streetAddress != null) address += streetAddress;
-		if(city  != null) address += city;
+		if(city != null) address += city;
 		if(state != null) address += state;
 		if(zipCode != null) address += zipCode;
 		
@@ -143,6 +135,17 @@ public class GoogleClient {
 	
 		String address = buildAddress(null, user.getHomeCity(), user.getHomeState(), user.getHomeZipCode());
 		return getCoordinate(address);
+	}
+
+	public static GeocodingResult getGeocodingResult(Job job) {
+		
+		String address = buildAddress(job.getStreetAddress(),
+				job.getCity(), job.getState(), job.getZipCode());
+		
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(address);
+
+		return results[0];
 	}
 	
 

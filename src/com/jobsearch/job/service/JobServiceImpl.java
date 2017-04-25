@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.PrimitiveIterator.OfDouble;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
@@ -22,6 +23,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.google.maps.model.AddressComponent;
+import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
@@ -74,61 +77,66 @@ public class JobServiceImpl {
 
 	public void addPosting(JobDTO jobDto, HttpSession session) {
 
-		
-			// ***********************************************************************************
-			// Should we verify the address on the client side? I'm thinking
-			// so...
-			// Why go all the way to the server
-			// when the same logic can be handled in the browser?
-			// ***********************************************************************************
+		if(	( jobDto.getJob().getCity() != null || jobDto.getJob().getCity() != "" ) &&
+			( jobDto.getJob().getState() != null || jobDto.getJob().getState() != "" ) &&
+			( jobDto.getJob().getStreetAddress() != null || jobDto.getJob().getStreetAddress() != "" ) ){
 
-		
-			this.setLatAndLag(jobDto);
-
-
-			if( jobDto.getJob().getLat() != null &&
-				jobDto.getJob().getLng() != null &&
+			if( verificationService.isValidLocation(jobDto.getJob()) && 
 				areValidWorkDays(jobDto.getWorkDays())){
-
-				JobSearchUser user = SessionContext.getUser(session);
+				
+				this.setLatAndLag(jobDto);
+				if( jobDto.getJob().getLat() != null &&	jobDto.getJob().getLng() != null ){
 	
-				// ***************************************************************
-				// Address this idea later.
-				// Should we format the user's address and city per the data
-				// from Google maps?
-				// This would correct spelling errors, maintain consistent
-				// letter casing, etc.
-				// ***************************************************************
-				// jobDto.setZipCode(GoogleClient.getAddressComponent(results[0].addressComponents,
-				// "POSTAL_CODE"));
-				// ***************************************************************
-
-
-
-				repository.addJob(jobDto, user);
-
-			} 
-	
+					JobSearchUser user = SessionContext.getUser(session);
+					formatAddress(jobDto.getJob());
+					repository.addJob(jobDto, user);
+				}
+			}
+		}
 	}
 
-	public void setLatAndLag(JobDTO jobDto) {
+	private void formatAddress(Job job) {
 		
+		String route = "";
+		String streetNumber = "";
+		String zip = "";
+		String city = "";
+		GeocodingResult result = GoogleClient.getGeocodingResult(job);
+				
+		for(AddressComponent addressComponent : result.addressComponents){
+			
+			for(AddressComponentType type : addressComponent.types){
+				
+				if(type.name().matches(type.ROUTE.name())){
+					route = addressComponent.longName;
+				}else if(type.name().matches(type.STREET_NUMBER.name())){
+					streetNumber = addressComponent.longName;
+				}else if(type.name().matches(type.LOCALITY.name())){
+					city = addressComponent.longName;
+				}else if(type.name().matches(type.POSTAL_CODE.name())){
+					zip = addressComponent.longName;
+				}				
+			}
+			
+		}
 		
-		Coordinate coord = GoogleClient.getCoordinate(jobDto.getJob());
+		job.setStreetAddress_formatted(streetNumber + " " + route);
+		job.setCity_formatted(city);
+		job.setZipCode_formatted(zip);
 		
+	}
+
+	public void setLatAndLag(JobDTO jobDto) {		
+		
+		Coordinate coord = GoogleClient.getCoordinate(jobDto.getJob());		
 		if(coord != null){
 			jobDto.getJob().setLat(coord.getLatitude());
 			jobDto.getJob().setLng(coord.getLongitude());
 		}
-
-		
-		
 	}
 
 	private boolean areValidWorkDays(List<WorkDay> workDays) {
 
-
-		
 		if(workDays == null) return false;
 		else if(workDays.size() == 0) return false;
 		else{		
@@ -438,6 +446,7 @@ public class JobServiceImpl {
 		JobDTO jobDto = new JobDTO();
 		
 		Job job = this.getJob(jobId);
+		
 		jobDto.setJob(job);
 		jobDto.setWorkDays(this.getWorkDays(jobId));
 		jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
@@ -450,7 +459,7 @@ public class JobServiceImpl {
 												job.getStartTime_local(),
 									job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
 		
-		
+		jobDto.setAreAllTimesTheSame(areAllTimesTheSame(jobDto.getWorkDays()));
 		setCalendarInitData(jobDto, jobDto.getWorkDays());
 		
 		return jobDto;
@@ -458,6 +467,27 @@ public class JobServiceImpl {
 	
 
 	
+	public Boolean areAllTimesTheSame(List<WorkDay> workDays) {
+		
+		if(verificationService.isListPopulated(workDays)){
+			if(workDays.size() > 1){
+			
+				LocalTime a_startTime =  LocalTime.parse(workDays.get(0).getStringStartTime());
+				LocalTime a_endTime =  LocalTime.parse(workDays.get(0).getStringEndTime());
+				for( WorkDay workDay : workDays){
+					if(!LocalTime.parse(workDay.getStringStartTime()).equals(a_startTime)){
+						return false;						
+					}
+					if(!LocalTime.parse(workDay.getStringEndTime()).equals(a_endTime)){
+						return false;						
+					}
+				}
+
+				return true;	
+			}else return true;
+		}else return null;
+	}
+
 	private List<Skill> getSkills_ByType(int jobId, Integer type) {
 		return repository.getSkills_ByType(jobId, type);
 	}
@@ -1284,6 +1314,7 @@ public class JobServiceImpl {
 	public void setModel_PreviewJobPost(Model model, JobDTO jobDto) {
 		
 		this.setLatAndLag(jobDto);
+		this.formatAddress(jobDto.getJob());
 		
 		this.setWorkDayDates(jobDto.getWorkDays());
 		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());

@@ -13,10 +13,10 @@
 <!-- 				</tr> -->
 				
 				<tr class="header-2">
-					<th id="" class="left-edge"></th>
+					<th id="job-name" class="left-edge"></th>
 
 					
-					<th class="header-dropdown hide-with-calendar" data-sort-attr="data-job-start-date">
+					<th id="start-date" class="header-dropdown hide-with-calendar" data-sort-attr="data-job-start-date">
 						<span data-toggle-id="sort_start_date" >
 							Start Date<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
@@ -31,7 +31,7 @@
 							</label>					
 						</div>					
 					</th>	
-					<th class="header-dropdown hide-with-calendar" data-sort-attr="data-job-end-date">
+					<th id="end-date" class="header-dropdown hide-with-calendar" data-sort-attr="data-job-end-date">
 						<span data-toggle-id="sort_end_date" >
 							End Date<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
@@ -61,7 +61,7 @@
 <!-- 							</label>					 -->
 <!-- 						</div>					 -->
 <!-- 					</th> -->
-					<th class="header-dropdown hide-with-calendar" data-sort-attr="data-job-distance">
+					<th id="location" class="header-dropdown hide-with-calendar" data-sort-attr="data-job-distance">
 						<span data-toggle-id="sort_distance" >
 							Location<span class="glyphicon glyphicon-menu-down"></span>
 						</span>
@@ -121,7 +121,7 @@
 							<td class="hide-with-calendar">${applicationDto.jobDto.job.stringStartDate }</td>
 							<td class="hide-with-calendar">${applicationDto.jobDto.job.stringEndDate }</td>	
 <%-- 							<td class="hide-with-calendar">${applicationDto.jobDto.workDays.size() } ${applicationDto.jobDto.workDays.size() <= 1 ? 'day' : 'days' }</td>	 --%>
-							<td class="hide-with-calendar">${applicationDto.jobDto.job.city }, ${applicationDto.jobDto.job.state }</td>
+							<td class="hide-with-calendar">${applicationDto.jobDto.job.city_formatted }, ${applicationDto.jobDto.job.state }</td>
 
 <%-- 							<td>${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</td> --%>
 							<td>

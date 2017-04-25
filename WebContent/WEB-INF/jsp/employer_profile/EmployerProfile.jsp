@@ -48,7 +48,7 @@
 							</td>						
 							<td class="job-details"><span>${jobDto.job.stringStartDate }</span></td>
 							<td class="job-details"><span>${jobDto.job.stringEndDate }</span></td>
-							<td class="job-details job-location"><span>${jobDto.job.city}, ${jobDto.job.state }</span></td>
+							<td class="job-details job-location"><span>${jobDto.job.city_formatted}, ${jobDto.job.state }</span></td>
 							<td>	
 								<div class="new-container">
 									<c:choose>

@@ -38,30 +38,18 @@
 			integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
 			crossorigin="anonymous">
 		
-		<!-- Latest compiled and minified JavaScript -->
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-			integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-			crossorigin="anonymous"></script>
+
 		
 		
 		<!-- 	Additional code for Bootstrap date picker -->
-		<script type="text/javascript"
-			src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-		<script type="text/javascript"
-			src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-		<link rel="stylesheet" type="text/css"
-			href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
-		
-		<!-- <script type="text/javascript" src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script> -->
-		<!-- <link rel="stylesheet" type="text/css" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css" /> -->
-		
+<!-- 		<link rel="stylesheet" type="text/css" -->
+<!-- 			href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> -->
 		
 		<!-- Bootstrap Drop down -->
-		<link rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css">
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
+<!-- 		<link rel="stylesheet" -->
+<!-- 			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"> -->
+<!-- 		<script -->
+<!-- 			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script> -->
 		
 		<!-- 	   	********************************************************* -->
 		
@@ -76,30 +64,23 @@
 		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/global_new.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
-<!-- 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/Modal.css" />	 -->
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/headerOptions.css" />	
 		
-<!-- 		Global Scripts -->	
-		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	
-		<script src="<c:url value="/static/javascript/Utilities.js" />"></script>	
-		<script src="<c:url value="/static/javascript/Utilities/Modal.js" />"></script>
-		<script src="<c:url value="/static/javascript/Utilities/Arrays.js" />"></script>
-		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
-		<script src="<c:url value="/static/javascript/Global.js" />"></script>		
+
 		
 						
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-		<title>Insert title here</title>
+		<title>Labor Vault</title>
 		
 		<meta name="_csrf" content="${_csrf.token}" />
 		<meta name="_csrf_header" content="${_csrf.headerName}" />
 		
 		
-		<%@ include file="../includes/resources/DatePicker.jsp" %>
-		<%@ include file="../includes/resources/Modal.jsp"%>	
-		<%@ include file="../includes/resources/EventCalendar.jsp"%>	
+<%-- 		<%@ include file="../includes/resources/DatePicker.jsp" %> --%>
+<%-- 		<%@ include file="../includes/resources/Modal.jsp"%>	 --%>
+<%-- 		<%@ include file="../includes/resources/EventCalendar.jsp"%>	 --%>
 		
 	</head>
 
@@ -120,7 +101,7 @@
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_calendar" class="" href="#">Calendar</a>
 <!-- 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a> -->
-								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Applications</a>
+								<a id="nav_profile" class="" href="/JobSearch/user/profile-new">Jobs</a>
 <!-- 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							 -->
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 <!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->

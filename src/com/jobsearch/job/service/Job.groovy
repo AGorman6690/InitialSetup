@@ -28,6 +28,11 @@ public class Job {
 	
 	int flag_isNotAcceptingApplications
 	
+	String streetAddress_formatted
+	String city_formatted
+	String zipCode_formatted
+	
+	
 	//******************************************************
 	//******************************************************
 	//Note: It appears LocalDate should be used over Date since 

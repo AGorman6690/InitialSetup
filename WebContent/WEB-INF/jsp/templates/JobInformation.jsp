@@ -7,10 +7,10 @@
 		<div id="map-section">
 		<div id="map-container" class="corner">
 			<div id="jobAddress">
-				<p class="accent">${jobDto.job.streetAddress }</p>
-				<p class="accent">${jobDto.job.city}, ${jobDto.job.state }</p>
-				<p class="accent">${jobDto.job.zipCode }</p>		
-			</div>	
+				<p class="accent">${jobDto.job.streetAddress_formatted }</p>
+				<p class="accent">${jobDto.job.city_formatted}, ${jobDto.job.state }</p>
+				<p class="accent">${jobDto.job.zipCode_formatted }</p>		
+			</div>			
 			<div id="map" class="right-border corner" data-do-init="1"
 				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
 		</div>
@@ -18,11 +18,11 @@
 	
 	<div class="title">
 		<p class="job-name">${jobDto.job.jobName }</p>
-		<p class="categories">		
-			<c:forEach items="${jobDto.categories }" var="category">
-				<span class="category">${category.name}</span>
-			</c:forEach>	
-		</p>
+<!-- 		<p class="categories">		 -->
+<%-- 			<c:forEach items="${jobDto.categories }" var="category"> --%>
+<%-- 				<span class="category">${category.name}</span> --%>
+<%-- 			</c:forEach>	 --%>
+<!-- 		</p> -->
 		<c:if test="${sessionScope.user.profileId == 1 }">
 		<div id="employer-rating" class="center">
 			<p class="detail-header-lbl">Employer Rating</p>

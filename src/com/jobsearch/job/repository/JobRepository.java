@@ -78,6 +78,9 @@ public class JobRepository {
 					e.setStatus(rs.getInt("Status"));
 					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
 					e.setPositionsPerDay(rs.getInt("PositionsPerDay"));
+					e.setStreetAddress_formatted(rs.getString("StreetAddress_Formatted"));
+					e.setCity_formatted(rs.getString("City_Formatted"));
+					e.setZipCode_formatted(rs.getString("ZipCode_Formatted"));
 										
 					e.setFlag_isNotAcceptingApplications(rs.getInt(Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS));
 					
@@ -299,7 +302,7 @@ public class JobRepository {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
 			 cStmt.setString(1, jobDto.getJob().getJobName());
 			 cStmt.setInt(2, user.getUserId());
@@ -313,6 +316,9 @@ public class JobRepository {
 			 cStmt.setInt(10,  Job.STATUS_FUTURE);
 			 cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
 			 cStmt.setInt(12, jobDto.getJob().getPositionsPerDay());
+			 cStmt.setString(13,  jobDto.getJob().getStreetAddress_formatted());
+			 cStmt.setString(14, jobDto.getJob().getCity_formatted());
+			 cStmt.setString(15, jobDto.getJob().getZipCode_formatted());
 
 			 ResultSet result = cStmt.executeQuery();
 

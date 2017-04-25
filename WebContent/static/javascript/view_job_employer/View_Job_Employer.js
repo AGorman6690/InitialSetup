@@ -24,7 +24,7 @@ $(document).ready(function(){
 		$(this).hide();
 	}})
 	
-	initCalendar_employerViewJob_applicantSummary();
+	initCalendar_employerViewJob_applicantSummary( $("#job-calendar-application-summary .calendar"));
 	
 	$("body").on("mouseover", "td.job-work-day:not(.all-positions-filled) .col-cont", function() {
 		$(this).find(".popuptext").show()
@@ -79,10 +79,10 @@ function executeAjaxCall_getApplicantsByJobAndDate(jobId, date){
 	})	
 }
 
-function initCalendar_employerViewJob_applicantSummary() {
+function initCalendar_employerViewJob_applicantSummary($calendar) {
 	
     var workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
-	var $calendar = $("#job-calendar-application-summary .calendar");
+//	var $calendar = $("#job-calendar-application-summary .calendar");
 	var firstDate = getMinDate($calendar)
 
 	$calendar.datepicker({

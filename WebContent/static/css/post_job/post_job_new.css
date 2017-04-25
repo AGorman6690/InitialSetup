@@ -1,3 +1,14 @@
+
+.invalid-section::before{
+/* 	font-family: "Glyphicons Halflings"; */
+/* 	content: "\e014"; */
+/* 	display: block; */
+	
+}
+.invalid.select-page-section{
+/*     color: #b30000 !important; */
+    padding: 5px;
+}
 #copy-or-new-container{
 	padding-top: 50px;
 	text-align: center;
@@ -210,7 +221,10 @@ thead .master-row{
 .list-item{
 	margin: 8px 0px;
 }
-
+#positions-per-day{
+    width: 60px;
+    text-align: center;
+}
 #compensationContainer .radio-container{
 	width: 300px;
 	margin: auto;
@@ -231,11 +245,16 @@ input#maxPay{
 	width: 75px;
 	margin: 5px auto;
 }
-#datesContainer .radio-container{
-    padding-bottom: 20px;
+#datesContainer .radio-container,
+#timesContainer .radio-container{
+    margin-bottom: 20px;
     width: 440px;
     margin: auto;
-    text-align: left;	
+    text-align: left;
+    padding: 5px;	
+}
+#timesContainer .item .radio-container{
+	width: 540px;
 }
 #post-job-container{
 	padding-bottom: 75px;

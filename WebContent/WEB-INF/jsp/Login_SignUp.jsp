@@ -204,3 +204,5 @@
 
 	}
 </script>	
+
+<%@ include file="./includes/Footer.jsp"%>

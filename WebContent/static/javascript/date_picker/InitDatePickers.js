@@ -210,6 +210,9 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 		numberOfMonths: numberOfMonths, 
 		onSelect: function(dateText, inst) {	   
 			
+			setValidCss($calendar.find(".invalid"));
+			validateSection($calendar);
+			
 			$("#select-times-cal").attr("data-required-updating", "1");
 			
 			var isThisTheFirstDateSelected = false;

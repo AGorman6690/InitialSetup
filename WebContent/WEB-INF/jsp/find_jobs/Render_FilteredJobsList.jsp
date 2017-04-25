@@ -58,7 +58,7 @@
 				</div>			
 			</div>	
 			<div class="job-location body-details-2">
-				${jobDto.job.city }, ${jobDto.job.state } (${jobDto.distanceFromFilterLocation } miles)
+				${jobDto.job.city_formatted }, ${jobDto.job.state } (${jobDto.distanceFromFilterLocation } miles)
 			</div>
 <!-- 			<div class="job-distance"> -->
 <%-- 			    <span class="bold">Distance</span> - ${jobDto.distanceFromFilterLocation } miles --%>

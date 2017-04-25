@@ -340,9 +340,9 @@ function hideCounterContainer($e, request){
 	
 	$cont = $e.closest("div.proposal"); 
 	if(request){
-		$cont.find(".counter-container").eq(0).slideUp();
+		$cont.find(".counter-container").eq(0).hide();
 	}else{
-		$cont.find(".counter-container").eq(0).slideDown();
+		$cont.find(".counter-container").eq(0).show();
 	}
 
 //	if(request){
@@ -356,10 +356,15 @@ function hideCounterContainer($e, request){
 function hideProposalContainer($e, request){
 	
 	$cont = $e.closest("div.proposal"); 
+//	if(request){
+//		$cont.find(".proposal-container").eq(0).animate({width:'hide'}, 500);
+//	}else{
+//		$cont.find(".proposal-container").eq(0).animate({width:'show'}, 500);
+//	}
 	if(request){
-		$cont.find(".proposal-container").eq(0).animate({width:'hide'}, 500);
+		$cont.find(".proposal-container").eq(0).hide();
 	}else{
-		$cont.find(".proposal-container").eq(0).animate({width:'show'}, 500);
+		$cont.find(".proposal-container").eq(0).show();
 	}
 	
 }

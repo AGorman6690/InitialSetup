@@ -28,6 +28,10 @@ $(document).ready(function(){
 		var idToShow = $(this).attr("data-show-id-on-click");
 		$("body").find("#" + idToShow).show();
 	})
+	$("[data-hide-id-on-click]").click(function() {
+		var idToShow = $(this).attr("data-hide-id-on-click");
+		$("body").find("#" + idToShow).hide();
+	})
 	
 	$("body").on("click", ".button-group button", function(){
 	
@@ -178,7 +182,7 @@ function broswerIsWaiting(isWaiting){
 
 function setStates(){
 	var $e = $("#state"); 
-	$e.append('<option value="" selected disabled>State</option>');
+	$e.append('<option value="" selected disabled></option>');
 	$e.append('<option value="Alabama">AL</option>');
 	$e.append('<option value="Alaska">AK</option>');
 	$e.append('<option value="Arizona">AZ</option>');

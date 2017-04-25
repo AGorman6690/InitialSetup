@@ -19,6 +19,13 @@ $(document).ready(function(){
 	
 })
 
+function dateifyWorkDayDtos(workDayDtos) {
+	$(workDayDtos).each(function(i, workDayDto) {
+		workDayDto.date = dateify(workDayDto.workDay.stringDate);
+	})
+	return workDayDtos;
+}
+
 function isDateInWorkDayDtos(date, workDayDtos) {
 	
 	var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
@@ -81,7 +88,7 @@ function getDatesFromWorkDayDtos(workDayDtos, daysArray){
 	daysArray = [];
 	
 	$(workDayDtos).each(function(i, workDayDto){
-		if(!isNaN(workDayDto.date.getTime())) daysArray.push(workDayDto.date);
+		if(workDayDto.date != null && !isNaN(workDayDto.date.getTime())) daysArray.push(workDayDto.date);
 		else daysArray.push(new Date(workDayDto.workDay.stringDate));
 	})
 	

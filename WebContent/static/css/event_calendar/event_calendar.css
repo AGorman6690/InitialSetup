@@ -142,6 +142,9 @@
 #user-event-calendar .mod{
     text-align: left;
 }
+#user-event-calendar .mod-content .mod-body{
+	background: #fff;
+}
 #user-event-calendar .popuptext p{
 	margin: 0;
 	padding: 5px;

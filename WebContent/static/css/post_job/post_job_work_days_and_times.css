@@ -42,7 +42,7 @@ td.selected-date .select-date-box{
 	padding: 0px 10px;
 }
 #times-cont .radio-container{
-    padding-bottom: 20px;
+    padding: 20px 0px;
     width: 200px;
     margin: auto;
     text-align: left;

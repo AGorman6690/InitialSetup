@@ -102,11 +102,17 @@ td div.job.application{
 }
 
 th.proposal{
-	width: 580px;
+	width: 540px;
 }
 
-
-
+th#job-name,
+th#start-date,
+th#end-date{
+	width: 160px;
+}
+th#location{
+	width: 200px;
+}
 
 
 

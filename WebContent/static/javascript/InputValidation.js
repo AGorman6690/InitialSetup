@@ -1,19 +1,12 @@
 
 $(document).ready(function(){
 	
-	$("body").on("change", ".invalid", function(){
-		
-		var value = "";
-		if($(this).id == "times"){
-			validateTimes();	
-		}else if($(this).is("input") || $(this).is("textarea")){
-			value = $(this).val()
-		}else if($(this).is("select")){
-			value = $(this).find(":selected").val();
-		}
-		
-		validateInput($(this), value);
-
+	$("body").on("keyup", ".invalid", function(event){		
+		validateUserInput($(this));
+	})
+	
+	$("body").on("change", ".invalid", function(event){		
+		validateUserInput($(this));
 	})
 	
 //	$("body").on("mousedown", ".invalid.calendar *", function(){
@@ -47,6 +40,26 @@ $(document).ready(function(){
 	})
 
 })
+
+function validateUserInput($e) {
+	if($e.is("input") || $e.is("textarea")){
+		if($e.hasClass("positive-number")){
+			
+			if(isValidatePositiveNumber($e.val())){
+				setValidCss($e);
+			}				
+		}else{
+			if($e.val() != "") setValidCss($e);
+		}
+	}else if($e.is("select")){
+		if($e.val() != "") setValidCss($e);
+	}
+	
+	if($e.hasClass("radio-container")){
+		if(isRadioContainerSelected($e)) setValidCss($e);
+		else setInvalidCss($e);
+	}
+}
 
 function isValidatePositiveNumber(value){
 	

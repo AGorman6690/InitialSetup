@@ -1,6 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 <%-- <%@ include file="../includes/resources/DatePicker.jsp"%> --%>
-<%@ include file="../includes/resources/JobInformation.jsp"%>
+
 <%@ include file="../includes/resources/SelectPageSection.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>
 
@@ -63,5 +63,9 @@
 	</div>
 </c:if>
 
+
+
+<%@ include file="../includes/Footer.jsp"%>
+<%@ include file="../includes/resources/JobInformation.jsp"%>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap">
 </script>

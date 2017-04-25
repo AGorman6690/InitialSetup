@@ -100,3 +100,5 @@
 		</div>
 	</div>
 </div>
+
+<%@ include file="../includes/Footer.jsp"%>

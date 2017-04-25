@@ -4,7 +4,7 @@
 	<%@ include file="../includes/resources/WageProposal.jsp" %>
 	<%@ include file="../includes/resources/StarRatings.jsp" %>
 	<%@ include file="../includes/resources/SelectPageSection.jsp" %>
-	<%@ include file="../includes/resources/JobInformation.jsp" %>
+
 	<%@ include file="../includes/resources/Modal.jsp" %>
 	
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
@@ -12,9 +12,6 @@
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/calendar_application_summary.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/view_job_employer.css" />
 	
-	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
-	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
-	<script src="/JobSearch/static/javascript/view_job_employer/View_Job_Employer.js" type="text/javascript" ></script>
 	
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
@@ -74,10 +71,16 @@
 		</div>	
 	</div>	
 
-<script
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
-</script>
+
 
 
 
 <%@ include file="../includes/Footer.jsp"%>
+<%@ include file="../includes/resources/JobInformation.jsp" %>
+	<script src="<c:url value="/static/javascript/Utilities.js" />"></script>
+	<script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>
+	<script src="/JobSearch/static/javascript/view_job_employer/View_Job_Employer.js" type="text/javascript" ></script>
+
+<script
+	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+</script>

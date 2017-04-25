@@ -32,3 +32,4 @@
 	</div>
 </div>
 <input id="jobId" type="hidden" value="${jobId }">
+<%@ include file="../includes/Footer.jsp"%>

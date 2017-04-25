@@ -67,3 +67,5 @@
 	</div>
 </div>
 <div id="json_work_day_dtos">${json_work_day_dtos }</div>
+
+<%@ include file="../includes/Footer.jsp"%>

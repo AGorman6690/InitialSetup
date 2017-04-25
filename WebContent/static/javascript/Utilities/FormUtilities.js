@@ -49,6 +49,11 @@ function enableAllInputFields($container){
 
 }
 
+function isRadioContainerSelected($container){
+	if($container.find("input[type=radio]:checked").length == 0) return false;
+	else return true;
+}
+
 function areInputsValid_Container($container){
 	
 	var option;

@@ -79,7 +79,7 @@
 									<p class="if-you-accept">If you <span class="bold">accept</span> this proposal, your following applications:</p>
 									<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0 }">
 										<div class="disposition">
-											<h6>will be <span class="bold">removed</span><span class="why">why?</span></h6>
+											<h6>will be <span class="bold">removed</span> because of time conflicts</h6>
 											<div class="applications">
 												<ul>
 													<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeRemoved }"
@@ -92,7 +92,7 @@
 									</c:if>
 									<c:if test="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0 }">
 										<div class="disposition">
-											<h6>will be <span class="bold">modified</span><span class="why">why?</span></h6>
+											<h6>will be <span class="bold">modified</span> because of time conflicts</h6>
 											<div class="applications">
 												<ul>
 													<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer }"

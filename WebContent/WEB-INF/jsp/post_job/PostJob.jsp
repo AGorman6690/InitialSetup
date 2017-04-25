@@ -1,6 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 <%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
-<%@ include file="../includes/resources/JobInformation.jsp" %>
+
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
@@ -41,14 +41,14 @@
 		</c:if>	
 		
 		<div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
-			<span class="select-page-section selected" data-page-section-id="generalContainer">General</span>
+			<span id="show-general" class="select-page-section selected" data-page-section-id="generalContainer">General</span>
 			<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Work Days</span>
 			<span id="select-times" class="select-page-section" data-page-section-id="timesContainer">Times</span>
-			<span class="select-page-section" data-page-section-id="positionsContainer">Positions</span>
-			<span class="select-page-section" data-page-section-id="locationContainer">Location</span>
-			<span class="select-page-section" data-page-section-id="categoriesContainer">Categories</span>
-			<span class="select-page-section" data-page-section-id="questionsContainer">Questions</span>
-			<span class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
+			<span id="show-positions" class="select-page-section" data-page-section-id="positionsContainer">Positions</span>
+			<span id="show-location" class="select-page-section" data-page-section-id="locationContainer">Location</span>
+<!-- 			<span class="select-page-section" data-page-section-id="categoriesContainer">Categories</span> -->
+			<span id="show-questions" class="select-page-section" data-page-section-id="questionsContainer">Questions</span>
+			<span id="show-skills" class="select-page-section" data-page-section-id="employeeSkillsContainer">Employee Skills</span>							
 		</div>
 		
 		<div class=" ${!empty postedJobs ? 'hide-on-load' : '' }">
@@ -124,11 +124,17 @@
 				<div id="timesContainer" class="page-section">
 				
 					<p id="no-dates-selected" class="linky-hover pad-top">Please select one or more work days</p>
-					<div id="initial-time-question" class="pad-top">
-						<p>The start time and the end time for each work day ...</p>
-						<button id="times-are-the-same" class="sqr-btn gray sm">is the same</button>
-						<button id="times-are-not-the-same" class="sqr-btn gray sm">is NOT the same</button>
-					</div>
+					<div id="initial-time-question" class="item pad-top">
+						<p>Is each work day's start time and end time the same?</p>
+						<div class="radio-container">
+							<label data-show-id-on-click="set-one-start-and-end-time"
+								data-hide-id-on-click="times-cont"><input id="same-times" type="radio" name="same-times">
+							Yes, each work day starts and ends at the same time</label>
+							<label data-show-id-on-click="times-cont"
+								data-hide-id-on-click="set-one-start-and-end-time"><input id="different-times" type="radio" name="same-times">
+							No, at least work one day starts or ends at a different time</label>
+						</div>
+					</div>							
 					<div id="set-one-start-and-end-time" class="pad-top">
 						<div>
 							<p>Start Time</p>
@@ -172,18 +178,18 @@
 					</div>		
 					<div>
 						<p>How many positions are you filling per day?</p>
-						<input type="text" value="2">
+						<input id="positions-per-day" type="text" class="positive-number" value="">
 					</div>								
 				</div>			
 							
 				<div id="locationContainer" class="page-section">
 					<div class="item">
 						<p>Street Address</p>						
-						<input id="street" type="text" class=""	value="2217 Bonnie Lane"></input>						
+						<input id="street" type="text" class=""	value=""></input>						
 					</div>
 					<div class="item">
 						<p>City</p>					
-						<input id="city" type="text" class=""	value="St. Paul"></input>						
+						<input id="city" type="text" class=""	value=""></input>						
 					</div>
 					<div class="item">
 						<p>State</p>						
@@ -191,18 +197,18 @@
 					</div>	
 					<div class="item">
 						<p>Zip Code</p>						
-						<input id="zipCode" type="text" value="55119"></input>						
+						<input id="zipCode" type="text" value=""></input>						
 					</div>						
 				</div>	
 								
-				<div id="categoriesContainer" class="page-section">
-					<div class="header row">
-						<p>Categories</p>
-					</div>		
-					<div class="row">
+<!-- 				<div id="categoriesContainer" class="page-section"> -->
+<!-- 					<div class="header row"> -->
+<!-- 						<p>Categories</p> -->
+<!-- 					</div>		 -->
+<!-- 					<div class="row"> -->
 		
-					</div>								
-				</div>	
+<!-- 					</div>								 -->
+<!-- 				</div>	 -->
 				
 				<div id="questionsContainer" class="page-section">
 					<div id="addedQuestionsContainer" class="item">			
@@ -311,3 +317,6 @@
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">
 </script>
+
+<%@ include file="../includes/Footer.jsp"%>
+<%@ include file="../includes/resources/JobInformation.jsp" %>
