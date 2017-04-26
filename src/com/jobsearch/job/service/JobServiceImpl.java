@@ -97,6 +97,9 @@ public class JobServiceImpl {
 
 	private void formatAddress(Job job) {
 		
+		// This is to "clean" the user's input by using the address components that Google provides.
+		// This only to make addresses consistent (i.e. proper spelling, capital letters, etc.).
+		
 		String route = "";
 		String streetNumber = "";
 		String zip = "";
@@ -116,8 +119,7 @@ public class JobServiceImpl {
 				}else if(type.name().matches(type.POSTAL_CODE.name())){
 					zip = addressComponent.longName;
 				}				
-			}
-			
+			}			
 		}
 		
 		job.setStreetAddress_formatted(streetNumber + " " + route);
@@ -158,18 +160,6 @@ public class JobServiceImpl {
 		return true;
 	}
 
-	public boolean areGeocodingResultsValid(GeocodingResult[] results) {
-		if (results.length == 1) {
-			return true;
-		} else if (results.length == 0) {
-			// invalid address
-			return false;
-		} else { // if (results.length > 1) {
-			// if greater than 1, then ambiguous address
-			return false;
-		}
-	}
-
 	public void addWorkDays(int jobId, List<WorkDay> workDays) {
 		
 		// **************************************************************
@@ -191,149 +181,15 @@ public class JobServiceImpl {
 		return repository.getDateId(date);
 	}
 
-	
-	public List<JobDTO> getJobDtos_employerProfile(int userId) {
-
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-
-		//Query the database
-		List<Job> jobs = this.getJobs_byEmployerAndStatuses(userId, Arrays.asList(Job.STATUS_FUTURE,
-																					Job.STATUS_PRESENT));
-		if(jobs != null){
-
-			for(Job job : jobs){
-				
-				JobDTO jobDto = new JobDTO();
-				jobDto = this.getJobDTO_employerProfile(job, userId);
-				jobDtos.add(jobDto);
-			}
-
-			return jobDtos;		
-		}
-
-		return null;
-
-	}
-
-
 	public List<Job> getJobs_byEmployerAndStatuses(int userId, List<Integer> jobStatuses) {
 		return repository.getJobs_byEmployerAndStatuses(userId, jobStatuses);
 	}
 
-	public List<JobDTO> getJobDtos_JobsInProcess_Employer(int userId) {
-		
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-
-		//Query the database
-		List<Job> jobsInProcess = repository.getJobsByStatusAndByEmployer(userId, Job.STATUS_PRESENT);
-		
-		//Set the job Dtos
-		if(jobsInProcess != null){
-			for(Job job : jobsInProcess){
-				
-				JobDTO jobDto = new JobDTO();
-				jobDto.setJob(job);
-	//			jobDto = this.getJobDTO_JobInProcess_Employer(job.getId());
-				jobDtos.add(jobDto);
-			}		
-		
-		}	
-		
-		return jobDtos;
-	}
-	
-	public List<JobDTO> getJobDtos_JobsCompleted_Employer(int userId) {
-
-		
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-
-		//Query the database
-		List<Job> jobsCompleted = getJobs_byStatusAndByEmployer(userId, Job.STATUS_PAST);
-		
-		//Set the job Dtos
-		if(jobsCompleted != null){
-			for(Job job : jobsCompleted){
-				
-				JobDTO jobDto = new JobDTO();
-				jobDto.setJob(job);
-				jobDtos.add(jobDto);
-			}		
-		}
-		return jobDtos;
-
-	}
-
-
-	public List<Job> getJobs_byStatusAndByEmployer(int userId, Integer status) {
-		
-		return repository.getJobsByStatusAndByEmployer(userId, status);
-	}
-
-	public int getJobCountByCategory(int categoryId) {
-		return repository.getJobCountByCategory(categoryId);
-	}
-
-	public int getSubJobCount(int categoryId, int count) {
-
-		List<Category> categories;
-
-		// For the categoryId passed as the paramenter, get the categories 1
-		// level
-		// deep
-		categories = categoryService.getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(categoryId);
-
-		// For each category 1 level deep
-		for (Category category : categories) {
-
-			// Get its job count
-			count += getJobCountByCategory(category.getId());
-
-			// Recursively get the job count for the category 1 level deep
-			count = getSubJobCount(category.getId(), count);
-		}
-
-		return count;
-	}
-
-
-
-
-	public List<JobDTO> getJobDtos_JobsCompleted_Employee(int userId) {
-		
-		//Get completed jobs
-		List<Job> completedJobs = getCompletedJobsByEmployee(userId);
-		
-		// For each completed job, create a completed job response DTO
-		List<JobDTO> jobDtos_jobsCompleted = new ArrayList<JobDTO>();
-		
-		for (Job job : completedJobs) {
-			JobDTO jobDto = new JobDTO();
-
-			jobDto.setJob(job);
-			jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-			jobDto.setRatingDto(userService.getRatingDtoByUserAndJob(userService.getUser(userId), job.getId()));
-			jobDto.setDurationDays(this.getDuration(job.getId()));
-			jobDto.setMilliseconds_endDate(job.getEndDate_local().toEpochDay());
-			jobDtos_jobsCompleted.add(jobDto);
-		}
-
-		return jobDtos_jobsCompleted;		
-	}
-
-	public List<Job> getCompletedJobsByEmployee(int userId) {
-
-		return repository.getJobsByStatusByEmployee(userId, 2);
-	}
-
 	public Job getJob(int jobId){
 		return repository.getJob(jobId);
-
 	}
 
-
 	public List<Job> getJobs_ByFindJobFilter(FindJobFilterDTO filter, HttpSession session) {
-
-
 
 		//******************************************************
 		//************************ ******************************
@@ -349,56 +205,19 @@ public class JobServiceImpl {
 
 	}
 
-
-
-	public Integer getDuration(int jobId) {
-		return repository.getDuration(jobId);
-	}
-
 	public double getDistanceFromRequest(Job job, float fromLat, float fromLng) {
-			return GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
+		return GoogleClient.getDistance(fromLat, fromLng, job.getLat(), job.getLng());
 	}	
-
-	public boolean getHaveJobRatingsBeenSubmitted(int jobId) {
-		
-		int unsubmittedRatingsCount = repository.getRatingCountByJobAndRatingValue(jobId, -1);
-		
-		if(unsubmittedRatingsCount == 0) return true;
-		else return false;
-		
-	}
-
-
-	public List<Job> getActiveJobsByEmployee(int userId) {
-
-		return repository.getJobsByStatusByEmployee(userId, 1);
-	}
-
-	public List<Job> getYetToStartJobsByEmployee(int userId) {
-
-		return repository.getJobsByStatusByEmployee(userId, 0);
-	}
 
 
 	public Job getJob_ByApplicationId(int applicationId) {
-
-		return repository.getJobByApplicationId(applicationId);
+		return repository.getJob_byApplicationId(applicationId);
 	}
-
 
 	public List<WorkDay> getWorkDays(int jobId) {
 		return repository.getWorkDays(jobId);
 	}
 	
-
-//	public List<WorkDay> getWorkDays(WageProposal wageProposal) {
-//		
-//		Application application = applicationService.getApplication(wageProposal.getApplicationId());
-//		return getWorkDays(application.getJobId());
-//	}
-
-
-
 	public Date getEndDate(int jobId) {
 
 		return repository.getEndDate(jobId);
@@ -410,9 +229,7 @@ public class JobServiceImpl {
 
 	public LocalDate getStartLocalDate(int jobId) {
 		Date date = repository.getStartDate(jobId);
-		return DateUtility.getLocalDate(date);
-		
-		
+		return DateUtility.getLocalDate(date);				
 	}
 	
 	public LocalDate getEndLocalDate(int jobId) {
@@ -421,7 +238,6 @@ public class JobServiceImpl {
 	}	
 	
 	public Time getStartTime(int jobId) {
-
 		return repository.getStartTime(jobId);
 	}
 
@@ -439,8 +255,6 @@ public class JobServiceImpl {
 		return DateUtility.getLocalTime(time);
 	}	
 
-
-
 	public JobDTO getJobDTO_DisplayJobInfo(int jobId) {
 		
 		JobDTO jobDto = new JobDTO();
@@ -453,7 +267,6 @@ public class JobServiceImpl {
 		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
 		jobDto.setSkillsRequired(this.getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
 		jobDto.setSkillsDesired(this.getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
-		jobDto.setDurationDays(this.getDuration(jobId));
 
 		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(job.getStartDate_local(),
 												job.getStartTime_local(),
@@ -464,9 +277,7 @@ public class JobServiceImpl {
 		
 		return jobDto;
 	}
-	
-
-	
+		
 	public Boolean areAllTimesTheSame(List<WorkDay> workDays) {
 		
 		if(verificationService.isListPopulated(workDays)){
@@ -492,100 +303,6 @@ public class JobServiceImpl {
 		return repository.getSkills_ByType(jobId, type);
 	}
 
-
-	public JobDTO getJobDTO_employerProfile(Job job, int userId) {
-		
-		JobDTO jobDto = new JobDTO();
-		
-		jobDto.setJob(job);		
-		
-		// Wage Proposals
-		jobDto.setCountWageProposals_sent(
-				applicationService.getCountWageProposal_Sent(job.getId(), userId));
-		
-		jobDto.setCountWageProposals_received(
-				applicationService.getCountWageProposal_Received(job.getId(), userId));
-		
-		jobDto.setCountWageProposals_received_new(
-				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
-		
-		// Applications
-		jobDto.setCountApplications_total(
-				applicationService.getCountApplications_total(job.getId()));		
-		
-		jobDto.setCountApplications_new(
-				applicationService.getCountApplications_new(job.getId()));
-		
-		jobDto.setCountApplications_received(
-				applicationService.getCountApplications_received(job.getId()));
-		
-		jobDto.setCountApplications_declined(
-				applicationService.getCountApplications_declined(job.getId()));
-		
-		// Employees
-		jobDto.setCountEmployees_hired(
-				applicationService.getCountEmployees_hired(job.getId()));
-		
-		
-		// Other job details
-		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
-				job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
-
-		
-		return jobDto;
-		
-	}
-//
-//	public JobDTO getJobDTO_JobWaitingToStart_Employer(int jobId, int userId) {
-//		
-//		// ***************************************************
-//		// ***************************************************
-//		// If only the counts are going to be displayed, and not specific job details,
-//		// then set an integer variable on the jobDto.
-//		// There's no need to pass a list of objects (wage negotiations, applications, employees)
-//		// Review this.
-//		// ***************************************************
-//		// ***************************************************
-//		
-//
-//		JobDTO jobDto = new JobDTO();
-//		
-//		Job job = this.getJob(jobId);
-//		jobDto.setJob(job);
-//		
-////		jobDto.setWorkDays(this.getWorkDays(jobId));
-//		
-////		jobDto.setQuestions(applicationService.getQuestions(jobId));
-//		
-////		jobDto.setFailedWageNegotiationDtos(applicationService.getFailedWageNegotiationDTOsByJob(job));
-//
-////		jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));
-//		
-//		jobDto.setCountWageProposals_sent(
-//				applicationService.getCountWageProposal_Sent(job.getId(), userId));
-//		
-//		jobDto.setCountWageProposals_received(
-//				applicationService.getCountWageProposal_Received(job.getId(), userId));
-//		
-//		jobDto.setCountWageProposals_received_new(
-//				applicationService.getCountWageProposal_Received_New(job.getId(), userId));
-//
-//		
-//		jobDto.setEmployees(userService.getEmployeesByJob(job.getId()));
-//		
-//		List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos_ByJob_OpenApplications(job.getId());
-//		jobDto.setApplicationDtos(applicationDtos);
-//		jobDto.setNewApplicationCount(this.getNewApplicationCount(applicationDtos));
-//
-//		
-//		System.err.println(jobDto.getJob().getUserId());
-//		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(), job.getStartDate_local(),
-//												job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
-//		
-//		return jobDto;
-//	}
-
-
 	public void updateJobStatus(int status, int jobId) {
 		
 		// ***********************************************************
@@ -600,28 +317,7 @@ public class JobServiceImpl {
 		// ***********************************************************
 		
 		repository.updateJobStatus(status, jobId);
-		
-		
-
 	}
-
-	public List<Job> getJobsByEmployee(int employeeUserId) {
-		
-		return repository.getJobsByEmployee(employeeUserId);
-	}
-
-	public int getCount_ByJobsAndStatus(List<Job> jobs, int status) {
-		
-		if(jobs != null){
-			return (int) jobs.stream().filter(j -> j.getStatus() == status).count();
-		}
-		else{
-			return 0; 
-		}
-		
-	}
-	
-	
 
 	public void setModel_GetMoreJobs(Model model, FindJobFilterDTO filter, HttpSession session) {
 		
@@ -655,8 +351,6 @@ public class JobServiceImpl {
 
 	}
 	
-	
-
 	public List<JobDTO> getJobDtos_FilteredJobs(List<Job> jobs, FindJobFilterDTO filter) {
 	
 		// For each job, set its:
@@ -674,7 +368,7 @@ public class JobServiceImpl {
 				JobDTO jobDto = new JobDTO(); 
 				jobDto.setJob(job);
 				jobDto.setCategories(categoryService.getCategoriesByJobId(job.getId()));			
-				jobDto.setDurationDays(this.getDuration(job.getId()));
+				jobDto.setWorkDays(getWorkDays(job.getId()));
 								
 				double distance = this.getDistanceFromRequest(job, filter.getLat(), filter.getLng());
 				distance = MathUtility.round(distance, 1, 0);
@@ -810,8 +504,6 @@ public class JobServiceImpl {
 
 	}
 
-
-
 	private double getMaxDistanceJobFromFilterRequest(List<JobDTO> jobDtos) {
 
 		// Get the farthest job from the users requested located.
@@ -820,20 +512,14 @@ public class JobServiceImpl {
 				return jobDtos.stream().max(Comparator.comparing(JobDTO::getDistanceFromFilterLocation))
 						.get().getDistanceFromFilterLocation();				
 			}
-		}
-		
-		return 0;
-		
+		}		
+		return 0;		
 	}
 
-	
-	private List<Job> getJobsByJobIds(List<Integer> jobIds) {
-		
-		if(jobIds != null) return repository.getJobsByIds(jobIds);
-		else return null;
-		
+	private List<Job> getJobsByJobIds(List<Integer> jobIds) {		
+		if(jobIds != null) return repository.getJobs_byIds(jobIds);
+		else return null;		
 	}
-
 
 	public void setModel_FindJobs_PageLoad(Model model, HttpSession session) {
 			
@@ -852,7 +538,6 @@ public class JobServiceImpl {
 		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
 		
 		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
-
 		
 		if(jobIds_previouslyLoaded != null && lastFilterRequest != null){
 			
@@ -864,22 +549,18 @@ public class JobServiceImpl {
 			List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 			if(lastFilterRequest.getSortBy() != null){
 				jobDtos = getJobDtos_Sorted(jobs, lastFilterRequest);	
-			}
-			else{
+			}else{
 				jobDtos = getJobDtos_FilteredJobs(jobs, lastFilterRequest);
 			}		
 			
 			this.setModel_Render_GetJobs_InitialRequest(model, jobDtos, lastFilterRequest);
 			
-		}
-		
-		
+		}				
 	}
 
 	private List<JobDTO> getJobDtos_Sorted(List<Job> jobs, FindJobFilterDTO filterDto) {
 		
-		if(filterDto.getSortBy() != null){
-		
+		if(filterDto.getSortBy() != null){		
 		
 			List<JobDTO> jobDtos = new ArrayList<JobDTO>();
 			
@@ -890,8 +571,7 @@ public class JobServiceImpl {
 			if(filterDto.getSortBy().matches("Distance") || filterDto.getSortBy().matches("Duration")){
 				jobDtos = this.getJobDtos_FilteredJobs(jobs, filterDto);
 				this.sortJobDtos(jobDtos, filterDto.getSortBy(), filterDto.getIsAscending());
-			}
-			else{
+			}else{
 				this.sortJobs(jobs, filterDto.getSortBy(), filterDto.getIsAscending());	
 				jobDtos = this.getJobDtos_FilteredJobs(jobs, filterDto);
 			}
@@ -901,13 +581,11 @@ public class JobServiceImpl {
 		else return null;
 	}
 
-	public List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
-		
+	public List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {		
 		return repository.getSavedFindJobFilters(userId);
 	}
 
-	public void saveFindJobFilter(FindJobFilterDTO request, HttpSession session) {
-		
+	public void saveFindJobFilter(FindJobFilterDTO request, HttpSession session) {		
 		
 		// *************************************
 		// Need to verify the address
@@ -933,8 +611,7 @@ public class JobServiceImpl {
 			
 			if(filter.getUserId() == sessionUser.getUserId()){
 				return filter;
-			}
-			else{
+			}else{
 				return null;
 			}
 		}
@@ -951,7 +628,7 @@ public class JobServiceImpl {
 		// **************************************************
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-//		JobSearchUserDTO userDto = new JobSearchUserDTO();
+
 
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
@@ -959,21 +636,6 @@ public class JobServiceImpl {
 		}
 		
 		jobDto.setRatingValue_overall(userService.getRating(jobDto.getJob().getUserId()));
-//		JobSearchUserDTO userDto_employer = new JobSearchUserDTO();
-//		userDto_employer.setUser(userService.getUser(jobDto.getJob().getUserId()));
-//		userDto_employer.setJobDtos_jobsCompleted(getJobDtos_JobsCompleted_Employer(
-//				userDto_employer.getUser().getUserId()));
-//		userDto_employer.setRatingValue_overall(userService.getRating(userDto_employer.getUser().getUserId()));
-//		userDto_employer.setRatingDto(userService.getRatingDto_byUser(userDto_employer.getUser()));
-//		
-//		for( JobDTO jobDto_complete : userDto_employer.getJobDtos_jobsCompleted() ){
-//			jobDto_complete.setRatingValue_overall(userService.getRating_byJobAndUser(
-//					jobDto_complete.getJob().getId(), userDto_employer.getUser().getUserId()));
-//			
-//			jobDto_complete.setComments(getCommentsGivenToUser_byJob(
-//					userDto_employer.getUser().getUserId(), jobDto_complete.getJob().getId()));
-//		}
-		
 		userService.setModel_getRatings_byUser(model, jobDto.getJob().getUserId());
 		
 
@@ -992,16 +654,13 @@ public class JobServiceImpl {
 														sessionUser.getUserId(),
 														jobDto.getWorkDays()));
 				}
-			}			
-			
+			}					
 			break;
-
 			
 		case "profile-incomplete":
 		
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
-														jobId, sessionUser.getUserId()));	
-			
+														jobId, sessionUser.getUserId()));				
 			break;
 			
 		
@@ -1009,26 +668,16 @@ public class JobServiceImpl {
 			
 			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 					jobId, sessionUser.getUserId()));
-
-//			userDto.setRatingDto(userService.getRatingDtoByUserAndJob(sessionUser, jobId));
-			
 			break;			
-	
-		
 		}	
 		
 		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("context", context);
 		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
-		model.addAttribute("jobDto", jobDto);
-//		model.addAttribute("userDto", userDto);
-//		model.addAttribute("user", sessionUser);
-
-				
+		model.addAttribute("jobDto", jobDto);				
 	}
 
-	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
-		
+	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {		
 		return repository.getCommentsGivenToUser_byJob(userId, jobId);
 	}
 
@@ -1115,28 +764,17 @@ public class JobServiceImpl {
 			
 			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			
-			boolean haveJobRatingsBeenSubmitted = false; // this.getHaveJobRatingsBeenSubmitted(jobId);			
+			boolean haveJobRatingsBeenSubmitted = false; 
 			model.addAttribute("haveJobRatingsBeenSubmitted", haveJobRatingsBeenSubmitted);
 			
 			break;	
 			
-		case "work-history":
-			
-//			jobDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
-//					jobId, sessionUser.getUserId()));
-//			
-//			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-			
-			break;
 		}	
 		
 		model.addAttribute("json_work_day_dtos", JSON.stringify(getWorkDayDtos(jobId)));
 		model.addAttribute("data_pageInit", data_pageInit);
 		model.addAttribute("context", context);
-//		model.addAttribute("isLoggedIn", SessionContext.isLoggedIn(session));
 		model.addAttribute("jobDto", jobDto);
-//		model.addAttribute("user", sessionUser);
-//		model.addAttribute("userDto", userDto);
 				
 	}
 
@@ -1158,41 +796,14 @@ public class JobServiceImpl {
 		return workDayDtos;
 	}
 
-	public List<JobDTO> getJobDtos_employment_currentAndFuture(int userId_employee) {
-
-		List<Job> jobs = this.getJobs_ByEmployeeAndJobStatuses(userId_employee, 
-													Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
-		
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-		
-		for(Job job : jobs){
-			
-			JobDTO jobDto = new JobDTO();
-			
-			jobDto.setJob(job);
-			jobDto.setWorkDays(this.getWorkDays(job.getId()));
-			
-			Application application = applicationService.getApplication(job.getId(), userId_employee);
-			EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(
-					application.getApplicationId());
-			jobDto.setWorkDayDtos(getWorkDayDtos_byProposal(currentProposal));
-			
-			jobDtos.add(jobDto);
-		}
-		
-		return jobDtos;
-	}
-
-	private List<Job> getJobs_ByEmployeeAndJobStatuses(int userId_employee, List<Integer> jobStatuses) {
-		
+	public List<Job> getJobs_ByEmployeeAndJobStatuses(int userId_employee, List<Integer> jobStatuses) {
+	
 		if(jobStatuses != null){
 			if(jobStatuses.size() > 0){
-				return repository.getJobs_ByEmplyeeAndStatuses(userId_employee, jobStatuses);
+				return repository.getJobs_ByEmployeeAndStatuses(userId_employee, jobStatuses);
 			}
 		}
-
-		return null;
-		
+		return null;		
 	}
 
 	public void setModel_ViewPostJob(Model model, HttpSession session) {
@@ -1207,19 +818,16 @@ public class JobServiceImpl {
 		
 	}
 
-	private List<Job> getJobs_ByEmployer(int userId) {
-		
+	private List<Job> getJobs_ByEmployer(int userId) {		
 		return repository.getJobs_ByEmployer(userId);
 	}
 
 	public JobDTO getJobDto_PreviousPostedJob(HttpSession session, int jobId) {
 		
-		JobDTO jobDto =getJobDTO_DisplayJobInfo(jobId);
+		JobDTO jobDto = getJobDto_ByEmployer(session, jobId);
 				
-		if(jobDto.getJob().getUserId() == SessionContext.getUser(session).getUserId()){
-			
-			jobDto.setQuestions(applicationService.getQuestions(jobId));
-			
+		if(jobDto != null){			
+			jobDto.setQuestions(applicationService.getQuestions(jobId));			
 			return jobDto;		
 		}		
 		else return null;
@@ -1228,9 +836,6 @@ public class JobServiceImpl {
 	public Question getQuestion_PreviousPostedQuestion(HttpSession session, int questionId) {
 		
 		Question postedQuestion = applicationService.getQuestion(questionId);
-		
-		
-		
 		if(verificationService.didSessionUserPostJob(session, postedQuestion.getJobId())){
 			return postedQuestion;
 		}
@@ -1238,8 +843,7 @@ public class JobServiceImpl {
 	}
 
 
-	public List<Job> getJobs_needRating_byUser(int userId) {
-		
+	public List<Job> getJobs_needRating_byUser(int userId) {		
 		return repository.getJobs_needRating_byUser(userId);
 	}
 
@@ -1283,8 +887,7 @@ public class JobServiceImpl {
 
 	public void addSkills(Integer jobId, List<Skill> skills) {
 		
-		for(Skill skill : skills){
-			
+		for(Skill skill : skills){			
 			if(skill.getText() != null){
 				if(skill.getText() != ""){
 					if(skill.getType() == Skill.TYPE_DESIRED_JOB_POSTING ||
@@ -1294,21 +897,8 @@ public class JobServiceImpl {
 						
 					}
 				}
-
-			}
-
-				
-			
-		}
-		
-	}
-
-	public void setWorkDayDates(List<WorkDay> workDays) {
-
-		for(WorkDay workDay : workDays){
-			workDay.setDate(LocalDate.parse(workDay.getStringDate()));
-		}
-		
+			}			
+		}		
 	}
 
 	public void setModel_PreviewJobPost(Model model, JobDTO jobDto) {
@@ -1316,7 +906,10 @@ public class JobServiceImpl {
 		this.setLatAndLag(jobDto);
 		this.formatAddress(jobDto.getJob());
 		
-		this.setWorkDayDates(jobDto.getWorkDays());
+		for(WorkDay workDay : jobDto.getWorkDays()){
+			workDay.setDate(LocalDate.parse(workDay.getStringDate()));
+		}	
+
 		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
 		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
 			
@@ -1340,16 +933,9 @@ public class JobServiceImpl {
 		
 	}
 
-	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
+	public JobDTO getJobDto_ByEmployer(HttpSession session, int jobId) {		
 		
-		return repository.getCount_JobsCompleted_ByCategory(userId, categoryId);
-	}
-
-	public JobDTO getJobDto_ByEmployer(HttpSession session, int jobId) {
-		
-		
-		if(verificationService.didSessionUserPostJob(session, jobId)){
-			
+		if(verificationService.didSessionUserPostJob(session, jobId)){			
 			return this.getJobDTO_DisplayJobInfo(jobId);
 		}
 		else return null;
@@ -1394,8 +980,7 @@ public class JobServiceImpl {
 		return repository.getDateId(dateId);
 	}
 
-	public Integer getWorkDayId(int jobId, int dateId) {
-		
+	public Integer getWorkDayId(int jobId, int dateId) {		
 		return repository.getWorkDayId(jobId, dateId);
 	}
 
@@ -1410,34 +995,37 @@ public class JobServiceImpl {
 		
 	}
 
-	public List<String> getDateStrings_UnavailableWorkDays(int userId, List<WorkDay> workDays) {
-		
-		if(verificationService.isListPopulated(workDays)){			
-			return repository.getDateStrings_UnavailableWorkDays(userId, workDays);				
-		}else return null;
-	}
-
 	public void setModel_getApplicants_byJobAndDate(Model model, HttpSession session, int jobId, String dateString) {
 		
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 			
 			JobDTO jobDto = getJobDTO_DisplayJobInfo(jobId);
 			
+			// Current applicants on the requested day
 			List<Application> applications = applicationService.getApplications_byJobAndDate(jobId, dateString);		
-			List<ApplicationDTO> applicationDtos = applicationService.getApplicationDtos(applications, session);
+			List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
+			for( Application application : applications){
+				
+				ApplicationDTO applicationDto = new ApplicationDTO();
+				applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));;
+				
+				applicationDtos.add(applicationDto);
+			}			
 			jobDto.setApplicationDtos(applicationDtos);
 			
+			// Applicants who are available on the requested day, but did not apply
 			List<JobSearchUser> applicants_whoAreAvailableButDidNotApplyForDate = userService.getApplicants_whoAreAvailableButDidNotApplyForDate(jobId, dateString);
-			List<ApplicationDTO> applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate =
-												applicationService.getApplicationDtos_byApplicants(jobId, applicants_whoAreAvailableButDidNotApplyForDate, session);
+		
 			
 			List<JobSearchUser> users_whoAreAvailableButHaveNotApplied = userService.getUsers_whoAreAvailableButHaveNotApplied(jobId, dateString);
 			
 
 			model.addAttribute("date", LocalDate.parse(dateString).format(DateTimeFormatter.ofPattern("E MMM d, y")));
 			model.addAttribute("jobDto", jobDto);
-			model.addAttribute("applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate",
-					applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate);
+			
+			model.addAttribute("applicants_whoAreAvailableButDidNotApplyForDate",
+					applicants_whoAreAvailableButDidNotApplyForDate);
+			
 			model.addAttribute("count_userswhoAreAvailableButHaveNotApplied",
 					users_whoAreAvailableButHaveNotApplied.size());
 		}
@@ -1445,6 +1033,15 @@ public class JobServiceImpl {
 	}
 
 	public List<WorkDayDto> getWorkDayDtos_byProposal(EmploymentProposalDTO proposal) {
+		
+		// **************************************************************
+		// **************************************************************
+		// After optimizing the Employee's Profile page load, this was the taxing.
+		// In this case, this method added 2 seconds to TTFB.
+		// Break this method up, or do away with it entirely.
+		// Not every calling method needs ALL this info.
+		// **************************************************************
+		// **************************************************************
 		
 		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
 		
@@ -1499,8 +1096,7 @@ public class JobServiceImpl {
 		else workDayDto.setHasConflictingEmployment(false);
 	}
 
-	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
-		
+	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {		
 		return repository.getWorkDays_byProposalId(employmentProposalId);
 	}
 
@@ -1770,10 +1366,8 @@ public class JobServiceImpl {
 			updateJobFlag(jobId, Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS, 1);
 	}
 
-	private void updateJobFlag(int jobId, String flag, int value) {
-		
-		repository.updateJobFlag(jobId, flag, value);
-		
+	private void updateJobFlag(int jobId, String flag, int value) {		
+		repository.updateJobFlag(jobId, flag, value);		
 	}
 	
 }

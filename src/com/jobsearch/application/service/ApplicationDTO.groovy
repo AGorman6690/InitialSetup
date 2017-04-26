@@ -18,8 +18,7 @@ class ApplicationDTO {
 	
 	List<Question> questions
 	List<Answer> answers
-	List<Integer> answerOptionIds_Selected
-	
+	List<Integer> answerOptionIds_Selected	
 	
 	EmploymentProposalDTO previousProposal
 	EmploymentProposalDTO employmentProposalDto

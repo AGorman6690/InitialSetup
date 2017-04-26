@@ -16,7 +16,9 @@ td .popuptext h4{
 	border-bottom: 1px solid #cacaca;
 }
 
-#applicantsTable > thead,
+#applicantsTable > thead{
+    border-top: 10px solid #163b3d;
+}
 #employeesTable > thead{
     border-top: 10px solid #163b3d;
 }

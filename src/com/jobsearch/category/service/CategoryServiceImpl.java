@@ -47,18 +47,6 @@ public class CategoryServiceImpl {
 		return repository.getCategoriesByUserId(userId);
 	}
 
-	public List<Category> getSubCategories_CALL_THIS_SOMETHING_DIFFERENT(int categoryId) {
-
-		List<Category> categories = repository.getSubCategories(categoryId);
-
-		for (Category category : categories) {
-			category.setJobCount(jobService.getJobCountByCategory(category.getId()));
-			category.setSubJobCount(jobService.getSubJobCount(category.getId(), 0));
-		}
-
-		return categories;
-	}
-
 	public List<Category> getSubCategories(int categoryId) {
 
 		return repository.getSubCategories(categoryId);
@@ -115,26 +103,7 @@ public class CategoryServiceImpl {
 	}
 	
 
-	public List<CategoryDTO> getCategoryDtos_JobsCompleted(int userId) {
 
-		List<Category> categories_jobsCompleted = this.getCategories_ForCompletedJobs(userId);
-		
-		List<CategoryDTO> categoryDtos = new ArrayList<CategoryDTO>();
-		
-		for(Category category : categories_jobsCompleted){
-			
-			CategoryDTO categoryDto = new CategoryDTO();
-			categoryDto.setCategory(category);
-			categoryDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByCategory(userId, category.getId()));;
-			categoryDto.setRatingValue_jobsCompleted(
-					MathUtility.round(userService.getRatingValue_ByCategory(userId, category.getId()), 1, 0));
-	
-			
-			categoryDtos.add(categoryDto);
-		}
-		
-		return categoryDtos;
-	}
 
 
 }

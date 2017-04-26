@@ -78,9 +78,20 @@ function hidePopup(){
 
 function initCalendar_eventCalendar(){
 	
-	var dates_employment = getDateFromContainer($("#employment-details"));
-	var dates_applications = getDateFromContainer($("#application-details"));
-	var dates_unavailable = getDateFromContainer($("#unavailability-details"));
+	var dates_applications = [];
+	var dates_employment = [];
+	$("#application-details .application").each(function(i, application){		
+		if($(application).attr("data-is-accepted") == "0"){
+			$(application).find("[data-date]").each(function() {
+				dates_applications.push(dateify($(this).attr("data-date")));
+			})
+		}else{
+			$(application).find("[data-date]").each(function() {
+				dates_employment.push(dateify($(this).attr("data-date")));
+			})
+		}		
+	})
+
 	var $calendar_events = $("#user-event-calendar .calendar").eq(0);
 	
 	var date_lastMonth = new Date();
@@ -89,60 +100,21 @@ function initCalendar_eventCalendar(){
 		minDate: date_lastMonth,
 		numberOfMonths: 3,
 		beforeShowDay: function(date){
-			
+
 			if(doesDateArrayContainDate(date, dates_employment)) return [true, "active111 employment"];
 			else if(doesDateArrayContainDate(date, dates_applications)) return [true, "active111 application"];
-			else if(doesDateArrayContainDate(date, dates_unavailable)) return [true, "active111 unavailable"];
 			else return [true, ""];
 		},
-		afterShow: function(){
-		
+		afterShow: function(){		
 			var html = "";
 			var $calendar_middle = $calendar_events.find(".ui-datepicker-group-middle");
-			
-//			$(dates_employment).each(function(){
-//				
-//				var td = getTdByDate($calendar_middle, this);
-//				
-//				html = "<div class='start-and-end-times'>";
-//				html += "<p>7:30a</p><p>5:30p</p>";
-//				html += "</div>";
-//				
-//				$(td).append(html);
-//			})		
-			
-//			renderEmpploymentLines($calendar_middle);		
-			
+		
 			setEmploymentLines($calendar_middle);
-			
-//			$("#application-details").find(".application").each(function(){
-//				html = this.cloneNode(false).outerHTML;				
-//				$(this).find("[data-date]").each(function(){
-//					var td = getTdByDate($calendar_middle, dateify($(this).attr("data-date")));	
-//					$(td).append(html);
-//				})
-//			})
-			
-//			$calendar_middle.find("td.application").each(function(){
-//				var countApplications = $(this).find("div.application").size();;				
-//				html = "<div class='application-count'><span>" + countApplications + "</span></div>";
-//				
-//				html += "<div class='popup'><div class='popuptext'>";
-//				$(this).find(".application").each(function(){
-//					
-//					html += "<p data-application-id='" + $(this).attr("data-id") + "'"
-//					  + " data-job-id='" + $(this).attr("data-job-id") + "'"
-//					  + ">" + $(this).attr("data-job-name") + "</p>";
-//				})			
-//				html += "</div></div>";				
-//	
-//				$(this).append(html);
-//			})
-			
-			
 
-		}
+		},
 	})	
+	
+	$calendar_events.datepicker("setDate", date_lastMonth);	
 }
 
 
@@ -153,20 +125,23 @@ function setEmploymentLines($calendar){
 	var job = {};
 	
 	// for each employed job, build a job object
-	$("#employment-details .employment").each(function(){
-		dates = getDateFromContainer($(this));
-		job = {};
-		job.isApplication = false;
-		job.jobName = $(this).attr("data-job-name");
-		job.topMargin_className = getTopMarginClassName(dates[0], $calendar);		
-		job.line_elements = getLineElements(dates);
-		jobs_employment.push(job);
-	})	
+//	$("#employment-details .employment-1").each(function(){
+//		dates = getDateFromContainer($(this));
+//		job = {};
+//		job.isApplication = false;
+//		job.jobName = $(this).attr("data-job-name");
+//		job.topMargin_className = getTopMarginClassName(dates[0], $calendar);		
+//		job.line_elements = getLineElements(dates);
+//		jobs_employment.push(job);
+//	})	
 	
 	$("#application-details .application").each(function(){
 		dates = getDateFromContainer($(this));
 		job = {};
-		job.isApplication = true;
+		
+		if($(this).attr("data-is-accepted") == "1")	job.isApplication = false;
+		else job.isApplication = true;
+		
 		job.jobName = $(this).attr("data-job-name");
 		job.topMargin_className = getTopMarginClassName(dates[0], $calendar);		
 		job.line_elements = getLineElements(dates);
@@ -187,14 +162,11 @@ function setEmploymentLines($calendar){
 			
 			var leftMargin_className = "start-day-" + line_element.leftEndPoint.day;
 			var html = "<div class='job-line " + jobType_className + " "  + job.topMargin_className + " " + leftMargin_className + "'>";
-			
-			
-			
+									
 			var additionMargin_endPoint = 30;
 			var tdWidth = 114.444;
 			
 			var employmentLineWidth = tdWidth * (line_element.rightEndPoint.day - line_element.leftEndPoint.day + 1)
-
 			
 			var leftMargin = tdWidth * (6 - line_element.leftEndPoint.day + 1);
 			
@@ -214,12 +186,8 @@ function setEmploymentLines($calendar){
 			var $appendedDiv = $tr.find(".job-line").last(); 
 			$appendedDiv.css("width", employmentLineWidth);
 			$appendedDiv.css("margin-left", -1 * leftMargin);
-			
-			
-		})
-		
-		
-		
+						
+		})						
 	})
 }
 

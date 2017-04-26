@@ -32,12 +32,18 @@ a.new{
     border-radius: 23px;
     /* text-decoration: underline; */
 }
-
+#table_jobsWaitingToStart tbody{
+    border: 1px solid #cacaca;
+}
 #table_jobsWaitingToStart thead tr th.job-status.first{
 	border-top-left-radius: 7px;
 }
-#table_jobsWaitingToStart thead tr th.job-status.applicant-perspective{
-	background: #429cb5;	
+#table_jobsWaitingToStart thead tr th.job-status.application{
+	background: #36595a;	
+}
+#table_jobsWaitingToStart thead tr th.job-status.employment{
+/* 	background: #7ec3b4; */
+	background: #6eab9d;	
 }
 #table_jobsWaitingToStart thead tr th#offers-waiting-on.job-status.applicant-perspective{
 /* 	background: #2089a7;	 */

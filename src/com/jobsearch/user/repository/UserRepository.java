@@ -48,15 +48,6 @@ public class UserRepository {
 
 	}
 
-	public JobSearchUser validateUser(int userId) {
-
-		String sql = "Update user Set enabled = 1 where userId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { userId });
-
-		return getUser(userId);
-	}
-
 	public JobSearchUser createUser(JobSearchUser user) {
 
 		try {
@@ -192,24 +183,6 @@ public class UserRepository {
 		return (ArrayList<Profile>) list;
 	}
 
-	public List<Category> UserCategoriesRowMapper(String sql, Object[] args) {
-
-		List<Category> list;
-		list = jdbcTemplate.query(sql, args, new RowMapper<Category>() {
-
-			@Override
-			public Category mapRow(ResultSet rs, int rownumber) throws SQLException {
-				Category e = new Category();
-				e.setId(rs.getInt(2));
-				return e;
-			}
-		});
-
-		// System.out.println(list.get(0));
-
-		return list;
-
-	}
 
 	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args) {
 
@@ -248,38 +221,6 @@ public class UserRepository {
 
 	}
 
-	public void setUsersId(JobSearchUser user) {
-
-		// From the user table, get the ID associated with the user's email
-		user.setUserId(getUserByEmail(user.getEmailAddress()).getUserId());
-
-	}
-
-	public boolean hasCategory(int userId, int categoryId) {
-
-		String sql;
-		sql = "select * from user_category where UserId = ? and CategoryId = ?";
-
-		List<Category> categories = this.UserCategoriesRowMapper(sql, new Object[] { userId, categoryId });
-
-		if (categories.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
-
-	public ArrayList<JobSearchUser> getApplicantsByJob_SubmittedOrConsidered(int jobId) {
-
-		String sql = "SELECT *" + " FROM user" + " INNER JOIN application" + " ON user.UserId = application.UserId"
-				+ " INNER JOIN job" + " ON application.JobId = job.JobId" + " AND application.JobId = ?"
-				+ " WHERE application.Status = ? or application.Status = ?";
-
-		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId, 
-												Application.STATUS_SUBMITTED, Application.STATUS_CONSIDERED });
-	}
-
 	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
 
 		String sql = "SELECT * FROM user u"
@@ -290,13 +231,6 @@ public class UserRepository {
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
 
-	public ArrayList<JobSearchUser> getEmployeesByCategory(int categoryId) {
-		String sql = "SELECT *" + " FROM user" + "	INNER JOIN usercategories"
-				+ "	ON user.UserId = usercategories.userID" + " AND user.ProfileId = 2"
-				+ " AND usercategories.CategoryID = ?";
-
-		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { categoryId });
-	}
 
 	public ArrayList<Profile> getProfiles() {
 		String sql = "SELECT *" + " FROM profile";
@@ -324,19 +258,6 @@ public class UserRepository {
 		return this.RateCriterionRowMapper(sql, new Object[] {});
 	}
 
-	public void deleteEndorsements(int employeeId, int jobId) {
-		String sql = "DELETE FROM endorsement WHERE UserId = ? AND JobId = ?";
-		jdbcTemplate.update(sql, new Object[] { employeeId, jobId });
-
-	}
-
-	public void addEndorsement(Endorsement endorsement) {
-		String sql = "INSERT INTO endorsement (JobId, UserId, CategoryId)" + " VALUES (?, ?, ?)";
-
-		jdbcTemplate.update(sql,
-				new Object[] { endorsement.getJobId(), endorsement.getUserId(), endorsement.getCategoryId() });
-
-	}
 
 	public void addComment(int userId, int jobId, String comment, int userId_commenter) {
 		String sql = "INSERT INTO comment (JobId, UserId, Comment, UserId_Commenter) VALUES (?, ?, ?, ?)";
@@ -372,136 +293,11 @@ public class UserRepository {
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
 
-		if (rating == null) {
-			return -1.0;
-		} else {
+//		if (rating == null) {
+//			return -1.0;
+//		} else {
 			return rating;
-		}
-	}
-
-	public List<Double> getRatingForJob(int userId, int jobId) {
-		String sql = "SELECT Value FROM rating"
-				+ " WHERE UserId = ?"
-				+ " AND JobId = ?";
-		
-		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Double.class);
-	}
-	
-
-	public double getRatingValue_ByUserAndJob(int rateCriterionId, int userId, int jobId) {
-		
-		String sql = "SELECT AVG(Value) FROM rating"
-				+ " WHERE UserId = ?"
-				+ " AND JobId = ?"
-				+ " AND RateCriterionId = ?";
-		
-		Double d = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
-		return jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId, rateCriterionId }, Double.class);
-	}
-
-	public List<Integer> getEndorsementCategoryIds(int userId) {
-		String sql = "SELECT CategoryId FROM endorsement"
-				+ " WHERE UserId = ?"
-				+ " GROUP BY CategoryId";
-		
-		return jdbcTemplate.queryForList(sql, new Object[] { userId }, Integer.class);
-	}
-
-	public int getEndorsementCountByCategory(int userId, int categoryId) {
-		String sql = "SELECT COUNT(*) FROM endorsement WHERE UserId = ? AND CategoryId = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[] { userId, categoryId }, Integer.class);
-	}
-
-	public List<Integer> getEndorsementCategoryIdsByJob(int userId, int jobId) {
-		String sql = "SELECT CategoryId FROM endorsement WHERE UserId = ? AND JobId = ? GROUP BY CategoryId";
-		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, Integer.class);
-	}
-
-	public int getEndorsementCountByCategoryAndJob(int userId, int categoryId, int jobId) {
-		String sql = "SELECT COUNT(*) FROM endorsement WHERE UserId = ? AND CategoryId = ? AND JobId = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[] { userId, categoryId, jobId }, Integer.class);
-	}
-
-	public void deleteAvailability(int userId) {
-		String sql = "DELETE FROM availability WHERE UserId = ?";
-		jdbcTemplate.update(sql, new Object[] { userId });
-
-	}
-
-	public void addAvailability(AvailabilityDTO availabilityDto){ //Date sqlDate) {
-		
-		// *************************************
-		// See note in userService.updateAvailability
-		// *************************************
-		
-		String sql = "INSERT INTO availability (UserId, DateId) VALUES";
-		ArrayList<Object> args = new ArrayList<Object>();
-		
-		boolean isFirst = true;
-		for(String date : availabilityDto.getStringDays()){
-			
-			if(!isFirst) sql += ",";			
-			
-			sql += " (?, ?)";
-
-			
-			isFirst = false;
-			args.add(availabilityDto.getUserId());
-			args.add(jobService.getDateId(date));
-		}
-		
-		sql += " ON DUPLICATE KEY UPDATE UserId = UserId";
-		
-		jdbcTemplate.update(sql, args.toArray());
-
-	}
-
-	public List<String> getAvailableDays(int userId) {
-		String sql = "SELECT Date FROM  date d"
-						+ " INNER JOIN availability a ON a.DateId = d.Id"
-						+ " WHERE UserId = ?";
-		return jdbcTemplate.queryForList(sql, new Object[] { userId }, String.class);
-	}
-
-
-	public List<String> getAvailableDays_byWorkDays(int userId, List<WorkDay> workDays) {
-		
-		// ***********************************************
-		// ***********************************************
-		// "availability" table needs to be changed to "unavailability"
-		// ***********************************************
-		// ***********************************************
-		
-		String sql = "SELECT Date FROM  date d"
-						+ " INNER JOIN availability a ON a.DateId = d.Id"
-//						+ " INNER JOIN employment e ON e.DateId = a.DateId"
-						+ " WHERE a.UserId = ?"
-//						+ " WHERE e.UserId = ?"
-						+ " AND a.DateId NOT IN ("
-						+ "	SELECT wd.DateId FROM work_day wd"
-						+ " INNER JOIN employment e ON e.JobId = wd.JobId"
-						+ " WHERE e.UserId = ?"
-						+ " )"
-						+ " AND (";
-		
-		List<Object> args = new ArrayList<Object>();
-		args.add(userId);
-		args.add(userId);
-		
-		boolean isFirst = true;
-		for(WorkDay workDay : workDays){
-			
-			if(!isFirst) sql += " OR";
-			sql += " d.Date = ?";
-			
-			args.add(workDay.getStringDate());
-			
-			isFirst = false;
-		}
-		sql += ")";
-		
-		
-		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
+//		}
 	}
 
 
@@ -654,56 +450,6 @@ public class UserRepository {
 		return this.JobSearchUserProfileRowMapper(sql, argsList.toArray());
 	}
 
-	public void createUsers_DummyData(List<JobSearchUser> users, int dummyCreationId) {
-
-		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insertUser_DummyData(?,?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)}");
-
-			for (JobSearchUser user : users) {
-				cStmt.setString(1, user.getFirstName());
-				cStmt.setString(2, user.getLastName());
-				cStmt.setString(3, user.getEmailAddress());
-				cStmt.setString(4, user.getPassword());
-				cStmt.setInt(5, user.getProfileId());
-				cStmt.setFloat(6, user.getHomeLat());
-				cStmt.setFloat(7, user.getHomeLng());
-				cStmt.setInt(8, user.getMaxWorkRadius());
-				cStmt.setInt(9, dummyCreationId);
-				cStmt.setDouble(10, user.getRating());
-				cStmt.setString(11, user.getHomeCity());
-				cStmt.setString(12, user.getHomeState());
-
-				cStmt.addBatch();
-			}
-
-			cStmt.executeBatch();
-			// cStmt.executeQuery();
-
-			cStmt.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-
-			try {
-				jdbcTemplate.getDataSource().getConnection().close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public int getLastDummyCreationId(String table) {
-		String sql = "SELECT MAX(DummyCreationId) FROM " + table;
-		return jdbcTemplate.queryForObject(sql, Integer.class);
-	}
-
-
-
-
 	public boolean resetPassword(String username, String newPassword) {
 		String sql = "UPDATE user SET password = ?, createNewPassword = 1 WHERE email = ?";
 
@@ -722,18 +468,6 @@ public class UserRepository {
 		jdbcTemplate.update(sql, new Object[] { password, email });
 	}
 
-	public Double getRatingValue_ByCategory(int userId, int categoryId) {
-
-		String sql = "SELECT Avg(r.value) FROM rating r"
-				+ " INNER JOIN job j on j.JobId = r.JobId"
-				+ " INNER JOIN job_category jc on jc.JobId = j.JobId"
-				+ " AND r.UserId = ?"
-				+ " AND r.Value != -1"
-				+ " AND jc.CategoryId = ?";				
-		 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ userId, categoryId }, Double.class);
-
-	}
 
 	public void updateHomeLocation(JobSearchUser user_edited, Coordinate coordinate) {
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
@@ -771,7 +505,7 @@ public class UserRepository {
 					+ " VALUES (?, ?, ?, ?, ?)";
 		
 		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId,
-												RateCriterion.VALUE_NOT_YET_RATED, ratedByUserId });
+											RateCriterion.VALUE_NOT_YET_RATED, ratedByUserId });
 		
 	}
 

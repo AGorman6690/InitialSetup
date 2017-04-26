@@ -175,7 +175,8 @@ function setDataAttributes_calendarContainer_byJobDto($calendar, jobDto){
 function getNumberOfMonths($e){
 	
 	var numberOfMonths = $e.attr("data-number-of-months");
-	if(numberOfMonths == undefined){
+	if(numberOfMonths > 10) return 5; // This a safety net in case logic gets screwy on the server
+	else if(numberOfMonths == undefined){
 		return 1;
 	}
 	else{

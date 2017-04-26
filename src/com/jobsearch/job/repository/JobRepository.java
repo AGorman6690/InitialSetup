@@ -649,46 +649,8 @@ public class JobRepository {
 		
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
-	
-	
-	
-	public List<Job> getJobsByStatusAndByEmployer(int userId, int jobStatus) {
-		String sql = "SELECT * FROM job WHERE Status = ? AND UserId = ?";
-		return this.JobRowMapper(sql, new Object[] { jobStatus , userId});
-	}
 
-	public int getJobCountByCategory(int categoryId) {
-
-		String sql = "SELECT COUNT(*)" + " FROM job " + " INNER JOIN job_category"
-				+ " ON job.JobId = job_category.JobId" + " AND job_category.CategoryId = ? AND job.IsActive = 1";
-
-		int result = jdbcTemplate.queryForObject(sql, new Object[] { categoryId }, int.class);
-
-		return result;
-	}
-
-//	public List<Job> getJobsAppliedTo(int userId) {
-//		String sql = "SELECT *" + " FROM job" + " INNER JOIN application" + " ON job.JobId = application.JobId"
-//				+ "	AND application.UserId = ?";
-//
-//		return this.JobRowMapper(sql, new Object[] { userId });
-//	}
-
-	public List<Job> getJobsByStatusByEmployee(int userId, int jobStatus) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
-				+ "	AND employment.UserId = ? and job.Status = ?";
-
-		return this.JobRowMapper(sql, new Object[] { userId, jobStatus });
-	}
-	
-	public List<Job> getJobsByEmployee(int employeeUserId) {
-		String sql = "SELECT *" + " FROM job" + " INNER JOIN employment ON job.JobId = employment.JobId"
-				+ "	AND employment.UserId = ?";
-
-		return this.JobRowMapper(sql, new Object[] { employeeUserId });
-	}
-	
-	public List<Job> getJobs_ByEmplyeeAndStatuses(int userId_employee, List<Integer> jobStatuses) {
+	public List<Job> getJobs_ByEmployeeAndStatuses(int userId_employee, List<Integer> jobStatuses) {
 		
 		
 		String sql = "SELECT * FROM job j"
@@ -751,15 +713,14 @@ public class JobRepository {
 	}
 
 
-	public Job getJobByApplicationId(int applicationId) {
+	public Job getJob_byApplicationId(int applicationId) {
 		String sql = "SELECT * FROM job j INNER JOIN application a"
 						+ " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
 
 		return this.JobRowMapper(sql, new Object[]{ applicationId }).get(0);
 	}
 
-	public void addWorkDay(int jobId, WorkDay workDay) {
-		
+	public void addWorkDay(int jobId, WorkDay workDay) {		
 		
 		// *******************************************************
 		// *******************************************************
@@ -834,36 +795,11 @@ public class JobRepository {
 
 	}
 
-	public List<Integer> getActiveJobIdsByDistance(float lat, float lng, int radius) {
-
-		String sql = "SELECT JobId"
-				+ " FROM job"
-				+ " WHERE Status = 0"
-				+ " AND ( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) <= ?";
-
-		return jdbcTemplate.queryForList(sql, new Object[]{ lat,  lng, lat, radius }, Integer.class);
-	}
-
-
-	public Integer getDuration(int jobId) {
-		
-		String sql = "SELECT COUNT(*) FROM work_day WHERE JobId = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
-	}
-
 	public List<WorkDay> getWorkDays(int jobId) {
 		String sql = "SELECT * FROM work_day WHERE JobId = ? ORDER BY DateId ASC";
 		return this.WorkDayMapper(sql, new Object[]{ jobId });
 	}
-	
-	
-	public int getRatingCountByJobAndRatingValue(int jobId, double value){
 
-		String sql = "SELECT COUNT(*) FROM rating WHERE JobId = ? AND Value = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, value }, Integer.class);
-
-	}
 
 	public void insertSavedFindJob(FindJobFilterDTO filter, JobSearchUser user) {
 		
@@ -965,12 +901,10 @@ public class JobRepository {
 			return this.FindJobFilterDtoMapper(sql, new Object[]{ savedFindJobFilterId }).get(0);	
 		} catch (Exception e) {
 			return null;
-		}
-		
+		}		
 	}
 
-	public List<Job> getJobsByIds(List<Integer> jobIds) {
-		
+	public List<Job> getJobs_byIds(List<Integer> jobIds) {		
 		
 		String sql = "SELECT * FROM job j WHERE";
 		List<Object> args = new ArrayList<Object>();
@@ -1027,24 +961,6 @@ public class JobRepository {
 	public List<Skill> getSkills_ByType(int jobId, int type) {
 		String sql = "SELECT * FROM skill WHERE JobId = ? AND Type = ?";
 		return SkillRowMapper(sql, new Object[]{ jobId, type });
-	}
-
-	
-	public int getCount_JobsCompleted_ByCategory(int userId, int categoryId) {
-
-		String sql = "SELECT COUNT(*) FROM job j"
-					+ " INNER JOIN job_category jc ON jc.JobId = j.JobId"
-					+ " INNER JOIN application a ON a.JobId = j.JobId"
-					+ " WHERE j.Status = ?"
-					+ " AND a.UserId = ?"
-					+ " AND a.Status = ?"
-					+ " AND jc.CategoryId = ?";
-		
-		return jdbcTemplate.queryForObject(sql, new Object[]{ Job.STATUS_PAST,
-																userId,
-																Application.STATUS_ACCEPTED,
-																categoryId }, Integer.class);
-
 	}
 
 	public int getCount_JobsCompleted_ByUser(int userId) {
@@ -1180,85 +1096,6 @@ public class JobRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  dateId }, Integer.class);
 	}
 
-	public List<String> getDateStrings_UnavailableWorkDays(int userId, List<WorkDay> workDays) {
-		
-		
-		List<Object> args = new ArrayList<Object>();
-		String sql = "SELECT d.Date from date d WHERE d.Id NOT IN (";
-		
-		// **********************************************
-		// Structure:
-		// If the user is either:
-		// 1) unavailable
-		// 2) or employed
-		// on the requested days,
-		// then return the date id
-		// **********************************************
-		
-		// Unavailability sub query.
-		sql += " SELECT a.DateId FROM availability a WHERE a.UserId = ?";
-		args.add(userId);		
-
-		boolean isFirst = true;
-		for(WorkDay workDay : workDays){
-			if(isFirst) sql += " AND (";
-			else sql += " OR";
-			
-			sql += " a.DateId = ?";
-			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
-			args.add(workDay.getDateId());
-			
-			isFirst = false;
-		}
-		
-		// Close the AND clause
-		sql += " ) ";
-		
-		
-		// Employment sub query.
-		sql += " OR a.DateId IN ("
-				+ " SELECT DISTINCT(d1.Id) FROM date d1"
-				+ " INNER JOIN work_day wd ON wd.DateId = d1.Id"
-				+ " INNER JOIN employment e ON e.JobId = wd.JobId"
-				+ " WHERE e.UserId = ?";
-		
-		args.add(userId);
-		
-
-		isFirst = true;
-		for(WorkDay workDay : workDays){
-			if(isFirst) sql += " AND (";
-			else sql += " OR";
-			
-			sql += " wd.DateId = ?";
-			args.add(workDay.getDateId());
-			
-			isFirst = false;
-		}
-				
-		// Close the AND and two IN clauses
-		sql += " ) ) )";			
-				
-		
-		// Restrict the main query to the work days in question
-		isFirst = true;
-		for(WorkDay workDay : workDays){
-			if(isFirst) sql += " AND (";
-			else sql += " OR";
-			
-			sql += " d.Id = ?";
-			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
-			args.add(workDay.getDateId());
-			
-			isFirst = false;
-		}	
-		// Close the AND clausec
-		sql += " ) ";		
-		
-		
-		return jdbcTemplate.queryForList(sql, args.toArray(), String.class);
-	}
-
 	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int DateId) {
 		String sql = "SELECT * FROM job j"
 					+ " JOIN employment e ON j.JobId = e.JobId"
@@ -1378,10 +1215,6 @@ public class JobRepository {
 		String sql = "UPDATE job SET " + flag + " = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, jobId });
 	}
-
-
-
-
 
 }
 

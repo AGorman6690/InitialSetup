@@ -13,7 +13,7 @@
 	<c:if test="${!empty applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate }">
 		<div id="otherApplicants" class="pad-top">
 			<h1>Other Available Applicants</h1>
-			<c:set var="param_applicationDtos" value="${applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate }" />
+<%-- 			<c:set var="param_applicationDtos" value="${applicationDtos_applicantsWhoAreAvailableButDidNotApplyForDate }" /> --%>
 			<%@ include  file="./Applicants_ByJobAndDate.jsp" %>
 		
 		</div>

@@ -70,46 +70,26 @@ public class UserController {
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
-	
-	@RequestMapping(value = "/user/profile-new", method = RequestMethod.GET)
-	public String getProfile_SessionUser_NEW(Model model, HttpSession session) {				
-		userService.setModel_Profile(model, session);		
-		return "/employee_profile/Profile_Employee";
-	}
-	
-	@RequestMapping(value = "/user/{userId}/profile", method = RequestMethod.GET)
-	public String getProfile_AUser(@PathVariable(value = "userId") int userId,
-									Model model, HttpSession session) {
-		
-		// ********************************************************
-		// ********************************************************
-		// Pretty this up.
-		// Think about combining the two view-profile/credentials-page requests
-		// ********************************************************
-		// ********************************************************
-		
-		
-		userService.setModel_Credentials_Employee(model, userId, session);
-		model.addAttribute("isViewingOnesSelf", false);
-		return "/credentials_employee/Credentials_Employee";
-	}
-	
 
 	
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
 	public String viewCredentials(Model model, HttpSession session) {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		userService.setModel_Credentials_Employee(model, sessionUser.getUserId(), session);
+		JobSearchUserDTO userDto = new JobSearchUserDTO();		
+		userDto.setUser(sessionUser);
+
 		userService.setModel_getRatings_byUser(model, sessionUser.getUserId());
+		
 		model.addAttribute("isViewingOnesSelf", true);
+		model.addAttribute("userDto", userDto);
 		return "/credentials_employee/Credentials_Employee";
 	}
 	
 	@RequestMapping(value = "/user/calendar", method = RequestMethod.GET)
 	public String viewCalendar(Model model, HttpSession session) {
 
-		userService.setModel_ViewCalendar_Employee(model, session);
+		userService.setModel_viewCalendar_employee(model, session);
 		return "/event_calendar/Event_Calendar";
 	}
 
@@ -141,8 +121,7 @@ public class UserController {
 
 		userService.setModel_findEmployees_pageLoad(model, session);
 		return "/find_employees/FindEmployees";
-	}
-	
+	}	
 
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
 	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
@@ -151,39 +130,6 @@ public class UserController {
 
 		return"/find_employees/Results_Find_Employees";
 	}
-
-	
-	@RequestMapping(value = "/availability/update", method = RequestMethod.POST)
-	public String updateAvailability(@RequestBody AvailabilityDTO availabilityDto,
-										Model model, HttpSession session) {
-
-		userService.updateAvailability(session, availabilityDto);
-		userService.setModel_Availability(model, session);
-		
-		return "settings_employee/AvailableDays_CurrentlySet";
-	}
-	
-	@RequestMapping(value = "/availability", method = RequestMethod.GET)
-	public String viewAvailability(Model model, HttpSession session) {
-
-
-		userService.setModel_Availability(model, session);
-
-		return "settings_employee/Availability";
-
-	}
-	
-	
-	@RequestMapping(value = "/user/get/availability", method = RequestMethod.GET)
-	@ResponseBody
-	public String getUserAvailability(Model model, HttpSession session) {
-		
-		JobSearchUserDTO userDto = userService.getUserDTO_Availability(session);
-
-		return JSON.stringify(userDto);
-	}
-
-		
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
 	public ModelAndView newPassword(ModelAndView model, @ModelAttribute("user") JobSearchUser user,

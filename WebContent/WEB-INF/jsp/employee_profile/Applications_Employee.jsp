@@ -3,15 +3,6 @@
 
 		<table class="main-table-style shadow">
 			<thead>
-<!-- 				<tr class="header-1">		 -->
-<!-- 					<th id="jobName" class="left-edge" colspan="1"></th>					 -->
-<!-- 					<th id="startDate" class="left-edge hide-with-calendar" colspan="1"></th> -->
-<!-- 					<th id="endDate" class="left-edge hide-with-calendar" colspan="1"></th>	 -->
-<!-- 					<th id="location" class="left-edge hide-with-calendar" colspan="1"></th>	 -->
-<!-- 					<th id="location" class="left-edge hide-with-calendar" colspan="1"></th> -->
-<!-- 					<th id="wageProposal" class="span left-edge right-edge" colspan="">Proposal</th>					 -->
-<!-- 				</tr> -->
-				
 				<tr class="header-2">
 					<th id="job-name" class="left-edge"></th>
 
@@ -76,7 +67,7 @@
 							</label>					
 						</div>					
 					</th>	
-					<th class="job-status first proposal">Proposal</th>
+					<th class=" first proposal">Proposal</th>
 <!-- 					<th>Expiration</th> -->
 <!-- 					<th id="action-th" class="left-edge">Status</th>					 -->
 <!-- 					<th class="header-dropdown" data-sort-attr="data-employment-proposal-amount"> -->

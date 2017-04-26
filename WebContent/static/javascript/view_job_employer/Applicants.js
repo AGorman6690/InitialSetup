@@ -1,10 +1,14 @@
 $(document).ready(function(){
 	
-	$("body").on("click", ".show-applicant-ratings-mod", function() {		
+	$("body").on("click", ".show-applicant-ratings-mod", function() {	
+				
 		var $tr = $(this).closest("tr");
-		var userId_applicant = $tr.attr("data-user-id");
-		var $e_renderHtml = $tr.find(".ratings-mod-container .mod-body").eq(0);
-		executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);
+		if(!$tr.find(".mod").eq(0).is(":visible")){			
+			var userId_applicant = $tr.attr("data-user-id");
+			var $e_renderHtml = $tr.find(".ratings-mod-container .mod-body").eq(0);
+			executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);	
+		}
+		
 	})
 	
 	$("#table_headerAnswers td input.show-question-and-answers").change(function(){

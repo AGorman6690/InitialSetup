@@ -11,12 +11,12 @@
 				<p>Accepted</p>
 			</c:when>
 			<c:otherwise>
-				<c:if test="${applicationDto.previousProposal.isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
+				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
 					<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
 					<p>The proposed work days have been updated</p>
 				</c:if>	
 				
-				<c:if test="${applicationDto.previousProposal.isCanceledDueToEmployerFillingAllPositions == 1 }">
+				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToEmployerFillingAllPositions == 1 }">
 					<c:choose>
 						<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">		
 							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>

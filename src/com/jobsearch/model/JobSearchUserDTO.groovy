@@ -28,7 +28,8 @@ class JobSearchUserDTO {
 	List<JobDTO> jobDtos_jobsCompleted;
 	int count_jobsCompleted;
 //	
-	double ratingValue_overall
+	
+	Double ratingValue_overall
 	List<CategoryDTO> categoryDtos_jobsCompleted
 	
 	Boolean isInvalidNewUser

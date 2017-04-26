@@ -104,36 +104,6 @@ public class VerificationServiceImpl {
 		else return false;
 	}
 
-	public boolean canSessionUserAcceptEmploymentProposal(HttpSession session,
-							EmploymentProposalDTO employmentProposalDto) {
-
-		
-		if(isProposalCurrentlyProposedToSessionUser(employmentProposalDto.getEmploymentProposalId(), session) &&
-				isEmploymentProposalOpen(employmentProposalDto) ){
-			return true;
-		}else return false;
-		
-	}
-		
-	
-
-	public boolean isProposalCurrentlyProposedToSessionUser(int wageProposalId, HttpSession session) {
-		
-		JobSearchUser user = SessionContext.getUser(session);
-		WageProposal wp = applicationService.getWageProposal(wageProposalId);
-		
-		// ********************************
-		// I cannot figure out why I had the hasActionBeenTakenOnWageProposal() condition...
-		// ********************************
-		// Verify the wage proposal has not yet been acted upon
-//		if(!this.hasActionBeenTakenOnWageProposal(wp)){
-			
-			if(wp.getProposedToUserId() == user.getUserId()) return true;
-			else return false;
-//		}
-//		else return false;
-	}
-	
 	public boolean isEmploymentProposalOpen(EmploymentProposalDTO employmentProposalDto) {
 		
 		if( employmentProposalDto.getStatus() == WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED ||

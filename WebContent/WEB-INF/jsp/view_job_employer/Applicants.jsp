@@ -184,10 +184,10 @@
 					>
 					
 					
-					<td class="table-view ">
+					<td class="table-view show-applicant-ratings-mod">
 						<div class="vert-border name-container">
 							<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
-							<p class="applicant-name show-applicant-ratings-mod">
+							<p class="applicant-name show-applicant-ratings-mod0">
 							 ${applicationDto.applicantDto.user.firstName }</p>
 						</div>
 						<div class="ratings-mod-container">
@@ -202,9 +202,17 @@
 							</div>						
 						</div>
 					</td>
-					<td class="table-view">
-						<div class="show-applicant-ratings-mod vert-border">
-						 	${applicationDto.applicantDto.ratingValue_overall}
+					<td class="table-view show-applicant-ratings-mod">
+						<div class="show-applicant-ratings-mod0 vert-border">
+							<c:choose>
+								<c:when test="${empty applicationDto.applicantDto.ratingValue_overall }">
+									NA
+								</c:when>
+								<c:otherwise>
+									${applicationDto.applicantDto.ratingValue_overall}
+								</c:otherwise>
+							</c:choose>
+						 	
 						 </div>
 					</td>
 	
@@ -244,7 +252,7 @@
 						<div class="info-container">
 							<div>
 								<p class="name">
-									<a class="accent" href="/JobSearch/user/${applicationDto.applicantDto.user.userId}/profile">
+									<a class="accent" href="#">
 											 ${applicationDto.applicantDto.user.firstName }</a>
 								</p>
 								<p>

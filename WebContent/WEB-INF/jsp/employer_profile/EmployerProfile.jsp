@@ -24,8 +24,8 @@
 						<th id="start-date" >Start date</th>
 						<th id="end-date" class="">End date</th>
 						<th id="location" class="">Location</th>
-						<th id="" class="job-status first applicant-perspective">Total applicants</th>		
-						<th id="offers-waiting-on" colspan="2" class="job-status applicant-perspective">
+						<th id="" class="job-status application first applicant-perspective">Total applicants</th>		
+						<th id="offers-waiting-on" colspan="2" class="job-status application applicant-perspective">
 							<div>
 								<p>Offers waiting on...</p>
 								<p><span>Applicant</span><span>You</span></p>
@@ -33,8 +33,8 @@
 						</th>						
 	<!-- 					<th id="" class="job-status applicant-perspective">Offers waiting on applicant</th> -->
 	<!-- 					<th id="" class="job-status applicant-perspective">Offers waiting on you</th> -->
-						<th id="" class="job-status">Positions filled</th>
-						<th id="" class="job-status">Positions available</th>
+						<th id="" class="job-status employment">Positions filled</th>
+						<th id="" class="job-status employment">Positions available</th>
 						<th></th>
 					</tr>
 				</thead>

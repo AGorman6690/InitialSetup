@@ -13,7 +13,9 @@ th.proposal p:first-of-type{
 #table_headerAnswers td.answers-container{
 	width:150px;	
 }
-
+#ratings-mod-container{
+	display: none;
+}
 #filterAnswersContainer{
 	width: 500px;
 }
