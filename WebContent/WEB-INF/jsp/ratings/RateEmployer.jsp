@@ -66,10 +66,10 @@
 						</div>
 						<div class="if-no radio-container">
 							<label><input type="radio" value="3" name="rate-3-${employer.userId }">
-								There was work for most of the days agreed upon, but not all days
+								There was work for some of the days agreed upon, but not all days
 							</label>
 							<label><input type="radio" value="1" name="rate-3-${employer.userId }">
-								More than half the amount of days we agreed upon did not have work
+								There was at least one day with no work and ${employer.firstName } did not notify me beforehand
 							</label>							
 						</div>
 					</div>				

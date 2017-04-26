@@ -1,4 +1,4 @@
-<%@ include file="../includes/Header.jsp"%>
+ <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>	
 
 <!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rate_employees.css" /> -->
@@ -46,11 +46,11 @@
 							</div>
 							<div class="if-no radio-container">
 								<label><input type="radio" value="3" name="on-time-${employee.userId }">
-									${employee.firstName} occasionally arrived late
+									${employee.firstName} did not consistently arrive on time
 								</label>
 								<label><input type="radio" value="1" name="on-time-${employee.userId }">
-									${employee.firstName} never arrived on time
-								</label>							
+									${employee.firstName} did not arrive at least one day and did not notify me
+								</label>	
 							</div>
 						</div>
 						<div class="work-ethic rate-criterion" data-rate-criterion-id="1">
@@ -76,7 +76,7 @@
 							</div>
 							<div class="if-no radio-container">
 								<label><input type="radio" value="3" name="experience-${employee.userId }">
-									${employee.firstName}'s experience level was OK, but I was expected more
+									${employee.firstName}'s experience level was OK, but I expected more
 								</label>
 								<label><input type="radio" value="1" name="experience-${employee.userId }">
 									${employee.firstName}'s experience level was far less than I expected

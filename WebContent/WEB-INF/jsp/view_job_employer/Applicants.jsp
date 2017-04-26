@@ -184,10 +184,10 @@
 					>
 					
 					
-					<td class="table-view show-applicant-ratings-mod">
+					<td class="table-view">
 						<div class="vert-border name-container">
 							<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
-							<p class="applicant-name show-applicant-ratings-mod0">
+							<p class="applicant-name show-applicant-ratings-mod">
 							 ${applicationDto.applicantDto.user.firstName }</p>
 						</div>
 						<div class="ratings-mod-container">
@@ -202,8 +202,8 @@
 							</div>						
 						</div>
 					</td>
-					<td class="table-view show-applicant-ratings-mod">
-						<div class="show-applicant-ratings-mod0 vert-border">
+					<td class="table-view">
+						<div class="show-applicant-ratings-mod vert-border">
 							<c:choose>
 								<c:when test="${empty applicationDto.applicantDto.ratingValue_overall }">
 									NA
