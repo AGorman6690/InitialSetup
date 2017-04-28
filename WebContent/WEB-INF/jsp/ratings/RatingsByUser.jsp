@@ -59,6 +59,13 @@
 					</div>		
 				</c:when>
 				<c:otherwise>
-					<p>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
+					<c:choose>
+						<c:when test="${isViewingOnesSelf }">
+							<p>You have not completed enough jobs in order to calculate a rating at this time</p>	
+						</c:when>
+						<c:otherwise>
+							<p>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
+						</c:otherwise>
+					</c:choose>
 				</c:otherwise>
 			</c:choose>

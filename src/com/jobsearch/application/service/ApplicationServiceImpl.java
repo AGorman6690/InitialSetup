@@ -979,6 +979,16 @@ public class ApplicationServiceImpl {
 	
 	public List<Application> getAcceptedApplications_byJobAndAtLeastOneWorkDay(int jobId,
 			List<WorkDay> workDays) {		
+		
+		
+		// **************************************************
+		// **************************************************
+		// Verify this is still needed after the logic for job edits is finalized.
+		// Review this later
+		// **************************************************
+		// **************************************************
+		
+		
 		return repository.getAcceptedApplications_byJobAndAtLeastOneWorkDay(jobId, workDays);
 	}
 
@@ -1015,8 +1025,8 @@ public class ApplicationServiceImpl {
 		return String.format("%.2f", (totalMinutes / 60) * Double.parseDouble(acceptedProposal.getAmount()));
 	}
 
-	public List<Application> getApplications_byUser_openAndAccepted(int userId) {
-		return repository.getApplications_byUser_openAndAccepted(userId);
+	public List<Application> getApplications_byUser_openOrAccepted(int userId) {
+		return repository.getApplications_byUser_openOrAccepted(userId);
 	}
 
 	public void updateFlag_applicantAcknowledgesAllPositionsAreFilled(HttpSession session, int applicationId) {
@@ -1027,5 +1037,19 @@ public class ApplicationServiceImpl {
 			updateApplicationFlag(application,
 					Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED, 1);
 		}		
+	}
+
+	public List<WorkDayDto> getWorkDayDtos_proposedWorkDays(int jobId, int userId, HttpSession session) {
+		
+		Application application = getApplication(jobId, userId);
+		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
+		if(application != null){
+			workDayDtos = getWorkDayDtos_proposedWorkDays(application.getApplicationId(), session);	
+		}		
+		return workDayDtos;
+	}
+
+	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
+		repository.deleteProposedWorkDays(workDays, applicationId);		
 	}
 }

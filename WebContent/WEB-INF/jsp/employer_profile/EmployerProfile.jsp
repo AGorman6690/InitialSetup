@@ -35,7 +35,7 @@
 	<!-- 					<th id="" class="job-status applicant-perspective">Offers waiting on you</th> -->
 						<th id="" class="job-status employment">Positions filled</th>
 						<th id="" class="job-status employment">Positions available</th>
-						<th></th>
+						<th id="edit"></th>
 					</tr>
 				</thead>
 				<tbody>

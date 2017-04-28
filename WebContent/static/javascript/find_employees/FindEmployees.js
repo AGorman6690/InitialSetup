@@ -102,6 +102,7 @@ $(document).ready(function(){
 	$("#posted-jobs [data-posted-job-id]").click(function(){
 		
 		var selectedJobId = $(this).attr("data-posted-job-id");
+		$("#jobId_getOnPageLoad").val(selectedJobId);
 		
 		executeAjaxCall_loadJobDto(selectedJobId);
 		

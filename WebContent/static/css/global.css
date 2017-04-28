@@ -26,7 +26,6 @@ body.waiting * {
 .mock-anchor{
     color: #5B7BA3;
     cursor:pointer;
-    font-size: 15px;    
 }
 
 .test111 a{
@@ -35,7 +34,6 @@ body.waiting * {
 
 .blue-btn{
     color: #337ab7;
-    font-size: 15px;
     padding:3px 7px;
 }
 
@@ -111,7 +109,7 @@ body {
   font-family: "Nunito", sans-serif !important;
 /*   letter-spacing: 0.75px; */
 
-  font-size: 15px;
+  font-size: 16px;
   
   
 /*   http://stackoverflow.com/questions/29682271/safari-kerning-issue-when-using-f-and-i */

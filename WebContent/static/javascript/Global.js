@@ -6,7 +6,7 @@ $(document).ready(function(){
 		executeAjaxCall_getEventCalendar();
 	})
 	
-	$("a").click(function(){
+	$("a.do-wait").click(function(){
 		broswerIsWaiting(true);
 	})
 	$("html").click(function(e){

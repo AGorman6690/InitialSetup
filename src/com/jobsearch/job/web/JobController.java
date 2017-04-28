@@ -1,5 +1,6 @@
 package com.jobsearch.job.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -159,6 +160,26 @@ public class JobController {
 		return "/view_job_employer/ApplicationSummary_ByWorkDay";
 	}
 	
+	@RequestMapping(value = "/job/{jobId}/employees/by-work-days", method = RequestMethod.POST)
+	public String getEmployees_byJobAndDates(Model model, HttpSession session,
+											@PathVariable(value = "jobId") int jobId,
+											@RequestBody List<String> dateStrings) {
+
+		jobService.setModel_getEmployees_byJobAndDate(model, session, jobId, dateStrings);
+		
+		return "/edit_job/Employees_ByDate";
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/delete-work-days", method = RequestMethod.POST)
+	@ResponseBody
+	public String editJob_deleteWorkDays(HttpSession session,
+											@PathVariable(value = "jobId") int jobId,
+											@RequestBody List<String> dateStrings_toDelete) {
+
+		jobService.deleteWorkDays(session, jobId, dateStrings_toDelete);
+		
+		return "";
+	}
 	
 	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
 	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
@@ -301,6 +322,8 @@ public class JobController {
 		return "/post_job/PostJob";
 	}
 	
+	
+	
 	@RequestMapping(value = "/job/{jobId}/rate-employer", method = RequestMethod.GET)
 	public String viewRateEmployer(@PathVariable(value= "jobId") int jobId,
 									Model model, HttpSession session) {
@@ -328,7 +351,25 @@ public class JobController {
 		else return SessionContext.get404Page();
 	}
 
+
+	@RequestMapping(value = "/job/{jobId}/user/{userId}/remove-remaining-work-days", method = RequestMethod.POST)
+	@ResponseBody
+	public String editJob_removeRemainingWorkDays_forUser(@PathVariable(value = "jobId") int jobId,
+													@PathVariable(value = "userId") int userId,
+													HttpSession session) {
+		
+		jobService.editJob_removeRemainingWorkDays_forUser(jobId, userId, session);
+		return "";
+	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/job/{jobId}/employee/{userId}/work-days", method = RequestMethod.GET)
+	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "jobId") int jobId,
+													@PathVariable(value = "userId") int userId,
+													HttpSession session) {
+
+		return JSON.stringify(applicationService.getWorkDayDtos_proposedWorkDays(jobId, userId, session));
+	}
 	
 	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
 	@ResponseBody
@@ -351,15 +392,15 @@ public class JobController {
 
 	}	
 	
-	@RequestMapping(value = "/job/{jobId}/edit/work-days/pre-process", method = RequestMethod.POST)
-	public String edotditJob(Model model, HttpSession session,
-							@PathVariable(value = "jobId") int jobId,
-							@RequestBody List<String> dateStrings_remove) {
-
-		if(jobService.setModel_editJob_removeWorkDays_preProcess(model, session, jobId, dateStrings_remove))
-			return "/edit_job/RemoveWorkDays_AffectedEmployees";
-		
-		else return SessionContext.get404Page();
-	}
+//	@RequestMapping(value = "/job/{jobId}/edit/work-days/pre-process", method = RequestMethod.POST)
+//	public String edotditJob(Model model, HttpSession session,
+//							@PathVariable(value = "jobId") int jobId,
+//							@RequestBody List<String> dateStrings_remove) {
+//
+//		if(jobService.setModel_editJob_removeWorkDays_preProcess(model, session, jobId, dateStrings_remove))
+//			return "/edit_job/RemoveWorkDays_AffectedEmployees";
+//		
+//		else return SessionContext.get404Page();
+//	}
 
 }

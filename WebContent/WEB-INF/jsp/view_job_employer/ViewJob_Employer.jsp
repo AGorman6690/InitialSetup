@@ -49,7 +49,7 @@
 		<c:if test="${context == 'waiting' }">
 			<div id="applicantsContainer" class="page-section pad-top-2">
 				<c:if test="${jobDto.job.flag_isNotAcceptingApplications == 0 }">
-					<div id="applicants" class="">
+					<div id="applicants" class="">				
 						<%@ include file="./Applicants.jsp" %>
 					</div>
 				</c:if>

@@ -1,3 +1,18 @@
+#affected-employees{
+	text-align: left;
+	color: #881c1c;
+	padding: 10px;
+	border-radius: 3px;
+	border: 2px solid #881c1c;
+	
+}
+#affected-employees-html{
+	min-height: 25px;
+/* 	display: none; */
+}
+#affected-employees p{
+	font-weight: bold;
+}
 #select-an-employee-cont{
 	margin: auto;
 }
@@ -44,15 +59,35 @@
 	line-height: normal;
 	width: 270px;
 }
-
+#employees p:hover{
+/* 	background: #cacaca; */
+	font-weight: bold;
+	border: 1px solid #888;
+	cursor: pointer;
+}
+#employees p{
+	padding: 10px;
+	width: auto;
+	font-size: 19px;
+}
+#edit-options .select-page-section.selected{
+	color: #fff;
+	font-weight: normal;
+}
 #save-edits:hover,
 #cancel-edits:hover{
 	text-decoration: underline;
 }
+#main-save-cancel-edits{
+	padding-bottom: 20px;
+	border-bottom: 1px solid #cacaca;
+	width: 500px;
+	margin: auto;
+}
 #save-edits,
 #cancel-edits,
 #approve-work-day-removal{
-	color: #163b3d;
+/* 	color: #163b3d; */
 	margin: 0px 7px;
 	cursor: pointer
 }
@@ -63,15 +98,17 @@
 }
 #cancel-edits,
 #cancel-work-day-removal{
-	font-size: 16px
+	font-size: 19px
 }
 td.original.not-selected{
 	background: #881c1c;
 	color: #fff;
-	position: relative;
 }
 .v2 td.original.not-selected a{
 	color: #fff;
+}
+.v2 td{
+	position: relative;
 }
 td.original.not-selected::after{
     font-family: 'Glyphicons Halflings';
@@ -82,6 +119,13 @@ td.original.not-selected::after{
     font-size: 28px;
     left: 50%;
     margin-left: -14px;
+}
+
+
+#dates-container .v2 td:not(.ui-datepicker-unselectable):hover,
+#employee-schedule-container .v2 td.original:hover{
+	cursor: pointer;
+	background: #cacaca;
 }
 td.active111:not(.original){
 /* 	background: #379c6a; */
@@ -100,8 +144,17 @@ td.active111:not(.original)::after{
 }
 
 
-
 #affected-employees{
 	width: 550px;
 	margin: auto;
+}
+#employee-schedule-container .calendar-container h3{
+	margin-bottom: 30px;
+}
+
+h3.h3{
+/* 	font-size: 26px; */
+}
+#verify-removal h3{
+	font-weight: normal;
 }

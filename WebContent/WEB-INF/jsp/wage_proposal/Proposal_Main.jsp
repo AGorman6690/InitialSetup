@@ -9,6 +9,7 @@
 		<c:choose>
 			<c:when test="${applicationDto.application.isAccepted == 1 }">
 				<p>Accepted</p>
+				<p>You are hired</p>
 			</c:when>
 			<c:otherwise>
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
@@ -48,12 +49,11 @@
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer deleted work days from the job posting that affect your employment.</p>
-									<p>The employer is required to submit you a new proposal.</p>
-									<p>Please review.</p>							
+									<p>The employer is required to submit you a new proposal.</p>						
 								</c:when>	
 								<c:otherwise>
-									<p>You deleted work days from the agreed upon proposal.</p>
-									<p>The applicant is reviewing your new proposal.</p>	
+									<p>You deleted work days from the previously agreed upon proposal.</p>
+									<p>You are required to submit a new proposal to the applicant.</p>	
 								</c:otherwise>
 							</c:choose>
 	
@@ -63,8 +63,7 @@
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer edited the start and end times that affect your employment.</p>
-									<p>The employer is required to submit you a new proposal.</p>
-									<p>Please review.</p>							
+									<p>The employer is required to submit you a new proposal.</p>						
 								</c:when>	
 								<c:otherwise>
 									<p>You edited the start and end times that affect your employment.</p>

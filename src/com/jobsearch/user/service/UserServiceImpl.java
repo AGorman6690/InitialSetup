@@ -371,7 +371,7 @@ public class UserServiceImpl {
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
 		
-		List<Application> applications = applicationService.getApplications_byUser_openAndAccepted(employee.getUserId());
+		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(employee.getUserId());
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();		
 	
 		for(Application application : applications){
@@ -731,7 +731,7 @@ public class UserServiceImpl {
 				
 		JobSearchUser sessionUser = SessionContext.getUser(session);	
 	
-		List<Application> applications = applicationService.getApplications_byUser_openAndAccepted(
+		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(
 				sessionUser.getUserId());		
 		
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();		
@@ -818,5 +818,9 @@ public class UserServiceImpl {
 		
 		model.addAttribute("userDto_ratings", userDto);
 				
+	}
+
+	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {		
+		return repository.getEmployees_byJobAndDate(jobId, dateStrings);
 	}
 }

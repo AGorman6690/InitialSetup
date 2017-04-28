@@ -36,6 +36,8 @@ public class WorkDay {
 	@JsonProperty("stringEndTime")
 	String stringEndTime
 	
+	Integer isComplete
+	
 	WorkDay(){
 		this.date = LocalDate.now()
 	}

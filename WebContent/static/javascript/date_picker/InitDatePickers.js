@@ -64,7 +64,7 @@ function initCalendar_new($calendar, workDayDtos){
 				
 				html_message = "<div class='message'>";
 				if(workDayDto.hasConflictingEmployment == "1"){
-					html_message += "<p>Busy</p>";
+					html_message += "<p>Other Emp.</p>";
 				}
 				html_message += "</div>";
 				

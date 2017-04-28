@@ -29,6 +29,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 
 
 @Repository
@@ -183,7 +184,8 @@ public class JobRepository {
 					e.setWorkDayId(rs.getInt("WorkDayId"));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
-					e.setDateId(rs.getInt("DateId"));					
+					e.setDateId(rs.getInt("DateId"));			
+					e.setIsComplete(rs.getInt("IsComplete"));
 					
 					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
 					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
@@ -328,6 +330,7 @@ public class JobRepository {
 			 createdJob.setId(result.getInt("JobId"));
 
 			 // Add the job's categories to the database
+			 /*
 			 for(Integer categoryId: jobDto.getCategoryIds()){
 				cStmt = jdbcTemplate.getDataSource().getConnection()
 							.prepareCall("{call insertJobCategories(?, ?)}");
@@ -337,6 +340,7 @@ public class JobRepository {
 
 				cStmt.executeQuery();
 			}
+			*/
 
 			// Add the questions
 			for(Question question : jobDto.getQuestions()){
@@ -1057,6 +1061,7 @@ public class JobRepository {
 						+ " JOIN employment e ON e.JobId = wd.JobId"
 						+ " JOIN job j ON e.JobId = j.JobId"
 						+ " WHERE e.UserId = ?"
+						+ " AND e.WasTerminated = 0"
 						+ " AND j.Status != ?"
 						+ " AND (";
 		
@@ -1215,6 +1220,35 @@ public class JobRepository {
 		String sql = "UPDATE job SET " + flag + " = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, jobId });
 	}
+
+	public List<WorkDay> getWorkDays_incomplete_byUser(int jobId, int userId) {
+		
+		String sql = "SELECT * FROM work_day wd WHERE wd.WorkDayId IN ("
+					+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd"
+					+ " JOIN employment e ON wd.JobId = e.JobId"
+					+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " WHERE e.UserId = ?"
+					+ " AND e.JobId = ?"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND e.WasTerminated = 0"
+					+ " AND wd.IsComplete = 0"
+					+ ")";
+					
+		return WorkDayMapper(sql, new Object[]{ userId, jobId });
+	}
+
+	public void updateWasTerminated(int jobId, int userId, int value) {
+		String sql = "UPDATE employment SET WasTerminated = ? WHERE JobId = ? AND UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });		
+	}
+
+	public void updateWorkDay_isComplete(int workDayId, int value) {
+		String sql = "UPDATE work_day SET IsComplete = ? WHERE WorkDayId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, workDayId });		
+	}
+
 
 }
 

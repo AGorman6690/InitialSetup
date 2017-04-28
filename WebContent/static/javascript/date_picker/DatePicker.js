@@ -197,6 +197,12 @@ function getMonthsSpan(dateArray) {
 	}	
 }
 
+function getMinDateFromDateArray(dateArray){
+	if(dateArray.length > 0){
+		return new Date(Math.min.apply(null, dateArray));
+	}	
+}
+
 function getMinDate($calendar){
 	
 	var dateString = $calendar.attr("data-min-date");

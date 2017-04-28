@@ -65,7 +65,7 @@
 <!-- 			<div  class="filter-value"></div> -->
 <!-- 		</div>	 -->
 		
-		<div><button id="findEmployees" class="sqr-btn teal">Get Employees</button></div>
+		<div><button id="findEmployees" class="sqr-btn green">Get Results</button></div>
 	</div>
 	<div id="resultsContainer">
 		<h3>Results</h3>

@@ -11,7 +11,7 @@
 }
 .expiration-time-cont p{
     margin: 14px auto;
-    width: 400px;
+/*     width: 400px; */
 }
 span.expiration-time{
     font-weight: bold;
@@ -190,7 +190,7 @@ input.counter-wage-amount{
 
 .application-proposal-container .proposal-item{
 	display: inline-block;
-	padding: 0px 25px;
+	padding: 0px 18px;
 	text-align: left;
 }
 .application-proposal-container{
@@ -216,22 +216,29 @@ input.counter-wage-amount{
 }
 .application-proposal-container.action-required{
 /* 	background: #bb6f6f; */
-/* 	background: #e0d5d5; */
+	background: #e0d5d5;
 /* 	background: #f3efef; */
-	background: #e2dddd;
+/* 	background: #e2dddd; */
+	border: 2px solid #cacaca;
 /* 	color: #fff; */
-    border: 7px solid #904d4d;
+/*     border: 7px solid #904d4d; */
+
     
 
 }
 td .application-proposal-container.accepted{
-    background: #d8e6e1;
+    background: #93c1b6;
 /*     border: 2px solid #002f0f; */
+/* 	background: #7ca79d; */
 /* 	background: #fff; */
-    border: 7px solid #4b6b64;   
+/*     border: 7px solid #7ca79d;   */
+    border: 2px solid #cacaca;
+/* 	border: 7px solid #3d524d; */
+/* 	font-size: 17px; */
+     
 }
 .application-proposal-container{
-	padding: 20px 0px;
+	padding: 20px 10px;
 	border: 2px solid #cacaca;
 	border-radius: 4px;	
 }

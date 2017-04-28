@@ -1,3 +1,6 @@
+th#edit{
+	background: #e4e4e4;
+}
 th#start-time,
 th#end-time,
 th#job-name{
@@ -83,6 +86,7 @@ table.main-table-style thead {
 td.job-location span{
 	border-right: 2px solid #cacaca;
     display: inline-block;
+    min-height
 }
 
 td button.replace-an-employee{

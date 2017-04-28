@@ -542,4 +542,34 @@ public class UserRepository {
 		
 	}
 
+	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {
+		
+		String sql = "SELECT * FROM user u WHERE u.UserId IN ("
+					+ " SELECT DISTINCT u.UserId FROM user u"
+					+ " JOIN application a ON u.UserId = a.UserId"
+					+ " JOIN employment e ON a.JobId = e.JobId AND a.UserId = e.UserId"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " JOIN date d ON wd.DateId = d.Id"
+					+ " WHERE e.JobId = ?"
+					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND e.WasTerminated = 0"
+					+ " AND (" ;
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(jobId);
+		
+		boolean isFirst = true;
+		for(String dateString : dateStrings){
+			if(!isFirst) sql += " OR ";
+			sql += " d.Id = ?";
+			args.add(jobService.getDateId(dateString));
+			isFirst = false;
+		}		
+		sql += ") )";
+		
+		return JobSearchUserRowMapper(sql,  args.toArray() );
+	}
+
 }

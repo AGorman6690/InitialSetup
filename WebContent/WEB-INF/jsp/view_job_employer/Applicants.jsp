@@ -17,26 +17,10 @@
 			</c:forEach>								
 		</div>
 
-
-<!-- 		<div id="changeLayout_applicants"> -->
-<!-- 			<span id="tableView_applicants">Table View</span> -->
-<!-- 			<span id="tileView_applicants">Tile View</span> -->
-<!-- 		</div> -->
-	
 		<table id="applicantsTable" class="main-table-style table-view shadow
 			${jobDto.job.isPartialAvailabilityAllowed ? 'has-work-days' : '' }
 			${jobDto.questions.size() > 0 ? 'has-answers' : ''}">
 			<thead>
-<!-- 				<tr> -->
-<!-- 					<th id="" class="table-view" colspan="1"></th> -->
-<%-- 					<th id="" class="table-view span tile-view" colspan="${jobDto.job.isPartialAvailabilityAllowed ? 3 : 2 }">Proposal</th> --%>
-<!-- 					<th id="" class="table-view tile-view" colspan="1"></th> -->
-<%-- 				<c:if test="${jobDto.questions.size() > 0 }"> --%>
-<!-- 					<th id="" class="table-view" colspan="1"></th> -->
-<%-- 				</c:if> --%>
-<!-- 					<th id="" class="table-view tile-view" colspan="1"></th> -->
-<!-- 				</tr> -->
-			
 				<tr>
 				
 					<th id="applicantName" class="left header-dropdown table-view tile-view"
@@ -44,22 +28,9 @@
 					
 						<span data-toggle-id="filterApplicationStatus" >
 							<span class="favorite-flag glyphicon glyphicon glyphicon-star-empty"></span>						
-<!-- 							Name<span class="glyphicon glyphicon-menu-down"></span> -->
 						</span>
 						<div id="filterApplicationStatus" class="dropdown-container filter-container checkbox-container">
-<!-- 							<span class="approve-filter glyphicon glyphicon-ok"></span> -->
-							
-<!-- 							<label class="select-all-container"> -->
-<!-- 								<input id="filterOption_wageProposal_selectAll" class="select-all" -->
-<!-- 									type="checkbox" name="wage-prpoposal-status" -->
-<!-- 									>Select All -->
-<!-- 							</label> -->
 							<div class="options">
-<!-- 								<label> -->
-<!-- 									<input id="" type="checkbox" -->
-<!-- 										name="application-status" -->
-<!-- 										data-filter-attr-value="0">No action taken -->
-<!-- 								</label> -->
 								<label>
 									<input id="" type="radio"
 										name="application-status"
@@ -111,12 +82,6 @@
 															class="show-question-and-answers">
 															<span></span>
 													</label>																									
-	<!-- 												<label> -->
-	<!-- 													<input type="checkbox" checked -->
-	<%-- 														name="show-question-${question.questionId }" --%>
-	<!-- 														class="filter-answers"> -->
-	<!-- 														<span>Filter Answers</span> -->
-	<!-- 												</label> -->
 												</td>
 												<td class="question">${question.text }</td>
 												<td class="answers answers-container">
@@ -242,47 +207,11 @@
 								</c:otherwise>
 							</c:choose>
 						</td>
-					</c:if>							
-
-	
-					<td class="tile-view" colspan="99">
-						<div class="image-container">
-							<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">
-						</div>
-						<div class="info-container">
-							<div>
-								<p class="name">
-									<a class="accent" href="#">
-											 ${applicationDto.applicantDto.user.firstName }</a>
-								</p>
-								<p>
-									<input name="input-1" class="rating-loading"
-											value="${applicationDto.applicantDto.ratingValue_overall }	">
-									${applicationDto.applicantDto.ratingValue_overall }						
-								</p>
-							</div>
-							<div class="proposal-container">
-								<h3>Proposal</h3>
-								<p>$ ${applicationDto.employmentProposalDto.amount }</p>
-								<p>${fn:length(applicationDto.dateStrings_availableWorkDays) } of ${fn:length(applicationDto.jobDto.workDays) } days</p>
-							</div>
-							<div class="answer-container">
-								<c:forEach items="${applicationDto.questions }" var="question">
-									<p>${question.text }</p>
-									<p>
-										<c:forEach items="${question.answers }" var="answer" varStatus="status">
-											${answer.text}${!status.last ? ',' : ''}			
-										</c:forEach>
-									</p>									
-								</c:forEach>
-								
-							</div>
-						</div>
-					</td>
+					</c:if>	
 					<td>
 						<%@ include file="../wage_proposal/Proposal_Main.jsp" %>
-					</td>
-					
+					</td>						
+
 				</tr>				
 
 			</c:forEach>						

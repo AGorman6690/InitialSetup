@@ -1,9 +1,21 @@
+.width-500{
+	width: 500px;
+	margin: auto;
+}
+.bold{
+	font-weight: bold;
+}
+.hide-on-load{
+	display: none;
+}
 h3.h3{
     font-size: 20px;
     font-weight: bold;
     color: #197994;
 }
-
+h3.h3.green{
+	color: #163b3d;
+}
 body{
 	margin-bottom: 75px;
 }
@@ -104,7 +116,9 @@ input, select, textarea{
 	padding: 9px 13px;
 	font-size: 16px;
 }
-
+.sqr-btn:hover{
+	cursor: pointer;
+}
 .sqr-btn.gray{
 	padding: 15px 20px;
 	color: #000000;
@@ -131,7 +145,6 @@ input, select, textarea{
 
 
 .accent{
-    font-size: 15px;
     font-weight: bold;
 /*     color: #5B7BA3; */
 	color:#6d8aaf;

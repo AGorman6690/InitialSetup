@@ -794,12 +794,14 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ applicationId, workDayId }, Integer.class);
 	}
 	
-	public List<Application> getApplications_byUser_openAndAccepted(int userId) {
+	public List<Application> getApplications_byUser_openOrAccepted(int userId) {
 		
 		String sql = "SELECT * FROM application a"
 					+ " JOIN job j ON a.JobId = j.JobId"
+					+ " LEFT JOIN employment e ON j.JobId = e.JobId" // do not include any employment has that has been terminated
 					+ " WHERE j.Status != ?"
 					+ " AND a.UserId = ?"
+					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
 					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1 )";
 		
 		return ApplicationRowMapper(sql, new Object[]{ Job.STATUS_PAST, userId });
@@ -848,6 +850,30 @@ public class ApplicationRepository {
 	public void updateApplicationFlag(int applicationId, String flag, int value) {
 		String sql = "UPDATE application SET " + flag + " = ? WHERE ApplicationId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, applicationId });		
+	}
+
+
+	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
+		String sql = "DELETE FROM employment_proposal_work_day ep"
+					+ " JOIN wage_proposal wp ON ep.EmploymentProposalId = wp.WageProposalId"
+					+ " WHERE wp.IsCurrentProposal = 1"
+					+ " AND wp.ApplicationId = ?"
+					+ " AND (";
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(applicationId);
+		
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			if(!isFirst) sql += " OR";
+			sql += " ep.WorkDayId = ?";
+			args.add(workDay.getWorkDayId());
+			isFirst = false;
+		}
+		sql += ")";
+		
+		jdbcTemplate.update(sql, args.toArray());
+		
 	}
 
 }

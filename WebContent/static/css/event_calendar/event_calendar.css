@@ -47,7 +47,8 @@
 #user-event-calendar .calendar-container .calendar td.employment,
 #user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
 /* 	background: #629a6f; */
-	background: #7ec3b4;
+/* 	background: #7ec3b4; */
+	background: #7ca79d;
 	cursor: pointer;
 }
 
