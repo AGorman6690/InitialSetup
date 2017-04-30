@@ -22,8 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;

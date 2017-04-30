@@ -36,10 +36,10 @@ public class UserRepository {
 
 	@Autowired
 	JobServiceImpl jobService;
-	
+
 	@Autowired
 	VerificationServiceImpl verificationService;
-	
+
 	public JobSearchUser getUser(int userId) {
 
 		String sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where userid = ?";
@@ -103,8 +103,8 @@ public class UserRepository {
 		// Address this later.
 		// *******************************************************
 		// *******************************************************
-		
-		
+
+
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
@@ -132,7 +132,7 @@ public class UserRepository {
 		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
-				
+
 				try {
 					JobSearchUser e = new JobSearchUser();
 					e.setUserId(rs.getInt("UserId"));
@@ -149,7 +149,7 @@ public class UserRepository {
 					e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 					e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
 					e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
-					e.setAbout(rs.getString("About"));
+//					e.setAbout(rs.getString("About"));
 //					Profile profile = new Profile();
 //					profile.setName(rs.getString("p.ProfileType"));
 
@@ -191,14 +191,14 @@ public class UserRepository {
 
 			@Override
 			public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {
-				
+
 				RateCriterion e = new RateCriterion();
-				
+
 				e.setRateCriterionId(rs.getInt("RateCriterionId"));
 				e.setName(rs.getString("Name"));
 				e.setIsUsedToRateEmployee(rs.getBoolean("IsUsedToRateEmployee"));
 				e.setShortName(rs.getString("ShortName"));
-				
+
 				return e;
 			}
 		});
@@ -303,7 +303,7 @@ public class UserRepository {
 
 	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
 
-		
+
 		// *******************************************************************
 		// *******************************************************************
 		// NOTE: If the employee search is no longer considering whether a job allows partial availability,
@@ -311,19 +311,19 @@ public class UserRepository {
 		// Review this.
 		// *******************************************************************
 		// *******************************************************************
-		
-		
-		
+
+
+
 		// **********************************
-		// ADD NOTE ABOUT EXCLUDING AND INCLUDIND APPLICANTS FOR A PARTICULAR JOB	
+		// ADD NOTE ABOUT EXCLUDING AND INCLUDIND APPLICANTS FOR A PARTICULAR JOB
 		// Summary:
 		// 1) The sub query for the distance between each employee's home location
 		// 		and the requested filter location is required.
 		// 2) The sub query for availability is optional.
-		//		2a) If availability is specified, then it is ensured that 
+		//		2a) If availability is specified, then it is ensured that
 		//			each potential employee's employment does not conflict
 		//			with the specified days in the search
-		//		2b) Note the query differences for whether partial availability is allowed  
+		//		2b) Note the query differences for whether partial availability is allowed
 		// 3) The sub query for categories is optional.
 		// **********************************
 
@@ -332,21 +332,21 @@ public class UserRepository {
 		// ***************************************************
 		String sql = "SELECT * FROM user u";
 		List<Object> argsList = new ArrayList<Object>();
-				
+
 
 
 		if(employeeSearch.getJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays() != null){
 			sql += " JOIN application ap on u.UserId = ap.UserId AND ap.JobId = ?";
 			argsList.add(employeeSearch.getJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays());
-		}	
-		
+		}
+
 		// ********************************************
 		// Distance sub query
-		// ********************************************	
+		// ********************************************
 		// This returns all user ids having a distance between the user's
 		// home location and job location that is less than or equal to the
 		// user's max-distance-willing-to-travel.
-		// This sub query is always required.		
+		// This sub query is always required.
 		sql += " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( u.HomeLat ) ) * cos( radians( u.HomeLng ) - radians(?) ) "
 										+ "+ sin( radians(?) ) * sin( radians( u.HomeLat ) ) ) ) <= u.MaxWorkRadius ";
 
@@ -354,13 +354,13 @@ public class UserRepository {
 		argsList.add(employeeSearch.getJobDto().getJob().getLng());
 		argsList.add(employeeSearch.getJobDto().getJob().getLat());
 
-		
+
 		// ********************************************
 		// Availability sub query
-		// ********************************************	
+		// ********************************************
 		String subQuery_Dates = null;
 		if (verificationService.isListPopulated(employeeSearch.getJobDto().getWorkDays())) {
-			
+
 			// Start the availability sub query
 			subQuery_Dates = " AND u.UserId NOT IN (";
 
@@ -369,22 +369,22 @@ public class UserRepository {
 			// If Partial availability is allowed.
 			// A user id is selected if the user has availability
 			// on **AT LEAST 1** of the requested days.
-			// *************************************				
-			subQuery_Dates += " SELECT DISTINCT(u3.UserId) FROM user u3";		
-			
+			// *************************************
+			subQuery_Dates += " SELECT DISTINCT(u3.UserId) FROM user u3";
+
 			int i = 0;
 			for(WorkDay workDay : employeeSearch.getJobDto().getWorkDays()){
-									
+
 					subQuery_Dates += " JOIN availability a" + i
 									+ " ON u3.UserId = a" + i + ".UserId"
-									+ " AND a" + i + ".DateId = ?";						
+									+ " AND a" + i + ".DateId = ?";
 //					}
 
-				i += 1;							
+				i += 1;
 				argsList.add(jobService.getDateId(workDay.getStringDate()));
 			}
 
-			subQuery_Dates += " UNION"; 
+			subQuery_Dates += " UNION";
 
 			// **************************************************
 			// Sub query to verify employment does not conflict with requested days.
@@ -392,26 +392,26 @@ public class UserRepository {
 			// **************************************************
 			subQuery_Dates += " SELECT DISTINCT(u4.UserId) FROM user u4";
 			subQuery_Dates += " JOIN employment e ON u4.UserId = e.UserId";
-			
+
 			i = 0;
 			for (WorkDay workDay : employeeSearch.getJobDto().getWorkDays()) {
-				
+
 				subQuery_Dates += " JOIN work_day wd" + i
 						 			+ " ON e.JobId = wd" + i + ".JobId"
-						 			+ " AND wd" + i + ".DateId = ?";					
-				
+						 			+ " AND wd" + i + ".DateId = ?";
+
 				argsList.add(jobService.getDateId(workDay.getStringDate()));
 				i += 1;
-			}	
-			
+			}
+
 			// Exclude **ALL** applicants of this job
 			if(employeeSearch.getJobDto().getJob().getId() != null){
 				subQuery_Dates += " UNION";
 				subQuery_Dates += " SELECT ap.UserId FROM application ap WHERE ap.JobId = ?";
 				argsList.add(employeeSearch.getJobDto().getJob().getId());
 			}
-			
-			
+
+
 			// Exclude applicants who applied for a particular day.
 			// *****************************
 			// Note: currently this is only built for one work day.
@@ -427,20 +427,20 @@ public class UserRepository {
 				subQuery_Dates += " WHERE wp.IsCurrentProposal = 1";
 				subQuery_Dates += " AND wd.DateId = ?";
 				subQuery_Dates += " AND ap.JobId = ?";
-				
+
 				argsList.add(jobService.getDateId(employeeSearch.getJobDto().getWorkDays().get(0).getStringDate()));
 				argsList.add(employeeSearch.getJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays());
-				
+
 			}
-			
+
 			subQuery_Dates += " ) "; // Close the sub query
-							
+
 		}
 
-		// Build the query string		
+		// Build the query string
 //		sql_mainQuery += whereCondition_distance;
 		if(subQuery_Dates != null) sql += subQuery_Dates;
-		
+
 		// close the sub queries
 //		for (int i = 0; i < subQueryCount; i++) {
 //			sql += ")";
@@ -477,7 +477,7 @@ public class UserRepository {
 				new Object[] { coordinate.getLatitude(), coordinate.getLongitude(),
 						user_edited.getHomeCity(), user_edited.getHomeState(),
 						user_edited.getHomeZipCode(), user_edited.getUserId() });
-		
+
 	}
 
 	public void updateMaxDistanceWillingToWork(int userId, Integer maxWorkRadius) {
@@ -500,20 +500,20 @@ public class UserRepository {
 	}
 
 	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {
-		
+
 		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, Value, RatedByUserId)"
 					+ " VALUES (?, ?, ?, ?, ?)";
-		
+
 		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId,
 											RateCriterion.VALUE_NOT_YET_RATED, ratedByUserId });
-		
+
 	}
 
 	public void insertEmployment(int userId, int jobId) {
-		
+
 		String sql = "INSERT INTO employment ( UserId, JobId, WasTerminated ) VALUES( ?, ?, 0)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId } );
-		
+
 	}
 
 	public Double getRating_byJobAndUser(Integer jobId, int userId) {
@@ -527,7 +527,7 @@ public class UserRepository {
 	}
 
 	public Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
-		
+
 		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ? AND Value > -1";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterionId }, Double.class);
@@ -539,11 +539,11 @@ public class UserRepository {
 	public void updateAbout(int userId, String about) {
 		String sql = "UPDATE user SET About = ? WHERE UserId = ?";
 		jdbcTemplate.update(sql, new Object[]{ about, userId });
-		
+
 	}
 
 	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {
-		
+
 		String sql = "SELECT * FROM user u WHERE u.UserId IN ("
 					+ " SELECT DISTINCT u.UserId FROM user u"
 					+ " JOIN application a ON u.UserId = a.UserId"
@@ -556,19 +556,19 @@ public class UserRepository {
 					+ " AND wp.IsCurrentProposal = 1"
 					+ " AND e.WasTerminated = 0"
 					+ " AND (" ;
-		
+
 		List<Object> args = new ArrayList<Object>();
 		args.add(jobId);
-		
+
 		boolean isFirst = true;
 		for(String dateString : dateStrings){
 			if(!isFirst) sql += " OR ";
 			sql += " d.Id = ?";
 			args.add(jobService.getDateId(dateString));
 			isFirst = false;
-		}		
+		}
 		sql += ") )";
-		
+
 		return JobSearchUserRowMapper(sql,  args.toArray() );
 	}
 

@@ -1,8 +1,8 @@
 package com.jobsearch.model
 
-import java.awt.TexturePaintContext.Int;
+import java.awt.TexturePaintContext.Int
 
-import com.jobsearch.job.service.JobDTO;
+import com.jobsearch.job.web.JobDTO;;
 
 public class EmployeeSearch {
 	JobDTO jobDto;

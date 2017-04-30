@@ -4,7 +4,7 @@ import java.awt.TexturePaintContext.Int;
 import java.util.List;
 
 import com.jobsearch.job.service.Job
-import com.jobsearch.job.service.JobDTO
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.Answer
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUserDTO

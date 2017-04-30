@@ -17,10 +17,10 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.RateCriterion;
@@ -29,8 +29,6 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
-import com.sun.org.apache.bcel.internal.generic.RETURN;
-
 
 @Repository
 public class JobRepository {
@@ -52,7 +50,7 @@ public class JobRepository {
 
 	@Autowired
 	VerificationServiceImpl verificationService;
-	
+
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
 		try {
@@ -62,7 +60,6 @@ public class JobRepository {
 				@Override
 				public Job mapRow(ResultSet rs, int rownumber) throws SQLException {
 					Job e = new Job();
-
 
 					int jobId = rs.getInt("JobId");
 
@@ -82,82 +79,65 @@ public class JobRepository {
 					e.setStreetAddress_formatted(rs.getString("StreetAddress_Formatted"));
 					e.setCity_formatted(rs.getString("City_Formatted"));
 					e.setZipCode_formatted(rs.getString("ZipCode_Formatted"));
-										
+
 					e.setFlag_isNotAcceptingApplications(rs.getInt(Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS));
-					
+
 					e.setStartDate(jobService.getStartDate(jobId));
 					e.setEndDate(jobService.getEndDate(jobId));
 					e.setStartTime(jobService.getStartTime(jobId));
 					e.setEndTime(jobService.getEndTime(jobId));
-					
-					
 
-					//************************************************************************					
-					//Once the method of storing work days is decided,
-					//then remove these try blocks.
-					//************************************************************************
+					// ************************************************************************
+					// Once the method of storing work days is decided,
+					// then remove these try blocks.
+					// ************************************************************************
 					try {
-						e.setStartDate_local(jobService.getStartLocalDate(jobId));	
+						e.setStartDate_local(jobService.getStartLocalDate(jobId));
 					} catch (Exception e2) {
 						e.setStartDate_local(null);
 					}
-					
+
 					try {
-						e.setEndDate_local(jobService.getEndLocalDate(jobId));	
+						e.setEndDate_local(jobService.getEndLocalDate(jobId));
 					} catch (Exception e2) {
 						e.setEndDate_local(null);
 					}
 					try {
-						e.setStartTime_local(jobService.getStartLocalTime(jobId));	
+						e.setStartTime_local(jobService.getStartLocalTime(jobId));
 					} catch (Exception e2) {
 						e.setStartTime_local(null);
 					}
-					
+
 					try {
-						e.setEndTime_local(jobService.getEndLocalTime(jobId));	
+						e.setEndTime_local(jobService.getEndLocalTime(jobId));
 					} catch (Exception e2) {
 						e.setEndTime_local(null);
 					}
-					
-					
-									
-					
-					//The default **string** time format is, for example,: "3:30 PM"
-					if (e.getStartTime() != null){
-						e.setStringStartTime(DateUtility.formatSqlTime(e.getStartTime(), "h:mm a"));	
+
+					// The default **string** time format is, for example,:
+					// "3:30 PM"
+					if (e.getStartTime() != null) {
+						e.setStringStartTime(DateUtility.formatSqlTime(e.getStartTime(), "h:mm a"));
 					}
-					
-					if(e.getEndTime() != null){
-						e.setStringEndTime(DateUtility.formatSqlTime(e.getEndTime(), "h:mm a"));	
+
+					if (e.getEndTime() != null) {
+						e.setStringEndTime(DateUtility.formatSqlTime(e.getEndTime(), "h:mm a"));
 					}
-					
-					//The default **string" date format is, for example,: "Sun Dec 25, 2017"
-					if (e.getStartTime() != null){
-						if(e.getStartDate_local().getYear() == LocalDate.now().getYear())
+
+					// The default **string" date format is, for example,: "Sun
+					// Dec 25, 2017"
+					if (e.getStartTime() != null) {
+						if (e.getStartDate_local().getYear() == LocalDate.now().getYear())
 							e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d"));
 						else
 							e.setStringStartDate(DateUtility.formatSqlDate(e.getStartDate(), "E MMM d, y"));
 					}
-					
-					if(e.getEndDate() != null){
-						if(e.getEndDate_local().getYear() == LocalDate.now().getYear())
+
+					if (e.getEndDate() != null) {
+						if (e.getEndDate_local().getYear() == LocalDate.now().getYear())
 							e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d"));
 						else
 							e.setStringEndDate(DateUtility.formatSqlDate(e.getEndDate(), "E MMM d, y"));
-					}					
-					
-
-					//Set duration
-//					DateTime dtStart = new DateTime(e.getStartDate());
-//					DateTime dtEnd = new DateTime(e.getEndDate());
-//					e.setDuration(Days.daysBetween(dtStart, dtEnd).getDays());
-					
-					try {
-//						e.setStartDate(rs.getDate("work_day_StartDate"));
-//						e.setEndDate(rs.getDate("work_day_EndDate"));
-					} catch (Exception e2) {
-						// TODO: handle exception
-						Job r = new Job();
 					}
 
 					return e;
@@ -172,44 +152,44 @@ public class JobRepository {
 
 	public List<WorkDay> WorkDayMapper(String sql, Object[] args) {
 
-		try{
+		try {
 
 			return jdbcTemplate.query(sql, args, new RowMapper<WorkDay>() {
 
 				@Override
 				public WorkDay mapRow(ResultSet rs, int rownumber) throws SQLException {
-					
+
 					WorkDay e = new WorkDay();
-					
+
 					e.setWorkDayId(rs.getInt("WorkDayId"));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
-					e.setDateId(rs.getInt("DateId"));			
+					e.setDateId(rs.getInt("DateId"));
 					e.setIsComplete(rs.getInt("IsComplete"));
-					
-					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
+
+					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));
 					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
 					return e;
 				}
 			});
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return null;
 		}
 
 	}
-	
+
 	public List<Skill> SkillRowMapper(String sql, Object[] args) {
 
-		try{
+		try {
 
 			return jdbcTemplate.query(sql, args, new RowMapper<Skill>() {
 
 				@Override
 				public Skill mapRow(ResultSet rs, int rownumber) throws SQLException {
-					
+
 					Skill e = new Skill();
-										
+
 					e.setSkillId(rs.getInt("SkillId"));
 					e.setText(rs.getString("Text"));
 					e.setType(rs.getInt("Type"));
@@ -218,139 +198,136 @@ public class JobRepository {
 				}
 			});
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return null;
 		}
 
 	}
-	
+
 	public List<FindJobFilterDTO> FindJobFilterDtoMapper(String sql, Object[] args) {
 
-		try{
+		try {
 
 			return jdbcTemplate.query(sql, args, new RowMapper<FindJobFilterDTO>() {
 
 				@Override
 				public FindJobFilterDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
-					
-					FindJobFilterDTO e = new FindJobFilterDTO();
-					
-					e.setId(rs.getInt("Id"));
-										
-					e.setStartDate(rs.getDate("StartDate"));					
-					e.setBeforeStartDate(rs.getBoolean("IsBeforeStartDate"));
-					
-					e.setStartTime(rs.getTime("StartTime"));
-					e.setBeforeStartTime(rs.getBoolean("IsBeforeStartTime"));
-					
-					e.setEndDate(rs.getDate("EndDate"));
-					e.setBeforeEndDate(rs.getBoolean("IsBeforeEndDate"));
-					
-					e.setEndTime(rs.getTime("EndTime"));
-					e.setBeforeEndTime(rs.getBoolean("IsBeforeEndTime"));
-					
-					e.setDuration(rs.getDouble("Duration"));
-					if(e.getDuration() <= 0) e.setDuration(null);
-					e.setIsShorterThanDuration(rs.getBoolean("IsShorterThanDuration"));
 
-					e.setSavedName(rs.getString("Name"));
-					e.setCity(rs.getString("City"));
-					e.setState(rs.getString("State"));
-					e.setZipCode(rs.getString("ZipCode"));
-					e.setRadius(rs.getInt("Radius"));
-					e.setEmailFrequencyId(rs.getInt("EmailFrequencyId"));
-					e.setUserId(rs.getInt("UserId"));
-					
+					FindJobFilterDTO jobFilterDTO = buildJobFilterResult(rs);
 
 					// Set Local Dates and Local Times
 					try {
-						e.setStartDate_local(e.getStartDate().toLocalDate());
+						jobFilterDTO.setStartDate_local(jobFilterDTO.getStartDate().toLocalDate());
 					} catch (Exception e2) {
 						// TODO: handle exception
 					}
-					
+
 					try {
-						e.setEndDate_local(e.getEndDate().toLocalDate());
+						jobFilterDTO.setEndDate_local(jobFilterDTO.getEndDate().toLocalDate());
 					} catch (Exception e2) {
 						// TODO: handle exception
 					}
-					
+
 					try {
-						e.setStartTime_local(e.getStartTime().toLocalTime());
+						jobFilterDTO.setStartTime_local(jobFilterDTO.getStartTime().toLocalTime());
 					} catch (Exception e2) {
 						// TODO: handle exception
 					}
-					
+
 					try {
-						e.setEndTime_local(e.getEndTime().toLocalTime());
+						jobFilterDTO.setEndTime_local(jobFilterDTO.getEndTime().toLocalTime());
 					} catch (Exception e2) {
 						// TODO: handle exception
 					}
-					
-					
-					return e;
+
+					return jobFilterDTO;
 				}
 			});
 
-		}catch(Exception e){
+		} catch (Exception e) {
 			return null;
 		}
 
 	}
-	
-	
+
+	protected FindJobFilterDTO buildJobFilterResult(ResultSet rs) {
+		FindJobFilterDTO jobFilterDTO = new FindJobFilterDTO();
+		try {
+			jobFilterDTO.setId(rs.getInt("Id"));
+
+			jobFilterDTO.setStartDate(rs.getDate("StartDate"));
+			jobFilterDTO.setBeforeStartDate(rs.getBoolean("IsBeforeStartDate"));
+
+			jobFilterDTO.setStartTime(rs.getTime("StartTime"));
+			jobFilterDTO.setBeforeStartTime(rs.getBoolean("IsBeforeStartTime"));
+
+			jobFilterDTO.setEndDate(rs.getDate("EndDate"));
+			jobFilterDTO.setBeforeEndDate(rs.getBoolean("IsBeforeEndDate"));
+
+			jobFilterDTO.setEndTime(rs.getTime("EndTime"));
+			jobFilterDTO.setBeforeEndTime(rs.getBoolean("IsBeforeEndTime"));
+
+			jobFilterDTO.setDuration(rs.getDouble("Duration"));
+
+			if (jobFilterDTO.getDuration() <= 0) {
+				jobFilterDTO.setDuration(null);
+			}
+
+			jobFilterDTO.setIsShorterThanDuration(rs.getBoolean("IsShorterThanDuration"));
+
+			jobFilterDTO.setSavedName(rs.getString("Name"));
+			jobFilterDTO.setCity(rs.getString("City"));
+			jobFilterDTO.setState(rs.getString("State"));
+			jobFilterDTO.setZipCode(rs.getString("ZipCode"));
+			jobFilterDTO.setRadius(rs.getInt("Radius"));
+			jobFilterDTO.setEmailFrequencyId(rs.getInt("EmailFrequencyId"));
+			jobFilterDTO.setUserId(rs.getInt("UserId"));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return jobFilterDTO;
+	}
 
 	public void addJob(JobDTO jobDto, JobSearchUser user) {
 
 		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall(
-					"{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			 cStmt.setString(1, jobDto.getJob().getJobName());
-			 cStmt.setInt(2, user.getUserId());
-			 cStmt.setString(3, jobDto.getJob().getDescription());
-			 cStmt.setString(4, jobDto.getJob().getStreetAddress());
-			 cStmt.setString(5, jobDto.getJob().getCity());
-			 cStmt.setString(6, jobDto.getJob().getState());
-			 cStmt.setString(7, jobDto.getJob().getZipCode());
-			 cStmt.setFloat(8,  jobDto.getJob().getLat());
-			 cStmt.setFloat(9,  jobDto.getJob().getLng());
-			 cStmt.setInt(10,  Job.STATUS_FUTURE);
-			 cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
-			 cStmt.setInt(12, jobDto.getJob().getPositionsPerDay());
-			 cStmt.setString(13,  jobDto.getJob().getStreetAddress_formatted());
-			 cStmt.setString(14, jobDto.getJob().getCity_formatted());
-			 cStmt.setString(15, jobDto.getJob().getZipCode_formatted());
+			cStmt.setString(1, jobDto.getJob().getJobName());
+			cStmt.setInt(2, user.getUserId());
+			cStmt.setString(3, jobDto.getJob().getDescription());
+			cStmt.setString(4, jobDto.getJob().getStreetAddress());
+			cStmt.setString(5, jobDto.getJob().getCity());
+			cStmt.setString(6, jobDto.getJob().getState());
+			cStmt.setString(7, jobDto.getJob().getZipCode());
+			cStmt.setFloat(8, jobDto.getJob().getLat());
+			cStmt.setFloat(9, jobDto.getJob().getLng());
+			cStmt.setInt(10, Job.STATUS_FUTURE);
+			cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
+			cStmt.setInt(12, jobDto.getJob().getPositionsPerDay());
+			cStmt.setString(13, jobDto.getJob().getStreetAddress_formatted());
+			cStmt.setString(14, jobDto.getJob().getCity_formatted());
+			cStmt.setString(15, jobDto.getJob().getZipCode_formatted());
 
-			 ResultSet result = cStmt.executeQuery();
+			ResultSet result = cStmt.executeQuery();
 
-			 // Set the newly created job
-			 Job createdJob = new Job();
-			 result.next();
-			 createdJob.setId(result.getInt("JobId"));
-
-			 // Add the job's categories to the database
-			 /*
-			 for(Integer categoryId: jobDto.getCategoryIds()){
-				cStmt = jdbcTemplate.getDataSource().getConnection()
-							.prepareCall("{call insertJobCategories(?, ?)}");
-
-				cStmt.setInt(1, createdJob.getId());
-				cStmt.setInt(2, categoryId);
-
-				cStmt.executeQuery();
-			}
-			*/
+			// Set the newly created job
+			Job createdJob = new Job();
+			result.next();
+			createdJob.setId(result.getInt("JobId"));
 
 			// Add the questions
-			for(Question question : jobDto.getQuestions()){
+			for (Question question : jobDto.getQuestions()) {
 				question.setJobId(createdJob.getId());
 				applicationService.addQuestion(question);
 			}
 
 			// Add the work days
 			jobService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
-			
+
 			// Add the skills
 			jobService.addSkills(createdJob.getId(), jobDto.getSkills());
 
@@ -361,371 +338,386 @@ public class JobRepository {
 	}
 
 	public List<Job> getFilteredJobs(FindJobFilterDTO filter) {
-		
+
 		// ****************************************************************
 		// ****************************************************************
 		// Summary:
 		// 1) The distance query is the only required query.
 		// 2) All other filters are sub queries within sub queries.
-		// 3) The sub queries are returning the job ids that match the particular filter.
+		// 3) The sub queries are returning the job ids that match the
+		// particular filter.
 		// ****************************************************************
 		// ****************************************************************
-		
-		
+
 		List<Object> argsList = new ArrayList<Object>();
 
 		// **************************************************************
-		//Main query: distance filter
+		// Main query: distance filter
 		// **************************************************************
-		//Distance formula found here: https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
+		// Distance formula found here:
+		// https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
 		String sql = "SELECT *, "
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
-				+ " FROM job j WHERE j.Status < 2";
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" + " FROM job j WHERE j.Status < 2";
 
-		
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());
 		argsList.add(filter.getLat());
-		
-		
+
 		String startNextSubQuery = " AND j.JobId IN (";
 		int count_subQueries = 0;
-		
+
 		// **************************************************
 		// Work day sub query
-		// **************************************************	
+		// **************************************************
 		String sql_subQuery = null;
 		if (verificationService.isListPopulated(filter.getWorkingDays())) {
-			
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
 
 			sql_subQuery += " SELECT DISTINCT wd0.jobId";
 			sql_subQuery += " FROM work_day wd0";
 
-
 			// *************************************
 			// If **ALL** work days are selected.
-			// A job is returned if all their work days was selected by the user.
+			// A job is returned if all their work days was selected by the
+			// user.
 			// *************************************
-			if(filter.getDoMatchAllDays()){
-								
+			if (filter.getDoMatchAllDays()) {
+
 				int i = 1;
 				for (String workDay : filter.getWorkingDays()) {
-					
-					if(i == filter.getWorkingDays().size()){
-						
+
+					if (i == filter.getWorkingDays().size()) {
+
 						// The WHERE clause must FOLLOW the JOINs
 						sql_subQuery += " WHERE wd0.DateId = ?";
+					} else {
+						sql_subQuery += " INNER JOIN work_day wd" + i + " ON wd" + i + ".JobId = wd" + (i - 1)
+								+ ".JobId" + " AND wd" + i + ".DateId = ?";
+
 					}
-					else{
-						sql_subQuery += " INNER JOIN work_day wd" + i
-					 			+ " ON wd" + i +".JobId = wd" + (i-1) + ".JobId"
-					 			+ " AND wd" + i + ".DateId = ?";			
-			
-										
-					}
-					argsList.add(jobService.getDateId(workDay));	
+					argsList.add(jobService.getDateId(workDay));
 					i += 1;
-				}					
-										
-			}
-			else{
-				
+				}
+
+			} else {
+
 				// *************************************
 				// If **At least one** work day was selected.
-				// A job is returned if at least one of their word days was selected by the user.
-				// *************************************	
+				// A job is returned if at least one of their word days was
+				// selected by the user.
+				// *************************************
 				boolean isFirst = true;
 				sql_subQuery += " WHERE (";
 				for (String workDay : filter.getWorkingDays()) {
-					
-					if(!isFirst) sql_subQuery += " OR ";
+
+					if (!isFirst)
+						sql_subQuery += " OR ";
 					sql_subQuery += " wd0.DateId = ?";
-					
-					argsList.add(jobService.getDateId(workDay));	
+
+					argsList.add(jobService.getDateId(workDay));
 					isFirst = false;
-				}		
-				
+				}
+
 				// Close the where clause
-				sql_subQuery += ")";		
-				
+				sql_subQuery += ")";
+
 			}
-				
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
-			
+
 			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd0.JobId IN (";
-		
-		}	
+
+		}
 
 		// ************************************************
 		// Start date sub query
 		// ************************************************
-		if(filter.getStartDate() != null){
-			
+		if (filter.getStartDate() != null) {
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";
-			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
+
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING MIN(d.Date)";
-			
-			if(filter.getBeforeStartDate()) sql_subQuery += " <= ?";
-			else sql_subQuery += " >= ?";
-			
+
+			if (filter.getBeforeStartDate())
+				sql_subQuery += " <= ?";
+			else
+				sql_subQuery += " >= ?";
+
 			argsList.add(filter.getStartDate());
-			
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
 
 			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd.JobId IN (";		
-		}	
-		
-		
+			startNextSubQuery = " AND wd.JobId IN (";
+		}
+
 		// ************************************************
 		// End date sub query
 		// ************************************************
-		if(filter.getEndDate() != null){
-			
+		if (filter.getEndDate() != null) {
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";
-			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
+
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING MAX(d.Date)";
-			
-			if(filter.getBeforeEndDate()) sql_subQuery += " <= ?";
-			else sql_subQuery += " >= ?";
-			
+
+			if (filter.getBeforeEndDate())
+				sql_subQuery += " <= ?";
+			else
+				sql_subQuery += " >= ?";
+
 			argsList.add(filter.getEndDate());
-			
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
 
 			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd.JobId IN (";		
-		}		
-		
-		
+			startNextSubQuery = " AND wd.JobId IN (";
+		}
+
 		// ************************************************
 		// Start time sub query
 		// ************************************************
-		if(filter.getStartTime() != null){
-			
+		if (filter.getStartTime() != null) {
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";
-			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
+
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
-			
-			if(filter.getBeforeStartTime()) sql_subQuery += " HAVING MAX(wd.StartTime) <= ?";
-			else sql_subQuery += " HAVING MIN(wd.StartTime) >= ?";
-			
+
+			if (filter.getBeforeStartTime())
+				sql_subQuery += " HAVING MAX(wd.StartTime) <= ?";
+			else
+				sql_subQuery += " HAVING MIN(wd.StartTime) >= ?";
+
 			argsList.add(filter.getStartTime());
-			
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
 
 			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd.JobId IN (";		
-		}		
-		
+			startNextSubQuery = " AND wd.JobId IN (";
+		}
+
 		// ************************************************
 		// End time sub query
 		// ************************************************
-		if(filter.getEndTime() != null){
-			
+		if (filter.getEndTime() != null) {
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";
-			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
+
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
-			
-			if(filter.getBeforeEndTime()) sql_subQuery += " HAVING MAX(wd.EndTime) <= ?";
-			else sql_subQuery += " HAVING MIN(wd.EndTime) >= ?";
-			
+
+			if (filter.getBeforeEndTime())
+				sql_subQuery += " HAVING MAX(wd.EndTime) <= ?";
+			else
+				sql_subQuery += " HAVING MIN(wd.EndTime) >= ?";
+
 			argsList.add(filter.getEndTime());
-			
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
 
 			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd.JobId IN (";		
-		}	
-				
+			startNextSubQuery = " AND wd.JobId IN (";
+		}
+
 		// ************************************************
 		// Duration sub query
 		// ************************************************
-		if(filter.getEndTime() != null){
-			
+		if (filter.getEndTime() != null) {
+
 			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs to be opened
+			// If there was a previous sub query, then another sub query needs
+			// to be opened
 			// for this sub query.
-			if(startNextSubQuery != "") sql_subQuery = startNextSubQuery;
-			else sql_subQuery = "";
-			
+			if (startNextSubQuery != "")
+				sql_subQuery = startNextSubQuery;
+			else
+				sql_subQuery = "";
+
 			sql_subQuery += " SELECT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING COUNT(wd.DateId)";
-			
-			if(filter.getIsShorterThanDuration()) sql_subQuery += " <= ?";
-			else sql_subQuery += " >= ?";
-			
+
+			if (filter.getIsShorterThanDuration())
+				sql_subQuery += " <= ?";
+			else
+				sql_subQuery += " >= ?";
+
 			argsList.add(filter.getDuration());
-			
+
 			sql += sql_subQuery;
-			
+
 			count_subQueries += 1;
 
 			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd.JobId IN (";		
-		}			
-		
+			startNextSubQuery = " AND wd.JobId IN (";
+		}
+
 		// Close the sub queries before finishing the distance query
 		int i = 0;
-		while(i < count_subQueries){
+		while (i < count_subQueries) {
 			sql += " )";
 			i += 1;
 		}
-		
-	
-		// Only closed jobs
-//		sql += " WHERE j.Status < 2";
 
-		//Complete the distance filter.			
+		// Only closed jobs
+		// sql += " WHERE j.Status < 2";
+
+		// Complete the distance filter.
 		sql += " HAVING distance < ?";
-		argsList.add(filter.getRadius());	
-		
-		//Skip already-loaded jobs
-		if(filter.getJobIdsToExclude() != null){
-			
-			for(Integer id : filter.getJobIdsToExclude()){
+		argsList.add(filter.getRadius());
+
+		// Skip already-loaded jobs
+		if (filter.getJobIdsToExclude() != null) {
+
+			for (Integer id : filter.getJobIdsToExclude()) {
 				sql += " AND j.jobId <> ?";
 				argsList.add(id);
 			}
 		}
-		
-		//Order by
+
+		// Order by
 		sql += " ORDER BY ";
-//		if(filter.getSortBy() != null){
-//			sql += filter.getSortBy() + " ";
-//			if(filter.getIsAscending()){
-//				sql += "ASC";
-//			}else{
-//				sql += "DESC";
-//			}
-//		}else{
-			//If user did not sort, then sort by ascending distance as a default
-			sql += " distance ASC";
-//		}
-		
-		
-		
-		//Number of jobs to return
+		// if(filter.getSortBy() != null){
+		// sql += filter.getSortBy() + " ";
+		// if(filter.getIsAscending()){
+		// sql += "ASC";
+		// }else{
+		// sql += "DESC";
+		// }
+		// }else{
+		// If user did not sort, then sort by ascending distance as a default
+		sql += " distance ASC";
+		// }
+
+		// Number of jobs to return
 		sql += " LIMIT 0 , 25";
-	
-		
+
 		return this.JobRowMapper(sql, argsList.toArray());
 	}
 
 	public List<Job> getJobs_ByEmployeeAndStatuses(int userId_employee, List<Integer> jobStatuses) {
-		
-		
-		String sql = "SELECT * FROM job j"
-					+ " INNER JOIN employment e ON j.JobId = e.JobId"
-					+ " WHERE e.UserId = ?"
-					+ " AND e.WasTerminated = 0"
-					+ " AND (";
-		
+
+		String sql = "SELECT * FROM job j" + " INNER JOIN employment e ON j.JobId = e.JobId" + " WHERE e.UserId = ?"
+				+ " AND e.WasTerminated = 0" + " AND (";
+
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId_employee);
-		
+
 		boolean isFirst = true;
-		for(Integer jobStatus : jobStatuses){
-			
-			if(isFirst) sql += "j.Status = ?";
-			else sql += " OR j.Status = ?";
-		
+		for (Integer jobStatus : jobStatuses) {
+
+			if (isFirst)
+				sql += "j.Status = ?";
+			else
+				sql += " OR j.Status = ?";
+
 			isFirst = false;
-			args.add(jobStatus);					
+			args.add(jobStatus);
 		}
-		
+
 		sql += ")";
-		
+
 		return JobRowMapper(sql, args.toArray());
 	}
 
 	public List<Job> getJobs_byEmployerAndStatuses(int userId_employer, List<Integer> jobStatuses) {
-		
-		
-		String sql = "SELECT * FROM job j"
-					+ " WHERE j.UserId = ? AND (";
-		
+
+		String sql = "SELECT * FROM job j" + " WHERE j.UserId = ? AND (";
+
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId_employer);
-		
+
 		boolean isFirst = true;
-		for(Integer jobStatus : jobStatuses){ 
-			
-			if(isFirst) sql += "j.Status = ?";
-			else sql += " OR j.Status = ?";
-		
+		for (Integer jobStatus : jobStatuses) {
+
+			if (isFirst)
+				sql += "j.Status = ?";
+			else
+				sql += " OR j.Status = ?";
+
 			isFirst = false;
-			args.add(jobStatus);					
+			args.add(jobStatus);
 		}
-		
+
 		sql += ")";
-		
+
 		return JobRowMapper(sql, args.toArray());
 	}
 
-
 	public Job getJob(int jobId) {
 
-	   String sql = "SELECT * FROM job j WHERE j.JobId = ?";
+		String sql = "SELECT * FROM job j WHERE j.JobId = ?";
 
 		List<Job> jobs = this.JobRowMapper(sql, new Object[] { jobId });
 
-		if(verificationService.isListPopulated(jobs)) return jobs.get(0);
-		else return null;
+		if (verificationService.isListPopulated(jobs))
+			return jobs.get(0);
+		else
+			return null;
 	}
-
 
 	public Job getJob_byApplicationId(int applicationId) {
-		String sql = "SELECT * FROM job j INNER JOIN application a"
-						+ " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
+		String sql = "SELECT * FROM job j INNER JOIN application a" + " ON j.JobId = a.JobId WHERE a.ApplicationId = ?";
 
-		return this.JobRowMapper(sql, new Object[]{ applicationId }).get(0);
+		return this.JobRowMapper(sql, new Object[] { applicationId }).get(0);
 	}
 
-	public void addWorkDay(int jobId, WorkDay workDay) {		
-		
+	public void addWorkDay(int jobId, WorkDay workDay) {
+
 		// *******************************************************
 		// *******************************************************
 		// If the date is in yyyy-mm-dd format, does it need to be
@@ -733,86 +725,73 @@ public class JobRepository {
 		// Review this.
 		// *******************************************************
 		// *******************************************************
-		
-		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId)"
-						+ "  VALUES (?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql, new Object[]{ jobId,
-												workDay.getStringStartTime(),
-												workDay.getStringEndTime(),
-												workDay.getDateId()});
+		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId)" + "  VALUES (?, ?, ?, ?)";
+
+		jdbcTemplate.update(sql,
+				new Object[] { jobId, workDay.getStringStartTime(), workDay.getStringEndTime(), workDay.getDateId() });
 
 	}
 
 	public Date getEndDate(int jobId) {
-		String sql = "SELECT MAX(d.Date) FROM date d"
-					+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
-					+ " WHERE JobId = ?";
+		String sql = "SELECT MAX(d.Date) FROM date d" + " INNER JOIN work_day wd ON wd.DateId = d.Id"
+				+ " WHERE JobId = ?";
 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, Date.class);
 	}
 
 	public Date getStartDate(int jobId) {
-		String sql = "SELECT MIN(d.Date) FROM date d"
-				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
+		String sql = "SELECT MIN(d.Date) FROM date d" + " INNER JOIN work_day wd ON wd.DateId = d.Id"
 				+ " WHERE JobId = ?";
 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Date.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, Date.class);
 	}
-	
+
 	public LocalDate getStartLocalDate(int jobId) {
-		String sql = "SELECT MIN(d.Date) FROM date d"
-				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
-				+ " WHERE JobId = ?";
-		
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
-	}
-	
-	public LocalDate getEndLocalDate(int jobId) {
-		String sql = "SELECT MAX(d.Date) FROM date d"
-				+ " INNER JOIN work_day wd ON wd.DateId = d.Id"
+		String sql = "SELECT MIN(d.Date) FROM date d" + " INNER JOIN work_day wd ON wd.DateId = d.Id"
 				+ " WHERE JobId = ?";
 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, LocalDate.class);
-	}	
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, LocalDate.class);
+	}
+
+	public LocalDate getEndLocalDate(int jobId) {
+		String sql = "SELECT MAX(d.Date) FROM date d" + " INNER JOIN work_day wd ON wd.DateId = d.Id"
+				+ " WHERE JobId = ?";
+
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, LocalDate.class);
+	}
 
 	public Time getStartTime(int jobId) {
-		String sql = "SELECT MIN(StartTime)"
-				+ " FROM work_day"
-				+ " WHERE JobId = ?";
+		String sql = "SELECT MIN(StartTime)" + " FROM work_day" + " WHERE JobId = ?";
 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, Time.class);
 	}
 
 	public Time getEndTime(int jobId) {
-		String sql = "SELECT MAX(EndTime)"
-				+ " FROM work_day"
-				+ " WHERE JobId = ?";
+		String sql = "SELECT MAX(EndTime)" + " FROM work_day" + " WHERE JobId = ?";
 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Time.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId }, Time.class);
 	}
 
 	public void updateJobStatus(int status, int jobId) {
 
 		String sql = "UPDATE job set Status = ? WHERE JobId = ?";
-		jdbcTemplate.update(sql, new Object[]{ status, jobId });
+		jdbcTemplate.update(sql, new Object[] { status, jobId });
 
 	}
 
 	public List<WorkDay> getWorkDays(int jobId) {
 		String sql = "SELECT * FROM work_day WHERE JobId = ? ORDER BY DateId ASC";
-		return this.WorkDayMapper(sql, new Object[]{ jobId });
+		return this.WorkDayMapper(sql, new Object[] { jobId });
 	}
 
-
 	public void insertSavedFindJob(FindJobFilterDTO filter, JobSearchUser user) {
-		
+
 		String columns = "";
 		String values = "";
 		ArrayList<String> columnNames = new ArrayList<String>();
 		ArrayList<Object> args = new ArrayList<Object>();
-		
-		
+
 		columnNames.add("Name");
 		args.add(filter.getSavedName());
 		columnNames.add("Radius");
@@ -821,105 +800,103 @@ public class JobRepository {
 		args.add(user.getUserId());
 		columnNames.add("EmailFrequencyId");
 		args.add(filter.getEmailFrequencyId());
-		
-		
-		if(filter.getCity() != null){
+
+		if (filter.getCity() != null) {
 			columnNames.add("City");
 			args.add(filter.getCity());
 		}
-		
-		if(filter.getState() != null){
+
+		if (filter.getState() != null) {
 			columnNames.add("State");
 			args.add(filter.getState());
 		}
-		
-		if(filter.getZipCode() != null){
+
+		if (filter.getZipCode() != null) {
 			columnNames.add("ZipCode");
 			args.add(filter.getZipCode());
 		}
 
-		
-		if(filter.getStartDate() != null){
+		if (filter.getStartDate() != null) {
 			columnNames.add("StartDate");
 			columnNames.add("IsBeforeStartDate");
 			args.add(filter.getStartDate());
 			args.add(filter.getBeforeStartDate());
 		}
-		
-		if(filter.getEndDate() != null){
+
+		if (filter.getEndDate() != null) {
 			columnNames.add("EndDate");
 			columnNames.add("IsBeforeEndDate");
 			args.add(filter.getEndDate());
 			args.add(filter.getBeforeEndDate());
 		}
-		
-		if(filter.getStartTime() != null){
+
+		if (filter.getStartTime() != null) {
 			columnNames.add("StartTime");
 			columnNames.add("IsBeforeStartTime");
 			args.add(filter.getStartTime());
 			args.add(filter.getBeforeStartTime());
 		}
-		
-		if(filter.getEndTime() != null){
+
+		if (filter.getEndTime() != null) {
 			columnNames.add("EndTime");
 			columnNames.add("IsBeforeEndTime");
 			args.add(filter.getEndTime());
 			args.add(filter.getBeforeEndTime());
-		}		
-		
-		if(filter.getDuration() != null){
+		}
+
+		if (filter.getDuration() != null) {
 			columnNames.add("Duration");
 			columnNames.add("IsShorterThanDuration");
 			args.add(filter.getDuration());
 			args.add(filter.getIsShorterThanDuration());
 		}
-		
+
 		boolean isFirst = true;
-		for(String columnName : columnNames){
-			if(isFirst){
+		for (String columnName : columnNames) {
+			if (isFirst) {
 				columns = " (" + columnName;
 				values = " (?";
 				isFirst = false;
-			}
-			else{
+			} else {
 				columns += ", " + columnName;
 				values += ", ?";
-			}					
-		}		
-		columns += ")";	
+			}
+		}
+		columns += ")";
 		values += ")";
-		
-		String sql = "INSERT INTO saved_find_job_filter" + columns + " VALUES" + values;  
-		
+
+		String sql = "INSERT INTO saved_find_job_filter" + columns + " VALUES" + values;
+
 		jdbcTemplate.update(sql, args.toArray());
 	}
 
 	public List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
 		String sql = "SELECT * FROM saved_find_job_filter WHERE UserId = ?";
-		return this.FindJobFilterDtoMapper(sql, new Object[]{ userId });
+		return this.FindJobFilterDtoMapper(sql, new Object[] { userId });
 	}
 
 	public FindJobFilterDTO getSavedFindJobFilter(int savedFindJobFilterId) {
 		String sql = "SELECT * FROM saved_find_job_filter WHERE Id = ?";
 		try {
-			return this.FindJobFilterDtoMapper(sql, new Object[]{ savedFindJobFilterId }).get(0);	
+			return this.FindJobFilterDtoMapper(sql, new Object[] { savedFindJobFilterId }).get(0);
 		} catch (Exception e) {
 			return null;
-		}		
+		}
 	}
 
-	public List<Job> getJobs_byIds(List<Integer> jobIds) {		
-		
+	public List<Job> getJobs_byIds(List<Integer> jobIds) {
+
 		String sql = "SELECT * FROM job j WHERE";
 		List<Object> args = new ArrayList<Object>();
-		
+
 		boolean isFirst = true;
-		for(Integer jobId : jobIds){
-			
-			if(!isFirst) sql += " OR";
+		for (Integer jobId : jobIds) {
+
+			if (!isFirst)
+				sql += " OR";
 			sql += " j.JobId = ?";
 			args.add(jobId);
-			
+
 			isFirst = false;
 		}
 
@@ -931,116 +908,107 @@ public class JobRepository {
 		// date must be in the form yyyy-mm-dd
 		// ***************************************************
 		String sql = "SELECT Id FROM date where Date = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[]{ date }, Integer.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { date }, Integer.class);
 	}
 
 	public List<Job> getJobs_ByEmployer(int userId) {
-		
+
 		String sql = "SELECT * FROM job WHERE UserId = ?";
-		return JobRowMapper(sql, new Object[]{ userId });
+		return JobRowMapper(sql, new Object[] { userId });
 	}
 
 	public List<Job> getJobs_needRating_byUser(int userId) {
 
-		// The sub query is required because **employers**, if a job had more than 1 employee,
+		// The sub query is required because **employers**, if a job had more
+		// than 1 employee,
 		// will return the same job more than once.
-		
-		String sql = "SELECT * FROM job j WHERE j.JobId IN ("
-						+ " SELECT DISTINCT(j1.JobId) FROM job j1"
-						+ " INNER JOIN rating r ON r.JobId = j1.JobId "
-						+ " WHERE r.RatedByUserId = ?"
-						+ " AND r.Value = ?"
-						+ " AND j1.Status = ? )";
-		
-		return JobRowMapper(sql, new Object[]{ userId, RateCriterion.VALUE_NOT_YET_RATED, Job.STATUS_PAST });
+
+		String sql = "SELECT * FROM job j WHERE j.JobId IN (" + " SELECT DISTINCT(j1.JobId) FROM job j1"
+				+ " INNER JOIN rating r ON r.JobId = j1.JobId " + " WHERE r.RatedByUserId = ?" + " AND r.Value = ?"
+				+ " AND j1.Status = ? )";
+
+		return JobRowMapper(sql, new Object[] { userId, RateCriterion.VALUE_NOT_YET_RATED, Job.STATUS_PAST });
 	}
 
 	public void addSkill(Integer jobId, Skill skill) {
-		
-		String sql = "INSERT INTO skill (Text, Type, JobId) VALUES (?, ?, ?)";		
-		jdbcTemplate.update(sql, new Object[]{ skill.getText(), skill.getType(), jobId });
-		
+
+		String sql = "INSERT INTO skill (Text, Type, JobId) VALUES (?, ?, ?)";
+		jdbcTemplate.update(sql, new Object[] { skill.getText(), skill.getType(), jobId });
+
 	}
 
 	public List<Skill> getSkills_ByType(int jobId, int type) {
 		String sql = "SELECT * FROM skill WHERE JobId = ? AND Type = ?";
-		return SkillRowMapper(sql, new Object[]{ jobId, type });
+		return SkillRowMapper(sql, new Object[] { jobId, type });
 	}
 
 	public int getCount_JobsCompleted_ByUser(int userId) {
-		
-		String sql = "SELECT COUNT(*) FROM job j"
-				+ " INNER JOIN application a ON a.JobId = j.JobId"
-				+ " WHERE j.Status = ?"
-				+ " AND a.UserId = ?"
-				+ " AND a.Status = ?";
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ Job.STATUS_PAST,
-															userId,
-															Application.STATUS_ACCEPTED },
-																Integer.class);
+
+		String sql = "SELECT COUNT(*) FROM job j" + " INNER JOIN application a ON a.JobId = j.JobId"
+				+ " WHERE j.Status = ?" + " AND a.UserId = ?" + " AND a.Status = ?";
+
+		return jdbcTemplate.queryForObject(sql, new Object[] { Job.STATUS_PAST, userId, Application.STATUS_ACCEPTED },
+				Integer.class);
 	}
 
 	public Integer getCount_unavailableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
-		
-		// Main query
-		String sql = "SELECT COUNT(e.Id) FROM employment e"
-					+ " JOIN job j ON e.JobId = e.JobId"
-					+ " JOIN application a ON j.JobId = a.JobId"
-					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
-					+ " WHERE e.UserId = ?"
-					+ " AND e.WasTerminated = 0"
-					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND j.Status";
 
-		
+		// Main query
+		String sql = "SELECT COUNT(e.Id) FROM employment e" + " JOIN job j ON e.JobId = e.JobId"
+				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId" + " WHERE e.UserId = ?"
+				+ " AND e.WasTerminated = 0" + " AND wp.IsCurrentProposal = 1" + " AND j.Status";
+
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
-		
-		boolean isFirst = true;		
+
+		boolean isFirst = true;
 		sql += " AND (";
-		for(WorkDay workDay : workDays){
-			
-			if(!isFirst) sql += " OR ";			
+		for (WorkDay workDay : workDays) {
+
+			if (!isFirst)
+				sql += " OR ";
 			sql += " wd.DateId = ?";
 			isFirst = false;
-			
+
 			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
 			args.add(workDay.getDateId());
-			
+
 		}
-		
+
 		// Close the AND
 		sql += ")";
-	
-		
+
 		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
 	}
 
 	public String getDateId(int dateId) {
 		String sql = "SELECT Date From Date WHERE Id = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[]{ dateId }, String.class);
+		return jdbcTemplate.queryForObject(sql, new Object[] { dateId }, String.class);
 	}
 
 	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
-		
-		// Find a user's employment in which the work days for theur employed-for jobs
+
+		// Find a user's employment in which the work days for theur
+		// employed-for jobs
 		// span the passed-in work days.
-		// The "passed-in work days" are typically the work days in which a user is
+		// The "passed-in work days" are typically the work days in which a user
+		// is
 		// attempting to APPLY for.
 		// ________________________________
 		// For a time conflict to exist, the following conditions MUST be met:
 		// For a particular calendar day:
 		// 1) The START TIME for the applying-for job must be LESS THAN the
-		//	 	END TIME of the employed-for job
-		//		---- AND ----
+		// END TIME of the employed-for job
+		// ---- AND ----
 		// 2) The END TIME for the applying-for job must GREATER THAN the
-		// 		START TIME of the employed-for job
-		// Simply said: A time conflict exists if the applying-for job starts before
-		//				an employed-for job ends AND the applying-for job ends after
-		//				an employed-for job starts
+		// START TIME of the employed-for job
+		// Simply said: A time conflict exists if the applying-for job starts
+		// before
+		// an employed-for job ends AND the applying-for job ends after
+		// an employed-for job starts
 		// ____________________________________
 		// I.e.
 		// ---- If ----
@@ -1053,156 +1021,148 @@ public class JobRepository {
 		// 2-E) 4-2 15:00 to 4-2 17:00
 		// ---- THEN ----
 		// the returned count would be 1;
-		// 1-A starts before 1-E ends; AND 1-A ends after 1-E starts; thus a conflict;  
-		// Although 2-A starts before 2-E ends, 2-A ends before 2-E starts; thus NOT a conflict;
-		
+		// 1-A starts before 1-E ends; AND 1-A ends after 1-E starts; thus a
+		// conflict;
+		// Although 2-A starts before 2-E ends, 2-A ends before 2-E starts; thus
+		// NOT a conflict;
+
 		// Main query
-		String sql = "SELECT COUNT(*) FROM work_day wd"
-						+ " JOIN employment e ON e.JobId = wd.JobId"
-						+ " JOIN job j ON e.JobId = j.JobId"
-						+ " WHERE e.UserId = ?"
-						+ " AND e.WasTerminated = 0"
-						+ " AND j.Status != ?"
-						+ " AND (";
-		
+		String sql = "SELECT COUNT(*) FROM work_day wd" + " JOIN employment e ON e.JobId = wd.JobId"
+				+ " JOIN job j ON e.JobId = j.JobId" + " WHERE e.UserId = ?" + " AND e.WasTerminated = 0"
+				+ " AND j.Status != ?" + " AND (";
+
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
 		args.add(Job.STATUS_PAST);
-		
+
 		boolean isFirst = true;
-		for(WorkDay workDay : workDays){
-			
-			if(!isFirst) sql += " OR ";
-			
+		for (WorkDay workDay : workDays) {
+
+			if (!isFirst)
+				sql += " OR ";
+
 			sql += "(";
 			sql += " wd.DateId = ?";
 			sql += " AND ? < wd.EndTime";
 			sql += " AND ? > wd.StartTime";
 			sql += ")";
 			isFirst = false;
-			
+
 			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
-		
+
 			args.add(workDay.getDateId());
 			args.add(workDay.getStringStartTime());
 			args.add(workDay.getStringEndTime());
-			
+
 		}
-		
+
 		// Close the AND
 		sql += ")";
-				
+
 		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
 	}
 
 	public Integer getWorkDayId(int jobId, int dateId) {
-		
-		String sql = "SELECT WorkDayId FROM work_day WHERE JobId = ? and DateId = ?"; 
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  dateId }, Integer.class);
+
+		String sql = "SELECT WorkDayId FROM work_day WHERE JobId = ? and DateId = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, dateId }, Integer.class);
 	}
 
 	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int DateId) {
-		String sql = "SELECT * FROM job j"
-					+ " JOIN employment e ON j.JobId = e.JobId"
-					+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
-					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
-					+ " WHERE e.UserId = ?"
-					+ " AND e.WasTerminated = 0"
-					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND wd.DateId= ?"
-					+ " AND j.Status != ?";
-		
-		List<Job> jobs = JobRowMapper(sql, new Object[]{ userId, DateId, Job.STATUS_PAST });
-		if(verificationService.isListPopulated(jobs))
+		String sql = "SELECT * FROM job j" + " JOIN employment e ON j.JobId = e.JobId"
+				+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId" + " WHERE e.UserId = ?"
+				+ " AND e.WasTerminated = 0" + " AND wp.IsCurrentProposal = 1" + " AND wd.DateId= ?"
+				+ " AND j.Status != ?";
+
+		List<Job> jobs = JobRowMapper(sql, new Object[] { userId, DateId, Job.STATUS_PAST });
+		if (verificationService.isListPopulated(jobs))
 			return jobs.get(0);
-		else return null;
+		else
+			return null;
 	}
-	
 
 	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
 		String sql = "SELECT * FROM work_day wd"
-					+ " JOIN employment_proposal_work_day ep ON wd.WorkDayId = ep.WorkDayId"
-					+ " WHERE ep.EmploymentProposalId = ?";
-		
-		return WorkDayMapper(sql, new Object[]{ employmentProposalId });
+				+ " JOIN employment_proposal_work_day ep ON wd.WorkDayId = ep.WorkDayId"
+				+ " WHERE ep.EmploymentProposalId = ?";
+
+		return WorkDayMapper(sql, new Object[] { employmentProposalId });
 	}
 
 	public List<String> getWorkDayDateStrings(int jobId) {
-		String sql = "SELECT d.Date FROM date d"
-					+ " JOIN work_day wd ON d.Id = wd.DateID"
-					+ " WHERE wd.JobId = ?";
-		
-		return jdbcTemplate.queryForList(sql, new Object[]{ jobId }, String.class);
+		String sql = "SELECT d.Date FROM date d" + " JOIN work_day wd ON d.Id = wd.DateID" + " WHERE wd.JobId = ?";
+
+		return jdbcTemplate.queryForList(sql, new Object[] { jobId }, String.class);
 	}
 
 	public void replaceEmployee(int jobId, int userId) {
-		
+
 		String sql = "UPDATE employment SET WasTerminated = 1 WHERE JobId = ? AND UserId = ?";
-		jdbcTemplate.update(sql, new Object[]{ jobId, userId });
-		
+		jdbcTemplate.update(sql, new Object[] { jobId, userId });
+
 	}
 
 	public void deleteProposedWorkDays(List<WorkDay> workDays) {
-		String sql = "DELETE FROM employment_proposal_work_day"
-					+ " WHERE (";
-		
+		String sql = "DELETE FROM employment_proposal_work_day" + " WHERE (";
+
 		ArrayList<Object> args = new ArrayList<Object>();
 		boolean isFirst = true;
-		for(WorkDay workDay : workDays){
-			
-			if(!isFirst) sql += " OR";
+		for (WorkDay workDay : workDays) {
+
+			if (!isFirst)
+				sql += " OR";
 			sql += " WorkDayId = ?";
-			args.add(workDay.getWorkDayId());		
-			
+			args.add(workDay.getWorkDayId());
+
 			isFirst = false;
-		}		
+		}
 		sql += " )";
-		
+
 		jdbcTemplate.update(sql, args.toArray());
-		
+
 	}
 
 	public void deleteWorkDays(List<WorkDay> workDays) {
-		String sql = "DELETE FROM work_day"
-				+ " WHERE (";
-	
-	ArrayList<Object> args = new ArrayList<Object>();
-	boolean isFirst = true;
-	for(WorkDay workDay : workDays){
-		
-		if(!isFirst) sql += " OR";
-		sql += " WorkDayId = ?";
-		args.add(workDay.getWorkDayId());		
-		
-		isFirst = false;
-	}
-	sql += " )";
-	
-	jdbcTemplate.update(sql, args.toArray());
-		
+		String sql = "DELETE FROM work_day" + " WHERE (";
+
+		ArrayList<Object> args = new ArrayList<Object>();
+		boolean isFirst = true;
+		for (WorkDay workDay : workDays) {
+
+			if (!isFirst)
+				sql += " OR";
+			sql += " WorkDayId = ?";
+			args.add(workDay.getWorkDayId());
+
+			isFirst = false;
+		}
+		sql += " )";
+
+		jdbcTemplate.update(sql, args.toArray());
+
 	}
 
 	public void updateWorkDay(int workDayId, String stringStartTime, String stringEndTime) {
 		String sql = "UPDATE work_day SET StartTime = ?, EndTime = ? WHERE WorkDayId = ?";
-		
-		jdbcTemplate.update(sql, new Object[]{ stringStartTime, stringEndTime, workDayId });
-		
+
+		jdbcTemplate.update(sql, new Object[] { stringStartTime, stringEndTime, workDayId });
+
 	}
 
 	public List<WorkDay> getWorkDays_byJobAndDateStrings(int jobId, List<String> dateStrings) {
-		String sql = "SELECT * FROM work_day wd"
-					+ " JOIN date d ON wd.DateId = d.Id"
-					+ " WHERE wd.JobId = ?"
-					+ " AND (";
-					
+		String sql = "SELECT * FROM work_day wd" + " JOIN date d ON wd.DateId = d.Id" + " WHERE wd.JobId = ?"
+				+ " AND (";
+
 		ArrayList<Object> args = new ArrayList<Object>();
 		args.add(jobId);
-		
+
 		boolean isFirst = true;
-		for(String dateString : dateStrings){
-			if(!isFirst) sql += " OR";
+		for (String dateString : dateStrings) {
+			if (!isFirst)
+				sql += " OR";
 			sql += " d.Date = ?";
 			args.add(dateString);
 			isFirst = false;
@@ -1213,42 +1173,35 @@ public class JobRepository {
 
 	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
 		String sql = "SELECT Comment FROM comment WHERE UserId = ? and JobId = ?";
-		return jdbcTemplate.queryForList(sql, new Object[]{ userId,  jobId }, String.class );
+		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, String.class);
 	}
 
 	public void updateJobFlag(int jobId, String flag, int value) {
 		String sql = "UPDATE job SET " + flag + " = ? WHERE JobId = ?";
-		jdbcTemplate.update(sql, new Object[]{ value, jobId });
+		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
 	public List<WorkDay> getWorkDays_incomplete_byUser(int jobId, int userId) {
-		
+
 		String sql = "SELECT * FROM work_day wd WHERE wd.WorkDayId IN ("
-					+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd"
-					+ " JOIN employment e ON wd.JobId = e.JobId"
-					+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
-					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-					+ " WHERE e.UserId = ?"
-					+ " AND e.JobId = ?"
-					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND e.WasTerminated = 0"
-					+ " AND wd.IsComplete = 0"
-					+ ")";
-					
-		return WorkDayMapper(sql, new Object[]{ userId, jobId });
+				+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd" + " JOIN employment e ON wd.JobId = e.JobId"
+				+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " WHERE e.UserId = ?" + " AND e.JobId = ?" + " AND wp.IsCurrentProposal = 1"
+				+ " AND e.WasTerminated = 0" + " AND wd.IsComplete = 0" + ")";
+
+		return WorkDayMapper(sql, new Object[] { userId, jobId });
 	}
 
 	public void updateWasTerminated(int jobId, int userId, int value) {
 		String sql = "UPDATE employment SET WasTerminated = ? WHERE JobId = ? AND UserId = ?";
-		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });		
+		jdbcTemplate.update(sql, new Object[] { value, jobId, userId });
 	}
 
 	public void updateWorkDay_isComplete(int workDayId, int value) {
 		String sql = "UPDATE work_day SET IsComplete = ? WHERE WorkDayId = ?";
-		jdbcTemplate.update(sql, new Object[]{ value, workDayId });		
+		jdbcTemplate.update(sql, new Object[] { value, workDayId });
 	}
 
-
 }
-

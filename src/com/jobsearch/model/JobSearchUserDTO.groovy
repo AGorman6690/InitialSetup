@@ -1,9 +1,9 @@
 package com.jobsearch.model
 
 import com.jobsearch.application.service.Application
-import com.jobsearch.job.service.FindJobFilterDTO
 import com.jobsearch.job.service.Job
-import com.jobsearch.job.service.JobDTO
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.user.rate.RatingDTO
 import com.jobsearch.category.service.Category
 import com.jobsearch.category.service.CategoryDTO

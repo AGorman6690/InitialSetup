@@ -8,9 +8,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
-import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 

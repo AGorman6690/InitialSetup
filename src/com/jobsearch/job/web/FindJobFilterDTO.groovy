@@ -1,4 +1,4 @@
-package com.jobsearch.job.service
+package com.jobsearch.job.web
 
 import java.sql.Date
 import java.sql.Time
