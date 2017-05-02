@@ -1,4 +1,4 @@
-package com.jobsearch.job.service
+package com.jobsearch.job.web
 
 import java.awt.TexturePaintContext.Int;
 import java.util.List
@@ -7,7 +7,8 @@ import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTe
 
 import com.jobsearch.application.service.Application
 import com.jobsearch.application.service.ApplicationDTO
-import com.jobsearch.category.service.Category;
+import com.jobsearch.category.service.Category
+import com.jobsearch.job.service.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
