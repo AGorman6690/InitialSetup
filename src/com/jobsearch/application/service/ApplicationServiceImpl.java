@@ -759,8 +759,6 @@ public class ApplicationServiceImpl {
 			
 			// Set the application
 			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
-			
-
 
 			// Set the wage proposal
 			LocalDateTime employerAcceptedDate = LocalDateTime.now();
@@ -772,6 +770,7 @@ public class ApplicationServiceImpl {
 			applicationDto.getEmploymentProposalDto().setProposedByUserId(SessionContext.getUser(session).getUserId());
 			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
 
+			this.insertApplication(applicationDto);	
 			
 			Application newApplication = getApplication(applicationDto.getJobId(), applicationDto.getApplicantId());
 			EmploymentProposalDTO proposal = getCurrentEmploymentProposal(newApplication.getApplicationId());
@@ -1005,6 +1004,7 @@ public class ApplicationServiceImpl {
 
 	public void deleteEmployment(int userId, int jobId) {
 		repository.deleteEmployment(userId, jobId);
+		repository.deleteRatings(userId, jobId);
 	}
 
 	public String getTotalPayment(EmploymentProposalDTO acceptedProposal) {

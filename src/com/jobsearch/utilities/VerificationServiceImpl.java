@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.repository.UserRepository;
+import com.jobsearch.user.service.UserServiceImpl;
 
 // Not sure 
 @Service
@@ -28,6 +30,9 @@ public class VerificationServiceImpl {
 	
 	@Autowired
 	CategoryServiceImpl categoryService;
+	
+	@Autowired
+	UserServiceImpl userService;
 
 	@Autowired
 	JobServiceImpl jobService;
@@ -142,9 +147,11 @@ public class VerificationServiceImpl {
 		
 		return true;
 	}
-	
 
+	public boolean isSessionUserAnEmployee(HttpSession session, Integer jobId) {
+		JobSearchUser employee = userService.getEmployee(jobId, SessionContext.getUser(session).getUserId());
+		if(employee != null) return true;
+		else return false;
+	}
 
-
-	
 }

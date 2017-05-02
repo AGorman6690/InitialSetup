@@ -6,10 +6,8 @@
 			<p>There are currently no employees for this job</p>
 			<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>	
 		</div>
-	</c:when>
-	
-	<c:otherwise>
-	
+	</c:when>	
+	<c:otherwise>	
 		<table id="employeesTable" class="main-table-style shadow">
 			<thead>
 				<tr>

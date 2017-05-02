@@ -115,13 +115,41 @@ public class UserController {
 //		}
 
 	}
+	
+	
+	@RequestMapping(value = "/employee/{userId}/left/job/{jobId}/acknowledge", method = RequestMethod.GET)
+	public String acknowledgeEmployeeLeftJob(@PathVariable(value = "jobId") int jobId,
+											@PathVariable(value = "userId") int userId,
+											HttpSession session) {
 
+		userService.acknowledgeEmployeeLeft(jobId, userId, session);
+		
+		return "redirect:/job/" + jobId + "?c=waiting";
+	}
+	
+	@RequestMapping(value = "/employer-removed-you-from-job/{jobId}/acknowledge", method = RequestMethod.GET)
+	public String acknowledgeEmployerRemovedYouFromJob(@PathVariable(value = "jobId") int jobId,
+											HttpSession session) {
+
+		jobService.updateEmploymentFlag(jobId, SessionContext.getUser(session).getUserId(),
+				"Flag_EmployeeAcknowledgedEmployerRemoval", 1);
+		
+		return "redirect:/user/profile";
+	}
+	
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public String viewFindEmployees(Model model, HttpSession session) {
 
 		userService.setModel_findEmployees_pageLoad(model, session);
 		return "/find_employees/FindEmployees";
 	}	
+	
+	@RequestMapping(value = "/employee/leave-job/{jobId}/confirm", method = RequestMethod.GET)
+	public String viewLeaveJob_confirm(@PathVariable(value = "jobId") Integer jobId, Model model, HttpSession session) {
+
+		userService.setModel_employeeLeaveJob_confirm(jobId, model, session);
+		return "/terminate_employment/Employee_Leaves_Job";
+	}
 
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
 	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
@@ -169,7 +197,7 @@ public class UserController {
 
 		userService.insertRatings(submitRatingDtos, session);
 
-		return "redirect:/user/profile";
+		return "";
 	}
 
 	@RequestMapping(value = "/user/password/reset", method = RequestMethod.GET)
@@ -202,6 +230,7 @@ public class UserController {
 		}
 	}
 
+	
 
 
 }

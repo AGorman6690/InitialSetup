@@ -188,6 +188,17 @@
 					<span class="cancel">Cancel</span>
 				</div>
 				<div class="send-proposal-container">
+					
+					<div class="send-message">
+						<c:choose>
+							<c:when test="${user.profileId == 1 }">
+								<p>If you accept this proposal, you will be employed for this job.</p>
+							</c:when>
+							<c:otherwise>
+								<p>If the applicant accepts this proposal, they will employed for this job.</p>
+							</c:otherwise>
+						</c:choose>
+					</div>
 					<span class="sqr-btn green ${isEmployerMakingFirstOffer ? 'send-employer-make-first-offer' : 'send' }">Send</span>
 					<span class="edit">Edit</span>
 				</div>

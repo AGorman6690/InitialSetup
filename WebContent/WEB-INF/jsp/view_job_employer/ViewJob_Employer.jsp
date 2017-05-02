@@ -28,6 +28,15 @@
 	</div>	
 
 	<div id="job-calendar-application-summary" class="pad-top v2 hide-unused-rows hide-prev-next calendar-container">
+		<c:if test="${!empty jobDto.employees_whoLeft }">
+			<div id="employees-who-left" class="center width-500 alert-message">
+				<h4 class="h4">The following ${jobDto.employees_whoLeft.size() == 1 ? 'employee has' : 'employees have' } left</h4>
+				<c:forEach items="${jobDto.employees_whoLeft }" var="user">
+					<p>${user.firstName } ${user.lastName }
+						 <a href="/JobSearch/employee/${user.userId}/left/job/${jobDto.job.id}/acknowledge" class="sqr-btn gray-2">OK</a></p>
+				</c:forEach>
+			</div>
+		</c:if>
 		<c:if test="${jobDto.job.flag_isNotAcceptingApplications == 1 }">
 			<div id="all-positions-are-filled">
 				<p>All Positions Are Filled</p>

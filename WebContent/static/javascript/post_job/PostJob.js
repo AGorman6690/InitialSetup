@@ -6,12 +6,17 @@ var workDayDtos = [];
 
 $(document).ready(function(){
 	
+	$calendar_workDays = $("#workDaysCalendar_postJob");
+	$calendar_times= $("#select-times-cal");
+	
+	workDayDtos = [];
+	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
+	
 	$("body").on("click", ".calendar", function() {
 //		alert(334)
 	})
 	
-	$calendar_workDays = $("#workDaysCalendar_postJob");
-	$calendar_times= $("#select-times-cal");
+
 	
 	
 	
@@ -67,8 +72,6 @@ $(document).ready(function(){
 	
 	$("#startNewJob").click(function(){
 		showPostJobSections();
-		workDayDtos = [];
-		initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
 	})
 
 	

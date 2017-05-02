@@ -61,7 +61,7 @@
 }
 #employees p:hover{
 /* 	background: #cacaca; */
-	font-weight: bold;
+/* 	font-weight: bold; */
 	border: 1px solid #888;
 	cursor: pointer;
 }
@@ -69,6 +69,7 @@
 	padding: 10px;
 	width: auto;
 	font-size: 19px;
+	border: 1px solid #fff;
 }
 #edit-options .select-page-section.selected{
 	color: #fff;
@@ -157,4 +158,20 @@ h3.h3{
 }
 #verify-removal h3{
 	font-weight: normal;
+}
+
+#work-days-to-add label{
+	margin: 0px 10px;
+}
+#work-days-to-add [data-date]{
+	padding: 10px 0px;
+}
+#work-days-to-add .date{
+	margin-right: 10px;
+    font-weight: bold;
+    width: 190px;
+    display: inline-block;    
+}
+#work-days-to-add select{
+	margin-left: 8px;
 }

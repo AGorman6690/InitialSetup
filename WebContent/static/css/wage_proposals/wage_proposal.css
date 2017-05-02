@@ -3,7 +3,11 @@
 }
 
 
-
+.send-message{
+    font-weight: bold;
+    color: #b35b5b;
+    font-size: 19px;
+}
 
 
 .expiration-time-cont p:last-child{

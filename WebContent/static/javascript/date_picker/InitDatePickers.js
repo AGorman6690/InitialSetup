@@ -211,7 +211,10 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 		onSelect: function(dateText, inst) {	   
 			
 			setValidCss($calendar.find(".invalid"));
-			validateSection($calendar);
+			
+			// This is for post job re-validation
+			if($("body #postSections").length > 0 )
+				validateSection($calendar);	
 			
 			$("#select-times-cal").attr("data-required-updating", "1");
 			

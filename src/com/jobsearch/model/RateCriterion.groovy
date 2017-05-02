@@ -12,5 +12,5 @@ public class RateCriterion {
 	
 	String stringValue
 	
-	public static int VALUE_NOT_YET_RATED = -1;
+	public static Integer VALUE_NOT_YET_RATED = null;
 }

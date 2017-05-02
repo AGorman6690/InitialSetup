@@ -57,7 +57,13 @@ function getWorkDayDtoByDate(dateToFind, workDayDtos) {
 	
 	var result = false;
 	$(workDayDtos).each(function(i, workDayDto) {
-		if(dateify(workDayDto.workDay.stringDate).getTime() == dateToFind.getTime()){		
+		if(workDayDto.date != null){
+			if(workDayDto.date.getTime() == dateToFind.getTime()){		
+				result = workDayDto;
+				return false;
+			}
+		}
+		else if(dateify(workDayDto.workDay.stringDate).getTime() == dateToFind.getTime()){		
 			result = workDayDto;
 			return false;
 		}		

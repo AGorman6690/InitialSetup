@@ -223,7 +223,7 @@ public class UserServiceImpl {
 
 
 	public List<JobSearchUser> getEmployeesByJob(int jobId) {
-		return repository.getEmpolyeesByJob(jobId);
+		return repository.getEmployeesByJob(jobId);
 	}
 
 	public List<Profile> getProfiles() {
@@ -365,6 +365,9 @@ public class UserServiceImpl {
 		Application application = applicationService.getApplication(jobId, userId);
 		applicationService.updateApplicationFlag(application, "IsAccepted", 1);
 		
+		insertRatings_toRateEmployer(jobId);
+		insertRatings_toRateEmployees(jobId);
+		
 		jobService.inspectJob_isStillAcceptingApplications(jobId);
 		
 	}
@@ -408,6 +411,9 @@ public class UserServiceImpl {
 			applicationDtos.add(applicationDto);
 		}
 		
+		List<Job> jobs_terminated = jobService.getJobs_terminatedFrom_byUser(employee.getUserId());
+		
+		model.addAttribute("jobs_terminated", jobs_terminated);
 		model.addAttribute("user", employee);	
 		model.addAttribute("applicationDtos", applicationDtos);
 		
@@ -415,7 +421,7 @@ public class UserServiceImpl {
 		// Since a job becomes one-that-needs-a-rating only after the passage of time,
 		// as opposed to a particular event, this is the best place to put it becuase
 		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employee.getUserId());		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
 	}
 	
@@ -490,7 +496,7 @@ public class UserServiceImpl {
 		// Since a job becomes one-that-needs-a-rating only after the passage of time,
 		// as opposed to a particular event, this is the best place to put it becuase
 		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(employer.getUserId());		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);	
 
 		model.addAttribute("jobDtos", jobDtos);
@@ -570,8 +576,8 @@ public class UserServiceImpl {
 		
 		SessionContext.setUser(session, user);
 		
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byUser(user.getUserId());		
-		session.setAttribute("jobs_needRating", jobs_needRating);	
+//		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(user.getUserId());		
+//		session.setAttribute("jobs_needRating", jobs_needRating);	
 		
 	}
 	
@@ -823,4 +829,40 @@ public class UserServiceImpl {
 	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {		
 		return repository.getEmployees_byJobAndDate(jobId, dateStrings);
 	}
+
+	public void setModel_employeeLeaveJob_confirm(Integer jobId, Model model, HttpSession session) {
+		
+		if(verificationService.isSessionUserAnEmployee(session, jobId)){
+			boolean hasJobStarted = jobService.getHasJobStarted(jobId);
+			boolean isJobComplete = jobService.getIsJobComplete(jobId);	
+			
+			model.addAttribute("jobId", jobId);
+			model.addAttribute("hasJobStarted", hasJobStarted);
+			model.addAttribute("isJobComplete", isJobComplete);
+		}		
+	}	
+
+	public JobSearchUser getEmployee(Integer jobId, int userId) {
+		return repository.getEmployee(jobId, userId);
+	}
+
+	public List<JobSearchUser> getEmployees_whoLeft(boolean departureHasBeenAcknowledged, int jobId) {
+		return repository.getEmployees_whoLeft(departureHasBeenAcknowledged, jobId);
+	}
+
+	public void acknowledgeEmployeeLeft(int jobId, int userId, HttpSession session) {
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			jobService.updateEmploymentFlag(jobId, userId, "Flag_EmployerAcknowledgedEmployeeLeftJob", 1);
+		}
+		
+	}
+
+	public Double getRating_givenByUser(Integer jobId, int userId) {		
+		return repository.getRating_givenByUser(jobId, userId);
+	}
+
+	public List<JobSearchUser> getEmployees_byJob_completedWork(int jobId) {
+		return repository.getEmployees_byJob_completedWork(jobId);
+	}
+
 }

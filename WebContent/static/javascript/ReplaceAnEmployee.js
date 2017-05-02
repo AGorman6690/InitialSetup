@@ -54,18 +54,7 @@ $(document).ready(function() {
 		var $calendar_times = $("#select-times-cal");		
 		initCalendar_editWorkDays($calendar, firstDate, numberOfMonths)		
 	})
-
-//	$("#select-an-employee-cont p").click(function(){
-//		$("#post-select").show();
-//		
-//		$("#select-an-employee-cont [data-toggle-id").click();
-//		
-//		var $e = $("employee-to-replace-name");
-//		$e.html($(this).html());
-//		$e.attr("data-user-id", $(this).attr("data-user-id"));
-//		
-//
-//	})	
+	
 	$("#cancel-employee-removal").click(function() {
 		$("#edit-options").show();
 		$("#employee-schedule-container").hide();
@@ -94,24 +83,35 @@ $(document).ready(function() {
 //		if($("#edit-dates").hasClass("selected")){
 			
 
-			if(areOriginalWorkDaysBeingRemoved()){
-				var datesOriginal = getSelectedDates($calendar, "yy-mm-dd", "original");
-				var datesRemoved = [];
-				$(datesOriginal).each(function(i, dateString) {
-					var td = getTdByDate($calendar, dateify(dateString)); 
-					if($(td).hasClass("not-selected")) datesRemoved.push(dateString);
-				})
-
-				executeAjaxCall_editJob_deleteWorkDays(jobId, datesRemoved);
-			}else{
-				var editJobDto = {};			
-				editJobDto.jobId = $("#jobId").val();
-				editJobDto.newWorkDays = getWorkDays_forAjaxRequest(workDayDtos);					
-				executeAjaxCall_saveEdits_dates(editJobDto);	
-			}
+//			if(areOriginalWorkDaysBeingRemoved()){
+//				var datesOriginal = getSelectedDates($calendar, "yy-mm-dd", "original");
+//				var datesRemoved = [];
+//				$(datesOriginal).each(function(i, dateString) {
+//					var td = getTdByDate($calendar, dateify(dateString)); 
+//					if($(td).hasClass("not-selected")) datesRemoved.push(dateString);
+//				})
+//
+//				executeAjaxCall_editJob_deleteWorkDays(jobId, datesRemoved);
+//			}
+//			else{
+						
+				
+				var newWorkDays = getWorkDays_forAjaxRequest(workDayDtos);					
+				executeAjaxCall_saveEdits_dates(g_jobId, newWorkDays);	
+//			}
 			
 //		}
 		
+	})
+	
+	$("#work-days-to-add").on("change", "select", function() {
+		
+		var $e = $(this);
+		var date = dateify($e.closest("[data-date]").attr("data-date"));
+		var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
+		var stringTime = $e.find("option:selected").attr("data-filter-value");
+		if($e.hasClass("start-time")) workDayDto.workDay.stringStartTime = stringTime;
+		else workDayDto.workDay.stringEndTime = stringTime;
 	})
 	
 	$("#confirm-employee-removal").click(function () {
@@ -218,7 +218,6 @@ function initCalendar_editWorkDays($calendar, firstDate, numberOfMonths){
 					$("#affected-employees-html").empty();
 			}
 		},		        
-        // This is run for every day visible in the datepicker.
         beforeShowDay: function (date) {       
         	var className = "";
         	
@@ -229,6 +228,35 @@ function initCalendar_editWorkDays($calendar, firstDate, numberOfMonths){
         	
         	return [true, className];
         
+     	},
+     	afterShow: function(){
+     		var $e = $("#work-days-to-add");
+     		$e.empty();
+     		$calendar.find("td.active111:not(.original)").each(function(i, td) {
+				
+
+				
+				var date = getDateFromTdElement(td);
+				var workDayDto = getWorkDayDtoByDate(date, workDayDtos);
+				
+				
+     			var html = "<div data-date='" + $.datepicker.formatDate("yy-mm-dd", date) + "'>" +
+     					"<span class='date'>" + $.datepicker.formatDate("D M dd, yy", date) + "</span>" +
+				"<label>Start Time<select class='start-time'></select></label>" +
+				"<label>End Time<select class='end-time'></select></label>" +
+				"</div>";
+     			
+				$e.append(html);
+			
+				var $startTime = $e.find(".start-time").last();
+				var $endTime = $e.find(".end-time").last();
+				setTimeOptions($startTime, 30);
+				setTimeOptions($endTime, 30);
+				
+				$startTime.find("option[data-filter-value='" + workDayDto.workDay.stringStartTime + "']").prop("selected", true);
+				$endTime.find("option[data-filter-value='" + workDayDto.workDay.stringEndTime + "']").prop("selected", true);
+				
+			})
      	},
 		defaultDate: firstDate
     });	
@@ -261,18 +289,18 @@ function initCalendar_editEmployeeSchedule($calendar, firstDate, numberOfMonths)
 		defaultDate: firstDate
     });	
 }
-function executeAjaxCall_editJob_deleteWorkDays(jobId, dateStrings_toDelete){
-	$.ajax({
-		type: "POST",
-		url: "/JobSearch/job/" + jobId + "/delete-work-days",
-		headers: getAjaxHeaders(),
-		contentType: "application/json",
-		data: JSON.stringify(dateStrings_toDelete),
-		dataType: "text",
-	}).done(function(response) {
-		location.reload(true);
-	})	
-}
+//function executeAjaxCall_editJob_deleteWorkDays(jobId, dateStrings_toDelete){
+//	$.ajax({
+//		type: "POST",
+//		url: "/JobSearch/job/" + jobId + "/delete-work-days",
+//		headers: getAjaxHeaders(),
+//		contentType: "application/json",
+//		data: JSON.stringify(dateStrings_toDelete),
+//		dataType: "text",
+//	}).done(function(response) {
+//		location.reload(true);
+//	})	
+//}
 function executeAjaxCall_removeDate_getAffectedEmployees(jobId, originalDates_notSelected){
 	$.ajax({
 		type: "POST",
@@ -317,19 +345,17 @@ function getWorkDays_forAjaxRequest(workDayDtos){
 	return workDays;
 }
 
-function executeAjaxCall_saveEdits_dates(editJobDto) {
+function executeAjaxCall_saveEdits_dates(jobId, newWorkDays) {
+	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
-		url: "/JobSearch/job/edit/work-days",
+		url: "/JobSearch/job/" + jobId + "/edit/work-days",
 		contentType: "application/json",
-		data: JSON.stringify(editJobDto),
+		data: JSON.stringify(newWorkDays),
 		dataType: "text",
-		success: function(response) {
+	}).done(function(response) {
+			broswerIsWaiting(false);
 			location.reload();
-		},
-		error: function(response) {
-			
-		}
 	})
 }

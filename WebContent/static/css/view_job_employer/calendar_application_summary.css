@@ -34,8 +34,8 @@
 	position: absolute;
 	right: 2px;
 /* 	bottom: 2px; */
-	left: 20%;
-	width: 60%;
+	left: 15%;
+	width: 70%;
 }
 
 #job-calendar-application-summary td.all-positions-filled .col-cont{
@@ -77,13 +77,13 @@
 /* 	height: 80%; */
 	position: absolute;
 /* 	width: 95%; */
-	width: 60%;
+	width: 70%;
 /* 	height: 50%; */
 /*  	background: #6e8cc5; */
 /*  	background: #617ea5; */
  	background: #36595a;
 /* 	bottoms: 3px; */
-	left: 20%;
+	left: 15%;
 	text-align: center;
 /* 	min-height: 19px; */
 }

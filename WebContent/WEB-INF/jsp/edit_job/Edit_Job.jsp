@@ -34,6 +34,7 @@
 				</div>			
 			</div>
 		</div>		
+		<div id="work-days-to-add" class="pad-top-2"></div>	
 		<div class="pad-top">
 			<span id="save-edits" class="sqr-btn green">Save</span>
 		</div>	
@@ -62,7 +63,8 @@
 			<div class="item calendar-container teal-navigation v2">
 				<div id="select-times-cal" class="calendar">
 				</div>											
-			</div>		
+			</div>	
+			
 		</div>
 	</div>	
 	<div id="employee-schedule-container" class="width-500 page-section pad-top">
@@ -77,8 +79,8 @@
 					</div>
 				</div>
 				<div id="verify-removal" class=" hide-on-load">
-					<h3 class="h3 green"><span class="employee-name"></span> will be removed from all unfinished work days that he was assigned to work.</h3>
-					<h3 class="h3 green">Are you sure you want to remove <span class="employee-name"></span>?</h3>
+					<h4 class="h4"><span class="employee-name"></span> will be removed from all unfinished work days that he was assigned to work.</h4>
+					<h4 class="h4">Are you sure you want to remove <span class="employee-name"></span>?</h4>
 
 					<div class="pad-top">
 						<span id="confirm-employee-removal" class="sqr-btn green">Yes</span>

@@ -187,6 +187,9 @@ public class JobRepository {
 					e.setDateId(rs.getInt("DateId"));			
 					e.setIsComplete(rs.getInt("IsComplete"));
 					
+					// I can't remember why I am swapping the slash and the dash...
+					// I think it's because in the browser, js likes dates with a dash...
+					// Any who.
 					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
 					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
 					return e;
@@ -734,13 +737,14 @@ public class JobRepository {
 		// *******************************************************
 		// *******************************************************
 		
-		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId)"
-						+ "  VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId, Timestamp_EndDateTime)"
+						+ "  VALUES (?, ?, ?, ?, ?)";
 
 		jdbcTemplate.update(sql, new Object[]{ jobId,
 												workDay.getStringStartTime(),
 												workDay.getStringEndTime(),
-												workDay.getDateId()});
+												workDay.getDateId(),
+												workDay.getTimestamp_endDate()});
 
 	}
 
@@ -940,20 +944,6 @@ public class JobRepository {
 		return JobRowMapper(sql, new Object[]{ userId });
 	}
 
-	public List<Job> getJobs_needRating_byUser(int userId) {
-
-		// The sub query is required because **employers**, if a job had more than 1 employee,
-		// will return the same job more than once.
-		
-		String sql = "SELECT * FROM job j WHERE j.JobId IN ("
-						+ " SELECT DISTINCT(j1.JobId) FROM job j1"
-						+ " INNER JOIN rating r ON r.JobId = j1.JobId "
-						+ " WHERE r.RatedByUserId = ?"
-						+ " AND r.Value = ?"
-						+ " AND j1.Status = ? )";
-		
-		return JobRowMapper(sql, new Object[]{ userId, RateCriterion.VALUE_NOT_YET_RATED, Job.STATUS_PAST });
-	}
 
 	public void addSkill(Integer jobId, Skill skill) {
 		
@@ -1137,12 +1127,12 @@ public class JobRepository {
 		return jdbcTemplate.queryForList(sql, new Object[]{ jobId }, String.class);
 	}
 
-	public void replaceEmployee(int jobId, int userId) {
-		
-		String sql = "UPDATE employment SET WasTerminated = 1 WHERE JobId = ? AND UserId = ?";
-		jdbcTemplate.update(sql, new Object[]{ jobId, userId });
-		
-	}
+//	public void replaceEmployee(int jobId, int userId) {
+//		
+//		String sql = "UPDATE employment SET WasTerminated = 1 WHERE JobId = ? AND UserId = ?";
+//		jdbcTemplate.update(sql, new Object[]{ jobId, userId });
+//		
+//	}
 
 	public void deleteProposedWorkDays(List<WorkDay> workDays) {
 		String sql = "DELETE FROM employment_proposal_work_day"
@@ -1239,16 +1229,79 @@ public class JobRepository {
 		return WorkDayMapper(sql, new Object[]{ userId, jobId });
 	}
 
-	public void updateWasTerminated(int jobId, int userId, int value) {
-		String sql = "UPDATE employment SET WasTerminated = ? WHERE JobId = ? AND UserId = ?";
-		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });		
-	}
-
 	public void updateWorkDay_isComplete(int workDayId, int value) {
 		String sql = "UPDATE work_day SET IsComplete = ? WHERE WorkDayId = ?";
 		jdbcTemplate.update(sql, new Object[]{ value, workDayId });		
 	}
 
+	public List<WorkDay> getWorkDays_incomplete(Integer jobId) {
+		String sql = "SELECT * FROM work_day wd WHERE wd.WorkDayId IN ("
+				+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd"
+				+ " WHERE wd.JobId = ?"
+				+ " AND wd.IsComplete = 0"
+				+ ")";
+				
+	return WorkDayMapper(sql, new Object[]{ jobId });
+	}
 
+	public void updateEmploymentFlag(int jobId, int userId, String flag, int value) {
+		String sql = "UPDATE employment SET " + flag + " = ? WHERE jobId = ? AND UserId = ?";
+		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });		
+	}
+
+	public List<Job> getJobs_terminatedFrom_byUser(int userId) {
+		String sql = "SELECT * FROM job j"
+				+ " JOIN employment e ON j.JobId = e.JobId"
+				+ " WHERE j.Status != ?"
+				+ " AND e.UserId = ?"
+				+ " AND e.Flag_EmployerTerminatedEmployee = 1"
+				+ " AND e.Flag_EmployeeAcknowledgedEmployerRemoval = 0";
+		return JobRowMapper(sql, new Object[]{ Job.STATUS_PAST, userId });
+	}
+
+	public List<Job> getJobs_completedByUser(int userId) {
+		String sql = "SELECT * FROM job j"
+//				+ " JOIN application a ON j.JobId = a.JobId"
+//				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+//				+ " WHERE e.UserId = ?"
+//				+ " AND e.WasTerminated = 0"
+				+ " AND j.JobId NOT IN ("
+				+ " SELECT DISTINCT(j.JobId) FROM job j"
+				+ " JOIN work_day wd ON j.JobId = wd.JobId"
+				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " WHERE wd.IsComplete = 0"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND e.UserId = ?"
+				+ " AND e.WasTerminated = 0"
+				+ " )";
+		return JobRowMapper(sql, new Object[]{ userId });
+	}
+
+	public List<Job> getJobs_needRating_byEmployer(int userId) {
+		
+		String sql = "SELECT * FROM job j"
+				+ " WHERE j.JobId IN ("
+				+ " SELECT DISTINCT j.JobId FROM job j"
+				+ "	JOIN rating r ON j.JobId = r.JobId AND r.RatedByUserId = j.UserId"
+				+ " WHERE r.Value IS NULL"
+				+ " )"
+				+ " AND j.JobId NOT IN ("
+				+ " SELECT DISTINCT(j.JobId) FROM job j"
+				+ " JOIN work_day wd ON j.JobId = wd.JobId"
+				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " WHERE wd.IsComplete = 0"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND j.UserId = ?"
+				+ " AND e.WasTerminated = 0"
+				+ " )";
+		
+		return JobRowMapper(sql, new Object[]{ userId });
+	}
 }
 

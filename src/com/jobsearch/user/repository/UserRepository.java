@@ -221,7 +221,7 @@ public class UserRepository {
 
 	}
 
-	public ArrayList<JobSearchUser> getEmpolyeesByJob(int jobId) {
+	public ArrayList<JobSearchUser> getEmployeesByJob(int jobId) {
 
 		String sql = "SELECT * FROM user u"
 					+ " INNER JOIN employment e ON e.UserId = u.UserId"
@@ -230,6 +230,26 @@ public class UserRepository {
 
 		return (ArrayList<JobSearchUser>) this.JobSearchUserRowMapper(sql, new Object[] { jobId });
 	}
+	
+
+	public List<JobSearchUser> getEmployees_byJob_completedWork(int jobId) {
+		String sql = "SELECT * FROM user u"
+				+ " JOIN employment e ON e.UserId = u.UserId"
+				+ " AND u.UserId NOT IN ("
+				+ " SELECT u.userId FROM employment e"
+				+ " JOIN application a ON e.UserId = a.UserId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+				+ " WHERE e.JobId = ?"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND e.WasTerminated = 0"
+				+ " AND wd.IsComplete = 0"
+				+ ")";
+
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+	}
+
 
 
 	public ArrayList<Profile> getProfiles() {
@@ -289,7 +309,7 @@ public class UserRepository {
 	}
 
 	public Double getRating(int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value > -1";
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value is not null";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
 
@@ -501,11 +521,10 @@ public class UserRepository {
 
 	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {
 		
-		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, Value, RatedByUserId)"
-					+ " VALUES (?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, RatedByUserId)"
+					+ " VALUES (?, ?, ?, ?)";
 		
-		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId,
-											RateCriterion.VALUE_NOT_YET_RATED, ratedByUserId });
+		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId, ratedByUserId });
 		
 	}
 
@@ -570,6 +589,41 @@ public class UserRepository {
 		sql += ") )";
 		
 		return JobSearchUserRowMapper(sql,  args.toArray() );
+	}
+	
+
+	public JobSearchUser getEmployee(Integer jobId, int userId) {
+		String sql = "SELECT * FROM user u"
+				+ " JOIN employment e ON u.UserId = e.UserId"
+				+ " WHERE e.UserId = ?"
+				+ " AND e.JobId = ?";
+		
+		List<JobSearchUser> result = JobSearchUserRowMapper(sql, new Object[]{ userId, jobId });
+		if(verificationService.isListPopulated(result)) return result.get(0);
+		else return null;
+	}
+
+	public List<JobSearchUser> getEmployees_whoLeft(boolean departureHasBeenAcknowledged, int jobId) {
+		
+		String sql = "SELECT * FROM user u"
+				+ " JOIN employment e ON u.UserId = e.UserId"
+				+ " WHERE e.JobId = ?"
+				+ " AND e.EmployeeLeftJob = 1";
+		
+		if(departureHasBeenAcknowledged) sql += " AND e.Flag_EmployerAcknowledgedEmployeeLeftJob = 1";
+		else sql += " AND e.Flag_EmployerAcknowledgedEmployeeLeftJob = 0";
+		
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+	}
+
+	public Double getRating_givenByUser(Integer jobId, int userId) {
+		String sql = "SELECT Value FROM rating r WHERE RatedByUserId = ? AND JobId = ?";
+		try {
+			return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Double.class);	
+		} catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 }

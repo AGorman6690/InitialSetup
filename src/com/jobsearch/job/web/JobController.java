@@ -1,5 +1,6 @@
 package com.jobsearch.job.web;
 
+import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,15 @@ public class JobController {
 		List<WorkDayDto> workDayDtos = jobService.getWorkDayDtos(jobId);
 		
 		return JSON.stringify(workDayDtos);
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/leave", method = RequestMethod.GET)
+	public String leaveJob_employee(@PathVariable(value = "jobId") int jobId,
+			HttpSession session) {
+		
+		jobService.leaveJob_employee(session, jobId);
+		return "redirect:/user/profile";
+		
 	}
 
 	@RequestMapping(value = "/jobs/filtered/sort", method = RequestMethod.GET)
@@ -169,17 +179,7 @@ public class JobController {
 		
 		return "/edit_job/Employees_ByDate";
 	}
-	
-	@RequestMapping(value = "/job/{jobId}/delete-work-days", method = RequestMethod.POST)
-	@ResponseBody
-	public String editJob_deleteWorkDays(HttpSession session,
-											@PathVariable(value = "jobId") int jobId,
-											@RequestBody List<String> dateStrings_toDelete) {
 
-		jobService.deleteWorkDays(session, jobId, dateStrings_toDelete);
-		
-		return "";
-	}
 	
 	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
 	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
@@ -362,6 +362,18 @@ public class JobController {
 		return "";
 	}
 	
+	
+//	@RequestMapping(value = "/job/{jobId}/delete-work-days", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String editJob_deleteWorkDays(HttpSession session,
+//											@PathVariable(value = "jobId") int jobId,
+//											@RequestBody List<String> dateStrings_toDelete) {
+//
+//		jobService.deleteWorkDays(session, jobId, dateStrings_toDelete);
+//		
+//		return "";
+//	}
+//	
 	@ResponseBody
 	@RequestMapping(value = "/job/{jobId}/employee/{userId}/work-days", method = RequestMethod.GET)
 	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "jobId") int jobId,
@@ -371,23 +383,24 @@ public class JobController {
 		return JSON.stringify(applicationService.getWorkDayDtos_proposedWorkDays(jobId, userId, session));
 	}
 	
-	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
-	@ResponseBody
-	public String replaceEmployee(HttpSession session,
-									@PathVariable(value = "jobId") int jobId,
-									@PathVariable(value = "userId") int userId){	
-
-		jobService.replaceEmployee(session, jobId, userId);
-		return "";
-
-	}
+//	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
+//	@ResponseBody
+//	public String replaceEmployee(HttpSession session,
+//									@PathVariable(value = "jobId") int jobId,
+//									@PathVariable(value = "userId") int userId){	
+//
+//		jobService.replaceEmployee(session, jobId, userId);
+//		return "";
+//
+//	}
 		
-	@RequestMapping(value = "/job/edit/work-days", method = RequestMethod.POST)
+	@RequestMapping(value = "/job/{jobId}/edit/work-days", method = RequestMethod.POST)
 	@ResponseBody
 	public String editJob_workDays(HttpSession session,
-									@RequestBody EditJobDto editJobDto){	
+									@PathVariable(value = "jobId") int jobId,
+									@RequestBody List<WorkDay> workDays){	
 
-		jobService.editJob_workDays(session, editJobDto);
+		jobService.editJob_workDays(session, workDays, jobId);
 		return "";
 
 	}	

@@ -412,6 +412,16 @@ function showConfirmationContainer($e){
 		}	
 	}	
 	
+	
+	
+	if( (isAmountBeingCountered($responseContainer) ||
+			areWorkDaysBeingCountered($responseContainer) ) &&
+			!isSessionUserAnEmployer($responseContainer)){
+		$(".send-message").hide();
+	}else $(".send-message").show();
+		
+	
+	
 	$responseContainer.addClass("confirm");
 //	$responseContainer.find(".proceed-to-confirmation-container").hide();
 //	$responseContainer.find(".send-proposal-container").show();

@@ -11,7 +11,19 @@
 <script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>	
 	
 <div class="container center">
-	<div id="applications_list_view" class="">
+	
+	<c:if test="${!empty jobs_terminated }">
+		<div class="pad-top-2">
+			<c:forEach items="${jobs_terminated }" var="job">
+				<div class="alert-message width-500">
+					<h4 class="h4">The employer has removed you from the following job:</h4>				
+					<p>${job.jobName } <a class="sqr-btn gray-2" href="/JobSearch/employer-removed-you-from-job/${job.id}/acknowledge">OK</a></p>				
+				</div>	
+			</c:forEach>
+		</div>
+	</c:if>
+	
+	<div id="applications_list_view" class="pad-top-2">
 		<c:choose>
 			<c:when test="${applicationDtos.size() > 0 }">	
 				<%@ include file="./Applications_Employee.jsp" %>									

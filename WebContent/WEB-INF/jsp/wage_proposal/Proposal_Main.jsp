@@ -169,7 +169,6 @@
 						</div>
 					</div>	
 				</div>		
-		
 			</div>
 		</c:if>
 		<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
@@ -179,6 +178,12 @@
 				<div class="present-proposal"></div>
 			</div>
 		</c:if>	
+		<c:if test="${user.profileId == 1 &&
+						applicationDto.application.isAccepted == 1}">	
+			<div class="proposal-item respond">
+				<a href="/JobSearch/employee/leave-job/${jobDto.job.id}/confirm" class="sqr-btn gray-2">Leave</a>	
+			</div>
+		</c:if>		
 	</c:if>
 </div>
 

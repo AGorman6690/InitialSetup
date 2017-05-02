@@ -140,7 +140,7 @@ function setTimeOptions($eSelect, increment){
 		for(hourCount = 0; hourCount < 24; hourCount++){
 
 			//Am or pm
-			if(hourCount <= 12){
+			if(hourCount < 12){
 				amPm = " am";
 			}else{
 				amPm = " pm";

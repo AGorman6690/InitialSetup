@@ -5,6 +5,7 @@
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 
 
+<script src="/JobSearch/static/javascript/InputValidation.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>
 <link href="/JobSearch/static/css/Templates/forms.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/table.css" rel="stylesheet" />

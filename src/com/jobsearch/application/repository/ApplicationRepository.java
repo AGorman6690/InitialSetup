@@ -796,15 +796,21 @@ public class ApplicationRepository {
 	
 	public List<Application> getApplications_byUser_openOrAccepted(int userId) {
 		
-		String sql = "SELECT * FROM application a"
+		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN ("
+					+ "	SELECT a.ApplicationId FROM application a"
 					+ " JOIN job j ON a.JobId = j.JobId"
 					+ " LEFT JOIN employment e ON j.JobId = e.JobId" // do not include any employment has that has been terminated
-					+ " WHERE j.Status != ?"
+					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+					+ " WHERE wp.IsCurrentProposal = 1"
+					+ " AND wd.IsComplete = 0"
 					+ " AND a.UserId = ?"
 					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
-					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1 )";
+					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1 )"
+					+ " )";
 		
-		return ApplicationRowMapper(sql, new Object[]{ Job.STATUS_PAST, userId });
+		return ApplicationRowMapper(sql, new Object[]{ userId });
 	}
 
 	public void closeApplication(int applicationId) {
@@ -854,7 +860,12 @@ public class ApplicationRepository {
 
 
 	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
-		String sql = "DELETE FROM employment_proposal_work_day ep"
+		
+//		http://stackoverflow.com/questions/5816840/delete-i-cant-specify-target-table
+		
+		String sql = "DELETE FROM employment_proposal_work_day WHERE Id IN ("
+					+ " SELECT * FROM ("
+					+ " SELECT DISTINCT ep.Id FROM employment_proposal_work_day ep"
 					+ " JOIN wage_proposal wp ON ep.EmploymentProposalId = wp.WageProposalId"
 					+ " WHERE wp.IsCurrentProposal = 1"
 					+ " AND wp.ApplicationId = ?"
@@ -870,10 +881,17 @@ public class ApplicationRepository {
 			args.add(workDay.getWorkDayId());
 			isFirst = false;
 		}
-		sql += ")";
+		sql += ") ) as ep1 )";
 		
 		jdbcTemplate.update(sql, args.toArray());
 		
+	}
+
+
+	public void deleteRatings(int userId, int jobId) {
+		String sql = "DELETE FROM rating WHERE (UserId = ? AND JobId = ?)"
+				+ " OR (RatedByUserId = ? AND JobId = ?)";
+		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
 	}
 
 }

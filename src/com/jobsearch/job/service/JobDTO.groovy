@@ -78,6 +78,8 @@ public class JobDTO {
 	 
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
+	 List<JobSearchUser> employees_whoLeft
+	 
 	 RatingDTO ratingDto
 //	 List<RatingDTO> ratingDtos
 	 Double ratingValue_overall
