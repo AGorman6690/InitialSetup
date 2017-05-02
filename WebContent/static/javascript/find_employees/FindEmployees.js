@@ -152,6 +152,7 @@ function executeAjaxCall_getMakeOfferModal(jobId, $e){
 		headers: getAjaxHeaders(),
 		dataType: "html",
 		success: function(html) {
+			
 			$e.empty();
 			$e.html(html);
 			$e.find(".mod").show();

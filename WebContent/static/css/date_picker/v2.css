@@ -67,7 +67,8 @@
 	opacity: 0.4;
 }
 .v2.proposal-calendar .job-work-day.is-proposed,
-.v2.proposal-calendar .job-work-day.has-conflicting-employment{
+.v2.proposal-calendar .job-work-day.has-conflicting-employment
+.v2.proposal-calendar .job-work-day.no-available-positions{
 	opacity: 1;
 }
 .v2 .select-work-day{
@@ -111,13 +112,15 @@
 	font-size: 14px;
 }
 .v2.hide-select-work-day .select-work-day,
-.v2 .has-conflicting-employment .select-work-day,
-.v2 .has-conflicting-employment .time-display{
+.v2 td.hide-select-work-day .select-work-day,
+.v2 td.hide-time .time-display{
 	display: none;
 }
 .v2 td.job-work-day.has-conflicting-employment{
 	border: 2px solid #888;
 } 
+.v2 td.job-work-day.no-available-positions,
+.v2 td.job-work-day.no-available-positions *,
 .v2 td.job-work-day.has-conflicting-employment,
 .v2 td.job-work-day.has-conflicting-employment *{
 	background: #000;
@@ -128,7 +131,7 @@
 	background: #7ec3b4;
 	color: #fff;
 }
-.v2.proposal-calendar td.job-work-day:not(.has-conflicting-employment):not(.read-only):hover{
+.v2.proposal-calendar td.job-work-day:not(.hide-select-work-day):not(.read-only):hover{
 	cursor: pointer;
 }
 .v2.select-work-days td:not(.ui-datepicker-unselectable):hover{

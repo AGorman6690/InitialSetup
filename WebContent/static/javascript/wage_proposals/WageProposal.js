@@ -168,9 +168,10 @@ function executeAjaxCall_sendOffer($e){
 		headers : getAjaxHeaders(),
 		contentType : "application/json",	
 		data: JSON.stringify(applicationDto),
-		dataType : "json"
+		dataType: "text"
 		
 	}).done(function(response){
+		$("#findEmployees").click();
 		$responseContainer.hide();
 		broswerIsWaiting(false);
 	})	

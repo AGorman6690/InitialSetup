@@ -394,11 +394,17 @@ public class ApplicationServiceImpl {
 
 						userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
 
+						// Update the job after the employment record has been inserted.
+						// The "IsStillAcceptingApplications" property needs to be updated.
+						job = jobService.getJob(job.getId());
 
-						resolveApplicationConflicts_withinApplicationsForAJob(job, proposalBeingRespondedTo);
+						resolveApplicationConflicts_withinApplicationsForAJob(job,
+								proposalBeingRespondedTo);
 
-						resolveApplicationConflicts(session, employmentProposalDto.getApplicationId(),
-											jobService.getWorkDays_byProposalId(proposalBeingRespondedTo.getEmploymentProposalId()));
+						resolveApplicationConflicts_withinApplicationsForUser(session,
+								employmentProposalDto.getApplicationId(),
+								jobService.getWorkDays_byProposalId(
+										proposalBeingRespondedTo.getEmploymentProposalId()));
 
 					}
 					break;
@@ -408,52 +414,72 @@ public class ApplicationServiceImpl {
 
 
 
-	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job, EmploymentProposalDTO proposalDto_justAccepted) {
-
-		List<WorkDay> workDays_toFindConflictsWith = jobService.getWorkDays_byProposalId(
-										proposalDto_justAccepted.getEmploymentProposalId());
-		List<WorkDay> workDays_withAllPositionsFilled = new ArrayList<WorkDay>();
-
-		for ( WorkDay workDay_toFindConflictWith : workDays_toFindConflictsWith ){
-			int positions_filled = getCount_positionsFilledByDay(workDay_toFindConflictWith.getDateId(),
-												job.getId());
-
-			// This condition should only be an equal sign.
-			// However, until we ensure the positions per day will never be exceeded (see note in respondToEmploymentProposal()),
-			// a greater-than-or-equal-to will be used.
-			if(positions_filled >= job.getPositionsPerDay())
-				workDays_withAllPositionsFilled.add(workDay_toFindConflictWith);
-		}
-
-		if(workDays_withAllPositionsFilled.size() > 0){
-			List<Application> applications_withConflicts = getOpenApplications_byJob_withAtLeastOneWorkDay(
-					job.getId(), workDays_withAllPositionsFilled);
-
-			for ( Application application : applications_withConflicts ){
-
-				EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(application.getApplicationId());
-				EmploymentProposalDTO modifiedProposal = currentProposal;
-
-				modifiedProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
-						currentProposal.getDateStrings_proposedDates(), workDays_withAllPositionsFilled));
-
-				updateProposalFlag(currentProposal,
-						EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS, 1);
-
-//				updateWageProposalStatus(currentProposal.getEmploymentProposalId(),
-//											EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
-
-				insertEmploymentProposal(modifiedProposal);
-
-				updateApplicationStatus(application.getApplicationId(), Application.STATUS_CANCELLED_DUE_TO_EMPLOYER_FILLED_ALL_POSITIONS);
-				updateApplicationFlag(application, Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED, 1);
-				closeApplication(application.getApplicationId());
+	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job,
+			EmploymentProposalDTO proposalDto_justAccepted) {
+		
+		if(job.getFlag_isNotAcceptingApplications() == 1) closeAllOpenApplications(job.getId());
+		else{
+	
+			List<WorkDay> workDays_toFindConflictsWith = jobService.getWorkDays_byProposalId(
+											proposalDto_justAccepted.getEmploymentProposalId());
+			List<WorkDay> workDays_withAllPositionsFilled = new ArrayList<WorkDay>();
+	
+			for ( WorkDay workDay_toFindConflictWith : workDays_toFindConflictsWith ){
+				int positions_filled = getCount_positionsFilledByDay(workDay_toFindConflictWith.getDateId(),
+													job.getId());
+	
+				// This condition should only be an equal sign.
+				// However, until we ensure the positions per day will never be exceeded (see note in respondToEmploymentProposal()),
+				// a greater-than-or-equal-to will be used.
+				if(positions_filled >= job.getPositionsPerDay())
+					workDays_withAllPositionsFilled.add(workDay_toFindConflictWith);
+			}
+	
+			if(workDays_withAllPositionsFilled.size() > 0){
+				List<Application> applications_withConflicts = getOpenApplications_byJob_withAtLeastOneWorkDay(
+						job.getId(), workDays_withAllPositionsFilled);
+	
+				for ( Application application : applications_withConflicts ){
+	
+					// Modify the proposal for the conflicting application
+					EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(
+							application.getApplicationId());
+					EmploymentProposalDTO modifiedProposal = currentProposal;
+	
+					modifiedProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
+							currentProposal.getDateStrings_proposedDates(), workDays_withAllPositionsFilled));
+	
+					updateProposalFlag(currentProposal,
+							EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS,
+							1);
+	
+					updateWageProposalStatus(currentProposal.getEmploymentProposalId(),
+												EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
+	
+					insertEmploymentProposal(modifiedProposal);
+	
+//					updateApplicationStatus(application.getApplicationId(),
+//							Application.STATUS_CANCELLED_DUE_TO_EMPLOYER_FILLED_ALL_POSITIONS);
+//					updateApplicationFlag(application,
+//							Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED, 1);
+//					closeApplication(application.getApplicationId());
+				}
 			}
 		}
 	}
 
 
-	public void resolveApplicationConflicts(HttpSession session, Integer reference_applicationId,
+	public void closeAllOpenApplications(Integer jobId) {
+		List<Application> applications_open = repository.getApplications_ByJob_OpenApplications(jobId);
+		for(Application application_open : applications_open){
+			closeApplication(application_open.getApplicationId());
+			updateApplicationFlag(application_open,
+					Application.FLAG_CLOSED_DUE_TO_ALL_POSITIONS_FILLED, 1);
+		}
+		
+	}
+
+	public void resolveApplicationConflicts_withinApplicationsForUser(HttpSession session, Integer reference_applicationId,
 											List<WorkDay> workDays_toFindConflictsWith) {
 
 		// **************************************************************
@@ -785,9 +811,14 @@ public class ApplicationServiceImpl {
 	}
 
 	public void updateApplicationFlag(Application newApplication, String flag, int value) {
+		// Why do i have this??????
+		// Just pass teh application id...
 		repository.updateApplicationFlag(newApplication.getApplicationId(), flag, value );
 	}
 
+	public void updateApplicationFlag(Integer applicationId, String flag, int value) {
+		repository.updateApplicationFlag(applicationId, flag, value );
+	}
 
 	public void insertEmploymentProsalWorkDays(EmploymentProposalDTO employmentProposalDTO) {
 
@@ -949,6 +980,7 @@ public class ApplicationServiceImpl {
 			ApplicationDTO applicationDto = new ApplicationDTO();
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos(jobId));
+			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
 
 			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
@@ -1057,5 +1089,9 @@ public class ApplicationServiceImpl {
 
 	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
 		repository.deleteProposedWorkDays(workDays, applicationId);
+	}
+
+	public List<Application> applications_closedDueToAllPositionsFilled_unacknowledged(int userId) {
+		return repository.applications_closedDueToAllPositionsFilled_unacknowledged(userId);
 	}
 }

@@ -105,14 +105,25 @@ public class ApplicationController {
 		
 		return JSON.stringify(workDayDtos);
 	}
+	
+	
+	@RequestMapping(value = "application-closed-due-to-all-positions-filleed/{applicationId}/acknowledge"
+			, method = RequestMethod.GET)
+	public String acknowledge_applicationClosed_employerFilledAllPositions(
+			@PathVariable(value = "applicationId") int applicationId, HttpSession session) {
 
+		applicationService.updateApplicationFlag(applicationId,
+				Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED, 1);
+		
+		return "redirect:/user/profile";
+	}
 	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
 	@ResponseBody
 	public String initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
 
 		applicationService.initiateContact_byEmployer(applicationDto, session);
 		
-		return JSON.stringify("");
+		return "";
 	}
 
 	

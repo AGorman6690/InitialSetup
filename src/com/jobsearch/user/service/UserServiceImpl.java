@@ -393,13 +393,31 @@ public class UserServiceImpl {
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
 			applicationDtos.add(applicationDto);
 		}
-
-		List<Job> jobs_terminated = jobService.getJobs_terminatedFrom_byUser(employee.getUserId());
-		
-		model.addAttribute("jobs_terminated", jobs_terminated);
-		model.addAttribute("user", employee);	 
 		model.addAttribute("applicationDtos", applicationDtos);
 
+
+		// Jobs the user was terminated from
+		List<Job> jobs_terminated = jobService.getJobs_terminatedFrom_byUser(employee.getUserId());
+		model.addAttribute("jobs_terminated", jobs_terminated);
+		
+		// Applications that were closed due to the employer filling all positions
+		List<Application> applications_closedDueToAllPositionsFilled_unacknowledged =
+				applicationService.applications_closedDueToAllPositionsFilled_unacknowledged(employee.getUserId());
+		List<ApplicationDTO> applicationDtos_closedDueToAllPositionsFilled_unacknowledged =
+				new ArrayList<ApplicationDTO>();
+		if(verificationService.isListPopulated(applications_closedDueToAllPositionsFilled_unacknowledged)){
+			for(Application application : applications_closedDueToAllPositionsFilled_unacknowledged){
+				ApplicationDTO applicationDto = new ApplicationDTO();
+				applicationDto.setApplication(application);
+				applicationDto.getJobDto().setJob(jobService.getJob(application.getJobId()));
+				applicationDtos_closedDueToAllPositionsFilled_unacknowledged.add(applicationDto);
+			}
+		}		
+		model.addAttribute("applicationDtos_closedDueToAllPositionsFilled_unacknowledged",
+				applicationDtos_closedDueToAllPositionsFilled_unacknowledged);
+		
+		model.addAttribute("user", employee);	 
+		
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
 		// time,

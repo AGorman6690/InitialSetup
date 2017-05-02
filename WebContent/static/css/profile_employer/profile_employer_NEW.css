@@ -97,8 +97,8 @@ td button.replace-an-employee{
 	padding: 20px;
 }
 #table_jobsWaitingToStart td a.accent:hover{
-	background: #e4e4e4;
-	border: 1px solid #cacaca;
+/* 	background: #e4e4e4; */
+/* 	border: 1px solid #cacaca; */
 	text-decoration: none;
 	border-radius: 60px;
 }

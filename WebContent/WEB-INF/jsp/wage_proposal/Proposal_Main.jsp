@@ -4,8 +4,7 @@
 	 ${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'action-required' : '' }
 	 ${applicationDto.application.isAccepted == 1 ? 'accepted' : '' }">
 	<div class="expiration-time-cont"> 
-		<c:set var="doSkipRemaingHtml" value="false"></c:set>
-		
+		<c:set var="doSkipRemaingHtml" value="false"></c:set>		
 		<c:choose>
 			<c:when test="${applicationDto.application.isAccepted == 1 }">
 				<p>Accepted</p>
@@ -14,13 +13,13 @@
 			<c:otherwise>
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
 					<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
-					<p>The proposed work days have been updated</p>
+					<p>The proposed work days have been updated to resolve overlapping work days</p>
 				</c:if>	
 				
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToEmployerFillingAllPositions == 1 }">
 					<c:choose>
 						<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">		
-							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated.</p>
+							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated to resolve overlapping work days.</p>
 						</c:when>
 						<c:otherwise>
 							<c:set var="doSkipRemaingHtml" value="true"></c:set>
@@ -33,19 +32,15 @@
 					</c:choose>		
 				</c:if>				
 			</c:otherwise>
-		</c:choose>
-	
-		
+		</c:choose>		
 		<c:if test="${!doSkipRemaingHtml && applicationDto.application.isAccepted == 0 }">			
 			<c:if test="${applicationDto.employmentProposalDto.flag_employerInitiatedContact == 1 }">
 				<p>${user.profileId == 2 ? 'You' : 'Employer'} initiated contact</p>
 			</c:if>			
 			<c:choose>	
-				<c:when test="${ applicationDto.previousProposal.flag_applicationWasReopened == 1 }">
-				
+				<c:when test="${ applicationDto.previousProposal.flag_applicationWasReopened == 1 }">				
 					<c:choose>
-						<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">
-							
+						<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">							
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer deleted work days from the job posting that affect your employment.</p>
@@ -55,11 +50,9 @@
 									<p>You deleted work days from the previously agreed upon proposal.</p>
 									<p>You are required to submit a new proposal to the applicant.</p>	
 								</c:otherwise>
-							</c:choose>
-	
+							</c:choose>	
 						</c:when>				
-						<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">
-							
+						<c:when test="${ applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">							
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer edited the start and end times that affect your employment.</p>
@@ -69,8 +62,7 @@
 									<p>You edited the start and end times that affect your employment.</p>
 									<p>The applicant is reviewing your new proposal.</p>	
 								</c:otherwise>
-							</c:choose>
-	
+							</c:choose>	
 						</c:when>				
 					</c:choose>				
 	<!-- 				********************************************** -->
@@ -83,8 +75,7 @@
 				<c:otherwise>
 	<%-- 				<c:choose> --%>
 						<c:if test="${ applicationDto.employmentProposalDto.flag_aProposedWorkDayWasRemoved == 1 ||
-										applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">
-							
+										applicationDto.previousProposal.flag_aProposedWorkDayWasRemoved == 1 }">							
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer deleted work days from the job posting that affected your proposal.</p>	
@@ -92,12 +83,10 @@
 								<c:otherwise>
 									<p>You deleted work days from the job posting that affected the applicant's proposal.</p>
 								</c:otherwise>
-							</c:choose>
-	
+							</c:choose>	
 						</c:if>				
 						<c:if test="${ applicationDto.employmentProposalDto.flag_aProposedWorkDayTimeWasEdited == 1 ||
-										applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">
-							
+										applicationDto.previousProposal.flag_aProposedWorkDayTimeWasEdited == 1 }">							
 							<c:choose>
 								<c:when test="${user.profileId == 1 }">
 									<p>The employer updated times for work days on the current proposal.</p>	
@@ -105,13 +94,11 @@
 								<c:otherwise>
 									<p>You  updated times for work days on the current proposal.</p>	
 								</c:otherwise>
-							</c:choose>
-	
+							</c:choose>	
 						</c:if>				
 	<%-- 				</c:choose>				 --%>
 				</c:otherwise>
-			</c:choose>		
-			
+			</c:choose>					
 			<c:choose>
 				<c:when test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">
 					<c:if test="${user.profileId == 1 }">						

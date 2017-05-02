@@ -180,7 +180,7 @@ public final class DateUtility {
 		LocalDate minDate = LocalDate.MAX;
 		
 		for(WorkDay workDay : workDays){
-			
+			 
 			if(workDay.getDate() == null) workDay.setDate(LocalDate.parse(workDay.getStringDate()));
 			
 			if(workDay.getDate().isBefore(minDate)) minDate = workDay.getDate();

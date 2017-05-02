@@ -75,11 +75,11 @@
 											applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0  ||
 											applicationDto.applicationDtos_conflicting_willBeSentBackToEmployer.size() > 0 }">
 									
-								<div class="conflicting-applications">
+								<div class="conflicting-applications alert-message">
 									<p class="if-you-accept">If you <span class="bold">accept</span> this proposal, your following applications:</p>
 									<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0 }">
 										<div class="disposition">
-											<h6>will be <span class="bold">removed</span> because of time conflicts</h6>
+											<h6>will be <span class="bold">removed</span> because work days overlap and this job does not allow partial availability</h6>
 											<div class="applications">
 												<ul>
 													<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeRemoved }"
@@ -92,7 +92,7 @@
 									</c:if>
 									<c:if test="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0 }">
 										<div class="disposition">
-											<h6>will be <span class="bold">modified</span> because of time conflicts</h6>
+											<h6>will be <span class="bold">modified</span> because work days overlap</h6>
 											<div class="applications">
 												<ul>
 													<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer }"

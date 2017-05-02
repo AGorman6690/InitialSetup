@@ -22,6 +22,17 @@
 			</c:forEach>
 		</div>
 	</c:if>
+	<c:if test="${!empty applicationDtos_closedDueToAllPositionsFilled_unacknowledged }">
+		<div class="pad-top-2">
+			<c:forEach items="${applicationDtos_closedDueToAllPositionsFilled_unacknowledged }"
+						 var="applicationDto">
+				<div class="alert-message width-500">
+					<h4 class="h4">Your following applications have been closed due to the employer filling all positions. Your application will remain in the employer's inbox:</h4>				
+					<p>${applicationDto.jobDto.job.jobName } <a class="sqr-btn gray-2" href="/JobSearch/application-closed-due-to-all-positions-filleed/${applicationDto.application.applicationId}/acknowledge">OK</a></p>				
+				</div>	
+			</c:forEach>
+		</div>
+	</c:if>	
 	
 	<div id="applications_list_view" class="pad-top-2">
 		<c:choose>

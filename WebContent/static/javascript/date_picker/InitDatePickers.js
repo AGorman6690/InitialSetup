@@ -29,11 +29,11 @@ function initCalendar_new($calendar, workDayDtos){
 			if(workDayDto != undefined){				
 				classNameToAdd += "job-work-day";
 				
-				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment";
+				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment hide-time hide-select-work-day";
 				if(workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
 				if(workDayDto.isAccepted == "1") classNameToAdd += " is-accepted";
 				
-				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions";
+				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions hide-time hide-select-work-day";
 				else{
 					if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
 				}
@@ -65,6 +65,8 @@ function initCalendar_new($calendar, workDayDtos){
 				html_message = "<div class='message'>";
 				if(workDayDto.hasConflictingEmployment == "1"){
 					html_message += "<p>Other Emp.</p>";
+				}else if(workDayDto.hasOpenPositions == "0"){
+					html_message += "<p>All Pos. Filled</p>";
 				}
 				html_message += "</div>";
 				

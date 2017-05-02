@@ -807,12 +807,24 @@ public class ApplicationRepository {
 					+ " AND wd.IsComplete = 0"
 					+ " AND a.UserId = ?"
 					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
-					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1 )"
+					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1)"
 					+ " )";
 		
 		return ApplicationRowMapper(sql, new Object[]{ userId });
 	}
 
+	public List<Application> applications_closedDueToAllPositionsFilled_unacknowledged(int userId) {
+	
+		String sql = "SELECT * FROM application a"
+				+ " JOIN job j ON a.JobId = j.JobId"
+				+ " WHERE a.UserId = ?"
+				+ " AND j.Status != ?"
+				+ " AND ( a.Flag_ClosedDueToAllPositionsFilled = 1 AND"
+				+ " a.Flag_ApplicantAcknowledgedAllPositionsAreFilled = 0 )";
+	
+	return ApplicationRowMapper(sql, new Object[]{ userId, Job.STATUS_PAST });
+	}
+	
 	public void closeApplication(int applicationId) {
 		String sql = "UPDATE application SET IsOpen = 0 WHERE ApplicationId = ?";
 		jdbcTemplate.update(sql, new Object[]{ applicationId });
@@ -893,5 +905,6 @@ public class ApplicationRepository {
 				+ " OR (RatedByUserId = ? AND JobId = ?)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
 	}
+
 
 }
