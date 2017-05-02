@@ -9,7 +9,7 @@
 				<span id="clearAllFilters" class="accent">Clear All</span>
 			</div>	
 			<div class="group"> 
-				<button id="getJobs" class="square-button-green">Get Jobs</button>
+				<button id="getJobs" class="sqr-btn green">Get Jobs</button>
 			</div>	
 		
 
@@ -325,7 +325,7 @@
 				</div>
 			</div>
 			<div class="mod-item center">
-				<button id="approveSaveFilter" class="square-button blue-button">Save</button>
+				<button id="approveSaveFilter" class="sqr-btn green">Save</button>
 			</div>					
 		</div>
 		

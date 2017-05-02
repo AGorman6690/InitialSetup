@@ -165,7 +165,7 @@
 								<button id="apply-multiple-times" class="sqr-btn gray-2">Apply</button>
 							</div>					
 						</div>				
-						<div class="item calendar-container teal-navigation v2 post-job">
+						<div class="item calendar-container teal-navigation v2 post-job hide-unused-rows">
 							<div id="select-times-cal" class="calendar">
 							</div>											
 						</div>	

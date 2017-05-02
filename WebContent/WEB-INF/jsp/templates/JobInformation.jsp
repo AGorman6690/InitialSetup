@@ -27,7 +27,7 @@
 			<div id="employer-rating" class="center">
 				<p class="detail-header-lbl">Employer Rating</p>
 				<c:choose>
-					<c:when test="${!empty userDto_ratings.jobDtos_jobsCompleted }">			
+					<c:when test="${userHasEnoughRatingData }">			
 						<input name="input-1" class="rating-loading"					
 							value="${jobDto.ratingValue_overall }">${jobDto.ratingValue_overall }									
 					</c:when>
@@ -36,7 +36,7 @@
 			</div>	
 		</c:if>
 		<p id="job-description">
-			${jobDto.job.description } Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+			${jobDto.job.description }
 		</p>
 		<c:if test="${jobDto.skillsRequired.size() > 0 || jobDto.skillsDesired.size() > 0 }">
 			<div id="skills-container">

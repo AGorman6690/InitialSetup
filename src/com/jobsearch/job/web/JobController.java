@@ -218,12 +218,14 @@ public class JobController {
 
 		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
 		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
-		List<JobDTO> jobDTOs = jobService.setModel_FindJobs_PageLoad(jobIds_previouslyLoaded, lastFilterRequest);
+		List<JobDTO> jobDTOs = jobService.setModel_FindJobs_PageLoad(model, session,
+				jobIds_previouslyLoaded, lastFilterRequest);
 
 		double maxDistance = jobService.getMaxDistanceJobFromFilterRequest(jobDTOs);
 		model.addAttribute("filterDto", lastFilterRequest);
 		model.addAttribute("maxDistance", maxDistance);
 		model.addAttribute("jobDtos", jobDTOs);
+
 
 		return "/find_jobs/FindJobs";
 	}
@@ -234,7 +236,9 @@ public class JobController {
 
 		jobService.setModel_LoadFindJobsFilter(savedFindJobFilterId, model, session);
 
+
 		return "/find_jobs/Filters";
+
 	}
 
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)

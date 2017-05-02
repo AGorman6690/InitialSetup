@@ -123,12 +123,12 @@ function submitRatings(){
 	        error: _error
 	    });
 
-		function _success(){
-			window.location = "/JobSearch/user/profile";
-		}
-
-		function _error(){
-		}
+//		function _success(){
+//			window.location = "/JobSearch/user/profile";
+//		}
+//
+//		function _error(){
+//		}
 			
 //	}
 }

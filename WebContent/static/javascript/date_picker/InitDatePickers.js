@@ -194,6 +194,9 @@ function initCalendar_setStartAndEndTimes($cal){
 				
 				$(td).addClass("a-date-to-set");
 				if(workDayDto.isSelected) $(td).addClass("selected-date");
+				
+				var $tr = $(td).closest("tr");
+				if($tr.hasClass("show-row") == 0) $tr.addClass("show-row");
 			})
 		}
 	})

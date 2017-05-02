@@ -481,7 +481,7 @@ public class JobServiceImpl {
 		else return null;
 	}
 
-	public List<JobDTO> setModel_FindJobs_PageLoad(List<Integer> previousJobIds, FindJobFilterDTO lastFilterRequest) {
+	public List<JobDTO> setModel_FindJobs_PageLoad(Model model, HttpSession session, List<Integer> previousJobIds, FindJobFilterDTO lastFilterRequest) {
 
 
 //		// ****************************************
@@ -489,10 +489,10 @@ public class JobServiceImpl {
 //		// ****************************************
 //
 //		// If logged in, set user account details
-//		if(SessionContext.isLoggedIn(session)){
-//			JobSearchUserDTO userDto = userService.getUserDTO_FindJobs_PageLoad(session);
-//			session.setAttribute("userDto", userDto);
-//		}
+		if(SessionContext.isLoggedIn(session)){
+			JobSearchUserDTO userDto = userService.getUserDTO_FindJobs_PageLoad(session);
+			model.addAttribute("userDto", userDto);
+		}
 
 		if(previousJobIds != null && lastFilterRequest != null){
 
@@ -581,6 +581,11 @@ public class JobServiceImpl {
 
 		FindJobFilterDTO filterDto = this.getSavedFindJobFilter(savedFindJobFilterId, session);
 		model.addAttribute("filterDto", filterDto);
+		
+		if(SessionContext.isLoggedIn(session)){
+			JobSearchUserDTO userDto = userService.getUserDTO_FindJobs_PageLoad(session);
+			model.addAttribute("userDto", userDto);
+		}
 	}
 
 	private FindJobFilterDTO getSavedFindJobFilter(int savedFindJobFilterId, HttpSession session) {

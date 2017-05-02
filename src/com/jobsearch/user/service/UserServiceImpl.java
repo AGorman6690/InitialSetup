@@ -764,9 +764,11 @@ public class UserServiceImpl {
 
 		List<Job> jobs_completed = new ArrayList<Job>();
 		if (userDto.getUser().getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			jobs_completed = jobService.getJobs_ByEmployeeAndJobStatuses(userId, Arrays.asList(Job.STATUS_PAST));
+			jobs_completed = jobService.getJobs_ByEmployeeAndJobStatuses(userId,
+					Arrays.asList(Job.STATUS_PAST));
 		} else {
-			jobs_completed = jobService.getJobs_byEmployerAndStatuses(userId, Arrays.asList(Job.STATUS_PAST));
+			jobs_completed = jobService.getJobs_byEmployerAndStatuses(userId,
+					Arrays.asList(Job.STATUS_PAST));
 		}
 
 		userDto.setRatingValue_overall(getRating(userDto.getUser().getUserId()));
@@ -777,16 +779,24 @@ public class UserServiceImpl {
 			JobDTO jobDto = new JobDTO();
 
 			jobDto.setJob(job_complete);
-			jobDto.setRatingValue_overall(getRating_byJobAndUser(job_complete.getId(), userDto.getUser().getUserId()));
+			jobDto.setRatingValue_overall(getRating_byJobAndUser(job_complete.getId(),
+					userDto.getUser().getUserId()));
 
 			jobDto.setComments(
-					jobService.getCommentsGivenToUser_byJob(userDto.getUser().getUserId(), job_complete.getId()));
+					jobService.getCommentsGivenToUser_byJob(userDto.getUser().getUserId(),
+							job_complete.getId()));
 
 			userDto.getJobDtos_jobsCompleted().add(jobDto);
 		}
 
+		boolean userHasEnoughRatingData = false;
+		if(userDto.getJobDtos_jobsCompleted() != null &&
+				userDto.getJobDtos_jobsCompleted().size() > 0 && 
+				userDto.getRatingValue_overall() != null)			
+				userHasEnoughRatingData = true;
+		
+		model.addAttribute("userHasEnoughRatingData", userHasEnoughRatingData);
 		model.addAttribute("userDto_ratings", userDto);
-
 	}
 
 	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {

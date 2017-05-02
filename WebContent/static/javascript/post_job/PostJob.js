@@ -16,10 +16,6 @@ $(document).ready(function(){
 //		alert(334)
 	})
 	
-
-	
-	
-	
 	$("#next-section, #previous-section").click(function(){
 		
 		var $nextSection;
@@ -45,6 +41,7 @@ $(document).ready(function(){
 	$("#proceed-to-preview-job-posting").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
 		var jobDto = getJobDto()
+//		broswerIsWaiting(true);
 		if(arePostJobInputsValid(jobDto)){
 			executeAjaxCall_previewJobPosting(jobDto);
 		}
@@ -139,6 +136,7 @@ function resetTimesSection(){
 	$("#no-dates-selected").show();	
 	$("#initial-time-question").hide();
 	$("#set-one-start-and-end-time").hide();
+	$("#timesContainer input[type=radio]").prop("checked", false);
 	
 	var $initalTimeQuestion = $("#initial-time-question");
 	$initalTimeQuestion.hide();
@@ -469,12 +467,8 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		data : JSON.stringify(jobDto),
 		dataType : "html",	
 		async: false,
-		success : _success,
-		error : _error,
 		cache: true
-	});
-
-	function _success(html_jobInfo) {
+	}).done( function (html_jobInfo) {
 		broswerIsWaiting(false);	
 	
 		setDisplay_previewJobPost(true);
@@ -489,10 +483,7 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		initMap();
 		$("[data-toggle-id]").click();
 //		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
-	}		
+	})
 
-	function _error() {
-		broswerIsWaiting(false);
-		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
-	}
+
 }

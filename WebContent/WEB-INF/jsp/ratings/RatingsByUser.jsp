@@ -2,7 +2,17 @@
 
 		
 			<c:choose>
-				<c:when test="${!empty userDto_ratings.jobDtos_jobsCompleted }">	
+				<c:when test="${!userHasEnoughRatingData}">
+					<c:choose>
+						<c:when test="${isViewingOnesSelf }">
+							<p>You have not completed enough jobs in order to calculate a rating at this time</p>	
+						</c:when>
+						<c:otherwise>
+							<p>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
+						</c:otherwise>
+					</c:choose>
+				</c:when>			
+				<c:otherwise>	
 					<div id="user-header">
 						<c:if test="${!isViewingOnesSelf }">
 							<h3>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName }</h3>
@@ -57,15 +67,5 @@
 							</c:forEach>
 						</div>
 					</div>		
-				</c:when>
-				<c:otherwise>
-					<c:choose>
-						<c:when test="${isViewingOnesSelf }">
-							<p>You have not completed enough jobs in order to calculate a rating at this time</p>	
-						</c:when>
-						<c:otherwise>
-							<p>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
-						</c:otherwise>
-					</c:choose>
 				</c:otherwise>
 			</c:choose>

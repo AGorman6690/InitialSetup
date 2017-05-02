@@ -534,18 +534,18 @@ public class UserRepository {
 	}
 
 	public Double getRating_byJobAndUser(Integer jobId, int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND JobId = ? AND Value > -1";
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND JobId = ? AND Value is not null";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId }, Double.class);
 
-		if (rating == null) return -1.0;
+		if (rating == null) return null;
 		else return rating;
 
 	}
 
 	public Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
 
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ? AND Value > -1";
+		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ? AND Value is not null";
 
 		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterionId }, Double.class);
 
