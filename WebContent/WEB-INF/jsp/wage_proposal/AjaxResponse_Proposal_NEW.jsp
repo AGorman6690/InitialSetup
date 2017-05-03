@@ -50,10 +50,25 @@
 				<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed ||
 								isEmployerMakingFirstOffer}"> 		
 					<div class="proposal work-day-proposal">
-						<h3 class="blue">Work Day Proposal</h3>
-						<div class="other-application-conflicts"></div>
+						<h3 class="blue">Work Day Proposal</h3>					
 						<div class="proposed-offer">
-							<h2>${user.profileId == 1 ? 'Employer' : 'Applicant' } proposed ${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } work days</h2>															
+							<h2>${user.profileId == 1 ? 'Employer' : 'Applicant' } proposed ${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } work days</h2>
+							<c:if test="${!empty applicationDto.count_conflictingApplications }">
+								<c:set var="text_application"
+								 value="${applicationDto.count_conflictingApplications == 1 ? 'application' : 'applications' }"></c:set>
+								<div class="other-application-conflicts width-500 ">
+									<h4 class="alert-text" data-toggle-id="conflicting-apps-${applicationDto.application.applicationId }">
+										${applicationDto.count_conflictingApplications} conflicting ${text_application }
+										<span class="glyphicon glyphicon-menu-down"></span>	
+									</h4>
+									<div id="conflicting-apps-${applicationDto.application.applicationId }"
+											class="alert-message hide-on-load">
+										<p>These proposed work days overlap with the following ${text_application }.</p>
+										<p class="if-you-accept">If you <span class="bold">accept</span> this proposal, your following ${text_application }:</p>
+										<%@ include file="./ConflictingApplications.jsp" %>
+									</div>
+								</div>
+							</c:if>																
 							<div class="v2 teal-title proposal-calendar hide-unused-rows calendar-container
 								 wage-proposal-calendar hide-prev-next read-only">
 								<div class="calendar proposed-calendar"

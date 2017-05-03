@@ -967,8 +967,12 @@ public class ApplicationServiceImpl {
 												applicationId,
 												jobService.getWorkDays_byProposalId(applicationDto.getEmploymentProposalDto().getEmploymentProposalId()));
 
+			if(applicationDtos_conflicting != null)
+				applicationDto.setCount_conflictingApplications(applicationDtos_conflicting.size());
+			
 			categorizeConflictingApplicationDtos(session, applicationDto, applicationDtos_conflicting);
 
+		
 			// Model
 			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);

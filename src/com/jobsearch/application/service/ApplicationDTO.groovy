@@ -38,7 +38,7 @@ class ApplicationDTO {
 	JobSearchUserDTO applicantDto
 	int applicantId
 		
-	List<ApplicationDTO> applicationDtos_conflicting
+	Integer count_conflictingApplications
 	List<ApplicationDTO> applicationDtos_conflicting_willBeRemoved
 	List<ApplicationDTO> applicationDtos_conflicting_willBeSentBackToEmployer
 	List<ApplicationDTO> applicationDtos_conflicting_willBeModifiedButRemainAtEmployer

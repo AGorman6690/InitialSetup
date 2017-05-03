@@ -75,10 +75,12 @@
 .application-proposal-container.action-required{
 	background: #e0d5d5;
 	border: 2px solid #cacaca;
+/*     border-top: 20px solid #a96d6d; */
 }
 td .application-proposal-container.accepted{
     background: #93c1b6;
     border: 2px solid #cacaca;     
+/*     border-top: 20px solid #93c1b6; */
 }
 .application-proposal-container{
 	padding: 20px 10px;
@@ -111,4 +113,13 @@ span.expiration-time{
 	position: absolute;
 	background: #bb4555;
     color: #fff;
+}
+.other-application-conflicts .alert-message{
+	text-align: left;
+}
+.conflicting-applications .disposition p{
+	padding-left: 25px;
+}
+.conflicting-applications .disposition ul{
+	margin-left: 40px;
 }
