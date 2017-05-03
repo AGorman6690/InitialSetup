@@ -17,6 +17,7 @@
 		<div id="imageContainer">			
 			<p id="make-edits" class="linky-hover">Edit</p>
 			<p id="save-edits" class="linky-hover">Save</p>		
+			<p>${userDto.user.firstName } ${userDto.user.lastName }</p>
 			<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">			
 		</div>
 		<div id="personalInfo" class="pad-top">

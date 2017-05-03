@@ -1249,6 +1249,7 @@ public class JobRepository {
 				+ " SELECT DISTINCT j.JobId FROM job j"
 				+ "	JOIN rating r ON j.JobId = r.JobId AND r.RatedByUserId = j.UserId"
 				+ " WHERE r.Value IS NULL"
+				+ "	AND j.UserId = ?"
 				+ " )"
 				+ " AND j.JobId NOT IN ("
 				+ " SELECT DISTINCT(j.JobId) FROM job j"
@@ -1263,7 +1264,7 @@ public class JobRepository {
 				+ " AND e.WasTerminated = 0"
 				+ " )";
 		
-		return JobRowMapper(sql, new Object[]{ userId });
+		return JobRowMapper(sql, new Object[]{ userId, userId });
 	}
 
 }

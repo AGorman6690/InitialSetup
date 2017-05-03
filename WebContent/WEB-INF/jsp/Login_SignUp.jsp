@@ -173,7 +173,7 @@
 			
 			$("#nav_logOut").trigger("click");
 			$("#login-password").val('2');
-			$("#userName").val('2');
+			$("#userName").val('2a');
 			$("#login").click();
 
 		})

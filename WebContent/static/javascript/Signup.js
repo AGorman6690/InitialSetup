@@ -5,7 +5,7 @@ $(document).ready(function(){
 		
 
 	
-		if(areInputsValid_signUp()){
+//		if(areInputsValid_signUp()){
 			
 		
 
@@ -21,7 +21,7 @@ $(document).ready(function(){
 			
 			executeAjaxCall_signUp(user);
 
-		}
+//		}
 	})
 	
 	$("#signup-password").on("focusout", function(){

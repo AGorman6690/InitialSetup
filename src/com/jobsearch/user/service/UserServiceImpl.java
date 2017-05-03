@@ -92,7 +92,7 @@ public class UserServiceImpl {
 		JobSearchUserDTO newUserDto = getNewUserDto(proposedUser);
 		newUserDto.setUser(proposedUser);
 
-		if (!newUserDto.getIsInvalidNewUser()) {
+//		if (!newUserDto.getIsInvalidNewUser()) {
 
 			proposedUser.setPassword(encryptPassword(proposedUser.getPassword()));
 
@@ -102,7 +102,7 @@ public class UserServiceImpl {
 					"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
 							+ newUser.getUserId());
 
-		}
+//		}
 
 		return newUserDto;
 	}
