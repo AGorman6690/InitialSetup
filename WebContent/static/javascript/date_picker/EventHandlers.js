@@ -19,16 +19,18 @@ $(document).ready(function() {
 	
 	$("body").on("click", ".calendar-container .select-all-work-days", function() {
 		var $calendar = $(this).closest(".calendar-container").find(".calendar");
-		$(workDayDtos).each(function(i, workDayDto) {
-			if(workDayDto.isProposed == "0" || workDayDto.isProposed == null){
-				var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
-				$(td).click();
-			}
-		})
-		
+		selectAllWorkDays($calendar, workDayDtos)		
 	})
 })
 
+function selectAllWorkDays($calendar, workDayDtos){
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(workDayDto.isProposed == "0" || workDayDto.isProposed == null){
+			var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
+			$(td).click();
+		}
+	})
+}
 
 function onSelect_multiDaySelect_withRange(dateText, days){
 	

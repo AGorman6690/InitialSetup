@@ -324,6 +324,10 @@ public class ApplicationServiceImpl {
 						newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 						newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 
+						newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+						newProposal.setAmount(employmentProposalDto.getAmount());
+						
+						
 						if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
 							newProposal.setEmployerAcceptedDate(LocalDateTime.now());
 							newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));
@@ -331,17 +335,17 @@ public class ApplicationServiceImpl {
 
 						// ***********************************************************************************
 						// This needs to be verified
-						if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
-							newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
-						}
-						else{
-							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
-						}
-						if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
-							newProposal.setAmount(employmentProposalDto.getAmount());
-						}else{
-							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
-						}
+//						if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
+//							newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+//						}
+//						else{
+//							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
+//						}
+//						if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
+//							newProposal.setAmount(employmentProposalDto.getAmount());
+//						}else{
+//							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
+//						}
 						// ***********************************************************************************
 
 						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),

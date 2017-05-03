@@ -71,7 +71,7 @@ public class ApplicationController {
 	}
 	
 	@RequestMapping(value = "/application/{applicationId}/all-positions-filled/acknowledge", method = RequestMethod.GET)
-	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
+	public String acknowledgeAllPositionsAreFilled(@PathVariable(value = "applicationId") int applicationId,
 								HttpSession session) {
 		
 		applicationService.updateFlag_applicantAcknowledgesAllPositionsAreFilled(session, applicationId);
@@ -84,7 +84,7 @@ public class ApplicationController {
 	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
 								Model model, HttpSession session) {
 		applicationService.setModel_ViewCurrentProposal(model, session, applicationId);
-		return "/wage_proposal/AjaxResponse_Proposal";
+		return "/wage_proposal/AjaxResponse_Proposal_NEW";
 	}
 	
 	@RequestMapping(value = "/job/{jobId}/make-an-offer/initialize", method = RequestMethod.GET)

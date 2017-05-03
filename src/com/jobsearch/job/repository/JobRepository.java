@@ -361,7 +361,10 @@ public class JobRepository {
 		// https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
 		String sql = "SELECT *, "
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" + " FROM job j WHERE j.Status < 2";
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" 
+				+ " FROM job j"
+				+ " WHERE j.Status < 2"
+				+ " AND j.Flag_IsNotAcceptingApplications = 0";
 
 		argsList.add(filter.getLat());
 		argsList.add(filter.getLng());

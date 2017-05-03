@@ -32,7 +32,7 @@ public class WelcomeController {
 		JobSearchUser sessionUser = new JobSearchUser();
 		return sessionUser;
 	}
-
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome(Model model, HttpSession session,
 					@RequestParam(name = "error", required = false) boolean error) {

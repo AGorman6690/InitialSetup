@@ -25,7 +25,7 @@
 <!-- 		</p> -->
 		<c:if test="${sessionScope.user.profileId == 1 }">
 			<div id="employer-rating" class="center">
-				<p class="detail-header-lbl">Employer Rating</p>
+				<p class="detail-header-lbl green">Employer Rating</p>
 				<c:choose>
 					<c:when test="${userHasEnoughRatingData }">			
 						<input name="input-1" class="rating-loading"					
@@ -35,9 +35,12 @@
 				</c:choose>
 			</div>	
 		</c:if>
-		<p id="job-description">
-			${jobDto.job.description }
-		</p>
+		<div class="width-500">
+<!-- 			<p class="detail-header-lbl">Description</p> -->
+			<p id="job-description">
+				${jobDto.job.description }
+			</p>
+		</div>
 		<c:if test="${jobDto.skillsRequired.size() > 0 || jobDto.skillsDesired.size() > 0 }">
 			<div id="skills-container">
 <!-- 				<p data-toggle-id="skills-details" class="detail-header-lbl">Skills<span class="glyphicon-menu-down glyphicon"></span></p> -->
@@ -94,7 +97,7 @@
 	<div id="middle-container" class="center">		
 	
 		<c:if test="${jobDto.workDayDtos.size() > 1 }">
-			<p class="detail-header-lbl">
+			<p class="detail-header-lbl green">
 				<c:choose>
 					<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
 						Applicants can apply for one or more days

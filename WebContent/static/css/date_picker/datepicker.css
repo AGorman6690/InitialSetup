@@ -45,7 +45,12 @@
 	border-bottom: 1px solid #cacaca;
 }
  
-.ui-datepicker-title { text-align: center; }
+.ui-datepicker-title {
+	text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    color: #197994
+}
  
 .ui-datepicker-month {
     position: relative;

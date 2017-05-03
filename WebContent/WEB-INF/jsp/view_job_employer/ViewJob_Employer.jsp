@@ -16,7 +16,7 @@
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>
 		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants.css" />
-		<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/applicants_tileView.css" />	
+			
 	</c:if>
 	
 	<c:if test="${context == 'complete' }">	
@@ -65,7 +65,7 @@
 			</div>	
 		</c:if>	
 		<c:if test="${context == 'waiting' || context == 'in-process' || context == 'complete' }">
-			<div id="employeesContainer" class="page-section pad-top-2">				
+			<div id="employeesContainer" class="page-section">				
 				<div id="employees" class="">
 					<%@ include file="./Employees.jsp" %>					
 				</div>			

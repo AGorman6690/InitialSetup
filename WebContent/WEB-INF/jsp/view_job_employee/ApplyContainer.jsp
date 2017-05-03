@@ -9,7 +9,7 @@
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div class="pad-top-2">
+		<div class="pad-top">
 			<a id="not-logged-in-warning"	class="${!isLoggedIn ? 'show-warning' : ''}"
 				href="/JobSearch/login-signup?login=true">You must be logged in to apply for a job
 			</a>	

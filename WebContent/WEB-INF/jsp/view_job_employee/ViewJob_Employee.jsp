@@ -25,34 +25,34 @@
 </div>
 
 
-<c:if test="${isLoggedIn}">
-	<div id="applicationStatus">	
-		<c:choose>					
-			<c:when test="${context == 'find' && !empty jobDto.application}">		
-					${jobDto.application.status == 0 ||
-						 jobDto.application.status == 2 ||
-						 jobDto.application.status == 4 ? "Application has been submitted" :
-						jobDto.application.status == 1 ? "Application has been declined" :
-						jobDto.application.status == 5 ? "You have withdrawn your application" :
-						jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
-						"Application has been accepted" }						
-				
-			</c:when>
-			<c:when test="${context == 'find' }">
-					${
-						jobDto.availabilityStatus == 1 ? "You are not available due to other employment. You cannot apply for this job." :	
-												
-						jobDto.availabilityStatus == 3 ? "You are partially available due to other employment" :
-						jobDto.availabilityStatus == 4 ? "You are available" : "" }							
-			</c:when>					
-		</c:choose>
-	</div>
+<c:if test="${isLoggedIn}">		
+	<c:choose>					
+		<c:when test="${context == 'find' && !empty jobDto.application}">	
+			<div id="applicationStatus">	
+				${jobDto.application.status == 0 ||
+					 jobDto.application.status == 2 ||
+					 jobDto.application.status == 4 ? "Application has been submitted" :
+					jobDto.application.status == 1 ? "Application has been declined" :
+					jobDto.application.status == 5 ? "You have withdrawn your application" :
+					jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
+					"Application has been accepted" }		
+			</div>			
+		</c:when>
+		<c:when test="${context == 'find' }">
+			<div id="applicationStatus">
+				${
+					jobDto.availabilityStatus == 1 ? "You are not available due to other employment. You cannot apply for this job." :												
+					jobDto.availabilityStatus == 3 ? "You are partially available due to other employment" :
+					jobDto.availabilityStatus == 4 ? "You are available" : "" }
+			</div>							
+		</c:when>					
+	</c:choose>
 </c:if>
 
 <div id="job-info-container" class="page-section">	
 	<%@include file="../templates/JobInformation.jsp"%>						
 </div>
-<div id="employer-info-container" class="page-section center">	
+<div id="employer-info-container" class="page-section center pad-top-2">	
 	<%@ include file="../ratings/RatingsByUser.jsp"%>
 </div>
 <c:if test="${context == 'find' && empty jobDto.application &&

@@ -1,14 +1,17 @@
 <%@ include file="../includes/TagLibs.jsp" %>				
 			
+<div class="center pad-btm-2">
+	<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
+</div>
 <c:choose>						
 	<c:when test="${empty jobDto.employeeDtos}">
 		<div class="no-data">
-			<p>There are currently no employees for this job</p>
-			<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>	
+			<p>There are currently no employees for this job</p>	
 		</div>
 	</c:when>	
 	<c:otherwise>	
-		<table id="employeesTable" class="main-table-style shadow">
+
+		<table id="employeesTable" class="main-table-style shadow ">
 			<thead>
 				<tr>
 					<th id="Name">Name</th>

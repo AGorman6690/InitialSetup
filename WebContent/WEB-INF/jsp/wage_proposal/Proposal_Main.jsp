@@ -12,20 +12,20 @@
 			</c:when>
 			<c:otherwise>
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
-					<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment</p>
-					<p>The proposed work days have been updated to resolve overlapping work days</p>
+					<p>${user.profileId == 1 ? 'You' : 'Applicant'} accepted other employment.</p>
+					<p>The proposed work days have been updated to resolve overlapping work days.</p>
 				</c:if>	
 				
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToEmployerFillingAllPositions == 1 }">
 					<c:choose>
 						<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">		
-							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposed work days have been updated to resolve overlapping work days.</p>
+							<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions on select work days. The proposal has been updated to remove the work days that have been filled.</p>
 						</c:when>
 						<c:otherwise>
 							<c:set var="doSkipRemaingHtml" value="true"></c:set>
 							<c:if test="${applicationDto.application.flag_applicantAcknowledgedAllPositionsAreFilled == 0}">
-								<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions</p>
-								<p>${user.profileId == 2 ? "The applicant's" : 'Your' } proposal will remain in ${user.profileId == 2 ? "your" : "the employer's"} proposal inbox</p>
+								<p>${user.profileId == 2 ? 'You' : 'Employer'} filled all positions.</p>
+								<p>${user.profileId == 2 ? "The applicant's" : 'Your' } proposal will remain in ${user.profileId == 2 ? "your" : "the employer's"} proposal inbox.</p>
 								<a class="sqr-btn gray-2" href="/JobSearch/application/${applicationDto.application.applicationId}/all-positions-filled/acknowledge">OK</a>
 							</c:if>							
 						</c:otherwise>	

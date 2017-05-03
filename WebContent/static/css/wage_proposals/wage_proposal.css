@@ -17,10 +17,7 @@
     margin: 14px auto;
 /*     width: 400px; */
 }
-span.expiration-time{
-    font-weight: bold;
-    font-size: 17px;
-}
+
 .response-container .mod-content {
     top: 20px;
     width: 1200px;
@@ -192,11 +189,7 @@ input.counter-wage-amount{
 
 
 
-.application-proposal-container .proposal-item{
-	display: inline-block;
-	padding: 0px 18px;
-	text-align: left;
-}
+
 .application-proposal-container{
 /* 	width: 550px */
 } 
@@ -218,39 +211,7 @@ input.counter-wage-amount{
 .proposal-item.status p{
 /* 	display: inline-block */
 }
-.application-proposal-container.action-required{
-/* 	background: #bb6f6f; */
-	background: #e0d5d5;
-/* 	background: #f3efef; */
-/* 	background: #e2dddd; */
-	border: 2px solid #cacaca;
-/* 	color: #fff; */
-/*     border: 7px solid #904d4d; */
 
-    
-
-}
-td .application-proposal-container.accepted{
-    background: #93c1b6;
-/*     border: 2px solid #002f0f; */
-/* 	background: #7ca79d; */
-/* 	background: #fff; */
-/*     border: 7px solid #7ca79d;   */
-    border: 2px solid #cacaca;
-/* 	border: 7px solid #3d524d; */
-/* 	font-size: 17px; */
-     
-}
-.application-proposal-container{
-	padding: 20px 10px;
-	border: 2px solid #cacaca;
-	border-radius: 4px;	
-}
-.application-proposal-container.action-required .proposal-item > p{
-/* .application-proposal-container.action-required .proposal-item > button{ */
-/* 	color: #fff; */
-	color: #000;
-}
 
 
 .conflicting-applications{

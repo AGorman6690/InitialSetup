@@ -118,6 +118,7 @@ tbody.vertical-lines td div.vert-border{
 #map-container.corner{
 	position: absolute;
 	right: 25px;
+	top: 25px;
 }
 
 .page{
@@ -150,7 +151,7 @@ span.category{
 }
 
 #job-description{
-	padding-top: 20px;
+	padding: 20px 0px;
 	max-height: 300px;
 	overflow-y: auto; 
 	width: 700px;
@@ -268,7 +269,9 @@ span.category{
 .start-and-end-times p{
 	margin: 2px;
 }
-
+.detail-header-lbl.green{
+	color: #163b3d;
+}
 .detail-header-lbl{
 	margin-top: 20px;
 	font-weight: bold;

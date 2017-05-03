@@ -24,6 +24,10 @@ $(document).ready(function(){
 		}
 	})
 	
+	$("body").on("click", ".button-group.invalid button", function() {
+		$(this).closest(".button-group").removeClass("invalid");
+	})
+	
 	$("[data-show-id-on-click]").click(function() {
 		var idToShow = $(this).attr("data-show-id-on-click");
 		$("body").find("#" + idToShow).show();
@@ -178,8 +182,17 @@ function broswerIsWaiting(isWaiting){
 	else $("body").removeClass("waiting");
 }
 
+function setInvalidCss($e){
 
-
+	if($e.hasClass("invalid") == 0){
+		$e.addClass("invalid");
+	}	
+}
+function setValidCss($e){
+	if($e.hasClass("invalid") == 1){
+		$e.removeClass("invalid");
+	}	
+}
 function setStates(){
 	var $e = $("#state"); 
 	$e.append('<option value="" selected disabled></option>');
