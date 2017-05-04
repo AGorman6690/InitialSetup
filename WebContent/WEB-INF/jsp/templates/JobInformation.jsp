@@ -4,25 +4,8 @@
 
 
 <div class="page">
-		<div id="map-section">
-		<div id="map-container" class="corner">
-			<div id="jobAddress">
-				<p class="accent">${jobDto.job.streetAddress_formatted }</p>
-				<p class="accent">${jobDto.job.city_formatted}, ${jobDto.job.state }</p>
-				<p class="accent">${jobDto.job.zipCode_formatted }</p>		
-			</div>			
-			<div id="map" class="right-border corner" data-do-init="1"
-				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
-		</div>
-	</div>
-	
 	<div class="title">
 		<p class="job-name">${jobDto.job.jobName }</p>
-<!-- 		<p class="categories">		 -->
-<%-- 			<c:forEach items="${jobDto.categories }" var="category"> --%>
-<%-- 				<span class="category">${category.name}</span> --%>
-<%-- 			</c:forEach>	 --%>
-<!-- 		</p> -->
 		<c:if test="${sessionScope.user.profileId == 1 }">
 			<div id="employer-rating" class="center">
 				<p class="detail-header-lbl green">Employer Rating</p>
@@ -36,7 +19,6 @@
 			</div>	
 		</c:if>
 		<div class="width-500">
-<!-- 			<p class="detail-header-lbl">Description</p> -->
 			<p id="job-description">
 				${jobDto.job.description }
 			</p>
@@ -94,8 +76,7 @@
 		</c:if>		
 
 	</div>
-	<div id="middle-container" class="center">		
-	
+	<div id="middle-container" class="center">			
 		<c:if test="${jobDto.workDayDtos.size() > 1 }">
 			<p class="detail-header-lbl green">
 				<c:choose>
@@ -112,6 +93,17 @@
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
 		</div>		
 	</div>
+	<div id="map-section" class="pad-top-2">
+		<div id="map-container" class="corner">
+			<div id="jobAddress">
+				<p class="accent">${jobDto.job.streetAddress_formatted }</p>
+				<p class="accent">${jobDto.job.city_formatted}, ${jobDto.job.state }</p>
+				<p class="accent">${jobDto.job.zipCode_formatted }</p>		
+			</div>			
+			<div id="map" class="right-border corner" data-do-init="1"
+				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
+		</div>
+	</div>	
 </div>
 <div id="json_work_day_dtos">${json_work_day_dtos }</div>
 

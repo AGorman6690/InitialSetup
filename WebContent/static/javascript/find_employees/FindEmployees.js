@@ -8,22 +8,6 @@ $(document).ready(function(){
 	
 	initPage();
 	
-	
-	
-	// ********************************************************
-	// ********************************************************
-	// Address how the employer-initiated wage proposal fits into the
-	// application-initated wage proposal.
-	// Make the html and js more robust.
-	// This is kludged 
-	// ********************************************************
-	// ********************************************************
-	$("#makeOfferModal #sendOffer").click(function(){
-		
-		executeAjaxCall_sendOffer();
-
-	})
-	
 	$("#job-i-might-post").click(function(){
 		$("#filtersContainer").show();
 		$("#what-kind-of-job-container").hide();
@@ -151,24 +135,21 @@ function executeAjaxCall_getMakeOfferModal(jobId, $e){
 		url: "/JobSearch/job/" + jobId + "/make-an-offer/initialize",
 		headers: getAjaxHeaders(),
 		dataType: "html",
-		success: function(html) {
-			
-			$e.empty();
-			$e.html(html);
-			$e.find(".mod").show();
-			workDayDtos = JSON.parse($("#json_workDayDtos").html());
-			$(workDayDtos).each(function() {
-				this.isProposed = "0";
-			})
-			var $calendar = $(".calendar.counter-calendar");
-			initCalendar_new($calendar, workDayDtos);	
-//			$calendar.find("tr").show();
-			$(".counter-container").show();
-			broswerIsWaiting(false);
-		},
-		error: function(html) {
-			broswerIsWaiting(false);
-		},
+	}).done(function(html) {
+		broswerIsWaiting(false);
+		$e.html(html);
+		
+		var $proposalContainer = $e.closest("tr").find(".proposal-container");
+		$e.find(".mod").show();
+//		
+		workDayDtos = JSON.parse($("#json_workDayDtos").html());
+		$(workDayDtos).each(function() {
+			this.isProposed = "0";
+		})
+		
+		var $calendar = $proposalContainer.find(".calendar.make-initial-offer-calendar").eq(0);
+		initCalendar_new($calendar, workDayDtos);	
+	
 	})
 }
 

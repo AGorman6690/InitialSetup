@@ -111,12 +111,12 @@ tbody.vertical-lines td div.vert-border{
 
 #map.corner,
 #map-container.corner{
-	width: 275px;
-	height: 275px;
+	width: 500px;
+	height: 500px;
 }
 
 #map-container.corner{
-	position: absolute;
+/* 	position: absolute; */
 	right: 25px;
 	top: 25px;
 }
@@ -176,6 +176,7 @@ span.category{
 	width: 100%;
 }
 .title,
+#middle-container,
 #map-section.bottom{
 	width: 900px;
 	border-bottom: 2px solid #bbbbbb;

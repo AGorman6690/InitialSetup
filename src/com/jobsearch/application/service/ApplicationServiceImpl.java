@@ -979,6 +979,35 @@ public class ApplicationServiceImpl {
 			model.addAttribute("user", sessionUser);
 			model.addAttribute("isEmployerMakingFirstOffer", false);
 		}
+	}	
+
+	public void setModel_conflictingApplications(Model model, HttpSession session,
+					int applicationId_withReferenceTo, List<String> dateStrings_toFindConflictsWith) {
+		
+		Application application = getApplication(applicationId_withReferenceTo);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		ApplicationDTO applicationDto = new ApplicationDTO();
+		
+		if(SessionContext.getUser(session).getProfileId() == Profile.PROFILE_ID_EMPLOYEE){		
+			if(verificationService.didUserApplyForJob(application.getJobId(), sessionUser.getUserId())){
+			
+				List<WorkDay> workDays_toFindConflictsWith = jobService.getWorkDays_byJobAndDateStrings(
+						application.getJobId(), dateStrings_toFindConflictsWith);
+			
+				List<ApplicationDTO> applicationDtos_conflicting = getApplicationDtos_Conflicting(
+													sessionUser.getUserId(),
+													applicationId_withReferenceTo,
+													workDays_toFindConflictsWith);
+			
+				if(applicationDtos_conflicting != null)
+					applicationDto.setCount_conflictingApplications(applicationDtos_conflicting.size());
+			
+				categorizeConflictingApplicationDtos(session, applicationDto, applicationDtos_conflicting);
+				
+				model.addAttribute("areConflictsCausedByCounteringWorkDays", true);
+				model.addAttribute("applicationDto", applicationDto);
+			}	
+		}
 	}
 
 	public boolean setModel_employerMakeFirstOffer(Model model, HttpSession session, int jobId) {
@@ -1102,4 +1131,5 @@ public class ApplicationServiceImpl {
 	public List<Application> applications_closedDueToAllPositionsFilled_unacknowledged(int userId) {
 		return repository.applications_closedDueToAllPositionsFilled_unacknowledged(userId);
 	}
+
 }

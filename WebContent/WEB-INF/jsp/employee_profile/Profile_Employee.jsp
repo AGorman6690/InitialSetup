@@ -47,5 +47,6 @@
 	</div>
 </div>
 
-<%@ include file="../includes/Footer.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
+<%@ include file="../includes/Footer.jsp"%>
+

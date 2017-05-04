@@ -8,60 +8,20 @@
 		</div>
 
 		<div class="mod-body">
-			<c:choose>
-				<c:when test="${empty jobDtos_current }">
-					You cannot make an offer. In order to make an offer, you must first post a job.
-				</c:when>
-				<c:otherwise>
-					<div class="item button-group">
-						<button id="inviteToApply">Invite To Apply</button>
-						<button id="makeAnOffer">Make An Offer</button>
-					</div>
-					<p id="makeAnOffer_applicationStatus"></p>
-					<div id="selectJob_initiateContact" class="item">
-						<p>Select a job</p>
-						<select>
-							<option disabled selected></option>
-							<c:forEach items="${jobDtos_current }" var="jobDto">
-								<option data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</option>
-							</c:forEach>
-						</select>	
-					</div>
-					<div id="detailsContainer_makeAnOffer">					
-						<div class="item">
-							<p>Offer Amount</p>
-							<input id="amount" />
-						</div>
-						<div class="item">
-							<p>Your offer expires in</p>
-							<div class="time-container">
-								<span class="label-horiz">Days</span><input class="days-pre-hire" />
-							</div>
-							<div class="time-container">
-								<span class="label-horiz">Hours</span><input class="hours-pre-hire" />
-							</div>
-							<div class="time-container">
-								<span class="label-horiz">Minutes</span><input class="minutes-pre-hire" />
-							</div>
-						</div>										
-						<div class="item">														
-							<div class="calendar-container">
-								<p>Select work days you want <span class="make-offer-to-name"></span> to work</p>
-								<div id="makerOffer_workDaysCalendar" class="calendar" data-number-of-months="${jobDto.months_workDaysSpan }"
-										data-first-date="${jobDto.date_firstWorkDay }">										
-								</div>							
-								<button class="clear" data-clear-class="apply-selected-work-day">Clear</button>
-							</div>
-						</div>
-					</div>	
-					<div id="actionsContainer_initiateContact">
-						<span id="sendInvite">Send Invite</span>
-						<span id="sendOffer">Send Offer</span>
-						<span id="cancelContact">Cancel</span>			
-					</div>		
-				</c:otherwise>
-			</c:choose>	
-		</div>
-		
+			<div class="apply-action">
+					<p>Propose a  wage</p>
+					<input id="amount" type="text">		
+			</div>
+			<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed == true }">	
+				<div class="apply-action">
+						<p>Propose the days you can work</p>
+						<button id="select-all-work-days" class="sqr-btn gray-2">Select All</button>		
+						<div id="apply-work-days-calendar-container" class="v2 proposal-calendar pad-top calendar-container hide-prev-next">
+							<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+						</div>					
+				</div>	
+			</c:if>	
+		</div>		
 	</div>
 </div>
+<div id="json_workDayDtos" class="hide">${json_workDayDtos }</div>

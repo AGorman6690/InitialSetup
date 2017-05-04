@@ -39,12 +39,12 @@
 			</div>			
 		</c:when>
 		<c:when test="${context == 'find' }">
-			<div id="applicationStatus">
-				${
-					jobDto.availabilityStatus == 1 ? "You are not available due to other employment. You cannot apply for this job." :												
-					jobDto.availabilityStatus == 3 ? "You are partially available due to other employment" :
-					jobDto.availabilityStatus == 4 ? "You are available" : "" }
-			</div>							
+<!-- 			<div id="applicationStatus"> -->
+<%-- 				${ --%>
+<%-- 					jobDto.availabilityStatus == 1 ? "You are not available due to other employment. You cannot apply for this job." :												 --%>
+<%-- 					jobDto.availabilityStatus == 3 ? "You are partially available due to other employment" : --%>
+<%-- 					jobDto.availabilityStatus == 4 ? "You are available" : "" } --%>
+<!-- 			</div>							 -->
 		</c:when>					
 	</c:choose>
 </c:if>

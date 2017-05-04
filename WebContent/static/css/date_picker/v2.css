@@ -67,7 +67,7 @@
 	opacity: 0.4;
 }
 .v2.proposal-calendar .job-work-day.is-proposed,
-.v2.proposal-calendar .job-work-day.has-conflicting-employment
+.v2.proposal-calendar .job-work-day.has-conflicting-employment,
 .v2.proposal-calendar .job-work-day.no-available-positions{
 	opacity: 1;
 }
@@ -103,6 +103,15 @@
 	height: 90px;
 }
 .v2 .is-accepted .added-content {
+/* 	display: none; */
+}
+.v2 .is-accepted .message {
+	display: none;
+}
+.v2 .is-accepted .time-display {
+	display: block;
+}
+.v2 .is-accepted .select-work-day{
 	display: none;
 }
 .v2.hide-select-work-day .added-content{
@@ -111,9 +120,10 @@
 .v2 .time-display p{
 	font-size: 14px;
 }
+
 .v2.hide-select-work-day .select-work-day,
 .v2 td.hide-select-work-day .select-work-day,
-.v2 td.hide-time .time-display{
+.v2 td.hide-time:not(.is-accepted) .time-display{
 	display: none;
 }
 .v2 td.job-work-day.has-conflicting-employment{

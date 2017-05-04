@@ -615,11 +615,12 @@ public class JobServiceImpl {
 		// **************************************************
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-
+		Application application = applicationService.getApplication(jobId, sessionUser.getUserId());
 
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
-			setWorkDayDto_conflictingEmployment(workDayDto, sessionUser.getUserId());
+			setWorkDayDto_conflictingEmployment(jobId, workDayDto, sessionUser.getUserId());
+		
 		}
 
 		jobDto.setRatingValue_overall(userService.getRating(jobDto.getJob().getUserId()));
@@ -633,7 +634,7 @@ public class JobServiceImpl {
 
 			if(sessionUser != null){
 
-				jobDto.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
+				jobDto.setApplication(application);
 
 				if(jobDto.getApplication() == null){
 					jobDto.setAvailabilityStatus(this.getAvailabilityStatus(
@@ -1075,7 +1076,7 @@ public class JobServiceImpl {
 
 
 			// Conflicting employment
-			setWorkDayDto_conflictingEmployment(workDayDto, application.getUserId());
+			setWorkDayDto_conflictingEmployment(job.getId(), workDayDto, application.getUserId());
 
 			// Conflicting applications
 			workDayDto.setApplicationDtos_conflictingApplications(
@@ -1086,15 +1087,14 @@ public class JobServiceImpl {
 		return workDayDtos;
 	}
 
-	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int workDayId) {
+	public Job getConflictingEmployment_byUserAndWorkDay(int jobId_reference, int userId, int workDayId) {
+		return repository.getConflictingEmployment_byUserAndWorkDay(
+				jobId_reference,userId, workDayId);	}
 
-		return repository.getConflictingEmployment_byUserAndWorkDay(userId, workDayId);
-	}
-
-	public void setWorkDayDto_conflictingEmployment(WorkDayDto workDayDto, int userId ){
+	public void setWorkDayDto_conflictingEmployment(int jobId_reference, WorkDayDto workDayDto, int userId ){
 
 		workDayDto.setJob_conflictingEmployment(getConflictingEmployment_byUserAndWorkDay(
-				userId, workDayDto.getWorkDay().getDateId()));
+				jobId_reference, userId, workDayDto.getWorkDay().getDateId()));
 		if(workDayDto.getJob_conflictingEmployment() != null)
 			workDayDto.setHasConflictingEmployment(true);
 		else workDayDto.setHasConflictingEmployment(false);

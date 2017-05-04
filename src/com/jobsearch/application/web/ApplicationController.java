@@ -17,10 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmploymentProposalDTO;
+import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Profile;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.session.SessionContext;
@@ -57,7 +60,20 @@ public class ApplicationController {
 	}
 	
 	
+	@RequestMapping(value = "/application/{applicationId_withReferenceTo}/conflicting-applications",
+		method = RequestMethod.POST)
+	public String getConflictingApplications(@RequestBody List<String> dateStrings_toFindConflictsWith,
+						@PathVariable( value = "applicationId_withReferenceTo") int applicationId_withReferenceTo,
+						HttpSession session, Model model) {
 	
+		
+		applicationService.setModel_conflictingApplications(model, session, applicationId_withReferenceTo,
+				dateStrings_toFindConflictsWith);
+	
+		
+		return "/wage_proposal/ConflictingApplications"; 
+
+	}	
 	@ResponseBody
 	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
 	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
@@ -92,7 +108,7 @@ public class ApplicationController {
 												@PathVariable(value = "jobId") int jobId) {
 		
 		if(applicationService.setModel_employerMakeFirstOffer(model, session, jobId))
-			return "/wage_proposal/AjaxResponse_Proposal";
+			return "/wage_proposal/AjaxResponse_Proposal_NEW";
 		else return SessionContext.get404Page();
 	}
 	
@@ -134,6 +150,24 @@ public class ApplicationController {
 		applicationService.insertApplicationInvite(applicationInvite, session);
 	}
 	
+	@RequestMapping(value = "/application/{applicationId}/close", method = RequestMethod.GET)
+	public String closeApplication(@PathVariable(value = "applicationId") int applicationId,
+									HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Job job = jobService.getJob_ByApplicationId(applicationId);
+		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			if(verificationService.didUserApplyForJob(job.getId(), sessionUser.getUserId())){
+				applicationService.closeApplication(applicationId);
+			}
+		}else{
+			if(verificationService.didSessionUserPostJob(session, job.getId())){
+				applicationService.closeApplication(applicationId);
+			}
+		}		
+		
+		return "redirect:/user/profile";
+	}
 	
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
 	@ResponseBody

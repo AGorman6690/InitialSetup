@@ -11,19 +11,20 @@
     font-weight: bold;
     margin-top: 0;
 }
-.wage-proposal .proposed-offer p{
+.wage-proposal .proposed-offer .proposed-amount{
 	font-size: 28px;
 }
 .proposal-container input{
 	width: 65px;
 	text-align: center;
+    font-size: 19px;
 }
 .counter-offer{
 	padding-top: 40px;
 	display: none;
 }
 .counter-offer h2{
-	color: #9c6363;
+/* 	color: #9c6363; */
     width: 400px;
     margin: auto;
     border-top: 1px solid #cacaca;
@@ -58,8 +59,7 @@
 .proposed-values p{
 	font-size: 17px;
 }
-.confirm-proposal-accept,
-.confirm-proposal-counter{
+.confirm-message h2{
 	color: #197994;
 }
 .time-container{
@@ -73,14 +73,14 @@
     cursor: not-allowed !important;
 }
 .application-proposal-container.action-required{
-	background: #e0d5d5;
+/* 	background: #e0d5d5; */
 	border: 2px solid #cacaca;
-/*     border-top: 20px solid #a96d6d; */
+    border-top: 20px solid #a96d6d;
 }
 td .application-proposal-container.accepted{
-    background: #93c1b6;
+/*     background: #93c1b6; */
     border: 2px solid #cacaca;     
-/*     border-top: 20px solid #93c1b6; */
+    border-top: 20px solid #93c1b6;
 }
 .application-proposal-container{
 	padding: 20px 10px;
@@ -96,7 +96,7 @@ span.expiration-time{
 }
 .application-proposal-container .proposal-item{
 	display: inline-block;
-	padding: 0px 13px;
+	padding: 0px 10px;
 	text-align: left;
 }
 .expiration-time-cont p:last-child{

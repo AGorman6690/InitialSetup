@@ -1067,16 +1067,17 @@ public class JobRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, dateId }, Integer.class);
 	}
 
-	public Job getConflictingEmployment_byUserAndWorkDay(int userId, int DateId) {
+	public Job getConflictingEmployment_byUserAndWorkDay(int jobId_reference, int userId, int DateId) {
 		String sql = "SELECT * FROM job j" + " JOIN employment e ON j.JobId = e.JobId"
 				+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
 				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
 				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId" + " WHERE e.UserId = ?"
 				+ " AND e.WasTerminated = 0" + " AND wp.IsCurrentProposal = 1" + " AND wd.DateId= ?"
-				+ " AND j.Status != ?";
+				+ " AND j.Status != ?"
+				+ " AND j.JobId != ?";
 
-		List<Job> jobs = JobRowMapper(sql, new Object[] { userId, DateId, Job.STATUS_PAST });
+		List<Job> jobs = JobRowMapper(sql, new Object[] { userId, DateId, Job.STATUS_PAST, jobId_reference});
 		if (verificationService.isListPopulated(jobs))
 			return jobs.get(0);
 		else

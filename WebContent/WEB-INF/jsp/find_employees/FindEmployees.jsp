@@ -41,7 +41,7 @@
 			</div>
 <%-- 		</c:if> --%>
 		<div id="locationFilterContainer" class="filter">
-			<h3>Location</h3>
+			<h3 class="blue">Location</h3>
 			<div id="location" class="filter-value">
 				<input id="street" type="text" placeholder="Street">
 				<input id="city" type="text" placeholder="City">
@@ -50,7 +50,7 @@
 			</div>
 		</div>
 		<div id="availabilityFilterContainer" class="filter">
-			<h3>Work Days</h3>
+			<h3 class="blue">Work Days</h3>
 <!-- 			<div class="filter-value"> -->
 <!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
 <!-- 			</div> -->
@@ -69,7 +69,7 @@
 		<div><button id="findEmployees" class="sqr-btn green">Get Results</button></div>
 	</div>
 	<div id="resultsContainer">
-		<h3>Results</h3>
+		<h3 class="blue">Results</h3>
 		<div id="results">
 		
 		</div>
@@ -77,6 +77,6 @@
 	
 <%-- <div id="json_work_day_dtos">${json_job_work_days }</div> --%>
 
-<%@ include file="./MakeOfferModal.jsp"%>
+<%-- <%@ include file="./MakeOfferModal.jsp"%> --%>
 
 <%@ include file="../includes/Footer.jsp"%>

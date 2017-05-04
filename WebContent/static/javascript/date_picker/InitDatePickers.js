@@ -20,7 +20,7 @@ function initCalendar_new($calendar, workDayDtos){
 						else workDayDto.isProposed = "1";
 					}					
 				}
-			}			
+			}	
 		},
 		beforeShowDay: function(date){			
 			var classNameToAdd = "";
@@ -42,6 +42,18 @@ function initCalendar_new($calendar, workDayDtos){
 			
 		},
 		afterShow: function(){
+			
+			// If this is a calendar for an applicant counter the proposed work days,
+			// get applications that have overlapping work days, if any.
+			if($calendar.hasClass("find-conflicting-applications-on-select")){
+				var $proposalContainer =  $calendar.closest(".proposal-container");
+				var applicationId = $proposalContainer.attr("data-application-id");
+				var dateStrings_counterWorkDays = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");
+				var $e_renderHtml = $proposalContainer.find(".conflicting-applications-countering").eq(0);
+					
+				executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId,
+						dateStrings_counterWorkDays);
+			}
 			
 			$(workDayDtos).each(function(i, workDayDto){				
 				var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));

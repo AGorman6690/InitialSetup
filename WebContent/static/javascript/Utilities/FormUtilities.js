@@ -167,7 +167,11 @@ function setTimeOptions($eSelect, increment){
 //				if(formattedTime == initTime) selected = "selected";
 //				else selected = "";
 				
-				$eSelect.append("<option data-filter-value='" + formattedTime + "'>"
+				var className = "";
+				if(modifiedMinute == "00") className = "bold";
+				
+				
+				$eSelect.append("<option class='" + className + "' data-filter-value='" + formattedTime + "'>"
 									+ time + "</option>");
 			}
 			

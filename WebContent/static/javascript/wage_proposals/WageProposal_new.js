@@ -3,16 +3,16 @@ var g_workDayDtos_originalProposal = [];
 var g_workDayDtos_counter = [];
 
 $(document).ready(function() {
-	$(".present-proposal").on("click", "button.counter-proposal", function() {
+	$("body").on("click", "button.counter-proposal", function() {
 		showCounterOffer(true, $(this));
 		
 	})
 	
-	$(".present-proposal").on("click", "button.accept-proposal", function() {
+	$("body").on("click", "button.accept-proposal", function() {
 		showCounterOffer(false, $(this));
 	})	
 	
-	$(".present-proposal").on("click", ".review-proposal", function() {
+	$("body").on("click", ".review-proposal", function() {
 		
 		g_employmentProposalDto = getEmploymentProposalDto($(this));
 //		if(isInputValid($(this))){		
@@ -22,21 +22,32 @@ $(document).ready(function() {
 		}		
 	})
 	
-	$(".present-proposal").on("click", ".edit-response-to-proposal", function() {
+	$("body").on("click", ".edit-response-to-proposal", function() {
 		showConfirmProposal(false, $(this));
 	})
 	
-	$(".present-proposal").on("click", ".send-proposal", function() {
+	$("body").on("click", ".send-proposal", function() {
+		// ************************************************************
+		// validation was done on .review-proposal event
+		// ************************************************************
 		var context = getContext($(this));
 		executeAjaxCall_respondToProposal(g_employmentProposalDto, context);
 	})
 	
-	$(".present-proposal").on("click", ".cancel", function() {
+	$("body").on("click", ".send-initial-offer", function() {
+			// ************************************************************
+			// validation was done on .review-proposal event
+			// ************************************************************			
+		var context = getContext($(this));
+		executeAjaxCall_sendOffer($(this));
+	})
+	
+	$("body").on("click", ".cancel", function() {
 		$(this).closest(".mod").find(".mod-header .glyphicon-remove").eq(0).click();			
 	})
 	
-	$(".present-proposal").on("click", ".select-all-work-days-override", function() {
-		var $calendar = $(this).closest(".present-proposal").find(".counter-calendar").eq(0);
+	$("body").on("click", ".select-all-work-days-override", function() {
+		var $calendar = $(this).closest(".proposal-container").find(".counter-calendar").eq(0);
 		selectAllWorkDays($calendar, g_workDayDtos_counter);
 	})
 	
@@ -48,7 +59,7 @@ $(document).ready(function() {
 		
 	
 		if($proposalMod.length > 0) $proposalMod.show();
-		else executeAjaxCall_getProposal(applicationId, $renderHtml);
+		else executeAjaxCall_getCurrentProposal(applicationId, $renderHtml);
 		
 	})
 	
@@ -125,13 +136,23 @@ function showConfirmProposal(request, $e){
 		
 		// Set which message to show
 		var $message_acceptingProposal = $confirmProposal.find(".confirm-proposal-accept");
-		var $message_counteringProposal = $confirmProposal.find(".confirm-proposal-counter");		
-		if(isAcceptingProposal($e)){
+		var $message_counteringProposal = $confirmProposal.find(".confirm-proposal-counter");
+		var $message_sendInitialOffer = $confirmProposal.find(".confirm-send-initial-offer");
+		var $proposalContainer = $e.closest(".proposal-container");
+		if(getIsEmployerMakingInitalOffer($proposalContainer)){
+			$message_acceptingProposal.hide();
+			$message_counteringProposal.hide();
+			$message_sendInitialOffer.show();			
+		}
+		else if(getIsAcceptingWorkDays($e) &&
+				getIsAcceptingWage($e)){
 			$message_acceptingProposal.show();
 			$message_counteringProposal.hide();
+			$message_sendInitialOffer.hide();
 		}else{
 			$message_acceptingProposal.hide();
 			$message_counteringProposal.show();
+			$message_sendInitialOffer.hide();
 		}
 
 		
@@ -154,17 +175,6 @@ function getIsAcceptingWage($e) {
 	else if(dataAttr == 1) return true;
 	else return false;
 }
-function isAcceptingProposal($e) {
-	var result_isAcceptingProposal = true;
-	$e.closest(".mod-body").find(".proposal").each(function() {
-		var dataAttr_isAccepting = $(this).attr("data-is-accepting");
-		if( dataAttr_isAccepting == undefined || dataAttr_isAccepting == 0){
-			result_isAcceptingProposal = false;
-			return false;
-		}
-	})
-	return result_isAcceptingProposal;
-}
 function executeAjaxCall_respondToProposal(employmentProposalDto, context){
 	broswerIsWaiting(true);
 	$.ajax({
@@ -183,11 +193,23 @@ function executeAjaxCall_respondToProposal(employmentProposalDto, context){
 		broswerIsWaiting(false);
 	});		
 }
-
-function executeAjaxCall_getProposal(applicationId, $e){
-
+function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,
+		dateStrings_toFindConflictsWith){
 	broswerIsWaiting(true);
-	
+	$.ajax({
+		type: "POST",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/application/" + applicationId_withReferenceTo + "/conflicting-applications",
+		contentType: "application/json",
+		data: JSON.stringify(dateStrings_toFindConflictsWith),
+		dataType: "html",
+	}).done(function(html){
+		broswerIsWaiting(false);
+		$e_renderHtml.html(html);
+	})
+}
+function executeAjaxCall_getCurrentProposal(applicationId, $e){
+	broswerIsWaiting(true);	
 	$.ajax({
 		type: "GET",
 		url: "/JobSearch/application/" + applicationId + "/current-proposal",
@@ -204,7 +226,7 @@ function executeAjaxCall_getProposal(applicationId, $e){
 			initCalendar_new($(".calendar.counter-calendar"), g_workDayDtos_counter);
 			
 			broswerIsWaiting(false);
-			console.log("executeAjaxCall_getProposal");
+
 		},
 		error: function() {
 			broswerIsWaiting(false);
@@ -233,7 +255,7 @@ function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 }
 function executeAjaxCall_sendOffer($e){
 	
-	var $responseContainer = $e.closest(".response-container");
+	var $proposalContainer = $e.closest(".proposal-container");
 	
 	var applicationDto = {};
 	applicationDto.application = {};
@@ -241,7 +263,7 @@ function executeAjaxCall_sendOffer($e){
 	
 	applicationDto.jobId = $("#jobId_getOnPageLoad").val();
 	applicationDto.applicantId = $e.closest("tr").attr("data-user-id");	
-	applicationDto.employmentProposalDto = getEmploymentProposalDto($responseContainer);
+	applicationDto.employmentProposalDto = g_employmentProposalDto;
 	
 	broswerIsWaiting(true);
 	$.ajax({
@@ -254,7 +276,7 @@ function executeAjaxCall_sendOffer($e){
 		
 	}).done(function(response){
 		$("#findEmployees").click();
-		$responseContainer.hide();
+		$proposalContainer.hide();
 		broswerIsWaiting(false);
 	})	
 }
@@ -355,12 +377,16 @@ function getEmploymentProposalDto($e){
 	var $proposalContainer = $e.closest(".proposal-container");
 	var $wageProposal = $proposalContainer.find(".wage-proposal.proposal").eq(0);
 	var $workDayProposal = $proposalContainer.find(".work-day-proposal.proposal").eq(0);
-	
+	var isEmployerMakingInitalOffer = getIsEmployerMakingInitalOffer($proposalContainer);
 	employmentProposalDto.applicationId = $proposalContainer.attr("data-application-id");
 	
 	// Wage
 	var isAcceptingWage = getIsAcceptingWage($e);
-	if(isAcceptingWage == undefined) {}
+	if(isEmployerMakingInitalOffer){
+		employmentProposalDto.amount = $wageProposal.find("input").val();	
+	}
+	else if(isAcceptingWage == undefined) {		
+	}
 	else if(isAcceptingWage){
 		employmentProposalDto.amount = $wageProposal.attr("data-proposed-amount");		
 	}else{
@@ -369,8 +395,14 @@ function getEmploymentProposalDto($e){
 	
 	// Work days
 	var $calendar;
-	var isAcceptingWorkDays = getIsAcceptingWorkDays($e);	
-	if(isAcceptingWorkDays == undefined) {}
+	var isAcceptingWorkDays = getIsAcceptingWorkDays($e);
+	if(isEmployerMakingInitalOffer){
+		$calendar = $proposalContainer.find(".calendar.make-initial-offer-calendar");
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+									$calendar, "yy-mm-dd", "is-proposed");		
+	}
+	else if(isAcceptingWorkDays == undefined) {
+	}
 	else if(isAcceptingWorkDays){ 
 		$calendar = $proposalContainer.find(".calendar.proposed-calendar");
 		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
@@ -389,6 +421,12 @@ function getEmploymentProposalDto($e){
 	}
 	
 	return employmentProposalDto;
+}
+function getIsEmployerMakingInitalOffer($proposalContainer) {
+	var attr = $proposalContainer.attr("data-employer-is-making-first-offer");
+	if(attr == undefined) return undefined;
+	else if(attr == 1) return true;
+	else return false;
 }
 function isSessionUserAnEmployer($e){
 	if($e.closest(".proposal-container").attr("data-session-user-is-employer") == "1") return true;

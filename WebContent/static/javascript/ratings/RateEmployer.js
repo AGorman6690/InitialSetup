@@ -119,9 +119,12 @@ function submitRatings(){
 			contentType : "application/json",
 			headers : getAjaxHeaders(),
 			data: JSON.stringify(submitRatingDtos),
-	        success: _success,
-	        error: _error
-	    });
+			dataType: "text",
+//	        success: _success,
+//	        error: _error
+	    }).done(function(response){
+	    	window.location = "/JobSearch/user/profile";
+	    })
 
 //		function _success(){
 //			window.location = "/JobSearch/user/profile";

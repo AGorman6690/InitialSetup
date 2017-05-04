@@ -15,8 +15,7 @@
 			<c:if test="${!isEmployerMakingFirstOffer }">
 				<button class="withdraw-application sqr-btn">${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }</button>
 			</c:if>							
-			<div class="proposal wage-container" data-is-proposing="${isEmployerMakingFirstOffer ? '1' : '-1' }">	
-
+			<div class="proposal wage-container" data-is-proposing="${isEmployerMakingFirstOffer ? '1' : '-1' }">
 				<c:if test="${user.profileId == 1 }">
 					<div class="proposal applicant-expiration-clock">
 						<h1>This offer expires in</h1>

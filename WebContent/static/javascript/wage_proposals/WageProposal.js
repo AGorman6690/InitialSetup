@@ -94,7 +94,6 @@ $(document).ready(function(){
 		$(this).closest(".proposal-actions-container").hide();		
 	})
 })
-
 function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 	
 	broswerIsWaiting(true);
@@ -105,7 +104,6 @@ function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 		dataType: "json",
 		success: function(workDayDtos) {
 			broswerIsWaiting(false);
-//			initCalendar_showWorkDays($calendar, workDayDtos);
 			initCalendar_new($calendar, workDayDtos);
 			$calendar.closest(".mod").show();
 			console.log("executeAjaxCall_getProposedWorkDays");

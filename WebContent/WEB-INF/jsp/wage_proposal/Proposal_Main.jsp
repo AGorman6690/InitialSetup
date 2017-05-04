@@ -133,7 +133,7 @@
 			<div class="proposal-item work-days">
 				<c:choose>
 					<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<p>${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days
+						<p class="pointer">${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days
 							<span class="glyphicon glyphicon-menu-down"></span>
 						</p>
 					</c:when>

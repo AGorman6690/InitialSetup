@@ -186,7 +186,7 @@ public class UserController {
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 //	@ResponseBody
 	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
-		userService.editEmployeeSettings(user_edited, session);
+//		userService.editEmployeeSettings(user_edited, session);
 		return "redirect:/user/profile";
 	}
 
@@ -197,7 +197,6 @@ public class UserController {
 									@RequestBody List<SubmitRatingDTO> submitRatingDtos) {
 
 		userService.insertRatings(submitRatingDtos, session);
-
 		return "";
 	}
 

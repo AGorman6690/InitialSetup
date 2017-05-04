@@ -1,3 +1,10 @@
+.pointer:hover{
+	cursor: pointer;
+}
+select.time option.bold{
+    font-weight: bold;
+    font-size: 17px;
+}
 h3.blue{
 	font-size: 21px;
 	font-weight: bold;
@@ -99,7 +106,9 @@ body{
     background-color: #337ab7;
     color: #ffffff;
 }
-
+.mar-btm{
+	margin-bottom: 25px;
+}
 .pad-top{
 	padding-top: 25px;
 }
