@@ -195,7 +195,7 @@ function setValidCss($e){
 }
 function setStates(){
 	var $e = $("#state"); 
-	$e.append('<option value="" selected disabled></option>');
+	$e.append('<option value="" selected disabled>State</option>');
 	$e.append('<option value="Alabama">AL</option>');
 	$e.append('<option value="Alaska">AK</option>');
 	$e.append('<option value="Arizona">AZ</option>');

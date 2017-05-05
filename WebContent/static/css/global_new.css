@@ -134,8 +134,8 @@ body{
 
 input, select, textarea{
 	padding: 5px 10px;
-    border-radius: 3px;
-    border: 2px solid #c8c5c5;	
+    border-radius: 1px;
+    border: 1px solid #c8c5c5;	
 }
 
 .square-button,

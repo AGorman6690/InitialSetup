@@ -1,0 +1,66 @@
+#location-filter{
+/* 	width: 600px; */
+}
+#miles,
+#zip-code,
+#state,
+#duration-filter input[type=text]{
+	width: 90px;
+}
+#city{
+	width: 175px;
+}
+#filters{
+	padding: 10px;
+    margin-left: 25px;
+}
+#location-filter,
+#other-filters,
+.filter{
+	display: inline-block;
+}
+.radio-container label{
+	display: block;
+}
+.radio-container{
+	margin: 13px 0px;
+}
+#other-filters h3{
+	text-align: center;
+	margin: 0px;
+/* 	background: green; */
+    border-bottom: 1px solid #cacaca;
+}
+h3 .glyphicon-ok{
+	font-size: 20px;
+	color: #163b3d;
+	padding: 10px;
+}
+.filter .dropdown-style{
+	padding-top: 0px;
+}
+.approve-filter:hover{
+	cursor: pointer
+}
+.calendar td.selected{
+	background: #163b3d;
+}
+.calendar td.selected a{
+	color: #fff;
+}
+#filters .glyphicon-menu-up,
+#filters .glyphicon-menu-down{
+	margin: 0px;
+    font-size: 10px;
+}
+.filter{
+	margin: 0px 10px;
+}
+.remove-filter{
+    color: #984242;
+    padding: 5px;
+    display: none;
+}
+p[data-toggle-id]{
+	display: inline-block;
+}

@@ -104,6 +104,7 @@
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Jobs</a>
 <!-- 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							 -->
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
+								<a id="nav_findJobs" href="/JobSearch/jobs/find-new">Find Jobs NEW</a>	
 <!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->
 <!-- 								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							 -->
 							</c:when>

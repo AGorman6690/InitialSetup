@@ -2,6 +2,28 @@ $(document).ready(function(){
 	
 
 })
+function initCalendar_selectSingleDate($calendar){
+	var selectedDate;
+	$calendar.datepicker({
+		minDate: new Date(),
+		numberOfMonths: 1,
+		onSelect: function(dateText, inst){			
+			var date = dateify(dateText);
+			if(selectedDate != undefined){
+				if(date.getTime() == selectedDate.getTime()){
+					selectedDate = undefined;
+				}else selectedDate = date;
+			}else selectedDate = date;
+			
+		},
+		beforeShowDay: function(date){			
+			if(selectedDate != undefined){
+				if(date.getTime() == selectedDate.getTime()) return [true, "selected"];	
+				else return [true, ""];				
+			}else return [true, ""];						
+		}
+	})	
+}
 
 function initCalendar_new($calendar, workDayDtos){
 
@@ -250,47 +272,50 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 			}
 			else $calendar.removeClass("show-hover-range");
 			
-			if(workDayDtos.length == 0){
-				resetTimesSection();
-				resetCalendar();
-			}
 			
-			else if(isThisTheSecondDateSelected){
-				$("#no-dates-selected").hide();
-				$("#initial-time-question").show();
-				$("#set-one-start-and-end-time").hide();
-				$("#times-cont").hide();
-			}
-			else if(workDayDtos.length == 1){
-				$("#times-cont").hide();
-				$("#no-dates-selected").hide();	
-				$("#initial-time-question").hide();
-				$("#set-one-start-and-end-time").show();
-			}
-						
-			if($calendar_startAndEndTimes != undefined)
-				initCalendar_setStartAndEndTimes($calendar_startAndEndTimes);
-			
-			if(workDayDtos_original.length > 0){
+			// This is only for job posts
+			if($calendar.attr("id") == "workDaysCalendar_postJob"){
 				
+				if(workDayDtos.length == 0){
+					resetTimesSection();
+					resetCalendar();
+				}
+				
+				else if(isThisTheSecondDateSelected){
+					$("#no-dates-selected").hide();
+					$("#initial-time-question").show();
+					$("#set-one-start-and-end-time").hide();
+					$("#times-cont").hide();
+				}
+				else if(workDayDtos.length == 1){
+					$("#times-cont").hide();
+					$("#no-dates-selected").hide();	
+					$("#initial-time-question").hide();
+					$("#set-one-start-and-end-time").show();
+				}
+							
+				if($calendar_startAndEndTimes != undefined)
+					initCalendar_setStartAndEndTimes($calendar_startAndEndTimes);
+				
+				if(workDayDtos_original.length > 0){
+					
+				}				
 			}
-
 		},		        
-        // This is run for every day visible in the datepicker.
         beforeShowDay: function (date) {       
         	var className = "";
+        	// This is for job posts
+        	if(typeof workDayDtos_original !== "undefined"){
+        		if(doesWorkDayDtoArrayContainDate(date, workDayDtos_original)) className += "original";	
+        	}        	
         	
-        	if(doesWorkDayDtoArrayContainDate(date, workDayDtos_original)) className += "original";
-        	
-        	if(doesWorkDayDtoArrayContainDate(date, workDayDtos)) className += " active111";
+        	if(doesWorkDayDtoArrayContainDate(date, workDayDtos)) className += " active111 selected";
         	else className += " not-selected";
         	
-        	 return [true, className];
+        	return [true, className];
         
      	}
     });	
-	
-
 }
 
 function initCalendar_jobInfo_workDays($calendar, workDayDtos){

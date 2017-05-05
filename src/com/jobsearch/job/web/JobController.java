@@ -102,6 +102,8 @@ public class JobController {
 
 		return "";
 	}
+	
+	
 
 	@RequestMapping(value = "/jobs/filter", method = RequestMethod.GET)
 	public String getFilteredJobs(@RequestParam(name = "radius", required = true) int radius,
@@ -228,6 +230,13 @@ public class JobController {
 
 
 		return "/find_jobs/FindJobs";
+	}
+	
+	@RequestMapping(value = "/jobs/find-new", method = RequestMethod.GET)
+	public String viewFindJobs_new(Model model, HttpSession session) {
+		
+		return "/find_jobs_new/Find_Jobs_New";
+		
 	}
 
 	@RequestMapping(value = "/jobs/find/load-filter", method = RequestMethod.GET)
