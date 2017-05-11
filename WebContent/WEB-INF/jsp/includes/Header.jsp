@@ -37,23 +37,7 @@
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
 			integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r"
 			crossorigin="anonymous">
-		
-
-		
-		
-		<!-- 	Additional code for Bootstrap date picker -->
-<!-- 		<link rel="stylesheet" type="text/css" -->
-<!-- 			href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" /> -->
-		
-		<!-- Bootstrap Drop down -->
-<!-- 		<link rel="stylesheet" -->
-<!-- 			href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css"> -->
-<!-- 		<script -->
-<!-- 			src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script> -->
-		
-		<!-- 	   	********************************************************* -->
-		
-					
+							
 <!-- 		Google Font -->
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito">
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
@@ -100,13 +84,9 @@
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_calendar" class="" href="#">Calendar</a>
-<!-- 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Applications</a> -->
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Jobs</a>
-<!-- 								<a id="nav_invitations" class="" href="/JobSearch/user/invitations">Invitations</a>							 -->
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
-								<a id="nav_findJobs" href="/JobSearch/jobs/find-new">Find Jobs NEW</a>	
-<!-- 								<a id="nav_settings" href="/JobSearch/settings">Settings</a> -->
-<!-- 								<a id="nav_availability" href="/JobSearch/availability">Availability</a>							 -->
+<!-- 								<a id="nav_findJobs" href="/JobSearch/jobs/find-new">Find Jobs NEW</a>	 -->
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
 								<a id="nav_jobs" href="/JobSearch/user/profile">Jobs</a>	
