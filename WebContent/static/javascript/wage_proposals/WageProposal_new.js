@@ -16,8 +16,7 @@ $(document).ready(function() {
 		
 		g_employmentProposalDto = getEmploymentProposalDto($(this));
 //		if(isInputValid($(this))){		
-		if(isInputValid2(g_employmentProposalDto, $(this))){
-			
+		if(isInputValid2(g_employmentProposalDto, $(this))){			
 			showConfirmProposal(true, $(this));
 		}		
 	})
@@ -110,10 +109,12 @@ function showConfirmProposal(request, $e){
 		
 		// Show proposed wage and work day messages
 		$confirmProposal.find(".wage-amount").html(g_employmentProposalDto.amount);
-		if(g_employmentProposalDto.dateStrings_proposedDates.length == 1){
-			$confirmProposal.find(".work-day-count").html(g_employmentProposalDto.dateStrings_proposedDates.length + " work day");
-		}else{
-			$confirmProposal.find(".work-day-count").html(g_employmentProposalDto.dateStrings_proposedDates.length + " work days");
+		if(g_employmentProposalDto.dateStrings_proposedDates != undefined){
+			if(g_employmentProposalDto.dateStrings_proposedDates.length == 1){
+				$confirmProposal.find(".work-day-count").html(g_employmentProposalDto.dateStrings_proposedDates.length + " work day");
+			}else{
+				$confirmProposal.find(".work-day-count").html(g_employmentProposalDto.dateStrings_proposedDates.length + " work days");
+			}
 		}
 		
 		// Show expiration time
@@ -162,11 +163,17 @@ function showConfirmProposal(request, $e){
 	}
 }
 function getIsAcceptingWorkDays($e) {
-	var dataAttr = $e.closest(".proposal-container").find(".work-day-proposal").attr("data-is-accepting");
+	var $workDayProposal = $e.closest(".proposal-container").find(".work-day-proposal").eq(0); 
+	var dataAttr = $workDayProposal.attr("data-is-accepting");
 	
-	if(dataAttr == undefined) return undefined;
-	else if(dataAttr == 1) return true;
-	else return false;
+	// Will be empty when job does not accept partial availability
+	if($workDayProposal.length == 0) return true;
+	else{
+		if(dataAttr == undefined) return undefined;
+		else if(dataAttr == 1) return true;
+		else return false;	
+	}
+	
 }
 function getIsAcceptingWage($e) {
 	var dataAttr = $e.closest(".proposal-container").find(".wage-proposal").attr("data-is-accepting");
@@ -300,16 +307,20 @@ function isInputValid2(dto, $e){
 		setValidCss($buttonGroup);
 	}
 	
-	// Validate work days
-	$buttonGroup = $workDayProposal.find(".button-group").eq(0);
-	if(dto.dateStrings_proposedDates == undefined){
-		setInvalidCss($buttonGroup);
-		isValid = false;
-	}else if(dto.dateStrings_proposedDates.length == 0){
-		
-		isValid = false;
-	}else {
-		setValidCss($buttonGroup)
+	// Validate work days.
+	// When a job does NOT allow partial availability, the work days cannot be negotiated.
+	// Hence, the html for work day proposal container will not be rendered.
+	if($workDayProposal.length > 0){
+		$buttonGroup = $workDayProposal.find(".button-group").eq(0);
+		if(dto.dateStrings_proposedDates == undefined){
+			setInvalidCss($buttonGroup);
+			isValid = false;
+		}else if(dto.dateStrings_proposedDates.length == 0){
+			
+			isValid = false;
+		}else {
+			setValidCss($buttonGroup)
+		}
 	}
 	
 	// Validate expiration time

@@ -139,11 +139,13 @@
 				</div>
 				<div class="proposed-values pad-top">
 					<p><label>Wage</label>$ <span class="wage-amount"></span> / hr </p>
-					<p>
-						<span data-toggle-id="confirm-work-days-calendar-${applicationDto.application.applicationId }">
-							<label>Work Days </label><span class="work-day-count"></span><span class="glyphicon glyphicon-menu-down"></span>
-						</span>
-					</p>
+					<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
+						<p>
+							<span data-toggle-id="confirm-work-days-calendar-${applicationDto.application.applicationId }">
+								<label>Work Days </label><span class="work-day-count"></span><span class="glyphicon glyphicon-menu-down"></span>
+							</span>
+						</p>
+					</c:if>
 					<c:if test="${user.profileId == 2 }">
 						<p><label>Expires In</label><span class="expires-in"></span></p>
 					</c:if>
