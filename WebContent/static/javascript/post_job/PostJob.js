@@ -41,7 +41,6 @@ $(document).ready(function(){
 	$("#proceed-to-preview-job-posting").click(function(){
 //		 executeAjaxCall_previewJobPosting( getJobDto());
 		var jobDto = getJobDto()
-//		broswerIsWaiting(true);
 		if(arePostJobInputsValid(jobDto)){
 			executeAjaxCall_previewJobPosting(jobDto);
 		}

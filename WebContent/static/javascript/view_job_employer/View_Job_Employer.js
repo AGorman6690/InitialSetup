@@ -59,6 +59,12 @@ $(document).ready(function(){
 	
 	});
 	
+	$(".select-page-section").click(function() {
+		var $calendarSection = $("#job-calendar-application-summary");
+		if($(this).hasClass("show-job-post")) $calendarSection.hide();
+		else $calendarSection.show();
+	})
+	
 })
 
 function executeAjaxCall_getApplicantsByJobAndDate(jobId, date){

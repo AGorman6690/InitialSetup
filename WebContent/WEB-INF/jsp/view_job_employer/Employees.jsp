@@ -1,6 +1,6 @@
 <%@ include file="../includes/TagLibs.jsp" %>				
 			
-<div class="center pad-btm-2">
+<div class="center pad-btm-2 pad-top-2">
 	<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
 </div>
 <c:choose>						

@@ -139,8 +139,9 @@ function saveEditQuestionChanges(){
 	newlyEditedQuestion.questionId = selectedQuestion.questionId;
 	
 	// Remove the old selected question
-	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
-	
+	questions = $.grep(questions, function(question, i) {
+		return question.questionId != selectedQuestion.questionId;
+	})
 	// Add the new edited question
 	questions.push(newlyEditedQuestion);
 	

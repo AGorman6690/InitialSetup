@@ -50,6 +50,7 @@
 }
 #addedQuestionsContainer .question-actions-container{
 	display: none;
+    margin-bottom: 10px;
 }
 
 #questionsContainer :disabled{

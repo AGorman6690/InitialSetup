@@ -178,9 +178,10 @@ span.category{
 .title,
 #middle-container,
 #map-section.bottom{
-	width: 900px;
+/* 	width: 900px; */
 	border-bottom: 2px solid #bbbbbb;
 	padding-bottom: 20px;
+    margin: 0px 300px;
 }
 
 #questions-container{

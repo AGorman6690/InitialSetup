@@ -82,6 +82,7 @@ function removeArrayElementByIdProp(idToRemove, array){
 	return newArray;
 }
 
+
 //*****************************************
 //*****************************************
 //Phase this out. The name is horrible

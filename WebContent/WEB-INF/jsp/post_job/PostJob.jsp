@@ -246,8 +246,8 @@
 							<select id="questionFormat" class="question-formats">
 							  <option class="answer-format-item" data-format-id="0">Yes or No</option>
 <!-- 							  <option class="answer-format-item" data-format-id="1">Short Answer</option> -->
-							  <option class="answer-format-item" data-format-id="2">Single Answer</option>
-							  <option class="answer-format-item" data-format-id="3">Multiple Answer</option>
+							  <option class="answer-format-item" data-format-id="2">Select one answer</option>
+							  <option class="answer-format-item" data-format-id="3">Select one or more answers</option>
 							</select>					
 						</div>	
 						
