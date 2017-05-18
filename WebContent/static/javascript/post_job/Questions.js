@@ -32,26 +32,30 @@ $(document).ready(function(){
 			showSelectedQuestion();		
 			
 			setClickableness_ForQuestionActions(true, false, true, true);
+			$("#addedQuestionsContainer .question-actions-container").show();
+			setDisplay_createQuestionContainer(true);
 		}
 		else{
 			clearAllInputs($("#questionsContainer"));
 			
 			setClickableness_ForQuestionActions(true, true, false, false);
 			enableAllInputFields($("#questionsContainer"));
+			$("#addedQuestionsContainer .question-actions-container").hide();
 		}
 
 		clearInvalidContentAndStyle();
 		
 	})
 	
-	$("body").on("click", "#newQuestion.clickable", function(){
+//	$("body").on("click", "#newQuestion.clickable", function(){
+	$("#create-new-question").click(function(){
 		
 		clearAllInputs($("#questionsContainer"));
 		enableAllInputFields($("#questionsContainer"));
 		$("#answerListContainer").hide();
 		setClickableness_ForQuestionActions(true, true, false, false);
 		deselectAddedQuestion();
-
+		setDisplay_createQuestionContainer(true);
 	})
 	
 	$("body").on("click", "#addQuestion.clickable", function(){
@@ -135,8 +139,9 @@ function saveEditQuestionChanges(){
 	newlyEditedQuestion.questionId = selectedQuestion.questionId;
 	
 	// Remove the old selected question
-	questions = removeArrayElementByIdProp(selectedQuestion.questionId, questions);
-	
+	questions = $.grep(questions, function(question, i) {
+		return question.questionId != selectedQuestion.questionId;
+	})
 	// Add the new edited question
 	questions.push(newlyEditedQuestion);
 	
@@ -193,8 +198,14 @@ function deleteQuestion(){
 	//Remove the question from the cart
 	removeElementFromDOM($("#addedQuestions"), "data-question-id", selectedQuestion.questionId);
 	
+	setDisplay_addedQuestions();
+	
 }
 
+function setDisplay_addedQuestions(){
+	if(questions.length > 0) $("#addedQuestionsContainer").show();
+	else $("#addedQuestionsContainer").hide();
+}
 function showSelectedQuestion(){
 	
 	var selectedQuestion = getSelectedQuestion();
@@ -284,6 +295,8 @@ function addQuestion(){
 		addQuestionToDOM(question);
 		clearAllInputs($("#questionsContainer"));
 		slideUp($("#answerListContainer"), 400);
+		setDisplay_addedQuestions();
+		setDisplay_createQuestionContainer(false);
 	}
 }
 function getQuestion(){
@@ -324,7 +337,7 @@ function doesQuestionHaveAnAnswerList(question){
 
 function addQuestionToDOM(question){
 	
-	var html = "<a data-question-id='" + question.questionId + "' class='accent no-hover clickable'>";
+	var html = "<a data-question-id='" + question.questionId + "' class='no-hover clickable'>";
 	
 	var buttonText = getAddedQuestionText(question.text);
 	html += buttonText;			

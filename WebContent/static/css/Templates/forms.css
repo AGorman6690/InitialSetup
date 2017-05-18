@@ -3,12 +3,19 @@ input[type=radio]{
     margin-right: 7px;
     margin-top:0px;
     vertical-align: middle;
-	cursor:pointer;    
+	cursor:pointer;  
+    top: 4px;  
 }
 
 label{
 	font-weight:normal;
 	cursor:pointer;
+}
+
+.label-horiz{
+	width: 120px;
+    display: inline-block;
+    text-align: right;
 }
 
 .checkbox-container label{

@@ -1,0 +1,125 @@
+.proposal-container .mod-content{
+    top: 20px;
+    width: 1200px;
+    margin-left: -600px;
+}
+.proposal{
+	padding-bottom: 25px;
+}
+.proposal-container h2{
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 0;
+}
+.wage-proposal .proposed-offer .proposed-amount{
+	font-size: 28px;
+}
+.proposal-container input{
+	width: 65px;
+	text-align: center;
+    font-size: 19px;
+}
+.counter-offer{
+	padding-top: 40px;
+	display: none;
+}
+.counter-offer h2{
+/* 	color: #9c6363; */
+    width: 400px;
+    margin: auto;
+    border-top: 1px solid #cacaca;
+    padding-top: 15px;
+    margin-bottom: 10px;
+}
+.proposal-container .sqr-btn.gray-2.accept-proposal.selected{
+	background: #4e806b;
+	border: 3px solid #4e806b;
+}
+.proposal-container .sqr-btn.gray-2.counter-proposal.selected{
+	background: #9c6363;
+	border: 3px solid #9c6363;
+}
+.proposal-container .button-group .sqr-btn.gray-2{
+	border: 3px solid #cacaca;
+}
+.proposal-container .button-group{
+    width: 230px;
+    margin: auto;
+    padding: 8px 0px;
+}
+.proposed-values{
+	text-align: left;
+	width: 330px;
+	margin: auto;
+}
+.proposed-values label{
+	font-weight: bold;
+	width: 150px;
+}
+.proposed-values p{
+	font-size: 17px;
+}
+.confirm-message h2{
+	color: #197994;
+}
+.time-container{
+	display: inline-block;
+	margin: 0px 7px;
+}
+.time-container input{
+	width: 65px;
+}
+.proposed-calendar *:hover{
+    cursor: not-allowed !important;
+}
+.application-proposal-container.action-required{
+/* 	background: #e0d5d5; */
+	border: 2px solid #cacaca;
+    border-top: 20px solid #a96d6d;
+}
+td .application-proposal-container.accepted{
+/*     background: #93c1b6; */
+    border: 2px solid #cacaca;     
+    border-top: 20px solid #93c1b6;
+}
+.application-proposal-container{
+	padding: 20px 10px;
+	border: 2px solid #cacaca;
+	border-radius: 4px;	
+}
+.application-proposal-container.action-required .proposal-item > p{
+	color: #000;
+}
+span.expiration-time{
+    font-weight: bold;
+    font-size: 17px;
+}
+.application-proposal-container .proposal-item{
+	display: inline-block;
+	padding: 0px 10px;
+	text-align: left;
+}
+.expiration-time-cont p:last-child{
+    border-bottom: 1px solid #cacaca;
+}
+.proposal-item.work-days .mod-content{
+    width: 1200px;
+    margin-left: -600px;
+    top: 100px;
+}
+.withdraw-application{
+	top: 73px;
+	right: 12px;
+	position: absolute;
+	background: #bb4555;
+    color: #fff;
+}
+.other-application-conflicts .alert-message{
+	text-align: left;
+}
+.conflicting-applications .disposition p{
+	padding-left: 25px;
+}
+.conflicting-applications .disposition ul{
+	margin-left: 40px;
+}

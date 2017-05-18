@@ -1,0 +1,142 @@
+.container{
+/* 	padding: 50px 0px; */
+}
+
+td div.job.application.drk{
+/* 	background-color: #337ab7; */
+/* 	background-color: #125792; */
+	background-color: #3f6e96;
+}
+
+td div.job.application.med{
+	background-color: #7dabd4;
+/* 	background-color: #4c90cc; */
+	
+}
+
+td div.job.application.lgt{
+	background-color: #cde2f5;
+}
+
+#applications_calendar_view .calendar {
+}
+
+td div.job.application{
+	position: absolute;
+/* 	bottom: 75px; */
+	height: 40px;
+	width: 100%
+}
+
+
+#applications_calendar_view .calendar td{
+    position: relative;
+    height:140px;
+    width: 120px;
+    vertical-align: top;
+    margin-bottom:3px;
+    text-align: center;
+    border-top: 1px solid #cecece;
+    padding: 0px;
+}
+
+.popuptext{
+	display: none;
+	border: 2px solid #cacaca;
+	
+}
+
+.popup{
+	display: table-cell;
+}
+
+.popuptext span{
+	display: block;
+}
+
+.popuptext span:not(:last-child){
+	padding-bottom: 15px
+}
+
+.popuptext span:hover{
+	text-decoration: underline;
+}
+
+#applications_list_view.with-calendar{
+	width: 500px;
+	float:left;
+}
+
+#applications_list_view.with-calendar th.hide-with-calendar,
+#applications_list_view.with-calendar td.hide-with-calendar{
+	display: none;
+}
+
+#applications_calendar_view.with-list td div.job.application{
+	position: absolute;
+	height: 30px;
+	width: 100%
+}
+
+#applications_calendar_view.with-list{
+	float: right;
+}
+
+#applications_calendar_view.with-list .calendar td{
+    height:70px;
+    width: 70px;
+}
+
+
+#applications_list_view > table > tbody > tr:hover{
+	background-color: #eaeaea;
+}
+
+#applications_calendar_view.with-list td div.job.hover{
+/* 	background-color:#c18585 !important; */
+/* 	background-color:#000000 !important; */
+/* 	background-color: #717171 !important; */
+	background-color: #163b3d !important;
+/* 	border: 2px solid #000000; */
+	
+}
+
+th.proposal{
+	width: 540px;
+}
+
+th#job-name,
+th#start-date,
+th#end-date{
+	width: 155px;
+}
+th#location{
+	width: 175px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* .button-group button{ */
+/* 	display: block; */
+/* 	margin-bottom: 8px; */
+/* 	width: 175px; */
+/* } */
+
+#summary-table{
+    width: 424px;
+    margin: auto;
+    padding-bottom: 40px;
+    padding-top: 50px;
+}
+

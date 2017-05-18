@@ -7,12 +7,19 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.GeocodingResult;
+import com.jobsearch.job.service.Job;
+import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.utilities.VerificationServiceImpl;
+
 
 @Component
 public class GoogleClient {
 
 	@Autowired
 	private GeoApiContext context;
+	
+	@Autowired
+	private	VerificationServiceImpl verificationService;
 
 	public GeocodingResult[] getLatAndLng(String address) {
 		
@@ -75,10 +82,8 @@ public class GoogleClient {
 		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(address);
 
-		if (results.length == 1) {
-			return true;
-		}
-		return false;
+		if (isValidResult(results))	return true;
+		else return false;
 	}
 
 	public static Coordinate getCoordinate(String address) {
@@ -86,11 +91,62 @@ public class GoogleClient {
 		GoogleClient maps = new GoogleClient();
 		GeocodingResult[] results = maps.getLatAndLng(address);
 
-		if (results.length == 1) {
+		if(isValidResult(results)){
 			Coordinate coordinate = new Coordinate();
 			coordinate.setLatitude((float) results[0].geometry.location.lat);
 			coordinate.setLongitude((float) results[0].geometry.location.lng);
 			return coordinate;
 		}else return null;
 	}
+
+	
+	
+	private static boolean isValidResult(GeocodingResult[] results) {
+		if (results == null || results.length != 1) return false;
+		else return true;
+	}
+
+	public static Coordinate getCoordinate(Job job) {
+	
+		String address = buildAddress(job.getStreetAddress(), job.getCity(), job.getState(), job.getZipCode());
+		return getCoordinate(address);
+	}
+
+	private static String buildAddress(String streetAddress, String city, String state, String zipCode) {
+	
+		String address = "";
+		
+		if(streetAddress != null) address += streetAddress;
+		if(city != null) address += city;
+		if(state != null) address += state;
+		if(zipCode != null) address += zipCode;
+		
+		return address;
+	}
+
+	public static boolean isValidAddress(JobSearchUser user) {
+		
+		String address = buildAddress(null, user.getHomeCity(), user.getHomeState(), user.getHomeZipCode());
+		
+		return isValidAddress(address);
+	}
+
+	public static Coordinate getCoordinate(JobSearchUser user) {
+	
+		String address = buildAddress(null, user.getHomeCity(), user.getHomeState(), user.getHomeZipCode());
+		return getCoordinate(address);
+	}
+
+	public static GeocodingResult getGeocodingResult(Job job) {
+		
+		String address = buildAddress(job.getStreetAddress(),
+				job.getCity(), job.getState(), job.getZipCode());
+		
+		GoogleClient maps = new GoogleClient();
+		GeocodingResult[] results = maps.getLatAndLng(address);
+
+		return results[0];
+	}
+	
+
 }

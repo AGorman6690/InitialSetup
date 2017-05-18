@@ -1,0 +1,177 @@
+#affected-employees{
+	text-align: left;
+	color: #881c1c;
+	padding: 10px;
+	border-radius: 3px;
+	border: 2px solid #881c1c;
+	
+}
+#affected-employees-html{
+	min-height: 25px;
+/* 	display: none; */
+}
+#affected-employees p{
+	font-weight: bold;
+}
+#select-an-employee-cont{
+	margin: auto;
+}
+#select-an-employee-cont,
+#select-an-employee-cont .dropdown-style{
+    width: 450px;
+}
+#select-an-employee-cont button{
+	width: 100%;
+	margin: auto;
+}
+
+.question{
+	width: 400px;
+	margin: auto;
+}
+.question p,
+#replace-cont p:first-child	{
+	font-weight: bold;
+	color: #163b3d;
+	font-size: 17px;
+}
+#questions-cont .button-group button.sqr-btn{
+	display: inline-block;
+	margin-bottom: 10px;
+}
+#questions-cont{
+	padding-top: 30px;
+}
+#post-select{
+	display: none;
+}
+
+.calendar-container{
+/* 	width: 662px; */
+/* 	width: 1150px; */
+/*     margin: auto; */
+    
+}
+#edit-options{
+	padding-bottom: 30px;
+}
+#edit-options button{
+	line-height: normal;
+	width: 270px;
+}
+#employees p:hover{
+/* 	background: #cacaca; */
+/* 	font-weight: bold; */
+	border: 1px solid #888;
+	cursor: pointer;
+}
+#employees p{
+	padding: 10px;
+	width: auto;
+	font-size: 19px;
+	border: 1px solid #fff;
+}
+#edit-options .select-page-section.selected{
+	color: #fff;
+	font-weight: normal;
+}
+#save-edits:hover,
+#cancel-edits:hover{
+	text-decoration: underline;
+}
+#main-save-cancel-edits{
+	padding-bottom: 20px;
+	border-bottom: 1px solid #cacaca;
+	width: 500px;
+	margin: auto;
+}
+#save-edits,
+#cancel-edits,
+#approve-work-day-removal{
+/* 	color: #163b3d; */
+	margin: 0px 7px;
+	cursor: pointer
+}
+#save-edits,
+#approve-work-day-removal{
+	font-size: 20px;
+	font-weight: bold;
+}
+#cancel-edits,
+#cancel-work-day-removal{
+	font-size: 19px
+}
+td.original.not-selected{
+	background: #881c1c;
+	color: #fff;
+}
+.v2 td.original.not-selected a{
+	color: #fff;
+}
+.v2 td{
+	position: relative;
+}
+td.original.not-selected::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e014";
+    display: block;
+    position: absolute;
+    top: 36%;
+    font-size: 28px;
+    left: 50%;
+    margin-left: -14px;
+}
+
+
+#dates-container .v2 td:not(.ui-datepicker-unselectable):hover,
+#employee-schedule-container .v2 td.original:hover{
+	cursor: pointer;
+	background: #cacaca;
+}
+td.active111:not(.original){
+/* 	background: #379c6a; */
+	position: relative;
+	color: #fff;
+}
+td.active111:not(.original)::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\2b";
+    display: block;
+    position: absolute;
+    top: 36%;
+    font-size: 28px;
+    left: 50%;
+    margin-left: -14px;
+}
+
+
+#affected-employees{
+	width: 550px;
+	margin: auto;
+}
+#employee-schedule-container .calendar-container h3{
+	margin-bottom: 30px;
+}
+
+h3.h3{
+/* 	font-size: 26px; */
+}
+#verify-removal h3{
+	font-weight: normal;
+}
+
+#work-days-to-add label{
+	margin: 0px 10px;
+}
+#work-days-to-add [data-date]{
+	padding: 10px 0px;
+}
+#work-days-to-add .date{
+	margin-right: 10px;
+    font-weight: bold;
+    width: 190px;
+    display: inline-block;    
+}
+#work-days-to-add select{
+	margin-left: 8px;
+}

@@ -1,0 +1,27 @@
+.select-page-section.selected{
+    color: #197994;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.select-page-section{
+    font-size: 17px;
+    color: #767676;
+    margin: 0px 15px;
+    line-height: 50px;
+    cursor: pointer;    
+}
+
+.select-page-section:not(.selected):hover{
+    font-weight: bold;
+}
+
+.select-page-section-container{
+    text-align: center;
+    height: 50px;
+    border-bottom: 1px solid #cacaca;
+}
+
+.page-section{
+	display: none;
+}

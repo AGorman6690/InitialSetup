@@ -24,7 +24,7 @@ function getAvailabilityDto(){
 
 function executeAjaxCall_updateAvailability(availabilityDto){	
 	
-	$("html").addClass("waiting");
+	broswerIsWaiting(true);
 	
 	$.ajax({
 		type : "POST",
@@ -39,13 +39,13 @@ function executeAjaxCall_updateAvailability(availabilityDto){
 	});
 
 	function _success(response) {
-		$("html").removeClass("waiting");	
+		broswerIsWaiting(false);
 		$("#availableDays").html(response);
 		setState_AfterAvailabilityAlterations();
 	}	
 
 	function _error(response) {
-		$("html").removeClass("waiting");
+		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }

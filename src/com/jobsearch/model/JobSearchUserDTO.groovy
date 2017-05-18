@@ -1,9 +1,9 @@
 package com.jobsearch.model
 
 import com.jobsearch.application.service.Application
-import com.jobsearch.job.service.FindJobFilterDTO
 import com.jobsearch.job.service.Job
-import com.jobsearch.job.service.JobDTO
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.user.rate.RatingDTO
 import com.jobsearch.category.service.Category
 import com.jobsearch.category.service.CategoryDTO
@@ -16,11 +16,20 @@ class JobSearchUserDTO {
 //	
 	RatingDTO ratingDto
 	List<FindJobFilterDTO> savedFindJobFilters;
-	List<JobDTO> jobDtos_jobsCompleted;
+	
 	List<String> availableDays;
-	double wage
+	List<String> unavailableDays;
+	Integer count_availableDays_perFindEmployeesSearch
+	
+	String totalPayment
+	EmploymentProposalDTO acceptedProposal
+	
+	
+	List<JobDTO> jobDtos_jobsCompleted;
+	int count_jobsCompleted;
 //	
-	double ratingValue_overall
+	
+	Double ratingValue_overall
 	List<CategoryDTO> categoryDtos_jobsCompleted
 	
 	Boolean isInvalidNewUser

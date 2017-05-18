@@ -27,25 +27,32 @@ $(document).ready(function(){
 		}
 	})
 
+	$("th[data-filter-attr] input[type=radio]").click(function(){	
+		applyFilters($(this))
+	})
 	
-	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){
+	$("th[data-filter-attr] .glyphicon.approve-filter").click(function(){	
+		applyFilters($(this))
+	})
 	
+	$("th span.glyphicon-sort").click(function() {
+		var $table = $(this).closest("table");		
+		var sortAttr = $(this).attr("data-sort-attr");
+		var doSortAscending = $(this).attr("data-sort-ascending");
 		
-		var $th = $(this).closest("th[data-filter-attr]");
-		var $table = $(this).closest("table");
-				
-		var filters = [];
-		filters= getFilters($table);
+		var sortedRows = getSortedRows(doSortAscending, sortAttr, $table);		
+		sortTable(sortedRows, $table);
+		
+		if(doSortAscending == "1") $(this).attr("data-sort-ascending", "0");
+		else $(this).attr("data-sort-ascending", "1");
 
-		filterTableRows(filters, $table);
-		
-		$th.find("span[data-toggle-id]").eq(0).click();
 	})
 	
 	$("th[data-sort-attr] input[type=radio]").change(function(){
 		
 		var $th = $(this).closest("th[data-sort-attr]");
 		var $table = $(this).closest("table");		
+//		var $tbody = $(this).closest("thead").siblings("tbody").eq(0);
 		var sortAttr = $(this).closest("th[data-sort-attr]").attr("data-sort-attr");
 		var doSortAscending = $(this).attr("data-sort-ascending");
 		
@@ -59,6 +66,18 @@ $(document).ready(function(){
 	
 	
 })
+
+function applyFilters($e){
+	var $th = $e.closest("th[data-filter-attr]");
+	var $table = $e.closest("table");
+			
+	var filters = [];
+	filters= getFilters($table);
+
+	filterTableRows(filters, $table);
+	
+	$th.find("span[data-toggle-id]").eq(0).click();
+}
 
 	
 function closeOtherDropdowns(dropdownIdToExclude){
@@ -99,9 +118,9 @@ function sortTable(sortedRows, $table){
 	$(sortedRows).each(function(){
 		sortedHtml += this.html;
 	})
-		
-	$table.find("tbody").eq(0).html(sortedHtml);
-	
+
+	$table.find("> tbody").eq(0).html(sortedHtml);
+
 }
 
 function getSortedRows(doSortAscending, sortAttr, $table){
@@ -111,7 +130,7 @@ function getSortedRows(doSortAscending, sortAttr, $table){
 	var searchIndex;
 	
 	// for each table row
-	$table.find("tbody tr:not(.no-filter)").each(function(i, row){
+	$table.find("> tbody > tr:not(.no-filter)").each(function(i, row){
 		
 		// Store row information
 		currentRow = {};
@@ -126,11 +145,11 @@ function getSortedRows(doSortAscending, sortAttr, $table){
 			while(searchIndex < sortedRows.length ){
 				
 				if(doSortAscending == 1){
-					if(currentRow.value > sortedRows[searchIndex].value) searchIndex += 1;
+					if(parseFloat(currentRow.value) > parseFloat(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 				else{
-					if(currentRow.value < sortedRows[searchIndex].value) searchIndex += 1;
+					if(parseFloat(currentRow.value) < parseFloat(sortedRows[searchIndex].value)) searchIndex += 1;
 					else break;
 				}
 			} 
@@ -181,7 +200,7 @@ function filterTableRows(appliedFilters, $table){
 	var doShowRow;
 
 	// Loop through each row that that should be filtered
-	$table.find("tbody tr:not(.no-filter)").each(function(i, row){
+	$table.find("> tbody > tr:not(.no-filter)").each(function(i, row){
 		
 		// Loop through each filter object
 		doShowRow = true;
@@ -197,29 +216,37 @@ function filterTableRows(appliedFilters, $table){
 			// as soon as one of the applied filters is not satisfied. 
 			// ********************************************************
 			
-			// Check if the row has an array of filter vaues
+			
+			// Check if the row has an array of filter values
 			if(isStringACommaSeperatedArray(filterValue_currentRow)){
+//			if($.isArray(filterValue_currentRow)){
 				
 				// Get the array of values
 				filterValue_currentRow = getArrayFromString(filterValue_currentRow);
 
+				// This condition is a work around for the case when the employer initiates
+				// contact with the applicant.
+				// In this scenario, the applicant does not answer any questions, hence this
+				// applicant's "anwer array" will be empty.
+				// Pretty this later.
+				if(filterValue_currentRow[0] != ""){
 			
-				// If the filter requires the row to satisfy ALL the applied filter values
-				if(appliedFilter.mustMatchAllValues == "1"){
-					if(!doesArrayContainAllValues(filterValue_currentRow, appliedFilter.values)){
-						doShowRow = false;
-						return false; // exit
+					// If the filter requires the row to satisfy ALL the applied filter values
+					if(appliedFilter.mustMatchAllValues == "1"){
+						if(!doesArrayContainAllValues(filterValue_currentRow, appliedFilter.values)){
+							doShowRow = false;
+							return false; // exit
+						}
 					}
-				}
-				
-				// or for the row to satisfy at least one applied filter value
-				else{
-					if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
-						doShowRow = false;
-						return false; // exit
+					
+					// or if the filter only requires the row to satisfy at least one applied filter value
+					else{
+						if(!doesArrayContainAtLeastOneValue(filterValue_currentRow, appliedFilter.values)){
+							doShowRow = false;
+							return false; // exit
+						}
 					}
-				}
-
+				}		
 			}
 			else if(!doesArrayContainValue(filterValue_currentRow, appliedFilter.values)){
 				doShowRow = false;

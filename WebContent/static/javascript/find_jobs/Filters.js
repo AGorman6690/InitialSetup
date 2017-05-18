@@ -16,9 +16,33 @@ $(document).ready(function(){
 		setMap();
 
 	}
+	
+	$("body").on("click", ".show-cal-mod", function() {
+		var jobId = $(this).closest(".job").attr("data-job-id");
+		var $calendar = $(this).closest(".job").find(".mod-body .calendar").eq(0);
+		executeAjaxCall_getJobWorkDays(jobId, $calendar);
+	})
+		
+	$(window).scroll(function(){
+		
+		$e = $("#headerRow");
+//		alert($e.position().top + ", " + $e.outerHeight(true));
+		
+		console.log("current pos:" + $(document).scrollTop() + "top:" + $e.position().top + ", bottom: " + $e.position().top + ", " + $e.outerHeight(true))
+	})
 })
 
-
+function executeAjaxCall_getJobWorkDays(jobId, $calendar) {
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/job/" + jobId + "/work-days",
+		headers: getAjaxHeaders(),
+		dataType: "json",			
+	}).done(function(workDayDtos){
+		initCalendar_new($calendar, workDayDtos);
+		$calendar.closest(".mod").show();
+	})
+}
 
 function attachEventHandles_Filters(){
 	
@@ -54,6 +78,8 @@ function attachEventHandles_Filters(){
 	
 	$("#getJobs").click(function(){
 		getJobs(0);
+		
+
 	})
 		
 	
@@ -476,23 +502,13 @@ function initWorkDaysCalendar(){
 	$("#workDaysCalendar").datepicker({
 			minDate: new Date(),
 			numberOfMonths: 2, 
-			onSelect: function(dateText, inst) {	
-        
-	            var date = new Date(dateText);
-	            
-	            if(selectedDays_workDaysFilter.length == 1){
-	            	attemptToAddDateRange(date, selectedDays_workDaysFilter);
-	            }
-	            else {
-	            	selectedDays_workDaysFilter = addOrRemoveDate(date, selectedDays_workDaysFilter);	            	
-	            }
-	            				
-//				$($e.closest(".calendar")).attr("data-selected-days-count", selectedDays.length);
+			onSelect: function(dateText, inst) {	        
+				selectedDays_workDaysFilter = onSelect_multiDaySelect_withRange(dateText, selectedDays_workDaysFilter);
+
 			},		        
 	        // This is run for every day visible in the datepicker.
 	        beforeShowDay: function (date) {
-	        	if(isDateAlreadySelected(date, selectedDays_workDaysFilter)) return [true, "active111"];
-	        	else return [true, ""];	        	
+	        	return beforeShowDay_ifSelected(date, selectedDays_workDaysFilter);
 	        }
 	    });	
 }

@@ -1,19 +1,12 @@
 
 $(document).ready(function(){
 	
-	$("body").on("change", ".invalid", function(){
-		
-		var value = "";
-		if($(this).id == "times"){
-			validateTimes();	
-		}else if($(this).is("input") || $(this).is("textarea")){
-			value = $(this).val()
-		}else if($(this).is("select")){
-			value = $(this).find(":selected").val();
-		}
-		
-		validateInput($(this), value);
-
+	$("body").on("keyup", ".invalid", function(event){		
+		validateUserInput($(this));
+	})
+	
+	$("body").on("change", ".invalid", function(event){		
+		validateUserInput($(this));
 	})
 	
 //	$("body").on("mousedown", ".invalid.calendar *", function(){
@@ -47,6 +40,26 @@ $(document).ready(function(){
 	})
 
 })
+
+function validateUserInput($e) {
+	if($e.is("input") || $e.is("textarea")){
+		if($e.hasClass("positive-number")){
+			
+			if(isValidatePositiveNumber($e.val())){
+				setValidCss($e);
+			}				
+		}else{
+			if($e.val() != "") setValidCss($e);
+		}
+	}else if($e.is("select")){
+		if($e.val() != "") setValidCss($e);
+	}
+	
+	if($e.hasClass("radio-container")){
+		if(isRadioContainerSelected($e)) setValidCss($e);
+		else setInvalidCss($e);
+	}
+}
 
 function isValidatePositiveNumber(value){
 	
@@ -260,31 +273,6 @@ function setValidCss($e){
 //	}	
 //}
 
-function validateDuration(durationTypeId, durationUnitLength){
-	
-	var $eDurationUnitLength = $("#durationUnitLength");
-	var $eInvalidDurationLength = $("#invalidDurationLength");
-	var isValid = true;
-	
-	// Weeks, months or years
-	if(durationTypeId == 3 || durationTypeId == 4 || durationTypeId == 5){		
-		if(!isValidatePositiveNumber(durationUnitLength)){
-			isValid = false;
-		}
-	}
-
-	
-	if(isValid){
-		setValidCss($eDurationUnitLength);
-		slideUp($eInvalidDurationLength, 500);
-		return 0;
-	}
-	else{
-		setInvalidCss($eDurationUnitLength);
-		slideDown($eInvalidDurationLength, 500);
-		return 1;
-	}
-}
 
 function validateMinimumSelectedCategories(){
 	

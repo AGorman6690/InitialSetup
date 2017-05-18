@@ -1,0 +1,127 @@
+#location #city,
+#location #street{
+	width: 200px;
+}
+
+#location #state,
+#location #zipCode{
+	width: 100px
+}
+
+#filtersContainer input,
+#filtersContainer select{
+    padding: 10px 10px;
+    border-radius: 1px;
+    border: 1px solid #c8c5c5;
+}
+
+#filtersContainer .filter{
+	padding-bottom: 45px;
+}
+
+.filter h3.blue{
+    width: 300px;
+}
+#job-info{
+	width: 620px;
+	margin: auto;
+	text-align: center;
+	border-bottom: 2px solid #cacaca;
+	margin-bottom: 45px;
+	display: none;
+}
+#job-info h2{
+	color: #197994;
+	font-size: 40px;
+}
+#job-info p{
+	font-size: 27px;
+}
+#filtersContainer,
+#resultsContainer{
+	padding-bottom: 50px;
+	text-align: center;
+}
+#results{
+	padding-top: 45px;
+}
+#resultsContainer{
+	display: none;
+	width: 1000px;
+	margin: auto;
+	padding-top: 20px;
+	margin-top: 20px;
+/* 	border-top: 1px solid #cacaca; */
+}
+
+td.days-available{
+	position: relative;	
+}
+
+td.days-available .calendar-container{
+    background-color: #ffffff;
+    z-index: 10000;
+    border: 2px solid #163b3d;
+    border-radius: 3px;
+    padding: 20px;
+    position: absolute;
+    display: none;
+}
+
+td.days-available .calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+td.days-available .calendar-container td.is-not-available {
+	background: #c38f8f;
+	border-radius: 5px;
+}
+
+td.days-available .calendar-container td.is-available a,
+td.days-available .calendar-container td.is-not-available a{
+	color: #ffffff;
+}
+
+span.toggle-availability-calendar{
+	cursor: pointer;
+}
+
+#what-kind-of-job-container{
+	padding: 50px 0px;
+	text-align: center;	
+}
+
+#what-kind-of-job-container p{
+	font-size: 20px;
+    margin-bottom: 20px;	
+}
+
+#what-kind-of-job-container button{
+	width: 340px;
+	font-size: 19px;
+}
+
+#posted-jobs-container{
+	display: inline-block;
+	
+}
+
+#posted-jobs{
+	margin-left: 20px;
+	width: 340px;
+}
+
+#posted-jobs [data-posted-job-id]{
+	padding: 10px 10px;
+}
+
+#posted-jobs [data-posted-job-id]:hover{
+	background: #cacaca;
+	cursor:pointer;
+}
+
+.hide-on-load{
+	display: none;
+}
+

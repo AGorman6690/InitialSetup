@@ -1,3 +1,4 @@
+body.waiting * ,
 html.waiting * {
     cursor: progress !important;
 }
@@ -26,7 +27,6 @@ html.waiting * {
 .mock-anchor{
     color: #5B7BA3;
     cursor:pointer;
-    font-size: 15px;    
 }
 
 .test111 a{
@@ -35,7 +35,6 @@ html.waiting * {
 
 .blue-btn{
     color: #337ab7;
-    font-size: 15px;
     padding:3px 7px;
 }
 
@@ -102,15 +101,25 @@ button.not-clickable{
 }
 
 
-
+.always-show{
+	display: block !important;
+}
 
 body {
   overflow-y: scroll;
   font-family: "Nunito", sans-serif !important;
-  letter-spacing: 0.75px;
-  font-size: 15px;
+/*   letter-spacing: 0.75px; */
+
+  font-size: 16px;
+  
+  
+/*   http://stackoverflow.com/questions/29682271/safari-kerning-issue-when-using-f-and-i */
+  font-variant-ligatures: no-common-ligatures;
 }
 
+button, body{
+	letter-spacing: 0.12em;
+}
 
 .static-row{
 	 border-top: 1px solid #ddd;
@@ -313,4 +322,20 @@ textarea {
 li.disabled {
     pointer-events:none; 
     opacity:0.6;        
+}
+
+
+
+
+
+
+
+
+
+
+.left-bar{
+/* 	float: left; */
+/* 	width: 320px; */
+/* 	height: 1000px; */
+/* 	background: #f4f4f4; */
 }

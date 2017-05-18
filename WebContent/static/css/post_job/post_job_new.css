@@ -1,0 +1,277 @@
+
+.invalid-section::before{
+/* 	font-family: "Glyphicons Halflings"; */
+/* 	content: "\e014"; */
+/* 	display: block; */
+	
+}
+.invalid.select-page-section{
+/*     color: #b30000 !important; */
+    padding: 5px;
+}
+#copy-or-new-container{
+	padding-top: 50px;
+	text-align: center;
+}
+
+#copy-or-new-container button{
+	padding: 15px 20px;
+	color: #ffffff;
+	background: #197994;
+	font-size: 18px;
+	margin: 0px 20px;
+	width: 400px;
+}
+
+.item{
+	padding-top: 35px;
+}
+
+.item p{
+	font-size: 18px;
+	font-weight: bold;
+	color: #197994;
+}
+#datesContainer .button-group button{
+	width: 275px;
+	margin: 0px 10px;
+} 
+#datesContainer .calendar-container{
+	display: none;
+}
+#preview-job-posting-container{
+	display: none;
+}
+
+/* #previous-next-container{ */
+/*     width: 400px; */
+/* } */
+
+/* #edit-or-submit-container{ */
+/* 	width: 600px; */
+/* } */
+
+#edit-or-submit-container,
+#previous-next-container{
+    padding: 25px 0px 0px 0px;
+    text-align: center;
+    border-bottom: 1px solid #cacaca;	
+    margin: auto;
+    width: 600px;
+}
+
+#proceed-to-preview-job-posting{
+	display:block
+}
+
+#editPosting,
+#submitPosting_final{
+	display: inline-block;
+}
+
+#proceed-to-preview-job-posting,
+#editPosting,
+#submitPosting_final{
+	background: #163b3d;
+	color: #ffffff;
+	padding: 10px 20px;
+
+	font-size: 20px;
+    width: 270px;
+}
+#edit-or-submit-container button,
+#proceed-to-preview-job-posting{
+	margin: 0px auto 20px;
+}
+#editPosting,
+#submitPosting_final{
+	margin: 0px 10px;
+}
+#clearCalendar,
+#previous-next-container span{
+	font-size: 16px;
+	color: #163b3d;
+	cursor: pointer;
+	margin: 0px 15px;
+/* 	font-weight: bold; */
+    border: 1px solid#bbbbbb;
+    padding: 2px 10px;
+    width: 119px;
+    display: inline-block;
+    background: #fff;
+}
+
+/* #previous-next-container span:hover{ */
+/* 	text-decoration: underline; */
+/* } */
+
+.page-section{
+	text-align: center;
+}
+
+textarea#description{
+	width: 500px;
+}
+
+thead .master-row-multi-select,
+thead .master-row{
+	display: none;
+}
+
+.hide-on-load{
+	display: none;
+}
+
+#previous-job-posts{
+	margin-left: 20px;
+	width: 400px;
+}
+#previous-job-posts [data-posted-job-id],
+#postedQuestions [data-question-id]{
+	padding: 10px 10px;
+}
+
+#previous-job-posts [data-posted-job-id]:hover,
+#postedQuestions [data-question-id]:hover{
+	background: #cacaca;
+	cursor:pointer;
+}
+
+#copy-previous-post-container{
+	display: inline-block;
+}
+
+#addedQuestionsContainer{
+	diplay: none;
+}
+
+#employeeSkillsContainer input{
+	width: 500px;
+}
+
+#addedQuestionsContainer,
+#create-question-container{
+	display: none;
+}
+
+#copy-or-new-question button{
+	padding: 10px 20px;
+	background: #197994;
+	color: #ffffff;
+	width: 320px;
+}
+
+#copy-question-container{
+	display: inline-block;
+}
+
+#locationContainer input,
+#locationContainer select{
+	width: 225px;
+}
+
+#initial-time-question{
+	padding-bottom: 30px;
+}
+
+#initial-time-question,
+#set-one-start-and-end-time,
+#times-cont{
+	display: none;
+}
+#initial-time-question{
+	border-bottom: 1px solid #cacaca;
+    margin: auto;
+    width: 600px;	
+}
+
+#initial-time-question p{
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+#initial-time-question button.sqr-btn{
+	width: 230px;
+}
+
+#initial-time-question .sqr-btn.selected{
+	background: #197994;
+	color: #fff;
+}
+
+#set-one-start-and-end-time p{
+	display: inline-block;
+	width: 120px;
+	text-align: left;
+}
+
+#set-one-start-and-end-time div:first-child{
+	margin-bottom: 20px;
+}
+
+.calendar .ui-datepicker-title{
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.add-list-item{
+	padding: 5px;
+	margin-top: 8px;
+}
+
+.list-item{
+	margin: 8px 0px;
+}
+#positions-per-day{
+    width: 60px;
+    text-align: center;
+}
+#compensationContainer .radio-container{
+	width: 300px;
+	margin: auto;
+	text-align: left;
+}
+#compensationContainer .radio-container label{
+/* 	text-align: left; */
+}
+#compensationContainer .radio-container .radio:first-child{
+	margin-bottom: 13px;
+}
+.calendar td:not(.ui-datepicker-unselectable):hover{
+	cursor: pointer;
+}
+
+input#maxPay{
+	display: block;
+	width: 75px;
+	margin: 5px auto;
+}
+#datesContainer .radio-container,
+#timesContainer .radio-container{
+    margin-bottom: 20px;
+    width: 460px;
+    margin: auto;
+    text-align: left;
+    padding: 5px;	
+}
+#timesContainer .item .radio-container{
+	width: 575px;
+}
+#post-job-container{
+	padding-bottom: 75px;
+}
+.selected-date .select-date-box .glyphicon-ok{
+	font-size: 30px;
+	display: block;
+	color: #627071;
+}
+.select-date-box .glyphicon-ok{
+	display: none;
+}
+#prev-or-next span{
+	cursor: pointer;
+	margin: 2px 20px;
+	font-size: 23px;
+	font-weight: bold;
+	text-decoration: underline;
+	color: #163b3d;
+}

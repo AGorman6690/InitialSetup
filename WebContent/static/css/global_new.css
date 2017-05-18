@@ -1,26 +1,214 @@
+.pointer:hover{
+	cursor: pointer;
+}
+select.time option.bold{
+    font-weight: bold;
+    font-size: 17px;
+}
+h3.blue{
+	font-size: 21px;
+	font-weight: bold;
+	color: #fff;
+	margin-bottom: 25px;
+    display: inline-block;
+    padding: 5px 10px;
+    width: 485px;
+    box-shadow: 3px 3px 3px #cacaca;
+	background: #197994;
+}
+.invalid{
+	border: 3px solid #b30000 !important;
+    border-radius: 5px;
+}
+
+button {
+  outline: none; 
+}
+.border-btm{
+	padding-bottom: 10px;
+	border-bottom: 1px solid #cacaca;
+}
+}
+.cancel:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+.alert-message{
+	padding: 10px;
+	border: 3px solid #795353;
+	background: #f1e8e8;
+	border-radius: 3px;
+}
+.alert-text{
+    color: #a02424;
+    font-weight: bold;
+}
+a{
+	color: #000;
+}
+.width-500{
+	width: 500px;
+	margin: auto;
+}
+.bold{
+	font-weight: bold;
+}
+.hide-on-load{
+	display: none;
+}
+a.sqr-btn:hover{
+	text-decoration: none;
+}
+h4.h4{
+	font-size: 18px;
+	font-weight: bold;
+	color: #163b3d;
+}
+h3.h3{
+    font-size: 20px;
+    font-weight: bold;
+    color: #197994;
+}
+h3.h3.green{
+	color: #163b3d;
+}
+body{
+	margin-bottom: 75px;
+}
+#json_work_day_dtos{
+	display: none;
+}
+.sqr-btn.teal-2{
+    padding: 11px 20px;
+    color: #197994;
+    background: #f9f9f9;
+    font-size: 19px;
+    margin: 0px 5px;
+    font-weight: bold;
+    border: 2px solid #cacaca;
+}
+.sqr-btn.teal-2.selected{
+    color: #fff;
+    background: #197994;
+    font-weight: normal;	
+}
+.selected-shadow{
+    box-shadow: 11px 11px 13px #545454;
+}
+.center{
+	text-align: center;
+}
+.page-container{
+	text-align: center;
+}
+
 .selected-blue{
     background-color: #337ab7;
     color: #ffffff;
 }
+.mar-btm{
+	margin-bottom: 25px;
+}
+.pad-top{
+	padding-top: 25px;
+}
+.pad-top-2{
+	padding-top: 50px;
+}
+.pad-btm{
+	padding-bottom: 25px;
+}
+.pad-btm-2{
+	padding-bottom: 50px;
+}
+.linky-hover:hover{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+.selected-green{
+    background-color: #163b3d !important;
+    color: #ffffff !important;
+    outline: none;
+}
 
 input, select, textarea{
 	padding: 5px 10px;
-    border-radius: 3px;
-    border: 2px solid #c8c5c5;	
+    border-radius: 1px;
+    border: 1px solid #c8c5c5;	
 }
 
 .square-button,
 .sqr-btn{
     border-radius: 0;
-/*     background-color: #ffffff; */
-/*     color: #000000; */
-    border: 1px solid rgb(192,192,192);
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #bbbbbb;
     padding:5px 10px;
+    display: inline-block;    
+}
+
+.sqr-btn.teal{
+	padding: 15px 20px;
+	color: #ffffff;
+	background: #197994;
+	font-size: 19px;
+	margin: 0px 20px;
+	font-weight: normal;
+}
+
+.sqr-btn.gray-2{
+    font-size: 16px;
+    color: #163b3d;
+    cursor: pointer;
+    margin: 0px 7px;
+    border: 1px solid #bbbbbb;
+    padding: 5px 10px;
+/*     background: #f9f9f9; */
+	background: #fff;
+}
+.sqr-btn.gray-2.selected{
+	color: #fff;
+	background: #163b3d;
+}
+.sqr-btn.teal.sm{
+	padding: 9px 13px;
+	font-size: 16px;
+}
+
+.sqr-btn.gray.sm{
+	padding: 9px 13px;
+	font-size: 16px;
+}
+.sqr-btn:hover{
+	cursor: pointer;
+}
+.sqr-btn.gray{
+	padding: 15px 20px;
+	color: #000000;
+	background: #f4f4f4;
+	font-size: 19px;
+	margin: 0px 20px;
+	font-weight: normal;
+}
+
+.sqr-btn.green{
+	padding: 10px 25px;
+	color: #ffffff;
+	background: #163b3d;
+	font-size: 18px;
+	margin: 0px 20px;
+}
+
+.button-group button{
+    border-radius: 0;
+    border: 1px solid rgb(192,192,192);
+    padding:5px 10px;	
+    background: #ffffff;
 }
 
 
 .accent{
-    font-size: 15px;
     font-weight: bold;
 /*     color: #5B7BA3; */
 	color:#6d8aaf;
@@ -61,11 +249,20 @@ span.dollar-sign{
 	background-color:#ffffff;
 	z-index: 10000;
 	display:none;
-	border: 2px solid #163b3d;
+	border: 2px solid #dedede;
 	border-radius:3px;
 	padding:20px;
 }
-
+.dropdown-style p{
+	padding: 10px;
+}
+.dropdown-style p:hover{
+	background: #cacaca;
+	cursor: pointer;
+}
+.marg-left{
+	margin-left: 20px;
+}
 .show-disabled{
 	background-color: rgb(235, 235, 228);
     border: 2px solid rgb(200, 197, 197);
@@ -78,4 +275,17 @@ span.glyphicon-menu-down{
 	margin: 0px 5px;
 	padding: 0px 5px;
 	color: #adadad;
+	font-size: 12px;
+}
+
+.glyphicon{
+	cursor: pointer;
+}
+
+[data-toggle-id]{
+	cursor: pointer;
+}
+
+div.work-day-dtos{
+	display: none;
 }

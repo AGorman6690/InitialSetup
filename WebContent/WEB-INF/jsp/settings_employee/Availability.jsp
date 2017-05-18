@@ -1,5 +1,5 @@
 <%@ include file="../includes/Header.jsp" %>
-<%@ include file="../includes/resources/DatePicker.jsp" %>
+<%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
 
 
 <!-- Order is specific -->
@@ -147,3 +147,5 @@
 		</div>
 	</div>
 </div>
+
+<%@ include file="../includes/Footer.jsp"%>

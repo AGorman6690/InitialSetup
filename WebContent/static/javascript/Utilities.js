@@ -48,12 +48,9 @@ function toggle($e){
 }
 
 function slideUp($e, milliseconds){
-	if(milliseconds != undefined){
-		$e.slideUp(milliseconds);	
-	}
-	else{
-		$e.slideUp(300);
-	}
+	if(milliseconds != undefined) $e.slideUp(milliseconds);	
+	else $e.slideUp(300);
+	
 }
 
 function slideDown($e, milliseconds){
@@ -84,6 +81,7 @@ function removeArrayElementByIdProp(idToRemove, array){
 							
 	return newArray;
 }
+
 
 //*****************************************
 //*****************************************
@@ -216,8 +214,8 @@ function formatTime(time){
 function formatTimeTo12Hours(time){
 	//Used to convert hh:mm:ss to h:mm[am or pm]
 	
-	if( time == "" ){
-		return "0:00am";
+	if( TimeRanges == undefined || time == "" ){
+		return "";
 	}else{
 
 		var len = time.length;
@@ -232,9 +230,9 @@ function formatTimeTo12Hours(time){
 
 		if(hour > 12){
 			hour = parseInt(hour) - 12;
-			dayHalf = "pm";
+			dayHalf = " p";
 		}else{
-			dayHalf = "am";
+			dayHalf = " a";
 		}
 
 

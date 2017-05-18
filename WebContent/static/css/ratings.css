@@ -1,14 +1,16 @@
 
+
+
 /* Override plugin */
 .rating-container{
 	display:inline-block !important;
-	padding-left:10px !important;
-
+/* 	padding-left:10px !important; */
+	margin: 0px 10px;
 }
 
 .rating-container .caption{
 	padding-top:12px !important;
-	width:100px;
+	width:125px;
 }
 
 .rating-container .caption span{
@@ -43,7 +45,7 @@ th#employee{
 }
 
 th#rating{
-	width:40%;
+/* 	width:40%; */
 }
 
 th#endorsements{
@@ -55,7 +57,7 @@ th#comment{
 }
 
 textarea.comment{
-	width: 100%;
+/* 	width: 100%; */
     border-radius: 2px;
 }
 
@@ -78,7 +80,9 @@ textarea.comment{
 	color:#0A5032;
 }
 
-
+.star{
+	font-size: 30px;
+}
 
 table#ratings{
 	width:100%;
@@ -90,4 +94,67 @@ table#ratings{
 	color:#ffffff;
 	margin-bottom:25px;
 	font-size:17px;
+}
+
+
+
+.criteria-cont{
+	padding: 5px 0px;
+}
+#user-header{
+    width: 550px;
+    border-bottom: 1px solid #cacaca;
+    margin: auto;
+    padding-bottom: 50px;
+}
+#user-rating-details .criteria-name{
+	width: 230px;
+    display: inline-block;
+    text-align: left;
+    color: #163b3d;
+    font-weight: bold;    
+}
+
+#user-rating-details .rating-value .star{
+	font-size: 22px;
+}
+#user-complted-jobs{
+/* 	    border-top: 1px solid #cacaca; */
+}
+.completed-job h3{
+	display: inline-block;
+	margin-right: 10px;
+	width: 175px;
+	text-align: left;
+	font-size: 19px;
+}
+.completed-job{
+	padding: 15px 0px;
+	width: 500px;
+	margin: auto;
+}
+.comments-cont{
+	width: 450px;
+	margin: auto;
+	
+}
+.comments-cont h5{
+	font-size: 16px;
+	text-align: right;
+}
+.comments{
+	display: none;
+	text-align: right;
+}
+.comments span{
+	padding-bottom: 10px;
+	border-bottom: 1px solid #cacaca;
+	margin-bottom: 10px;
+}
+.comments span:last-child{
+	border-bottom: 0;
+}
+.details{
+	display: none;
+/*     border-bottom: 2px solid #cacaca; */
 }

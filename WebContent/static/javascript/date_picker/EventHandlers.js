@@ -1,4 +1,45 @@
+//Refer to: https://bugs.jqueryui.com/ticket/6885
+//I was directed to the above link from http://stackoverflow.com/questions/6334898/jquery-datepicker-after-update-event-or-equivalent/6337622#6337622
+// ***********************************************************************
+// Note: It appears that parameters cannot be passed to this "afterShow" method.
+// Without understanding the details of the code below, I cannot answer why.
+// ***********************************************************************
+$(function() {
+	$.datepicker._updateDatepicker_original = $.datepicker._updateDatepicker;
+	$.datepicker._updateDatepicker = function(inst) {
+		$.datepicker._updateDatepicker_original(inst);
+		var afterShow = this._get(inst, 'afterShow');
+		if (afterShow)
+			afterShow.apply((inst.input ? inst.input[0] : null));  // trigger custom callback
+	}
+});
+
+
+$(document).ready(function() {
+	
+	$("body").on("click", ".calendar-container .select-all-work-days", function() {
+		var $calendar = $(this).closest(".calendar-container").find(".calendar");
+		selectAllWorkDays($calendar, workDayDtos)		
+	})
+})
+
+function selectAllWorkDays($calendar, workDayDtos){
+	$(workDayDtos).each(function(i, workDayDto) {
+		if(workDayDto.isProposed == "0" || workDayDto.isProposed == null){
+			var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
+			$(td).click();
+		}
+	})
+}
+
 function onSelect_multiDaySelect_withRange(dateText, days){
+	
+	// **************************************
+	// **************************************
+	// Phase this out
+	// **************************************
+	// **************************************
+	
 	    
         var date = new Date(dateText);
         
@@ -14,11 +55,58 @@ function onSelect_multiDaySelect_withRange(dateText, days){
         				
 }
 
+function onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos){
+    
+    var date = new Date(dateText);
+
+    if(workDayDtos.length == 1){
+    	if(date.getTime() == workDayDtos[0].date.getTime())
+    		workDayDtos = removeWorkDayDto(date, workDayDtos);
+    	else attemptToAddDateRange_workDayDtos(date, workDayDtos);
+    }
+    else {
+    	workDayDtos = addOrRemoveWorkDayDtoByDate(date, workDayDtos);      	
+    }
+    
+    return workDayDtos;
+    				
+}
+
 function beforeShowDay_ifSelected(date, days){
-	if(isDateAlreadySelected(date, selectedDays)) return [true, "active111"];
+	if(isDateAlreadySelected(date, days)) return [true, "active111"];
 	else return [true, ""];	   
 }
 
+function beforeShowDay_findEmployees_ifUserHasAvailability(
+			date, dates_jobWorkDays, dates_applicantProposal){
+	// This is to for the find employees page.
+	// If the user (i.e. the returned prospective employee) as availability
+	// on the requested date, then the calendar date will be green.
+	// If the user is not available, then the calendar date will be red.
+	
+	
+	// Check if date is in the particular array of dates
+	if(doesDateArrayContainDate(date, dates_applicantProposal)) return [true, 'proposed'];
+	else if(doesDateArrayContainDate(date, dates_jobWorkDays)) return [true, 'a-job-work-day'];
+	else return [true, ""];
+	
+}
+
+function beforeShowDay_counterApplicationDays(date,
+		dates_application, dates_job, dates_unavailable){
+	// This is to for the find employees page.
+	// If the user (i.e. the returned prospective employee) as availability
+	// on the requested date, then the calendar date will be green.
+	// If the user is not available, then the calendar date will be red.
+	
+	
+	// Check if date is in the particular array of dates
+	if(doesDateArrayContainDate(date, dates_unavailable)) return [true, 'unavailable'];
+	else if(doesDateArrayContainDate(date, dates_application)) return [true, 'proposed'];
+	else if(doesDateArrayContainDate(date, dates_job)) return [true, 'a-job-work-day'];
+	else return [true, ""];
+	
+}
 function onSelect_multiDaySelect_noRange(dateText, days){
  
 	var date = new Date(dateText);

@@ -1,4 +1,87 @@
-
+.container{
+	padding-top: 30px;
+}
 #applicantsTable .endorsement .badge{
 	margin-left: 5px;
+}
+
+button.sqr-btn.gray,
+button.sqr-btn.teal{
+	padding: 10px 12px;
+	font-size: 15px;
+	margin: 0;
+/* 	border: 0; */
+/* 	background: #ffffff; */
+/* 	color: #197994; */
+}
+
+table.wage-proposal th{
+	width: 12.5%;
+}
+table.application th{
+	width: 12.5%;
+}
+table.employee th{
+	width: 14%;
+}
+
+thead tr:first-child th:not(.placeholder){
+	font-size: 17px;
+	font-weight: bold;
+	color: #163b3d;
+/* 	border-left: 2px solid #bbbbbb; */
+}
+thead tr:last-child th{
+	font-size: 16px;
+	font-weight: normal;
+/* 	color: #163b3d; */
+}
+
+table.wage-proposal tbody td.wage-proposal.first span,
+table.wage-proposal tbody td.application.perm-first span,
+table.wage-proposal tbody td.employee.perm-first span{	
+	border-left: 1px solid #bbbbbb;
+}
+
+table.application tbody td.wage-proposal.perm-first span,
+table.application tbody td.application.first span,
+table.application tbody td.employee.perm-first span{	
+	border-left: 1px solid #bbbbbb;
+}
+
+table.employee tbody td.wage-proposal.perm-first span,
+table.employee tbody td.application.perm-first span,
+table.employee tbody td.employee.first span{	
+	border-left: 1px solid #bbbbbb;
+}
+
+table.job-details tbody td.wage-proposal.perm-first span,
+table.job-details tbody td.application.perm-first span,
+table.job-details tbody td.employee.perm-first span{	
+	border-left: 1px solid #bbbbbb;
+}
+
+
+table#table_jobsWaitingToStart thead th button{
+	margin-bottom: 15px;
+}
+
+table.main-table-style tbody tr td{
+    padding: 15px 0px;
+}
+
+tbody tr td span {
+    display: inline-block;
+    width: 100%;
+    padding: 0px 10px;
+/*     height: 45px; */
+/*     line-height: 45px; */
+}
+
+tbody tr:hover{
+	background: #f4f4f4;
+}
+
+tbody td:first-child{
+	text-align: left
 }

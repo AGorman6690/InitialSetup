@@ -1,0 +1,8 @@
+.header-options-container{
+	text-align: center
+}
+
+.header-options-container .header-option{
+	margin: 0px 12px;
+	cursor: pointer;
+}

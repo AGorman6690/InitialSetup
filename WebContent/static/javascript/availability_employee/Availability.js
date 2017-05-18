@@ -11,19 +11,26 @@ $(document).ready(function(){
 		var minDate = new Date($(this).attr("data-min-date"));
 		var month = minDate.getMonth();
 		
-		$(this).datepicker({
-			minDate: minDate,
-			numberOfMonths: 1, 
-			changeMonth: false,
-			hideIfNoPrevNext: true,
-			onSelect: function(dateText, inst) {	    
-				onSelect_Availability(dateText);
-			},		        
-	        beforeShowDay: function (date) {       
-	        	broswerIsWaiting(true);
-	        	return beforeShowDay_Availability(month, date, daysOfWeekToSelect);	
-	     	}
-	    });	
+		var today = new Date();
+		
+		// This if statement is here for debugging.
+		// Need to determine how we want to handle months that have passed.
+		if(minDate.getMonth() >= today.getMonth()){
+			$(this).datepicker({
+				minDate: minDate,
+				numberOfMonths: 1, 
+				changeMonth: false,
+				hideIfNoPrevNext: true,
+				onSelect: function(dateText, inst) {	    
+					onSelect_Availability(dateText);
+				},		        
+		        beforeShowDay: function (date) {       
+		        	return beforeShowDay_Availability(month, date, daysOfWeekToSelect);	
+		     	}
+		    });				
+		}
+		
+
 	})
 	
 	$("#monthsContainer .options input[type=checkbox]").change(function(){
@@ -196,7 +203,7 @@ function updateSelectedDates_ByWeekDay(isDaySelected, dayOfWeek){
 //		selectDatesBy_Month_Year_And_WeekDays(this, 2017, daysOfWeekToSelect);		
 //	})	
 //	
-////	$("html").removeClass("waiting");
+////	broswerIsWaiting(false);
 //}
 //
 //function selectDatesBy_Month_Year_And_WeekDays(month, year, weekdays){

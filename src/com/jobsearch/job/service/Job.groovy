@@ -1,16 +1,12 @@
 package com.jobsearch.job.service
 
-import com.jobsearch.application.service.Application
-import com.jobsearch.model.JobSearchUser
-import com.jobsearch.model.Question
-import com.jobsearch.model.WorkDay
-import com.jobsearch.category.service.Category
 import java.sql.Time
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.Date
-import java.util.List
+
+import com.jobsearch.category.service.Category
+import com.jobsearch.model.JobSearchUser
+import com.jobsearch.model.WorkDay
 
 
 public class Job {
@@ -27,10 +23,19 @@ public class Job {
 	String zipCode
 	Float lat
 	Float lng
-	
+	Boolean isPartialAvailabilityAllowed
+	int positionsPerDay
+
+	int flag_isNotAcceptingApplications
+
+	String streetAddress_formatted
+	String city_formatted
+	String zipCode_formatted
+
+
 	//******************************************************
 	//******************************************************
-	//Note: It appears LocalDate should be used over Date since 
+	//Note: It appears LocalDate should be used over Date since
 	//Date is deprecated.
 	//I'm beginning to switch this over.
 	//Eventually delete all Date and Time properties
@@ -48,9 +53,9 @@ public class Job {
 	String stringEndTime
 	String stringStartDate
 	String stringEndDate
-	
-	
-	
+
+
+
 	Double distanceFromFilterLocation
 	List<Integer> categoryIds
 	List<Category> categories // do away with
@@ -60,7 +65,7 @@ public class Job {
 //	List<Question> questions
 	Integer Duration
 	List<Integer> selectedQuestionIds
-	
+
 	//0 = not yet started;
 	//1 = started;
 	//2 = finished;
@@ -68,17 +73,7 @@ public class Job {
 	public static Integer STATUS_FUTURE = 0;
 	public static Integer STATUS_PRESENT = 1;
 	public static Integer STATUS_PAST = 2;
-	
-	// Do away with work days from the job lass
-	List<WorkDay> workDays;
-	
-	// 1 = Hours
-	// 2 = Days
-	// 3 = Weeks
-	// 4 = Months
-	// 5 = Years
-	// 6 = Hopefully Forever
-	Integer durationTypeId;
-	
-	Integer durationUnitLength;
+
+	public static String FLAG_IS_NOT_ACCEPTING_APPLICATIONS = "Flag_IsNotAcceptingApplications"
+
 }

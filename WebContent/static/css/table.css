@@ -2,11 +2,17 @@ table.main-table-style{
 	width:100%;
 } 
 
-.main-table-style thead{
-    border-bottom: 1px solid #ddd;
+.main-table-style > thead{
+/*     border-bottom: 1px solid #ddd; */
 /*     border-top: 1px solid #ddd; */
 }
-
+.main-table-style.shadow > thead > tr:last-child{
+	-webkit-box-shadow: 3px 3px 5px #848484;
+	box-shadow: 3px 3px 5px #848484;	
+}
+.main-table-style.shadow.left-border > thead > tr:last-child{
+	border-left: 5px solid #163b3d;
+}
 .main-table-style .glyphicon-menu-up, .main-table-style .glyphicon-menu-down{
 	margin: 0px 5px;
 	padding: 5px;
@@ -17,15 +23,15 @@ table.main-table-style{
 	border-top: 0;
 }
 
-.main-table-style tbody > tr{
-	border-top:1px solid #ddd;
+.main-table-style > tbody > tr{
+	border-bottom:1px solid #ddd;
 }
 
-.main-table-style tbody tr:first-child{
-	border-bottom: 0;
+.main-table-style > tbody > tr:first-child{
+/* 	border-bottom: 0; */
 }
 
-.main-table-style tbody tr{
+.main-table-style > tbody > tr{
 	height:30px;
 }
 
@@ -43,23 +49,32 @@ table.main-table-style{
 
 
 
-.main-table-style td{
+.main-table-style > tbody > tr > td{
 	padding:15px;
 	text-align:center;
-	font-size:15px;
 	vertical-align:top;
 }
 
-.main-table-style th{
-	padding:4px 8px;
-    color: #163b3d;
+.main-table-style > thead > tr > th{
+	padding:13px 8px;
     font-size: 16px;
-    font-weight: bold;
+/*     color: #888888; */
+	color: #000;
+    font-weight: normal;
+/*     color: #fff; */
+/*     background: #197994;     */
+}
+.main-table-style th.teal{
+/* 	background: #197994;	 */
+	background: #36595a;
+    color: #fff;
+}
+.main-table-style th.teal.first{
+	border-top-left-radius: 7px;
 }
 
 td .accent{
     color: #337ab7;
-    font-size: 15px;
     font-weight: bold;
 }
 
@@ -95,9 +110,9 @@ th.right-edge{
 
 }
 
-th{
+.main-table-style > thead > tr > th{
 	font-weight:100;
-	font-size:18px;
+	font-size: 16px;
 	text-align:center;
 }
 
@@ -110,8 +125,24 @@ td.left *{
 	text-align:left;
 }
 
-.main-table-style td{
+.main-table-style > tbody > tr > td{
 	vertical-align:middle;
 }
 
 
+.main-table-style.shadow > thead > tr th.job-status{
+/*     padding-top: 8px; */
+/*     border-top: 2px solid #163b3d; */
+/*     border-bottom: 2px solid #163b3d; */
+/*     color: #000; */
+/*     font-weight: bold; */
+/*     background: #163b3d; */
+	background: #197994;	
+    color: #fff;
+}
+.main-table-style.shadow > thead > tr > th:not(.job-status){
+	font-weight: bold;
+}
+.main-table-style.shadow > thead > tr > th.job-status.first{
+	border-top-left-radius: 7px;
+}

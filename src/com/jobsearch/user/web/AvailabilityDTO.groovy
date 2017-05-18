@@ -7,7 +7,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 class AvailabilityDTO {
 	int userId
-
+	int dateId
+	
 	@JsonProperty
 	List<String> stringDays
 

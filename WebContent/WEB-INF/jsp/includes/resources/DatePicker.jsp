@@ -3,13 +3,9 @@
 
 <script src="<c:url value="/static/javascript/date_picker/DatePicker.js" />"></script>
 <script src="<c:url value="/static/javascript/date_picker/EventHandlers.js" />"></script>
+<script src="<c:url value="/static/javascript/date_picker/InitDatePickers.js" />"></script>
 
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/datepicker.css" />	
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker_new.css" />	
-
-
-
-<!-- //*************************************** -->
-<!-- // Verify this css sheet is still being used... -->
-<!-- //*************************************** -->
-<!-- <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/calendar.css" /> -->
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/datepicker.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/calendar_container.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/date_colors.css" />	
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/date_picker/v2.css" />	

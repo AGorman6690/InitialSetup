@@ -49,6 +49,11 @@ function enableAllInputFields($container){
 
 }
 
+function isRadioContainerSelected($container){
+	if($container.find("input[type=radio]:checked").length == 0) return false;
+	else return true;
+}
+
 function areInputsValid_Container($container){
 	
 	var option;
@@ -135,7 +140,7 @@ function setTimeOptions($eSelect, increment){
 		for(hourCount = 0; hourCount < 24; hourCount++){
 
 			//Am or pm
-			if(hourCount <= 12){
+			if(hourCount < 12){
 				amPm = " am";
 			}else{
 				amPm = " pm";
@@ -162,7 +167,11 @@ function setTimeOptions($eSelect, increment){
 //				if(formattedTime == initTime) selected = "selected";
 //				else selected = "";
 				
-				$eSelect.append("<option data-filter-value='" + formattedTime + "'>"
+				var className = "";
+				if(modifiedMinute == "00") className = "bold";
+				
+				
+				$eSelect.append("<option class='" + className + "' data-filter-value='" + formattedTime + "'>"
 									+ time + "</option>");
 			}
 			

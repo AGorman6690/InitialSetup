@@ -91,11 +91,11 @@ table#openApplications_oneLine thead{
 	border-top:0;	
 }
 
-table#openApplications_oneLine tbody tr:hover{
+table#openApplications_oneLine > tbody > tr:hover{
 	background-color: #eaeaea;
 }
 
-table#openApplications_oneLine table.wage-proposal-history-table tr:hover{
+table#openApplications_oneLine table.wage-proposal-history-table > tr:hover{
 	background-color: #ffffff;
 }
 

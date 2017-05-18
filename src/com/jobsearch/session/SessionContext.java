@@ -8,9 +8,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
-import com.jobsearch.job.service.FindJobFilterDTO;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobDTO;
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -44,20 +44,23 @@ public class SessionContext {
 		// *************************************
 		// *************************************
 		JobSearchUser user = SessionContext.getUser(session);
-		if (user == null) {
-			return false;
-		}
-		else if(user.getEmailAddress() == null){
-			return false;
-		}
-		else {
-			if (user.getEmailAddress() == null) {
-				return false;
-			} else {
-				return true;
-			}
-
-		}
+		
+		if(user != null) return true;
+		else return false;
+//		if (user == null) {
+//			return false;
+//		}
+//		else if(user.getEmailAddress() == null){
+//			return false;
+//		}
+//		else {
+//			if (user.getEmailAddress() == null) {
+//				return false;
+//			} else {
+//				return true;
+//			}
+//
+//		}
 	}
 
 	public static void appendToFilteredJobIds(HttpSession session, List<Integer> jobIdsToAdd) {

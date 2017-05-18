@@ -23,10 +23,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.FindEmployeesDTO;
+import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.session.SessionContext;
+import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -67,34 +70,28 @@ public class UserController {
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
-	
-	@RequestMapping(value = "/user/{userId}/profile", method = RequestMethod.GET)
-	public String getProfile_AUser(@PathVariable(value = "userId") int userId,
-									Model model, HttpSession session) {
-		
-		// ********************************************************
-		// ********************************************************
-		// Pretty this up.
-		// Think about combining the two view-profile/credentials-page requests
-		// ********************************************************
-		// ********************************************************
-		
-		
-		userService.setModel_Credentials_Employee(model, userId);
-		model.addAttribute("isViewingOnesSelf", false);
-		return "/credentials_employee/Credentials_Employee";
-	}
-	
 
 	
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
 	public String viewCredentials(Model model, HttpSession session) {
 
-		userService.setModel_Credentials_Employee(model, SessionContext.getUser(session).getUserId());
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		JobSearchUserDTO userDto = new JobSearchUserDTO();		
+		userDto.setUser(sessionUser);
 
+		userService.setModel_getRatings_byUser(model, sessionUser.getUserId());
+		
+		model.addAttribute("isViewingOnesSelf", true);
+		model.addAttribute("userDto", userDto);
 		return "/credentials_employee/Credentials_Employee";
 	}
+	
+	@RequestMapping(value = "/user/calendar", method = RequestMethod.GET)
+	public String viewCalendar(Model model, HttpSession session) {
 
+		userService.setModel_viewCalendar_employee(model, session);
+		return "/event_calendar/Event_Calendar";
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
@@ -118,62 +115,48 @@ public class UserController {
 //		}
 
 	}
+	
+	
+	@RequestMapping(value = "/employee/{userId}/left/job/{jobId}/acknowledge", method = RequestMethod.GET)
+	public String acknowledgeEmployeeLeftJob(@PathVariable(value = "jobId") int jobId,
+											@PathVariable(value = "userId") int userId,
+											HttpSession session) {
 
+		userService.acknowledgeEmployeeLeft(jobId, userId, session);
+		
+		return "redirect:/job/" + jobId + "?c=waiting";
+	}
+	
+	@RequestMapping(value = "/employer-removed-you-from-job/{jobId}/acknowledge", method = RequestMethod.GET)
+	public String acknowledgeEmployerRemovedYouFromJob(@PathVariable(value = "jobId") int jobId,
+											HttpSession session) {
+
+		jobService.updateEmploymentFlag(jobId, SessionContext.getUser(session).getUserId(),
+				"Flag_EmployeeAcknowledgedEmployerRemoval", 1);
+		
+		return "redirect:/user/profile";
+	}
+	
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
-	public ModelAndView viewFindEmployees(ModelAndView model, HttpSession session) {
+	public String viewFindEmployees(Model model, HttpSession session) {
 
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-		model.addObject("user", user);
-
-		model.setViewName("FindEmployees");
-
-		// model.setViewName("Test");
-		return model;
-	}
-
-	@RequestMapping(value = "/settings", method = RequestMethod.GET)
-	public ModelAndView viewSettings(ModelAndView model, HttpSession session) {
-
-		JobSearchUser user = (JobSearchUser) session.getAttribute("user");
-
-		if (user.getProfileId() == 1) {
-			model.setViewName("EmployeeSettings");
-		}
-
-		return model;
+		userService.setModel_findEmployees_pageLoad(model, session);
+		return "/find_employees/FindEmployees";
+	}	
 	
-	}
-	
-	@RequestMapping(value = "/availability/update", method = RequestMethod.POST)
-	public String updateAvailability(@RequestBody AvailabilityDTO availabilityDto,
-										Model model, HttpSession session) {
+	@RequestMapping(value = "/employee/leave-job/{jobId}/confirm", method = RequestMethod.GET)
+	public String viewLeaveJob_confirm(@PathVariable(value = "jobId") Integer jobId, Model model, HttpSession session) {
 
-		userService.updateAvailability(session, availabilityDto);
-		userService.setModel_Availability(model, session);
-		
-		return "settings_employee/AvailableDays_CurrentlySet";
-	}
-	
-	@RequestMapping(value = "/availability", method = RequestMethod.GET)
-	public String viewAvailability(Model model, HttpSession session) {
-
-		userService.setModel_Availability(model, session);
-
-		return "settings_employee/Availability";
+		userService.setModel_employeeLeaveJob_confirm(jobId, model, session);
+		return "/terminate_employment/Employee_Leaves_Job";
 	}
 
-		
-	@RequestMapping(value = "/user/{userId}/jobs/completed", method = RequestMethod.GET)
-	public String getUserWorkHistory(@PathVariable(value = "userId") int userId,
-									 Model model, HttpSession session) {
+	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
+	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
 
-		if (SessionContext.isLoggedIn(session)) {
-			userService.setModel_WorkHistoryByUser(model, userId);
-			return "templates/WorkHistory";
-		} else {
-			return "NotLoggedIn";
-		}
+		userService.setModel_findEmployees_results(model, employeeSearch);
 
+		return"/find_employees/Results_Find_Employees";
 	}
 
 	@RequestMapping(value = "/newPassword", method = RequestMethod.POST)
@@ -183,7 +166,7 @@ public class UserController {
 		userService.updatePassword(newPassword.getPassword(), user.getEmailAddress());
 
 		if (user.getProfile().getName().equals("Employee")) {
-			model.setViewName("EmployeeProfile");
+			model.setViewName("Profile_Employee");
 		} else if (user.getProfile().getName().equals("Employer")) {
 			model.setViewName("EmployerProfile");
 		}
@@ -192,38 +175,29 @@ public class UserController {
 
 	}
 
-	
+	@RequestMapping(value = "/user/{userId}/ratings", method = RequestMethod.GET)
+	public String getRatings_byUser(Model model, @PathVariable(value = "userId") int userId) {
+		
+		userService.setModel_getRatings_byUser(model, userId);
+		
+		return "/ratings/RatingsByUser";
+	}	
 	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
-	@ResponseBody
-	public void editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
-
-		userService.editEmployeeSettings(user_edited, session);
-	}
-
-	@RequestMapping(value = "/search/employees", method = RequestMethod.GET)
-	@ResponseBody
-	public String findEmployees(@RequestParam(name = "fromAddress", required = true) String fromAddress,
-			@RequestParam(name = "radius", required = true) double radius,
-			@RequestParam(name = "day", value = "day", required = false) List<String> days,
-			@RequestParam(name = "rating", required = false) double rating,
-			@RequestParam(name = "categoryId", value = "categoryId", required = false) List<Integer> categoryIds) {
-
-		// Set the dto
-		FindEmployeesDTO findEmployeesDto = new FindEmployeesDTO(fromAddress, radius, rating, days, categoryIds);
-
-		// Run the velocity template
-		String findEmployeesResponseHTML = userService.getFindEmployeesResponseHTML(findEmployeesDto);
-
-		return findEmployeesResponseHTML;
-	}
-
-	@RequestMapping(value = "/user/rate", method = RequestMethod.POST)
-	public String rateEmployee(Model model, @RequestBody SubmitRatingDTOs_Wrapper submitRatingDtos_wrapper) {
-
-		userService.insertRatings(submitRatingDtos_wrapper);
-
+//	@ResponseBody
+	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
+//		userService.editEmployeeSettings(user_edited, session);
 		return "redirect:/user/profile";
+	}
+
+
+	@RequestMapping(value = "/user/rate/employees", method = RequestMethod.POST)
+	@ResponseBody
+	public String rateEmployees(HttpSession session,
+									@RequestBody List<SubmitRatingDTO> submitRatingDtos) {
+
+		userService.insertRatings(submitRatingDtos, session);
+		return "";
 	}
 
 	@RequestMapping(value = "/user/password/reset", method = RequestMethod.GET)
@@ -256,6 +230,7 @@ public class UserController {
 		}
 	}
 
+	
 
 
 }

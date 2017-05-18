@@ -174,39 +174,16 @@ public final class DateUtility {
 		
 		}
 
-	public static int getMinimumMonth(List<WorkDay> workDays) {
-		
-		List<LocalDate> dates = getLocalDates(workDays);		
-		
-		int minMonth = 12;
-		
-		for(LocalDate date : dates){
-			if(date.getMonthValue() < minMonth) minMonth = date.getMonthValue();
-		}
-		
-		return minMonth;
-	}
 	
-	public static int getMaximumMonth(List<WorkDay> workDays) {
-		
-		List<LocalDate> dates = getLocalDates(workDays);
-		
-		int maxMonth = 1;
-		
-		for(LocalDate date : dates){
-			if(date.getMonthValue() > maxMonth) maxMonth = date.getMonthValue();
-		}
-		
-		return maxMonth;
-	}
-
 	public static LocalDate getMinimumDate(List<WorkDay> workDays) {
 	
 		LocalDate minDate = LocalDate.MAX;
-		List<LocalDate> dates = getLocalDates(workDays);
 		
-		for(LocalDate date : dates){
-			if(date.isBefore(minDate)) minDate = date;
+		for(WorkDay workDay : workDays){
+			 
+			if(workDay.getDate() == null) workDay.setDate(LocalDate.parse(workDay.getStringDate()));
+			
+			if(workDay.getDate().isBefore(minDate)) minDate = workDay.getDate();
 		}
 		
 		return minDate;
@@ -215,21 +192,17 @@ public final class DateUtility {
 	public static LocalDate getMaximumDate(List<WorkDay> workDays) {
 		
 		LocalDate maxDate = LocalDate.MIN;
-		List<LocalDate> dates = getLocalDates(workDays);
 		
-		for(LocalDate date : dates){
-			if(date.isAfter(maxDate)) maxDate = date;
+		for(WorkDay workDay : workDays){
+			
+			if(workDay.getDate() == null) workDay.setDate(LocalDate.parse(workDay.getStringDate()));
+			
+			if(workDay.getDate().isAfter(maxDate)) maxDate = workDay.getDate();
 		}
 		
 		return maxDate;
 	}
 
-	private static List<LocalDate> getLocalDates(List<WorkDay> workDays) {
-		
-		return workDays.stream()
-						.map(WorkDay::getDate)
-						.collect(Collectors.toList());
-	}
 
 	public static int getMonthSpan(List<WorkDay> workDays) {
 

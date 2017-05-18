@@ -1,0 +1,42 @@
+.calendar-container .calendar td.unavailable{
+	background: #4c4c4c;
+	cursor: default;
+}
+
+.calendar-container .calendar.show-hover-range td.hover-range{
+	background: #bbbbbb !important;
+}
+
+.calendar-container .calendar td.unavailable a{
+	color: #ffffff;
+	cursor: default;
+}
+
+.calendar td.proposed{
+	background: #4f9a63;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.a-job-work-day{
+	background: #bbbbbb;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.a-job-work-day a,
+.calendar-container .calendar td.proposed a,
+.calendar-container .calendar td.application{
+	color: #ffffff;
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.available{
+	background: #bbbbbb;
+/* 	background: #b7c7e0; */
+	cursor: pointer;
+}
+
+.calendar-container .calendar td.application{
+	background: #b7c7e0;
+	cursor: pointer;
+}
+

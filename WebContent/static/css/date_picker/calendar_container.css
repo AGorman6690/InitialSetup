@@ -1,0 +1,136 @@
+.calendar-container.disabled{
+    background: #f4f4f4;
+    border: 2px solid #cec9c9;
+}
+.calendar-container.disabled .calendar{
+	opacity: 0.6;
+}
+.calendar-container.disabled *{
+	cursor: default !important;
+}
+.calendar th{
+	border-bottom: 1px solid #cacaca;
+}
+.calendar th,
+.calendar td{
+	text-align: center;
+}
+
+.calendar-container{
+/* 	width:300px; */
+}
+
+/* .calendar-container a{ */
+/* 	color:#000000; */
+/* 	font-size:13px; */
+/* } */
+
+.calendar-container.wide{
+	width:650px;
+}
+
+.calendar-container td{
+	padding:3px 9px;
+/* 	cursor: pointer; */
+}
+
+.calendar{
+	padding:10px;
+}
+
+.calendar-container.read-only td,
+.calendar-container.read-only a{
+	cursor:default !important;
+	color:#777171;
+	
+}
+
+.calendar-container.read-only td a:hover{
+/* 	cursor:default !important; */
+/* 	color:#777171; */
+/* 	text-decoration: none; */
+}
+
+.calendar-container td a{
+	text-decoration: none;
+	color:#000000;
+}
+
+
+td.active111,
+td.active111{
+	background-color: #163b3d;
+	border-radius:4px;
+}
+
+td.active111 a:hover{
+	color: #ffffff; 
+}
+
+td.active111 a{
+	color: #ffffff !important; 
+
+}
+
+.calendar-container.read-only .ui-datepicker-prev,
+.calendar-container.read-only .ui-datepicker-next{
+	display:none;
+}
+
+.calendar-container.teal-title .ui-datepicker-title{
+    font-weight: bold;
+    font-size: 19px;
+    color: #197994;
+    text-align: center;
+}
+
+
+
+
+
+
+
+
+.calendar-container.teal-title .ui-datepicker-prev,
+.calendar-container.teal-title .ui-datepicker-next{
+    color: #163b3d;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.calendar-container .ui-datepicker-multi{
+	width:100% !important;
+}
+
+
+.calendar-container td {
+	border-radius: 5px;
+}
+
+.calendar-container td.is-available {
+	background: #65886e;
+	border-radius: 5px;
+}
+
+.calendar-container td.is-not-available {
+	background: #c38f8f;
+	border-radius: 5px;
+}
+
+.calendar-container td.is-available a,
+.calendar-container td.is-not-available a{
+	color: #ffffff;
+}
+
+.calendar-container.hide-prev-next .ui-datepicker-prev,
+.calendar-container.hide-prev-next .ui-datepicker-next{
+	display: none
+}
+
+.calendar-container.teal-navigation .ui-datepicker-next,
+.calendar-container.teal-navigation .ui-datepicker-prev{
+    padding: 2px 6px;
+    background: #8e8e8e;
+    color: #fff;
+    border-radius: 4px;
+}

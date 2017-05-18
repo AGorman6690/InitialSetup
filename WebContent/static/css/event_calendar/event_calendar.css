@@ -1,0 +1,179 @@
+#user-event-calendar .ui-datepicker-group-middle td{
+    padding: 2px;
+    vertical-align: top;
+    text-align: center;
+    height: 120px;
+    width: 115px;
+    border: 1px solid #e6e2e2;
+}
+
+
+#user-event-calendar .calendar-container .calendar td a{
+    width: 100%;
+    display: inline-block;
+}
+#user-event-calendar .mod .mod-header .glyphicon-remove{
+	float: none;
+	margin: 10px;
+	font-size: 25px;
+}
+#user-event-calendar .start-and-end-times,
+.application-count {
+    color: #000;    
+    padding: 2px;
+    text-align: center;
+    font-size: 13px;
+}
+#user-event-calendar td.application .application-count{
+	border: 2px solid #7389b3;
+}
+#user-event-calendar td.employment .start-and-end-times{
+	border: 2px solid #629a6f;
+}
+
+/* .calendar-container .calendar td.application{ */
+/* 	background: #7389b3;	 */
+/* } */
+#user-event-calendar .calendar-container .calendar td.unavailable{
+	background: #bbbbbb;
+}
+#user-event-calendar .application-count span,
+#user-event-calendar .calendar-container .calendar td.application,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application a{
+/* 	background: #7389b3; */
+	background: #36595a;
+	cursor: pointer;
+}
+#user-event-calendar .calendar-container .calendar td.employment,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
+/* 	background: #629a6f; */
+/* 	background: #7ec3b4; */
+	background: #7ca79d;
+	cursor: pointer;
+}
+
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment{
+	background: #fff;
+	cursor: pointer;
+}
+#user-event-calendar .calendar-container .calendar .ui-datepicker-middle td{
+	background: #fff;
+}
+
+#user-event-calendar .ui-datepicker-group-first,
+#user-event-calendar .ui-datepicker-group-last{
+	font-size: 14px;
+}
+#user-event-calendar .ui-datepicker-header{
+	border-bottom: 0;
+	position: static
+}
+#user-event-calendar .ui-datepicker{
+	position: relative;
+}
+#user-event-calendar .ui-datepicker-next{
+	right: 355px
+}
+#user-event-calendar .ui-datepicker-prev{
+	left: 335px
+}
+#user-event-calendar .ui-datepicker-next,
+#user-event-calendar .ui-datepicker-prev{
+	font-size: 18px;
+	font-weight: bold;
+	color: #197994;
+	top: -300px;
+}
+#user-event-calendar .ui-datepicker-group-middle .ui-datepicker-title{
+	font-size:22px;
+}
+#user-event-calendar .ui-datepicker-title{
+    font-weight: bold;
+    color: #163b3d;
+    font-size: 22px;
+}
+.start-and-end-times p {
+    margin: 2px;
+}
+
+#user-event-calendar .calendar .ui-datepicker-group {
+	padding: 10px;
+}
+#user-event-calendar .calendar .ui-datepicker-group{
+	border: 2px solid #fff;
+}
+#user-event-calendar .calendar .ui-datepicker-group:not(.ui-datepicker-group-middle):hover{
+	background: #f8ffe3;
+	border: 2px solid #bbbbbb;
+	cursor: pointer;
+}
+#user-event-calendar .application-count span{
+    display: inline-block;
+    /* margin: auto; */
+    height: 20px;
+    line-height: 20px;
+    width: 20px;
+    margin-top: 12px;
+    margin-bottom: 10px;
+    padding-left: 1px;
+    color: #fff;
+    border-radius: 10px;
+    /* text-align: center; */
+    /* vertical-align: middle; */
+}
+
+#user-event-calendar .popup{
+	top: -78px;	
+}
+
+
+#user-event-calendar td.application-hover .application-count{
+	background: #ccd8f5 !important;
+}
+
+
+#user-event-calendar #event-calendar-mod .mod-content {
+	top: 20px;
+    width: 1500px;
+    /* height: 420px; */
+    /* margin: -210px 0 0 -200px; */
+    margin-left: -750px;    
+}
+#user-event-calendar .mod{
+    text-align: left;
+}
+#user-event-calendar .mod-content .mod-body{
+	background: #fff;
+}
+#user-event-calendar .popuptext p{
+	margin: 0;
+	padding: 5px;
+}
+#user-event-calendar .popuptext p:hover{
+	background: #e4e4e4;
+}
+
+#user-event-calendar #event-calendar-mod .ui-datepicker-today a{
+	color: #fff;
+}
+#user-event-calendar #event-calendar-mod .ui-datepicker-today{
+	background: #197994;
+}
+#user-event-calendar #event-calendar-mod{
+	display: block;
+}
+#user-event-calendar #event-calendar-mod .mod-header{
+	background: #f4f4f4;
+}
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-first,
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-last{
+	position: absolute;
+	top: 246px;
+}
+#user-event-calendar #event-calendar-mod .ui-datepicker-group-middle{
+	margin-left: 300px;
+}
+#user-event-calendar td.ui-datepicker-other-month{
+	border: 0;
+}

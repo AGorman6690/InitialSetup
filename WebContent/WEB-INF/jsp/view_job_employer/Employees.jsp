@@ -1,27 +1,32 @@
 <%@ include file="../includes/TagLibs.jsp" %>				
 			
+<div class="center pad-btm-2 pad-top-2">
+	<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
+</div>
 <c:choose>						
 	<c:when test="${empty jobDto.employeeDtos}">
-		<div class="no-data">There are currently no employees for this job</div>
-	</c:when>
-	
-	<c:otherwise>
-	
-		<table id="employeesTable" class="main-table-style">
+		<div class="no-data">
+			<p>There are currently no employees for this job</p>	
+		</div>
+	</c:when>	
+	<c:otherwise>	
+
+		<table id="employeesTable" class="main-table-style shadow ">
 			<thead>
 				<tr>
-					<th id="employeeName">Name</th>
-					<th id="wage">Wage</th>
-					<th id="employeerating">Rating</th>
+					<th id="Name">Name</th>
+					<th>Hourly Wage</th>
+					<th>Work Days</th>
+					<th>Total Wage</th>
 				</tr>
 			</thead>
 			<tbody>						
 			<c:forEach items="${jobDto.employeeDtos }" var="userDto">
 				<tr>
-					<td><a class="accent" href="/JobSearch/job/${jobDto.job.id }/user/
-							${userDto.user.userId}/jobs/completed"> ${userDto.user.firstName }</a></td>
-					<td>${userDto.wage }</td>
-					<td>${userDto.ratingDto.value }</td>
+					<td>${userDto.user.firstName} ${userDto.user.lastName }</td>
+					<td>$ ${userDto.acceptedProposal.amount }</td>
+					<td>${userDto.acceptedProposal.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days</td>
+					<td>$ ${userDto.totalPayment }</td>
 				</tr>	
 			</c:forEach>						
 			</tbody>
