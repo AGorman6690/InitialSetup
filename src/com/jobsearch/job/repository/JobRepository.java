@@ -1227,11 +1227,11 @@ public class JobRepository {
 
 	public List<Job> getJobs_completedByUser(int userId) {
 		String sql = "SELECT * FROM job j"
-//				+ " JOIN application a ON j.JobId = a.JobId"
-//				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
 //				+ " WHERE e.UserId = ?"
 //				+ " AND e.WasTerminated = 0"
-				+ " AND j.JobId NOT IN ("
+				+ " WHERE j.JobId NOT IN ("
 				+ " SELECT DISTINCT(j.JobId) FROM job j"
 				+ " JOIN work_day wd ON j.JobId = wd.JobId"
 				+ " JOIN application a ON j.JobId = a.JobId"
@@ -1242,8 +1242,9 @@ public class JobRepository {
 				+ " AND wp.IsCurrentProposal = 1"
 				+ " AND e.UserId = ?"
 				+ " AND e.WasTerminated = 0"
-				+ " )";
-		return JobRowMapper(sql, new Object[]{ userId });
+				+ " )"
+				+ " AND e.UserId = ?";
+		return JobRowMapper(sql, new Object[]{ userId, userId });
 	}
 
 	public List<Job> getJobs_needRating_byEmployer(int userId) {

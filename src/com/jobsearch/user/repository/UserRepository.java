@@ -236,18 +236,20 @@ public class UserRepository {
 		String sql = "SELECT * FROM user u"
 				+ " JOIN employment e ON e.UserId = u.UserId"
 				+ " AND u.UserId NOT IN ("
-				+ " SELECT u.userId FROM employment e"
+				+ " SELECT e.userId FROM employment e"
 				+ " JOIN application a ON e.UserId = a.UserId"
 				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
 				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
 				+ " WHERE e.JobId = ?"
+				+ " AND a.JobId = ?"
 				+ " AND wp.IsCurrentProposal = 1"
 				+ " AND e.WasTerminated = 0"
 				+ " AND wd.IsComplete = 0"
-				+ ")";
+				+ ")"
+				+ " AND e.JobId = ?";
 
-		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId, jobId, jobId });
 	}
 
 
