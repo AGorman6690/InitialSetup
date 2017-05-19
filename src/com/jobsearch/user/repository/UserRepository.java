@@ -617,13 +617,18 @@ public class UserRepository {
 	}
 
 	public Double getRating_givenByUser(Integer jobId, int userId) {
-		String sql = "SELECT Value FROM rating r WHERE RatedByUserId = ? AND JobId = ?";
+		String sql = "SELECT Value FROM rating WHERE RatedByUserId = ? AND JobId = ?";
 		try {
 			return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Double.class);	
 		} catch (Exception e) {
 			return null;
 		}
 		
+	}
+
+	public Integer getCount_nullRatings_givenByUserForJob(Integer jobId, int userId) {
+		String sql = "SELECT COUNT(*) FROM rating WHERE RatedByUserId = ? AND JobId = ? AND Value IS NULL";
+		return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Integer.class);	
 	}
 
 }

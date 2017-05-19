@@ -17,25 +17,16 @@
 						<c:if test="${!isViewingOnesSelf }">
 							<h3>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName }</h3>
 						</c:if>
+						<h3 class="h3">Overall Rating</h3>
 						<p data-toggle-id="user-rating-details">
 							<input name="input-1" class="rating-loading"
 									value="${userDto_ratings.ratingValue_overall }	">
 							${userDto_ratings.ratingValue_overall }			
 <!-- 							<span class="glyphicon glyphicon-menu-up"></span>			 -->
 						</p>		
-						<div id="user-rating-details" class="">
-							<c:forEach items="${userDto_ratings.ratingDto.rateCriteria }" var="rateCriterion">
-								<div class="criteria-cont">
-									<span class="criteria-name">${rateCriterion.shortName }</span>
-									<span class="rating-value">
-										<input name="input-1" class="rating-loading"
-												value="${rateCriterion.stringValue }">${rateCriterion.stringValue }	
-									</span>
-								</div>
-							</c:forEach>
-						</div>
+						<%@ include file="./RatingDetails.jsp" %>
 					</div>		
-					<c:if test="${!isViewingOnesSelf }">
+					<c:if test="${!isViewingOnesSelf && !empty userDto_ratings.user.about }">
 						<div>
 							<h3 data-toggle-id="about-user" class="h3">About<span class="glyphicon glyphicon-menu-up"></span></h3>
 							<div id="about-user" class="details">
@@ -44,8 +35,8 @@
 						</div>
 					</c:if>
 					<div id="user-complted-jobs" class="pad-top">
-						<h3 data-toggle-id="completed-jobs" class="h3">Completed Jobs<span class="glyphicon glyphicon-menu-up"></span></h3>
-						<div id="completed-jobs" class="details">
+						<h3 class="h3">Completed Jobs</h3>
+						<div id="completed-jobs" class="">
 							<c:forEach items="${userDto_ratings.jobDtos_jobsCompleted }" var="jobDto">
 								<div class="completed-job">
 									<h3>${jobDto.job.jobName }</h3>

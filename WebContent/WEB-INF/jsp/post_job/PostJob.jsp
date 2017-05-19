@@ -280,7 +280,7 @@
 				
 				<div id="employeeSkillsContainer" class="page-section">
 					<div class="item">
-							<p>Required (optional)</p>					
+							<p>Required Employee Skills (optional)</p>					
 							<div id="requiredSkillsContainer" class="list-items-container skills-container">
 								<div class="list-item">
 									<span class="delete-list-item glyphicon glyphicon-remove"></span>
@@ -292,7 +292,7 @@
 							<span class="add-list-item glyphicon glyphicon-plus"></span>								
 					</div>		
 					<div class="item">
-						<p>Desired (optional)</p>						
+						<p>Desired Employee Skills (optional)</p>						
 						<div id="desiredSkillsContainer" class="list-items-container skills-container">
 							<div class="list-item">
 								<span class="delete-list-item glyphicon glyphicon-remove"></span>

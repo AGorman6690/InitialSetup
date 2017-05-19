@@ -67,37 +67,33 @@ public class ApplicationServiceImpl {
 			ApplicationDTO applicationDto =  new ApplicationDTO();
 
 			applicationDto.setApplication(application);
-
+			
+			// Applicant
 			applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));
-
 			int applicantId = applicationDto.getApplicantDto().getUser().getUserId();
+			applicationDto.getApplicantDto().setRatingValue_overall(userService.getRating(applicantId));
 
+			// Proposal
 			applicationDto.setEmploymentProposalDto(this.getCurrentEmploymentProposal(application.getApplicationId()));
 			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
 					getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
 			applicationDto.setPreviousProposal(getPreviousProposal(
 					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(), application.getApplicationId()));
 
-
-			applicationDto.setTime_untilEmployerApprovalExpires(
-							this.getTime_untilEmployerApprovalExpires(
-									application.getExpirationDate()));
-			applicationDto.getApplicantDto().setRatingValue_overall(userService.getRating(applicantId));
-
+			// Answers
 			applicationDto.setQuestions(this.getQuestionsWithAnswersByJobAndUser(jobId, applicantId));
 
 			applicationDto.setAnswerOptionIds_Selected(
 						this.getAnswerOptionIds_Selected_ByApplicantAndJob(applicantId, jobId));
 
-//			applicationDto.setDateStrings_availableWorkDays(
-//								this.getProposedWorkDays(applicationDto.getEmploymentProposalDto().getEmploymentProposalId()));
-
-
+			// Job
 			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
-//			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
-//											applicationDto.getEmploymentProposalDto()));
 
+			// Misc.
+			applicationDto.setTime_untilEmployerApprovalExpires(
+					this.getTime_untilEmployerApprovalExpires(
+							application.getExpirationDate()));
 			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
 

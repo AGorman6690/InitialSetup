@@ -72,7 +72,7 @@
 			</div>	
 		</c:if>
 		<div id="jobInfoContainer" class="page-section">
-			<%@include file="../templates/JobInformation.jsp"%>
+			<%@include file="../JobInfo_NEW.jsp"%>
 		</div>	
 		
 		<div id="modal_applicants" class="mod">

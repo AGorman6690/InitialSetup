@@ -20,6 +20,14 @@
 .v2 .start-and-end-times{
 	border: 2px solid #36595a;
 }
+.v2.proposal-calendar .job-work-day:not(.is-proposed) a{
+/*     border: 2px solid #c1c1c1; */
+/* 	padding: 2px; */
+/* 	border: 0; */
+	background: #fff;
+	color: #000;
+	opacity: 1;
+}
 .v2 .added-content{
 	padding: 5px 0px;
 	background: #fff;	
@@ -63,12 +71,12 @@
 	width: 500px;
 	margin: auto;
 }
-.v2.proposal-calendar .job-work-day{
+.v2.proposal-calendar .job-work-day a{
 	opacity: 0.4;
 }
-.v2.proposal-calendar .job-work-day.is-proposed,
-.v2.proposal-calendar .job-work-day.has-conflicting-employment,
-.v2.proposal-calendar .job-work-day.no-available-positions{
+.v2.proposal-calendar .job-work-day.is-proposed a,
+.v2.proposal-calendar .job-work-day.has-conflicting-employment a,
+.v2.proposal-calendar .job-work-day.no-available-positions a{
 	opacity: 1;
 }
 .v2 .select-work-day{

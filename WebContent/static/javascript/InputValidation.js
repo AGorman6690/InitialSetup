@@ -35,15 +35,15 @@ $(document).ready(function(){
 	})
 	
 	
-	$("body").on("mousedown", ".invalid.calendar.hasDatepicker td ", function(){
-		$(this).closest(".invalid.calendar.hasDatepicker").removeClass("invalid");
+	$("body").on("mousedown", ".invalid.ui-datepicker td ", function(){
+		$(this).closest(".invalid.ui-datepicker").removeClass("invalid");
 	})
 
 })
 
 function validateUserInput($e) {
 	if($e.is("input") || $e.is("textarea")){
-		if($e.hasClass("positive-number")){
+		if($e.hasClass("requires-positive-number")){
 			
 			if(isValidatePositiveNumber($e.val())){
 				setValidCss($e);
@@ -55,10 +55,14 @@ function validateUserInput($e) {
 		if($e.val() != "") setValidCss($e);
 	}
 	
-	if($e.hasClass("radio-container")){
-		if(isRadioContainerSelected($e)) setValidCss($e);
-		else setInvalidCss($e);
-	}
+	
+	if($e.find("input[type=radio]:checked, input[type=checkbox]:checked").length > 0 )
+		setValidCss($e.closest(".invalid"))
+	
+//	if($e.hasClass("radio-container")){
+//		if(isRadioContainerSelected($e)) setValidCss($e);
+//		else setInvalidCss($e);
+//	}
 }
 
 function isValidatePositiveNumber(value){

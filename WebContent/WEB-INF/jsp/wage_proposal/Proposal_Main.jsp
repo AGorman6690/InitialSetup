@@ -101,6 +101,7 @@
 			</c:choose>					
 			<c:choose>
 				<c:when test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">
+					<p>Waiting for you</p>
 					<c:if test="${user.profileId == 1 }">						
 						<p>
 							<span>Employer's offer expires in:</span>								

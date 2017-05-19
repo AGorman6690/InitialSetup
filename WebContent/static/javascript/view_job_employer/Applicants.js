@@ -64,9 +64,7 @@ function executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml) {
 	}).done(function (html) {
 		$e_renderHtml.html(html);
 		renderStars($e_renderHtml);
-		$e_renderHtml.closest(".mod").show();
-		
-		
+		$e_renderHtml.closest(".mod").show();		
 	})
 	
 }

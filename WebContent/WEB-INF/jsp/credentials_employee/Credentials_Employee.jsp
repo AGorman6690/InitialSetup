@@ -65,7 +65,8 @@
 			</div>			
 			
 		</div>
-		<div id="ratings" class="pad-top-2">
+		<div id="ratings" class="pad-top">
+			
 			<%@ include file="../ratings/RatingsByUser.jsp" %>
 		</div>	
 	</div>

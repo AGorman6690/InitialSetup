@@ -1,0 +1,116 @@
+.job-info h2{
+	font-size: 27px;
+    font-weight: bold;
+    color: #163b3d;
+    margin-bottom: 20px
+}
+.job-info p.employer{
+	font-size: 18px
+}
+#skills,
+#questions,
+#job-description,
+#map-container{
+	text-align: left;
+	width: 500px;
+	margin: auto;
+}
+/* #work-days-label, */
+/* #location-label{ */
+/* 	text-align: left; */
+/* 	width: 500px; */
+/* 	margin-left: auto; */
+/* 	margin-right: auto; */
+/* } */
+.job-info .sub > h3-2{
+	font-size: 20px;
+	font-weight: bold;
+	color: #197994;
+	margin-top: 55px;
+}
+.job-info .sub > h3{
+	font-size: 20px;
+	background: #197994;
+    color: #fff;
+    line-height: 36px;
+    text-align: center;
+    width: 188px;
+    box-shadow: 3px 3px 2px #cacaca;
+/*     border-radius: 3px; */
+    margin: auto;
+    margin-top: 55px;
+    margin-bottom: 20px;
+    font-weight: normal;
+}
+#skills li,
+#questions li{
+	list-style: none;
+}
+/* #skills ul, */
+/* #questions .question-container, */
+/* #job-description p{ */
+/* 	padding-left: 50px; */
+/* } */
+.question-container{
+	margin: 5px 0px;
+}
+.question-container p{
+	font-weight: bold;
+}
+#work-day-message{
+	font-weight: bold;
+	font-size: 18px;
+    margin: 20px 0px;
+}
+.break{
+	width: 300px;
+	margin: 40px auto;
+	border-bottom: 1px solid #cacaca;
+}
+#work-days-calendar-container .ui-datepicker-title{
+	font-weight: normal;
+}
+.job-info #map{
+    width: 500px;
+    height: 500px;
+}
+#job-address p{
+	margin: 0px;
+}
+#job-address{
+	text-align: left;
+}
+#desired-wage input{
+    width: 100px;
+    text-align: center;
+    font-size: 27px;
+}
+#apply-for-job{
+	font-size: 20px;
+	width: 220px;
+	height: 50px;
+}
+#skills h4{
+	font-size: 17px;
+	font-weight: bold;
+}
+#apply-for-job-cont.fixed{
+    position: fixed;
+    top: 0px;
+    padding: 10px;
+    border-bottom: 1px solid #cacaca;
+    margin: auto;
+    background: rgba(222, 222, 222, 0.85);
+}
+#apply-for-job-cont{
+	position: absolute;
+	width: 100%;
+	height: 70px;
+	background: #fff;
+	z-index: 1000;
+	top: -40px;
+}
+.job-info{
+	margin-top: 60px;
+	position: relative;
+}

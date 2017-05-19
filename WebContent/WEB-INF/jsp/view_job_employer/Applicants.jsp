@@ -147,8 +147,7 @@
 					data-answer-option-ids-seleted="${applicationDto.answerOptionIds_Selected }"
 					data-proposed-work-day-count="${applicationDto.dateStrings_availableWorkDays.size() }"
 					>
-					
-					
+
 					<td class="table-view">
 						<div class="vert-border name-container">
 							<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>

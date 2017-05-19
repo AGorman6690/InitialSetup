@@ -359,6 +359,7 @@ public class UserServiceImpl {
 		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(employee.getUserId());
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
 
+		// Applications
 		for (Application application : applications) {
 
 			ApplicationDTO applicationDto = new ApplicationDTO();
@@ -421,8 +422,8 @@ public class UserServiceImpl {
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
 		// time,
-		// as opposed to a particular event, this is the best place to put it
-		// becuase
+		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
+		// because
 		// I'm assuming this page loads most often.
 		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
@@ -854,6 +855,10 @@ public class UserServiceImpl {
 
 	public List<JobSearchUser> getEmployees_byJob_completedWork(int jobId) {
 		return repository.getEmployees_byJob_completedWork(jobId);
+	}
+
+	public Integer getCount_nullRatings_givenByUserForJob(Integer jobId, int userId) {
+		return repository.getCount_nullRatings_givenByUserForJob(jobId, userId);
 	}
 
 }

@@ -1,10 +1,3 @@
-
-//	var jobs = [];	
-//	var jobCount = 0;
-//	var questions = [];
-//	var questionCount = 0;
-//	var questionContainerIdPrefix = 'question-';
-	
 		
 	$(document).ready(function() {
 
@@ -12,54 +5,45 @@
 			$(workDayDtos).each(function() {
 				this.isProposed = "1";
 			})
-			$("#apply-work-days-calendar-container .calendar").datepicker("refresh");
+			$("#work-days-calendar-container .calendar").datepicker("refresh");
 		})
 		
-		$(".single").click(function(){
-			var container = $(this).closest(".answer-container");
-			var answers = $(container).find(".single")
-			highlightArrayItemByAttribute(this, answers, "selected");
-		})
-		
-				
-		$(".multi").click(function(){
-			toggleClass($(this), "selected");
-		})
-		$("#submitApplication").click(function(){
+
+		$("#apply-for-job").click(function(){
 			apply();
 		})
 				
 	})
-	
-	function showInvalidAmountMessage(message){
-		var $e = $("#invalidAmount");
-		$e.html(message);
-		$e.show();
-	}
-	
+
 	function isInputValid(){
 		
 		var isValid = true;
 		var $e;
 		
 		// Desired pay
-		$e = $("#amount");
+		$e = $("#desired-wage input");
 		if(isDesiredPayValid($e.val())) setValidCss($e);
 		else{			
 			isValid = false;
 			setInvalidCss($e);			
 		}
 		
-		// Work days
-		if(doesApplicantNeedToSelectWorkDays()){
-			var count_selectedWorkDays = $calendar_applicationWorkDays.find(".is-proposed").size();
-			var count_allWorkDays = $calendar_applicationWorkDays.find(".job-work-day").size();			
+		// Work days		
+		if($("#work-days-calendar-container").hasClass("proposal-calendar")){
 			
-			$e = $calendar_applicationWorkDays.find(".ui-datepicker-inline").eq(0);
+			var $calendar = $("#work-days-calendar-container .calendar");
+			var count_selectedWorkDays = $calendar.find(".is-proposed").size();
+			var count_allWorkDays = $calendar.find(".job-work-day").size();			
+			
+			$e = $calendar.find(".ui-datepicker-inline").eq(0);
 			if(count_selectedWorkDays == 0){
 				isValid = false;
 				setInvalidCss($e);
-			}else setValidCss($e);
+				$("#invalid-work-days").show();
+			}else{
+				setValidCss($e);
+				$("#invalid-work-days").hide();
+			}
 		}
 		
 		// Answers
@@ -77,23 +61,22 @@
 		
 		var isValid = true;
 		
+		var $e_missing = $("#invalid-desired-wage-missing");
+		var $e_not_positive_number = $("#invalid-desired-wage-not-positive-number");
+		
+		$e_missing.hide();
+		$e_not_positive_number.hide();
+		
 		//Verify pay proposal		
 		if(desiredPay == ""){
-			showInvalidAmountMessage("Desired pay is required.");
+			$e_missing.show();
 			isValid = false;
-		}else if($.isNumeric(desiredPay) == 0){
-			showInvalidAmountMessage("Desired pay must be numeric.");
-			isValid = false;
-		}else if(desiredPay <= 0){
-			showInvalidAmountMessage("Desired pay must be greater than 0.");
+		}else if($.isNumeric(desiredPay) == 0 || desiredPay <= 0){
+			$e_not_positive_number.show();
 			isValid = false;
 		}
 		
-		//Hide error message if input is valid
-		if(isValid){
-			$("#invalidAmount").hide();
-			return true;
-		} else return false;
+		return isValid;
 	}
 	
 	
@@ -108,6 +91,7 @@
 	
 	function areAnswersValid(){
 
+		var isValid = true;
 		var invalidCount = 0;
 		
 		$(".question-container .answer-options-container").each(function(){			
@@ -117,7 +101,7 @@
 			}
 			else{				
 				setInvalidCss($(this).closest(".question-container"));
-				invalidCount += 1;
+				isValid = false;
 			}
 		})
 		
@@ -129,16 +113,16 @@
 			}
 			else{				
 				setInvalidCss($(this).closest(".question-container"));
-				invalidCount += 1;
+				isValid = false;
 			}
 		})
 		
-		if(invalidCount > 0){
-			return false;
-		}
-		else{
-			return true;
-		}
+		if(!isValid) $("#invalid-answers").show();
+		else $("#invalid-answers").hide();
+		
+		return isValid;
+		
+
 		
 	}
 	
@@ -147,7 +131,7 @@
 		
 		var applicationDto = {};
 		
-		applicationDto.jobId = $("#submitApplication").attr("data-job-id");
+		applicationDto.jobId = $(".job-info #jobId").val();
 		applicationDto.employmentProposalDto = getEmploymentProposalDto();
 		applicationDto.answers = getAnswers();		
 	
@@ -160,13 +144,9 @@
 		var employmentProposalDto = {};
 		employmentProposalDto.dateStrings_proposedDates = [];
 		
-		employmentProposalDto.amount = $("input#amount").val();
-			
-		if(doesApplicantNeedToSelectWorkDays){
-			
-			employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
-										$("#apply-work-days-calendar-container .calendar"), "yy-mm-dd", "is-proposed");
-		}
+		employmentProposalDto.amount = $("#desired-wage input").val();				
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+									$("#work-days-calendar-container .calendar"), "yy-mm-dd", "is-proposed");
 
 		return employmentProposalDto;
 	}
@@ -200,7 +180,7 @@
 		if(isInputValid()){
 			$.ajax({
 				type : "POST",
-				url : environmentVariables.LaborVaultHost + '/JobSearch/apply',
+				url : '/JobSearch/apply',
 				headers : getAjaxHeaders(),
 				contentType : "application/json",
 				data : JSON.stringify(getApplicationDto()),

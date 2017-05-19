@@ -21,7 +21,9 @@
 	font-size:75% !important;
 	font-weight:bold !important;
 }
-
+.rating-container .glyphicon{
+	cursor: default;
+}
 .rating-container .filled-stars{
 	text-shadow: none !important;
 	color: #b79a1d;
@@ -30,7 +32,9 @@
 .rated{
 	color: #337ab7 !important;
 }
-
+#user-complted-jobs h3{
+	margin-bottom: -12px;
+}
 #buttonsContainer{
     padding-top: 25px;
 }
@@ -108,18 +112,21 @@ table#ratings{
     padding-bottom: 50px;
 }
 #user-rating-details .criteria-name{
-	width: 230px;
+	width: 250px;
     display: inline-block;
     text-align: left;
-    color: #163b3d;
-    font-weight: bold;    
+/*     color: #163b3d; */
+/*     font-weight: bold;     */
 }
-
+#user-rating-details .criteria-cont:first-child{
+	margin-top: 15px;
+}
 #user-rating-details .rating-value .star{
 	font-size: 22px;
 }
 #user-complted-jobs{
 /* 	    border-top: 1px solid #cacaca; */
+	max-height: 750px;
 }
 .completed-job h3{
 	display: inline-block;
@@ -132,6 +139,7 @@ table#ratings{
 	padding: 15px 0px;
 	width: 500px;
 	margin: auto;
+    text-align: left;
 }
 .comments-cont{
 	width: 450px;
@@ -157,4 +165,12 @@ table#ratings{
 .details{
 	display: none;
 /*     border-bottom: 2px solid #cacaca; */
+}
+
+
+.ratings-mod-container .mod-content{
+    width: 700px;
+    margin-left: -350px;
+    top: 100px;
+    border: 5px solid #163b3d;
 }

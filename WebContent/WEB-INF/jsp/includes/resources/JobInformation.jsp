@@ -11,6 +11,7 @@
 <!-- **************************************************************** -->
 
 <script src="<c:url value="/static/javascript/Map.js" />"></script>
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/jobInfo.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/jobInfo.css" /> -->
 <script src="/JobSearch/static/javascript/JobInfo.js" type="text/javascript"></script>
 <!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/calendar_work_day.css" />	 -->
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/job_info_NEW.css" />

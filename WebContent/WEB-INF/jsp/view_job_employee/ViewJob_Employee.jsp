@@ -16,13 +16,13 @@
 	<script src="<c:url value="/static/javascript/view_job_employee/SubmitApplication.js"/>"></script>
 </c:if>
 	
-<div class="select-page-section-container">
-	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Post</span>
-	<span data-page-section-id="employer-info-container" class="select-page-section">Employer</span>
-	<c:if test="${context == 'find' && empty jobDto.application}">
-		<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span>
-	</c:if>
-</div>
+<!-- <div class="select-page-section-container"> -->
+<!-- 	<span data-page-section-id="job-info-container" class="selected select-page-section">Job Post</span> -->
+<!-- 	<span data-page-section-id="employer-info-container" class="select-page-section">Employer</span> -->
+<%-- 	<c:if test="${context == 'find' && empty jobDto.application}"> --%>
+<!-- 		<span data-page-section-id="apply-container"  class=" select-page-section ">Apply</span> -->
+<%-- 	</c:if> --%>
+<!-- </div> -->
 
 
 <c:if test="${isLoggedIn}">		
@@ -49,8 +49,8 @@
 	</c:choose>
 </c:if>
 
-<div id="job-info-container" class="page-section">	
-	<%@include file="../templates/JobInformation.jsp"%>						
+<div id="job-info-container" class="">	
+	<%@include file="../JobInfo_NEW.jsp"%>						
 </div>
 <div id="employer-info-container" class="page-section center pad-top-2">	
 	<%@ include file="../ratings/RatingsByUser.jsp"%>
@@ -58,9 +58,9 @@
 <c:if test="${context == 'find' && empty jobDto.application &&
 			jobDto.availabilityStatus != 1 }">
 			
-	<div id="apply-container" class="page-section ${!isLoggedIn ? 'not-logged-in' : '' }">
-		<%@ include file="./ApplyContainer.jsp" %>
-	</div>
+<%-- 	<div id="apply-container" class="page-section ${!isLoggedIn ? 'not-logged-in' : '' }"> --%>
+<%-- 		<%@ include file="./ApplyContainer.jsp" %> --%>
+<!-- 	</div> -->
 </c:if>
 
 

@@ -13,6 +13,6 @@ $(document).ready(function(){
 
 })
 
-function selectNavItem(navItemId){
-	highlightArrayItem($("#" + navItemId), $("#navBar").find(".nav-items a"), "selected-green");
-}
+//function selectNavItem(navItemId){
+//	highlightArrayItem($("#" + navItemId), $("#navBar").find(".nav-items a"), "selected-green");
+//}

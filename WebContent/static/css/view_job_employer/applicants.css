@@ -173,6 +173,7 @@ td span.glyphicon{
 table .question-container .answer{
 	text-align:left;
 	padding-left: 20px;	
+	font-weight: normal;
 }
 table .question-container{
 	width: 250px;;

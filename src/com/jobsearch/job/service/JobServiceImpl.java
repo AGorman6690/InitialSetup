@@ -838,8 +838,8 @@ public class JobServiceImpl {
 		if(verificationService.isListPopulated(jobs_completed)){
 			List<Job> jobs_needRating = new ArrayList<Job>();
 			for(Job job : jobs_completed){
-				Double rating = userService.getRating_givenByUser(job.getId(), userId);
-				if(rating == null) jobs_needRating.add(job);
+				Integer count_nullRatings = userService.getCount_nullRatings_givenByUserForJob(job.getId(), userId);
+				if(count_nullRatings > 0) jobs_needRating.add(job);
 			}
 			
 			return jobs_needRating;	
@@ -888,7 +888,6 @@ public class JobServiceImpl {
 			return true;
 		}else return false;
 	}
-
 
 	public void addSkills(Integer jobId, List<Skill> skills) {
 
