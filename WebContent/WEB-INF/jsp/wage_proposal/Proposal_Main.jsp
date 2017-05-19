@@ -126,7 +126,8 @@
 		</c:if>		
 	</div>
 
-	<c:if test="${!doSkipRemaingHtml }">	
+	<c:if test="${!doSkipRemaingHtml }">
+		<	
 		<div class="proposal-item amount">		
 			<p><%@ include file="../wage_proposal/History_WageProposals.jsp" %></p>
 		</div>	
