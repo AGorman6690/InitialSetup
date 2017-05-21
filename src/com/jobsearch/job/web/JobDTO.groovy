@@ -18,6 +18,7 @@ import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.user.rate.RatingDTO
 
+
 public class JobDTO {
 	 // **********************************************
 	 // **********************************************
@@ -56,6 +57,7 @@ public class JobDTO {
 	 String date_firstWorkDay
 	 int months_workDaysSpan
 	 double daysUntilStart
+	 String timeUntilStart
 	 
 	 int countWageProposals_sent
 	 int countWageProposals_received

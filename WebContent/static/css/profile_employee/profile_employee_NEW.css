@@ -45,7 +45,9 @@ td div.job.application{
 	border: 2px solid #cacaca;
 	
 }
-
+.main-table-style > tbody > tr > td.job-name{
+	text-align: left;
+}
 .popup{
 	display: table-cell;
 }
@@ -89,7 +91,7 @@ td div.job.application{
 
 
 #applications_list_view > table > tbody > tr:hover{
-	background-color: #eaeaea;
+/* 	background-color: #eaeaea; */
 }
 
 #applications_calendar_view.with-list td div.job.hover{

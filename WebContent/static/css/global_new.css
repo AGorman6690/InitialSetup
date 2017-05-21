@@ -7,7 +7,7 @@ select.time option.bold{
 }
 h3.blue{
 	font-size: 21px;
-	font-weight: bold;
+/* 	font-weight: bold; */
 	color: #fff;
 	margin-bottom: 25px;
     display: inline-block;
@@ -143,7 +143,8 @@ input, select, textarea{
     border-radius: 0;
     background-color: #ffffff;
     color: #000000;
-    border: 1px solid #bbbbbb;
+/*     border: 1px solid #bbbbbb; */
+	border: 0;
     padding:5px 10px;
     display: inline-block;    
 }
@@ -156,7 +157,9 @@ input, select, textarea{
 	margin: 0px 20px;
 	font-weight: normal;
 }
-
+a:visited, a:hover, a{
+	text-decoration: none;
+}
 .sqr-btn.gray-2{
     font-size: 16px;
     color: #163b3d;
@@ -166,6 +169,11 @@ input, select, textarea{
     padding: 5px 10px;
 /*     background: #f9f9f9; */
 	background: #fff;
+}
+.sqr-btn.gray-3{
+	border: 0;
+    background: #d4d4d4;
+    color: #000;
 }
 .sqr-btn.gray-2.selected{
 	color: #fff;
@@ -214,7 +222,7 @@ input, select, textarea{
 	color:#6d8aaf;
 /*     color:#24599a; */
     cursor:pointer;
-    letter-spacing: 0.5px;
+/*     letter-spacing: 0.5px; */
 }
 
 a.accent.no-hover:hover{

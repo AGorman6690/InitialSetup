@@ -4,6 +4,7 @@
 <!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rate_employees.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rate_employer.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/inputValidation.css" />
 
 <script src="/JobSearch/static/javascript/ratings/RateEmployer.js" type="text/javascript"></script>
 
@@ -12,12 +13,15 @@
 	
 	<div id="submit-cont">
 		<button id="submit" class="sqr-btn teal">Submit Ratings</button>
+		<div class="error-message-container">
+			<p class="error-message">Please rate the employer</p>
+		</div>
 	</div>
-	<div id="job" class="item pad-top">
-		<h1>Job</h1>
-		<p><a href="/JobSearch/job/${job.id }?p=2&c=complete">${job.jobName }</a></p>
+	<div id="job" class="item">
+<!-- 		<h1>Job</h1> -->
+		<h1><a href="/JobSearch/job/${job.id }?p=2&c=complete">${job.jobName }</a></h1>
 	</div>
-	<div id="main-cont" class="item pad-top">	
+	<div id="main-cont" class="item center rate-employer">	
 		<div id="ratings-cont">
 			<div class="user-cont" data-user-id="${employer.userId}">
 				<div class="">
@@ -59,14 +63,14 @@
 						</div>
 					</div>	
 					<div class="experience rate-criterion" data-rate-criterion-id="8">
-						<p>Did ${employer.firstName} provide work for all the days agreed upon, excluding weather related incidents?</p>
+						<p>Did ${employer.firstName} provide work for all the days you agreed upon, excluding weather related incidents?</p>
 						<div class="rating-answer button-group no-toggle">
 							<button class="sqr-btn yes">Yes</button>
 							<button class="sqr-btn no">No</button>
 						</div>
 						<div class="if-no radio-container">
 							<label><input type="radio" value="3" name="rate-3-${employer.userId }">
-								There was work for some of the days agreed upon, but not all days
+								There was work for some of the days we agreed upon, but not all days
 							</label>
 							<label><input type="radio" value="1" name="rate-3-${employer.userId }">
 								There was at least one day with no work and ${employer.firstName } did not notify me beforehand
@@ -80,7 +84,7 @@
 							<button class="sqr-btn no" data-rating-value="1">No</button>
 						</div>
 					</div>		
-					<div class="">
+					<div class="comment-cont">
 						<p>Comment</p>
 						<textarea class="comment" rows="4"></textarea>
 					</div>																	

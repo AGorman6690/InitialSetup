@@ -39,9 +39,11 @@
     padding-top: 25px;
 }
 
-.rate-criterion{
-    padding: 5px 5px;
+.rate-criterion,
+.comment-cont{
+	padding: 5px 5px;
     margin: 5px 0px;
+    text-align: left;
 }
 
 th#employee{
@@ -173,4 +175,13 @@ table#ratings{
     margin-left: -350px;
     top: 100px;
     border: 5px solid #163b3d;
+}
+body{
+	min-height: 1100px;
+}
+.user-cont h2{
+    width: 425px;
+}
+.rate-employer .user-cont h2{
+	width: auto;
 }

@@ -15,6 +15,10 @@ class EmploymentProposalDTO {
 	LocalDateTime employerAcceptedDate
 	LocalDateTime expirationDate
 	
+	String dateString_expirationDate
+	String timeString_expirationTime
+	
+	
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment	
 	Integer flag_isCanceledDueToEmployerFillingAllPositions
 	Integer flag_applicationWasReopened
@@ -26,6 +30,7 @@ class EmploymentProposalDTO {
 	Integer hours_offerExpires
 	Integer minutes_offerExpires
 	String time_untilEmployerApprovalExpires
+
 
 //	List<WorkDayDto> workDayDtos_proposed
 	List<String> dateStrings_proposedDates

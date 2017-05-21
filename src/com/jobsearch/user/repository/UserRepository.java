@@ -149,7 +149,7 @@ public class UserRepository {
 					e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
 					e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
 					e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
-//					e.setAbout(rs.getString("About"));
+					e.setAbout(rs.getString("About"));
 //					Profile profile = new Profile();
 //					profile.setName(rs.getString("p.ProfileType"));
 

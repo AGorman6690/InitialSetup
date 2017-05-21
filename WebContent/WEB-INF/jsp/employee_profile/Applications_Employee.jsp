@@ -103,7 +103,7 @@
 							data-job-distance="${applicationDto.jobDto.distance }"
 							>
 										
-							<td>
+							<td class="job-name">
 								<a class="accent ${applicationDto.application.status == 3 ? 'accepted' : ''}"
 								   href="/JobSearch/job/${applicationDto.jobDto.job.id }?c=profile-incomplete&p=1">
 									${applicationDto.jobDto.job.jobName }

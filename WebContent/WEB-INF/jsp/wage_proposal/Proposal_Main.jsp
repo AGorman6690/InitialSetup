@@ -7,7 +7,6 @@
 		<c:set var="doSkipRemaingHtml" value="false"></c:set>		
 		<c:choose>
 			<c:when test="${applicationDto.application.isAccepted == 1 }">
-				<p>Accepted</p>
 				<p>You are hired</p>
 			</c:when>
 			<c:otherwise>
@@ -111,7 +110,8 @@
 				</c:when>
 				<c:otherwise>
 					<c:choose>
-						<c:when test="${user.profileId == 2 }">					
+						<c:when test="${user.profileId == 2 }">		
+							<p>Waiting for applicant</p>			
 							<p>
 								<span>Your offer expires in:</span>								
 								<span class="expiration-time">${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</span>
@@ -127,44 +127,28 @@
 	</div>
 
 	<c:if test="${!doSkipRemaingHtml }">
-		<	
-		<div class="proposal-item amount">		
-			<p><%@ include file="../wage_proposal/History_WageProposals.jsp" %></p>
-		</div>	
-		<c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> 	
-			<div class="proposal-item work-days">
-				<c:choose>
-					<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<p class="pointer">${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days
-							<span class="glyphicon glyphicon-menu-down"></span>
-						</p>
-					</c:when>
-					<c:otherwise>
-						<p>${jobDto.workDays.size() } days<span class="glyphicon glyphicon-menu-down"></span></p>
-					</c:otherwise>
-				</c:choose>		
-				<div class="mod simple-header">
-					<div class="mod-content">
-						<div class="mod-header">
-							<span class="glyphicon glyphicon-remove"></span>
-						</div>
-						<div class="mod-body">
-							<div class="v2 calendar-container proposal-calendar hide-unused-rows hide-prev-next read-only">
-								<div class="calendar"
-									data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
-									data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
-								</div>										
-							</div>
-						</div>
-					</div>	
-				</div>		
+		<c:if test="${!empty applicationDto.previousProposal && applicationDto.application.isAccepted == 0 }">
+			<div class="previous-proposal">				
+				<c:set var="p_proposal" value="${applicationDto.previousProposal }"></c:set>
+				<p class="proposal-lbl">${p_proposal.proposedByUserId == user.userId ? 'Your last proposal' : 
+						user.profileId == 1 ? "Employer's last proposal" : "Applicant's last proposal"}
+				<%@ include file="./Proposal_Details.jsp" %>
 			</div>
 		</c:if>
+		<div class="current-proposal">				
+			<c:set var="p_proposal" value="${applicationDto.employmentProposalDto }"></c:set>
+			<c:if test="${applicationDto.application.isAccepted == 0 }">
+				<p class="proposal-lbl">${p_proposal.proposedByUserId == user.userId ? 'Your current proposal' : 
+						user.profileId == 1 ? "Employer's current proposal" : "Applicant's current proposal"}</p>
+			</c:if>
+			<%@ include file="./Proposal_Details.jsp" %>
+		</div>		
 		<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
 						applicationDto.application.isAccepted == 0}">	
 			<div class="proposal-item respond">
-				<button class="sqr-btn gray-2 show-mod">Respond</button>	
-				<div class="present-proposal"></div>
+				<button class="sqr-btn gray-3 show-mod accept-current-proposal">Accept</button>
+				<button class="sqr-btn gray-3 show-mod counter-current-proposal">Counter</button>	
+				<div class="render-present-proposal-mod"></div>
 			</div>
 		</c:if>	
 		<c:if test="${user.profileId == 1 &&

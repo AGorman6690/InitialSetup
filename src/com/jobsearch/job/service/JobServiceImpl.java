@@ -720,6 +720,8 @@ public class JobServiceImpl {
 		// **************************************************
 		// **************************************************
 
+
+		
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 //		JobSearchUserDTO userDto = new JobSearchUserDTO();

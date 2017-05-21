@@ -19,18 +19,8 @@ $(document).ready(function() {
 		})
 	
 	})
-	$("#times-cont #deselect-all-dates").change(function() {
-		
-		var allTds_toBeSet = getSelectedDates($calendar_times, "yy-mm-dd", "a-date-to-set");
-		$(allTds_toBeSet).each(function(){
-			var date = dateify(this)
-			var td = getTdByDate($calendar_times, date);
-			if($(td).hasClass("selected-date") == 1) $(td).removeClass("selected-date");
-			
-			var workDayDto = getWorkDayDtoByDate_new(date, workDayDtos);
-			workDayDto.isSelected = false;
-		})
-	
+	$("#times-cont #deselect-all-dates").change(function() {		
+		deselectAllWorkDays();	
 	})	
 
 	$("#apply-multiple-times").click(function() {
@@ -46,6 +36,7 @@ $(document).ready(function() {
 			workDayDto.workDay.stringEndTime = value_endTime;
 		})
 		
+		deselectAllWorkDays();
 		$calendar_times.datepicker("refresh");
 	})
 	
@@ -70,3 +61,15 @@ $(document).ready(function() {
 	})		
 	
 })
+
+function deselectAllWorkDays(){
+	var allTds_toBeSet = getSelectedDates($calendar_times, "yy-mm-dd", "a-date-to-set");
+	$(allTds_toBeSet).each(function(){
+		var date = dateify(this)
+		var td = getTdByDate($calendar_times, date);
+		if($(td).hasClass("selected-date") == 1) $(td).removeClass("selected-date");
+		
+		var workDayDto = getWorkDayDtoByDate_new(date, workDayDtos);
+		workDayDto.isSelected = false;
+	})	
+}

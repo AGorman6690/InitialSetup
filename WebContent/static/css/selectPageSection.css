@@ -1,19 +1,21 @@
 .select-page-section.selected{
-    color: #197994;
-    font-weight: bold;
-    font-size: 18px;
+    color: #424242;
+    /* font-weight: bold; */
+/*     font-size: 18px; */
+    background: #d4d4d4;
+    
 }
-
+.select-page-section.selected,
+.select-page-section:not(.selected):hover{
+	border-top: 6px solid #197994;
+}
 .select-page-section{
     font-size: 17px;
-    color: #767676;
+    color: #333;
     margin: 0px 15px;
-    line-height: 50px;
-    cursor: pointer;    
-}
-
-.select-page-section:not(.selected):hover{
-    font-weight: bold;
+    line-height: 55px;
+    cursor: pointer;  
+    padding: 5px;  
 }
 
 .select-page-section-container{

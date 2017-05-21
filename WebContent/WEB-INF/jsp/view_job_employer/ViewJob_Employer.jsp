@@ -51,7 +51,7 @@
 	</div>		
 	<input id="jobId" type="hidden" value="${jobDto.job.id }">
 	<input id="data_pageInit" type="hidden" value="${data_pageInit }">
-	<div class="pad-top-2">
+	<div class="pad-top-2 center">
 		<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
 			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
 		</c:if>

@@ -85,7 +85,7 @@
 									<div class="conflicting-applications-countering"></div>
 									<div class="v2 teal-title proposal-calendar calendar-container wage-proposal-calendar
 										 hide-prev-next hide-unused-rows">	
-										<button class="sqr-btn gray-2 select-all-work-days-override">
+										<button class="sqr-btn gray-3 select-all-work-days-override">
 											Select All Work Days</button>								
 										<div class="calendar counter-calendar  ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
 											data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
@@ -98,22 +98,43 @@
 					</div>				
 				</c:if>
 				<c:if test="${user.profileId == 2 }">
-					<div class="expiration-container">
+					<div class="expiration-container">						
 						<h3 class="blue">The Applicant Must Reply Within</h3>
-						<div class="set-expiration">
-							<div class="time-container">
-								<p>Days</p>
-								<input class="days" type="text" value="0"/>
-							</div>
-							<div class="time-container">
-								<p>Hours</p>
-								<input class="hours" type="text" value="0"/>
-							</div>
-							<div class="time-container">
-								<p>Minutes</p>
-								<input class="minutes" type="text" value="0"/>
-							</div>									
-						</div>	
+						<h2>(Job starts in ${applicationDto.jobDto.timeUntilStart })</h2>						
+						<div class="expiration-input-container">
+							<div class="radio-container">
+								<label><input class="one-day-from-now" type="radio" name="set-exp-time">
+									1 day from now</label>
+								<label><input class="one-day-before-first-proposed-work-day" type="radio" name="set-exp-time">
+									1 day before the first proposed work day starts</label>
+							</div>	
+							<div class="set-expiration">	
+								<div class="custom-times-inputs">						
+									<div class="time-container">
+										<p>Days</p>
+										<input class="days" type="text" value="0"/>
+									</div>
+									<div class="time-container">
+										<p>Hours</p>
+										<input class="hours" type="text" value="0"/>
+									</div>
+									<div class="time-container">
+										<p>Minutes</p>
+										<input class="minutes" type="text" value="0"/>
+									</div>
+<!-- 									<div class="time-container job-starts-in-message"> -->
+<!-- 										<p>Job starts in</p> -->
+<%-- 										<p>${applicationDto.jobDto.timeUntilStart }</p> --%>
+<!-- 									</div> -->
+								</div>		
+								<div class="custom-time-radios">
+									<label><input class="custom-time-from-now" type="radio" name="set-exp-time">
+										from now</label>
+									<label><input class="custom-time-before-first-proposed-work-day" type="radio" name="set-exp-time">
+										before the first proposed work day starts</label>
+								</div>						
+							</div>	
+						</div>
 					</div>
 				</c:if>	
 				<div class="pad-top-2">
@@ -121,8 +142,29 @@
 					<span class="cancel linky-hover">Cancel</span>
 				</div>		
 			</div>		
-			<div class="confirm-response-to-proposal hide-on-load pad-top-2">
-				<div class="confirm-message">
+			<div class="confirm-response-to-proposal hide-on-load">
+				<h3 class="blue">Review Your Actions</h3>
+				<div class="proposed-values">
+					<c:if test="${user.profileId == 2 }">
+						<p><label>Expires In</label><span class="expires-in"></span></p>
+					</c:if>					
+					<p><label>Wage</label>$ <span class="wage-amount"></span> / hr </p>
+					<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
+						<p>			
+							<label>Work Days </label><span class="work-day-count"></span>							
+						</p>
+					</c:if>
+
+				</div>
+				<div id="confirm-work-days-calendar-${applicationDto.application.applicationId }" 
+				    class="v2 teal-title proposal-calendar hide-unused-rows calendar-container
+					 wage-proposal-calendar hide-prev-next read-only">
+					<div class="calendar confirm-calendar"
+						data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
+						data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
+					</div>										
+				</div>	
+				<div class="confirm-message pad-top">
 					<c:choose>
 						<c:when test="${user.profileId == 1 }">
 							<h2 class="confirm-proposal-accept">You are about to accept employment</h2>
@@ -136,30 +178,9 @@
 							<h2 class="confirm-proposal-counter">If this proposal is accepted, the applicant will be employed.</h2>						
 						</c:otherwise>
 					</c:choose>
-				</div>
-				<div class="proposed-values pad-top">
-					<p><label>Wage</label>$ <span class="wage-amount"></span> / hr </p>
-					<c:if test="${applicationDto.jobDto.job.isPartialAvailabilityAllowed }">
-						<p>
-							<span data-toggle-id="confirm-work-days-calendar-${applicationDto.application.applicationId }">
-								<label>Work Days </label><span class="work-day-count"></span><span class="glyphicon glyphicon-menu-down"></span>
-							</span>
-						</p>
-					</c:if>
-					<c:if test="${user.profileId == 2 }">
-						<p><label>Expires In</label><span class="expires-in"></span></p>
-					</c:if>
-				</div>
-				<div id="confirm-work-days-calendar-${applicationDto.application.applicationId }" 
-				    class="v2 teal-title proposal-calendar hide-unused-rows calendar-container
-					 wage-proposal-calendar hide-prev-next read-only hide-on-load">
-					<div class="calendar confirm-calendar"
-						data-min-date="${applicationDto.jobDto.date_firstWorkDay }"
-						data-number-of-months=${applicationDto.jobDto.months_workDaysSpan }>
-					</div>										
-				</div>	
-				<div class="pad-top-2">
-					<span class="${isEmployerMakingFirstOffer ? 'send-initial-offer' : 'send-proposal' } sqr-btn green">OK</span>
+				</div>				
+				<div class="">
+					<span class="${isEmployerMakingFirstOffer ? 'send-initial-offer' : 'send-proposal' } sqr-btn green">Send</span>
 					<span class="edit-response-to-proposal linky-hover">Edit</span>
 				</div>						
 				

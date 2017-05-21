@@ -347,8 +347,8 @@ public class UserServiceImpl {
 		Application application = applicationService.getApplication(jobId, userId);
 		applicationService.updateApplicationFlag(application, "IsAccepted", 1);
 		
-		insertRatings_toRateEmployer(jobId);
-		insertRatings_toRateEmployees(jobId);
+		insertRatings_toRateEmployer(jobId, userId);
+		insertRatings_toRateEmployees(jobId, userId);
 
 		jobService.inspectJob_isStillAcceptingApplications(jobId);
 
@@ -688,36 +688,26 @@ public class UserServiceImpl {
 		return repository.getRateCriteria_toRateEmployer();
 	}
 
-	public void insertRatings_toRateEmployer(int jobId) {
+	public void insertRatings_toRateEmployer(int jobId, int userId_emloyee) {
 
-		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
 		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployer();
 		Job job = jobService.getJob(jobId);
 
-		for (JobSearchUser employee : employees) {
-
-			for (RateCriterion rateCriterion : rateCriteria) {
-				repository.insertRating(rateCriterion.getRateCriterionId(), job.getUserId(), job.getId(),
-						employee.getUserId());
-			}
-
+		for (RateCriterion rateCriterion : rateCriteria) {
+			repository.insertRating(rateCriterion.getRateCriterionId(), job.getUserId(), job.getId(),
+					userId_emloyee);
 		}
-
 	}
 
-	public void insertRatings_toRateEmployees(int jobId) {
+	public void insertRatings_toRateEmployees(int jobId, int userId_employee) {
 
-		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
 		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployee();
 		Job job = jobService.getJob(jobId);
-
-		for (JobSearchUser employee : employees) {
-			for (RateCriterion rateCriterion : rateCriteria) {
-				repository.insertRating(rateCriterion.getRateCriterionId(), employee.getUserId(), job.getId(),
-						job.getUserId());
-			}
+		
+		for (RateCriterion rateCriterion : rateCriteria) {
+			repository.insertRating(rateCriterion.getRateCriterionId(), userId_employee, job.getId(),
+					job.getUserId());
 		}
-
 	}
 
 	public void setModel_viewCalendar_employee(Model model, HttpSession session) {
@@ -805,7 +795,7 @@ public class UserServiceImpl {
 					jobService.getCommentsGivenToUser_byJob(userDto.getUser().getUserId(),
 							job_complete.getId()));
 
-			userDto.getJobDtos_jobsCompleted().add(jobDto);
+			if(jobDto.getRatingValue_overall() != null) userDto.getJobDtos_jobsCompleted().add(jobDto);
 		}
 
 		boolean userHasEnoughRatingData = false;

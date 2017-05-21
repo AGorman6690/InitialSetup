@@ -209,6 +209,17 @@ function getMinDateFromDateArray(dateArray){
 	}	
 }
 
+function getMinDateFromDateStringsArray(dateStringArray) {
+	
+	var dates = [];
+	$(dateStringArray).each(function() {
+		dates.push(dateify(this));
+	})
+	
+	return getMinDateFromDateArray(dates);
+	
+}
+
 function getMinDate($calendar){
 	
 	var dateString = $calendar.attr("data-min-date");

@@ -356,6 +356,6 @@ function executeAjaxCall_saveEdits_dates(jobId, newWorkDays) {
 		dataType: "text",
 	}).done(function(response) {
 			broswerIsWaiting(false);
-			location.reload();
+			redirectToProfile();
 	})
 }

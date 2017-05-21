@@ -1,16 +1,22 @@
+<%@ include file="../includes/TagLibs.jsp"%>
+
 <div class="proposal-item amount">		
-	<p><%@ include file="../wage_proposal/History_WageProposals.jsp" %></p>
+	<p>
+		<span class="dollar-sign">$</span>
+		<fmt:formatNumber type="number" minFractionDigits="2" 
+			maxFractionDigits="2" value="${p_proposal.amount}"/> / hr		
+	</p>
 </div>	
 <c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> 	
 	<div class="proposal-item work-days">
 		<c:choose>
 			<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
-				<p class="pointer">${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days
-					<span class="glyphicon glyphicon-menu-down"></span>
+				<p class="pointer">${p_proposal.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days
+					<span class="glyphicon glyphicon-calendar"></span>
 				</p>
 			</c:when>
 			<c:otherwise>
-				<p>${jobDto.workDays.size() } days<span class="glyphicon glyphicon-menu-down"></span></p>
+				<p>${jobDto.workDays.size() } days<span class="glyphicon glyphicon-calendar"></span></p>
 			</c:otherwise>
 		</c:choose>		
 		<div class="mod simple-header">
@@ -30,16 +36,3 @@
 		</div>		
 	</div>
 </c:if>
-<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
-				applicationDto.application.isAccepted == 0}">	
-	<div class="proposal-item respond">
-		<button class="sqr-btn gray-2 show-mod">Respond</button>	
-		<div class="present-proposal"></div>
-	</div>
-</c:if>	
-<c:if test="${user.profileId == 1 &&
-				applicationDto.application.isAccepted == 1}">	
-	<div class="proposal-item respond">
-		<a href="/JobSearch/employee/leave-job/${jobDto.job.id}/confirm" class="sqr-btn gray-2">Leave</a>	
-	</div>
-</c:if>	

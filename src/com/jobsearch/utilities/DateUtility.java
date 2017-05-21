@@ -222,6 +222,35 @@ public final class DateUtility {
 
 
 
+	public static String getTimeInBetween(LocalDateTime start, String stringEndDate, String stringEndTime) {
+		
+		LocalDate endDate = LocalDate.parse(stringEndDate.replace("/", "-"));
+		LocalTime endTime = LocalTime.parse(stringEndTime);
+		LocalDateTime end = LocalDateTime.of(endDate, endTime);
+		
+		long days = ChronoUnit.DAYS.between(start, end);
+		long hours =  ChronoUnit.HOURS.between(start, end) - days * 24 ;
+		long minutes =  ChronoUnit.MINUTES.between(start, end) - ( days * 24 * 60 ) - ( hours * 60 );
+		String result = "";
+
+		if(days == 1) result += days + " day, ";
+		else if(days > 1) result += days + " days, ";
+
+		result += " " + hours + ":";
+
+		if(minutes < 10) result += "0";
+
+		result += minutes + " hrs";
+
+		// For example, the result will be in the form "2 days 15:45 hrs"
+		return result;		
+		
+	}
+
+
+
+
+
 
 
 

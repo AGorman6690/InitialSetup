@@ -24,7 +24,7 @@ tr.in-process{
 a.new{
     position: absolute;
     top: -23px;
-    right: -7px;
+    right: -25px;
 /*     font-weight: bold; */
     font-size: 16px;
     border: 2px solid #bd3131;
@@ -94,7 +94,7 @@ td button.replace-an-employee{
 }
 
 #table_jobsWaitingToStart td a.accent{
-	padding: 20px;
+/* 	padding: 20px; */
 }
 #table_jobsWaitingToStart td a.accent:hover{
 /* 	background: #e4e4e4; */
@@ -121,9 +121,11 @@ th#offers-waiting-on{
 th{
 /* 	width: 150px; */
 }
-td.job-name{
+.main-table-style > tbody > tr > td.job-name{
 	position: relative;
+	text-align:left;
 }
+
 td .glyphicon-pencil{
     color: #888;
 }

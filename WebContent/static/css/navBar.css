@@ -30,7 +30,7 @@
     color: #163B3D;
     cursor: pointer;
 	margin: 6px 13px;
-   
+	text-decoration: none;
     padding-left: 4px;
 }
 
@@ -54,26 +54,33 @@
 
 
 #ratingRequired .lbl{
-	font-size: 19px;
-    padding-right: 15px;
-    border-right: 2px solid #cacaca;
+/* 	font-size: 19px; */
+/*     padding-right: 15px; */
+/*     border-right: 2px solid #cacaca; */
 }
 
 #ratingRequired{
     text-align: center;
-    height: 60px;
-    line-height: 60px;
-    border-bottom: 2px solid #cacaca;
-    background: #e4e4e4;
+    width: 500px;
+    margin: 20px auto;
+    border-top: 5px solid #cc0a0a;
+    padding: 10px;
+   	color: #cc0a0a !important;
+    background: #ffe6e6;
 }
-
+#ratingRequired a{
+	font-size: 19px;
+}
+#ratingRequired h3{
+	margin-top: 0px;
+}
 #ratingRequired #jobNames{
 	padding-left: 10px;
 }
 
 #ratingRequired #jobNames .job{
-	padding-left: 10px;
-	border-left: 1px solid #cacaca;
+/* 	padding-left: 10px; */
+/* 	border-left: 1px solid #cacaca; */
 }
 
 #ratingRequired #jobNames .job:first-child{

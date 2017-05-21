@@ -66,6 +66,9 @@
 			<div id="post-job-container">
 				<div id="previous-next-container">
 					<button id="proceed-to-preview-job-posting" class="sqr-btn">Review Job Posting</button>
+					<div class="error-message-container">
+						<p id="invalid-address-error-message" class="error-message">Invalid address</p>
+					</div>
 		<!-- 			<span id="previous-section">Previous</span> -->
 		<!-- 			<span id="next-section">Next</span> -->
 				</div>
@@ -162,7 +165,7 @@
 								<select id="multiple-end-times" class="time end-time"></select>
 							</div>
 							<div>
-								<button id="apply-multiple-times" class="sqr-btn gray-2">Apply</button>
+								<button id="apply-multiple-times" class="sqr-btn gray-3">Apply</button>
 							</div>					
 						</div>				
 						<div class="item calendar-container teal-navigation v2 post-job hide-unused-rows">

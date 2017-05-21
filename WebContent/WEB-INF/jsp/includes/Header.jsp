@@ -108,14 +108,14 @@
 
 		<c:if test="${sessionScope.jobs_needRating.size() > 0 }">
 			<div id="ratingRequired">
-				<span class="lbl">Your Rating Required</span>
-				<span id="jobNames">
+				<h3 class="lbl">Your Rating Is Required</h3>
+				<div id="jobNames">
 					<c:forEach items="${jobs_needRating }" var="job">
-						<span><a class="job accent"
+						<p><a class="job accent"
 							   href="/JobSearch/job/${job.id }/rate-${sessionScope.user.profileId == 1 ? 'employer' : 'employees' }">
-								${job.jobName }</a></span>
+								${job.jobName }</a></p>
 					</c:forEach>
-				</span>		
+				</div>		
 			</div>
 		</c:if>
 

@@ -14,13 +14,15 @@
 
 <div class="container">
 	<div id="personalInfoContainer">	
-		<div id="imageContainer">			
-			<p id="make-edits" class="linky-hover">Edit</p>
-			<p id="save-edits" class="linky-hover">Save</p>		
-			<p>${userDto.user.firstName } ${userDto.user.lastName }</p>
-			<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">			
+		<div id="imageContainer">		
+			<p>${userDto.user.firstName } ${userDto.user.lastName }</p>	
+			<img src="/JobSearch/static/images/profile_image_default.png" alt="Profile Image">		
+	
 		</div>
 		<div id="personalInfo" class="pad-top">
+		
+					<p id="make-edits" class="linky-hover">Edit</p>
+			<p id="save-edits" class="linky-hover">Save</p>	
 			<c:if test="${userDto.user.profileId == 1 }">
 				<div class="info">	
 					<div class="lbl">Home Location
@@ -52,8 +54,8 @@
 				</div>
 			</c:if>
 			<div class="info">
-				<div data-toggle-id="aboutContainer" class="lbl">About
-					<span class="glyphicon glyphicon-menu-down"></span>
+				<div class="lbl">About
+					
 <!-- 					<span class="glyphicon glyphicon-pencil"></span> -->
 				</div>
 				<div id="aboutContainer" class="value">

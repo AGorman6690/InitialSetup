@@ -75,7 +75,7 @@ input[type=submit]{
 	display: inline-block;
 }
 
-.error-message{
+.group .error-message{
 	text-align: right;
 	padding-bottom: 8px;
 	margin-top: -4px;

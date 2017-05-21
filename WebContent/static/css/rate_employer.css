@@ -51,7 +51,7 @@ h2{
 }
 h1{
 	font-weight: bold;
-	font-size:30px;
+	font-size:24px;
 	color: #163b3d;
 }
 p,
@@ -67,7 +67,7 @@ p a{
 
 
 textarea{
-	width: 350px;
+	width: 500px;
 }
 
 .rating-container{
@@ -83,6 +83,9 @@ textarea{
 
 #ratings-cont{
 /* 	float: right; */
+/* 	width: 450px; */
+	text-align: center;
+	margin-left: 20px;
 }
 #ratings-cont,
 #employee-list{
@@ -91,31 +94,65 @@ textarea{
 
 #employee-list{
 	vertical-align: top;
-	margin-right: 75px;
+/* 	margin-right: 75px; */
 	width: 200px;
 }
 #employee-list p{
-	margin: 17px 0px;
 	padding: 5px 8px;
-	border-left: 3px solid #cacaca;
-	border-top-right-radius: 4px;
-	border-bottom-right-radius: 4px;
+	border-left: 7px solid #d4d4d4;
+    margin: 2px 5px;
+}
+#employee-list .employee{
+    margin: 17px 0px;
 }
 #employee-list p:hover{
 	cursor: pointer;
-	background: #197994;
-	color: #fff;.
+/* 	background: #197994; */
+/* 	color: #fff;. */
+	border-left: 7px solid #197994;
+	
 }
 #employees p.selected{
-
-	background: #163b3d;
-	color: #fff;.
+	border-left: 7px solid #d4d4d4;
+	background: #d4d4d4;
+/* 	color: #fff;. */
 }
 #employees{
 /* 	border: 2px solid #cacaca; */
-/* 	border-right: 2px solid #cacaca; */
+	border-right: 1px solid #cacaca;
 }
 #submit-cont{
 	width: 250px;
 	margin: auto;
+}
+#next-employee{
+	text-align: left;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 19px;
+    color: #197994;
+}
+.user-cont h2{
+    font-size: 21px;
+    color: #197994;
+}
+#next-employee span{
+	font-size: 13px;
+	margin-right: -9px;
+}
+#employees .employee.complete p::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e013";
+    float: right;
+    color: #3c8c55;
+    font-size: 21px;
+    line-height: 21px;
+    padding-right: 10px;
+}
+p.error-message{
+	font-size: 18px;
+	margin-top: 10px;
+}
+.rate-employer .rating-criteria-cont{
+	width: 550px;
 }

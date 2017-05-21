@@ -39,10 +39,25 @@ $(document).ready(function(){
 	
 
 	$("#proceed-to-preview-job-posting").click(function(){
-//		 executeAjaxCall_previewJobPosting( getJobDto());
+
 		var jobDto = getJobDto()
 		if(arePostJobInputsValid(jobDto)){
-			executeAjaxCall_previewJobPosting(jobDto);
+		
+			var addressToValidate = ""
+			addressToValidate += $("#street").val(); 
+			addressToValidate += $("#city").val();
+			addressToValidate += $("#state option:selected").html();
+			addressToValidate += $("#zipCode").val();
+			
+			executeAjaxCall_isAddressValid(addressToValidate, function(response){
+				if(response == "isValid"){			
+					$("#invalid-address-error-message").hide();
+					executeAjaxCall_previewJobPosting(jobDto);
+				}else{
+					$("#show-location").click();
+					$("#invalid-address-error-message").show();
+				}				
+			})
 		}
 	})
 	
@@ -353,7 +368,7 @@ function getJobDto(){
 	jobDto.job.description = $("#description").val();
 	jobDto.job.streetAddress = $("#street").val();
 	jobDto.job.city = $("#city").val();
-	jobDto.job.state = $("#state").val();
+	jobDto.job.state = $("#state").html();
 	jobDto.job.zipCode = $("#zipCode").val();
 	jobDto.job.positionsPerDay = $("#positionsContainer input").val();
 	
@@ -453,6 +468,17 @@ function executeAjaxCall_postJob(jobDto){
 		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
+}
+
+function executeAjaxCall_isAddressValid(address, callback) {
+	$.ajax({
+		type: "GET",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/validate-address?address=" + address,
+		dataType: "text"
+	}).done(function(response) {
+		callback(response);
+	})
 }
 
 function executeAjaxCall_previewJobPosting(jobDto){

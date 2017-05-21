@@ -22,11 +22,16 @@
 	margin: 0px 20px;
 	width: 400px;
 }
-
+#postSections{
+    width: 1000px;
+    margin: auto;
+}
 .item{
 	padding-top: 35px;
 }
-
+p.error-message{
+    font-size: 19px;
+}
 .item p{
 	font-size: 18px;
 	font-weight: bold;
@@ -272,6 +277,6 @@ input#maxPay{
 	margin: 2px 20px;
 	font-size: 23px;
 	font-weight: bold;
-	text-decoration: underline;
+/* 	text-decoration: underline; */
 	color: #163b3d;
 }

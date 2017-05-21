@@ -3,6 +3,12 @@ var g_workDayDtos_originalProposal = [];
 var g_workDayDtos_counter = [];
 
 $(document).ready(function() {
+	$("body").on("keydown", ".custom-times-inputs input", function() {
+		var $cont = $(this).closest(".expiration-input-container");
+		$cont.find("input.one-day-from-now").prop("checked", false);
+		$cont.find("input.one-day-before-job-starts").prop("checked", false);
+	})
+	
 	$("body").on("click", "button.counter-proposal", function() {
 		showCounterOffer(true, $(this));
 		
@@ -14,11 +20,17 @@ $(document).ready(function() {
 	
 	$("body").on("click", ".review-proposal", function() {
 		
-		g_employmentProposalDto = getEmploymentProposalDto($(this));
-//		if(isInputValid($(this))){		
+		g_employmentProposalDto = getEmploymentProposalDto($(this));	
+//		executeAjaxCall_respondToProposal(g_employmentProposalDto, "sdf");
+		
+		
 		if(isInputValid2(g_employmentProposalDto, $(this))){			
-			showConfirmProposal(true, $(this));
+			showConfirmProposal(true, $(this), g_employmentProposalDto);
 		}		
+	})
+	
+	$("body").on("change", ".expiration-input-container input[type=radio]", function() {
+		$(this).closest(".expiration-input-container").removeClass("invalid");
 	})
 	
 	$("body").on("click", ".edit-response-to-proposal", function() {
@@ -53,7 +65,7 @@ $(document).ready(function() {
 	$("body").on("click", ".show-mod", function(){
 	
 		var applicationId = $(this).closest("tr").attr("data-application-id");
-		var $renderHtml = $(this).siblings(".present-proposal").eq(0);
+		var $renderHtml = $(this).siblings(".render-present-proposal-mod").eq(0);
 		var $proposalMod = $renderHtml.find(".mod").eq(0);
 		
 	
@@ -71,7 +83,6 @@ $(document).ready(function() {
 			executeAjaxCall_getProposedWorkDays(applicationId, $calendar);
 		else
 			$calendar.closest(".mod").show();
-		
 		
 	})
 	
@@ -100,7 +111,7 @@ function showCounterOffer(request, $e) {
 		$e.closest(".proposal").find(".proposed-offer").slideDown(speed);
 	}
 }
-function showConfirmProposal(request, $e){
+function showConfirmProposal(request, $e, employmentProposalDto){
 	var $modBody = $e.closest(".mod-body");
 	var $respondToProposal = $modBody.find(".respond-to-proposal").eq(0);
 	var $confirmProposal = $modBody.find(".confirm-response-to-proposal").eq(0);
@@ -119,7 +130,7 @@ function showConfirmProposal(request, $e){
 		
 		// Show expiration time
 		if(isSessionUserAnEmployer($e)){
-			$confirmProposal.find(".expires-in").html(getExpirationTimeToConfirm($e));
+			$confirmProposal.find(".expires-in").html(getExpirationTimeToConfirm(employmentProposalDto));
 		}
 		
 		// Initialize calendar
@@ -309,78 +320,55 @@ function isInputValid2(dto, $e){
 	
 	// Validate work days.
 	// When a job does NOT allow partial availability, the work days cannot be negotiated.
-	// Hence, the html for work day proposal container will not be rendered.
+	// Hence, the html for work day proposal container will not be rendered (1st "if" condition).
 	if($workDayProposal.length > 0){
 		$buttonGroup = $workDayProposal.find(".button-group").eq(0);
 		if(dto.dateStrings_proposedDates == undefined){
 			setInvalidCss($buttonGroup);
 			isValid = false;
 		}else if(dto.dateStrings_proposedDates.length == 0){
-			
+			setInvalidCss($buttonGroup);
 			isValid = false;
 		}else {
 			setValidCss($buttonGroup)
 		}
 	}
 	
-	// Validate expiration time
+	// Validate expiration time.
+	// (Cannot inspect the dto property values. If the user did NOT acknowledge the work days,
+	// then the dto's expiration time values will be undefined even if the user has
+	// correctly set the expiration time)
 	if(isSessionUserAnEmployer($e)){
-		if(dto.days_offerExpires == 0 && 
-				dto.hours_offerExpires == 0 && 
-				dto.minutes_offerExpires == 0 ){
+		
+		var $expirationContainer = $proposalContainer.find(".expiration-input-container").eq(0);
+		
+		// Default time options
+		if($proposalContainer
+				.find("input.one-day-from-now:checked, input.one-day-before-first-proposed-work-day:checked")
+				.length){
 			
-			$proposalContainer.find(".set-expiration input").each(function() {
-				setInvalidCss($(this));
-			})
-			isValid = false;
+			setValidCss($expirationContainer);
+		
+		// Custom time options	
+		}else if($proposalContainer
+					.find("input.custom-time-from-now:checked, input.custom-time-before-first-proposed-work-day:checked")
+					.length){
+			
+//			if(isValidatePositiveNumber($proposalContainer.find("input.days")) ||
+//				isValidatePositiveNumber($proposalContainer.find("input.hours")) || 
+//				isValidatePositiveNumber($proposalContainer.find("input.minutes")) ){
+						
+					setValidCss($expirationContainer);
+//			}else{
+//				setInvalidCss($expirationContainer);
+//			}
+			
 		}else{
-			$proposalContainer.find(".set-expiration input").each(function() {
-				setValidCss($(this));
-			})
+			setInvalidCss($expirationContainer);
 		}		
 	}
 	
 	return isValid;	
-}
-function isInputValid($e) {
-	var $proposalContainer = $e.closest(".proposal-container");
-	var $wageProposal = $proposalContainer.find(".wage-proposal.proposal").eq(0);
-	var $workDayProposal = $proposalContainer.find(".work-day-proposal.proposal").eq(0);
-	var isValid = true;
-	
-	// Validate wage
-	var dataAttr_isAccepting_wageProposal = $wageProposal.attr("data-is-accepting"); 
-	if(dataAttr_isAccepting_wageProposal== undefined){
-		setInvalidCss($wageProposal.find(".button-group").eq(0));
-		isValid = false;
-	}else if(dataAttr_isAccepting_wageProposal == 0){
-		var $counterAmount = $wageProposal.find("input").eq(0); 
-		if($counterAmount.val() == ""){
-			setInvalidCss($counterAmount);
-			isValid = false;
-		}
-	}else {
-		setValidCss($wageProposal.find(".button-group").eq(0))
-	}
-	
-	// Validate work days
-	var dataAttr_isAccepting_workDayProposal = $workDayProposal.attr("data-is-accepting");
-	if(dataAttr_isAccepting_workDayProposal == undefined){
-		setInvalidCss($workDayProposal.find(".button-group").eq(0));
-		isValid = false;
-	}else if(dataAttr_isAccepting_workDayProposal == 0){
-		
-	}else {
-		setValidCss($workDayProposal.find(".button-group").eq(0))
-	}
-	
-	// Validate expiration time
-	if(isSessionUserAnEmployer($e)){
-		var days
-	}
-	
-	return isValid;
-		
 }
 function getEmploymentProposalDto($e){
 
@@ -405,6 +393,7 @@ function getEmploymentProposalDto($e){
 	}
 	
 	// Work days
+	employmentProposalDto.dateStrings_proposedDates = [];
 	var $calendar;
 	var isAcceptingWorkDays = getIsAcceptingWorkDays($e);
 	if(isEmployerMakingInitalOffer){
@@ -426,9 +415,71 @@ function getEmploymentProposalDto($e){
 
 	// Expiration time
 	if(isSessionUserAnEmployer($e)){
-		employmentProposalDto.days_offerExpires = $proposalContainer.find(".set-expiration input.days").val();
-		employmentProposalDto.hours_offerExpires = $proposalContainer.find(".set-expiration input.hours").val();
-		employmentProposalDto.minutes_offerExpires = $proposalContainer.find(".set-expiration input.minutes").val();		
+		if(employmentProposalDto.dateStrings_proposedDates.length > 0){
+			var date_expiration = new Date();
+			var date_now = new Date();
+			
+			var date_firstProposedWorkDay = getMinDateFromDateStringsArray(
+					employmentProposalDto.dateStrings_proposedDates);
+			
+			var workDayDto_firstProposedWorkDay = getWorkDayDtoByDate(date_firstProposedWorkDay,
+													g_workDayDtos_originalProposal);
+			
+			var dateTime_firstProposedWorkDay = new Date(workDayDto_firstProposedWorkDay.workDay.stringDate +
+					" " + workDayDto_firstProposedWorkDay.workDay.stringStartTime);
+			
+			var days = 0;
+			var hours = 0;
+			var mins = 0;
+			
+			
+			// 1 day from now
+			if($proposalContainer.find("input.one-day-from-now:checked").length){
+				date_expiration.setDate(date_now.getDate() + 1);
+				
+			// 1 day before the first proposed work day starts
+			}else if($proposalContainer.find("input.one-day-before-first-proposed-work-day:checked").length){
+				
+				date_expiration = new Date(dateTime_firstProposedWorkDay);
+				date_expiration.setDate(date_expiration.getDate() - 1);
+				
+			
+			// Custom time ...
+			}else{
+				
+				days = parseInt($proposalContainer.find(".set-expiration input.days").val());
+				hours = parseInt($proposalContainer.find(".set-expiration input.hours").val());
+				mins = parseInt($proposalContainer.find(".set-expiration input.minutes").val());			
+				
+				// ... from now 
+				if($proposalContainer.find("input.custom-time-from-now:checked").length){
+					date_expiration = new Date();
+					
+					if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() + days);
+					if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() + hours);
+					if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() + mins);
+				
+				// ... from the start time of the first proposed work day
+				}else if($proposalContainer.find("input.custom-time-before-first-proposed-work-day:checked").length){
+					date_expiration = new Date(dateTime_firstProposedWorkDay);
+					
+					if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() - days);
+					if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() - hours);
+					if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() - mins);				
+				}						
+			}
+			
+			var seconds = Math.floor((date_expiration - (date_now))/1000);
+			var minutes_offerExpires = Math.floor(seconds/60);
+			var hours_offerExpires = Math.floor(minutes_offerExpires/60);
+			var days_offerExpires = Math.floor(hours_offerExpires/24);
+			hours_offerExpires = hours_offerExpires-(days_offerExpires*24);
+			minutes_offerExpires = minutes_offerExpires-(days_offerExpires*24*60)-(hours_offerExpires*60);
+			
+			employmentProposalDto.days_offerExpires = days_offerExpires;
+			employmentProposalDto.hours_offerExpires = hours_offerExpires;
+			employmentProposalDto.minutes_offerExpires = minutes_offerExpires;	
+		}
 	}
 	
 	return employmentProposalDto;
@@ -443,11 +494,11 @@ function isSessionUserAnEmployer($e){
 	if($e.closest(".proposal-container").attr("data-session-user-is-employer") == "1") return true;
 	else return false;
 }
-function getExpirationTimeToConfirm($e){
-	var $proposalContainer = $e.closest(".proposal-container");
-	var days = $proposalContainer.find("input.days").val();
-	var hours = $proposalContainer.find("input.hours").val();
-	var minutes = $proposalContainer.find("input.minutes").val();	
+function getExpirationTimeToConfirm(employmentProposalDto){
+
+	var days = employmentProposalDto.days_offerExpires;
+	var hours = employmentProposalDto.hours_offerExpires;
+	var minutes = employmentProposalDto.minutes_offerExpires;
 	var html = "";
 	
 	if(days > 1) html += days + " days ";

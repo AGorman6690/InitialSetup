@@ -53,6 +53,7 @@
 /* } */
 .question-container{
 	margin: 5px 0px;
+	padding: 5px;
 }
 .question-container p{
 	font-weight: bold;
@@ -100,7 +101,7 @@
     padding: 10px;
     border-bottom: 1px solid #cacaca;
     margin: auto;
-    background: rgba(222, 222, 222, 0.85);
+    background: rgba(82, 81, 81, 0.85);
 }
 #apply-for-job-cont{
 	position: absolute;
@@ -111,6 +112,23 @@
 	top: -40px;
 }
 .job-info{
-	margin-top: 60px;
 	position: relative;
+}
+.job-info.show-apply-button{
+	margin-top: 60px;
+	padding-top: 25px;
+}
+.sub::after{
+    content: '';
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e1e1;
+    width: 500px;
+    margin: auto;
+    display: block;
+}
+
+#jobs-needing-rating-warning{
+    text-align: center;
+    color: #cc0a0a;
+    font-size: 20px;
 }

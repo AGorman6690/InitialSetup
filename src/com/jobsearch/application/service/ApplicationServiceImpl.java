@@ -1,5 +1,6 @@
 package com.jobsearch.application.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.aspectj.weaver.IUnwovenClassFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -266,7 +268,6 @@ public class ApplicationServiceImpl {
 											HttpSession session,
 											String context) {
 
-
 		// Get the proposal being **RESPONDED TO**.
 		// Per the application id, get the most recent employment proposal in the database.
 		EmploymentProposalDTO proposalBeingRespondedTo = getCurrentEmploymentProposal(
@@ -295,8 +296,6 @@ public class ApplicationServiceImpl {
 				case "counter-by-applicant":
 				case "acknowledge-by-employer":
 
-
-
 					// ****************************************************
 					// ****************************************************
 					// Is it desired to have transparency into whether the employer is "accepting"
@@ -306,15 +305,23 @@ public class ApplicationServiceImpl {
 					// would appreciate the distinction.
 					// ****************************************************
 					// ****************************************************
+					EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
+					
+					if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER ){
+						newProposal.setEmployerAcceptedDate(LocalDateTime.now());
+						newProposal.setExpirationDate(getExpirationDate(
+								newProposal.getEmployerAcceptedDate(), employmentProposalDto));
+					}
 
 					// **Employers** must provide an expiration time for all acknowledgments they make.
 					// **Applicants** must counter before the employer's offer is expired.
 					if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
-							isValidExpirationTime(employmentProposalDto) ) ||
+							isValidExpirationDate(newProposal.getEmployerAcceptedDate(),
+									newProposal.getExpirationDate()) ) ||
 						(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE &&
 								!isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
 
-						EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
+						
 						newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
 						newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
 						newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
@@ -325,8 +332,8 @@ public class ApplicationServiceImpl {
 						
 						
 						if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
-							newProposal.setEmployerAcceptedDate(LocalDateTime.now());
-							newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));
+							
+//							newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));
 						}
 
 						// ***********************************************************************************
@@ -581,17 +588,15 @@ public class ApplicationServiceImpl {
 		repository.updateWageProposal_isCurrentProposal(employmentProposalId, isCurrentProposal);
 	}
 
-	private boolean isValidExpirationTime(EmploymentProposalDTO employmentProposalDto) {
+	private boolean isValidExpirationDate(LocalDateTime accetedDateTime,
+			LocalDateTime proposedExpirationDateTime) {
+		
+		if(accetedDateTime != null && proposedExpirationDateTime != null){	
+			if(accetedDateTime.isBefore(proposedExpirationDateTime)){
+				return true;
+			}else return false;
+		}else return false;	
 
-		if( ( employmentProposalDto.getDays_offerExpires() != null ||
-				employmentProposalDto.getHours_offerExpires() != null ||
-					employmentProposalDto.getMinutes_offerExpires() != null) &&
-				( employmentProposalDto.getDays_offerExpires() > 0 ||
-					employmentProposalDto.getHours_offerExpires() > 0 ||
-						employmentProposalDto.getMinutes_offerExpires() > 0) )
-
-			return true;
-		else return false;
 	}
 
 	public EmploymentProposalDTO getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
@@ -705,11 +710,14 @@ public class ApplicationServiceImpl {
 
 		LocalDateTime expirationDate = start;
 
-		if(employmentProposalDto.getDays_offerExpires() != null)
+		if(employmentProposalDto.getDays_offerExpires() != null && 
+				employmentProposalDto.getDays_offerExpires() > 0)
 			expirationDate = expirationDate.plusDays(employmentProposalDto.getDays_offerExpires() );
-		if(employmentProposalDto.getHours_offerExpires()  != null)
+		if(employmentProposalDto.getHours_offerExpires()  != null && 
+				employmentProposalDto.getHours_offerExpires() > 0)
 			expirationDate = expirationDate.plusHours(employmentProposalDto.getHours_offerExpires() );
-		if(employmentProposalDto.getMinutes_offerExpires()  != null)
+		if(employmentProposalDto.getMinutes_offerExpires()  != null && 
+				employmentProposalDto.getMinutes_offerExpires() > 0)
 			expirationDate = expirationDate.plusMinutes(employmentProposalDto.getMinutes_offerExpires() );
 
 		return expirationDate;
@@ -720,7 +728,8 @@ public class ApplicationServiceImpl {
 		repository.updateWageProposalStatus(wageProposalId, status);
 	}
 
-	public JobSearchUser getOtherUserInvolvedInWageProposal(WageProposal failedWageProposal, int dontReturnThisUserId) {
+	public JobSearchUser getOtherUserInvolvedInWageProposal(WageProposal failedWageProposal,
+			int dontReturnThisUserId) {
 
 		int otherUserId;
 
@@ -952,10 +961,12 @@ public class ApplicationServiceImpl {
 			applicationDto.getJobDto().setWorkDayDtos(jobService.getWorkDayDtos_byProposal(
 											applicationDto.getEmploymentProposalDto()));
 			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
-
-
 			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
+			applicationDto.getJobDto().setTimeUntilStart(DateUtility.getTimeInBetween(
+					LocalDateTime.now(),
+					applicationDto.getJobDto().getWorkDays().get(0).getStringDate(),
+					applicationDto.getJobDto().getWorkDays().get(0).getStringStartTime()));
 
 			// Conflicting applications
 			List<ApplicationDTO> applicationDtos_conflicting = getApplicationDtos_Conflicting(

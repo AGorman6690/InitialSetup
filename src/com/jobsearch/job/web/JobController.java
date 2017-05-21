@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
@@ -205,6 +206,13 @@ public class JobController {
 		return "/templates/JobInformation";
 	}
 
+	@RequestMapping(value = "/validate-address")
+	@ResponseBody
+	public String isAddressValid(@RequestParam(name = "address") String address){		
+		if(GoogleClient.isValidAddress(address)) return "isValid";
+		else return "isNotValid";		
+	}
+	
 	@RequestMapping(value = "/preview/job-info/{jobId}", method = RequestMethod.POST)
 	public String previewJobInfo_ByJobId(Model model, @PathVariable(value = "jobId") int jobId) {
 

@@ -33,3 +33,7 @@ td .popuptext h4{
 	color: #163b3d;
 	font-weight: bold;
 }
+#employees{
+    margin: auto;
+    width: 850px;
+}
