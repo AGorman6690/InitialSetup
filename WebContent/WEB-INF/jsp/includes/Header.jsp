@@ -107,7 +107,7 @@
 
 
 		<c:if test="${sessionScope.jobs_needRating.size() > 0 }">
-			<div id="ratingRequired">
+			<div id="rating-required" class="warning-message">
 				<h3 class="lbl">Your Rating Is Required</h3>
 				<div id="jobNames">
 					<c:forEach items="${jobs_needRating }" var="job">
@@ -118,6 +118,13 @@
 				</div>		
 			</div>
 		</c:if>
+		
+		<div id="job-info-mod" class="mod simple-header">
+			<div class="mod-content">
+				<div class="mod-header"></div>
+				<div class="mod-body"></div>
+			</div>
+		</div>
 
 <%-- 	<%@ inlude file="../event_calendar/Event_Calendar.jsp" %> --%>
 

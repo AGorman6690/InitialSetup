@@ -1,6 +1,11 @@
 var global_workDayDtos = [];
 
 $(document).ready(function(){
+	
+	$("body").on("click", ".show-job-info-mod", function() {
+		var jobId = $(this).attr("data-job-id");
+		executeAjaxCall_showJobInfoMod(jobId);
+	})
 //	
 	$("#nav_calendar").click(function() {
 		executeAjaxCall_getEventCalendar();
@@ -22,6 +27,14 @@ $(document).ready(function(){
 //					}
 			
 		}
+	})
+	
+	$("body").on("mouseover", ".popup", function() {
+		$(this).find(".popuptext").show()
+	})
+	
+	$("body").on("mouseout", ".popup", function() {
+		$(this).find(".popuptext").hide()
 	})
 	
 	$("body").on("click", ".button-group.invalid button", function() {
@@ -104,7 +117,23 @@ $(document).ready(function(){
 	})
 	
 })
-
+function executeAjaxCall_showJobInfoMod(jobId) {
+	$.ajax({
+		type: "POST",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/preview/job-info/" + jobId,
+		dataType: "html"
+	}).done(function(html) {
+		var $jobInfoMod = $("#job-info-mod");
+		$jobInfoMod.find(".mod-body").html(html);
+		
+		workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+		initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);
+		initMap();
+		$jobInfoMod.show();
+	})
+	
+}
 function executeAjaxCall_getEventCalendar() {
 	broswerIsWaiting(true);
 	$.ajax({

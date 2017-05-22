@@ -95,13 +95,25 @@ function getDatesFromWorkDayDtos(workDayDtos, daysArray){
 	
 	$(workDayDtos).each(function(i, workDayDto){
 		if(workDayDto.date != null && !isNaN(workDayDto.date.getTime())) daysArray.push(workDayDto.date);
-		else daysArray.push(new Date(workDayDto.workDay.stringDate));
+		else daysArray.push(dateify(workDayDto.workDay.stringDate));
 	})
 	
 	return daysArray;
 	
 }
-
+function getDateStringsFromWorkDayDtos(workDayDtos){
+	// Receive an array of work day objects and return
+	// an array of dates
+	
+	dateStrings = [];
+	
+	$(workDayDtos).each(function(i, workDayDto){
+		dateStrings.push(workDayDto.workDay.stringDate);
+	})
+	
+	return dateStrings;
+	
+}
 function clearCalendar($calendar, clearClassName){
 	$calendar.find("td." + clearClassName).each(function(){
 		$(this).removeClass(clearClassName);

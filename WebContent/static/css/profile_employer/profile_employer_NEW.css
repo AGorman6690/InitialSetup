@@ -86,7 +86,8 @@ table.main-table-style thead {
 td.job-location span{
 	border-right: 2px solid #cacaca;
     display: inline-block;
-    min-height
+    padding-right: 20px;
+    margin-right: -25px;
 }
 
 td button.replace-an-employee{

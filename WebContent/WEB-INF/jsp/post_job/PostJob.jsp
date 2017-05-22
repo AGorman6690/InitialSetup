@@ -56,7 +56,7 @@
 		
 			<div id="preview-job-posting-container">
 				<div id="edit-or-submit-container">
-					<button id="editPosting" class="sqr-btn">Edit Job Posting</button>
+					<span id="editPosting" class="">Edit Job Posting</span>
 					<button id="submitPosting_final" class="sqr-btn">Submit Job Posting</button>
 				</div>	
 				<div id="displayExample_jobInfo">

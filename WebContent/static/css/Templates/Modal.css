@@ -126,6 +126,15 @@
     margin: 10px;
     font-size: 25px;
 }
+.mod.simple-header .mod-header::after{
+	font-family:'Glyphicons Halflings';
+	content: "\e014";
+	    float: none;
+    margin: 10px;
+    font-size: 25px;
+	cursor:pointer;
+    color: #bbbbbb;
+}
 .mod.simple-header .mod-header{
     background: #f4f4f4;
 }

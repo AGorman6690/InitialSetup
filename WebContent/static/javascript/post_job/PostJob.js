@@ -16,7 +16,7 @@ $(document).ready(function(){
 //		alert(334)
 	})
 	
-	$("#next-section, #previous-section").click(function(){
+	$("#previous-sectionadsf").click(function(){
 		
 		var $nextSection;
 		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
@@ -28,6 +28,23 @@ $(document).ready(function(){
 			$nextSection = $("#select-page-section-container").find(".select-page-section").eq(0);
 		}		
 		$nextSection.click();				
+	})
+	
+	$("#next-section").click(function(){
+		
+		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
+
+		if($selectedSection.attr("id") == "show-skills") $("#proceed-to-preview-job-posting").click();
+		else{
+			$selectedSection.next().click();
+		}
+				
+	})	
+	
+	$("#previous-section").click(function(){		
+		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
+		$selectedSection.prev().click();
+				
 	})	
 	
 	$("#select-times.select-page-section").click(function(){
@@ -44,10 +61,10 @@ $(document).ready(function(){
 		if(arePostJobInputsValid(jobDto)){
 		
 			var addressToValidate = ""
-			addressToValidate += $("#street").val(); 
-			addressToValidate += $("#city").val();
-			addressToValidate += $("#state option:selected").html();
-			addressToValidate += $("#zipCode").val();
+			addressToValidate += jobDto.job.streetAddress;
+			addressToValidate += " " + jobDto.job.city;
+			addressToValidate += " " + jobDto.job.state;
+			addressToValidate += " " + jobDto.job.zipCode;
 			
 			executeAjaxCall_isAddressValid(addressToValidate, function(response){
 				if(response == "isValid"){			
@@ -368,7 +385,7 @@ function getJobDto(){
 	jobDto.job.description = $("#description").val();
 	jobDto.job.streetAddress = $("#street").val();
 	jobDto.job.city = $("#city").val();
-	jobDto.job.state = $("#state").html();
+	jobDto.job.state =$("#state option:selected").html();
 	jobDto.job.zipCode = $("#zipCode").val();
 	jobDto.job.positionsPerDay = $("#positionsContainer input").val();
 	

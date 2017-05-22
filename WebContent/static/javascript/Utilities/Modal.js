@@ -1,4 +1,9 @@
 $(document).ready(function(){
+	
+	$("body").on("click", ".mod-body .cancel", function() {
+		$(this).closest(".mod").hide();
+	})
+	
 	window.onclick = function(event) {
 	    if ($(event.target).hasClass("mod") == 1) {
 	       closeModal($(".mod"));

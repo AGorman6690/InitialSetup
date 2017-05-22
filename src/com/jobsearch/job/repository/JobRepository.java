@@ -1257,16 +1257,31 @@ public class JobRepository {
 				+ "	AND j.UserId = ?"
 				+ " )"
 				+ " AND j.JobId NOT IN ("
+				
+				// Jobs that allow partial availability
 				+ " SELECT DISTINCT(j.JobId) FROM job j"
-				+ " JOIN work_day wd ON j.JobId = wd.JobId"
 				+ " JOIN application a ON j.JobId = a.JobId"
 				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
 				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
 				+ " WHERE wd.IsComplete = 0"
 				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND j.IsPartialAvailabilityAllowed = 1"
 				+ " AND j.UserId = ?"
 				+ " AND e.WasTerminated = 0"
+				
+				+ " UNION"
+				
+				// Jobs that DO NOT allow partial availability
+				+ " SELECT DISTINCT(j.JobId) FROM job j"
+				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+				+ " JOIN work_day wd ON j.JobId = wd.JobId"				
+				+ " WHERE wd.IsComplete = 0"
+				+ " AND j.IsPartialAvailabilityAllowed = 0"
+				+ " AND j.UserId = ?"
+				+ " AND e.WasTerminated = 0"				
 				+ " )";
 		
 		return JobRowMapper(sql, new Object[]{ userId, userId });

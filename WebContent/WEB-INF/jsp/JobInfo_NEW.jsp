@@ -1,7 +1,7 @@
 <%@ include file="./includes/TagLibs.jsp"%>	
 
 <c:if test="${sessionScope.user.profileId == 1 && context == 'find' && empty jobDto.application &&
-				sessionScope.jobs_needRating.size() == 0}">
+				empty sessionScope.jobs_needRating}">
 	<c:set var="doShowApplyButton" value="1"></c:set>
 </c:if>
 <div class="job-info center ${!empty doShowApplyButton ? 'show-apply-button' : '' }">
@@ -9,18 +9,20 @@
 
 	<c:if test="${sessionScope.user.profileId == 1 }">
 		<div id="error-messages">
-			<div id="invalid-desired-wage-missing" class="invalid-message">Please enter a desired wage</div>
-			<div id="invalid-desired-wage-not-positive-number" class="invalid-message">Please enter a positive number for a desired wage</div>
-			<div id="invalid-answers" class="invalid-message">Please answer the employer's questions</div>
-			<div id="invalid-work-days" class="invalid-message">Please select one or more work days</div>
+			<p id="invalid-desired-wage-missing" class="invalid-message">Please enter a desired wage</p>
+			<p id="invalid-desired-wage-not-positive-number" class="invalid-message">Please enter a positive number for a desired wage</p>
+			<p id="invalid-answers" class="invalid-message">Please answer the employer's questions</p>
+			<p id="invalid-work-days" class="invalid-message">Please select one or more work days</p>
 		</div>
 	</c:if>
-	<c:if test="${!empty doShowApplyButton }">
+	
+	<c:if test="${doShowApplyButton == '1'}">
 		<div id="apply-for-job-cont">
 			<button id="apply-for-job" class="sqr-btn green">Apply for job</button>
+			
 		</div>
 	</c:if>
-	<h2>${jobDto.job.jobName }</h2>
+	<h2>${jobDto.job.jobName }   ${doShowApplyButton }</h2>
 	<c:if test="${sessionScope.user.profileId == 1 }">
 		<div class="">
 			<div class="ratings-mod-container">
@@ -100,10 +102,12 @@
 								<c:forEach items="${question.answerOptions }" var="answerOption">
 									<li class="answer-option">
 										<label>
-											<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
-												name="answer-options-${question.questionId }"
-												data-id="${answerOption.answerOptionId }"
-												data-question-id="${question.questionId}">
+											<c:if test="${context != 'preview-job-post' }">
+												<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
+													name="answer-options-${question.questionId }"
+													data-id="${answerOption.answerOptionId }"
+													data-question-id="${question.questionId}">
+											</c:if>
 												${answerOption.text }
 										</label>
 									</li>
@@ -116,10 +120,12 @@
 			</c:forEach>		
 		</div>	
 	</c:if>			
-	<div id="desired-wage" class="sub">
-		<h3>Desired Wage</h3>
-		<input type="text" class="requires-positive-number" />
-	</div>		
+	<c:if test="${context != 'preview-job-post' }">
+		<div id="desired-wage" class="sub">
+			<h3>Desired Wage</h3>
+			<input type="text" class="requires-positive-number" />
+		</div>		
+	</c:if>
 	<div  class="sub">		
 		<h3 id="work-days-label">Work Days</h3>	
 		<c:if test="${jobDto.workDayDtos.size() > 1 }">
@@ -135,7 +141,8 @@
 				</c:choose>
 			</p> 
 		</c:if>
-		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container hide-prev-next
+		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container
+			 hide-prev-next ${context == 'preview-job-post' ? 'preview-job-post' : '' }
 			 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only' : 'proposal-calendar' }">
 			<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
 				<button id="select-all-work-days" class="sqr-btn gray-3">Select All</button>		

@@ -8,6 +8,7 @@
 		<%@ include file="../includes/resources/DatePicker.jsp" %>
 		<%@ include file="../includes/resources/Modal.jsp"%>	
 		<%@ include file="../includes/resources/EventCalendar.jsp"%>	
+		<%@ include file="../includes/resources/JobInformation.jsp"%>
 
 <!-- 		Global Scripts -->	
 		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	

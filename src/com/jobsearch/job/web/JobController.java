@@ -203,7 +203,7 @@ public class JobController {
 
 		jobService.setModel_PreviewJobPost(model, jobDto);
 
-		return "/templates/JobInformation";
+		return "/JobInfo_NEW";
 	}
 
 	@RequestMapping(value = "/validate-address")
@@ -219,8 +219,8 @@ public class JobController {
 		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
 
 		model.addAttribute("jobDto", jobDto);
-
-		return "/templates/JobInformation";
+		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
+		return "/JobInfo_NEW";
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
@@ -419,6 +419,16 @@ public class JobController {
 		return "";
 
 	}
+	
+	@RequestMapping(value = "/job/{jobId}/employee/{userId}/display-termination-message", method = RequestMethod.POST)
+	public String displayMessage_terminateEmployee(@PathVariable(value = "jobId") int jobId,
+													@PathVariable(value = "userId") int userId_emloyee,
+													HttpSession session, Model model){
+		
+		jobService.setModel_displayMessage_terminmateEmployee(model, session, jobId, userId_emloyee);
+		return "/terminate_employment/Employer_terminates_employee";
+	}
+	
 
 	// @RequestMapping(value = "/job/{jobId}/edit/work-days/pre-process", method
 	// = RequestMethod.POST)

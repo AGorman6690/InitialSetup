@@ -118,6 +118,9 @@ $(document).ready(function() {
 		executeAjaxCall_removeEmployee(g_jobId, g_clickedUser);
 	})
 	
+		
+
+	
 	$("#employees p").click(function() {
 		
 		$(".employee-name").html($(this).html());

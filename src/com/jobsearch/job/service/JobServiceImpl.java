@@ -934,6 +934,7 @@ public class JobServiceImpl {
 			jobDto.getWorkDayDtos().add(workDayDto);
 		}
 
+		model.addAttribute("context", "preview-job-post");
 		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		model.addAttribute("jobDto", jobDto);
 
@@ -1440,6 +1441,17 @@ public class JobServiceImpl {
 
 	public List<Job> getJobs_terminatedFrom_byUser(int userId) {
 		return repository.getJobs_terminatedFrom_byUser(userId);
+	}
+
+	public void setModel_displayMessage_terminmateEmployee(Model model, HttpSession session, int jobId,
+			int userId_emloyee) {
+
+		if(verificationService.didSessionUserPostJob(session, jobId) &&
+				verificationService.didUserApplyForJob(jobId, userId_emloyee)){
+			
+			JobSearchUser user_employee = userService.getUser(userId_emloyee);
+			model.addAttribute("user_employee", user_employee);			
+		}		
 	}
 
 }

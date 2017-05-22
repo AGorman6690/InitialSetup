@@ -7,7 +7,7 @@
 		<c:set var="doSkipRemaingHtml" value="false"></c:set>		
 		<c:choose>
 			<c:when test="${applicationDto.application.isAccepted == 1 }">
-				<p>You are hired</p>
+				<p class="proposal-status">You are hired</p>
 			</c:when>
 			<c:otherwise>
 				<c:if test="${applicationDto.previousProposal.flag_isCanceledDueToApplicantAcceptingOtherEmployment == 1 }">
@@ -100,7 +100,7 @@
 			</c:choose>					
 			<c:choose>
 				<c:when test="${applicationDto.employmentProposalDto.isProposedToSessionUser }">
-					<p>Waiting for you</p>
+					<p class="proposal-status">Waiting for you</p>
 					<c:if test="${user.profileId == 1 }">						
 						<p>
 							<span>Employer's offer expires in:</span>								
@@ -111,14 +111,14 @@
 				<c:otherwise>
 					<c:choose>
 						<c:when test="${user.profileId == 2 }">		
-							<p>Waiting for applicant</p>			
+							<p class="proposal-status">Waiting for applicant</p>			
 							<p>
 								<span>Your offer expires in:</span>								
 								<span class="expiration-time">${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</span>
 							</p>
 						</c:when>
 						<c:otherwise>
-							<p>Waiting for employer</p>
+							<p class="proposal-status">Waiting for employer</p>
 						</c:otherwise>
 					</c:choose>				
 				</c:otherwise>

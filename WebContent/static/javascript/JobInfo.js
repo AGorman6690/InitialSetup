@@ -21,8 +21,8 @@ $(document).ready(function() {
 		
 		var fixAtScrollAmount = $e.offset().top - 10;
 		$(window).scroll(function(){
-			if($(window).scrollTop() > fixAtScrollAmount) $applyCont.addClass("fixed");
-			else $applyCont.removeClass("fixed");
+			if($(window).scrollTop() > fixAtScrollAmount) $jobInfo.addClass("fixed");
+			else $jobInfo.removeClass("fixed");
 		})
 	}	
 	

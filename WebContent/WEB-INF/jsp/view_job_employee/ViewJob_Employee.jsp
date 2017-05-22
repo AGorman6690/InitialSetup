@@ -15,14 +15,16 @@
 <div class="">
 <c:choose>
 	<c:when test="${isLoggedIn && context == 'find' && !empty jobDto.application}">						
-		<div id="applicationStatus">	
+		<div class="warning-message">	
+			<h3>
 			${jobDto.application.status == 0 ||
 				 jobDto.application.status == 2 ||
 				 jobDto.application.status == 4 ? "Application has been submitted" :
 				jobDto.application.status == 1 ? "Application has been declined" :
 				jobDto.application.status == 5 ? "You have withdrawn your application" :
 				jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
-				"Application has been accepted" }		
+				"Application has been accepted" }	
+			</h3>	
 		</div>						
 	</c:when>
 	<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
@@ -35,6 +37,6 @@
 </div>
 
 <%@ include file="../includes/Footer.jsp"%>
-<%@ include file="../includes/resources/JobInformation.jsp"%>
+<%-- <%@ include file="../includes/resources/JobInformation.jsp"%> --%>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp;callback=initMap">
 </script>

@@ -7,6 +7,11 @@
 .job-info p.employer{
 	font-size: 18px
 }
+#job-info-mod .mod-content{
+	    width: 1200px;
+    margin-left: -600px;
+    top: 5%;
+}
 #skills,
 #questions,
 #job-description,
@@ -95,13 +100,24 @@
 	font-size: 17px;
 	font-weight: bold;
 }
-#apply-for-job-cont.fixed{
+.job-info.fixed #apply-for-job-cont,
+.job-info.fixed #error-messages{
     position: fixed;
-    top: 0px;
-    padding: 10px;
     border-bottom: 1px solid #cacaca;
     margin: auto;
+    width: 100%;
+}
+.job-info.fixed #apply-for-job-cont{
+    top: 0px;
+    padding: 10px;
     background: rgba(82, 81, 81, 0.85);
+}
+.job-info.fixed #error-messages{
+    top: 69px;
+    background: rgb(255, 223, 223);
+}
+.job-info.fixed #error-messages p:first-child{
+	padding-top: 10px;
 }
 #apply-for-job-cont{
 	position: absolute;

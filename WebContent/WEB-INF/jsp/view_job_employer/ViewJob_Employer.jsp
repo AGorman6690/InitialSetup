@@ -12,6 +12,8 @@
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/calendar_application_summary.css" />
 	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/view_job_employer.css" />
 	
+	<link href="/JobSearch/static/css/terminate_employment.css" rel="stylesheet" />	
+	<script src="/JobSearch/static/javascript/TerminateEmployment.js" type="text/javascript"></script>
 	
 	<c:if test="${context != 'complete' }">
 		<script src="<c:url value="/static/javascript/view_job_employer/Applicants.js" />"></script>

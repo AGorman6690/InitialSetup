@@ -183,10 +183,10 @@ public class ApplicationServiceImpl {
 			applicationDto.getEmploymentProposalDto().setProposedToUserId(appliedToJob.getUserId());
 			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 
-			if(!appliedToJob.getIsPartialAvailabilityAllowed()){
-				applicationDto.getEmploymentProposalDto().setDateStrings_proposedDates(
-										jobService.getWorkDayDateStrings(applicationDto.getJobId()));
-			}
+//			if(!appliedToJob.getIsPartialAvailabilityAllowed()){
+//				applicationDto.getEmploymentProposalDto().setDateStrings_proposedDates(
+//										jobService.getWorkDayDateStrings(applicationDto.getJobId()));
+//			}
 
 			// Set the application dto
 			applicationDto.getApplication().setStatus(Application.STATUS_SUBMITTED);
@@ -301,7 +301,7 @@ public class ApplicationServiceImpl {
 					// Is it desired to have transparency into whether the employer is "accepting"
 					// or "countering" the applicant's proposal?
 					// I'm thinking so. Then we can say to the applicant: "the employer accepted your offer"
-					// or "the employer countered your offer". As an applicant, I think I
+					// or "the employer countered your offer". As an applicant, I
 					// would appreciate the distinction.
 					// ****************************************************
 					// ****************************************************
@@ -864,8 +864,14 @@ public class ApplicationServiceImpl {
 		EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(employmentProposalDto.getApplicationId());
 		if(currentProposal != null) updateWageProposal_isCurrentProposal(currentProposal.getEmploymentProposalId(), 0);
 
+		// Set date strings, if necessary
+		Job job = jobService.getJob_ByApplicationId(employmentProposalDto.getApplicationId());		
+		if(!job.getIsPartialAvailabilityAllowed()){
+			employmentProposalDto.setDateStrings_proposedDates(
+									jobService.getWorkDayDateStrings(job.getId()));
+		}
+		
 		repository.insertEmploymentProposal(employmentProposalDto);
-
 	}
 
 	public List<ApplicationInvite> getApplicationInvites(int userId) {

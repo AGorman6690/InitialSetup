@@ -3,6 +3,14 @@ $(document).ready(function(){
 	
 	initPage();
 
+	$(".display-message-terminate-employee").click(function() {
+		
+		var jobId = $("#jobId").val();
+		var userId_employee = $(this).closest("tr").attr("data-user-id");
+		executeAjaxCall_displayMessage_terminateEmployee(jobId, userId_employee);
+		
+	})
+
 	$("#toggle-calendar-numbers").change(function() {
 		var doShow = false;
 		if($(this).is(":checked")) doShow = true;

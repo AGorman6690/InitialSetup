@@ -797,17 +797,33 @@ public class ApplicationRepository {
 	public List<Application> getApplications_byUser_openOrAccepted(int userId) {
 		
 		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN ("
+				
+					// Jobs that allow partial availability
 					+ "	SELECT a.ApplicationId FROM application a"
+					+ " LEFT JOIN employment e ON a.JobId = e.JobId AND a.UserId = e.UserId" // do not include any employment has that has been terminated (LEFT JOIN to include NULL employment records)
 					+ " JOIN job j ON a.JobId = j.JobId"
-					+ " LEFT JOIN employment e ON j.JobId = e.JobId" // do not include any employment has that has been terminated
 					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 					+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
 					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
 					+ " WHERE wp.IsCurrentProposal = 1"
+//					+ " AND j.IsPartialAvailabilityAllowed = 1"
 					+ " AND wd.IsComplete = 0"
 					+ " AND a.UserId = ?"
 					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
 					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1)"
+					
+//					+ " UNION"
+					
+//					// Jobs that DO NOT allow partial availability
+//					+ "	SELECT a.ApplicationId FROM application a"
+//					+ " JOIN job j ON a.JobId = j.JobId"
+//					+ " LEFT JOIN employment e ON j.JobId = e.JobId" // do not include any employment has that has been terminated (LEFT JOIN to include NULL employment records)
+//					+ " JOIN work_day wd ON j.JobId = wd.JobId"
+//					+ " AND j.IsPartialAvailabilityAllowed = 0"
+//					+ " AND wd.IsComplete = 0"
+//					+ " AND a.UserId = ?"
+//					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
+//					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1)"					
 					+ " )";
 		
 		return ApplicationRowMapper(sql, new Object[]{ userId });

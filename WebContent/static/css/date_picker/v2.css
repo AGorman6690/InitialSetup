@@ -20,7 +20,7 @@
 .v2 .start-and-end-times{
 	border: 2px solid #36595a;
 }
-.v2.proposal-calendar .job-work-day:not(.is-proposed) a{
+.v2.proposal-calendar:not(.preview-job-post) .job-work-day:not(.is-proposed) a{
 /*     border: 2px solid #c1c1c1; */
 /* 	padding: 2px; */
 /* 	border: 0; */
@@ -71,7 +71,7 @@
 	width: 500px;
 	margin: auto;
 }
-.v2.proposal-calendar .job-work-day a{
+.v2.proposal-calendar:not(.preview-job-post).job-work-day a{
 	opacity: 0.4;
 }
 .v2.proposal-calendar .job-work-day.is-proposed a,

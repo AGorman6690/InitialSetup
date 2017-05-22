@@ -1,3 +1,16 @@
+.warning-message{
+	text-align: center;
+    width: 500px;
+    margin: 20px auto;
+    border-top: 5px solid #cc0a0a;
+    padding: 10px;
+    color: #cc0a0a !important;
+    background: #ffe6e6;
+}
+.warning-message h3{
+	font-size: 21px;
+	margin-top: 10px;
+}
 .pointer:hover{
 	cursor: pointer;
 }

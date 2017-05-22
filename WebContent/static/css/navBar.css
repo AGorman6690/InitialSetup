@@ -52,38 +52,6 @@
 	border-top: 3px solid #cacaca;
 }
 
-
-#ratingRequired .lbl{
-/* 	font-size: 19px; */
-/*     padding-right: 15px; */
-/*     border-right: 2px solid #cacaca; */
-}
-
-#ratingRequired{
-    text-align: center;
-    width: 500px;
-    margin: 20px auto;
-    border-top: 5px solid #cc0a0a;
-    padding: 10px;
-   	color: #cc0a0a !important;
-    background: #ffe6e6;
-}
-#ratingRequired a{
+#rating-required a{
 	font-size: 19px;
-}
-#ratingRequired h3{
-	margin-top: 0px;
-}
-#ratingRequired #jobNames{
-	padding-left: 10px;
-}
-
-#ratingRequired #jobNames .job{
-/* 	padding-left: 10px; */
-/* 	border-left: 1px solid #cacaca; */
-}
-
-#ratingRequired #jobNames .job:first-child{
-	padding-left: 0px;
-	border-left: 0;
 }

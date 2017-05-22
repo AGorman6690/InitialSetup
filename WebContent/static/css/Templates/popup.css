@@ -30,7 +30,7 @@
 }
 
 /* Popup arrow */
-.popup .popuptext::after {
+.popup .popuptext:not(.no-arrow)::after {
     content: "";
     position: absolute;
     top: 100%;

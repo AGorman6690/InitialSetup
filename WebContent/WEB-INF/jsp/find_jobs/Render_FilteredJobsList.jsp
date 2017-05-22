@@ -8,7 +8,7 @@
 				<span class="glyphicon glyphicon-move"></span>
 			</div>
 			<a href="/JobSearch/job/${jobDto.job.id}?c=find&p=1" class="job-name accent">${jobDto.job.jobName }</a>
-
+<%-- 			<p class="show-job-info-mod" data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</p> --%>
 			<div class="job-category-container">
 				<c:forEach items="${jobDto.categories }" var="category" varStatus="status">
 				<span class="job-category bold">${category.name }</span>

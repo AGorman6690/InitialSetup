@@ -399,7 +399,11 @@ function getEmploymentProposalDto($e){
 	if(isEmployerMakingInitalOffer){
 		$calendar = $proposalContainer.find(".calendar.make-initial-offer-calendar");
 		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
-									$calendar, "yy-mm-dd", "is-proposed");		
+									$calendar, "yy-mm-dd", "is-proposed");	
+		
+	// Job does not allow partial availability
+	}else if($workDayProposal.length == 0){
+		employmentProposalDto.dateStrings_proposedDates = getDatesFromWorkDayDtos(g_workDayDtos_originalProposal);
 	}
 	else if(isAcceptingWorkDays == undefined) {
 	}
@@ -414,72 +418,79 @@ function getEmploymentProposalDto($e){
 	}
 
 	// Expiration time
-	if(isSessionUserAnEmployer($e)){
-		if(employmentProposalDto.dateStrings_proposedDates.length > 0){
-			var date_expiration = new Date();
-			var date_now = new Date();
-			
+	if(isSessionUserAnEmployer($e) && employmentProposalDto.dateStrings_proposedDates.length > 0){
+		
+		var date_expiration = new Date();
+		var date_now = new Date();
+		
+		// Job does not allow partial availability
+		if($workDayProposal.length == 0){
+			workDayDto_firstProposedWorkDay = g_workDayDtos_originalProposal[0];
+		
+		// Get the first date proposed/accepted
+		}else if(employmentProposalDto.dateStrings_proposedDates.length > 0){			
 			var date_firstProposedWorkDay = getMinDateFromDateStringsArray(
 					employmentProposalDto.dateStrings_proposedDates);
 			
 			var workDayDto_firstProposedWorkDay = getWorkDayDtoByDate(date_firstProposedWorkDay,
-													g_workDayDtos_originalProposal);
-			
-			var dateTime_firstProposedWorkDay = new Date(workDayDto_firstProposedWorkDay.workDay.stringDate +
-					" " + workDayDto_firstProposedWorkDay.workDay.stringStartTime);
-			
-			var days = 0;
-			var hours = 0;
-			var mins = 0;
-			
-			
-			// 1 day from now
-			if($proposalContainer.find("input.one-day-from-now:checked").length){
-				date_expiration.setDate(date_now.getDate() + 1);
-				
-			// 1 day before the first proposed work day starts
-			}else if($proposalContainer.find("input.one-day-before-first-proposed-work-day:checked").length){
-				
-				date_expiration = new Date(dateTime_firstProposedWorkDay);
-				date_expiration.setDate(date_expiration.getDate() - 1);
-				
-			
-			// Custom time ...
-			}else{
-				
-				days = parseInt($proposalContainer.find(".set-expiration input.days").val());
-				hours = parseInt($proposalContainer.find(".set-expiration input.hours").val());
-				mins = parseInt($proposalContainer.find(".set-expiration input.minutes").val());			
-				
-				// ... from now 
-				if($proposalContainer.find("input.custom-time-from-now:checked").length){
-					date_expiration = new Date();
-					
-					if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() + days);
-					if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() + hours);
-					if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() + mins);
-				
-				// ... from the start time of the first proposed work day
-				}else if($proposalContainer.find("input.custom-time-before-first-proposed-work-day:checked").length){
-					date_expiration = new Date(dateTime_firstProposedWorkDay);
-					
-					if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() - days);
-					if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() - hours);
-					if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() - mins);				
-				}						
-			}
-			
-			var seconds = Math.floor((date_expiration - (date_now))/1000);
-			var minutes_offerExpires = Math.floor(seconds/60);
-			var hours_offerExpires = Math.floor(minutes_offerExpires/60);
-			var days_offerExpires = Math.floor(hours_offerExpires/24);
-			hours_offerExpires = hours_offerExpires-(days_offerExpires*24);
-			minutes_offerExpires = minutes_offerExpires-(days_offerExpires*24*60)-(hours_offerExpires*60);
-			
-			employmentProposalDto.days_offerExpires = days_offerExpires;
-			employmentProposalDto.hours_offerExpires = hours_offerExpires;
-			employmentProposalDto.minutes_offerExpires = minutes_offerExpires;	
+													g_workDayDtos_originalProposal);		
 		}
+	
+		var dateTime_firstProposedWorkDay = new Date(workDayDto_firstProposedWorkDay.workDay.stringDate +
+				" " + workDayDto_firstProposedWorkDay.workDay.stringStartTime);
+		
+		var days = 0;
+		var hours = 0;
+		var mins = 0;			
+		
+		// 1 day from now
+		if($proposalContainer.find("input.one-day-from-now:checked").length){
+			date_expiration.setDate(date_now.getDate() + 1);
+			
+		// 1 day before the first proposed work day starts
+		}else if($proposalContainer.find("input.one-day-before-first-proposed-work-day:checked").length){
+			
+			date_expiration = new Date(dateTime_firstProposedWorkDay);
+			date_expiration.setDate(date_expiration.getDate() - 1);
+			
+		
+		// Custom time ...
+		}else{
+			
+			days = parseInt($proposalContainer.find(".set-expiration input.days").val());
+			hours = parseInt($proposalContainer.find(".set-expiration input.hours").val());
+			mins = parseInt($proposalContainer.find(".set-expiration input.minutes").val());			
+			
+			// ... from now 
+			if($proposalContainer.find("input.custom-time-from-now:checked").length){
+				date_expiration = new Date();
+				
+				if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() + days);
+				if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() + hours);
+				if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() + mins);
+			
+			// ... from the start time of the first proposed work day
+			}else if($proposalContainer.find("input.custom-time-before-first-proposed-work-day:checked").length){
+				date_expiration = new Date(dateTime_firstProposedWorkDay);
+				
+				if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() - days);
+				if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() - hours);
+				if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() - mins);				
+			}						
+		}
+		
+		// Calculate the days/hours/minutes the offer will expire from now
+		var seconds = Math.floor((date_expiration - (date_now))/1000);
+		var minutes_offerExpires = Math.floor(seconds/60);
+		var hours_offerExpires = Math.floor(minutes_offerExpires/60);
+		var days_offerExpires = Math.floor(hours_offerExpires/24);
+		hours_offerExpires = hours_offerExpires-(days_offerExpires*24);
+		minutes_offerExpires = minutes_offerExpires-(days_offerExpires*24*60)-(hours_offerExpires*60);
+		
+		employmentProposalDto.days_offerExpires = days_offerExpires;
+		employmentProposalDto.hours_offerExpires = hours_offerExpires;
+		employmentProposalDto.minutes_offerExpires = minutes_offerExpires;	
+		
 	}
 	
 	return employmentProposalDto;
