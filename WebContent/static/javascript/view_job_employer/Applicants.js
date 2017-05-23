@@ -112,7 +112,14 @@ function updateApplicationStatus($e){
 function showAllQuestions($e){
 	
 	var doShowAllQuestions = false;
-	if($e.hasClass("glyphicon-menu-down")) doShowAllQuestions = true;
+	if($e.attr("data-all-are-shown") == 0){
+		doShowAllQuestions = true;
+		$e.html("Show less");
+		$e.attr("data-all-are-shown", "1");
+	}else{
+		$e.html("Show all");
+		$e.attr("data-all-are-shown", "0");
+	}
 
 	$e.siblings(".question-container:not(.displayed)").each(function(){
 		if(doShowAllQuestions) $(this).show();

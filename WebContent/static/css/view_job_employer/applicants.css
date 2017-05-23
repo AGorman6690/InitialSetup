@@ -98,7 +98,7 @@ th.proposal p:first-of-type{
 }
 thead span.sub-header-toggle.glyphicon,
 thead .glyphicon{
-	font-size: 20px;
+	font-size: 15px;
 	color: #888;
 }
 table#applicantsTable.table-view > thead > th{
@@ -203,7 +203,8 @@ table .question-container .question{
 #applicantsTable .show-all-questions{
     margin: auto;
     display: block;
-    width: 20px;
+    text-decoration: underline;
+    font-size: 15px;
 }
 	
 label.display-question{

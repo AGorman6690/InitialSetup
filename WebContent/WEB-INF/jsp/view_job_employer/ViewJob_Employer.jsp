@@ -45,20 +45,23 @@
 			</div>
 		</c:if>		
 		<div class="left-fill"></div>
-		<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
-		<div class="right-fill"></div>
-		<div class="checkbox-container center">
-			<label><input id="toggle-calendar-numbers" type="checkbox" name="toggle-calendar-numbers" >Toggle calendar numbers</label>
+		<p data-toggle-id="application-employment-calendar" class="toggle">Application/Employment Distribution Calendar<span class="glyphicon glyphicon-menu-down"></span></p>
+		<div id="application-employment-calendar" class="hide-on-load">
+			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay } data-number-of-months="${jobDto.months_workDaysSpan }"></div>
+			<div class="right-fill"></div>
+			<div class="checkbox-container center">
+				<label><input id="toggle-calendar-numbers" type="checkbox" name="toggle-calendar-numbers" >Toggle calendar numbers</label>
+			</div>
 		</div>
 	</div>		
 	<input id="jobId" type="hidden" value="${jobDto.job.id }">
 	<input id="data_pageInit" type="hidden" value="${data_pageInit }">
-	<div class="pad-top-2 center">
+	<div class="pad-top center">
 		<c:if test="${data_pageInit != 'all-apps' && !empty data_pageInit }">
 			<button id="showAllApplicants" class="sqr-btn teal">Show All Applicants</button>			
 		</c:if>
 		<c:if test="${context == 'waiting' }">
-			<div id="applicantsContainer" class="page-section pad-top-2">
+			<div id="applicantsContainer" class="page-section pad-top-29">
 				<c:if test="${jobDto.job.flag_isNotAcceptingApplications == 0 }">
 					<div id="applicants" class="">				
 						<%@ include file="./Applicants.jsp" %>

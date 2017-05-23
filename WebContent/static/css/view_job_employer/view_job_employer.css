@@ -37,4 +37,8 @@ td .popuptext h4{
     margin: auto;
     width: 850px;
 }
-
+[data-toggle-id=application-employment-calendar]{
+	width: 1200px;
+	margin: auto;
+	text-align: center;
+}

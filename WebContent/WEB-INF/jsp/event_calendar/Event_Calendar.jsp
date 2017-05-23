@@ -52,8 +52,6 @@
 <div id="event-calendar-mod" class="mod simple-header container calendar-container employment-line hide-prev-next">
 	<div class="mod-content">
 		<div class="mod-header">
-		<span class="glyphicon glyphicon-remove"></span>
-		<h2></h2>
 		</div>
 		<div class="mod-body">
 			<div class="calendar">

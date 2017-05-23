@@ -93,7 +93,10 @@ textarea.comment{
 table#ratings{
 	width:100%;
 }
-
+.about-user{
+	max-height: 200px;
+	overflow-y: scroll;
+}
 #submitRatings{
 	padding: 5px 10px;
 	background-color: #163B3D;

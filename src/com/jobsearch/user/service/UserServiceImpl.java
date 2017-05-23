@@ -447,6 +447,8 @@ public class UserServiceImpl {
 
 	public void setModel_EmployerProfile(JobSearchUser employer, Model model, HttpSession session) {
 
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
+		
 		// Query the database
 		List<Job> jobs = jobService.getJobs_byEmployerAndStatuses(employer.getUserId(),
 				Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
@@ -495,7 +497,7 @@ public class UserServiceImpl {
 		// becuase
 		// I'm assuming this page loads most often.
 
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
+		
 		session.setAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("jobDtos", jobDtos);
 	}

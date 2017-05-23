@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp" %>				
 			
 <c:if test="${jobDto.job.flag_isNotAcceptingApplications == 0}">
-	<div class="center pad-btm-2 pad-top-2">
+	<div class="center pad-btm-2 pad-top">
 		<a class="sqr-btn teal" href="/JobSearch/job/${jobDto.job.id }/find-employees">Find Employees</a>
 	</div>
 </c:if>

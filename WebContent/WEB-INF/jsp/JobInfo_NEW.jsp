@@ -22,7 +22,7 @@
 			
 		</div>
 	</c:if>
-	<h2>${jobDto.job.jobName }   ${doShowApplyButton }</h2>
+	<h2>${jobDto.job.jobName }</h2>
 	<c:if test="${sessionScope.user.profileId == 1 }">
 		<div class="">
 			<div class="ratings-mod-container">
@@ -30,9 +30,7 @@
 				 ${userDto_ratings.user.lastName }</p>
 				<div class="mod simple-header">
 					<div class="mod-content">
-						<div class="mod-header">
-							<span class="glyphicon glyphicon-remove"></span>
-						</div>
+						<div class="mod-header"></div>
 						<div class="mod-body">	
 						</div>
 					</div>
@@ -102,7 +100,7 @@
 								<c:forEach items="${question.answerOptions }" var="answerOption">
 									<li class="answer-option">
 										<label>
-											<c:if test="${context != 'preview-job-post' }">
+											<c:if test="${sessionScope.user.profileId == 1 }">
 												<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
 													name="answer-options-${question.questionId }"
 													data-id="${answerOption.answerOptionId }"
@@ -120,7 +118,7 @@
 			</c:forEach>		
 		</div>	
 	</c:if>			
-	<c:if test="${context != 'preview-job-post' }">
+	<c:if test="${sessionScope.user.profileId == 1}">
 		<div id="desired-wage" class="sub">
 			<h3>Desired Wage</h3>
 			<input type="text" class="requires-positive-number" />
@@ -142,9 +140,9 @@
 			</p> 
 		</c:if>
 		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container
-			 hide-prev-next ${context == 'preview-job-post' ? 'preview-job-post' : '' }
+			 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post' : '' }
 			 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only' : 'proposal-calendar' }">
-			<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
+			<c:if test="${jobDto.job.isPartialAvailabilityAllowed && sessionScope.user.profileId == 1}">
 				<button id="select-all-work-days" class="sqr-btn gray-3">Select All</button>		
 			</c:if>
 			<div class="calendar" data-min-date=${jobDto.date_firstWorkDay }

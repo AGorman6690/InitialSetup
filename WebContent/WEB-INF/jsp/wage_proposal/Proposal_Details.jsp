@@ -21,9 +21,7 @@
 		</c:choose>		
 		<div class="mod simple-header">
 			<div class="mod-content">
-				<div class="mod-header">
-					<span class="glyphicon glyphicon-remove"></span>
-				</div>
+				<div class="mod-header"></div>
 				<div class="mod-body">
 					<div class="v2 calendar-container proposal-calendar hide-unused-rows hide-prev-next read-only">
 						<div class="calendar"

@@ -83,13 +83,14 @@
     position: absolute;
     width: 33px;
     height: 29px;
-    background: #a9a9a9;
-	opacity: 1;
-	z-index: 1000;
+    background: #fff;
+    opacity: 1;
+    z-index: 1000;
     top: 51px;
     left: 15px;
-    box-shadow: 4px 4px 3px #717171;
-    border-radius: 3px; 
+    /* box-shadow: 4px 4px 3px #717171; */
+    /* border-radius: 3px; */
+    border: 3px solid #cacaca;
 }
 .v2 .proposed-work-day .select-work-day .glyphicon-ok{
 /* 	color: #163b3d; */
@@ -102,10 +103,11 @@
 .v2.proposal-calendar .is-proposed .select-work-day .glyphicon-ok{
 	color: #36595a;
 	display: block;
+	top: 0;
 }
 .v2 .select-work-day .glyphicon-ok{
 	color: #36595a;
-	font-size: 28px;
+	font-size: 22px;
 }
 .v2 .added-content{
 	height: 90px;

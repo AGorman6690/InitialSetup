@@ -148,6 +148,7 @@
 			<div class="proposal-item respond">
 				<button class="sqr-btn gray-3 show-mod accept-current-proposal">Accept</button>
 				<button class="sqr-btn gray-3 show-mod counter-current-proposal">Counter</button>	
+				<button class="sqr-btn gray-3 show-mod decline-current-proposal">Decline</button>	
 				<div class="render-present-proposal-mod"></div>
 			</div>
 		</c:if>	

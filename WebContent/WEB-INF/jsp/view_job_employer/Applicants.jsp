@@ -22,7 +22,7 @@
 			${jobDto.questions.size() > 0 ? 'has-answers' : ''}">
 			<thead>
 				<tr>
-				
+					
 					<th id="applicantName" class="left header-dropdown table-view tile-view"
 					 data-filter-attr="data-application-status" data-must-match-all-filter-values="0">
 					
@@ -46,9 +46,10 @@
 						</div>					
 
 					</th>	
+					<th>Name</th>
 					
 					<th id="rating" class="header-dropdown table-view tile-view"
-						 data-sort-attr="data-applicant-rating">
+						 data-sort-attr="data-applicant-rating">Rating
 						<span class="glyphicon glyphicon-sort" data-sort-ascending="0"
 								data-sort-attr="data-applicant-rating"></span>				
 					
@@ -57,6 +58,7 @@
 						<th id="questions" class="header-dropdown table-view tile-view"
 							 data-filter-attr="data-answer-option-ids-seleted"
 							 data-must-match-all-filter-values="1">
+							 Answers
 							<span data-toggle-id="filterAnswersContainer" >
 								<span class="sub-header-toggle glyphicon glyphicon-menu-down"></span>
 							</span>					
@@ -147,10 +149,12 @@
 					data-answer-option-ids-seleted="${applicationDto.answerOptionIds_Selected }"
 					data-proposed-work-day-count="${applicationDto.dateStrings_availableWorkDays.size() }"
 					>
-
+					<td>
+						<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
+					</td>
 					<td class="table-view">
 						<div class="vert-border name-container">
-							<span class=" favorite-flag glyphicon ${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' : 'glyphicon glyphicon-star-empty' }"></span>
+							
 							<p class="applicant-name show-applicant-ratings-mod">
 							 ${applicationDto.applicantDto.user.firstName }</p>
 						</div>
@@ -158,7 +162,6 @@
 							<div class="mod simple-header">
 								<div class="mod-content">
 									<div class="mod-header">
-										<span class="glyphicon glyphicon-remove"></span>
 									</div>
 									<div class="mod-body">	
 									</div>
@@ -198,8 +201,8 @@
 												</c:forEach>									
 											</p>
 										</div>
-										<c:if test="${!status_questions.first && status_questions.last }">
-											<span class="glyphicon glyphicon-menu-down show-all-questions"></span>
+										<c:if test="${!status_questions.first && status_questions.last && applicationDto.questions.size() > 0 }">
+											<span data-all-are-shown="0" class="linky-hover show-all-questions">See all</span>
 										</c:if>
 									</c:forEach>
 									</div>								

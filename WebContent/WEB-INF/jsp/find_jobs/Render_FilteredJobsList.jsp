@@ -43,7 +43,6 @@
 					<div class="mod simple-header">
 						<div class="mod-content">
 							<div class="mod-header">
-								<span class="glyphicon glyphicon-remove"></span>
 							</div>
 							<div class="mod-body">
 								<div class="v2 calendar-container teal-title proposal-calendar hide-unused-rows hide-prev-next read-only">

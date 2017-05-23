@@ -28,8 +28,8 @@
 					</div>		
 					<c:if test="${!isViewingOnesSelf && !empty userDto_ratings.user.about }">
 						<div>
-							<h3 data-toggle-id="about-user" class="h3">About<span class="glyphicon glyphicon-menu-up"></span></h3>
-							<div id="about-user" class="details">
+							<h3 data-toggle-id="about-user" class="h3">About</h3>
+							<div id="about-user" class="paragraph">
 								<p>${userDto_ratings.user.about }</p>
 							</div>
 						</div>

@@ -35,8 +35,7 @@
 		
 	<div id="filtersContainer" class="${!empty jobDtos_current ? 'hide-on-load' : ''}">
 <%-- 		<c:if test="${!empty job }"> --%>
-			<div id="job-info">
-				<h2>Job</h2>
+			<div id="job-info" class="pad-top">
 				<p><a href="/JobSearch/job/${job.id }?c=waiting&p=2&d=all-apps">${job.jobName }</a></p>
 			</div>
 <%-- 		</c:if> --%>

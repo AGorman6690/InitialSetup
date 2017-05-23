@@ -4,16 +4,13 @@
 	data-application-id="${applicationDto.application.applicationId }"
 	data-employer-is-making-first-offer="${isEmployerMakingFirstOffer ? '1' : '0'}">
 	<div class="center mod-content" >
-		<div class="mod-header">
-			<span class="glyphicon glyphicon-remove"></span>
-			<h2></h2>
-		</div>	
+		<div class="mod-header"></div>	
 		<div class="mod-body">		
-			<c:if test="${!isEmployerMakingFirstOffer }">
-				<a class="withdraw-application sqr-btn" href="/JobSearch/application/${applicationDto.application.applicationId }/close">
-					${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' }
-				</a>
-			</c:if>				
+<%-- 			<c:if test="${!isEmployerMakingFirstOffer }"> --%>
+<%-- 				<a class="withdraw-application sqr-btn" href="/JobSearch/application/${applicationDto.application.applicationId }/close"> --%>
+<%-- 					${user.profileId == 1 ? 'Withdraw your application' : 'Decline the application' } --%>
+<!-- 				</a> -->
+<%-- 			</c:if>				 --%>
 			<div class="respond-to-proposal">
 				<c:if test="${user.profileId == 1 }">
 					<div class="context-employee">
