@@ -414,31 +414,6 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJob
 		if(isAppendingJobs)	$("#getMoreJobsContainer").before(response);
 		else $("#filteredJobs").html(response);		
 
-		
-		//Show the jobs and map container if this is the first job request
-//		if(!$("#mainBottom").is("visible")){
-//			$("#mainBottom").show();
-//		}
-		
-//		if(doSetMap == 1){
-			setMap();	
-//		}
-		
-		//The map should not be set when sorting jobs because the same jobs will be returned,
-		//they will only be displayed in a different order.
-		//Because the same jobs will be returned, the map markers will remain the same.
-		//Reloading the map is a bit awkward when sorting. 
-
-		
-//		sessionStorage.clear();
-//		sessionStorage.setItem("doStoreFilteredJobs", doStoreFilteredJobs(response));			
-//		if(sessionStorage.doStoreFilteredJobs == 1){
-//			sessionStorage.setItem("filteredJobs", response);
-//			sessionStorage.setItem("map", $("#map").html());
-//			sessionStorage.setItem("filters", $("#filterContainer").html());
-//		}
-		
-		
 	}	
 
 	function _error(response) {

@@ -1,5 +1,28 @@
 <%@ include file="./includes/TagLibs.jsp"%>	
 
+<c:choose>
+	<c:when test="${!isLoggedIn }">
+		<div class="warning-message">	
+			<h3>Please login to apply for a job</h3>
+		</div>
+	</c:when>
+	<c:when test="${context == 'find' && !empty jobDto.application}">						
+		<div class="warning-message">	
+			<h3>
+			${jobDto.application.status == 0 ||
+				 jobDto.application.status == 2 ||
+				 jobDto.application.status == 4 ? "Application has been submitted" :
+				jobDto.application.status == 1 ? "Application has been declined" :
+				jobDto.application.status == 5 ? "You have withdrawn your application" :
+				jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
+				"Application has been accepted" }	
+			</h3>	
+		</div>						
+	</c:when>
+	<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
+		<p id="jobs-needing-rating-warning">Please rate your previous employer before applying to another job</p>
+	</c:when>	
+</c:choose>
 <c:if test="${sessionScope.user.profileId == 1 && context == 'find' && empty jobDto.application &&
 				empty sessionScope.jobs_needRating}">
 	<c:set var="doShowApplyButton" value="1"></c:set>
@@ -130,18 +153,20 @@
 			<p id="work-day-message">
 				<c:choose>
 					<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
-						${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} can apply for one or more days
+						<p>Job does allow partial availability.</p>
+						${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} can apply for one or more days.
 						
 					</c:when>
 					<c:otherwise>
-						${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} must apply for all days
+						<p>Job does not allow partial availability.</p>
+						${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} must apply for all days.
 					</c:otherwise>
 				</c:choose>
 			</p> 
 		</c:if>
-		<div id="work-days-calendar-container" class="v2 hide-select-work-day calendar-container
+		<div id="work-days-calendar-container" class="v2 calendar-container
 			 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post' : '' }
-			 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only' : 'proposal-calendar' }">
+			 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }">
 			<c:if test="${jobDto.job.isPartialAvailabilityAllowed && sessionScope.user.profileId == 1}">
 				<button id="select-all-work-days" class="sqr-btn gray-3">Select All</button>		
 			</c:if>
@@ -157,7 +182,7 @@
 				<p class="accent">${jobDto.job.city_formatted}, ${jobDto.job.state }</p>
 				<p class="accent">${jobDto.job.zipCode_formatted }</p>		
 			</div>			
-			<div id="map" class="right-border corner" data-do-init="1"
+			<div id="job-info-map" class="map right-border corner" data-do-init="1"
 				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div>
 		</div>
 	</div>	

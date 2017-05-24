@@ -101,12 +101,6 @@ td.active111 a{
 .calendar-container .ui-datepicker-multi{
 	width:100% !important;
 }
-
-
-.calendar-container td {
-	border-radius: 5px;
-}
-
 .calendar-container td.is-available {
 	background: #65886e;
 	border-radius: 5px;

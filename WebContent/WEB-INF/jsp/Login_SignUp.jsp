@@ -116,7 +116,7 @@
 					    <label class="checkboxLabel"><input type="checkbox" value="">Keep Me Signed In</label>
 					</div>							
 					<label></label>
-					<input id="login" class="square-button" type="submit" value="Login"/>
+					<input id="login" class="sqr-btn gray-3" type="submit" value="Login"/>
 				</div>					
 			</form:form>			
 		</div>

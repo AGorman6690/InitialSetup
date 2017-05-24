@@ -83,6 +83,8 @@ public class JobDTO {
 	 List<JobSearchUserDTO> employeeDtos
 	 List<JobSearchUser> employees_whoLeft
 	 
+	 JobSearchUserDTO employerDto
+	 
 	 RatingDTO ratingDto
 //	 List<RatingDTO> ratingDtos
 	 Double ratingValue_overall
@@ -109,6 +111,7 @@ public class JobDTO {
 		 this.job = new Job();	
 		 this.workDays = new ArrayList<WorkDay>();	 
 		 this.workDayDtos = new ArrayList<WorkDayDto>();
+		 this.employerDto = new JobSearchUserDTO();		  
 	 }
 
 

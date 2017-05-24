@@ -11,22 +11,19 @@
 	border: 0
 }
 .v2 .job-work-day a{
-	display: inline-block;
-	width: 100%;
-	background: #36595a;
-	color: #fff;
+/* 	display: inline-block; */
+/* 	width: 100%; */
+/* 	background: #36595a; */
+/* 	color: #fff; */
 }
 .v2 td.job-work-day,
 .v2 .start-and-end-times{
 	border: 2px solid #36595a;
 }
 .v2.proposal-calendar:not(.preview-job-post) .job-work-day:not(.is-proposed) a{
-/*     border: 2px solid #c1c1c1; */
-/* 	padding: 2px; */
-/* 	border: 0; */
-	background: #fff;
-	color: #000;
-	opacity: 1;
+/* 	background: #fff; */
+/* 	color: #000; */
+/* 	opacity: 1; */
 }
 .v2 .added-content{
 	padding: 5px 0px;
@@ -39,7 +36,7 @@
 	color: #000;
 }   
 .v2 td.job-work-day {
-	background: #fff;
+/* 	background: #fff; */
 }
 .v2.hide-unused-rows tbody tr{
 	display: none;
@@ -111,6 +108,27 @@
 }
 .v2 .added-content{
 	height: 90px;
+}
+
+.v2.no-partial td.job-work-day,
+.v2.no-partial td.job-work-day a,
+.v2.no-partial td.job-work-day .added-content,
+.v2 td.job-work-day.is-proposed,
+.v2 td.job-work-day.is-proposed a,
+.v2 td.job-work-day.is-proposed .added-content{
+	background: #36595a;
+	color: #fff;
+}
+.v2 .is-proposed .added-content{
+	background: #36595a;
+}
+.v2.no-partial td.job-work-day:hover,
+.v2.no-partial td.job-work-day *:hover{
+	cursor: not-allowed !important;
+}
+.v2.no-partial .added-content .time-display *,
+.v2 .is-proposed .added-content .time-display *{
+		color: #fff ;
 }
 .v2 .is-accepted .added-content {
 /* 	display: none; */

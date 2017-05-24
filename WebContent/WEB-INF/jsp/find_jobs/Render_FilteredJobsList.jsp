@@ -1,45 +1,23 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 
-<c:forEach items="${jobDtos }" var="jobDto">
- 	<div id="${jobDto.job.id }" class="job" data-job-id="${jobDto.job.id }" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }">
-		<div class="job-header">
-			<div>
+<c:choose>
+	<c:when test="${jobDtos.size() > 0 }">
+		<c:forEach items="${jobDtos }" var="jobDto">
+		 	<div id="${jobDto.job.id }" class="job" data-job-id="${jobDto.job.id }" data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }">
 				<span class="glyphicon glyphicon-move"></span>
-			</div>
-			<a href="/JobSearch/job/${jobDto.job.id}?c=find&p=1" class="job-name accent">${jobDto.job.jobName }</a>
-<%-- 			<p class="show-job-info-mod" data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</p> --%>
-			<div class="job-category-container">
-				<c:forEach items="${jobDto.categories }" var="category" varStatus="status">
-				<span class="job-category bold">${category.name }</span>
-				${!status.last ? '<span class="spacer bold">.</span>' : ''}							
-				</c:forEach>
-			</div>
-		</div>
-		<div class="job-body">	
-<!-- 			<div class="job-location"> -->
-<%-- 				${jobDto.job.city }, ${jobDto.job.state } (${jobDto.distanceFromFilterLocation } miles) --%>
-<!-- 			</div>					 -->
-			<div class="job-description less-description">
-				${jobDto.job.description }
-			</div>
-<!-- 			<div class="show-more show-desc"> -->
-<!-- 				<span class="glyphicon glyphicon-plus"></span><span>Show More</span> -->
-<!-- 			</div> -->
-<!-- 			<div class="show-less show-desc"> -->
-<!-- 				<span class="glyphicon glyphicon-minus"></span><span>Show Less</span> -->
-<!-- 			</div>				 -->
-			<div class="job-dates-times body-details">
+				<p class="job-name accent show-job-info-mod" data-job-id="${jobDto.job.id }">${jobDto.job.jobName }</p>
+		<%-- 		<p class="job-name"><a href="/JobSearch/job/${jobDto.job.id}?c=find&p=1" class="accent">${jobDto.job.jobName }</a></p> --%>
+				<p class="employer-rating">
+					<span>${jobDto.employerDto.user.firstName } ${jobDto.employerDto.user.lastName }</span>
+					<input name="input-1" class="rating-loading"
+							value="${jobDto.employerDto.ratingValue_overall }	"></p>
+				
+				<p class="job-description less-description">${jobDto.job.description }</p>
 				<div class="start-date-time">
-					<p class="show-cal-mod linky-hover">
-						${jobDto.job.stringStartDate} - ${jobDto.job.stringEndDate} (${jobDto.durationDays } days)
-						<span class="glyphicon glyphicon-calendar"></span>	
-									 
-					</p>
-					<div class="times">
-						<p>Start time: ${jobDto.job.stringStartTime }</p>
-						<p>End time: ${jobDto.job.stringEndTime }</p>
-					</div>
+					<p class="show-cal-mod">
+						${jobDto.job.stringStartDate} - ${jobDto.job.stringEndDate} (${jobDto.workDays.size() } days)
+		<!-- 				<span class="glyphicon glyphicon-calendar"></span></p> -->
 					<div class="mod simple-header">
 						<div class="mod-content">
 							<div class="mod-header">
@@ -55,17 +33,12 @@
 						</div>	
 					</div>					
 				</div>			
-			</div>	
-			<div class="job-location body-details-2">
-				${jobDto.job.city_formatted }, ${jobDto.job.state } (${jobDto.distanceFromFilterLocation } miles)
-			</div>
-<!-- 			<div class="job-distance"> -->
-<%-- 			    <span class="bold">Distance</span> - ${jobDto.distanceFromFilterLocation } miles --%>
-<!-- 			</div>				 -->
-		</div>		
-		<div class="job-footer">			
-		</div> 
-	</div>
-</c:forEach>
-
+				<p>${jobDto.job.city_formatted }, ${jobDto.job.state } (${jobDto.distanceFromFilterLocation } miles)</p>		
+			</div> 
+		</c:forEach>
+	</c:when>
+	<c:otherwise>
+		RETURN_NO_MORE_JOBS
+	</c:otherwise>
+</c:choose>
 

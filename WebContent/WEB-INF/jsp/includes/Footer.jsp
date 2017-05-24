@@ -18,6 +18,9 @@
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Global.js" />"></script>	
 		
+		
+		<link href="/JobSearch/static/css/inputValidation.css" rel="stylesheet" />
+		
 				<!-- Latest compiled and minified JavaScript -->
 		<script
 			src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"

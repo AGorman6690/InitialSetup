@@ -1,33 +1,20 @@
-function initMap() {
+function initMap_find_jobs() {
 	//Eventually initialize it to a user defualt
 	var myLatLng = {
 		lat : 44.954445,
 		lng : -93.091301,
 	};
-	var map = new google.maps.Map(document.getElementById('map'), {
+	var map = new google.maps.Map(document.getElementById('find-jobs-map'), {
 		zoom : 8,
 		center : myLatLng,
-		scrollwheel: false,
+//		scrollwheel: true,
 		streetViewControl: false,
 //			disableDefaultUI: true,
 	    mapTypeControlOptions: {
 	      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
 	    }
 
-	});
-	
-	
-	// This is hackish.
-	// Its for the Find Jobs' page on-load.
-	// This code needs to be ran AFTER the above code.
-	// Placing this code within the
-//	if($("#mapContainer").attr("data-init-map-on-load") == "1"){
-//		$("#mainBottom").show();
-//		setMap();
-//
-//	}
-	
-	
+	});	
 }
 
 function getZoom(radius){
@@ -50,7 +37,7 @@ function getZoom(radius){
 }
 
 
-function setMap(){
+function setMap_renderFindJobsResults(){
 	
 	var requestedLat = $("#requestOrigin").data("lat");
 	var requestedLng = $("#requestOrigin").data("lng");
@@ -61,10 +48,10 @@ function setMap(){
 			lng : requestedLng,
 		};
 
-	var map = new google.maps.Map(document.getElementById('map'), {
+	var map = new google.maps.Map(document.getElementById('find-jobs-map'), {
 		zoom : getZoom(requestedRadius),
 		center : requestedLatLng,
-		scrollwheel: false,
+//		scrollwheel: true,
 		streetViewControl: false,
 //			disableDefaultUI: true,
 	    mapTypeControlOptions: {
@@ -73,7 +60,7 @@ function setMap(){
 	});
 	
 	//Show job markers
-	$("#filteredJobs").find(".job").each(function(){
+	$("#get-jobs-results").find(".job").each(function(){
 		var job = this;
 		var jobId = $(this).attr("id");
 		var jobName = $(this).find(".job-name").html();

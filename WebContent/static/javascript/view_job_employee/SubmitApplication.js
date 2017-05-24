@@ -1,7 +1,7 @@
 		
 	$(document).ready(function() {
 
-		$("#select-all-work-days").click(function() {
+		$("body").on("click", "#select-all-work-days", function() {
 			$(workDayDtos).each(function() {
 				this.isProposed = "1";
 			})
@@ -9,7 +9,7 @@
 		})
 		
 
-		$("#apply-for-job").click(function(){
+		$("body").on("click", "#apply-for-job", function(){
 			apply();
 		})
 				
@@ -185,9 +185,7 @@
 				contentType : "application/json",
 				data : JSON.stringify(getApplicationDto()),
 			}).done(function() {
-				redirectToProfile();
-			}).error(function() {
-				redirectToProfile();
+				$("#job-info-mod").hide();
 			});
 		}
 	}

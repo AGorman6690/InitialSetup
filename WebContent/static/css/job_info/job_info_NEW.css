@@ -8,9 +8,11 @@
 	font-size: 18px
 }
 #job-info-mod .mod-content{
-	    width: 1200px;
+    width: 1200px;
     margin-left: -600px;
-    top: 5%;
+    top: 2%;
+    height: 96%;
+    overflow: auto;
 }
 #skills,
 #questions,
@@ -76,7 +78,7 @@
 #work-days-calendar-container .ui-datepicker-title{
 	font-weight: normal;
 }
-.job-info #map{
+.job-info .map{
     width: 500px;
     height: 500px;
 }
@@ -142,9 +144,22 @@
     margin: auto;
     display: block;
 }
-
+.job-description{
+    max-height: 70px;
+    overflow-y: auto;	
+}
 #jobs-needing-rating-warning{
     text-align: center;
     color: #cc0a0a;
     font-size: 20px;
+}
+.job-body{
+	padding-left: 10px;
+}
+
+
+
+#job-info-map{
+	width: 500px;
+	height: 500px;
 }

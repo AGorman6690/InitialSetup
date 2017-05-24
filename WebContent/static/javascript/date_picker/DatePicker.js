@@ -170,11 +170,16 @@ function getDateFromTdElement(td){
 }
 
 
-function getSelectedDate($calendar){
+function getSelectedDate($calendar, format, classToSearchFor){
 	
-	var selectedTd = $calendar.find("td.active111");
+	if(classToSearchFor == undefined) classToSearchFor = "active111";
+	var selectedTd = $calendar.find("td." + classToSearchFor);
 	
-	return getDateFromTdElement(selectedTd);
+	var date = getDateFromTdElement(selectedTd);
+	if(!isNaN(date.getTime())){
+		if(format != undefined) return $.datepicker.formatDate(format, date);
+		else return date	
+	}else return undefined;
 	
 }
 

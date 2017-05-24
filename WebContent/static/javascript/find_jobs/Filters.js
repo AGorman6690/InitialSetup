@@ -1,4 +1,4 @@
-var $filterContainer;
+//var $filterContainer;
 var slideSpeed_filterDropdowns = 500;
 var initialUrlParameterString = "?";
 

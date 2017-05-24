@@ -86,7 +86,6 @@
 								<a id="nav_calendar" class="" href="#">Calendar</a>
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Jobs</a>
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
-<!-- 								<a id="nav_findJobs" href="/JobSearch/jobs/find-new">Find Jobs NEW</a>	 -->
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
 								<a id="nav_jobs" href="/JobSearch/user/profile">Jobs</a>	
@@ -119,12 +118,7 @@
 			</div>
 		</c:if>
 		
-		<div id="job-info-mod" class="mod simple-header">
-			<div class="mod-content">
-				<div class="mod-header"></div>
-				<div class="mod-body"></div>
-			</div>
-		</div>
+
 
 <%-- 	<%@ inlude file="../event_calendar/Event_Calendar.jsp" %> --%>
 

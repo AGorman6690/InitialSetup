@@ -3,6 +3,11 @@
 var workDayDtos = [];
 $(document).ready(function() {
 	
+	$("body").on("click", ".show-job-info-mod", function() {
+		var jobId = $(this).attr("data-job-id");
+		executeAjaxCall_showJobInfoMod(jobId, "find", "1");
+	})
+	
 	$("body").on("click", ".show-ratings-mod", function() {	
 		var $e = $(this);
 		var $modContainer = $e.closest(".ratings-mod-container");
@@ -39,4 +44,61 @@ $(document).ready(function() {
 	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
 	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);	
 }) 
+function executeAjaxCall_showJobInfoMod(jobId, c, p) {
+	$.ajax({
+		type: "POST",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/preview/job-info/" + jobId + "?c=" + c,
+//		url: "/JobSearch/job/" + jobId + "?c=" + c + "&p=" + p,
+		dataType: "html"
+	}).done(function(html) {
+		var $jobInfoMod = $("#job-info-mod");
+		$jobInfoMod.find(".mod-body").html(html);
+		
+		workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+		initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);
+		var d = $(".job-info .map").get();
 
+		$jobInfoMod.show();
+		
+		// Map must be initialized AFTER the modal is shown
+		initMap_job_info();
+		renderStars($jobInfoMod);
+	})
+	
+}
+function initMap_job_info() {
+		
+		var $map = $("#job-info-map");
+		var jobLat = parseFloat($map.attr("data-lat"));
+		var jobLng = parseFloat($map.attr("data-lng"));
+
+		var center = {
+			lat : jobLat,
+			lng : jobLng,
+		};
+		
+		var map = new google.maps.Map(document.getElementById('job-info-map'), {
+			zoom : 11,
+			center : center,
+			scrollwheel: false,
+			streetViewControl: false,			
+//				disableDefaultUI: true,
+		    mapTypeControlOptions: {
+		      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
+		    }
+
+		});
+		
+		var icon = {
+				url: "/JobSearch/static/images/map-marker-black.png",
+				scaledSize: new google.maps.Size(30, 30),
+			}
+		
+		var marker = new google.maps.Marker({
+			position : center,
+			map : map,
+			icon: icon,
+			clickable: false,
+		});
+	}

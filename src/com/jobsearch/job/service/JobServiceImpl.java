@@ -556,6 +556,9 @@ public class JobServiceImpl {
 
 				jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 				jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(workDays));
+				
+				jobDto.getEmployerDto().setUser(userService.getUser(job.getUserId()));
+				jobDto.getEmployerDto().setRatingValue_overall(userService.getRating(job.getUserId()));
 
 				jobDtos.add(jobDto);
 			}
@@ -614,14 +617,20 @@ public class JobServiceImpl {
 		// **************************************************
 		// **************************************************
 
+		Application application = new Application();
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		Application application = applicationService.getApplication(jobId, sessionUser.getUserId());
-
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
-		for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
-			setWorkDayDto_conflictingEmployment(jobId, workDayDto, sessionUser.getUserId());
-		
+		// User does not need to be logged in to view job
+		if(sessionUser != null){
+			application = applicationService.getApplication(jobId, sessionUser.getUserId());
+			
+			for( WorkDayDto workDayDto : jobDto.getWorkDayDtos()){
+				setWorkDayDto_conflictingEmployment(jobId, workDayDto, sessionUser.getUserId());
+			
+			}
 		}
+
+
 
 		jobDto.setRatingValue_overall(userService.getRating(jobDto.getJob().getUserId()));
 		userService.setModel_getRatings_byUser(model, jobDto.getJob().getUserId());

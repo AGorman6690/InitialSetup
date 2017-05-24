@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -157,6 +158,7 @@ public class JobController {
 			List<Integer> jobIds = jobDTOs.stream().map(JobDTO::getJob).map(Job::getId).collect(Collectors.toList());
 
 			SessionContext.appendToFilteredJobIds(session, jobIds);
+//			if(jobDTOs.size() == 0) page = "/find_jobs/no-more-jobs"
 			page = "/find_jobs/Render_FilteredJobsList";
 		} else {
 			SessionContext.setFilteredJobIds(session, null);
@@ -214,35 +216,32 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "/preview/job-info/{jobId}", method = RequestMethod.POST)
-	public String previewJobInfo_ByJobId(Model model, @PathVariable(value = "jobId") int jobId) {
+	public String previewJobInfo_ByJobId(Model model, HttpSession session,
+				@PathVariable(value = "jobId") int jobId, @RequestParam(name = "c", required = true) String c) {
 
-		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
+//		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
+		
+		jobService.setModel_ViewJob_Employee(model, session, c, jobId);
 
-		model.addAttribute("jobDto", jobDto);
-		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
+//		model.addAttribute("jobDto", jobDto);
+//		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		return "/JobInfo_NEW";
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
-
-		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
-		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
-		List<JobDTO> jobDTOs = jobService.setModel_FindJobs_PageLoad(model, session,
-				jobIds_previouslyLoaded, lastFilterRequest);
-
-		double maxDistance = jobService.getMaxDistanceJobFromFilterRequest(jobDTOs);
-		model.addAttribute("filterDto", lastFilterRequest);
-		model.addAttribute("maxDistance", maxDistance);
-		model.addAttribute("jobDtos", jobDTOs);
-
-
-		return "/find_jobs/FindJobs";
-	}
-	
-	@RequestMapping(value = "/jobs/find-new", method = RequestMethod.GET)
-	public String viewFindJobs_new(Model model, HttpSession session) {
 		
+		
+//		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
+//		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
+//		List<JobDTO> jobDTOs = jobService.setModel_FindJobs_PageLoad(model, session,
+//				jobIds_previouslyLoaded, lastFilterRequest);
+//
+//		double maxDistance = jobService.getMaxDistanceJobFromFilterRequest(jobDTOs);
+//		model.addAttribute("filterDto", lastFilterRequest);
+//		model.addAttribute("maxDistance", maxDistance);
+//		model.addAttribute("jobDtos", jobDTOs);
+//		
 		return "/find_jobs_new/Find_Jobs_New";
 		
 	}

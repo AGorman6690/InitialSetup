@@ -152,7 +152,7 @@ body{
 
 input, select, textarea{
 	padding: 5px 10px;
-    border-radius: 1px;
+    border-radius: 3px;
     border: 1px solid #c8c5c5;	
 }
 
@@ -280,11 +280,11 @@ span.dollar-sign{
 	padding:20px;
 }
 .dropdown-style p{
-	padding: 10px;
+/* 	padding: 10px; */
 }
 .dropdown-style p:hover{
-	background: #cacaca;
-	cursor: pointer;
+/* 	background: #cacaca; */
+/* 	cursor: pointer; */
 }
 .marg-left{
 	margin-left: 20px;

@@ -50,8 +50,9 @@
 <!-- // ******************************************** -->
 <!-- 	<script async defer  -->
 	<script
-		src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap">
+		src="https://maps.googleapis.com/maps/api/
+			js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap_find_jobs">
 	</script>
 	
-
+<c:set var="doSkip_loadGoogleMapsApiForJobInfo" value="1"></c:set>
 <%@ include file="../includes/Footer.jsp"%>
