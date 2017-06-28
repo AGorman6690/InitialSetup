@@ -53,6 +53,7 @@ public class ApplicationRepository {
 				application.setJobId(rs.getInt("JobId"));
 				application.setHasBeenViewed(rs.getInt("HasBeenViewed"));
 				application.setIsNew(rs.getInt("IsNew"));
+				application.setIsOpen(rs.getInt("IsOpen"));
 				application.setIsAccepted(rs.getInt("IsAccepted"));
 				application.setStatus(rs.getInt("Status"));
 				

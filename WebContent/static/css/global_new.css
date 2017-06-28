@@ -1,3 +1,13 @@
+.red-fill{
+	background: #d61a1a !important;
+}
+.green-fill{
+	background: #18984c !important;
+}
+.green-fill:hover,
+.red-fill:hover{
+	opacity: 0.7;
+}
 .paragraph{
     width: 500px;
     margin: auto;
@@ -7,9 +17,10 @@
 	text-align: center;
     width: 500px;
     margin: 20px auto;
-    border-top: 5px solid #cc0a0a;
+    border-top: 3px solid #cc0a0a;
     padding: 10px;
-    color: #cc0a0a !important;
+/*     color: #cc0a0a !important; */
+	color: #cc0a0a;
     background: #ffe6e6;
 }
 .warning-message h3{
@@ -152,7 +163,7 @@ body{
 
 input, select, textarea{
 	padding: 5px 10px;
-    border-radius: 3px;
+/*     border-radius: 3px; */
     border: 1px solid #c8c5c5;	
 }
 

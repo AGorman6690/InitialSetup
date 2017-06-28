@@ -28,6 +28,7 @@ import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
+import com.jobsearch.model.Profile;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
@@ -71,6 +72,13 @@ public class UserController {
 		return userService.getProfileJspName(session);
 	}
 
+	@RequestMapping(value = "/user/profile/new", method = RequestMethod.GET)
+	public String TEMP_getProfile_SessionUser(Model model, HttpSession session) {				
+
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		userService.setModel_EmployeeProfile(sessionUser, model, session);
+		return "/employee_profile/Profile_Employee_NEW";
+	}
 	
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)
 	public String viewCredentials(Model model, HttpSession session) {

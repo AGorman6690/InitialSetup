@@ -1,3 +1,114 @@
+.proposal p.red-bold{
+	font-size: 23px;
+	color: red;
+    font-weight: bold;
+}
+.proposal .button-wrapper p{
+    font-weight: bold;
+    font-size: 37px;
+    color: #197994;
+    position: relative;
+}
+.button-wrapper.left p span.text{
+	margin-left: -35px;
+}
+.button-wrapper.right p span.text{
+	margin-right: -35px;
+}
+.button-wrapper.left p span{
+	float: left;
+/* 	position: absolute; */
+/* 	top:25%; */
+}
+.button-wrapper.right p span{
+	float: right;
+}
+.button-wrapper p span:last-child{
+/* 	margin-left: -20px; */
+}
+.accepting-or-proposing{
+	    font-weight: bold;
+    font-size: 23px;
+    color: red;
+}
+.proposal.counter-context .review-context:not(.counter-context){
+	display: none;
+}
+.proposal.review-context .counter-context:not(.review-context){
+	display: none;
+}
+.proposal .button-wrapper{
+	width: 24%;
+	vertical-align: middle;	
+    position: absolute;    
+    top: 50%;
+/*     margin-top: -100px; */
+    font-size: 22px;
+}
+.proposal .button-wrapper.left{
+	left: 10px;
+}
+.proposal .button-wrapper.right{
+	right: 10px;
+}
+.proposal .proposal-content-wrapper{
+	width: 50%;
+}
+.proposal .button-wrapper,
+.proposal .proposal-content-wrapper{
+	display: inline-block;
+}
+.proposal .button-wrapper button{
+	height: 200px;
+	color: #fff;
+}
+.proposal .button-wrapper .glyphicon{
+    /* margin: 5px 0px; */
+    color: #163b3d;
+    font-size: 100px;
+    /* height: 100%; */
+    margin-top: -25px;
+}
+.proposal p{
+	font-size: 19px;
+}
+.proposal .render-present-proposal-mod .proposal{
+/* 	text-align: left; */
+}
+.proposal .v2 .ui-datepicker-inline.ui-datepicker-multi{
+	width: auto !important;
+}
+.proposal .ui-datepicker-group{
+	display: block;
+}
+.proposal h1{
+    margin-bottom: 30px;
+    background: #197994;
+    /* font-weight: bold; */
+    color: #fff;
+    padding: 10px;
+    width: 525px;
+    margin: 15px auto 35px;    
+}
+.proposal h3.blue{
+
+    font-size: 21px;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 25px;
+    display: inline-block;
+    padding: 5px 10px;
+    width: 485px;
+    /* box-shadow: 3px 3px 3px #197994; */
+    /* background: #197994; */
+    background: #fff;
+    border-bottom: 2px solid #197994;
+    box-shadow: none;
+    width: 320px;
+}
+
+
+
 .proposal-container .mod-content{
     top: 20px;
     width: 1200px;
@@ -13,16 +124,16 @@
     margin-top: 0;
 }
 .wage-proposal .proposed-offer .proposed-amount{
-	font-size: 28px;
+/* 	font-size: 28px; */
 }
 .proposal-container input[type=text]{
-	width: 65px;
+	width: 130px;
 	text-align: center;
-    font-size: 19px;
+    font-size: 30px;
 }
 .counter-offer{
-	padding-top: 40px;
-	display: none;
+/* 	padding-top: 40px; */
+/* 	display: none; */
 }
 .counter-offer h2{
 /* 	color: #9c6363; */

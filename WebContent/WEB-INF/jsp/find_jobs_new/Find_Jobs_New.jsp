@@ -19,12 +19,13 @@
 	<div id="wrapper">
 		<div id="other-filters">
 			<div id="side-location-filter" class="filter">
-			<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
+				<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
 				<input id="miles" type="text" placeholder="number" value = "25"/>
 				<span>Miles From</span>
 				<input id="" class="address" type="text" placeholder="city, state, zip code" value="55119"/>
 				
 			</div>
+<!-- 			<p class="filter-sort-jobs-header">Filters</p> -->
 			<div class="filter">						
 				<div class="filter-name-container">
 					<div data-toggle-id="wstart-date-filter">
@@ -50,7 +51,7 @@
 			<div class="filter">
 				<div class="filter-name-container">
 					<div data-toggle-id="wend-date-filter">
-						<p class="filter-name">End Date<span class="glyphicon glyphicon-menu-right"></span></p>
+						<span class="glyphicon glyphicon-menu-right"></span><p class="filter-name">End Date</p>
 					</div>
 					<div id="end-date-filter" class="dropdown-style">
 						<p class="apply-filter">Apply</p>		

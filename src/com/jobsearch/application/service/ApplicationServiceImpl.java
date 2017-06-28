@@ -7,6 +7,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -987,6 +989,12 @@ public class ApplicationServiceImpl {
 
 		
 			// Model
+			List<String> datestrings_workDays = applicationDto.getJobDto().getWorkDayDtos()
+					.stream()
+					.map(workDayDto -> workDayDto.getWorkDay().getDate().toString())
+					.collect(Collectors.toList());
+			
+			model.addAttribute("datestrings_workDays", datestrings_workDays);
 			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);
 			model.addAttribute("user", sessionUser);
@@ -1144,5 +1152,27 @@ public class ApplicationServiceImpl {
 	public List<Application> applications_closedDueToAllPositionsFilled_unacknowledged(int userId) {
 		return repository.applications_closedDueToAllPositionsFilled_unacknowledged(userId);
 	}
+
+
+	public String getCurrentProposalStatus(int application_isOpen, int application_isAccepted,			
+			Integer proposedByUserId_currentProposal, int userId_setStatusFor, int profileId_forUser) {
+		
+		if(application_isOpen == 0) return "Application is closed";
+		else if(application_isAccepted == 1){			
+			if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
+				return "You are hired";
+			else return "Applicant is hired";			
+		}else{
+			if(proposedByUserId_currentProposal == userId_setStatusFor){
+				if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
+					return "Waiting for employer to respond";
+				else return "Waiting for applicant to respond";						
+			}else{
+				return "Waiting for you to respond";
+			}
+		}
+
+	}
+
 
 }

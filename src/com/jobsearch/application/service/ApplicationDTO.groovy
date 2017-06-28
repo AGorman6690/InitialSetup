@@ -23,6 +23,7 @@ class ApplicationDTO {
 	EmploymentProposalDTO previousProposal
 	EmploymentProposalDTO employmentProposalDto
 	
+	String currentProposalStatus
 	WageProposal currentWageProposal
 	List<WageProposal> wageProposals
 	
@@ -34,6 +35,8 @@ class ApplicationDTO {
 		
 	JobDTO jobDto
 	int jobId
+	
+	
 	
 	JobSearchUserDTO applicantDto
 	int applicantId

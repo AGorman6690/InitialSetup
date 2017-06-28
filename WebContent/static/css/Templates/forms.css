@@ -1,3 +1,30 @@
+input[type=checkbox]{
+    -webkit-appearance: button;
+    background-color: #ffffff;    
+    border-radius: 0px;
+    border: 2px solid #cacaca;   
+    width: 20px;
+    height: 20px;  
+}
+input[type=checkbox]:not(:checked){
+	outline: 0; 
+}
+input[type=checkbox]:checked{
+	outline: 0; 
+	border: 2px solid #197994;;	
+}
+input[type=checkbox]:checked::after{
+    font-family: 'Glyphicons Halflings';
+    content: "\e013";
+/* 	margin-top: -1px; */
+    line-height: 15px;
+    font-size: 14px;
+    display: inline-block;   
+   	color: #fff;
+   	background: #197994;
+    width: 16px;
+    height: 16px;   	
+}
 input[type=checkbox],
 input[type=radio]{
     margin-right: 7px;

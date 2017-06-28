@@ -7,7 +7,7 @@
  		<p id="noJobs">Sorry, no jobs match your search.</p>	 	
 	</c:when>
 	<c:otherwise>
-		<div id="sort-jobs">Sort</div>
+		<div id="sort-jobs" class="filter-sort-jobs-header">Sort</div>
 		<%@ include file="../find_jobs/Render_FilteredJobsList.jsp"%>
 		<div id="get-more-jobs">Get More Jobs</div>	
 		<div id="no-more-jobs">No more jobs match your search criteria</div>	

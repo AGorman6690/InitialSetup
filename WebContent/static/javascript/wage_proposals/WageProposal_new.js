@@ -3,6 +3,50 @@ var g_workDayDtos_originalProposal = [];
 var g_workDayDtos_counter = [];
 
 $(document).ready(function() {
+	
+	
+	$("body").on("click", "button.accept-current-proposal, button.counter-current-proposal", function() {
+		var $e = $(this);
+		var $cont = $(this).closest(".proposal");
+		var applicationId = $cont.attr("data-application-id");
+		var $e_renderHtml = $cont.find(".render-present-proposal-mod").eq(0);
+		executeAjaxCall_getCurrentProposal(applicationId, $e_renderHtml, function() {
+//			var $Ccont = $(this).closest(".proposal-content-wrapper");
+			
+			
+			if($e.hasClass("counter-current-proposal") == 1){
+				$cont.addClass("counter-context");
+				$cont.removeClass("review-context");
+				$cont.find(".proposal-calendar").removeClass("read-only");
+			}
+			else {
+//				$cont.addClass("review-context");
+//				$cont.removeClass("counter-context");				
+//				$cont.find(".proposal-calendar").addClass("read-only");
+				
+				$cont.find(".review-proposal").click();
+			}			
+		});
+		
+
+	})
+	
+
+	$("body").on("click", ".edit-proposal", function() {
+		
+		var $cont = $(this).closest(".proposal");
+		toggleClasses($cont, "counter-context", "review-context");
+		$cont.find(".proposal-calendar").removeClass("read-only");
+//		g_employmentProposalDto = getEmploymentProposalDto($(this));	
+////		executeAjaxCall_respondToProposal(g_employmentProposalDto, "sdf");
+//		
+//		
+//		if(isInputValid2(g_employmentProposalDto, $(this))){			
+//			showConfirmProposal(true, $(this), g_employmentProposalDto);
+//		}		
+	})
+	
+	
 	$("body").on("keydown", ".custom-times-inputs input", function() {
 		var $cont = $(this).closest(".expiration-input-container");
 		$cont.find("input.one-day-from-now").prop("checked", false);
@@ -20,13 +64,43 @@ $(document).ready(function() {
 	
 	$("body").on("click", ".review-proposal", function() {
 		
+		var $cont = $(this).closest(".proposal");
+		$cont.find(".proposal-calendar").addClass("read-only");
+		
+//		$cont.removeClass("counter-context");
+//		$cont.addClass("review-context");
+		
+		$cont.addClass("review-context");
+		$cont.removeClass("counter-context");
+		
+		var $wage =  $cont.find(".proposal.wage-proposal").eq(0);
+		var $wage_acceptOrPropose = $wage.find("span.accepting-or-proposing").eq(0);
+		var $workDays_acceptOrPropose = $cont.find(".proposal.work-day-proposal span.accepting-or-proposing").eq(0);
+		
+		$wage.find(".review-context .wage-amount").html($wage.find("input.counter-wage-amount").eq(0).val())
+		if(isCounteringWage($cont)){
+			$wage_acceptOrPropose.html("proposing");
+		}else{
+			$wage_acceptOrPropose.html("accepting");
+		}
+		
+		if($workDays_acceptOrPropose != undefined){
+			if(isCounteringWorkDays($cont)){
+				$workDays_acceptOrPropose.html("proposing");
+			}else{
+				$workDays_acceptOrPropose.html("accepting");
+			}	
+		}
+		
+		
+		
 		g_employmentProposalDto = getEmploymentProposalDto($(this));	
-//		executeAjaxCall_respondToProposal(g_employmentProposalDto, "sdf");
-		
-		
-		if(isInputValid2(g_employmentProposalDto, $(this))){			
-			showConfirmProposal(true, $(this), g_employmentProposalDto);
-		}		
+////		executeAjaxCall_respondToProposal(g_employmentProposalDto, "sdf");
+//		
+//		
+//		if(isInputValid2(g_employmentProposalDto, $(this))){			
+//			showConfirmProposal(true, $(this), g_employmentProposalDto);
+//		}		
 	})
 	
 	$("body").on("change", ".expiration-input-container input[type=radio]", function() {
@@ -87,6 +161,26 @@ $(document).ready(function() {
 	})
 	
 })
+function isCounteringWorkDays($cont) {
+	var $workDayProposal = $cont.find(".proposal.work-day-proposal").eq(0);
+	
+	var originalProposedWorkDays = getArrayFromString($workDayProposal.attr("data-proposed-work-days"));
+	var counteredWorkDays = getSelectedDates($workDayProposal.find(".calendar"),
+			"yy-mm-dd", "is-proposed");
+	
+	if($(originalProposedWorkDays).not(counteredWorkDays).length === 0 
+			&& $(counteredWorkDays).not(originalProposedWorkDays).length === 0) return false;
+	else return true;
+	
+}
+function isCounteringWage($cont) {
+	var $wageProposal = $cont.find(".proposal.wage-proposal").eq(0);
+	var originalProposedWage = parseFloat($wageProposal.attr("data-proposed-amount"));
+	var counteredWage = parseFloat($wageProposal.find("input.counter-wage-amount").eq(0).val());
+	if(originalProposedWage - counteredWage == 0) return false;
+	else return true;
+	
+}
 function getContext($e){
 	
 	if(!getIsAcceptingWage($e) || !getIsAcceptingWorkDays($e))
@@ -226,7 +320,7 @@ function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_
 		$e_renderHtml.html(html);
 	})
 }
-function executeAjaxCall_getCurrentProposal(applicationId, $e){
+function executeAjaxCall_getCurrentProposal(applicationId, $e, callback){
 	broswerIsWaiting(true);	
 	$.ajax({
 		type: "GET",
@@ -234,9 +328,12 @@ function executeAjaxCall_getCurrentProposal(applicationId, $e){
 		header: getAjaxHeaders(),
 		dataType: "html",
 		success: function(html) {
+			
 			$e.html(html);
 			$e.find(".mod").eq(0).show();	
 			
+			// Perhaps make another ajax call for obtaining the proposed work days???
+			// The down side is there would be a lag when rendering the calendar...
 			g_workDayDtos_originalProposal = JSON.parse($("#json_workDayDtos").html());
 			$.extend(true, g_workDayDtos_counter, g_workDayDtos_originalProposal);
 
@@ -244,6 +341,8 @@ function executeAjaxCall_getCurrentProposal(applicationId, $e){
 			initCalendar_new($(".calendar.counter-calendar"), g_workDayDtos_counter);
 			
 			broswerIsWaiting(false);
+			
+			callback();
 
 		},
 		error: function() {
@@ -369,6 +468,131 @@ function isInputValid2(dto, $e){
 	}
 	
 	return isValid;	
+}
+function getEmploymentProposalDto_2($e){
+
+	var employmentProposalDto = {};
+	var $proposalContainer = $e.closest(".proposal-container");
+	var $wageProposal = $proposalContainer.find(".wage-proposal.proposal").eq(0);
+	var $workDayProposal = $proposalContainer.find(".work-day-proposal.proposal").eq(0);
+	var isEmployerMakingInitalOffer = getIsEmployerMakingInitalOffer($proposalContainer);
+	employmentProposalDto.applicationId = $proposalContainer.attr("data-application-id");
+	
+	// Wage
+	var isAcceptingWage = getIsAcceptingWage($e);
+	if(isEmployerMakingInitalOffer){
+		employmentProposalDto.amount = $wageProposal.find("input").val();	
+	}
+	else if(isAcceptingWage == undefined) {		
+	}
+	else if(isAcceptingWage){
+		employmentProposalDto.amount = $wageProposal.attr("data-proposed-amount");		
+	}else{
+		employmentProposalDto.amount = $wageProposal.find("input").val();		
+	}
+	
+	// Work days
+	employmentProposalDto.dateStrings_proposedDates = [];
+	var $calendar;
+	var isAcceptingWorkDays = getIsAcceptingWorkDays($e);
+	if(isEmployerMakingInitalOffer){
+		$calendar = $proposalContainer.find(".calendar.make-initial-offer-calendar");
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+									$calendar, "yy-mm-dd", "is-proposed");	
+		
+	// Job does not allow partial availability
+	}else if($workDayProposal.length == 0){
+		employmentProposalDto.dateStrings_proposedDates = getDatesFromWorkDayDtos(g_workDayDtos_originalProposal);
+	}
+	else if(isAcceptingWorkDays == undefined) {
+	}
+	else if(isAcceptingWorkDays){ 
+		$calendar = $proposalContainer.find(".calendar.proposed-calendar");
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+									$calendar, "yy-mm-dd", "is-proposed");
+	}else{
+		$calendar = $proposalContainer.find(".calendar.counter-calendar")
+		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
+									$calendar, "yy-mm-dd", "is-proposed");
+	}
+
+	// Expiration time
+	if(isSessionUserAnEmployer($e) && employmentProposalDto.dateStrings_proposedDates.length > 0){
+		
+		var date_expiration = new Date();
+		var date_now = new Date();
+		
+		// Job does not allow partial availability
+		if($workDayProposal.length == 0){
+			workDayDto_firstProposedWorkDay = g_workDayDtos_originalProposal[0];
+		
+		// Get the first date proposed/accepted
+		}else if(employmentProposalDto.dateStrings_proposedDates.length > 0){			
+			var date_firstProposedWorkDay = getMinDateFromDateStringsArray(
+					employmentProposalDto.dateStrings_proposedDates);
+			
+			var workDayDto_firstProposedWorkDay = getWorkDayDtoByDate(date_firstProposedWorkDay,
+													g_workDayDtos_originalProposal);		
+		}
+	
+		var dateTime_firstProposedWorkDay = new Date(workDayDto_firstProposedWorkDay.workDay.stringDate +
+				" " + workDayDto_firstProposedWorkDay.workDay.stringStartTime);
+		
+		var days = 0;
+		var hours = 0;
+		var mins = 0;			
+		
+		// 1 day from now
+		if($proposalContainer.find("input.one-day-from-now:checked").length){
+			date_expiration.setDate(date_now.getDate() + 1);
+			
+		// 1 day before the first proposed work day starts
+		}else if($proposalContainer.find("input.one-day-before-first-proposed-work-day:checked").length){
+			
+			date_expiration = new Date(dateTime_firstProposedWorkDay);
+			date_expiration.setDate(date_expiration.getDate() - 1);
+			
+		
+		// Custom time ...
+		}else{
+			
+			days = parseInt($proposalContainer.find(".set-expiration input.days").val());
+			hours = parseInt($proposalContainer.find(".set-expiration input.hours").val());
+			mins = parseInt($proposalContainer.find(".set-expiration input.minutes").val());			
+			
+			// ... from now 
+			if($proposalContainer.find("input.custom-time-from-now:checked").length){
+				date_expiration = new Date();
+				
+				if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() + days);
+				if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() + hours);
+				if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() + mins);
+			
+			// ... from the start time of the first proposed work day
+			}else if($proposalContainer.find("input.custom-time-before-first-proposed-work-day:checked").length){
+				date_expiration = new Date(dateTime_firstProposedWorkDay);
+				
+				if(!isNaN(days)) date_expiration.setDate(date_expiration.getDate() - days);
+				if(!isNaN(hours)) date_expiration.setHours(date_expiration.getHours() - hours);
+				if(!isNaN(mins)) date_expiration.setMinutes(date_expiration.getMinutes() - mins);				
+			}						
+		}
+		
+		// Calculate the days/hours/minutes the offer will expire from now
+		var seconds = Math.floor((date_expiration - (date_now))/1000);
+		var minutes_offerExpires = Math.floor(seconds/60);
+		var hours_offerExpires = Math.floor(minutes_offerExpires/60);
+		var days_offerExpires = Math.floor(hours_offerExpires/24);
+		hours_offerExpires = hours_offerExpires-(days_offerExpires*24);
+		minutes_offerExpires = minutes_offerExpires-(days_offerExpires*24*60)-(hours_offerExpires*60);
+		
+		employmentProposalDto.days_offerExpires = days_offerExpires;
+		employmentProposalDto.hours_offerExpires = hours_offerExpires;
+		employmentProposalDto.minutes_offerExpires = minutes_offerExpires;	
+		
+	}
+	
+	return employmentProposalDto;
 }
 function getEmploymentProposalDto($e){
 

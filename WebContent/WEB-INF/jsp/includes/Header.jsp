@@ -41,6 +41,7 @@
 <!-- 		Google Font -->
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito">
 		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Montserrat">
+		<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nunito Sans">
 	
 			
 		
@@ -85,6 +86,7 @@
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_calendar" class="" href="#">Calendar</a>
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Jobs</a>
+								<a id="nav_profile" class="" href="/JobSearch/user/profile/new">Jobs NEW</a>
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">

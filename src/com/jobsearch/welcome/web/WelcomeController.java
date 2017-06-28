@@ -36,9 +36,11 @@ public class WelcomeController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String welcome(Model model, HttpSession session,
 					@RequestParam(name = "error", required = false) boolean error) {
-
+			
+		
 		return "Welcome";
 	}
+	
 	
 	
 	@RequestMapping(value = "/login-signup", method = RequestMethod.GET)

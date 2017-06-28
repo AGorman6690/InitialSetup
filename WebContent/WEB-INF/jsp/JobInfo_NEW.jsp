@@ -11,10 +11,10 @@
 			<h3>
 			${jobDto.application.status == 0 ||
 				 jobDto.application.status == 2 ||
-				 jobDto.application.status == 4 ? "Application has been submitted" :
-				jobDto.application.status == 1 ? "Application has been declined" :
+				 jobDto.application.status == 4 ? "Your application has been submitted" :
+				jobDto.application.status == 1 ? "Your application has been declined" :
 				jobDto.application.status == 5 ? "You have withdrawn your application" :
-				jobDto.application.status == 6 ? "The employer filled all positions. Your application remains in the employer's inbox." :
+				jobDto.application.status == 6 ? "The employer filled all positions for this job. Your application will remain in the employer's inbox." :
 				"Application has been accepted" }	
 			</h3>	
 		</div>						

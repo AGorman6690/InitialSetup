@@ -4,8 +4,8 @@
 	font-size: 18px;
 }
 #get-jobs{
-	height: 38px;
-	padding: 0px 10px;'
+/* 	height: 38px; */
+	padding: 15px 27px;
 }
 #miles,
 #zip-code,
@@ -81,14 +81,15 @@ h3 .glyphicon-ok{
     display: none;
 }
 #header{
-    border-bottom: 8px solid #d4d4d4;
-/*     background: #f7f7f7; */
+/*     border-bottom: 8px solid #d4d4d4; */
+/*     background: #599280; */
+    background: #197994;
     padding: 10px 0px;
 }
 p[data-toggle-id]{
 	display: inline-block;
 }
-#sort-jobs{
+.filter-sort-jobs-header{
 	text-align: center;
     font-size: 18px;
     /* color: #fff; */
@@ -96,17 +97,18 @@ p[data-toggle-id]{
     /* background: #163b3d; */
     padding: 5px;
     border-bottom: 1px solid #d4d4d4;
-    width: 200px;
+    width: 75%;
     margin: 0px auto 14px;
     color: #163b3d;
     font-weight: bold;    
 }
 .filter .glyphicon-menu-right,
 .filter .glyphicon-menu-down{
-	font-size: 11px;
+	font-size: 15px;
 	color: #cacaca;
 	float: right;
 	line-height: 20px;
+	right: 7px;
 }
 #applied-filters button p{
     text-align: left;
@@ -115,7 +117,7 @@ p[data-toggle-id]{
     margin: 0;
 }
 #get-jobs-results .job{
-	padding: 5px;
+	padding: 10px;
 	border-bottom: 1px solid #d4d4d4;
 }
 
@@ -152,6 +154,7 @@ p[data-toggle-id]{
 }
 #location-filter input{
 	letter-spacing: 0.08em;
+	text-align: center;
 }
 #get-jobs-results .star{
 	font-size: 17px;
@@ -159,7 +162,7 @@ p[data-toggle-id]{
 #wrapper{
 	position: absolute;
 	left: 0;
-	top: 146px;
+	top: 155px;
 	right: 0;
 	bottom: 0;
 	padding-right: 15px;
@@ -178,6 +181,13 @@ p[data-toggle-id]{
     border-right: 1px solid #d4d4d4;
     float: left;
 /*     padding: 10px 0px; */
+   
+    background: #fffdfd;
+/*     padding-right: 5px */
+}
+#get-jobs-results,
+#other-filters{
+/* 	border-top: 5px solid #197994; */
 }
 #no-more-jobs{
 	display: none;
@@ -212,25 +222,27 @@ p[data-toggle-id]{
     margin-top: 10px;    
 }
 .filter{
-	padding: 10px 0px;
-    border-bottom: 1px solid #d4d4d4;	
-    background: #197994;
-    color: #fff;
+	padding: 18px 0px;
+    /* border-bottom: 1px solid #d4d4d4; */
+    /* background: #197994; */
+    color: #828080;
+    font-weight: bold;
 }
 .filter .dropdown-style {
-    position: absolute;
-   
+    position: absolute;   
     z-index: 10000;
     display: none;
     border: 1px solid #dedede;
     border-radius: 3px;
     padding: 20px;
-    top: -12px;
+    top: -18px;
     left: 174px;
 }
 #location-filter span{
     vertical-align: bottom;
     font-weight: bold;
+    line-height: 53px;
+    color: #fff;
 }
 html{
 	overflow: hidden;
@@ -239,6 +251,7 @@ html{
 #applied-filters{
 /*     margin-left: 170px; */
     padding-bottom: 10px;
+    margin: 0px 5px;    
 }
 .filter .dropdown-style,
 .filter.expand{
@@ -260,7 +273,7 @@ html{
     padding: 5px 10px;
     /* margin: 1px 0px; */
     width: 100%;
-    border-bottom: 1px solid #fff;
+    margin-bottom: 5px;
 }
 .filter.expand .dropdown-style{
 	display: block;

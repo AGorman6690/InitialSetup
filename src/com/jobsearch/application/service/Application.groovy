@@ -19,6 +19,7 @@ public class Application {
 	int hasBeenViewed
 	int isNew
 	int isAccepted
+	int isOpen
 	
 	int flag_employerInitiatedContact
 	int flag_closedDueToAllPositionsFilled

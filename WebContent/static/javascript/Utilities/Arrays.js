@@ -101,9 +101,8 @@ function isStringACommaSeperatedArray(str){
 	
 	var array;
 	
-	// If necessary, remove the leading and trailing square brackets.
-	str = str.replace(/[\[\]]/g, "");
-		
+	str = str.replace(/[\[\]]/g, ""); // remove the leading and trailing square brackets.
+	
 	array = str.split(",");
 	
 	if(array.length > 0) return true;
@@ -117,7 +116,7 @@ function getArrayFromString(string){
 	
 	// If necessary, remove the leading and trailing square brackets.
 	string = string.replace(/[\[\]]/g, "");
-		
+	string = string.replace(/ +?/g, ''); // white space	
 	array = string.split(",");
 	
 	return array;

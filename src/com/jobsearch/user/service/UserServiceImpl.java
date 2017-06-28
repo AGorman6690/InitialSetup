@@ -374,6 +374,13 @@ public class UserServiceImpl {
 			applicationDto.setPreviousProposal(applicationService.getPreviousProposal(
 					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
 					application.getApplicationId()));
+			
+			applicationDto.setCurrentProposalStatus(applicationService.getCurrentProposalStatus(
+					application.getIsOpen(),
+					application.getIsAccepted(),
+					applicationDto.getEmploymentProposalDto().getProposedByUserId(),
+					employee.getUserId(),
+					employee.getProfileId()));
 
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
