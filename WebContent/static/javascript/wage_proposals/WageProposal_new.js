@@ -10,6 +10,7 @@ $(document).ready(function() {
 		var $cont = $(this).closest(".proposal");
 		var applicationId = $cont.attr("data-application-id");
 		var $e_renderHtml = $cont.find(".render-present-proposal-mod").eq(0);
+		
 		executeAjaxCall_getCurrentProposal(applicationId, $e_renderHtml, function() {
 //			var $Ccont = $(this).closest(".proposal-content-wrapper");
 			
@@ -65,11 +66,7 @@ $(document).ready(function() {
 	$("body").on("click", ".review-proposal", function() {
 		
 		var $cont = $(this).closest(".proposal");
-		$cont.find(".proposal-calendar").addClass("read-only");
-		
-//		$cont.removeClass("counter-context");
-//		$cont.addClass("review-context");
-		
+		$cont.find(".proposal-calendar").addClass("read-only");				
 		$cont.addClass("review-context");
 		$cont.removeClass("counter-context");
 		
@@ -78,8 +75,12 @@ $(document).ready(function() {
 		var $workDays_acceptOrPropose = $cont.find(".proposal.work-day-proposal span.accepting-or-proposing").eq(0);
 		
 		$wage.find(".review-context .wage-amount").html($wage.find("input.counter-wage-amount").eq(0).val())
+
+		var isAcceptingTheOffer = true;
+		
 		if(isCounteringWage($cont)){
 			$wage_acceptOrPropose.html("proposing");
+			isAcceptingTheOffer = false;
 		}else{
 			$wage_acceptOrPropose.html("accepting");
 		}
@@ -87,11 +88,19 @@ $(document).ready(function() {
 		if($workDays_acceptOrPropose != undefined){
 			if(isCounteringWorkDays($cont)){
 				$workDays_acceptOrPropose.html("proposing");
+				isAcceptingTheOffer = false;
 			}else{
 				$workDays_acceptOrPropose.html("accepting");
 			}	
 		}
 		
+		if(isAcceptingTheOffer){
+			$cont.addClass("accepting-offer-context");
+			$cont.removeClass("proposing-new-offer-context");
+		}else{
+			$cont.removeClass("accepting-offer-context");
+			$cont.addClass("proposing-new-offer-context");
+		}
 		
 		
 		g_employmentProposalDto = getEmploymentProposalDto($(this));	

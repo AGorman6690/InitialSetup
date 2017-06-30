@@ -1,6 +1,7 @@
 package com.jobsearch.user.service;
 
 import java.security.SecureRandom;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -381,6 +382,11 @@ public class UserServiceImpl {
 					applicationDto.getEmploymentProposalDto().getProposedByUserId(),
 					employee.getUserId(),
 					employee.getProfileId()));
+			
+			applicationDto.setMessages(applicationService.getMessages(employee, applicationDto.getJobDto().getJob(), 
+					applicationDto.getApplication(),
+					applicationDto.getPreviousProposal(),
+					applicationDto.getEmploymentProposalDto()));
 
 			// Job dto
 			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
@@ -466,16 +472,22 @@ public class UserServiceImpl {
 
 				JobDTO jobDto = new JobDTO();
 				jobDto.setJob(job);
+				
+				Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
 				// Wage Proposals
 				jobDto.setCountWageProposals_sent(
-						applicationService.getCountWageProposal_Sent(job.getId(), employer.getUserId()));
+						applicationService.getCountWageProposal_Sent(job.getId(), employer.getUserId(),
+								currentTime));
 
 				jobDto.setCountWageProposals_received(
 						applicationService.getCountWageProposal_Received(job.getId(), employer.getUserId()));
 
 				jobDto.setCountWageProposals_received_new(
 						applicationService.getCountWageProposal_Received_New(job.getId(), employer.getUserId()));
+				
+				jobDto.setCountProposals_expired(
+						applicationService.getCountProposals_expired(job.getId(), currentTime));
 
 				// Applications
 				jobDto.setCountApplications_total(applicationService.getCountApplications_total(job.getId()));

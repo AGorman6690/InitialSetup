@@ -1,5 +1,9 @@
+.send-tatus-warning{
+	background: #ffdada;
+    padding: 5px;
+}
 .proposal p.red-bold{
-	font-size: 23px;
+	font-size: 21px;
 	color: red;
     font-weight: bold;
 }
@@ -35,6 +39,12 @@
 	display: none;
 }
 .proposal.review-context .counter-context:not(.review-context){
+	display: none;
+}
+.proposal.accepting-offer-context .proposing-new-offer-context{
+	display: none;
+}
+.proposal.proposing-new-offer-context .accepting-offer-context{
 	display: none;
 }
 .proposal .button-wrapper{

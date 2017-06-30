@@ -1,11 +1,12 @@
 #location-filter{
-	width: 625px;
+	width: 630px;
 	margin: auto;
 	font-size: 18px;
 }
 #get-jobs{
 /* 	height: 38px; */
 	padding: 15px 27px;
+    border: 2px solid #fff;	
 }
 #miles,
 #zip-code,
@@ -162,7 +163,7 @@ p[data-toggle-id]{
 #wrapper{
 	position: absolute;
 	left: 0;
-	top: 155px;
+	top: 159px;
 	right: 0;
 	bottom: 0;
 	padding-right: 15px;

@@ -17,10 +17,11 @@
 	text-align: center;
     width: 500px;
     margin: 20px auto;
-    border-top: 3px solid #cc0a0a;
+/*     border-top: 3px solid #cc0a0a; */
     padding: 10px;
 /*     color: #cc0a0a !important; */
-	color: #cc0a0a;
+/* 	color: #cc0a0a; */
+	color: red;
     background: #ffe6e6;
 }
 .warning-message h3{

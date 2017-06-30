@@ -405,7 +405,7 @@ public class ApplicationRepository {
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
-	public int getCountWageProposal_Sent(Integer jobId, int userId) {
+	public int getCountWageProposal_Sent(Integer jobId, int userId, Timestamp currentTime) {
 
 		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
 					+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
@@ -413,9 +413,10 @@ public class ApplicationRepository {
 					+ " WHERE j.JobId = ?"
 					+ " AND wp.ProposedByUserId = ?"
 					+ " AND wp.IsCurrentProposal = 1"
+					+ " AND wp.ExpirationDate > ?"
 					+ " AND a.IsOpen = 1";
 		
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, Integer.class);
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, currentTime }, Integer.class);
 	}
 
 	public int getCountWageProposal_Received(Integer jobId, int userId) {
@@ -449,6 +450,22 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
 											Integer.class);
 	}
+	
+
+	public int getCountProposals_expired(Integer jobId, Timestamp currentTime) {
+		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
+				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
+				+ " INNER JOIN job j ON j.jobId = a.JobId"
+				+ " WHERE j.JobId = ?"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND wp.ExpirationDate <= ?"
+				+ " AND a.IsOpen = 1";
+	
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId, new Timestamp(System.currentTimeMillis())},
+											Integer.class);
+
+	}
+
 
 	public int getCountApplications_total(Integer jobId) {
 		String sql = "SELECT COUNT(*) FROM application a"
@@ -922,6 +939,7 @@ public class ApplicationRepository {
 				+ " OR (RatedByUserId = ? AND JobId = ?)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
 	}
+
 
 
 }

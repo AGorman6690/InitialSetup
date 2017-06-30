@@ -17,6 +17,16 @@
 <!-- 	<button class="red-fill review-context edit-proposal sqr-btn"><span class="glyphicon glyphicon-menu-left"></span>Edit</button> -->
 </div>
 <div class="proposal-content-wrapper">
+
+	<div class="send-status-warning review-context">
+		<div class="accepting-offer-context">
+			<p class=" red-bold">You are about to accept the employer's offer.</p>
+			<p class=" red-bold">Once you do, you will be employed for this job.</p>
+		</div>
+		<div class="proposing-new-offer-context red-bold">
+			<p class=" red-bold">You are about to propose a new offer to the employer.</p>
+		</div>
+	</div>
 	<div class="proposal wage-proposal" data-proposed-amount="${applicationDto.employmentProposalDto.amount }">
 		<h3 class="blue">Wage Proposal</h3>		
 		<div class="counter-context">
@@ -66,6 +76,7 @@
 	<p class="counter-context review-proposal linky-hover">
 		<span class="glyphicon glyphicon-menu-right"></span><span class="text">Review</span></p>
 	<p class="review-context send-proposal linky-hover">
-		<span class="glyphicon glyphicon-menu-right"></span><span class="text">Send</span></p>		
+		<span class="glyphicon glyphicon-menu-right"></span><span class="text">Send</span></p>	
+			
 <!-- 	<button class="green-fill review-context send-proposal sqr-btn">Send<span class="glyphicon glyphicon-menu-right"></span></button> -->
 </div>

@@ -1,0 +1,75 @@
+#jobs-list, #job-details{
+	display: inline-block;
+}
+h1{
+    width: 275px;
+    background: #197994;
+    color: #fff;
+    padding: 15px;
+    margin: 50px auto;
+    text-align: center;
+}
+.application-details{
+	padding-left: 45px;
+}
+.total{
+	background: #197994;
+	margin-left: 10px;
+}
+.new{
+	background: #b70707;
+	margin-left: 5px;
+}
+.total, .new{
+	padding: 2px 8px;
+	color: #fff;
+    border-radius: 5px;
+}
+.total:hover, .new:hover{
+	opacity: 0.7;
+	cursor: pointer;
+}
+.job-name{
+    color: #197994;
+    font-size: 25px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+.brief-details{
+	padding-left: 30px;
+	position: relative;
+}
+.job-container{
+	width: 600px;
+    padding: 10px;
+    background: #f7f7f7;	
+    margin-bottom: 20px;
+}
+.see-full-details{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    display: table;
+    height: 40px;
+    margin-top: -20px;    
+}
+.see-full-details span{
+/*     display: table-cell; */
+    vertical-align: middle;	
+}
+.see-full-details .glyphicon{
+	font-size: 40px;
+}
+.see-full-details .text{
+	font-size: 22px;
+	margin-right: -10px;
+}
+.sub-items{
+	padding-left: 30px;
+}
+.sort-and-filter-wrapper .item{
+	margin-bottom: 10px;
+}
+.item.sort .glyphicon{
+	margin: 0px 3px;
+}

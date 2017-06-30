@@ -62,6 +62,7 @@ public class JobDTO {
 	 int countWageProposals_sent
 	 int countWageProposals_received
 	 int countWageProposals_received_new
+	 int countProposals_expired
 	 
 	 int countApplications_total
 	 int countApplications_new

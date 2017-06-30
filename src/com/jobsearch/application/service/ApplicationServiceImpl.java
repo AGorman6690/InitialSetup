@@ -1,5 +1,6 @@
 package com.jobsearch.application.service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -759,8 +760,8 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public int getCountWageProposal_Sent(Integer jobId, int userId) {
-		return repository.getCountWageProposal_Sent(jobId, userId);
+	public int getCountWageProposal_Sent(Integer jobId, int userId, Timestamp currentTime) {
+		return repository.getCountWageProposal_Sent(jobId, userId, currentTime);
 	}
 
 	public int getCountWageProposal_Received(Integer jobId, int userId) {
@@ -769,6 +770,10 @@ public class ApplicationServiceImpl {
 
 	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
 		return repository.getCountWageProposal_Received_New(jobId, userId);
+	}	
+
+	public int getCountProposals_expired(Integer jobId, Timestamp currentTime) {
+		return repository.getCountProposals_expired(jobId, currentTime);
 	}
 
 	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
@@ -1002,6 +1007,85 @@ public class ApplicationServiceImpl {
 		}
 	}	
 
+	public List<String> getMessages(JobSearchUser sessionUser,Job job, Application application,
+			EmploymentProposalDTO previousProposal,
+			EmploymentProposalDTO currentProposal) {
+		
+		List<String> messages = new ArrayList<>();
+		
+		boolean isEmployee = true;
+		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) isEmployee = false;
+		
+		if(previousProposal != null){
+			// Employer filed all positions
+			if(previousProposal.getFlag_isCanceledDueToEmployerFillingAllPositions() == 1){
+				if(job.getIsPartialAvailabilityAllowed()){
+					messages.add((isEmployee ? "The employer" : "You" )+ " filled all positions on select work days. The proposal has"
+							+ " been updated to remove the work days that have been filled.");
+				}else{
+					messages.add((isEmployee ? "The employer" : "You" ) + " filled all positions.");
+					messages.add((isEmployee ? "Your" : "The applicant's" ) + " proposal will remain in"
+							+ (isEmployee ? " the employer's" : " your" ) + " inbox" );
+				}
+			}
+			
+			// The applicant accepted other employment
+			if(previousProposal.getFlag_isCanceledDueToApplicantAcceptingOtherEmployment() == 1){
+				messages.add((isEmployee ? "You" : "The applicant" )+ " has accepted other employment.");
+				
+				if(job.getIsPartialAvailabilityAllowed()){
+					messages.add("Because this job allows partial availability,"
+							+ (isEmployee ? " your" : " the applicant's" )+ " proposed work days have"
+									+ " been updated to resolve the time conflicts.");
+				}else{
+					messages.add("Because this job does not allow partial availability,"
+							+ (isEmployee ? " your" : " the applicant's" )+ " applicant has been closed.");			}		
+			}
+			
+			// The application was re-opened
+			if(previousProposal.getFlag_applicationWasReopened() == 1){
+				if(previousProposal.getFlag_aProposedWorkDayWasRemoved() == 1){
+					if(isEmployee){
+						messages.add("The employer deleted work days from the job posting that affect"
+								+ " your employment.");
+						messages.add("The employer is required to submit you a new proposal");
+					}else{
+						messages.add("You deleted work days from the job posting that affect the"
+								+ " employee's schedule.");
+						messages.add("You are required to submit a new proposal to the employee.");
+					}
+				}else if(previousProposal.getFlag_aProposedWorkDayTimeWasEdited() == 1){
+					if(isEmployee){
+						messages.add("The employer edited the start and end times that affect"
+								+ " your employment.");
+						messages.add("The employer is required to submit you a new proposal");
+					}else{
+						messages.add("You edited the start and end times that affect the employee's"
+								+ " schedule.");
+						messages.add("You are required to submit a new proposal to the employee.");
+					}				
+				}			
+			}
+		}
+		
+		
+		
+		// Employer initiated contact
+		if(currentProposal.getFlag_employerInitiatedContact() == 1){
+			messages.add((isEmployee ? "The employer" : "You") + " initiated contact");
+		}
+		
+		if(currentProposal.getFlag_aProposedWorkDayWasRemoved() == 1){
+			messages.add((isEmployee ? "The employer" : "You") + " deleted work days from the job post"
+					+ " that affected" + (isEmployee ? " your" : " the applicant's") + " proposal");
+		}else if(currentProposal.getFlag_aProposedWorkDayTimeWasEdited() == 1){
+			messages.add((isEmployee ? "The employer" : "You") + " updatyed the start and end "
+					+ " times that affect the current proposal");			
+		}
+		
+		return messages;
+	}
+
 	public void setModel_conflictingApplications(Model model, HttpSession session,
 					int applicationId_withReferenceTo, List<String> dateStrings_toFindConflictsWith) {
 		
@@ -1173,6 +1257,7 @@ public class ApplicationServiceImpl {
 		}
 
 	}
+
 
 
 }

@@ -5,6 +5,7 @@ h1{
     color: #fff;
     text-align: center;
     padding: 20px;
+    font-size: 25px;
 }
 #job-list-sort{
 	width: 28%;
@@ -61,14 +62,18 @@ h1{
 	color: #cc0a0a;
 	text-align: center;
 }
-#job-list .application h2{
+#job-list .application .status-wrapper{
 	text-align: center;
+    margin: 20px auto;
+}
+#job-list .application .status-wrapper .status{
+    font-size: 25px;
 }
 .job-header{
 	text-align: left;	
 }
 .job-header h3 a{
-	font-size: 18px;
+	font-size: 22px;
     color: #197994;
     font-weight: bold;
 }

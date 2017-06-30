@@ -11,9 +11,15 @@ input[type=checkbox]:not(:checked){
 }
 input[type=checkbox]:checked{
 	outline: 0; 
-	border: 2px solid #197994;;	
+/* 	border: 2px solid #197994; */
+	border: 0;
+	background: #197994;
+/* 	position: relative; */
 }
 input[type=checkbox]:checked::after{
+/* 	position: absolute; */
+/* 	left: 50%; */
+/* 	margin-left: -7px; */
     font-family: 'Glyphicons Halflings';
     content: "\e013";
 /* 	margin-top: -1px; */
@@ -21,9 +27,11 @@ input[type=checkbox]:checked::after{
     font-size: 14px;
     display: inline-block;   
    	color: #fff;
-   	background: #197994;
-    width: 16px;
-    height: 16px;   	
+/*    	background: #197994; */
+    width: 20px;
+    height: 20px;   
+    margin-top: 2px;
+    margin-left: 3px;	
 }
 input[type=checkbox],
 input[type=radio]{

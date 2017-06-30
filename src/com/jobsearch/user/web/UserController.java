@@ -71,6 +71,14 @@ public class UserController {
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
+	
+	@RequestMapping(value = "/user/profile-employer-new", method = RequestMethod.GET)
+	public String TEMP_EMPLOYERS_getProfile_SessionUser(Model model, HttpSession session) {				
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		userService.setModel_EmployerProfile(sessionUser, model, session);
+		return "/homepage_employer/Homepage_Employer";
+	}
+
 
 	@RequestMapping(value = "/user/profile/new", method = RequestMethod.GET)
 	public String TEMP_getProfile_SessionUser(Model model, HttpSession session) {				

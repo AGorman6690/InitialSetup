@@ -9,9 +9,9 @@
 			<div class="respond-to-proposal">
 				<%@ include file="./ReplyToCurrentProposal/CurrentProposal.jsp" %>
 			</div>		
-			<div class="confirm-response-to-proposal hide-on-load">
-				<%@ include file="./ReplyToCurrentProposal/ReviewResponseToCurrentProposal.jsp" %>				
-			</div>		
+<!-- 			<div class="confirm-response-to-proposal hide-on-load"> -->
+<%-- 				<%@ include file="./ReplyToCurrentProposal/ReviewResponseToCurrentProposal.jsp" %>				 --%>
+<!-- 			</div>		 -->
 		</div>
 	</div>
 </div>

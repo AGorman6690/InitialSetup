@@ -52,8 +52,8 @@ td.selected-date .select-date-box{
 	display: block;
 }
 .v2.post-job .calendar td{
-	height: 110px;
-	width: 92px;
+	height: 70px;
+	width: 55px;
 }
 .v2.post-job .ui-datepicker-inline.ui-datepicker-multi-2{
 	width: 1600px !important;

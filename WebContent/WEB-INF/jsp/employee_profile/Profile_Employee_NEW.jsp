@@ -79,7 +79,15 @@
 								data-job-distance="${applicationDto.jobDto.distance }"
 								>
 								<div class="job-header ">
-									<h2 class="${applicationDto.employmentProposalDto.isProposedToSessionUser ? 'warning-message' : '' }">${applicationDto.currentProposalStatus }</h2>								
+									<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
+										 ? 'warning-message' : '' }">
+										<p class="status">${applicationDto.currentProposalStatus }</p>
+										<div class="messages">
+											<c:forEach items="${applicationDto.messages }" var="message">.
+												<p>${message }</p>
+											</c:forEach>
+										</div>
+									</div>								
 									<h3>
 										<a class="${applicationDto.application.status == 3 ? 'accepted' : ''}"
 										   href="/JobSearch/job/${applicationDto.jobDto.job.id }?c=profile-incomplete&p=1">

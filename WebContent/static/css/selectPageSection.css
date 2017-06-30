@@ -1,13 +1,13 @@
 .select-page-section.selected{
-    color: #424242;
+    color: #fff;
     /* font-weight: bold; */
 /*     font-size: 18px; */
-    background: #d4d4d4;
+    background: #197994;
     
 }
 .select-page-section.selected,
 .select-page-section:not(.selected):hover{
-	border-top: 6px solid #197994;
+/* 	border-top: 6px solid #197994; */
 }
 .select-page-section{
     font-size: 17px;

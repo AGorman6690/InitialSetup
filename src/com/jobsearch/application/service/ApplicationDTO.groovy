@@ -36,7 +36,7 @@ class ApplicationDTO {
 	JobDTO jobDto
 	int jobId
 	
-	
+	List<String> messages
 	
 	JobSearchUserDTO applicantDto
 	int applicantId
