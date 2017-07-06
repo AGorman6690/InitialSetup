@@ -1,6 +1,7 @@
-#jobs-list, #job-details{
-	display: inline-block;
-}
+
+/* #jobs-list, #job-details{ */
+/* 	display: inline-block; */
+/* } */
 h1{
     width: 275px;
     background: #197994;
@@ -29,6 +30,11 @@ h1{
 	opacity: 0.7;
 	cursor: pointer;
 }
+.show-hide-details{
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
 .job-name{
     color: #197994;
     font-size: 25px;
@@ -43,7 +49,7 @@ h1{
 	width: 600px;
     padding: 10px;
     background: #f7f7f7;	
-    margin-bottom: 20px;
+    margin: 0px auto 20px;
 }
 .see-full-details{
     position: absolute;
@@ -58,11 +64,11 @@ h1{
     vertical-align: middle;	
 }
 .see-full-details .glyphicon{
-	font-size: 40px;
+	font-size: 30px;
 }
 .see-full-details .text{
 	font-size: 22px;
-	margin-right: -10px;
+	margin-right: -4px;
 }
 .sub-items{
 	padding-left: 30px;

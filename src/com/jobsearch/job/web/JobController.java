@@ -1,16 +1,12 @@
 package com.jobsearch.job.web;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.groovy.runtime.m12n.MetaInfExtensionModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,15 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
-import com.fasterxml.jackson.core.sym.Name;
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.EditJobDto;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
@@ -39,8 +30,6 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
 
 @Controller
 public class JobController {
@@ -65,6 +54,15 @@ public class JobController {
 		return "";
 		// return "redirect:/user/profile";
 
+	}
+	
+	@RequestMapping(value = "/job/{jobId}/application-progress", method = RequestMethod.GET)
+	public String getApplicationProgress(@PathVariable(value = "jobId") int jobId,
+			Model model, HttpSession session) {
+
+		jobService.setModel_applicationProgress(jobId, model, session);
+
+		return "homepage_employer/ApplicationProgress";
 	}
 
 	@ResponseBody

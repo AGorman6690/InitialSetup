@@ -82,19 +82,7 @@ h1{
 	margin: 0;
 }
 
-.proposal-table > tbody > tr > td{
-	padding: 5px 15px;
-}
-.proposal-table >thead > tr > th{
-	text-align: center;
-}
-.proposal-table > tbody > tr:not(.warning-message) > td:first-child{
-	padding-left: 0px;
-}
-.proposal-table > tbody > tr > td:first-child{
-/* 	font-size: 18px; */
-	font-weight: bold;
-}
+
 .application .proposal{
 	padding: 25px 0px 15px 0px;
 }
@@ -105,17 +93,5 @@ h1{
 #job-list .expiration-time-cont p:last-child{
 	border:0;
 }
-.proposal .respond{
-	text-align: center;
-}
-.proposal .respond > .sqr-btn{
-    background: #197994;
-    color: #fff;
-    font-weight: bold;	
-    padding: 10px 25px;
-    margin-right: 10px;
-}
-.proposal .respond .sqr-btn:hover{
-	background: #77afbf;
-}
+
 

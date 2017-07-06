@@ -872,4 +872,10 @@ public class UserServiceImpl {
 		return repository.getCount_nullRatings_givenByUserForJob(jobId, userId);
 	}
 
+	public List<JobSearchUser> getApplicants_byJob_openApplicantions(int jobId) {
+	
+		return repository.getApplicants_byJob_openApplicantions(jobId);
+	}
+
+
 }

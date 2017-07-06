@@ -1,0 +1,70 @@
+.status h3{
+	font-size: 18px;
+}
+.status h2{
+	padding: 5px;
+	background: #e2e1e1;
+}
+.status h2.warning-message{
+    color: red;
+    background: #ffe6e6;	
+}
+.status{
+	margin-bottom: 30px;
+	text-align: center;
+}
+.show-applicant-ratings-mod{
+	display: inline-block;
+}
+.sort-and-filter-wrapper,
+.applicants{
+	display: inline-block;
+	vertical-align: top;
+}
+.applicants{
+	margin-left: 50px;
+	margin-bottom: 40px;
+}
+.applicant{
+	background: #f7f7f7;
+	padding: 15px;
+}
+#job-details{
+	vertical-align: top;
+	display: inline-block;
+}
+
+span.glyphicon-star.favorite-flag,
+span.glyphicon-star-empty.favorite-flag{
+    font-size: 19px;
+    margin-right: 15px;
+    float: left;
+}
+.favorite-flag.glyphicon-star{
+	color: #000;
+}
+.favorite-flag.glyphicon-star-empty{
+	color: #c4c4c4;
+}
+.applicant .rating-container .star{
+	font-size: 21px;
+}
+.questions{
+	padding: 5px;
+    background: #ececec;
+    max-height: 120px;
+    overflow: auto;
+    margin: 20px 0px;
+}
+.questions .question{
+    font-weight: bold;
+    font-style: italic;	
+}
+.questions .answer{
+	padding-left: 30px;
+}
+.applicant-name{
+	font-size: 22px;
+    color: #197994;
+    font-weight: bold;	
+}

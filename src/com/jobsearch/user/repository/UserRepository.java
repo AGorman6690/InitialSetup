@@ -631,4 +631,16 @@ public class UserRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Integer.class);	
 	}
 
+	public List<JobSearchUser> getApplicants_byJob_openApplicantions(int jobId) {
+		
+		String sql = "SELECT * FROM user u"
+				+ " INNER JOIN application a ON u.UserId = a.UserId"
+				+ " INNER JOIN job j ON a.JobId = j.JobId"
+				+ " WHERE a.isOpen = 1"
+				+ " AND j.JobId = ?";
+		
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
+
+	}
+
 }

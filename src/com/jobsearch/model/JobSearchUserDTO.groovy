@@ -1,6 +1,7 @@
 package com.jobsearch.model
 
 import com.jobsearch.application.service.Application
+import com.jobsearch.application.service.ApplicationDTO
 import com.jobsearch.job.service.Job
 import com.jobsearch.job.web.FindJobFilterDTO;
 import com.jobsearch.job.web.JobDTO;
@@ -23,6 +24,8 @@ class JobSearchUserDTO {
 	
 	String totalPayment
 	EmploymentProposalDTO acceptedProposal
+	
+	ApplicationDTO applicationDto
 	
 	
 	List<JobDTO> jobDtos_jobsCompleted;

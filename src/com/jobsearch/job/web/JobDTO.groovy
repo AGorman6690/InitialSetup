@@ -84,6 +84,8 @@ public class JobDTO {
 	 List<JobSearchUserDTO> employeeDtos
 	 List<JobSearchUser> employees_whoLeft
 	 
+	 List<JobSearchUserDTO> userDtos_applicants
+	 
 	 JobSearchUserDTO employerDto
 	 
 	 RatingDTO ratingDto

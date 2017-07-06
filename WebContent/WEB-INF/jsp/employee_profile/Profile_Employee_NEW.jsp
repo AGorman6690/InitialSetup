@@ -1,12 +1,8 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
 <%@ include file="../includes/resources/TableFilter.jsp" %>
-
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/view_job_employer/calendar_application_summary.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/inputValidation.css" />
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee_NEW.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee_NEW_2.css" />
 		
 <script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>	

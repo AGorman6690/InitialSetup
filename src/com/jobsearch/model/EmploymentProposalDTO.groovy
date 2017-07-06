@@ -18,6 +18,7 @@ class EmploymentProposalDTO {
 	String dateString_expirationDate
 	String timeString_expirationTime
 	
+	Boolean isExpired
 	
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment	
 	Integer flag_isCanceledDueToEmployerFillingAllPositions

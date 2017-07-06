@@ -778,6 +778,95 @@ public class JobServiceImpl {
 		model.addAttribute("jobDto", jobDto);
 
 	}
+	
+
+	public void setModel_applicationProgress(int jobId, Model model, HttpSession session) {
+		
+		if(verificationService.didSessionUserPostJob(session, jobId)){
+			
+			JobSearchUser sessionUser = SessionContext.getUser(session);
+			LocalDateTime now = LocalDateTime.now();
+		
+			JobDTO jobDto = new JobDTO();
+			jobDto.setUserDtos_applicants(new ArrayList<>());
+			
+			List<JobSearchUser> applicants = 
+					userService.getApplicants_byJob_openApplicantions(jobId);			
+			applicants.addAll(userService.getEmployeesByJob(jobId));
+			
+			for(JobSearchUser applicant : applicants){
+				
+				JobSearchUserDTO userDTO = new JobSearchUserDTO();
+				userDTO.setUser(applicant);
+				userDTO.setRatingValue_overall(userService.getRating(applicant.getUserId()));
+				
+				ApplicationDTO applicationDto =  new ApplicationDTO();
+				
+				applicationDto.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
+				// Applicant
+//				applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));
+//				int applicantId = applicationDto.getApplicantDto().getUser().getUserId();
+				
+
+				// Proposal
+				applicationDto.setEmploymentProposalDto(applicationService
+						.getCurrentEmploymentProposal(applicationDto.getApplication().getApplicationId()));
+				applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(applicationService						
+						.getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
+				applicationDto.getEmploymentProposalDto().setIsExpired(
+						applicationService.isProposalExpired(
+								applicationDto.getEmploymentProposalDto().getExpirationDate(), now));
+				applicationDto.setPreviousProposal(applicationService.getPreviousProposal(
+						applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
+						applicationDto.getApplication().getApplicationId()));
+
+				// Answers
+				applicationDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
+						jobId, applicant.getUserId()));
+
+				applicationDto.setAnswerOptionIds_Selected(
+						applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(
+								applicant.getUserId(), jobId));
+
+				// Job
+//				applicationDto.getJobDto().setJob(jobService.getJob(jobId));
+//				applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
+
+				// Misc.
+				// *********************************************************
+				// Refactor:
+				// Place this on the wage proposal dto
+				applicationDto.setTime_untilEmployerApprovalExpires(
+						applicationService.getTime_untilEmployerApprovalExpires(
+								applicationDto.getEmploymentProposalDto().getExpirationDate(), now));
+				// *********************************************************
+//				applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
+//				applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
+
+				
+				applicationDto.setCurrentProposalStatus(
+						applicationService.getCurrentProposalStatus(
+								applicationDto.getApplication().getIsOpen(),
+								applicationDto.getApplication().getIsAccepted(),
+								applicationDto.getEmploymentProposalDto().getProposedByUserId(),
+								sessionUser.getUserId(),
+								sessionUser.getProfileId()));
+			
+				
+				
+				
+				userDTO.setApplicationDto(applicationDto);
+				jobDto.getUserDtos_applicants().add(userDTO);
+
+				
+			}
+			
+			jobDto.setJob(getJob(jobId));
+//			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
+//			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
+			model.addAttribute("jobDto", jobDto);
+		}
+	}
 
 	public List<WorkDayDto> getWorkDayDtos(int jobId) {
 
@@ -1462,5 +1551,6 @@ public class JobServiceImpl {
 			model.addAttribute("user_employee", user_employee);			
 		}		
 	}
+
 	
 }

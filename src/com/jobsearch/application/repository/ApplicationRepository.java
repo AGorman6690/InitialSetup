@@ -4,7 +4,13 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +26,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.EmploymentProposalDTO;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
@@ -99,6 +106,14 @@ public class ApplicationRepository {
 				e.setProposedByUserId(rs.getInt("ProposedByUserId"));
 				e.setProposedToUserId(rs.getInt("ProposedToUserId"));
 				
+				String expirationDate = rs.getString("ExpirationDate");
+				if(expirationDate != null){
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+					e.setExpirationDate(LocalDateTime.parse(
+							expirationDate, formatter));	
+				}
+				
+				
 				e.setFlag_isCanceledDueToApplicantAcceptingOtherEmployment(
 						rs.getInt(EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT));			
 				e.setFlag_isCanceledDueToEmployerFillingAllPositions(
@@ -140,6 +155,8 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, new Object[] { jobId });
 
 	}
+
+
 
 	public Application getApplication(int jobId, int userId) {
 		
@@ -939,6 +956,7 @@ public class ApplicationRepository {
 				+ " OR (RatedByUserId = ? AND JobId = ?)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
 	}
+
 
 
 

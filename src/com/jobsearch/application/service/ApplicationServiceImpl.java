@@ -117,13 +117,16 @@ public class ApplicationServiceImpl {
 	}
 
 	public String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
+		
+		LocalDateTime now = LocalDateTime.now();
+		return getTime_untilEmployerApprovalExpires(expirationDate, now);
 
-		// This will subtract the current time from the expiration date.
+	}
+	
+	public String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate, LocalDateTime now) {
 
 
 		if(expirationDate != null){
-			LocalDateTime now = LocalDateTime.now();
-
 			// If expired
 			if(ChronoUnit.MINUTES.between(now, expirationDate) < 0){
 				return "-1";
@@ -133,22 +136,20 @@ public class ApplicationServiceImpl {
 				long hours =  ChronoUnit.HOURS.between(now, expirationDate) - days * 24 ;
 				long minutes =  ChronoUnit.MINUTES.between(now, expirationDate) - ( days * 24 * 60 ) - ( hours * 60 );
 				String result = "";
-
+	
 				if(days == 1) result += days + " day, ";
 				else if(days > 1) result += days + " days, ";
-
+	
 				result += " " + hours + ":";
-
+	
 				if(minutes < 10) result += "0";
-
+	
 				result += minutes + " hrs";
-
+	
 				// For example, the result will be in the form "2 days 15:45 hrs"
 				return result;
 			}
-
-		}
-		return null;
+		}else return null;
 	}
 
 	public List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
@@ -1256,6 +1257,15 @@ public class ApplicationServiceImpl {
 			}
 		}
 
+	}
+
+	public Boolean isProposalExpired(LocalDateTime expirationDate, LocalDateTime now) {
+		
+		if(expirationDate != null){
+			if(expirationDate.isBefore(now)) return true;
+			else return false;	
+		}else return null;
+		
 	}
 
 
