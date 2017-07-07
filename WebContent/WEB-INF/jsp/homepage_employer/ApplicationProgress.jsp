@@ -3,24 +3,30 @@
 <div class="job-detail" data-job-id="${jobDto.job.id }">
 	<div class="sort-and-filter-wrapper">
 		<div class="item">
-			<input type="checkbox" id="employees-${jobDto.job.id }" checked><label for="employees-123">Employees</label>
+			<input type="checkbox" id="employees-${jobDto.job.id }" checked>
+			<label for="employees-${jobDto.job.id }">Employees</label>
 		</div>	
 		<div class="item">
-			<input type="checkbox" id="applicants-${jobDto.job.id }" checked><label for="applicants-123">Applicants</label>
+			<input type="checkbox" id="applicants-${jobDto.job.id }" checked>
+			<label for="applicants-${jobDto.job.id }">Applicants</label>
 			<div class="sub-items">
 				<div>
-					<input type="checkbox" id="waiting-on-you-${jobDto.job.id }" checked><label for="waiting-on-you-123">Proposals waiting on you</label>
+					<input type="checkbox" id="waiting-on-you-${jobDto.job.id }" checked>
+					<label for="waiting-on-you-${jobDto.job.id }">Proposals waiting on you</label>
 				</div>
 				<div>
-					<input type="checkbox" id="waiting-on-applicant-${jobDto.job.id }" checked><label for="waiting-on-applicant-123">Proposals waiting on applicant</label>
+					<input type="checkbox" id="waiting-on-applicant-${jobDto.job.id }" checked>
+					<label for="waiting-on-applicant-${jobDto.job.id }">Proposals waiting on applicant</label>
 				</div>
 				<div>
-					<input type="checkbox" id="expired-proposals-${jobDto.job.id }" checked><label for="expired-proposals-123">Expired proposals</label>
+					<input type="checkbox" id="expired-proposals-${jobDto.job.id }" checked>
+					<label for="expired-proposals-${jobDto.job.id }">Expired proposals</label>
 				</div>					
 			</div>
 		</div>				
 		<div class="item">
-			<input type="checkbox" id="favorites-${jobDto.job.id }"><label for="favorites-123">Favorites</label>
+			<input type="checkbox" id="favorites-${jobDto.job.id }">
+			<label for="favorites-${jobDto.job.id }">Favorites</label>
 		</div>	
 		<div class="item sort">
 			<p><span>Rating</span><span class="glyphicon glyphicon-arrow-down"></span>
@@ -34,6 +40,7 @@
 	<div class="applicants">
 		<c:forEach items="${jobDto.userDtos_applicants }" var="userDto">
 			<div class="applicant"
+				data-user-id="${userDto.user.userId }"
 				data-is-accepted="${userDto.applicationDto.application.isAccepted }"
 				data-is-waiting-on-you="${userDto.applicationDto.employmentProposalDto.isProposedToSessionUser }"
 				data-is-expired="${userDto.applicationDto.employmentProposalDto.isExpired ? 1 : 0 }"
@@ -59,7 +66,9 @@
 							'glyphicon glyphicon-star-empty not-selected' }">
 					</span>
 					<div>
-						<span class="applicant-name">${userDto.user.firstName }</span>
+<%-- 						<span class="applicant-name">${userDto.user.firstName }</span> --%>
+						<p class="applicant-name show-applicant-ratings-mod linky-hover">
+							 ${userDto.user.firstName }</p>						
 						<div class="show-applicant-ratings-mod">
 							<input name="input-1" class="rating-loading"
 											value="4.2"><span class="rating-value-overall">4.2</span>
@@ -74,7 +83,7 @@
 								</c:otherwise>
 							</c:choose>							 	
 						 </div>
-						<div class="ratings-mod-container-import">
+						<div class="ratings-mod-container">
 							<div class="mod simple-header">
 								<div class="mod-content">
 									<div class="mod-header">

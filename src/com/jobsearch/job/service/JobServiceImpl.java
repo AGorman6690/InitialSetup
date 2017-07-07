@@ -733,7 +733,9 @@ public class JobServiceImpl {
 		
 		JobDTO jobDto = this.getJobDTO_DisplayJobInfo(jobId);
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-//		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		jobDto.setQuestions(applicationService.getQuestions(jobDto.getJob().getId()));
+
+		//		JobSearchUserDTO userDto = new JobSearchUserDTO();
 
 		switch (context) {
 		case "waiting":

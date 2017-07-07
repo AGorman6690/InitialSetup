@@ -51,10 +51,11 @@ span.glyphicon-star-empty.favorite-flag{
 }
 .questions{
 	padding: 5px;
-    background: #ececec;
+/*     background: #ececec; */
     max-height: 120px;
     overflow: auto;
     margin: 20px 0px;
+    border: 1px solid #cacaca;
 }
 .questions .question{
     font-weight: bold;
@@ -62,6 +63,7 @@ span.glyphicon-star-empty.favorite-flag{
 }
 .questions .answer{
 	padding-left: 30px;
+    font-weight: normal;
 }
 .applicant-name{
 	font-size: 22px;

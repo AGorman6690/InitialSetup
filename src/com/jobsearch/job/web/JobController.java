@@ -215,11 +215,25 @@ public class JobController {
 	
 	@RequestMapping(value = "/preview/job-info/{jobId}", method = RequestMethod.POST)
 	public String previewJobInfo_ByJobId(Model model, HttpSession session,
-				@PathVariable(value = "jobId") int jobId, @RequestParam(name = "c", required = true) String c) {
+				@PathVariable(value = "jobId") int jobId,
+				@RequestParam(name = "c", required = true) String c) {
 
+		// *************************************************
+		// *************************************************
+		// Refactor all of this
+		// *************************************************		
+		// *************************************************
+		
+		
+		
 //		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
 		
-		jobService.setModel_ViewJob_Employee(model, session, c, jobId);
+		if(SessionContext.getUser(session).getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
+		}else{
+			jobService.setModel_ViewJob_Employer(model, session, c, jobId, "");
+		}
+		
 
 //		model.addAttribute("jobDto", jobDto);
 //		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));

@@ -1,3 +1,15 @@
+.wrapper.employee-context .employer-context{
+	display: none;
+}
+.wrapper.employer-context .employee-context{
+	display: none;
+}
+.instructions{
+	color: red;
+	font-size: 19px;
+	font-weight: bold;
+	text-align: center;
+}
 .job-info h2{
 	font-size: 27px;
     font-weight: bold;
@@ -42,7 +54,7 @@
     line-height: 36px;
     text-align: center;
     width: 188px;
-    box-shadow: 3px 3px 2px #cacaca;
+/*     box-shadow: 3px 3px 2px #cacaca; */
 /*     border-radius: 3px; */
     margin: auto;
     margin-top: 55px;

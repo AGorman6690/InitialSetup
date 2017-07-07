@@ -1,4 +1,7 @@
-
+.glyphicon-pencil{
+	float: right;
+	color: #888;
+}
 /* #jobs-list, #job-details{ */
 /* 	display: inline-block; */
 /* } */
@@ -14,16 +17,20 @@ h1{
 	padding-left: 45px;
 }
 .total{
-	background: #197994;
+/* 	background: #197994; */
 	margin-left: 10px;
+/* 	color: #197994; */
+	color: #163b3d;
+	font-weight: bold;
 }
 .new{
 	background: #b70707;
 	margin-left: 5px;
+	color: #fff;
 }
 .total, .new{
 	padding: 2px 8px;
-	color: #fff;
+/* 	color: #fff; */
     border-radius: 5px;
 }
 .total:hover, .new:hover{
@@ -34,6 +41,7 @@ h1{
     margin-top: 20px;
     font-size: 20px;
     font-weight: bold;
+    text-align: center;
 }
 .job-name{
     color: #197994;

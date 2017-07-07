@@ -6,6 +6,17 @@ $(document).ready(function() {
 	$e_renderJobDetails = $("#job-details");
 	$e_jobsList = $("#jobs-list");
 	
+	$("body").on("click", ".show-applicant-ratings-mod", function() {	
+		
+		var $e_applicant = $(this).closest(".applicant");
+//		if($e_applicant.find(".mod").eq(0).is(":visible")){			
+			var userId_applicant = $e_applicant.attr("data-user-id");
+			var $e_renderHtml = $e_applicant.find(".ratings-mod-container .mod-body").eq(0);
+			executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);	
+//		}
+		
+	})
+	
 	$(".see-details").click(function() {
 		var jobId = $(this).attr("data-job-id");
 		if(!hasJobDetailsBeenLoaded(jobId)){
@@ -26,6 +37,21 @@ $(document).ready(function() {
 			$(this).hide();
 			$(this).siblings(".see-details").show();
 		
+	})
+	
+	$("body").on("click", ".show-job-info-mod-employer", function() {
+		var jobId = $(this).attr("data-job-id");
+		executeAjaxCall_showJobInfoMod(jobId, "waiting", "2", function() {
+			
+			selectAllWorkDays($(".calendar"), workDayDtos)
+			
+//			$(".calendar").find("td.job-work-day").each(function() {	
+				
+//				$(this).click();
+//				$(this).addClass("is-proposed");
+//				selectAllWorkDays($(".calendar"), workDayDtos)
+//			})
+		});
 	})
 })
 function hideJobSummaries(jobId_notToHide) {

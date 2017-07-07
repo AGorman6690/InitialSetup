@@ -9,9 +9,13 @@
 <div class="container">
 	<h1>Your Jobs</h1>
 	<div id="jobs-list">
+	
 		<c:forEach items="${jobDtos }" var="jobDto">
 			<div class="job-container" data-job-id="${jobDto.job.id }">
-				<a class="job-name">${jobDto.job.jobName }</a>
+				<a class="" href="/JobSearch/job/${jobDto.job.id}/edit" >
+					<span class="glyphicon glyphicon-pencil"></span></a>			
+						<p class="job-name accent show-job-info-mod-employer" data-job-id="${jobDto.job.id }">
+							${jobDto.job.jobName }</p>
 				<div class="brief-details">
 					<div class="applicants-container">
 						<p>Applicants<span class="total total-applicants">${jobDto.countApplications_total }</span>
@@ -46,4 +50,14 @@
 		
 	</div>	
 </div>
+		<div id="job-info-mod" class="mod simple-header">
+			<div class="mod-content">
+				<div class="mod-header"></div>
+				<div class="mod-body"></div>
+			</div>
+		</div>
+<script
+	src="https://maps.googleapis.com/maps/api/
+		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI">
+</script>
 <%@ include file="../includes/Footer.jsp"%>

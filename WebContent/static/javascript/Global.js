@@ -114,7 +114,11 @@ $(document).ready(function(){
 	})
 	
 })
-
+function executeCallBack(callback) {
+	if(callback && typeof callback == "function") {
+		callback();
+	}
+}
 function executeAjaxCall_getEventCalendar() {
 	broswerIsWaiting(true);
 	$.ajax({

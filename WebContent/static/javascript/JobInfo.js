@@ -44,7 +44,8 @@ $(document).ready(function() {
 	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
 	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);	
 }) 
-function executeAjaxCall_showJobInfoMod(jobId, c, p) {
+function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
+	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
@@ -52,6 +53,7 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p) {
 //		url: "/JobSearch/job/" + jobId + "?c=" + c + "&p=" + p,
 		dataType: "html"
 	}).done(function(html) {
+		broswerIsWaiting(false);
 		var $jobInfoMod = $("#job-info-mod");
 		$jobInfoMod.find(".mod-body").html(html);
 		
@@ -61,9 +63,13 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p) {
 
 		$jobInfoMod.show();
 		
+		// **************************************************
 		// Map must be initialized AFTER the modal is shown
+		// **************************************************
 		initMap_job_info();
 		renderStars($jobInfoMod);
+		
+		executeCallBack(callback);
 	})
 	
 }

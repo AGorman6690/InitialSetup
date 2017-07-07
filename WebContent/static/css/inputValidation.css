@@ -1,5 +1,6 @@
 .invalid{
-	border: 3px solid #b30000 !important;
+/* 	border: 3px solid #b30000 !important; */
+	border: 3px solid red !important;
     border-radius: 5px;
 }
 
