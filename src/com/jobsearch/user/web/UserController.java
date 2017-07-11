@@ -76,7 +76,8 @@ public class UserController {
 	public String TEMP_EMPLOYERS_getProfile_SessionUser(Model model, HttpSession session) {				
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		userService.setModel_EmployerProfile(sessionUser, model, session);
-		return "/homepage_employer/Homepage_Employer";
+		
+		return "/employer_profile/EmployerProfile";
 	}
 
 
@@ -85,7 +86,7 @@ public class UserController {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		userService.setModel_EmployeeProfile(sessionUser, model, session);
-		return "/employee_profile/Profile_Employee_NEW";
+		return "/employee_profile/Profile_Employee";
 	}
 	
 	@RequestMapping(value = "/user/credentials", method = RequestMethod.GET)

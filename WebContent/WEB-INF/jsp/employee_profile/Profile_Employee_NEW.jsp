@@ -13,8 +13,9 @@
 		<div class="pad-top-2">
 			<c:forEach items="${jobs_terminated }" var="job">
 				<div class="alert-message width-500">
-					<h4 class="h4">The employer has removed you from the following job:</h4>				
-					<p>${job.jobName } <a class="sqr-btn gray-2" href="/JobSearch/employer-removed-you-from-job/${job.id}/acknowledge">OK</a></p>				
+					<h4 class="h4">The employer has removed you from the following job:</h4>	
+					<p class="job-name accent show-job-info-mod" data-job-id="${job.id }">job.jobName</p>			
+					<a class="sqr-btn gray-2" href="/JobSearch/employer-removed-you-from-job/${job.id}/acknowledge">OK</a>				
 				</div>	
 			</c:forEach>
 		</div>
@@ -73,29 +74,29 @@
 								data-job-end-date="${applicationDto.jobDto.milliseconds_endDate }"
 								data-job-duration-days="${applicationDto.jobDto.workDays.size() }"
 								data-job-distance="${applicationDto.jobDto.distance }"
+								data-is-waiting-on-you="${applicationDto.employmentProposalDto.isProposedToSessionUser }"
 								>
 								<div class="job-header ">
 									<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
-										 ? 'warning-message' : '' }">
+										 ? '' : '' }">
 										<p class="status">${applicationDto.currentProposalStatus }</p>
+										<p class="exp-time">The employer's offer expires in ${applicationDto.time_untilEmployerApprovalExpires }</p>
 										<div class="messages">
 											<c:forEach items="${applicationDto.messages }" var="message">.
 												<p>${message }</p>
 											</c:forEach>
 										</div>
 									</div>								
-									<h3>
-										<a class="${applicationDto.application.status == 3 ? 'accepted' : ''}"
-										   href="/JobSearch/job/${applicationDto.jobDto.job.id }?c=profile-incomplete&p=1">
-											${applicationDto.jobDto.job.jobName }
-										</a>
-									</h3>
+									<p class="job-name accent show-job-info-mod"
+										 data-job-id="${applicationDto.jobDto.job.id }">${applicationDto.jobDto.job.jobName }</p>
 									<p>${applicationDto.jobDto.job.stringStartDate }
 										 - ${applicationDto.jobDto.job.stringEndDate }
 										 (${applicationDto.jobDto.workDays.size() } ${applicationDto.jobDto.workDays.size() <= 1 ? 'day' : 'days' })</p>
 									<p >${applicationDto.jobDto.job.city_formatted }, ${applicationDto.jobDto.job.state }</p>
 								</div>			
-								<div class="proposal" data-application-id="${applicationDto.application.applicationId }">
+								<div class="proposal ${sessionScope.user.profileId == 1 &&
+									applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
+									 data-application-id="${applicationDto.application.applicationId }">
 									<c:set var="jobDto" value="${applicationDto.jobDto }" />
 									<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
 									<div class="render-present-proposal-mod"></div>

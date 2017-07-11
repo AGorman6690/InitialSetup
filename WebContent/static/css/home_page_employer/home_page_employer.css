@@ -1,6 +1,10 @@
-.glyphicon-pencil{
+.brief-details p{
+	display: inline-block;
+}
+.action-options .glyphicon{
 	float: right;
 	color: #888;
+	margin-left: 12px;
 }
 /* #jobs-list, #job-details{ */
 /* 	display: inline-block; */
@@ -19,9 +23,12 @@ h1{
 .total{
 /* 	background: #197994; */
 	margin-left: 10px;
-/* 	color: #197994; */
-	color: #163b3d;
+	color: #197994;
+/* 	color: #163b3d; */
 	font-weight: bold;
+}
+.action{
+	color: red;
 }
 .new{
 	background: #b70707;
@@ -85,5 +92,5 @@ h1{
 	margin-bottom: 10px;
 }
 .item.sort .glyphicon{
-	margin: 0px 3px;
+	margin: 0px -3px;
 }

@@ -31,6 +31,7 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
+import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
@@ -109,6 +110,7 @@ public class ApplicationServiceImpl {
 	}
 
 	public EmploymentProposalDTO getCurrentEmploymentProposal(Integer applicationId) {
+		// Per the application id, get the most recent employment proposal in the database.
 		return repository.getCurrentEmploymentProposal(applicationId);
 	}
 
@@ -269,161 +271,174 @@ public class ApplicationServiceImpl {
 	}
 
 	public void respondToEmploymentProposal(EmploymentProposalDTO employmentProposalDto,
-											HttpSession session,
-											String context) {
+											HttpSession session) {
 
-		// Get the proposal being **RESPONDED TO**.
-		// Per the application id, get the most recent employment proposal in the database.
 		EmploymentProposalDTO proposalBeingRespondedTo = getCurrentEmploymentProposal(
 							employmentProposalDto.getApplicationId());
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		Job job = jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId());
+		
+		
+		boolean isAcceptingOffer = getIsAcceptingOffer(proposalBeingRespondedTo, employmentProposalDto);
 
-
-		// For all responses:
-		// 1) Is the proposal being responded to currently presented TO the session user
-		// 2) AND is this proposal not yet declined?
 		if(proposalBeingRespondedTo.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
 				proposalBeingRespondedTo.getStatus() != EmploymentProposalDTO.STATUS_DECLINED){
 
-			switch (context) {
-				case "decline":
-					this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
-							EmploymentProposalDTO.STATUS_DECLINED);
-
-						Application application = this.getApplication(proposalBeingRespondedTo.getApplicationId());
-						this.updateApplicationStatus(application.getApplicationId(),
-							Application.STATUS_DECLINED);
-					break;
-
-				case "counter-by-applicant":
-				case "acknowledge-by-employer":
-
-					// ****************************************************
-					// ****************************************************
-					// Is it desired to have transparency into whether the employer is "accepting"
-					// or "countering" the applicant's proposal?
-					// I'm thinking so. Then we can say to the applicant: "the employer accepted your offer"
-					// or "the employer countered your offer". As an applicant, I
-					// would appreciate the distinction.
-					// ****************************************************
-					// ****************************************************
-					EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-					
-					if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER ){
-						newProposal.setEmployerAcceptedDate(LocalDateTime.now());
-						newProposal.setExpirationDate(getExpirationDate(
-								newProposal.getEmployerAcceptedDate(), employmentProposalDto));
-					}
-
-					// **Employers** must provide an expiration time for all acknowledgments they make.
-					// **Applicants** must counter before the employer's offer is expired.
-					if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
-							isValidExpirationDate(newProposal.getEmployerAcceptedDate(),
-									newProposal.getExpirationDate()) ) ||
-						(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE &&
-								!isEmployerAcceptanceExpired(proposalBeingRespondedTo)) ){
-
-						
-						newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
-						newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
-						newProposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-						newProposal.setApplicationId(proposalBeingRespondedTo.getApplicationId());
-
-						newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
-						newProposal.setAmount(employmentProposalDto.getAmount());
-						
-						
-						if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
-							
-//							newProposal.setExpirationDate(getExpirationDate(LocalDateTime.now(), employmentProposalDto));
-						}
-
-						// ***********************************************************************************
-						// This needs to be verified
-//						if(verificationService.isListPopulated(employmentProposalDto.getDateStrings_proposedDates())){
-//							newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
-//						}
-//						else{
-//							newProposal.setDateStrings_proposedDates(proposalBeingRespondedTo.getDateStrings_proposedDates());
-//						}
-//						if(verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
-//							newProposal.setAmount(employmentProposalDto.getAmount());
-//						}else{
-//							newProposal.setAmount(proposalBeingRespondedTo.getAmount());
-//						}
-						// ***********************************************************************************
-
-						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
-								WageProposal.STATUS_COUNTERED);
-
-						this.insertEmploymentProposal(newProposal);
-
-
-
-					}
-					break;
-
-				case "approve-by-applicant":
-
-					// ******************************************************
-					// ******************************************************
-					// Checking whether amount-hired is less than positions-to-be-filled-per-day is not adequate.
-					// Since queries are asynchronous, this condition can be met by two different requests,
-					// while there is only one position left to fill.
-					// This needs to be addressed.
-					// _________________________________________________________
-					// Also, it needs to be verified that each work day has at least one position available.
-					// I think creating a new table that links WorkDayId to UserId is best.
-					// So if Job 123 has WorkDayIds 4 and 5, is filling two positions per day, and hires UserIds 6 and 7:
-					// then the table will have four rows:
-					// 4 and 6;
-					// 5 and 6;
-					// 4 and 7;
-					// 5 and 7;
-					// __________________________________________________________
-					// Update: to verify each proposed work day does indeed have a position available,
-					// the "counts" are being compared. Essentially, we need to handle the situation
-					// where multiple, simultaneous requests for the same position are submitted.
-					// Do we process each request, include a time stamp, then do a post-insert query
-					// to ensure the work day's position's-per-day is not exceeded??? If it is exceeded,
-					// then delete the necessary records starting with the newest time stamps.
-					// ******************************************************
-					// ******************************************************
-					if(!isEmployerAcceptanceExpired(proposalBeingRespondedTo) &&
-							( verificationService.isAPositionAvaiableEachProposedWorkDay(
-									proposalBeingRespondedTo.getEmploymentProposalId(), job.getId())) ){
-
-						this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
-														EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
-
-						this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
-													Application.STATUS_ACCEPTED);
-
-						this.closeApplication(proposalBeingRespondedTo.getApplicationId());
-
-						userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
-
-						// Update the job after the employment record has been inserted.
-						// The "IsStillAcceptingApplications" property needs to be updated.
-						job = jobService.getJob(job.getId());
-
-						resolveApplicationConflicts_withinApplicationsForAJob(job,
-								proposalBeingRespondedTo);
-
-						resolveApplicationConflicts_withinApplicationsForUser(session,
-								employmentProposalDto.getApplicationId(),
-								jobService.getWorkDays_byProposalId(
-										proposalBeingRespondedTo.getEmploymentProposalId()));
-
-					}
-					break;
+			if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){		
+				respondToProposal_byEmployer(proposalBeingRespondedTo, employmentProposalDto,
+						isAcceptingOffer);
+			}else{
+				if(isAcceptingOffer){							
+					approveProposal_byEmployee(proposalBeingRespondedTo, employmentProposalDto,
+							session);	
+				}else{									
+					counterProposal_byEmployee(proposalBeingRespondedTo, employmentProposalDto,
+							 sessionUser);
+				}				
 			}
 		}
 	}
 
 
+
+	private boolean getIsAcceptingOffer(EmploymentProposalDTO proposalBeingRespondedTo,
+			EmploymentProposalDTO newProposalDto) {
+	
+		boolean isAcceptingOffer = true;
+		if(!proposalBeingRespondedTo.getAmount().matches(newProposalDto.getAmount()))
+			isAcceptingOffer = false;
+		else if(proposalBeingRespondedTo.getDateStrings_proposedDates().size() !=
+				newProposalDto.getDateStrings_proposedDates().size())
+			
+			isAcceptingOffer = false;
+		else{
+			for(String dateString : newProposalDto.getDateStrings_proposedDates()){
+				if(proposalBeingRespondedTo.getDateStrings_proposedDates()
+						.stream()
+						.filter(ds -> ds.matches(dateString))
+						.count() == 0){
+					isAcceptingOffer = false;
+					break;
+				}
+			}
+		}
+		return isAcceptingOffer;
+	}
+
+	private void declineProposal(EmploymentProposalDTO proposalBeingRespondedTo) {
+		
+		this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
+				EmploymentProposalDTO.STATUS_DECLINED);
+
+		Application application = this.getApplication(proposalBeingRespondedTo.getApplicationId());
+		this.updateApplicationStatus(application.getApplicationId(),
+			Application.STATUS_DECLINED);
+	
+	}
+
+	private void counterProposal_byEmployee(EmploymentProposalDTO proposalBeingRespondedTo,
+			EmploymentProposalDTO employmentProposalDto, JobSearchUser sessionUser) {
+
+		EmploymentProposalDTO newProposal = new EmploymentProposalDTO(proposalBeingRespondedTo);
+
+		if(!isEmployerAcceptanceExpired(proposalBeingRespondedTo)){
+			newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+			newProposal.setAmount(employmentProposalDto.getAmount());
+
+			this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
+					WageProposal.STATUS_COUNTERED);
+
+			this.insertEmploymentProposal(newProposal);
+		}
+	}
+
+	private void respondToProposal_byEmployer(EmploymentProposalDTO proposalBeingRespondedTo,
+			EmploymentProposalDTO employmentProposalDto,
+			Boolean isAcceptingOffer) {
+
+		
+		EmploymentProposalDTO newProposal = new EmploymentProposalDTO(proposalBeingRespondedTo);
+		
+		newProposal.setEmployerAcceptedDate(LocalDateTime.now());
+		newProposal.setExpirationDate(getExpirationDate(
+				newProposal.getEmployerAcceptedDate(), employmentProposalDto));
+		
+		if(	isValidExpirationDate(newProposal.getEmployerAcceptedDate(),
+						newProposal.getExpirationDate()) ){
+
+			newProposal.setDateStrings_proposedDates(employmentProposalDto.getDateStrings_proposedDates());
+			newProposal.setAmount(employmentProposalDto.getAmount());
+			
+			insertEmploymentProposal(newProposal);			
+			
+			if(isAcceptingOffer){				
+				updateProposalFlag(newProposal,
+						EmploymentProposalDTO.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
+				updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
+					WageProposal.STATUS_ACCEPTED);
+			}
+		}
+	}
+
+	private void approveProposal_byEmployee(EmploymentProposalDTO proposalBeingRespondedTo,
+			EmploymentProposalDTO proposalBeingApproved,
+			HttpSession session) {
+	
+		// ******************************************************
+		// Checking whether amount-hired is less than positions-to-be-filled-per-day is not adequate.
+		// Since queries are asynchronous, this condition can be met by two different requests,
+		// while there is only one position left to fill.
+		// This needs to be addressed.
+		// _________________________________________________________
+		// Also, it needs to be verified that each work day has at least one position available.
+		// I think creating a new table that links WorkDayId to UserId is best.
+		// So if Job 123 has WorkDayIds 4 and 5, is filling two positions per day, and hires UserIds 6 and 7:
+		// then the table will have four rows:
+		// 4 and 6;
+		// 5 and 6;
+		// 4 and 7;
+		// 5 and 7;
+		// __________________________________________________________
+		// Update: to verify each proposed work day does indeed have a position available,
+		// the "counts" are being compared. Essentially, we need to handle the situation
+		// where multiple, simultaneous requests for the same position are submitted.
+		// Do we process each request, include a time stamp, then do a post-insert query
+		// to ensure the work day's position's-per-day is not exceeded??? If it is exceeded,
+		// then delete the necessary records starting with the newest time stamps.
+		// ******************************************************
+		// ******************************************************
+		
+		Job job = jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId());
+		
+		if(!isEmployerAcceptanceExpired(proposalBeingRespondedTo) &&
+				( verificationService.isAPositionAvaiableEachProposedWorkDay(
+						proposalBeingRespondedTo.getEmploymentProposalId(), job.getId())) ){
+
+			this.updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
+											EmploymentProposalDTO.STATUS_APPROVED_BY_APPLICANT);
+
+			this.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
+										Application.STATUS_ACCEPTED);
+
+			this.closeApplication(proposalBeingRespondedTo.getApplicationId());
+
+			userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
+
+			// Update the job after the employment record has been inserted.
+			// The "IsStillAcceptingApplications" property needs to be updated.
+			job = jobService.getJob(job.getId());
+
+			resolveApplicationConflicts_withinApplicationsForAJob(job,
+					proposalBeingRespondedTo);
+
+			resolveApplicationConflicts_withinApplicationsForUser(session,
+					proposalBeingApproved.getApplicationId(),
+					jobService.getWorkDays_byProposalId(
+							proposalBeingRespondedTo.getEmploymentProposalId()));
+
+		}	
+		
+	}
 
 	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job,
 			EmploymentProposalDTO proposalDto_justAccepted) {
@@ -535,12 +550,9 @@ public class ApplicationServiceImpl {
 
 				EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(applicationDto_toModifyAndSendToEmployer.getApplication().getApplicationId());
 
-				EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-				newProposal.setApplicationId(currentProposal.getApplicationId());
-				newProposal.setProposedByUserId(currentProposal.getProposedToUserId());
-				newProposal.setProposedToUserId(currentProposal.getProposedByUserId());
+				EmploymentProposalDTO newProposal = new EmploymentProposalDTO(currentProposal);
+
 				newProposal.setAmount(currentProposal.getAmount());
-				newProposal.setStatus(EmploymentProposalDTO.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 
 				newProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
 						currentProposal.getDateStrings_proposedDates(), workDays_toFindConflictsWith));
@@ -562,15 +574,11 @@ public class ApplicationServiceImpl {
 			for ( ApplicationDTO applicationDto_toModifyAndNotifyEmployer :
 					applicationDto_placeHolder.getApplicationDtos_conflicting_willBeModifiedButRemainAtEmployer()){
 
-				EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(applicationDto_toModifyAndNotifyEmployer.getApplication().getApplicationId());
-
-				EmploymentProposalDTO newProposal = new EmploymentProposalDTO();
-				newProposal.setApplicationId(currentProposal.getApplicationId());
-				newProposal.setProposedByUserId(currentProposal.getProposedByUserId());
-				newProposal.setProposedToUserId(currentProposal.getProposedToUserId());
-				newProposal.setAmount(currentProposal.getAmount());
-				newProposal.setStatus(EmploymentProposalDTO.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-
+				EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(
+						applicationDto_toModifyAndNotifyEmployer.getApplication().getApplicationId());
+				EmploymentProposalDTO newProposal = new EmploymentProposalDTO(currentProposal);
+				
+				newProposal.setAmount(currentProposal.getAmount());				
 				newProposal.setDateStrings_proposedDates(jobService.removeConflictingWorkDays(
 						currentProposal.getDateStrings_proposedDates(), workDays_toFindConflictsWith));
 
@@ -995,12 +1003,13 @@ public class ApplicationServiceImpl {
 
 		
 			// Model
-			List<String> datestrings_workDays = applicationDto.getJobDto().getWorkDayDtos()
-					.stream()
-					.map(workDayDto -> workDayDto.getWorkDay().getDate().toString())
-					.collect(Collectors.toList());
+//			List<String> datestrings_workDays = applicationDto.getJobDto().getWorkDayDtos()
+//					.stream()
+//					.map(workDayDto -> workDayDto.getWorkDay().getDate().toString())
+//					.collect(Collectors.toList());
 			
-			model.addAttribute("datestrings_workDays", datestrings_workDays);
+			model.addAttribute("datestrings_workDays",
+					applicationDto.getEmploymentProposalDto().getDateStrings_proposedDates());
 			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);
 			model.addAttribute("user", sessionUser);

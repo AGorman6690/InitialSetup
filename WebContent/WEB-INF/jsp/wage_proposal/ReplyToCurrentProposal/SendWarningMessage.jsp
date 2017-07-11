@@ -1,0 +1,16 @@
+<div class="accepting-offer-context">
+	<p class=" red-bold">You are about to accept the
+		 ${sessionScope.user.profileId == 1 ? "employer's" : "applicant's" } offer.</p>			
+	<p class=" red-bold context-employee">Once you do, you will be employed for this job.</p>
+</div>
+<div class="proposing-new-offer-context red-bold">
+	<p class=" red-bold">You are about to propose a new offer to the
+	${sessionScope.user.profileId == 1 ? " employer" : " applicant" }.</p>
+</div>
+<p class="context-employer proposing-new-offer-context red-bold">
+	The applicant will have the option to counter this offer,
+	 however must do so within the time period you specify.</p>
+<p class="context-employer proposing-new-offer-context red-bold">
+	If the applicant accepts this offer, they will become an employee for this job.</p>	
+<p class="context-employer accepting-offer-context red-bold">
+	The applicant must confirm your acceptance within the time period you specify.</p>	

@@ -47,7 +47,7 @@ class ApplicationDTO {
 	List<ApplicationDTO> applicationDtos_conflicting_willBeModifiedButRemainAtEmployer
 	
 	String time_untilEmployerApprovalExpires
-	
+
 	int newStatus
 	
 	

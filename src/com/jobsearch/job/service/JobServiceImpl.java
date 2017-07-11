@@ -864,6 +864,7 @@ public class JobServiceImpl {
 			}
 			
 			jobDto.setJob(getJob(jobId));
+			jobDto.setWorkDays(getWorkDays(jobId));
 //			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
 //			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
 			model.addAttribute("jobDto", jobDto);

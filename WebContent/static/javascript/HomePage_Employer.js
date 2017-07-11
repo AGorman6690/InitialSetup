@@ -24,19 +24,25 @@ $(document).ready(function() {
 		}
 		showJobDetails(jobId);	
 		hideJobSummaries(jobId);
+		showSortWrapper(true);
 		
 		$(this).hide();
 		$(this).siblings(".hide-details").show();
 		
 	})
 	
-		$(".hide-details").click(function() {
-			hideAllJobDetails();	
-			showJobSummaries();
-			
-			$(this).hide();
-			$(this).siblings(".see-details").show();
+	$(".hide-details").click(function() {
+		hideAllJobDetails();	
+		showJobSummaries();
+		showSortWrapper(false);
+		$(this).hide();
+		$(this).siblings(".see-details").show();
 		
+	})
+	
+	$("#surpress-certain-details").click(function() {
+		if($(this).is(":checked")) $("#job-details").addClass("surpress");
+		else $("#job-details").removeClass("surpress");
 	})
 	
 	$("body").on("click", ".show-job-info-mod-employer", function() {
@@ -89,7 +95,8 @@ function showJobDetails(jobId){
 		$(this).hide();		
 	})
 
-	$e_renderJobDetails.find(".job-detail[data-job-id=" + jobId + "]").eq(0).show();	
+	$e_renderJobDetails.find(".job-detail[data-job-id=" + jobId + "]").eq(0).show();
+	
 		
 }
 function hideAllJobDetails(){
@@ -97,7 +104,11 @@ function hideAllJobDetails(){
 	$e_renderJobDetails.find(".job-detail:visible").each(function(){
 		$(this).hide();		
 	})
-
 	
-		
+}
+
+function showSortWrapper(request){
+	
+	if(request) $("#sort-wrapper").show(); 
+	else $("#sort-wrapper").hide();
 }

@@ -7,6 +7,15 @@ import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;;
 
 class EmploymentProposalDTO {
 	
+	public EmploymentProposalDTO(EmploymentProposalDTO proposalBeingRespondedTo) {
+			this.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
+			this.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
+			this.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
+			this.setApplicationId(proposalBeingRespondedTo.getApplicationId());
+	}
+	public EmploymentProposalDTO() {
+		// TODO Auto-generated constructor stub
+	}
 	Integer applicationId
 	Integer employmentProposalId
 	Integer proposedByUserId
@@ -19,6 +28,8 @@ class EmploymentProposalDTO {
 	String timeString_expirationTime
 	
 	Boolean isExpired
+	Boolean isAcceptingOffer
+	Boolean isDeclining
 	
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment	
 	Integer flag_isCanceledDueToEmployerFillingAllPositions
@@ -26,6 +37,7 @@ class EmploymentProposalDTO {
 	Integer flag_aProposedWorkDayWasRemoved
 	Integer flag_aProposedWorkDayTimeWasEdited
 	Integer flag_employerInitiatedContact
+	Integer flag_employerAcceptedTheOffer
 	
 	Integer days_offerExpires
 	Integer hours_offerExpires
@@ -53,6 +65,7 @@ class EmploymentProposalDTO {
 	public static String FLAG_EMPLOYER_INITIATED_CONTACT = "Flag_EmployerInitiatedContact"
 	public static String FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = "Flag_IsCanceledDueToEmployerFillingAllPositions"
 	public static String FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT = "Flag_IsCanceledDueToApplicantAcceptingOtherEmployment"
+	public static String FLAG_EMPLOYER_ACCEPTED_THE_OFFER = "Flag_EmployerAcceptedTheOffer";
 	
 	Integer status
 	public static Integer STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = -4

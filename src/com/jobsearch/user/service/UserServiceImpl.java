@@ -401,7 +401,8 @@ public class UserServiceImpl {
 
 			// Miscellaneous
 			applicationDto.setTime_untilEmployerApprovalExpires(
-					this.applicationService.getTime_untilEmployerApprovalExpires(application.getExpirationDate()));
+					applicationService.getTime_untilEmployerApprovalExpires(
+							applicationDto.getEmploymentProposalDto().getExpirationDate()));
 
 			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
@@ -604,9 +605,9 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
-			return "/employee_profile/Profile_Employee";
+			return "/employee_profile/Profile_Employee_NEW";
 		else
-			return "/employer_profile/EmployerProfile";
+			return "/homepage_employer/Homepage_Employer";
 
 	}
 

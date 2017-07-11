@@ -240,7 +240,7 @@ a:visited, a:hover, a{
 
 .button-group button{
     border-radius: 0;
-    border: 1px solid rgb(192,192,192);
+/*     border: 1px solid rgb(192,192,192); */
     padding:5px 10px;	
     background: #ffffff;
 }

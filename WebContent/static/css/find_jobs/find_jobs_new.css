@@ -1,3 +1,10 @@
+.calendar.v2 .ui-datepicker-inline{
+	width: 315px;
+}
+.calendar.v2 td{
+	height: 45px;
+	widht: 45px
+}
 #location-filter{
 	width: 630px;
 	margin: auto;
@@ -174,10 +181,12 @@ p[data-toggle-id]{
 /*     padding-bottom: 10px; */
     padding-left: 25px;
     margin: 0;
+    font-weight: bold;
+    color: #888;    
 }
 #other-filters{
 /* 	padding: 10px 10px 10px 25px;; */
-	width: 175px;
+	width: 215px;
 	height: 100%;
     border-right: 1px solid #d4d4d4;
     float: left;
@@ -222,22 +231,22 @@ p[data-toggle-id]{
     font-weight: bold;
     margin-top: 10px;    
 }
-.filter{
-	padding: 18px 0px;
-    /* border-bottom: 1px solid #d4d4d4; */
-    /* background: #197994; */
-    color: #828080;
-    font-weight: bold;
-}
+/* .filter .name{ */
+/* 	padding: 18px 0px; */
+/*     border-bottom: 1px solid #d4d4d4; */
+/*     background: #197994; */
+/*     color: #828080; */
+/*     font-weight: bold; */
+/* } */
 .filter .dropdown-style {
     position: absolute;   
     z-index: 10000;
     display: none;
     border: 1px solid #dedede;
-    border-radius: 3px;
+/*     border-radius: 3px; */
     padding: 20px;
-    top: -18px;
-    left: 174px;
+    top: 0px;
+    left: 214px;
 }
 #location-filter span{
     vertical-align: bottom;
@@ -256,12 +265,10 @@ html{
 }
 .filter .dropdown-style,
 .filter.expand{
-	background: #f7f7f7;
+	background: #FFFAFA;
 	color: #000;
 }
-.filter.expand .filter-name{
-	font-weight: bold;
-}
+
 .glyphicon-calendar{
 	font-size: 15px;
 	color: #bbb;
@@ -285,7 +292,6 @@ html{
 	margin-right: 5px;
 }
 .filter-name-container{
-    padding-top: 0px;
-
+    padding: 18px 0px;
     position: relative;	
 }

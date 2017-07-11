@@ -86,12 +86,12 @@
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_calendar" class="" href="#">Calendar</a>
 								<a id="nav_profile" class="" href="/JobSearch/user/profile">Jobs</a>
-								<a id="nav_profile" class="" href="/JobSearch/user/profile/new">Jobs NEW</a>
+								<a id="nav_profile" class="" href="/JobSearch/user/profile/new">Jobs OLD</a>
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
 								<a id="nav_jobs" href="/JobSearch/user/profile">Jobs</a>
-								<a id="nav_jobs" href="/JobSearch/user/profile-employer-new">Jobs NEW</a>	
+								<a id="nav_jobs" href="/JobSearch/user/profile-employer-new">Jobs OLD</a>	
 								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
 								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
 							</c:when>

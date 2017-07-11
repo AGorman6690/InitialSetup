@@ -24,15 +24,14 @@ $(document).ready(function() {
 })
 
 function selectAllWorkDays($calendar, workDayDtos){
+	
 	$(workDayDtos).each(function(i, workDayDto) {
-		if(workDayDto.isProposed == "0" || workDayDto.isProposed == null){
+		if(workDayDto.isProposed == "0" || workDayDto.isProposed == false || workDayDto.isProposed == null){
 			var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
-			workDayDto.isProposed = 1;
-//			$(td).click();
+			workDayDto.isProposed = "1";
+			$(td).click();
 		}
 	})
-	
-	$calendar.find("td.job-work-day").eq(0).click();
 }
 
 function onSelect_multiDaySelect_withRange(dateText, days){

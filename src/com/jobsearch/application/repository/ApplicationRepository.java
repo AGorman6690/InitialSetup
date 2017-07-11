@@ -121,7 +121,8 @@ public class ApplicationRepository {
 				e.setFlag_applicationWasReopened(rs.getInt(EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED));
 				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
 				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
-				e.setFlag_employerInitiatedContact(rs.getInt(EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT));			
+				e.setFlag_employerInitiatedContact(rs.getInt(EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT));
+				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
 				
 				
 				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");

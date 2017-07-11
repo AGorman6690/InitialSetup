@@ -55,7 +55,7 @@ h1{
     text-align: left;
 }
 .application:not(.warning-message){
-    background: #f3f3f3;
+/*     background: #f3f3f3; */
 /*     border-top: 5px solid #c4c4c4; */
 }
 #job-list .application.warning-message h2{
@@ -64,7 +64,9 @@ h1{
 }
 #job-list .application .status-wrapper{
 	text-align: center;
-    margin: 20px auto;
+    margin: 0px auto;
+    width: auto;
+    color: #000;
 }
 #job-list .application .status-wrapper .status{
     font-size: 25px;

@@ -1,3 +1,16 @@
+.proposal.confirm{
+	padding: 20px;
+    background: #80cc91;
+}
+.proposal.confirm .confirm-message{
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+/* 	color: green; */
+}
+.proposal-table.confirm{
+	margin: auto;
+}
 .proposal .respond{
 	text-align: center;
 }
@@ -20,13 +33,17 @@
 .proposal-table > tbody > tr:not(.warning-message) > td:first-child{
 	padding-left: 0px;
 }
-.proposal-table > tbody > tr > td:first-child{
+.proposal-table:not(.confirm) > tbody > tr > td:first-child{
 /* 	font-size: 18px; */
 	font-weight: bold;
 }
 
-
-
+.wrapper.context-employee .context-employer{
+	display:none;
+}
+.wrapper.context-employer .context-employee{
+	display:none;
+}
 .counter-context,
 .counter-context {
 	transition: display, 2s}
@@ -37,7 +54,7 @@
     padding: 5px;
 }
 .proposal p.red-bold{
-	font-size: 21px;
+	font-size: 20px;
 	color: red;
     font-weight: bold;
 }
@@ -158,9 +175,6 @@
     width: 1200px;
     margin-left: -600px;
     margin-bottom: 20px;    
-}
-.proposal{
-	padding-bottom: 25px;
 }
 .proposal-container h2{
     font-size: 20px;
@@ -346,4 +360,15 @@ span.expiration-time{
 }
 .job-starts-in-message p{
 	margin: 0;
+}
+div[data-is-waiting-on-you=true]{
+/* 	background: #ffbdbd; */
+    border: 6px solid red;
+}
+div[data-is-waiting-on-you=false]{
+/* 	background: #f7f7f7; */
+	border: 6px solid #888;
+}
+.send-status-warning{
+	text-align: left;
 }

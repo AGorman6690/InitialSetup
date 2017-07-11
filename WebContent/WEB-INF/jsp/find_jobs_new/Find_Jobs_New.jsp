@@ -29,6 +29,13 @@
 			<div class="filter">						
 				<div class="filter-name-container">
 					<div data-toggle-id="wstart-date-filter">
+						<p class="filter-name">Employer Rating<span class="glyphicon glyphicon-menu-right"></span></p>
+					</div>
+				</div>
+			</div>
+			<div class="filter">						
+				<div class="filter-name-container">
+					<div data-toggle-id="wstart-date-filter">
 						<p class="filter-name">Start Date<span class="glyphicon glyphicon-menu-right"></span></p>
 					</div>
 					<div id="start-date-filter" class="dropdown-style">
@@ -41,8 +48,8 @@
 								 data-filter-text="Start after" type="radio"
 								 name="start-date" checked/>After</label>
 						</div>
-						<div class="calendar-container v2">
-							<div data-parameter-name="startDate" class="calendar"></div>
+						<div class="calendar-container">
+							<div data-parameter-name="startDate" class="calendar v2"></div>
 						</div>	
 											
 					</div>
@@ -63,8 +70,8 @@
 								 data-filter-text="End after" type="radio" name="end-date"
 								 />After</label>
 						</div>		
-						<div class="calendar-container v2">
-							<div data-parameter-name="endDate" class="calendar"></div>
+						<div class="calendar-container">
+							<div data-parameter-name="endDate" class="calendar v2"></div>
 						</div>	
 					</div>
 				</div>
@@ -134,8 +141,8 @@
 					</div>
 					<div id="work-days-filter" class="dropdown-style">
 						<p class="apply-filter">Apply</p>		
-						<div class="calendar-container v2">
-							<div class="calendar"></div>
+						<div class="calendar-container">
+							<div class="calendar v2"></div>
 						</div>						
 					</div>
 				</div>

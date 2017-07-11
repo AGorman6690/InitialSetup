@@ -1,43 +1,82 @@
+#job-details.surpress .surpress{
+	display: none;
+}
+p.show-hide-details.hide-details{
+	display: none;
+}
+p.show-hide-details{
+	display: block;
+}
+#sort-wrapper{
+	text-align: center;
+	width: 600px;
+    margin: auto;
+    height: 60px;
+    line-height: 60px;
+    background: #197994;
+    color: #fff;	
+    display: none;
+    margin-bottom: 2px;
+}
+.item.sort label,
+.item.sort p span:first-child{
+	font-size: 20px;
+	margin-right: 10px;
+}
+.item.sort{
+	display: inline-block;
+	margin: 0px 17px;
+}
 .status h3{
 	font-size: 18px;
+    margin-bottom: 15px;
+    margin-top: 0px;	
 }
 .status h2{
 	padding: 5px;
-	background: #e2e1e1;
+/* 	background: #e2e1e1; */
+    margin-top: 0;
+    font-size: 28px;
 }
 .status h2.warning-message{
     color: red;
     background: #ffe6e6;	
+    margin: 0px auto;
 }
 .status{
-	margin-bottom: 30px;
+/* 	margin-bottom: 30px; */
 	text-align: center;
 }
 .show-applicant-ratings-mod{
 	display: inline-block;
 }
+.sort-and-filter-wrapper{
+	display: none;
+}
 .sort-and-filter-wrapper,
 .applicants{
-	display: inline-block;
 	vertical-align: top;
 }
 .applicants{
-	margin-left: 50px;
+/* 	margin-left: 50px; */
 	margin-bottom: 40px;
+	width: 600px;
+	margin: auto;
 }
 .applicant{
-	background: #f7f7f7;
+/* 	background: #f7f7f7; */
 	padding: 15px;
+    margin-bottom: 10px;	
 }
 #job-details{
 	vertical-align: top;
-	display: inline-block;
+/* 	display: inline-block; */
 }
 
 span.glyphicon-star.favorite-flag,
 span.glyphicon-star-empty.favorite-flag{
     font-size: 19px;
-    margin-right: 15px;
+    margin-top: 5px;
     float: left;
 }
 .favorite-flag.glyphicon-star{
@@ -52,7 +91,7 @@ span.glyphicon-star-empty.favorite-flag{
 .questions{
 	padding: 5px;
 /*     background: #ececec; */
-    max-height: 120px;
+    max-height: 85px;
     overflow: auto;
     margin: 20px 0px;
     border: 1px solid #cacaca;
@@ -70,3 +109,24 @@ span.glyphicon-star-empty.favorite-flag{
     color: #197994;
     font-weight: bold;	
 }
+.expiration-time label{
+	display: block;
+	text-align: left;
+}
+.expiration-time .time-input{
+	display: inline-block;	
+}
+.expiration-time .time-input p{
+	margin-bottom: 2px;
+}
+.expiration-time .other-container{
+    text-align: left;
+    padding-left: 50px;
+    display: none;
+}
+.expiration-time .other-container .radio-container{
+	margin-top: 10px;
+}
+.expiration-time .time-input input{
+	font-size: 18px;
+	width: 75px;
