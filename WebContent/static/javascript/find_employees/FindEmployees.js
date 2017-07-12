@@ -6,7 +6,31 @@ var workDayDtos= [];
 var workDayDtos_original = [];
 $(document).ready(function(){
 	
-	initPage();
+	
+	initCalendar_selectWorkDays($(".calendar"), undefined, 1);
+	
+	
+		
+	$("#clear-work-day-filter").click(function(){	
+		
+		workDayDtos = [];
+		workDayDtos_original = [];
+		$(".calendar").datepicker("destroy");
+		initCalendar_selectWorkDays($(".calendar"), undefined, 1);
+	})
+	
+	
+	$("#find-employees").click(function(){
+		executeAjaxCall_findEmployees();
+	})	
+	
+	
+	
+	
+	
+	
+	
+
 	
 	$("#job-i-might-post").click(function(){
 		$("#filtersContainer").show();
@@ -68,21 +92,8 @@ $(document).ready(function(){
 		toggleClasses($(this).find(".glyphicon").eq(0), "glyphicon-menu-up", "glyphicon-menu-down");
 				
 	})
-	
-	$("#resultsContainer").on("mouseout", "td.days-available .calendar-container", function(){
-		
-//		$(this).hide();
-		
-	})
-	
-	$(".clear-calendar").click(function(){
-//		selectedDays = resetCalendar_hoverRange(selectedDays, $("#availabilityCalendar"));
 
-		resetCal_findEmplyees();
-		
-		
-	})
-	
+
 	$("#posted-jobs [data-posted-job-id]").click(function(){
 		
 		var selectedJobId = $(this).attr("data-posted-job-id");
@@ -92,15 +103,7 @@ $(document).ready(function(){
 		
 		$("#what-kind-of-job-container").hide();
 	})
-	
-	$("#findEmployees").click(function(){
-//		
-		executeAjaxCall_findEmployees();
-//		$("#resultsContainer").show();
-//		$('html, body').animate({
-//	        scrollTop: $("#results").offset().top -100
-//	    }, 2000);
-	})
+
 	
 	$("#makeAnOffer").click(function(){
 //		$("#detailsContainer_makeAnOffer").show();
@@ -117,9 +120,7 @@ $(document).ready(function(){
 	})
 	
 	setStates();
-	var workDayDtos = [];
-//	initCalendar_findEmployees_workDaysFilter($("#availabilityCalendar"), workDayDtos);
-	initCalendar_selectWorkDays($(".calendar"), undefined, 2);
+
 	$("button.clear").click(function(){
 		clearCalendar($("#makerOffer_workDaysCalendar"), "apply-selected-work-day");
 		dates_selectedAvailability_makeOffer = [];
@@ -153,19 +154,6 @@ function executeAjaxCall_getMakeOfferModal(jobId, $e){
 	})
 }
 
-function initPage(){
-	var jobId_getOnPageLoad = $("#jobId_getOnPageLoad").val();
-	
-	if(jobId_getOnPageLoad != "") executeAjaxCall_loadJobDto(jobId_getOnPageLoad);
-}
-
-function resetCal_findEmplyees(){
-	var $calendar = $("#availabilityCalendar");
-	workDayDtos = [];	
-	
-	$calendar.datepicker("refresh");
-	$calendar.removeClass("show-hover-range");	
-}
 
 function onSelect_ShowHoverRange($calendar, selectedDateText, selectedDays){
 
@@ -284,22 +272,14 @@ function showJobInfo(jobDto){
 
 function executeAjaxCall_findEmployees(){
 	var employeeSearch = {};
-	var jobDto = {};
-	jobDto.job = {};
+
+	employeeSearch.radius = $("#miles").val();
+	employeeSearch.address = $("#address").val();
+	employeeSearch.workDays = getSelectedDates($(".calendar"), "yy-mm-dd", "active111");
 	
-	jobDto.job.id = $("#jobId_getOnPageLoad").val();
-	jobDto.job.streetAddress = $("#street").val();
-	jobDto.job.city = $("#city").val();
-	jobDto.job.state = $("#state").val();
-	jobDto.job.zipCode = $("#zipCode").val();
+	employeeSearch.minimumRating = $("#rating-filter-value").find("input:checked").eq(0).val();
+	employeeSearch.minimumJobsCompleted = $("#jobs-completed-filter-value").find("input:checked").eq(0).val();
 	
-	jobDto.workDays = getWorkDays_FromSelectedDates($("#availabilityCalendar"), "yy-mm-dd");
-	
-//	if($("#partialAvailabilityAllowed").is(":checked")) jobDto.job.isPartialAvailabilityAllowed = 1;
-//	else jobDto.job.isPartialAvailabilityAllowed = 0;
-	jobDto.job.isPartialAvailabilityAllowed = 1;
-	
-	employeeSearch.jobDto = jobDto;
 	
 	broswerIsWaiting(true);
 	$.ajax({
@@ -309,25 +289,16 @@ function executeAjaxCall_findEmployees(){
 		headers : getAjaxHeaders(),
 		data: JSON.stringify(employeeSearch),
 		dataType: "html",
-		success: _success,
-		error: _error,
+	}).done(function(html){
+		broswerIsWaiting(false);
+		$e = $("#results");
+		$e.empty();
+		$e.append(html);
+
+		renderStars($e);
+
 	})
 	
-	function _success(html_findEmployee_results){
-		broswerIsWaiting(false);
-		$("#resultsContainer").show();
-		$("#results").empty();
-		$("#results").append(html_findEmployee_results);
-	   
-		$('html, body').animate({
-	        scrollTop: $("#results").offset().top - 100
-	    }, 1000);
-
-	}
-	
-	function _error(){
-		broswerIsWaiting(false);
-	}
 }
 
 

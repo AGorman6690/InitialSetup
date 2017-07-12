@@ -50,7 +50,7 @@
 				>
 
 				<div class="status surpress">
-									 									<span class=" favorite-flag glyphicon glyphicon-flag
+					<span class=" favorite-flag glyphicon glyphicon-flag
 						${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' :
 							'glyphicon glyphicon-star-empty not-selected' }">
 					</span>
@@ -74,8 +74,8 @@
 						<p class="applicant-name show-applicant-ratings-mod linky-hover">
 							 ${userDto.user.firstName }</p>						
 						<div class="show-applicant-ratings-mod">
-							<input name="input-1" class="rating-loading"
-											value="4.2"><span class="rating-value-overall">4.2</span>
+<!-- 							<input name="input-1" class="rating-loading" -->
+<!-- 											value="4.2"><span class="rating-value-overall">4.2</span> -->
 							<c:choose>
 								<c:when test="${empty userDto.ratingValue_overall }">
 									No Rating

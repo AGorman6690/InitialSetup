@@ -60,7 +60,7 @@
 td.active111,
 td.active111{
 	background-color: #163b3d;
-	border-radius:4px;
+/* 	border-radius:4px; */
 }
 
 td.active111 a:hover{
@@ -103,12 +103,12 @@ td.active111 a{
 }
 .calendar-container td.is-available {
 	background: #65886e;
-	border-radius: 5px;
+/* 	border-radius: 5px; */
 }
 
 .calendar-container td.is-not-available {
 	background: #c38f8f;
-	border-radius: 5px;
+/* 	border-radius: 5px; */
 }
 
 .calendar-container td.is-available a,
@@ -126,5 +126,5 @@ td.active111 a{
     padding: 2px 6px;
     background: #8e8e8e;
     color: #fff;
-    border-radius: 4px;
+/*     border-radius: 4px; */
 }

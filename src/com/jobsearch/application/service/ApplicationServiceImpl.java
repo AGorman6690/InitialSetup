@@ -1251,11 +1251,13 @@ public class ApplicationServiceImpl {
 	public String getCurrentProposalStatus(int application_isOpen, int application_isAccepted,			
 			Integer proposedByUserId_currentProposal, int userId_setStatusFor, int profileId_forUser) {
 		
-		if(application_isOpen == 0) return "Application is closed";
-		else if(application_isAccepted == 1){			
+		
+		if(application_isAccepted == 1){			
 			if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
 				return "You are hired";
 			else return "Applicant is hired";			
+		}else if(application_isOpen == 0){
+			return "Application is closed";
 		}else{
 			if(proposedByUserId_currentProposal == userId_setStatusFor){
 				if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)

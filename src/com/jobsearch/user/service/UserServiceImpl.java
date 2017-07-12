@@ -2,8 +2,11 @@ package com.jobsearch.user.service;
 
 import java.security.SecureRandom;
 import java.sql.Timestamp;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +60,8 @@ import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+
+import javassist.expr.NewArray;
 
 @Service
 public class UserServiceImpl {
@@ -441,6 +446,32 @@ public class UserServiceImpl {
 		// I'm assuming this page loads most often.
 		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
+		
+		
+		List<WorkDayDto> workDayDtos_calendar = getWorkDayDtos_employmentSummary(employee.getUserId());
+		
+		
+	}
+
+	private List<WorkDayDto> getWorkDayDtos_employmentSummary(int userId) {
+		
+		int saturdayCount = 0;
+		LocalDateTime today = LocalDateTime.now();
+		
+		while(saturdayCount < 2){
+			
+			if (today.getDayOfWeek() == DayOfWeek.SATURDAY) saturdayCount += 1;
+			
+			WorkDayDto workDayDto = new WorkDayDto();
+			workDayDto.getWorkDay().setDate(today.toLocalDate());
+			
+			String dateString = today.format(DateTimeFormatter.ISO_LOCAL_DATE);
+			List<Job> jobs = jobService.getJobs_employment_byUserAndDate(userId, dateString);
+			
+		}
+		
+		
+		return null;
 	}
 
 	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
@@ -657,51 +688,40 @@ public class UserServiceImpl {
 
 		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
 
-		if (verificationService.isValidLocation(employeeSearch.getJobDto().getJob())) {
-			Coordinate coordinate = GoogleClient.getCoordinate(employeeSearch.getJobDto().getJob());
+		if (GoogleClient.isValidAddress(employeeSearch.getAddress())) {
+			
+			Coordinate coordinate = GoogleClient.getCoordinate(employeeSearch.getAddress());
+			employeeSearch.setLat(coordinate.getLatitude());
+			employeeSearch.setLng(coordinate.getLongitude());
 
-			// Search location must return a result
-			if (coordinate != null) {
+			List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(employeeSearch);
+			boolean doShowAvailability = true;
+			if(employeeSearch.getWorkDays().size() == 0) doShowAvailability = false; 
 
-				employeeSearch.getJobDto().getJob().setLat(coordinate.getLatitude());
-				employeeSearch.getJobDto().getJob().setLng(coordinate.getLongitude());
+			for (JobSearchUser user : users) {
+				JobSearchUserDTO userDto = new JobSearchUserDTO();
 
-				// Get the users that match the search request
-				List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(employeeSearch);
+				userDto.setUser(user);
+				userDto.setRatingValue_overall(this.getRating(user.getUserId()));			
+				userDto.setCount_jobsCompleted(
+						jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
 
-				for (JobSearchUser user : users) {
-					JobSearchUserDTO userDto = new JobSearchUserDTO();
-
-					userDto.setUser(user);
-
-					userDto.setRatingValue_overall(this.getRating(user.getUserId()));
-					userDto.setCount_jobsCompleted(jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
-
+				if(doShowAvailability){
 					userDto.setCount_availableDays_perFindEmployeesSearch(
 							jobService.getCount_availableDays_ByUserAndWorkDays(user.getUserId(),
-									employeeSearch.getJobDto().getWorkDays()));
-
-					// userDto.setAvailableDays(this.getAvailableDays_byWorkDays(user.getUserId(),
-					// employeeSearch.getJobDto().getWorkDays()));
-
-					userDtos.add(userDto);
+									employeeSearch.getWorkDays()));	
 				}
-
+				
+				userDtos.add(userDto);
 			}
-
-			employeeSearch.getJobDto().setDate_firstWorkDay(
-					DateUtility.getMinimumDate(employeeSearch.getJobDto().getWorkDays()).toString());
-			employeeSearch.getJobDto()
-					.setMonths_workDaysSpan(DateUtility.getMonthSpan(employeeSearch.getJobDto().getWorkDays()));
-
-			model.addAttribute("jobDto", employeeSearch.getJobDto());
+			model.addAttribute("employeeSearch", employeeSearch);
+			model.addAttribute("doShowAvailability", doShowAvailability);
 			model.addAttribute("userDtos", userDtos);
 		}
 
 	}
 
 	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
-
 		return repository.getUsers_ByFindEmployeesSearch(employeeSearch);
 	}
 
@@ -761,9 +781,8 @@ public class UserServiceImpl {
 		jobDto_findEmployees.setJob(jobService.getJob(jobId));
 		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
 
-		employeeSearch.setJobDto(jobDto_findEmployees);
-		// employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
-		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
+//		employeeSearch.setJobDto(jobDto_findEmployees);
+//		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
 
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
 
@@ -777,8 +796,8 @@ public class UserServiceImpl {
 		jobDto_findEmployees.setJob(jobService.getJob(jobId));
 		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
 
-		employeeSearch.setJobDto(jobDto_findEmployees);
-		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
+//		employeeSearch.setJobDto(jobDto_findEmployees);
+//		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
 
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
 	}

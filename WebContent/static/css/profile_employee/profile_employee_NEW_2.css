@@ -1,3 +1,6 @@
+.job-name{
+	font-size: 22px;
+}
 h1{
     width: 300px;
     margin: 50px auto;
@@ -6,6 +9,9 @@ h1{
     text-align: center;
     padding: 20px;
     font-size: 25px;
+}
+.proposal-table{
+/* 	margin: auto; */
 }
 #job-list-sort{
 	width: 28%;
@@ -64,12 +70,12 @@ h1{
 }
 #job-list .application .status-wrapper{
 	text-align: center;
-    margin: 0px auto;
+    margin: 10px auto 20px;
     width: auto;
     color: #000;
 }
 #job-list .application .status-wrapper .status{
-    font-size: 25px;
+    font-size: 28px;
 }
 .job-header{
 	text-align: left;	
@@ -86,7 +92,8 @@ h1{
 
 
 .application .proposal{
-	padding: 25px 0px 15px 0px;
+	padding: 25px 0px 15px 25px;
+	font-size: 18px;
 }
 
 #job-list .application-proposal-container{
@@ -95,5 +102,15 @@ h1{
 #job-list .expiration-time-cont p:last-child{
 	border:0;
 }
-
-
+.employment-job-summary label{
+	width: 110px;
+	font-weight: bold;
+	font-size: 18px;
+}
+.employment-job-summary  > div{
+	margin-bottom: 10px;
+}
+.employment-job-summary .dot{
+    font-size: 75px;
+    line-height: 1px;
+}

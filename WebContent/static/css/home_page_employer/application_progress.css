@@ -6,6 +6,7 @@ p.show-hide-details.hide-details{
 }
 p.show-hide-details{
 	display: block;
+    text-decoration: underline;	
 }
 #sort-wrapper{
 	text-align: center;

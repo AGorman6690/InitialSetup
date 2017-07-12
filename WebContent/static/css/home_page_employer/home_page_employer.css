@@ -1,5 +1,6 @@
 .brief-details p{
 	display: inline-block;
+	font-size: 18px;
 }
 .action-options .glyphicon{
 	float: right;
@@ -29,11 +30,14 @@ h1{
 }
 .action{
 	color: red;
+	font-weight: bold;
 }
 .new{
-	background: #b70707;
-	margin-left: 5px;
-	color: #fff;
+    /* background: #b70707; */
+    margin-left: 5px;
+    color: red;
+    text-decoration: underline;
+    font-weight: bold;
 }
 .total, .new{
 	padding: 2px 8px;

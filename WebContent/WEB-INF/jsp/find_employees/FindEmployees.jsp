@@ -1,81 +1,95 @@
 <%@ include file="../includes/Header.jsp"%>
-<%-- <%@ include file="../includes/resources/DatePicker.jsp"%> --%>
-<%-- <%@ include file="../includes/resources/Modal.jsp"%> --%>
 <%@ include file="../includes/resources/InputValidation.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
+<%@ include file="../includes/resources/StarRatings.jsp" %>
 
-
-<script src="/JobSearch/static/javascript/InputValidation.js" type="text/javascript"></script>
-<script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>
-<link href="/JobSearch/static/css/Templates/forms.css" rel="stylesheet" />
-<link href="/JobSearch/static/css/table.css" rel="stylesheet" />
 
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
-<link href="/JobSearch/static/css/find_employees/findEmployees.css" rel="stylesheet" />
-<link href="/JobSearch/static/css/find_employees/make_offer_modal.css" rel="stylesheet" />
-<!-- <link href="/JobSearch/static/css/find_employees/cal_find_employees.css" rel="stylesheet" /> -->
+<link href="/JobSearch/static/css/find_employees/find_employees.css" rel="stylesheet" />
+<link href="/JobSearch/static/css/find_employees/results.css" rel="stylesheet" />
 
 
-<c:if test="${!empty jobDtos_current}">
-	<div id="what-kind-of-job-container">
-		<p>Find employees for a job...</p>
-		<div id="posted-jobs-container" class="dropdown-container" data-toggle-id="posted-jobs">
-			<button class="sqr-btn teal">I have already posted</button>
-			<div id="posted-jobs" class="dropdown-style">
-				<c:forEach items="${jobDtos_current }" var="jobDto">
-					<div data-posted-job-id="${jobDto.job.id }">${jobDto.job.jobName }</div>
-				</c:forEach>
-			</div>
-		</div>			
-		<button id="job-i-might-post" class="sqr-btn teal">I am thinking about posting</button>
-	</div>
-</c:if>
-
-<input id="jobId_getOnPageLoad" type="hidden" value="${job.id }">
-		
-	<div id="filtersContainer" class="${!empty jobDtos_current ? 'hide-on-load' : ''}">
-<%-- 		<c:if test="${!empty job }"> --%>
-			<div id="job-info" class="pad-top">
-				<p><a href="/JobSearch/job/${job.id }?c=waiting&p=2&d=all-apps">${job.jobName }</a></p>
-			</div>
-<%-- 		</c:if> --%>
-		<div id="locationFilterContainer" class="filter">
-			<h3 class="blue">Location</h3>
-			<div id="location" class="filter-value">
-				<input id="street" type="text" placeholder="Street">
-				<input id="city" type="text" placeholder="City">
-				<select id="state"></select>
-				<input id="zipCode" type="text" placeholder="Zip Code" value="55119">
-			</div>
-		</div>
-		<div id="availabilityFilterContainer" class="filter">
-			<h3 class="blue">Work Days</h3>
-<!-- 			<div class="filter-value"> -->
-<!-- 				<label><input id="partialAvailabilityAllowed" type="checkbox">Partial Availability Allowed</label> -->
+<%-- <c:if test="${!empty jobDtos_current}"> --%>
+<!-- 	<div id="what-kind-of-job-container"> -->
+<!-- 		<p>Find employees for a job...</p> -->
+<!-- 		<div id="posted-jobs-container" class="dropdown-container" data-toggle-id="posted-jobs"> -->
+<!-- 			<button class="sqr-btn teal">I have already posted</button> -->
+<!-- 			<div id="posted-jobs" class="dropdown-style"> -->
+<%-- 				<c:forEach items="${jobDtos_current }" var="jobDto"> --%>
+<%-- 					<p data-posted-job-id="${jobDto.job.id }">${jobDto.job.jobName }</p> --%>
+<%-- 				</c:forEach> --%>
 <!-- 			</div> -->
-			<div class="v2 select-work-days calendar-container filter-value work-day-filter">
-				<button class="clear-calendar sqr-btn gray-2">Clear</button>
-				<div id="availabilityCalendar" class="calendar">
-				</div>
-			</div>
-		</div>
-		
-<!-- 		<div id="categoriesFilterContainer" class="filter"> -->
-<!-- 			<h3>Categories</h3> -->
-<!-- 			<div  class="filter-value"></div> -->
-<!-- 		</div>	 -->
-		
-		<div><button id="findEmployees" class="sqr-btn green">Get Results</button></div>
-	</div>
-	<div id="resultsContainer">
-		<h3 class="blue">Results</h3>
-		<div id="results">
-		
-		</div>
-	</div>
+<!-- 		</div>			 -->
+<!-- 		<button id="job-i-might-post" class="sqr-btn teal">I am thinking about posting</button> -->
+<!-- 	</div> -->
+<%-- </c:if> --%>
 	
-<%-- <div id="json_work_day_dtos">${json_job_work_days }</div> --%>
-
-<%-- <%@ include file="./MakeOfferModal.jsp"%> --%>
+<div id="distance-filter-wrapper">
+	<div id="distance-filter">
+		<input id="miles" type="text" placeholder="number of" value="25"/>
+		<span>miles from</span>
+		<input id="address" type="text" placeholder="city, state, zip" value="55119"/>
+		<button id="find-employees" class="sqr-btn">Find Employees</button>
+	</div>
+</div>
+<div id="filters">
+	<div class="filter">
+		
+		<p data-toggle-id="rating-filter-value" class="name">Rating<span class="glyphicon glyphicon-menu-down"></span></p>		
+		<div id="rating-filter-value" class="filter-value-container">
+			<div>
+				<input id="5-stars" type="radio" name="rating-filter-value" value="5"/>
+				<label for="5-stars">5 stars</label>
+			</div>
+			<div>
+				<input id="4-stars" type="radio" name="rating-filter-value" value="4"/>
+				<label for="4-stars">4+ stars</label>
+			</div>
+			<div>
+				<input id="3-stars" type="radio" name="rating-filter-value" value="3"/>
+				<label for="3-stars">3+ stars</label>
+			</div>
+			<div>
+				<input id="2-stars" type="radio" name="rating-filter-value" value="2"/>
+				<label for="2-stars">2+ stars</label>
+			</div>
+			<div>
+				<input id="1-stars" type="radio" name="rating-filter-value" value="1"/>
+				<label for="1-stars">1+ stars</label>
+			</div>			
+		</div>
+	</div>
+	<div class="filter">
+		
+		<p data-toggle-id="jobs-completed-filter-value" class="name">Jobs Completed<span class="glyphicon glyphicon-menu-down"></span></p>		
+		<div id="jobs-completed-filter-value" class="filter-value-container">
+			<div>
+				<input id="15-jobs" type="radio" name="jobs-completed-filter-value" value="15"/>
+				<label for="15-jobs">15+ jobs</label>
+			</div>
+			<div>
+				<input id="10-jobs" type="radio" name="jobs-completed-filter-value" value="10"/>
+				<label for="10-jobs">10+ jobs</label>
+			</div>
+			<div>
+				<input id="5-jobs" type="radio" name="jobs-completed-filter-value" value="5"/>
+				<label for="5-jobs">5+ jobs</label>
+			</div>			
+		</div>
+	</div>
+	<div class="filter">		
+		<p data-toggle-id="work-days-filter-value" class="name">Work Days<span class="glyphicon glyphicon-menu-down"></span></p>		
+		<div id="work-days-filter-value" class="filter-value-container">
+			<p class="apply-filter">Apply</p>		
+			<p id="clear-work-day-filter" class="apply-filter">Clear</p>		
+			<div class="calendar-container">
+				<div class="calendar v2"></div>
+			</div>						
+		</div>
+	</div>	
+</div>
+<div id="results">
+	
+</div>
 
 <%@ include file="../includes/Footer.jsp"%>

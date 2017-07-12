@@ -1053,18 +1053,11 @@ public class JobServiceImpl {
 		return repository.getCount_JobsCompleted_ByUser(userId);
 	}
 
-	public Integer getCount_availableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
-
-		// *************************************************
-		// This takes into account the user's employment and the days
-		// they have explicitly marked as "Available".
-		// If they have marked the 1st and 2nd as "available", and the
-		// work days are the 2nd and 3rd, then their availability count
-		// is 1 (the 3rd is not counted, because it was not marked as "available".
-		// *************************************************
+	public Integer getCount_availableDays_ByUserAndWorkDays(int userId, List<String> workDays) {
 
 		if(verificationService.isListPopulated(workDays)){
-			Integer count_unavailableDays = repository.getCount_unavailableDays_ByUserAndWorkDays(userId, workDays);
+			Integer count_unavailableDays =
+					repository.getCount_unavailableDays_ByUserAndWorkDays(userId, workDays);
 			return 	workDays.size() - count_unavailableDays;
 		}
 		else return -1;
@@ -1553,6 +1546,10 @@ public class JobServiceImpl {
 			JobSearchUser user_employee = userService.getUser(userId_emloyee);
 			model.addAttribute("user_employee", user_employee);			
 		}		
+	}
+
+	public List<Job> getJobs_employment_byUserAndDate(int userId, String dateString) {
+		return repository.getJobs_employment_byUserAndDate(userId, dateString);
 	}
 
 	

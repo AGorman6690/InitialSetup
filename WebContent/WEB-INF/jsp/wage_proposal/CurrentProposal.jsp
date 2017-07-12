@@ -6,14 +6,16 @@
 <c:choose>
 	<c:when test="${sessionScope.user.profileId == 1 &&
 				applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 1 }">
-		<p class="confirm-message">The employer accepted your offer</p>		
+		<c:if test="${appliationDto.application.isAccepted == 0 }">
+			<p class="confirm-message">The employer accepted your offer</p>
+		</c:if>		
 
 		<table class="proposal-table confirm">
 			<thead>
 				<tr>
-					<th>Wage</th>
+					<th></th>
 					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<th>Work Days</th>
+						<th></th>
 					</c:if>
 				</tr>
 			</thead>
@@ -39,9 +41,9 @@
 			<thead>
 				<tr>
 					<th></th>
-					<th>Wage</th>
+					<th></th>
 					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<th>Work Days</th>
+						<th></th>
 					</c:if>
 				</tr>
 			</thead>
@@ -94,7 +96,7 @@
 				<button class="sqr-btn gray-3 show-mod counter-current-proposal">Counter</button>	
 			</c:when>
 			<c:otherwise>
-				<button class="sqr-btn gray-3 show-mod confirm-current-proposal">Confirm</button>
+				<button class="sqr-btn gray-3 show-mod accept-current-proposal">Confirm</button>
 			</c:otherwise>
 		</c:choose>
 	

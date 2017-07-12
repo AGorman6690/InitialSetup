@@ -1,0 +1,74 @@
+#miles{
+	width: 130px;
+}
+#address{
+	width: 200px;
+}
+#distance-filter{
+    width: 700px;
+    margin: auto;	
+}
+#distance-filter input{
+	text-align: center;
+	font-size: 18px;
+}
+#distance-filter-wrapper{
+	padding: 20px 0px;
+	background: #197994;
+}
+#find-employees{
+    padding: 16px 29px;
+    background: #163b3d;
+    color: #fff;
+    font-size: 18px;
+    margin-left: 20px;
+}
+#distance-filter span{
+    color: #fff;
+    font-size: 19px;
+}
+.filter .glyphicon{
+	float: right;
+	font-size: 19px;
+}
+#filters{
+	width: 290px;
+	padding: 25px;
+	vertical-align: top;
+}
+.calendar.v2 td{
+	height: 42px;
+	width: 32px
+}
+.calendar.v2 .ui-datepicker-inline{
+	width: 230px;
+}
+.filter .name{
+	font-size: 18px;
+	font-weight: bold;
+}
+.filter-value-container{
+	padding-left: 20px;
+	display: none;
+}
+.filter{
+	margin-bottom: 25px;
+}
+.calendar.v2{
+	padding: 0;
+}
+#work-days-filter-value .calendar-container{
+	padding: 0;
+}
+.apply-filter{
+    text-align: center;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+.v2 td.active111{
+	background: #197994;
+}
+#filters, #results{
+	display: inline-block;
+}

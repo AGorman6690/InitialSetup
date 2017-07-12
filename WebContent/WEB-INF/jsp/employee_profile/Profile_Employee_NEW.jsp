@@ -74,13 +74,17 @@
 								data-job-end-date="${applicationDto.jobDto.milliseconds_endDate }"
 								data-job-duration-days="${applicationDto.jobDto.workDays.size() }"
 								data-job-distance="${applicationDto.jobDto.distance }"
+								data-is-accepted="${applicationDto.application.isAccepted }"
 								data-is-waiting-on-you="${applicationDto.employmentProposalDto.isProposedToSessionUser }"
 								>
 								<div class="job-header ">
 									<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
 										 ? '' : '' }">
 										<p class="status">${applicationDto.currentProposalStatus }</p>
-										<p class="exp-time">The employer's offer expires in ${applicationDto.time_untilEmployerApprovalExpires }</p>
+										<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
+													applicationDto.application.isAccepted == 0 }">
+											<p class="exp-time">The employer's offer expires in ${applicationDto.time_untilEmployerApprovalExpires }</p>
+										</c:if>
 										<div class="messages">
 											<c:forEach items="${applicationDto.messages }" var="message">.
 												<p>${message }</p>
@@ -89,18 +93,25 @@
 									</div>								
 									<p class="job-name accent show-job-info-mod"
 										 data-job-id="${applicationDto.jobDto.job.id }">${applicationDto.jobDto.job.jobName }</p>
-									<p>${applicationDto.jobDto.job.stringStartDate }
-										 - ${applicationDto.jobDto.job.stringEndDate }
-										 (${applicationDto.jobDto.workDays.size() } ${applicationDto.jobDto.workDays.size() <= 1 ? 'day' : 'days' })</p>
-									<p >${applicationDto.jobDto.job.city_formatted }, ${applicationDto.jobDto.job.state }</p>
+<%-- 									<p>${applicationDto.jobDto.job.stringStartDate } --%>
+<%-- 										 - ${applicationDto.jobDto.job.stringEndDate } --%>
+<%-- 										 (${applicationDto.jobDto.workDays.size() } ${applicationDto.jobDto.workDays.size() <= 1 ? 'day' : 'days' })</p> --%>
+<%-- 									<p >${applicationDto.jobDto.job.city_formatted }, ${applicationDto.jobDto.job.state }</p> --%>
 								</div>			
 								<div class="proposal ${sessionScope.user.profileId == 1 &&
 									applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
 									 data-application-id="${applicationDto.application.applicationId }">
+									
 									<c:set var="jobDto" value="${applicationDto.jobDto }" />
-									<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
-									<div class="render-present-proposal-mod"></div>
-<%-- 									<%@ include file="../wage_proposal/Proposal_Main.jsp" %> --%>
+									<c:choose>
+										<c:when test="${applicationDto.application.isAccepted == 1 }">
+											<%@ include file="./EmploymentJobSummary.jsp" %>
+										</c:when>
+										<c:otherwise>
+											<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
+											<div class="render-present-proposal-mod"></div>										
+										</c:otherwise>
+									</c:choose>
 								</div>
 							</div>
 						</c:if>

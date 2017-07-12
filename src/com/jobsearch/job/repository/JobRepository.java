@@ -950,7 +950,7 @@ public class JobRepository {
 				Integer.class);
 	}
 
-	public Integer getCount_unavailableDays_ByUserAndWorkDays(int userId, List<WorkDay> workDays) {
+	public Integer getCount_unavailableDays_ByUserAndWorkDays(int userId, List<String> workDays) {
 
 		// Main query
 		String sql = "SELECT COUNT(e.Id) FROM employment e" + " JOIN job j ON e.JobId = e.JobId"
@@ -965,15 +965,14 @@ public class JobRepository {
 
 		boolean isFirst = true;
 		sql += " AND (";
-		for (WorkDay workDay : workDays) {
+		for (String workDay : workDays) {
 
 			if (!isFirst)
 				sql += " OR ";
 			sql += " wd.DateId = ?";
 			isFirst = false;
 
-			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
-			args.add(workDay.getDateId());
+			args.add(jobService.getDateId(workDay));
 
 		}
 
@@ -1285,6 +1284,20 @@ public class JobRepository {
 				+ " )";
 		
 		return JobRowMapper(sql, new Object[]{ userId, userId });
+	}
+
+	public List<Job> getJobs_employment_byUserAndDate(int userId, String dateString) {
+		String sql = "SELCT * FROM job j"
+				+ " INNER JOIN work_day wd ON j.JobId = wd.JobId"
+				+ " INNER JOIN date d ON wd.DateId = d.Id"
+				+ " INNER JOIN employment e ON j.JobId = e.JobId"
+				+ " INNER JOIN application a ON e.JobId = a.jobId AND e.UserId = a.UserId"
+				+ " INNER JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " INNER JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " WHERE e.UserId = ?"
+				+ "	WHERE d.Date = ?";
+		
+		return JobRowMapper(sql, new Object[]{ userId, dateString });
 	}
 
 }

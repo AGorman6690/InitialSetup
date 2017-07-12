@@ -16,7 +16,7 @@
 		</div>
 <!-- 		<div id="applied-filters"></div> -->
 	</div>
-	<div id="wrapper">
+	<div id="wrapper" class="${sessionScope.jobs_needRating.size() > 0 ? 'rating-required' : ''}">
 		<div id="other-filters">
 			<div id="side-location-filter" class="filter">
 				<button id="get-jobs" class="sqr-btn green">Get Jobs</button>

@@ -1,7 +1,4 @@
-.proposal.confirm{
-	padding: 20px;
-    background: #80cc91;
-}
+
 .proposal.confirm .confirm-message{
 	font-size: 18px;
 	font-weight: bold;
@@ -365,10 +362,15 @@ div[data-is-waiting-on-you=true]{
 /* 	background: #ffbdbd; */
     border: 6px solid red;
 }
-div[data-is-waiting-on-you=false]{
+div[data-is-accepted="1"]{
+/* 	background: #f7f7f7; */
+	border: 6px solid green;
+}
+div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]){
 /* 	background: #f7f7f7; */
 	border: 6px solid #888;
 }
+
 .send-status-warning{
 	text-align: left;
 }

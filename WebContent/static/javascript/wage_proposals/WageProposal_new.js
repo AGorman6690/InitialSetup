@@ -103,16 +103,14 @@ $(document).ready(function() {
 		// ************************************************************
 		// Need validation
 		// ************************************************************
-		var context = getContext($(this));
 		g_employmentProposalDto = getEmploymentProposalDto($(this));	
-		executeAjaxCall_respondToProposal(g_employmentProposalDto, context);
+		executeAjaxCall_respondToProposal(g_employmentProposalDto);
 	})
 	
 	$("body").on("click", ".send-initial-offer", function() {
 			// ************************************************************
 			// validation was done on .review-proposal event
 			// ************************************************************			
-		var context = getContext($(this));
 		executeAjaxCall_sendOffer($(this));
 	})
 	
@@ -174,7 +172,7 @@ function isCounteringWage($cont) {
 	else return true;
 	
 }
-function executeAjaxCall_respondToProposal(employmentProposalDto, context){
+function executeAjaxCall_respondToProposal(employmentProposalDto){
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",

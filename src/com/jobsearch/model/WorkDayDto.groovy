@@ -27,6 +27,8 @@ public class WorkDayDto {
 	Job job_conflictingEmployment
 	List<ApplicationDTO> applicationDtos_conflictingApplications
 	
+	List<Job> jobs
+	
 	Object date
 	
 	WorkDayDto(){
