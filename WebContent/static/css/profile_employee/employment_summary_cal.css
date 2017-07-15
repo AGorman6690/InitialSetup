@@ -1,0 +1,43 @@
+#employment-summary-calendar{
+	margin-bottom: 50px;
+}
+#employment-summary-calendar .calendar td{
+	width: 150px;
+	height: 150px;
+}
+.v2.calendar .ui-datepicker-inline{
+	width: auto;
+}
+.calendar .job-name{
+	font-size: 18px;
+	font-weight: bold;
+	color: #197994;
+}
+.jobs{
+	height: 100px;
+}
+.jobs p{
+	margin: 0px;
+}
+#employment-summary-calendar h2{
+	text-align: center;
+}
+.v2 .ui-datepicker-title{
+	font-size: 23px;
+}
+.ui-datepicker-current-day{
+	background: #163b3d;
+}
+.calendar td.ui-datepicker-current-day a{
+	color: #fff;
+}
+#employment-summary-calendar h1{
+	width: 375px;
+	margin-bottom: 10px;
+}
+td.has-employment{
+	background: #f7f7f7;
+}
+.calendar-container .v2 td a{
+	font-size: 20px;
+}

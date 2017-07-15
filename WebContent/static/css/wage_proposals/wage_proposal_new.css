@@ -165,13 +165,13 @@
     width: 320px;
 }
 
-
-
+#make-offer-modal .mod-content,
 .proposal-container .mod-content{
     top: 20px;
     width: 1200px;
     margin-left: -600px;
-    margin-bottom: 20px;    
+    margin-bottom: 20px;  
+    text-align: center;  
 }
 .proposal-container h2{
     font-size: 20px;
@@ -360,15 +360,21 @@ span.expiration-time{
 }
 div[data-is-waiting-on-you=true]{
 /* 	background: #ffbdbd; */
-    border: 6px solid red;
+/*     border: 6px solid red; */
+	border: 0;
+    border-left: 35px solid red;
 }
 div[data-is-accepted="1"]{
 /* 	background: #f7f7f7; */
-	border: 6px solid green;
+/* 	border: 6px solid green; */
+	border: 0;
+	border-left: 35px solid #00c15e;
 }
 div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]){
 /* 	background: #f7f7f7; */
-	border: 6px solid #888;
+/* 	border: 6px solid #888; */
+	border: 0;
+	border-left: 35px solid #888;
 }
 
 .send-status-warning{

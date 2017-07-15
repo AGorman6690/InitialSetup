@@ -2,10 +2,10 @@
 	width: 130px;
 }
 #address{
-	width: 200px;
+	width: 400px;
 }
 #distance-filter{
-    width: 700px;
+    width: 940px;
     margin: auto;	
 }
 #distance-filter input{
@@ -71,4 +71,27 @@
 }
 #filters, #results{
 	display: inline-block;
+}
+
+#unavailable-message{
+	display: none;
+	font-weight: bold;
+	color: red
+}
+#select-a-job .mod-content{
+    width: 300px;
+    margin-left: -150px;
+    top: 25%;
+}
+#select-a-job{
+	text-align: center;
+}
+
+#select-a-job [data-job-id]{
+	padding: 5px;
+}
+#select-a-job [data-job-id]:hover{
+	background: #163b3d;
+	color: #fff;
+	cursor: pointer;
 }

@@ -1,42 +1,6 @@
 <%@ include file="../includes/TagLibs.jsp"%>		
 		
 <div class="job-detail" data-job-id="${jobDto.job.id }">
-<!-- 	<div class="sort-and-filter-wrapper"> -->
-<!-- 		<div class="item"> -->
-<%-- 			<input type="checkbox" id="employees-${jobDto.job.id }" checked> --%>
-<%-- 			<label for="employees-${jobDto.job.id }">Employees</label> --%>
-<!-- 		</div>	 -->
-<!-- 		<div class="item"> -->
-<%-- 			<input type="checkbox" id="applicants-${jobDto.job.id }" checked> --%>
-<%-- 			<label for="applicants-${jobDto.job.id }">Applicants</label> --%>
-<!-- 			<div class="sub-items"> -->
-<!-- 				<div> -->
-<%-- 					<input type="checkbox" id="waiting-on-you-${jobDto.job.id }" checked> --%>
-<%-- 					<label for="waiting-on-you-${jobDto.job.id }">Proposals waiting on you</label> --%>
-<!-- 				</div> -->
-<!-- 				<div> -->
-<%-- 					<input type="checkbox" id="waiting-on-applicant-${jobDto.job.id }" checked> --%>
-<%-- 					<label for="waiting-on-applicant-${jobDto.job.id }">Proposals waiting on applicant</label> --%>
-<!-- 				</div> -->
-<!-- 				<div> -->
-<%-- 					<input type="checkbox" id="expired-proposals-${jobDto.job.id }" checked> --%>
-<%-- 					<label for="expired-proposals-${jobDto.job.id }">Expired proposals</label> --%>
-<!-- 				</div>					 -->
-<!-- 			</div> -->
-<!-- 		</div>				 -->
-<!-- 		<div class="item"> -->
-<%-- 			<input type="checkbox" id="favorites-${jobDto.job.id }"> --%>
-<%-- 			<label for="favorites-${jobDto.job.id }">Favorites</label> --%>
-<!-- 		</div>	 -->
-<!-- 		<div class="item sort"> -->
-<!-- 			<p><span>Rating</span><span class="glyphicon glyphicon-arrow-down"></span> -->
-<!-- 				<span class="glyphicon glyphicon-arrow-up"></span></p> -->
-<!-- 		</div>	 -->
-<!-- 		<div class="item sort"> -->
-<!-- 			<p><span>Proposed wage</span><span class="glyphicon glyphicon-arrow-down"></span> -->
-<!-- 				<span class="glyphicon glyphicon-arrow-up"></span></p> -->
-<!-- 		</div>								 -->
-<!-- 	</div> -->
 	<div class="applicants">
 		<c:forEach items="${jobDto.userDtos_applicants }" var="userDto">
 			<div class="applicant"
@@ -54,11 +18,13 @@
 						${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' :
 							'glyphicon glyphicon-star-empty not-selected' }">
 					</span>
-					<h2 class="${userDto.applicationDto.employmentProposalDto.isProposedToSessionUser &&
+					<p class="applicant-or-employee">${userDto.applicationDto.application.isAccepted == 1
+						? 'Employee' : 'Applicant' }</p>
+					<p class="waiting-status ${userDto.applicationDto.employmentProposalDto.isProposedToSessionUser &&
 									userDto.applicationDto.application.isAccepted == 0
 											 ? '' : '' }">${userDto.applicationDto.currentProposalStatus }
 											 
-					 </h2>
+					 </p>
 					 <h3>					 
 						 ${!userDto.applicationDto.employmentProposalDto.isProposedToSessionUser &&
 								userDto.applicationDto.application.isAccepted == 0 ?
@@ -70,12 +36,10 @@
 				<div>
 
 					<div class="center">
-<%-- 						<span class="applicant-name">${userDto.user.firstName }</span> --%>
-						<p class="applicant-name show-applicant-ratings-mod linky-hover">
-							 ${userDto.user.firstName }</p>						
-						<div class="show-applicant-ratings-mod">
-<!-- 							<input name="input-1" class="rating-loading" -->
-<!-- 											value="4.2"><span class="rating-value-overall">4.2</span> -->
+<!-- 						<p class="applicant-name show-applicant-ratings-mod linky-hover"> -->
+<%-- 							 ${userDto.user.firstName }</p>						 --%>
+						<%@ include file="./../ratings/Template_RenderRatingsMod.jsp" %>
+						<div class="show-applicant-ratings-mod-0">
 							<c:choose>
 								<c:when test="${empty userDto.ratingValue_overall }">
 									No Rating
@@ -87,16 +51,16 @@
 								</c:otherwise>
 							</c:choose>							 	
 						 </div>
-						<div class="ratings-mod-container">
-							<div class="mod simple-header">
-								<div class="mod-content">
-									<div class="mod-header">
-									</div>
-									<div class="mod-body">	
-									</div>
-								</div>
-							</div>						
-						</div>
+<!-- 						<div class="ratings-mod-container"> -->
+<!-- 							<div class="mod simple-header"> -->
+<!-- 								<div class="mod-content"> -->
+<!-- 									<div class="mod-header"> -->
+<!-- 									</div> -->
+<!-- 									<div class="mod-body">	 -->
+<!-- 									</div> -->
+<!-- 								</div> -->
+<!-- 							</div>						 -->
+<!-- 						</div> -->
 					</div>
 								
 				</div>
@@ -128,6 +92,7 @@
 				<div>
 					<div class="proposal" data-application-id="${userDto.applicationDto.application.applicationId }">
 						<c:set var="applicationDto" value="${userDto.applicationDto }" />
+						<c:set var="jobDto" value="${userDto.applicationDto.jobDto }" />
 						<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
 					</div>
 				</div>

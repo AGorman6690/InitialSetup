@@ -44,6 +44,9 @@ p.show-hide-details{
     background: #ffe6e6;	
     margin: 0px auto;
 }
+.proposal-table{
+	margin: auto;
+}
 .status{
 /* 	margin-bottom: 30px; */
 	text-align: center;
@@ -65,20 +68,24 @@ p.show-hide-details{
 	margin: auto;
 }
 .applicant{
-/* 	background: #f7f7f7; */
+	background: #f7f7f7;
 	padding: 15px;
-    margin-bottom: 10px;	
+    margin-bottom: 25px;	
 }
 #job-details{
 	vertical-align: top;
 /* 	display: inline-block; */
 }
-
+.applicant{
+	position: relative;
+}
 span.glyphicon-star.favorite-flag,
 span.glyphicon-star-empty.favorite-flag{
     font-size: 19px;
     margin-top: 5px;
-    float: left;
+    /* float: left; */
+    position: absolute;
+    left: 20px;
 }
 .favorite-flag.glyphicon-star{
 	color: #000;
@@ -105,7 +112,7 @@ span.glyphicon-star-empty.favorite-flag{
 	padding-left: 30px;
     font-weight: normal;
 }
-.applicant-name{
+.user-rating{
 	font-size: 22px;
     color: #197994;
     font-weight: bold;	

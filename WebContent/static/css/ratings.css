@@ -1,6 +1,13 @@
-
-
-
+.show-applicant-ratings-mod{
+	text-align: center;
+}
+.show-applicant-ratings-mod .user-rating:hover{
+	cursor: pointer;
+}
+.show-applicant-ratings-mod .user-rating{
+	font-weight: bold;
+	color: #197994;
+}
 /* Override plugin */
 .rating-container{
 	display:inline-block !important;
@@ -177,7 +184,7 @@ table#ratings{
     width: 700px;
     margin-left: -350px;
     top: 100px;
-    border: 5px solid #163b3d;
+/*     border: 5px solid #163b3d; */
 }
 body{
 	min-height: 1100px;

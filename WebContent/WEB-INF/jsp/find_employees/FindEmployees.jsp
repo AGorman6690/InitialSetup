@@ -2,12 +2,18 @@
 <%@ include file="../includes/resources/InputValidation.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 <%@ include file="../includes/resources/StarRatings.jsp" %>
+<%@ include file="../includes/resources/Modal.jsp" %>
 
 
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <link href="/JobSearch/static/css/find_employees/find_employees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/find_employees/results.css" rel="stylesheet" />
 
+<!-- ******************************** -->
+<!-- Refactor this style sheet. -->
+<!-- It is only here to format the make-an-offer modal -->
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/application_progress.css" />
+<!-- ********************************** -->
 
 <%-- <c:if test="${!empty jobDtos_current}"> --%>
 <!-- 	<div id="what-kind-of-job-container"> -->
@@ -26,9 +32,11 @@
 	
 <div id="distance-filter-wrapper">
 	<div id="distance-filter">
-		<input id="miles" type="text" placeholder="number of" value="25"/>
+		<input id="miles" type="text" placeholder="number of"
+			value="${not empty employeeSearch ? employeeSearch.radius: '25' }"/>
 		<span>miles from</span>
-		<input id="address" type="text" placeholder="city, state, zip" value="55119"/>
+		<input id="address" type="text" placeholder="city, state, zip"
+			value="${not empty employeeSearch ? employeeSearch.address : '55119' }"/>
 		<button id="find-employees" class="sqr-btn">Find Employees</button>
 	</div>
 </div>
@@ -78,7 +86,7 @@
 		</div>
 	</div>
 	<div class="filter">		
-		<p data-toggle-id="work-days-filter-value" class="name">Work Days<span class="glyphicon glyphicon-menu-down"></span></p>		
+		<p data-toggle-id="work-days-filter-value" class="name">Availability<span class="glyphicon glyphicon-menu-down"></span></p>		
 		<div id="work-days-filter-value" class="filter-value-container">
 			<p class="apply-filter">Apply</p>		
 			<p id="clear-work-day-filter" class="apply-filter">Clear</p>		
@@ -89,7 +97,30 @@
 	</div>	
 </div>
 <div id="results">
-	
+	<c:if test="${not empty employeeSearch }">
+		<%@ include file="./Results_Find_Employees.jsp" %>
+	</c:if>	
+</div>
+<div id="select-a-job"></div>
+
+<div class="proposal-container">
+	<div id="make-offer-modal" class="proposal counter-context respond"></div>
 </div>
 
+
+<!-- <div class="proposal-container"> -->
+<!-- 	<div id="make-offer-modal" class="proposal counter-context"> -->
+	
+<!-- 		<div class="mod simple-header respond"> -->
+<!-- 			<div class="mod-content"> -->
+<!-- 				<div class="mod-header"></div> -->
+<!-- 				<div class="mod-body">		 -->
+<!-- 				</div>  -->
+		
+<!-- 			</div> -->
+<!-- 		</div> -->
+	
+	
+<!-- 	</div> -->
+<!-- </div> -->
 <%@ include file="../includes/Footer.jsp"%>

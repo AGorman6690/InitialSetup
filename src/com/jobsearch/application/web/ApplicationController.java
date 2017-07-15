@@ -98,6 +98,7 @@ public class ApplicationController {
 	@RequestMapping(value = "/application/{applicationId}/current-proposal", method = RequestMethod.GET)
 	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
 								Model model, HttpSession session) {
+		
 		applicationService.setModel_ViewCurrentProposal(model, session, applicationId);
 		return "/wage_proposal/AjaxResponse_Proposal_NEW";
 	}
@@ -132,9 +133,10 @@ public class ApplicationController {
 		
 		return "redirect:/user/profile";
 	}
-	@RequestMapping(value = "/employer/initiate-contact", method = RequestMethod.POST)
+	@RequestMapping(value = "/employer/make-initial-offer", method = RequestMethod.POST)
 	@ResponseBody
-	public String initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+	public String initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto,
+			HttpSession session) {
 
 		applicationService.initiateContact_byEmployer(applicationDto, session);
 		

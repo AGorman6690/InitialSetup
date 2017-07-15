@@ -191,6 +191,8 @@ public class UserController {
 		return model;
 
 	}
+	
+	
 
 	@RequestMapping(value = "/user/{userId}/ratings", method = RequestMethod.GET)
 	public String getRatings_byUser(Model model, @PathVariable(value = "userId") int userId) {
@@ -200,6 +202,34 @@ public class UserController {
 		return "/ratings/RatingsByUser";
 	}	
 	
+	@RequestMapping(value = "/user/{userId}/make-offer/initialize", method = RequestMethod.GET)
+	public String makeOffer_initialize(Model model, HttpSession session, 
+			@PathVariable(value = "userId") int userId) {
+		
+		userService.setModel_makeOffer_initialize(model, userId, session);
+		
+		return "/find_employees/MakeOffer_SelectJob";
+	}
+	
+	@RequestMapping(value = "/user/{userId}/make-offer/job/{jobId}", method = RequestMethod.GET)
+	public String makeOffer(Model model, HttpSession session, 
+			@PathVariable(value = "userId") int userId,
+			@PathVariable(value = "jobId") int jobId) {
+		
+		userService.setModel_makeOffer(model, userId, jobId, session);
+		
+		return "/wage_proposal/AjaxResponse_Proposal_NEW";
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/user/{userId}/verify-availability/job/{jobId}", method = RequestMethod.GET)
+	public String verifyAvailabilityForJob(Model model, HttpSession session, 
+			@PathVariable(value = "userId") int userId,
+			@PathVariable(value = "jobId") int jobId) {
+		
+		return userService.getAvailabliltyStatusMessage_forUserAndJob(userId, jobId);
+	}	
 	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
 //	@ResponseBody
 	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {

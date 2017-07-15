@@ -53,7 +53,6 @@ public class JobRepository {
 
 	public List<Job> JobRowMapper(String sql, Object[] args) {
 
-		try {
 
 			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
 
@@ -144,9 +143,6 @@ public class JobRepository {
 				}
 			});
 
-		} catch (Exception e) {
-			return null;
-		}
 
 	}
 
@@ -1287,17 +1283,29 @@ public class JobRepository {
 	}
 
 	public List<Job> getJobs_employment_byUserAndDate(int userId, String dateString) {
-		String sql = "SELCT * FROM job j"
-				+ " INNER JOIN work_day wd ON j.JobId = wd.JobId"
-				+ " INNER JOIN date d ON wd.DateId = d.Id"
+		String sql = "SELECT * FROM job j"
 				+ " INNER JOIN employment e ON j.JobId = e.JobId"
 				+ " INNER JOIN application a ON e.JobId = a.jobId AND e.UserId = a.UserId"
 				+ " INNER JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 				+ " INNER JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " INNER JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+				+ " INNER JOIN date d ON wd.DateId = d.Id"
 				+ " WHERE e.UserId = ?"
-				+ "	WHERE d.Date = ?";
+				+ "	AND d.Date = ?"
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND wd.IsComplete = 0";
 		
 		return JobRowMapper(sql, new Object[]{ userId, dateString });
+	}
+
+	public WorkDay getWorkDay(Integer jobId, String dateString) {
+		String sql = "SELECT * FROM work_day wd"
+				+ " INNER JOIN job j ON wd.JobId = j.JobId"
+				+ " INNER JOIN date d ON wd.DateId = d.Id"
+				+ " WHERE j.JobId = ?"
+				+ " AND d.Date = ?";
+		
+		return WorkDayMapper(sql, new Object[]{ jobId, dateString }).get(0);
 	}
 
 }

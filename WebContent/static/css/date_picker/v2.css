@@ -18,7 +18,7 @@
 }
 .v2 td.job-work-day,
 .v2 .start-and-end-times{
-	border: 2px solid #36595a;
+/* 	border: 2px solid #36595a; */
 }
 .v2.proposal-calendar:not(.preview-job-post) .job-work-day:not(.is-proposed) a{
 /* 	background: #fff; */

@@ -21,7 +21,7 @@
 	</div>
 </div>
 <div id="main-save-cancel-edits" class="center pad-top-2 hide-on-load">
-	
+	<span id="save-edits" class="sqr-btn green">Save</span>
 	<span id="cancel-edits">Cancel</span>
 </div>
 <div class="center">
@@ -35,9 +35,6 @@
 			</div>
 		</div>		
 		<div id="work-days-to-add" class="pad-top-2"></div>	
-		<div class="pad-top">
-			<span id="save-edits" class="sqr-btn green">Save</span>
-		</div>	
 	</div>			
 	<div id="times-container" class="page-section">	
 		<div id="times-cont">				

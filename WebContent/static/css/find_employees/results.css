@@ -1,7 +1,7 @@
 #results table th,
 #results table td{
-	padding: 10px;
-	text-align: center;
+	padding: 10px 25px;
+/* 	text-align: center; */
 }
 #results .rating-container .glyphicon{
 	font-size: 19px;
@@ -13,4 +13,9 @@
     margin-top: 25px;
     margin-left: 50px;
     font-size: 18px;
+}
+.make-an-offer{
+	font-size: 15px;
+    font-weight: bold;
+    color: #163b3d;
 }

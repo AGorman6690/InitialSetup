@@ -67,8 +67,11 @@
 				</c:if>
 				<tr class="current-proposal ${applicationDto.employmentProposalDto.proposedToUserId == user.userId ? 'swarning-message' :'' }">
 					<td>
-						<p class="">${applicationDto.employmentProposalDto.proposedByUserId == user.userId ? 'Your current proposal' : 
-							user.profileId == 1 ? "Employer's current proposal" : "Applicant's current proposal"}</p>
+						<p class="">${applicationDto.application.isAccepted == "1" ? "Wage" :
+							applicationDto.employmentProposalDto.proposedByUserId == user.userId ?
+							'Your current proposal' : 
+							user.profileId == 1 ? "Employer's current proposal" :
+							"Applicant's current proposal"}</p>
 					
 					</td>
 					<td><span class="dollar-sign">$</span>

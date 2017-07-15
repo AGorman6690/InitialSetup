@@ -33,6 +33,7 @@ import com.jobsearch.job.repository.JobRepository;
 import com.jobsearch.job.web.FindJobFilterDTO;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
@@ -855,11 +856,17 @@ public class JobServiceImpl {
 								sessionUser.getProfileId()));
 			
 				
+				if(applicationDto.getApplication().getIsNew() == 1){
+					applicationService.updateApplicationFlag(
+							applicationDto.getApplication(), "IsNew", 0);
+				}
 				
-				
+				if(applicationDto.getEmploymentProposalDto().getIsNew() == 1){
+					applicationService.updateProposalFlag(applicationDto.getEmploymentProposalDto(), "IsNew", 0);
+				}
+								
 				userDTO.setApplicationDto(applicationDto);
 				jobDto.getUserDtos_applicants().add(userDTO);
-
 				
 			}
 			
@@ -1442,10 +1449,27 @@ public class JobServiceImpl {
 		}else return null;
 	}
 
-	public void setModel_findEmployeesByJob(Model model, HttpSession session, int jobId) {
+	public void setModel_findEmployees_byJob(Model model, HttpSession session, int jobId) {
 
 		if(verificationService.didSessionUserPostJob(session, jobId)){
-			model.addAttribute("job", getJob(jobId));
+			
+			Job job = getJob(jobId);
+			String address = job.getStreetAddress_formatted() + " " 
+					+ job.getCity_formatted() + " "
+					+ job.getState() + " "
+					+ job.getZipCode_formatted();
+			Double radius = 25.0;
+			
+			EmployeeSearch employeeSearch = new EmployeeSearch();
+			employeeSearch.setAddress(address);
+			
+			employeeSearch.setRadius(radius);
+			employeeSearch.setWorkDays(getWorkDayDateStrings(jobId));
+			
+			userService.setModel_findEmployees_results(model, employeeSearch);
+			
+			model.addAttribute("job", job);			
+//			model.addAttribute("doShowResultsOnPageLoad", true);
 		}
 	}
 
@@ -1550,6 +1574,10 @@ public class JobServiceImpl {
 
 	public List<Job> getJobs_employment_byUserAndDate(int userId, String dateString) {
 		return repository.getJobs_employment_byUserAndDate(userId, dateString);
+	}
+
+	public WorkDay getWorkDay(Integer jobId, String dateString) {
+		return repository.getWorkDay(jobId, dateString);
 	}
 
 	

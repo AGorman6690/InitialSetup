@@ -1,8 +1,11 @@
 <h3 class="blue">Expiration Time</h3>		
 <div>
 	<div class="radio-container">		
-		<label><input type="radio" name="exp-time-init" class="one-day-from-now"> 1 day from now </label>
-		<label><input type="radio" name="exp-time-init" class="one-day-before"> 1 day before the first proposed work day begins</label>
+		<label><input type="radio" name="exp-time-init" class="one-day-from-now">
+			 1 day from now </label>
+		<label><input type="radio" name="exp-time-init" class="one-day-before">
+			 1 day before the first ${jobDto.job.isPartialAvailabilityAllowed ?
+			 	 'proposed' : '' } work day begins</label>
 		<label><input type="radio" name="exp-time-init" class="other"> Other</label>
 		<div class="other-container">
 			<div class="time-input">

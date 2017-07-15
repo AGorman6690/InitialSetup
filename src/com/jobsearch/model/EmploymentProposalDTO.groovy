@@ -23,6 +23,7 @@ class EmploymentProposalDTO {
 	String amount
 	LocalDateTime employerAcceptedDate
 	LocalDateTime expirationDate
+	Integer isNew
 	
 	String dateString_expirationDate
 	String timeString_expirationTime

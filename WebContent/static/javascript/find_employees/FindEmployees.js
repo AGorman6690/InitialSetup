@@ -9,6 +9,16 @@ $(document).ready(function(){
 	
 	initCalendar_selectWorkDays($(".calendar"), undefined, 1);
 	
+	$("body").on("click", ".make-an-offer", function() {
+		var userId = $(this).attr("data-user-id");
+		executeAjaxCall_makeAnOffer_initialize(userId);
+	})
+	
+	$("body").on("click", ".select-a-job [data-job-id]", function() {
+		var userId_makeOfferTo = $(this).closest(".select-a-job").attr("data-user-id");
+		var jobId = $(this).attr("data-job-id");
+		executeAjaxCall_verifyAvailability(userId_makeOfferTo, jobId);
+	})
 	
 		
 	$("#clear-work-day-filter").click(function(){	
@@ -52,46 +62,7 @@ $(document).ready(function(){
 //		}
 		
 	})
-	
-	
-	$("#resultsContainer").on("click", "span.show-make-offer-modal", function(){
-		var $e_renderHtml = $(this).siblings(".make-offer-container").eq(0);
-		var jobId = $("#jobId_getOnPageLoad").val();
-		
-		if($e_renderHtml.find(".calendar.hasDatepicker").length == 0)
-			executeAjaxCall_getMakeOfferModal(jobId, $e_renderHtml);
-		else 
-			$e_renderHtml.find(".mod").show();
 
-	})
-	
-	$("#resultsContainer").on("click", "td span.toggle-availability-calendar", function(){
-		
-		var $td = $(this).closest("td").eq(0);
-		var $calendarContainer = $td.find(".calendar-container").eq(0);
-		var $calendar = $calendarContainer.find(".calendar").eq(0);
-		
-		if($calendarContainer.is(":visible")){
-			$calendarContainer.hide();
-		}
-		else{
-			// Only set the calendar once
-			if($calendar.hasClass("hasDatepicker") == 0){
-				dates_employeeAvailability = [];
-				$td.find(".dates div[data-date]").each(function(){
-					dates_employeeAvailability.push(new Date($(this).attr("data-date").replace(/-/g, "/")));
-				})
-				initCalendar_employeeAvailability($calendar);
-				
-				$calendar.datepicker("setDate", new Date($("#calendarSpecs").attr("data-first-date").replace(/-/g, "/")));
-			}		
-			
-			$calendarContainer.show();
-		}
-
-		toggleClasses($(this).find(".glyphicon").eq(0), "glyphicon-menu-up", "glyphicon-menu-down");
-				
-	})
 
 
 	$("#posted-jobs [data-posted-job-id]").click(function(){
@@ -104,53 +75,73 @@ $(document).ready(function(){
 		$("#what-kind-of-job-container").hide();
 	})
 
-	
-	$("#makeAnOffer").click(function(){
-//		$("#detailsContainer_makeAnOffer").show();
-		$("#selectJob_initiateContact").show();
-		$("#actionsContainer_initiateContact #sendInvite").hide();
-		$("#actionsContainer_initiateContact #sendOffer").show();
-	})
-	
-	$("#inviteToApply").click(function(){
-		$("#detailsContainer_makeAnOffer").hide();
-		$("#selectJob_initiateContact").show();
-		$("#actionsContainer_initiateContact #sendInvite").show();
-		$("#actionsContainer_initiateContact #sendOffer").hide();
-	})
-	
-	setStates();
-
-	$("button.clear").click(function(){
-		clearCalendar($("#makerOffer_workDaysCalendar"), "apply-selected-work-day");
-		dates_selectedAvailability_makeOffer = [];
-	})
-	
 })
-
-
-function executeAjaxCall_getMakeOfferModal(jobId, $e){
+function executeAjaxCall_verifyAvailability(userId, jobId) {
 	broswerIsWaiting(true);
 	$.ajax({
 		type: "GET",
-		url: "/JobSearch/job/" + jobId + "/make-an-offer/initialize",
-		headers: getAjaxHeaders(),
+		url: "/JobSearch/user/" + userId + "/verify-availability/job/" + jobId,
+		dataType: "text",
+		headers: getAjaxHeaders()
+	}).done(function(text) {
+		broswerIsWaiting(false);
+		$e = $("#unavailable-message");
+		if(text == "available"){
+			$e.hide();
+			executeAjaxCall_makeOffer(userId, jobId);
+		}else{
+			$e.show();
+			$span = $e.find("span").eq(0);
+			if(text == "unavailable"){
+				$span.html("is unavailable.");
+			}else if(text == "already-applied"){
+				$span.html("already applied for this job.");
+			}
+		}
+	})
+}
+
+function executeAjaxCall_makeOffer(userId, jobId) {
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/user/" + userId + "/make-offer/job/" + jobId,
 		dataType: "html",
+		headers: getAjaxHeaders(),
 	}).done(function(html) {
 		broswerIsWaiting(false);
-		$e.html(html);
-		
-		var $proposalContainer = $e.closest("tr").find(".proposal-container");
+		var $e = $("#make-offer-modal");
+		$e.empty();
+		$e.append(html);
 		$e.find(".mod").show();
-//		
-		workDayDtos = JSON.parse($("#json_workDayDtos").html());
-		$(workDayDtos).each(function() {
-			this.isProposed = "0";
-		})
 		
-		var $calendar = $proposalContainer.find(".calendar.make-initial-offer-calendar").eq(0);
-		initCalendar_new($calendar, workDayDtos);	
-	
+		g_workDayDtos_originalProposal = JSON.parse($e.find("#json_workDayDtos").eq(0).html());
+		$.extend(true, g_workDayDtos_counter, g_workDayDtos_originalProposal);
+
+		initCalendar_new($e.find(".calendar"), g_workDayDtos_originalProposal);
+		
+		broswerIsWaiting(false);
+		
+		$("#select-a-job .mod").hide();
+		
+	})
+}
+
+function executeAjaxCall_makeAnOffer_initialize(userId) {
+	broswerIsWaiting(true);
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/user/" + userId + "/make-offer/initialize",
+		dataType: "html",
+		headers: getAjaxHeaders(),
+	}).done(function(html) {
+		broswerIsWaiting(false);
+		var $e = $("#select-a-job");
+		$e.html(html);
+		$e.find(".mod").show();
+		
+
+		
 	})
 }
 

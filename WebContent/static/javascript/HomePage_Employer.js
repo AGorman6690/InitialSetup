@@ -6,16 +6,14 @@ $(document).ready(function() {
 	$e_renderJobDetails = $("#job-details");
 	$e_jobsList = $("#jobs-list");
 	
-	$("body").on("click", ".show-applicant-ratings-mod", function() {	
-		
-		var $e_applicant = $(this).closest(".applicant");
-//		if($e_applicant.find(".mod").eq(0).is(":visible")){			
-			var userId_applicant = $e_applicant.attr("data-user-id");
-			var $e_renderHtml = $e_applicant.find(".ratings-mod-container .mod-body").eq(0);
-			executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);	
-//		}
-		
-	})
+//	$("body").on("click", ".show-applicant-ratings-mod", function() {	
+//		
+//		var $e_applicant = $(this).closest(".applicant");	
+//			var userId_applicant = $e_applicant.attr("data-user-id");
+//			var $e_renderHtml = $e_applicant.find(".ratings-mod-container .mod-body").eq(0);
+//			executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml);	
+//		
+//	})
 	
 	$(".see-details").click(function() {
 		var jobId = $(this).attr("data-job-id");

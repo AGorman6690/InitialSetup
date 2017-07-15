@@ -39,6 +39,7 @@ import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.DistanceUtility;
+import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 
@@ -178,7 +179,8 @@ public class ApplicationServiceImpl {
 
 		// ****************************************
 		// ****************************************
-		// Verify at least one application work day is within the job work days
+		// Verify at least one application work day is within the job work days.
+		// Verify the user id not yet apply.
 		// ****************************************
 		// ****************************************
 
@@ -289,7 +291,7 @@ public class ApplicationServiceImpl {
 						isAcceptingOffer);
 			}else{
 				if(isAcceptingOffer){							
-					approveProposal_byEmployee(proposalBeingRespondedTo, employmentProposalDto,
+					approveProposal_byEmployee(proposalBeingRespondedTo,
 							session);	
 				}else{									
 					counterProposal_byEmployee(proposalBeingRespondedTo, employmentProposalDto,
@@ -381,7 +383,6 @@ public class ApplicationServiceImpl {
 	}
 
 	private void approveProposal_byEmployee(EmploymentProposalDTO proposalBeingRespondedTo,
-			EmploymentProposalDTO proposalBeingApproved,
 			HttpSession session) {
 	
 		// ******************************************************
@@ -423,6 +424,8 @@ public class ApplicationServiceImpl {
 			this.closeApplication(proposalBeingRespondedTo.getApplicationId());
 
 			userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
+			
+			updateProposalFlag(proposalBeingRespondedTo, "IsNew", 0);
 
 			// Update the job after the employment record has been inserted.
 			// The "IsStillAcceptingApplications" property needs to be updated.
@@ -432,7 +435,7 @@ public class ApplicationServiceImpl {
 					proposalBeingRespondedTo);
 
 			resolveApplicationConflicts_withinApplicationsForUser(session,
-					proposalBeingApproved.getApplicationId(),
+					proposalBeingRespondedTo.getApplicationId(),
 					jobService.getWorkDays_byProposalId(
 							proposalBeingRespondedTo.getEmploymentProposalId()));
 
@@ -808,8 +811,10 @@ public class ApplicationServiceImpl {
 		// Verify:
 		// 1) That the session user did indeed post this job.
 		// 2) That the prospective employee has not already applied to this job.
-		if(verificationService.didSessionUserPostJob(session, applicationDto.getJobId()) &&
-				!verificationService.didUserApplyForJob(applicationDto.getJobId(), applicationDto.getApplicantId())){
+		if(verificationService.didSessionUserPostJob(session,
+				applicationDto.getJobId()) &&
+				!verificationService.didUserApplyForJob(applicationDto.getJobId(),
+						applicationDto.getApplicantId())){
 
 			// Set the application
 			applicationDto.getApplication().setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
@@ -820,17 +825,23 @@ public class ApplicationServiceImpl {
 													applicationDto.getEmploymentProposalDto());
 			applicationDto.getEmploymentProposalDto().setEmployerAcceptedDate(employerAcceptedDate);
 			applicationDto.getEmploymentProposalDto().setExpirationDate(expirationDate);
-			applicationDto.getEmploymentProposalDto().setProposedToUserId(applicationDto.getApplicantId());
-			applicationDto.getEmploymentProposalDto().setProposedByUserId(SessionContext.getUser(session).getUserId());
+			applicationDto.getEmploymentProposalDto().setProposedToUserId(
+					applicationDto.getApplicantId());
+			applicationDto.getEmploymentProposalDto().setProposedByUserId(
+					SessionContext.getUser(session).getUserId());
 			applicationDto.getEmploymentProposalDto().setStatus(WageProposal.STATUS_PENDING_APPLICANT_APPROVAL);
 
+			
 			this.insertApplication(applicationDto);	
-			Application newApplication = getApplication(applicationDto.getJobId(), applicationDto.getApplicantId());
+			Application newApplication = getApplication(applicationDto.getJobId(),
+					applicationDto.getApplicantId());
 			EmploymentProposalDTO proposal = getCurrentEmploymentProposal(newApplication.getApplicationId());
 
+			// ******************************************************************
+			// Is this flag needed on both objects?????????			
 			updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			updateProposalFlag(proposal, EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
-
+			// ******************************************************************
 		}
 
 	}
@@ -867,27 +878,33 @@ public class ApplicationServiceImpl {
 		// proposed date strings is a work day for the particular job.
 		// *********************************************************
 		// *********************************************************
-
-
-		// *******************************************************************
-		// *******************************************************************
-		// If there is a soon-to-be-previous proposal, should this method also be responsible to set the
-		// status of this proposal in addition to setting its IsCurrentProposal = 0??
-		// It will help ensure statuses are always being updated...
-		// *******************************************************************
-		// *******************************************************************
-		// Before this new proposal is added, set the current proposal's IsCurrentProposal to 0
-		EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(employmentProposalDto.getApplicationId());
-		if(currentProposal != null) updateWageProposal_isCurrentProposal(currentProposal.getEmploymentProposalId(), 0);
-
-		// Set date strings, if necessary
-		Job job = jobService.getJob_ByApplicationId(employmentProposalDto.getApplicationId());		
-		if(!job.getIsPartialAvailabilityAllowed()){
-			employmentProposalDto.setDateStrings_proposedDates(
-									jobService.getWorkDayDateStrings(job.getId()));
-		}
 		
-		repository.insertEmploymentProposal(employmentProposalDto);
+		if(employmentProposalDto.getDateStrings_proposedDates().size() > 0 &&
+				verificationService.isPositiveNumber(employmentProposalDto.getAmount())){
+		
+			// *******************************************************************
+			// *******************************************************************
+			// If there is a soon-to-be-previous proposal, should this method also be responsible to set the
+			// status of this proposal in addition to setting its IsCurrentProposal = 0??
+			// It will help ensure statuses are always being updated...
+			// *******************************************************************
+			// *******************************************************************
+			// Before this new proposal is added, set the current proposal's IsCurrentProposal to 0
+			EmploymentProposalDTO currentProposal = getCurrentEmploymentProposal(employmentProposalDto.getApplicationId());
+			if(currentProposal != null) updateWageProposal_isCurrentProposal(currentProposal.getEmploymentProposalId(), 0);
+
+			// Set date strings, if necessary
+			Job job = jobService.getJob_ByApplicationId(employmentProposalDto.getApplicationId());		
+			if(!job.getIsPartialAvailabilityAllowed()){
+				employmentProposalDto.setDateStrings_proposedDates(
+										jobService.getWorkDayDateStrings(job.getId()));
+			}
+			
+			repository.insertEmploymentProposal(employmentProposalDto);
+		}
+
+
+
 	}
 
 	public List<ApplicationInvite> getApplicationInvites(int userId) {
@@ -1012,6 +1029,7 @@ public class ApplicationServiceImpl {
 					applicationDto.getEmploymentProposalDto().getDateStrings_proposedDates());
 			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
 			model.addAttribute("applicationDto", applicationDto);
+			model.addAttribute("jobDto", applicationDto.getJobDto());
 			model.addAttribute("user", sessionUser);
 			model.addAttribute("isEmployerMakingFirstOffer", false);
 		}
@@ -1082,7 +1100,7 @@ public class ApplicationServiceImpl {
 		
 		// Employer initiated contact
 		if(currentProposal.getFlag_employerInitiatedContact() == 1){
-			messages.add((isEmployee ? "The employer" : "You") + " initiated contact");
+			messages.add((isEmployee ? "The employer" : "You") + " made you an initial offer");
 		}
 		
 		if(currentProposal.getFlag_aProposedWorkDayWasRemoved() == 1){
@@ -1254,17 +1272,17 @@ public class ApplicationServiceImpl {
 		
 		if(application_isAccepted == 1){			
 			if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
-				return "You are hired";
-			else return "Applicant is hired";			
+				return "";
+			else return "";			
 		}else if(application_isOpen == 0){
 			return "Application is closed";
 		}else{
 			if(proposedByUserId_currentProposal == userId_setStatusFor){
 				if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
-					return "Waiting for employer to respond";
-				else return "Waiting for applicant to respond";						
+					return "Waiting for the employer";
+				else return "Waiting for the applicant";						
 			}else{
-				return "Waiting for you to respond";
+				return "Waiting for you";
 			}
 		}
 

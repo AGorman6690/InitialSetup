@@ -10,6 +10,12 @@
 /* #jobs-list, #job-details{ */
 /* 	display: inline-block; */
 /* } */
+.waiting-status{
+	font-size: 23px;
+}
+.applicant-or-employee{
+	font-size: 28px;
+}
 h1{
     width: 275px;
     background: #197994;
@@ -29,7 +35,7 @@ h1{
 	font-weight: bold;
 }
 .action{
-	color: red;
+	color: #ea0010;
 	font-weight: bold;
 }
 .new{

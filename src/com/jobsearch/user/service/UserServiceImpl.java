@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.mail.internet.AddressException;
@@ -39,6 +41,7 @@ import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.CalendarDay;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Endorsement;
@@ -60,6 +63,7 @@ import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
 
 import javassist.expr.NewArray;
 
@@ -361,6 +365,8 @@ public class UserServiceImpl {
 	}
 
 	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
+		
+		// Refactor: remove "user" from model. use "userDto" instead.
 
 		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(employee.getUserId());
 		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
@@ -414,8 +420,30 @@ public class UserServiceImpl {
 			applicationDtos.add(applicationDto);
 		}
 		model.addAttribute("applicationDtos", applicationDtos);
+		
+		JobSearchUserDTO userDto = new JobSearchUserDTO();
+		userDto.setUser(employee);
+		userDto.setCountApplications_open(applications
+				.stream().filter(a -> a.getIsAccepted() == 0 && a.getIsOpen() == 1).count());
+		userDto.setCountJobs_employment(applications
+				.stream().filter(a -> a.getIsAccepted() == 1).count());
+		userDto.setCountProposals_waitingOnYou(applicationDtos
+				.stream()
+				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
+				.filter(aDto -> aDto.getEmploymentProposalDto()
+						.getIsProposedToSessionUser() == true).count());
+		userDto.setCountProposals_waitingOnYou_new(applicationDtos
+				.stream()
+				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
+				.filter(aDto -> aDto.getEmploymentProposalDto().getIsNew() == 1)
+				.count());
+		userDto.setCountProposals_waitingOnOther(applicationDtos
+				.stream()
+				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
+				.filter(aDto -> aDto.getEmploymentProposalDto()
+						.getIsProposedToSessionUser() == false).count());
 
-
+		
 		// Jobs the user was terminated from
 		List<Job> jobs_terminated = jobService.getJobs_terminatedFrom_byUser(employee.getUserId());
 		model.addAttribute("jobs_terminated", jobs_terminated);
@@ -436,7 +464,7 @@ public class UserServiceImpl {
 		model.addAttribute("applicationDtos_closedDueToAllPositionsFilled_unacknowledged",
 				applicationDtos_closedDueToAllPositionsFilled_unacknowledged);
 		
-		model.addAttribute("user", employee);	 
+				 
 		
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
@@ -446,32 +474,50 @@ public class UserServiceImpl {
 		// I'm assuming this page loads most often.
 		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
+				
+		List<CalendarDay> calendarDays_employmentSummary = getCalendarDays_employmentSummary(employee.getUserId());
+		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
 		
+		int monthSpan_employmentSummaryCalendar =
+				DateUtility.getMonthSpan_new(calendarDays_employmentSummary
+						.stream()
+						.map(cd -> cd.getDate())
+						.collect(Collectors.toList()));
 		
-		List<WorkDayDto> workDayDtos_calendar = getWorkDayDtos_employmentSummary(employee.getUserId());
-		
-		
+		model.addAttribute("userDto", userDto);	
+		model.addAttribute("user", employee);	
+		model.addAttribute("monthSpan_employmentSummaryCalendar", monthSpan_employmentSummaryCalendar);
 	}
 
-	private List<WorkDayDto> getWorkDayDtos_employmentSummary(int userId) {
+	private List<CalendarDay> getCalendarDays_employmentSummary(int userId) {
 		
-		int saturdayCount = 0;
-		LocalDateTime today = LocalDateTime.now();
+		List<CalendarDay> calendarDays = new ArrayList<CalendarDay>();
+		
+		int saturdayCount = 0;	
+		LocalDate day = LocalDate.now();
 		
 		while(saturdayCount < 2){
 			
-			if (today.getDayOfWeek() == DayOfWeek.SATURDAY) saturdayCount += 1;
+			CalendarDay calendarDay = new CalendarDay();
+			calendarDay.setDate(day);
 			
-			WorkDayDto workDayDto = new WorkDayDto();
-			workDayDto.getWorkDay().setDate(today.toLocalDate());
+			String dateString = day.format(DateTimeFormatter.ISO_LOCAL_DATE);			
+			List<Job> jobs_employment = jobService.getJobs_employment_byUserAndDate(userId, dateString);
 			
-			String dateString = today.format(DateTimeFormatter.ISO_LOCAL_DATE);
-			List<Job> jobs = jobService.getJobs_employment_byUserAndDate(userId, dateString);
+			calendarDay.setJobDtos(new ArrayList<>());
+			for ( Job job : jobs_employment ){				
+				JobDTO jobDto = new JobDTO();
+				jobDto.setJob(job);
+				jobDto.setWorkDayDto(new WorkDayDto());
+				jobDto.getWorkDayDto().setWorkDay(jobService.getWorkDay(job.getId(), dateString));
+				calendarDay.getJobDtos().add(jobDto);
+			}			
+			calendarDays.add(calendarDay);
 			
-		}
-		
-		
-		return null;
+			if (day.getDayOfWeek() == DayOfWeek.SATURDAY) saturdayCount += 1;
+			day = day.plusDays(1);
+		}		
+		return calendarDays;
 	}
 
 	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
@@ -506,6 +552,13 @@ public class UserServiceImpl {
 				jobDto.setJob(job);
 				
 				Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+				
+				// *****************************************************************
+				// *****************************************************************
+				// Refactor this count logic.
+				// Consider using streams as used in Employee Profile
+				// *****************************************************************
+				// *****************************************************************
 
 				// Wage Proposals
 				jobDto.setCountWageProposals_sent(
@@ -895,6 +948,54 @@ public class UserServiceImpl {
 	public List<JobSearchUser> getApplicants_byJob_openApplicantions(int jobId) {
 	
 		return repository.getApplicants_byJob_openApplicantions(jobId);
+	}
+
+	public void setModel_makeOffer_initialize(Model model, int userId, HttpSession session) {
+		List<Job> openJobs = jobService.getJobs_byEmployerAndStatuses(
+				SessionContext.getUser(session).getUserId(),
+				Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
+		
+		model.addAttribute("openJobs", openJobs);
+		model.addAttribute("user_makeOfferTo", getUser(userId));
+	}
+
+	public String getAvailabliltyStatusMessage_forUserAndJob(int userId, int jobId) {
+		
+		Job job = jobService.getJob(jobId);
+		List<String> workDays = jobService.getWorkDayDateStrings(jobId);		
+		Integer availableDays = jobService.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
+		
+		if(verificationService.didUserApplyForJob(jobId, userId)) return "already-applied";
+		else if(job.getIsPartialAvailabilityAllowed()){
+			if(availableDays > 0) return "available";
+			else return "unavailable";
+		}else{
+			if(availableDays == workDays.size()) return "available";
+			else return "unavailable";
+		}
+				
+	}
+
+	public void setModel_makeOffer(Model model, int userId_makeOfferTo, int jobId, HttpSession session) {
+
+		if(!verificationService.didUserApplyForJob(jobId, userId_makeOfferTo) &&
+				verificationService.didSessionUserPostJob(session, jobId)){
+			
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(jobService.getJob(jobId));
+			jobDto.setWorkDayDtos(jobService.getWorkDayDtos(jobId));
+			jobDto.setWorkDays(jobService.getWorkDays(jobId));
+			jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
+			jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+
+			model.addAttribute("json_workDayDtos", JSON.stringify(jobDto.getWorkDayDtos()));
+			model.addAttribute("jobDto", jobDto);
+			model.addAttribute("user_makeOfferTo", getUser(userId_makeOfferTo));
+			model.addAttribute("context", "employer-make-initial-offer");
+			
+		}
+		
+		
 	}
 
 

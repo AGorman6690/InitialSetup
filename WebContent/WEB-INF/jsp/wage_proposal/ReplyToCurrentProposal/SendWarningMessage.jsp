@@ -1,11 +1,23 @@
+<%@ include file="../../includes/TagLibs.jsp" %>
+
 <div class="accepting-offer-context">
 	<p class=" red-bold">You are about to accept the
 		 ${sessionScope.user.profileId == 1 ? "employer's" : "applicant's" } offer.</p>			
 	<p class=" red-bold context-employee">Once you do, you will be employed for this job.</p>
 </div>
 <div class="proposing-new-offer-context red-bold">
-	<p class=" red-bold">You are about to propose a new offer to the
-	${sessionScope.user.profileId == 1 ? " employer" : " applicant" }.</p>
+	<p class=" red-bold">
+		<c:choose>
+			<c:when test="${context == 'employer-make-initial-offer' }">
+				You are about to make an offer to 
+					${user_makeOfferTo.firstName } ${user_makeOfferTo.lastName }
+			</c:when>
+			<c:otherwise>
+				You are about to propose a new offer to the 
+					${sessionScope.user.profileId == 1 ? " employer" : " applicant" }.
+			</c:otherwise>
+		</c:choose>
+	</p>
 </div>
 <p class="context-employer proposing-new-offer-context red-bold">
 	The applicant will have the option to counter this offer,

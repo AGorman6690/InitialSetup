@@ -42,7 +42,7 @@
 </div>	
 
 
-<c:if test="${user.profileId == 2 }">
+<c:if test="${sessionScope.user.profileId == 2 }">
 	<div class="expiration-container">						
 		<h3 class="blue">The Applicant Must Reply Within</h3>
 		<h2>(Job starts in ${applicationDto.jobDto.timeUntilStart })</h2>						

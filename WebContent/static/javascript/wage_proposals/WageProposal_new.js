@@ -54,35 +54,52 @@ $(document).ready(function() {
 	
 	
 	$("body").on("click", ".review-proposal", function() {
+		var $wrapper = $(this).closest(".wrapper");
+		var employerIsMakingFirstOffer = false;		
 		
-		var $cont = $(this).closest(".proposal");
-		$cont.find(".proposal-calendar").addClass("read-only");				
-		$cont.addClass("review-context");
-		$cont.removeClass("counter-context");
-		
-		var $wage =  $cont.find(".proposal.wage-proposal").eq(0);
-		var $wage_acceptOrPropose = $wage.find("span.accepting-or-proposing").eq(0);
-		var $workDays_acceptOrPropose = $cont.find(".proposal.work-day-proposal span.accepting-or-proposing").eq(0);
-		
-		$wage.find(".review-context .wage-amount").html($wage.find("input.counter-wage-amount").eq(0).val())
-
-		var isAcceptingTheOffer = true;
-		
-		if(isCounteringWage($cont)){
-			$wage_acceptOrPropose.html("proposing");
-			isAcceptingTheOffer = false;
-		}else{
-			$wage_acceptOrPropose.html("accepting");
+		if($wrapper.hasClass("employer-make-initial-offer")){
+			employerIsMakingFirstOffer = true;
 		}
 		
-		if($workDays_acceptOrPropose != undefined){
-			if(isCounteringWorkDays($cont)){
-				$workDays_acceptOrPropose.html("proposing");
+
+			
+			
+			var $cont = $(this).closest(".proposal");
+			var isAcceptingTheOffer = true;
+			
+			$cont.find(".proposal-calendar").addClass("read-only");				
+			$cont.addClass("review-context");
+			$cont.removeClass("counter-context");
+			
+			var $wage =  $cont.find(".proposal.wage-proposal").eq(0);
+			var $wage_acceptOrPropose = $wage.find("span.accepting-or-proposing").eq(0);
+			var $workDays_acceptOrPropose = $cont.find(".proposal.work-day-proposal span.accepting-or-proposing").eq(0);
+			
+			$wage.find(".review-context .wage-amount")
+				.html($wage.find("input.counter-wage-amount").eq(0).val())
+
+			
+			
+			if(isCounteringWage($cont) || employerIsMakingFirstOffer){
+				$wage_acceptOrPropose.html("proposing");
 				isAcceptingTheOffer = false;
 			}else{
-				$workDays_acceptOrPropose.html("accepting");
-			}	
+				$wage_acceptOrPropose.html("accepting");
+			}
+			
+			if($workDays_acceptOrPropose != undefined){
+				if(isPartialAvailabilityAllowed($wrapper)){
+					if(isCounteringWorkDays($cont) || employerIsMakingFirstOffer ){
+						$workDays_acceptOrPropose.html("proposing");
+						isAcceptingTheOffer = false;
+					}else{
+						$workDays_acceptOrPropose.html("accepting");
+					}			
+				}
+	
+		
 		}
+
 		
 		if(isAcceptingTheOffer){
 			$cont.addClass("accepting-offer-context");
@@ -91,6 +108,8 @@ $(document).ready(function() {
 			$cont.removeClass("accepting-offer-context");
 			$cont.addClass("proposing-new-offer-context");
 		}
+		
+		$(".mod").animate({ scrollTop: 0 }, "200");
 				
 	})
 	
@@ -103,8 +122,20 @@ $(document).ready(function() {
 		// ************************************************************
 		// Need validation
 		// ************************************************************
-		g_employmentProposalDto = getEmploymentProposalDto($(this));	
-		executeAjaxCall_respondToProposal(g_employmentProposalDto);
+		
+		var employerMakeInitialOffer = $(this).closest(".proposal-container")
+							.attr("data-employer-is-making-first-offer");
+		
+		
+		if(employerMakeInitialOffer == "1"){
+			
+			var applicationDto_makeInitialOffer = getApplicationDto_makeInitialOffer($(this));
+			executeAjaxCall_makeInitialOffer(applicationDto_makeInitialOffer);	
+		}else{
+			g_employmentProposalDto = getEmploymentProposalDto($(this));
+			executeAjaxCall_respondToProposal(g_employmentProposalDto);	
+		}
+		
 	})
 	
 	$("body").on("click", ".send-initial-offer", function() {
@@ -135,6 +166,19 @@ $(document).ready(function() {
 	})
 	
 })
+function getApplicationDto_makeInitialOffer($e) {
+	var $wrapper = $e.closest(".wrapper");
+	var applicationDto = {};
+	applicationDto.application = {};
+	applicationDto.employmentProposalDto = getEmploymentProposalDto($e);
+	applicationDto.applicantId = $wrapper.attr("data-user-id-make-offer-to");
+	applicationDto.jobId = $wrapper.attr("data-job-id-make-offer-for");
+	return applicationDto;	
+}
+function isPartialAvailabilityAllowed($wrapper){
+	if($wrapper.attr("data-is-partial-availability-allowed") == "true") return true;
+	else return false;
+}
 function hasCurrentProposalAlreadyBeenImported($e_renderHtml) {
 	if($e_renderHtml.find(".mod").length) return true;
 	else return false;
@@ -186,9 +230,20 @@ function executeAjaxCall_respondToProposal(employmentProposalDto){
 		broswerIsWaiting(false);
 		location.reload(true);
 		
-	}).error(function() {
-		broswerIsWaiting(false);
-	});		
+	})	
+}
+function executeAjaxCall_makeInitialOffer(applicationDto){	
+	broswerIsWaiting(true);
+	$.ajax({
+		type : "POST",
+		url :"/JobSearch/employer/make-initial-offer",
+		headers : getAjaxHeaders(),
+		contentType : "application/json",	
+		data: JSON.stringify(applicationDto),
+		dataType: "text"		
+	}).done(function(response){
+		location.reload(true);
+	})	
 }
 function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,
 		dateStrings_toFindConflictsWith){
@@ -254,33 +309,7 @@ function executeAjaxCall_getProposedWorkDays(applicationId, $calendar) {
 		}
 	})
 }
-function executeAjaxCall_sendOffer($e){
-	
-	var $proposalContainer = $e.closest(".proposal-container");
-	
-	var applicationDto = {};
-	applicationDto.application = {};
-	applicationDto.employmentProposalDto = {};
-	
-	applicationDto.jobId = $("#jobId_getOnPageLoad").val();
-	applicationDto.applicantId = $e.closest("tr").attr("data-user-id");	
-	applicationDto.employmentProposalDto = g_employmentProposalDto;
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/employer/initiate-contact",
-		headers : getAjaxHeaders(),
-		contentType : "application/json",	
-		data: JSON.stringify(applicationDto),
-		dataType: "text"
-		
-	}).done(function(response){
-		$("#findEmployees").click();
-		$proposalContainer.hide();
-		broswerIsWaiting(false);
-	})	
-}
+
 function isInputValid2(dto, $e){
 	var $proposalContainer = $e.closest(".proposal-container");
 	var $wageProposal = $proposalContainer.find(".wage-proposal.proposal").eq(0);

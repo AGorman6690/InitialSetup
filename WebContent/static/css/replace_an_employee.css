@@ -60,9 +60,10 @@
 	width: 270px;
 }
 #employees p:hover{
-/* 	background: #cacaca; */
+	background: #197994;
+	color: #fff;
 /* 	font-weight: bold; */
-	border: 1px solid #888;
+/* 	border: 1px solid #888; */
 	cursor: pointer;
 }
 #employees p{
@@ -95,7 +96,6 @@
 #save-edits,
 #approve-work-day-removal{
 	font-size: 20px;
-	font-weight: bold;
 }
 #cancel-edits,
 #cancel-work-day-removal{

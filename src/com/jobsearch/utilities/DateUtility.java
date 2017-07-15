@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.joda.time.DateTime;
@@ -214,6 +216,20 @@ public final class DateUtility {
 		// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
 		long months_minDate = minDate.getYear() * 12 + minDate.getMonthValue();
 		long months_maxDate = maxDate.getYear() * 12 + maxDate.getMonthValue();
+		
+		return (int) (months_maxDate - months_minDate + 1);
+	}
+	
+	public static int getMonthSpan_new(List<LocalDate> dates) {
+
+		Optional<LocalDate> minDate = dates.stream().min(Comparator.comparing(LocalDate::toEpochDay));
+		Optional<LocalDate> maxDate = dates.stream().max(Comparator.comparing(LocalDate::toEpochDay));;
+		
+		// Get total months since year 0.
+		// This handles jobs where more than one year is spanned.
+		// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
+		long months_minDate = minDate.get().getYear() * 12 + minDate.get().getMonthValue();
+		long months_maxDate = maxDate.get().getYear() * 12 + maxDate.get().getMonthValue();
 		
 		return (int) (months_maxDate - months_minDate + 1);
 	}

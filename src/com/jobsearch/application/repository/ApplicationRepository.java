@@ -105,6 +105,8 @@ public class ApplicationRepository {
 				e.setStatus(rs.getInt("Status"));
 				e.setProposedByUserId(rs.getInt("ProposedByUserId"));
 				e.setProposedToUserId(rs.getInt("ProposedToUserId"));
+				e.setIsNew(rs.getInt("IsNew"));
+				
 				
 				String expirationDate = rs.getString("ExpirationDate");
 				if(expirationDate != null){
@@ -462,10 +464,10 @@ public class ApplicationRepository {
 				+ " WHERE j.JobId = ?"
 				+ " AND wp.ProposedToUserId = ?"
 				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND wp.Status = ?"
+				+ " AND wp.IsNew = 1"
 				+ " AND a.IsOpen = 1";
 	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED },
+		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId },
 											Integer.class);
 	}
 	

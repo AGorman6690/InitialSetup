@@ -15,7 +15,8 @@
 				<div class="action-options">
 					<a class="" href="/JobSearch/job/${jobDto.job.id}/edit" >
 						<span class="glyphicon glyphicon-pencil"></span></a>	
-						<span class="glyphicon glyphicon-search"></span>
+					<a class="" href="/JobSearch/job/${jobDto.job.id}/find-employees" >
+						<span class="glyphicon glyphicon-search"></span></a>
 				</div>		
 				<p class="job-name accent show-job-info-mod-employer" data-job-id="${jobDto.job.id }">
 					${jobDto.job.jobName }</p>

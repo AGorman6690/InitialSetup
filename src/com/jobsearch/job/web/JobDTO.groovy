@@ -53,6 +53,8 @@ public class JobDTO {
 	 // ****************************************************
 	 // ****************************************************
 	 
+	 WorkDayDto workDayDto;
+	 
 	 Boolean areAllTimesTheSame
 	 String date_firstWorkDay
 	 int months_workDaysSpan

@@ -4,8 +4,9 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/inputValidation.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/Templates/popup.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/profile_employee_NEW_2.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/profile_employee/employment_summary_cal.css" />
 		
-<script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>	
+	
 	
 <div class="container">
 	
@@ -32,32 +33,44 @@
 		</div>
 	</c:if>	
 	
-	<div id="" class="">	
-		<h1>Your Activity</h1>
+	<div id="activity" class="">	
+		
+		<div id="employment-summary-calendar">
+			<h1>Upcoming Employment</h1>
+			<%@ include file="./EmploymentSummaryCalendar.jsp" %>
+		</div>
 		<c:choose>
 			<c:when test="${applicationDtos.size() > 0 }">	
-				
+						<h1>Your Activity</h1>
 					<div id="job-list-sort">
 						<div class="filter-item">
 							<div class="filter-item-header">
 								<input checked id="all-applications" type="checkbox" name="filter-item">
-								<label for="all-applications">Applications <span class="circle">10</span></label>			
+								<label for="all-applications">Applications
+									<span class="total">${userDto.countApplications_open }</span></label>			
 							</div>
 							<div class=filter-sub-items>
 								<div>
 									<input checked id="waiting-on-you" type="checkbox" name="proposal-status">
-									<label for="waiting-on-you">Proposals waiting for you to respond</label>
+									<label for="waiting-on-you">Waiting for you
+										<span class="total">${userDto.countProposals_waitingOnYou}</span>
+										<c:if test="${userDto.countProposals_waitingOnYou_new > 0}">
+										<span class="total new">${userDto.countProposals_waitingOnYou_new} new</span>
+										</c:if>
+									</label>
 								</div>
 								<div>
 									<input checked id="waiting-on-other" type="checkbox" name="proposal-status">
-									<label for="waiting-on-other">Proposals waiting for the employer to respond</label>
+									<label for="waiting-on-other">Waiting for the employer
+										<span class="total">${userDto.countProposals_waitingOnOther}</span></label>
 								</div>
 							</div>
 						</div>
 						<div class="filter-item">
 							<div class="filter-item-header">
 								<input checked id="all-employment" type="checkbox" name="filter-item">
-								<label for="all-employment">Employment <span class="circle">3</span></label>			
+								<label for="all-employment">Employment
+									<span class="total">${userDto.countJobs_employment }</span></label>			
 							</div>
 						</div>			
 					</div>	
@@ -80,16 +93,20 @@
 								<div class="job-header ">
 									<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
 										 ? '' : '' }">
-										<p class="status">${applicationDto.currentProposalStatus }</p>
+										<div class="messages">
+											<c:forEach items="${applicationDto.messages }" var="message">
+												<p>* ${message }</p>
+											</c:forEach>
+										</div>										 
+										<p class="status">${applicationDto.application.isAccepted == 1
+											 ? "Employment" : "Application" }</p>
+										<p class="waiting-status">${applicationDto.currentProposalStatus }</p>
 										<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
 													applicationDto.application.isAccepted == 0 }">
-											<p class="exp-time">The employer's offer expires in ${applicationDto.time_untilEmployerApprovalExpires }</p>
+											<p class="exp-time">The employer's offer expires in
+												 ${applicationDto.time_untilEmployerApprovalExpires }</p>
 										</c:if>
-										<div class="messages">
-											<c:forEach items="${applicationDto.messages }" var="message">.
-												<p>${message }</p>
-											</c:forEach>
-										</div>
+
 									</div>								
 									<p class="job-name accent show-job-info-mod"
 										 data-job-id="${applicationDto.jobDto.job.id }">${applicationDto.jobDto.job.jobName }</p>
@@ -108,6 +125,7 @@
 											<%@ include file="./EmploymentJobSummary.jsp" %>
 										</c:when>
 										<c:otherwise>
+											<c:set var="jobDto" value="${applicationDto.jobDto }" />
 											<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
 											<div class="render-present-proposal-mod"></div>										
 										</c:otherwise>
@@ -131,5 +149,5 @@
 
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 <%@ include file="../includes/Footer.jsp"%>
-
+<script src="<c:url value="/static/javascript/profile_employee/Profile_Employee.js" />"></script>
 				
