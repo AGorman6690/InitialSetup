@@ -22,7 +22,6 @@
 							<input name="input-1" class="rating-loading"
 									value="${userDto_ratings.ratingValue_overall }	">
 							${userDto_ratings.ratingValue_overall }			
-<!-- 							<span class="glyphicon glyphicon-menu-up"></span>			 -->
 						</p>		
 						<%@ include file="./RatingDetails.jsp" %>
 					</div>		

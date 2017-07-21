@@ -91,34 +91,63 @@
 								data-is-waiting-on-you="${applicationDto.employmentProposalDto.isProposedToSessionUser }"
 								>
 								<div class="job-header ">
-									<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
-										 ? '' : '' }">
-										<div class="messages">
-											<c:forEach items="${applicationDto.messages }" var="message">
-												<p>* ${message }</p>
-											</c:forEach>
-										</div>										 
-										<p class="status">${applicationDto.application.isAccepted == 1
-											 ? "Employment" : "Application" }</p>
-										<p class="waiting-status">${applicationDto.currentProposalStatus }</p>
-										<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
-													applicationDto.application.isAccepted == 0 }">
-											<p class="exp-time">The employer's offer expires in
-												 ${applicationDto.time_untilEmployerApprovalExpires }</p>
-										</c:if>
+									<div class="option-1 hide-on-load">
+										<div class="status-wrapper ${applicationDto.employmentProposalDto.isProposedToSessionUser
+											 ? '' : '' }">
+											<div class="messages">
+												<c:forEach items="${applicationDto.messages }" var="message">
+													<p>* ${message }</p>
+												</c:forEach>
+											</div>										 
+											<p class="status">${applicationDto.application.isAccepted == 1
+												 ? "Employment" : "Application" }</p>
+											<p class="waiting-status">${applicationDto.currentProposalStatus }</p>
+											<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
+														applicationDto.application.isAccepted == 0 }">
+												<p class="exp-time">The employer's offer expires in
+													 ${applicationDto.time_untilEmployerApprovalExpires }</p>
+											</c:if>
+	
+										</div>								
+										<p class="job-name accent show-job-info-mod"
+											 data-job-id="${applicationDto.jobDto.job.id }">${applicationDto.jobDto.job.jobName }</p>
+									</div>
+									<div class="option-2">
+										<div class="status-wrapper">
+											<div class="messages">
+												<c:forEach items="${applicationDto.messages }" var="message">
+													<p>* ${message }</p>
+												</c:forEach>
+											</div>	
+											<p class="job-name accent show-job-info-mod"
+												data-job-id="${applicationDto.jobDto.job.id }">
+													${applicationDto.jobDto.job.jobName }</p>									 
+											<span class="status">${applicationDto.application.isAccepted == 1
+												 ? "Employment" : "Application" }</span>
 
-									</div>								
-									<p class="job-name accent show-job-info-mod"
-										 data-job-id="${applicationDto.jobDto.job.id }">${applicationDto.jobDto.job.jobName }</p>
-<%-- 									<p>${applicationDto.jobDto.job.stringStartDate } --%>
-<%-- 										 - ${applicationDto.jobDto.job.stringEndDate } --%>
-<%-- 										 (${applicationDto.jobDto.workDays.size() } ${applicationDto.jobDto.workDays.size() <= 1 ? 'day' : 'days' })</p> --%>
-<%-- 									<p >${applicationDto.jobDto.job.city_formatted }, ${applicationDto.jobDto.job.state }</p> --%>
+<%-- 											<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser && --%>
+<%-- <%-- 														applicationDto.application.isAccepted == 0 }"> --%> 
+<!-- 												<p class="exp-time">The employer's offer expires in -->
+<%-- 													 ${applicationDto.time_untilEmployerApprovalExpires }</p> --%>
+<%-- 											</c:if> --%>
+	
+										</div>									
+									</div>
 								</div>			
 								<div class="proposal ${sessionScope.user.profileId == 1 &&
 									applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
 									 data-application-id="${applicationDto.application.applicationId }">
 									
+											<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
+														applicationDto.application.isAccepted == 0 }">
+												<p class="exp-time center black-bold">The employer's offer expires in
+													 <span class="red-bold">${applicationDto.time_untilEmployerApprovalExpires }</span></p>
+											</c:if>
+											
+											<c:if test="${!applicationDto.employmentProposalDto.isProposedToSessionUser }">
+												<p class="waiting-status black-bold">${applicationDto.currentProposalStatus }</p>
+											</c:if>
+											
 									<c:set var="jobDto" value="${applicationDto.jobDto }" />
 									<c:choose>
 										<c:when test="${applicationDto.application.isAccepted == 1 }">

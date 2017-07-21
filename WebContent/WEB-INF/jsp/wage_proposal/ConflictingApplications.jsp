@@ -5,7 +5,7 @@
 	<c:set var="text_application"
 	 	value="${applicationDto.count_conflictingApplications == 1 ? 'application' : 'applications' }"></c:set>
 	<div class="other-application-conflicts width-500 mar-btm">
-		<h4 class="alert-text" data-toggle-id="conflicting-apps-${applicationDto.application.applicationId }">
+		<h4 class="red-bold" data-toggle-id="conflicting-apps-${applicationDto.application.applicationId }">
 			${applicationDto.count_conflictingApplications} conflicting ${text_application }
 			<span class="glyphicon glyphicon-menu-down"></span>	
 		</h4>
@@ -14,8 +14,8 @@
 			<p>These proposed work days overlap with the following ${text_application }.</p>
 			<c:choose>
 				<c:when test="${areConflictsCausedByCounteringWorkDays }">
-					<p class="if-you-accept">If the <span class="bold">employer accepts</span>
-						 this proposal and you then accept employment, your following ${text_application } will be:</p>		
+					<p class="if-you-accept">If you <span class="bold">accept</span>
+						 these work days, your following ${text_application } will be:</p>		
 				</c:when>
 				<c:otherwise>
 					<p class="if-you-accept">If <span class="bold">you accept</span>
@@ -28,7 +28,7 @@
 				<div class="conflicting-applications ">
 					<c:if test="${applicationDto.applicationDtos_conflicting_willBeRemoved.size() > 0 }">
 						<div class="disposition">
-							<p>Will be <span class="bold">removed</span> this job requires you to apply for all work days</p>
+							<p><span class="bold">Removed</span> because this job requires you to apply for all work days</p>
 							<div class="applications">
 								<ul>
 									<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeRemoved }"
@@ -41,7 +41,7 @@
 					</c:if>
 					<c:if test="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer.size() > 0 }">
 						<div class="disposition">
-							<p>will be <span class="bold">modified</span></p>
+							<p><span class="bold">Modified</span> because this job allows partial availability</p>
 							<div class="applications">
 								<ul>
 									<c:forEach items="${applicationDto.applicationDtos_conflicting_willBeModifiedButRemainAtEmployer }"

@@ -1297,6 +1297,17 @@ public class ApplicationServiceImpl {
 		
 	}
 
+	public void inspectNewness(ApplicationDTO applicationDto) {
+		if(applicationDto.getApplication().getIsNew() == 1){
+			updateApplicationFlag(
+					applicationDto.getApplication(), "IsNew", 0);
+		}
+		
+		if(applicationDto.getEmploymentProposalDto().getIsNew() == 1){
+			updateProposalFlag(applicationDto.getEmploymentProposalDto(), "IsNew", 0);
+		}		
+	}
+
 
 
 }

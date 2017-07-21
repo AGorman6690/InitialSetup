@@ -263,6 +263,9 @@ input#maxPay{
 }
 #post-job-container{
 	padding-bottom: 75px;
+	width: 1100px;
+	margin: auto;
+	position: relative;
 }
 .selected-date .select-date-box .glyphicon-ok{
 	font-size: 30px;
@@ -279,4 +282,21 @@ input#maxPay{
 	font-weight: bold;
 /* 	text-decoration: underline; */
 	color: #163b3d;
+}
+#previous-section{
+	left: 0px;	
+}
+#next-section{
+	right: 0px;
+}
+#no-dates-selected{
+	font-size: 23px;
+}
+#next-section,
+#previous-section{
+    font-size: 33px;
+    font-weight: bold;
+    color: #197994;
+    position: absolute;
+    top: 150px;
 }

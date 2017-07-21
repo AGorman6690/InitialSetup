@@ -10,17 +10,17 @@
 /* 	border-top: 6px solid #197994; */
 }
 .select-page-section{
-    font-size: 17px;
+    font-size: 19px;
     color: #333;
-    margin: 0px 15px;
+/*     margin: 0px 15px; */
     line-height: 55px;
     cursor: pointer;  
-    padding: 5px;  
+    padding: 10px 15px;  
 }
 
 .select-page-section-container{
     text-align: center;
-    height: 50px;
+    height: 56px;
     border-bottom: 1px solid #cacaca;
 }
 

@@ -55,15 +55,16 @@
 		
 		
 			<div id="preview-job-posting-container">
-				<div id="edit-or-submit-container">
-					<span id="editPosting" class="">Edit Job Posting</span>
-					<button id="submitPosting_final" class="sqr-btn">Submit Job Posting</button>
-				</div>	
+<!-- 				<div id="edit-or-submit-container"> -->
+<!-- 					<span id="editPosting" class="">Edit Job Posting</span> -->
+<!-- 					<button id="submitPosting_final" class="sqr-btn">Submit Job Posting</button> -->
+<!-- 				</div>	 -->
 				<div id="displayExample_jobInfo">
 				
 				</div>
 			</div>
 			<div id="post-job-container">
+
 				<div id="previous-next-container">
 					<button id="proceed-to-preview-job-posting" class="sqr-btn">Review Job Posting</button>
 					<div class="error-message-container">
@@ -307,15 +308,23 @@
 						<span class="add-list-item glyphicon glyphicon-plus"></span>								
 					</div>											
 				</div>
-				<div id="prev-or-next" class="pad-top-2 center button-container">
-					<span id="previous-section" class="sqr-btnz greenz">Previous</span>
-					<span id="next-section" class="sqr-btnz greenz">Next</span>
-				</div>
+<!-- 				<div id="prev-or-next" class="pad-top-2 center button-container"> -->
+
+<!-- 				</div> -->
+
+				<span id="previous-section" class="linky-hover">Previous</span>
+				<span id="next-section" class="linky-hover">Next</span>
 			</div>
 		</div>	
 	</c:otherwise>
 </c:choose>
 
+		<div id="job-info-mod" class="mod simple-header">
+			<div class="mod-content">
+				<div class="mod-header"></div>
+				<div class="mod-body"></div>
+			</div>
+		</div>
 
 
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">

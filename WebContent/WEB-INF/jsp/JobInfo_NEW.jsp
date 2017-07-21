@@ -3,11 +3,6 @@
 <div class="wrapper ${sessionScope.user.profileId == 1 ? 'employee-context' : 'employer-context'}">
 	<c:if test="${sessionScope.user.profileId == 1 }">
 		<c:choose>
-			<c:when test="${!isLoggedIn }">
-				<div class="warning-message">	
-					<h3>Please login to apply for a job</h3>
-				</div>
-			</c:when>
 			<c:when test="${context == 'find' && !empty jobDto.application}">						
 				<div class="warning-message">	
 					<h3>
@@ -26,10 +21,16 @@
 			</c:when>	
 		</c:choose>
 	</c:if>
+	<c:if test="${!isLoggedIn && context == 'find' }">
+		<div class="warning-message">	
+			<h3>Please login to apply for a job</h3>
+		</div>
+	</c:if>
 	<c:if test="${sessionScope.user.profileId == 1 && context == 'find' && empty jobDto.application &&
 					empty sessionScope.jobs_needRating}">
 		<c:set var="doShowApplyButton" value="1"></c:set>
 	</c:if>
+
 	<div class="job-info center ${!empty doShowApplyButton ? 'show-apply-button' : '' }">
 		<input id="jobId" type="hidden" value="${jobDto.job.id }">
 	
@@ -48,11 +49,17 @@
 				
 			</div>
 		</c:if>
+		<c:if test="${isPreviewingJobPost }">
+			<div class="to-be-fixed-cont-disabled">
+				<button id="submitPosting_final" class="sqr-btn green to-be-fixed-disalbed">Submit Job Post</button>
+			</div>
+		</c:if>
 		<h2>${jobDto.job.jobName }</h2>
 		<c:if test="${sessionScope.user.profileId == 1 }">
 			<div class="">
 				<div class="ratings-mod-container">
-				<p class="linky-hover employer show-ratings-mod" data-user-id="${userDto_ratings.user.userId }">${userDto_ratings.user.firstName }
+				<p class="linky-hover employer show-ratings-mod user-rating"
+					 data-user-id="${userDto_ratings.user.userId }">${userDto_ratings.user.firstName }
 					 ${userDto_ratings.user.lastName }</p>
 					<div class="mod simple-header">
 						<div class="mod-content">

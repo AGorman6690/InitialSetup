@@ -949,12 +949,17 @@ public class JobRepository {
 	public Integer getCount_unavailableDays_ByUserAndWorkDays(int userId, List<String> workDays) {
 
 		// Main query
-		String sql = "SELECT COUNT(e.Id) FROM employment e" + " JOIN job j ON e.JobId = e.JobId"
-				+ " JOIN application a ON j.JobId = a.JobId"
+		String sql = "SELECT COUNT(wd.WorkDayId) FROM work_day wd"
+				+ " WHERE wd.WorkDayId IN ("
+				+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd"
+				+ "	JOIN employment e ON wd.JobId = e.JobId"
+				+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
 				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
 				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId" + " WHERE e.UserId = ?"
-				+ " AND e.WasTerminated = 0" + " AND wp.IsCurrentProposal = 1" + " AND j.Status";
+				+ " JOIN date d ON wd.DateId = d.Id"
+				+ " WHERE e.UserId = ?"
+				+ " AND e.WasTerminated = 0" 
+				+ " AND wp.IsCurrentProposal = 1";
 
 		List<Object> args = new ArrayList<Object>();
 		args.add(userId);
@@ -965,15 +970,15 @@ public class JobRepository {
 
 			if (!isFirst)
 				sql += " OR ";
-			sql += " wd.DateId = ?";
+			sql += " d.Id = ?";
 			isFirst = false;
 
 			args.add(jobService.getDateId(workDay));
 
 		}
 
-		// Close the AND
-		sql += ")";
+		// Close the AND and sub query
+		sql += ") )";
 
 		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
 	}

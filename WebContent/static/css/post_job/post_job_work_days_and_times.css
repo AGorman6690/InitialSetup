@@ -56,7 +56,7 @@ td.selected-date .select-date-box{
 	width: 55px;
 }
 .v2.post-job .ui-datepicker-inline.ui-datepicker-multi-2{
-	width: 1600px !important;
+	width: auto !important;
 	margin: auto;
 }
 .v2.post-job .ui-datepicker-inline{

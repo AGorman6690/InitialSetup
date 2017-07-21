@@ -4,8 +4,10 @@ var workDayDtos = [];
 $(document).ready(function() {
 	
 	$("body").on("click", ".show-job-info-mod", function() {
-		var jobId = $(this).attr("data-job-id");
-		executeAjaxCall_showJobInfoMod(jobId, "find", "1");
+		var $e = $(this);
+		var jobId = $e.attr("data-job-id");
+		var p = $e.attr("data-p");
+		executeAjaxCall_showJobInfoMod(jobId, "find", p);
 	})
 	
 	$("body").on("click", ".show-ratings-mod", function() {	
@@ -19,17 +21,7 @@ $(document).ready(function() {
 		
 	})
 	
-	var $e = $("#apply-for-job");
-	if($e.length){
-		var $applyCont = $("#apply-for-job-cont");
-		var $jobInfo = $(".job-info");
-		
-		var fixAtScrollAmount = $e.offset().top - 10;
-		$(window).scroll(function(){
-			if($(window).scrollTop() > fixAtScrollAmount) $jobInfo.addClass("fixed");
-			else $jobInfo.removeClass("fixed");
-		})
-	}	
+
 	
 	$("body").on("click", "#job-address", function(){
 // **********************
@@ -49,10 +41,11 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
-		url: "/JobSearch/preview/job-info/" + jobId + "?c=" + c,
+		url: "/JobSearch/preview/job-info/" + jobId + "?c=" + c + "&p=" + p,
 //		url: "/JobSearch/job/" + jobId + "?c=" + c + "&p=" + p,
 		dataType: "html"
 	}).done(function(html) {
+		
 		broswerIsWaiting(false);
 		var $jobInfoMod = $("#job-info-mod");
 		$jobInfoMod.find(".mod-body").html(html);
@@ -73,6 +66,50 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 	})
 	
 }
+function setScrollAction() {
+	var $e = $(".to-be-fixed").eq(0);
+	if($e.length){
+		var $applyCont = $(".to-be-fixed-cont").eq(0);
+		var $jobInfo = $(".job-info");
+		
+		var fixAtScrollAmount = $e.offset().top - 10;
+//		$("body").on("scroll", "#job-info-mod .mod-content", function(){
+		var $window = $("#job-info-mod .mod-content"); 
+		$window.scroll(function(){
+			if($window.scrollTop() > fixAtScrollAmount){
+				$jobInfo.addClass("fixed");
+			}
+			else $jobInfo.removeClass("fixed");
+		})
+	}	
+}
+function renderHtml_jobInfo(html, doRenderStars, doSelectAllWorkDays){
+	broswerIsWaiting(false);
+	var $jobInfoMod = $("#job-info-mod");
+	$jobInfoMod.find(".mod-body").html(html);
+	
+	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
+	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);
+	var d = $(".job-info .map").get();
+
+	$jobInfoMod.show();
+	
+	// **************************************************
+	// Map must be initialized AFTER the modal is shown
+	// **************************************************
+	initMap_job_info();
+	
+	if (doRenderStars) renderStars($jobInfoMod);
+	
+	
+	if (selectAllWorkDays) selectAllWorkDays($(".calendar"), workDayDtos);
+	
+	
+//	setScrollAction();
+	
+//	executeCallBack(callback);
+}
+
 function initMap_job_info() {
 		
 		var $map = $("#job-info-map");

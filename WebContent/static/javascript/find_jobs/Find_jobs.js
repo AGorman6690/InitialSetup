@@ -42,15 +42,18 @@ $(document).ready(function(){
 	
 	$("#applied-filters").on("click", "button", function() {
 		$(this).remove();
+		$("#get-jobs").click();
 	})
 	$(".apply-filter").click(function() {
 		applyFilter($(this));
+		$("#get-jobs").click();
 	})
 	
 	$(".remove-filter").click(function() {
 		var $e = $(this).closest(".dropdown-style"); 
 		$e.attr("data-is-approved", 0);
 		$(this).hide();
+		
 	})
 	
 	$(".time").each(function(){

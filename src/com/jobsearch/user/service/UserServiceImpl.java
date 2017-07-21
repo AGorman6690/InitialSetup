@@ -1,3 +1,4 @@
+
 package com.jobsearch.user.service;
 
 import java.security.SecureRandom;
@@ -418,6 +419,8 @@ public class UserServiceImpl {
 			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
 			applicationDtos.add(applicationDto);
+			
+			applicationService.inspectNewness(applicationDto);
 		}
 		model.addAttribute("applicationDtos", applicationDtos);
 		

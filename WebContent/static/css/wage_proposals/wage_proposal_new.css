@@ -368,13 +368,13 @@ div[data-is-accepted="1"]{
 /* 	background: #f7f7f7; */
 /* 	border: 6px solid green; */
 	border: 0;
-	border-left: 35px solid #00c15e;
+	border-left: 35px solid #08a554;
 }
 div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]){
 /* 	background: #f7f7f7; */
 /* 	border: 6px solid #888; */
 	border: 0;
-	border-left: 35px solid #888;
+	border-left: 35px solid #c7c7c7;
 }
 
 .send-status-warning{

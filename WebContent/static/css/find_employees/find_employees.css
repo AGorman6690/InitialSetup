@@ -61,10 +61,11 @@
 	padding: 0;
 }
 .apply-filter{
-    text-align: center;
+/*     text-align: center; */
     font-size: 17px;
     font-weight: bold;
     text-decoration: underline;
+    color: #197994;
 }
 .v2 td.active111{
 	background: #197994;

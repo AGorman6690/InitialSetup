@@ -54,11 +54,12 @@
 			</div>
 			<c:if test="${jobDto.job.isPartialAvailabilityAllowed}">
 				<div class="proposal work-day-proposal" data-proposed-work-days="${datestrings_workDays }">
-					<h3 class="blue">Work Day Proposal</h3>								
+					<h3 class="blue">Work Day Proposal</h3>		
+					<div class="conflicting-applications-countering"></div>						
 					<p class="red-bold counter-context">
 						Select ${context != 'employer-make-initial-offer' ? 'or deselect ' : '' } your proposed work days</p>
-					<p class="review-context">You are <span class="accepting-or-proposing"></span> the following work days</span>							
-					<div class="conflicting-applications-countering"></div>
+					<p class="review-context">You are <span class="accepting-or-proposing"></span> the following work days</p>							
+					
 					<div class="counter-context review-context v2 teal-title proposal-calendar calendar-container wage-proposal-calendar
 						 hide-prev-next hide-unused-rows">	
 						<button class="counter-context sqr-btn gray-3 select-all-work-days-override">
@@ -74,7 +75,9 @@
 		<div class="button-wrapper right">
 			<p class="counter-context review-proposal linky-hover">
 				<span class="glyphicon glyphicon-menu-right"></span><span class="text">Review</span></p>
-			<p class="review-context send-proposal linky-hover">
-				<span class="glyphicon glyphicon-menu-right"></span><span class="text">Send</span></p>	
+			<p class="review-context send-proposal linky-hover accepting-offer-context">
+				<span class="glyphicon glyphicon-menu-right"></span><span class="text">Accept Employment</span></p>	
+			<p class="review-context send-proposal linky-hover proposing-new-offer-context">
+				<span class="glyphicon glyphicon-menu-right"></span><span class="text">Send New Proposal</span></p>	
 		</div>
 </div>

@@ -856,14 +856,8 @@ public class JobServiceImpl {
 								sessionUser.getProfileId()));
 			
 				
-				if(applicationDto.getApplication().getIsNew() == 1){
-					applicationService.updateApplicationFlag(
-							applicationDto.getApplication(), "IsNew", 0);
-				}
-				
-				if(applicationDto.getEmploymentProposalDto().getIsNew() == 1){
-					applicationService.updateProposalFlag(applicationDto.getEmploymentProposalDto(), "IsNew", 0);
-				}
+				applicationService.inspectNewness(applicationDto);
+
 								
 				userDTO.setApplicationDto(applicationDto);
 				jobDto.getUserDtos_applicants().add(userDTO);

@@ -58,7 +58,7 @@ $(document).ready(function(){
 	$("#proceed-to-preview-job-posting").click(function(){
 
 		var jobDto = getJobDto()
-		if(arePostJobInputsValid(jobDto)){
+//		if(arePostJobInputsValid(jobDto)){
 		
 			var addressToValidate = ""
 			addressToValidate += jobDto.job.streetAddress;
@@ -75,14 +75,14 @@ $(document).ready(function(){
 					$("#invalid-address-error-message").show();
 				}				
 			})
-		}
+//		}
 	})
 	
 	$("#editPosting").click(function(){
 		setDisplay_previewJobPost(false);	
 	})
 	
-	$("#submitPosting_final").click(function(){
+	$("body").on("click", "#submitPosting_final", function(){
 		executeAjaxCall_postJob(getJobDto());
 //		if(arePostJobInputsValid()) executeAjaxCall_postJob(getJobDto());
 	})
@@ -511,20 +511,20 @@ function executeAjaxCall_previewJobPosting(jobDto){
 		async: false,
 		cache: true
 	}).done( function (html_jobInfo) {
-		broswerIsWaiting(false);	
-	
-		setDisplay_previewJobPost(true);
-	
-		$("#displayExample_jobInfo").html(html_jobInfo);
 		
-		var $e = $("#json_work_day_dtos");
-		workDayDtos_preview = JSON.parse($e.html());
-		$e.empty(); 
-//		setWorkDays();
-		initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos_preview);
-		initMap();
-		$("[data-toggle-id]").click();
-//		$.getScript("/JobSearch/static/javascript/JobInfo.js", function(){alert(789)});
+		renderHtml_jobInfo(html_jobInfo, false, true);
+//		broswerIsWaiting(false);	
+//	
+//		setDisplay_previewJobPost(true);
+//	
+//		$("#displayExample_jobInfo").html(html_jobInfo);
+//		
+//		var $e = $("#json_work_day_dtos");
+//		workDayDtos_preview = JSON.parse($e.html());
+//		$e.empty(); 
+//		initCalendar_jobInfo_workDays($("#work-days-calendar-container .calendar"), workDayDtos_preview);
+//		initMap();
+//		$("[data-toggle-id]").click();
 	})
 
 

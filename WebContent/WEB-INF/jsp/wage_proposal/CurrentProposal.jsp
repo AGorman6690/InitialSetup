@@ -91,6 +91,7 @@
 
 <c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
 				applicationDto.application.isAccepted == 0}">	
+				
 	<div class="proposal-item respond">
 		<c:choose>
 			<c:when test="${ sessionScope.user.profileId == 2 || (sessionScope.user.profileId == 1 &&

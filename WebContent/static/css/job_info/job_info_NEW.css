@@ -17,7 +17,9 @@
     margin-bottom: 20px
 }
 .job-info p.employer{
-	font-size: 18px
+    font-size: 21px;
+    font-weight: bold;
+    color: #197994;
 }
 #job-info-mod .mod-content{
     width: 1200px;
@@ -105,6 +107,7 @@
     text-align: center;
     font-size: 27px;
 }
+.to-be-fixed,
 #apply-for-job{
 	font-size: 20px;
 	width: 220px;
@@ -114,6 +117,7 @@
 	font-size: 17px;
 	font-weight: bold;
 }
+.job-info.fixed .to-be-fixed-cont,
 .job-info.fixed #apply-for-job-cont,
 .job-info.fixed #error-messages{
     position: fixed;
@@ -121,6 +125,7 @@
     margin: auto;
     width: 100%;
 }
+job-info.fixed .to-be-fixed-cont,
 .job-info.fixed #apply-for-job-cont{
     top: 0px;
     padding: 10px;
@@ -133,6 +138,7 @@
 .job-info.fixed #error-messages p:first-child{
 	padding-top: 10px;
 }
+.to-be-fixed-cont,
 #apply-for-job-cont{
 	position: absolute;
 	width: 100%;

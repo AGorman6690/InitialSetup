@@ -12,6 +12,7 @@
 /* } */
 .waiting-status{
 	font-size: 23px;
+	display: none;
 }
 .applicant-or-employee{
 	font-size: 28px;

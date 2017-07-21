@@ -9,6 +9,15 @@ $(document).ready(function(){
 	
 	initCalendar_selectWorkDays($(".calendar"), undefined, 1);
 	
+	$(".clear").click(function() {
+		$(this).closest(".filter-value-container").find("input:checked").eq(0).prop("checked", false);
+		executeAjaxCall_findEmployees();
+	})
+	
+	$(".filter-value-container input," +
+			" #apply-availability-filter").click(function() {
+		executeAjaxCall_findEmployees();
+	})
 	$("body").on("click", ".make-an-offer", function() {
 		var userId = $(this).attr("data-user-id");
 		executeAjaxCall_makeAnOffer_initialize(userId);
@@ -27,6 +36,7 @@ $(document).ready(function(){
 		workDayDtos_original = [];
 		$(".calendar").datepicker("destroy");
 		initCalendar_selectWorkDays($(".calendar"), undefined, 1);
+		executeAjaxCall_findEmployees()
 	})
 	
 	

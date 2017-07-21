@@ -10,7 +10,7 @@
 	<div id="header">
 		<div id="location-filter">
 			<input id="miles" type="text" placeholder="number" value = "25"/>
-			<span>Miles From</span>
+			<span>miles from</span>
 			<input id="address" type="text" placeholder="city, state, zip code" value="55119"/>
 			<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
 		</div>
@@ -150,12 +150,9 @@
 			<div id="applied-filters"></div>														
 		</div>
 		
-		<div id="get-jobs-results">				
-		
-<!-- 		<div id="job-info-map" class="map right-border corner" data-do-init="1" -->
-<%-- 				data-lat="${jobDto.job.lat }" data-lng="${jobDto.job.lng }"></div> --%>
-				
-				</div>	
+		<div id="get-jobs-results-cont">
+			<div id="get-jobs-results"></div>
+		</div>	
 		<div id="get-jobs-map-container">
 			<div id="find-jobs-map"></div>
 		</div>

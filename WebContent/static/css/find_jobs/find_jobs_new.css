@@ -13,7 +13,7 @@
 #get-jobs{
 /* 	height: 38px; */
 	padding: 15px 27px;
-    border: 2px solid #fff;	
+/*     border: 2px solid #fff;	 */
 }
 #miles,
 #zip-code,
@@ -45,11 +45,19 @@
    
 }
 #get-jobs-results{
-	width: 400px;
-	float: right;
+/* 	width: 400px; */
+/* 	float: right; */
     border-left: 1px solid #d4d4d4;
     padding-left: 10px;	
 /*     float: left; */
+	overflow: auto;
+	height: 100%;
+}
+#get-jobs-results-cont{
+    overflow: hidden;
+    width: 400px;
+    float: right;
+    height: 100%;
 }
 h3 .glyphicon-ok{
 	font-size: 20px;
@@ -92,7 +100,7 @@ h3 .glyphicon-ok{
 /*     border-bottom: 8px solid #d4d4d4; */
 /*     background: #599280; */
     background: #197994;
-    padding: 10px 0px;
+    padding: 12px 0px;
 }
 p[data-toggle-id]{
 	display: inline-block;
@@ -121,7 +129,7 @@ p[data-toggle-id]{
 #applied-filters button p{
     text-align: left;
     float: right;
-    width: 121px;
+    width: 175px;
     margin: 0;
 }
 #get-jobs-results .job{
@@ -143,7 +151,7 @@ p[data-toggle-id]{
 /* 	margin-right: 0px; */
 }
 .page-cont{
-	height: 100%;
+/* 	height: 100%; */
 /* 	padding-top: 10px; */
 }
 /* #get-jobs-results .job::after{ */
@@ -173,7 +181,8 @@ p[data-toggle-id]{
 	top: 159px;
 	right: 0;
 	bottom: 0;
-	padding-right: 15px;
+/* 	padding-right: 15px; */	
+	overflow: hidden;
 }
 #wrapper.rating-required{
 	top: 300px;
@@ -182,14 +191,23 @@ p[data-toggle-id]{
 	width: 100%;
 /* 	height: 20px; */
 /*     padding-bottom: 10px; */
-    padding-left: 25px;
+/*     padding-left: 25px; */
     margin: 0;
     font-weight: bold;
-    color: #888;    
+/*     color: #888;    */
+    font-size: 18px 
+}
+.filter-name-container [data-toggle-id]:hover{
+	background: #92bac5;
+	cursor: pointer;
+/* 	color: #cacaca; */
+}
+.filter-name-container [data-toggle-id]{
+	padding: 18px 0px 18px 25px;
 }
 #other-filters{
 /* 	padding: 10px 10px 10px 25px;; */
-	width: 215px;
+	width: 235px;
 	height: 100%;
     border-right: 1px solid #d4d4d4;
     float: left;
@@ -233,6 +251,7 @@ p[data-toggle-id]{
     color: #163b3d;
     font-weight: bold;
     margin-top: 10px;    
+    padding-bottom: 25px;
 }
 /* .filter .name{ */
 /* 	padding: 18px 0px; */
@@ -249,17 +268,18 @@ p[data-toggle-id]{
 /*     border-radius: 3px; */
     padding: 20px;
     top: 0px;
-    left: 214px;
+    left: 234px;
 }
 #location-filter span{
     vertical-align: bottom;
-    font-weight: bold;
+	font-size: 19px;
     line-height: 53px;
     color: #fff;
 }
 html{
-	overflow: hidden;
-	height: 100%;
+/* 	overflow: hidden; */
+/* 	height: 100%; */
+    overflow: visible!important;
 }
 #applied-filters{
 /*     margin-left: 170px; */
@@ -295,6 +315,6 @@ html{
 	margin-right: 5px;
 }
 .filter-name-container{
-    padding: 18px 0px;
+/*     padding: 18px 0px; */
     position: relative;	
 }

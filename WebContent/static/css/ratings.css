@@ -187,7 +187,7 @@ table#ratings{
 /*     border: 5px solid #163b3d; */
 }
 body{
-	min-height: 1100px;
+/* 	min-height: 1100px; */
 }
 .user-cont h2{
     width: 425px;
