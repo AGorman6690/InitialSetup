@@ -18,7 +18,7 @@
 					<a class="" href="/JobSearch/job/${jobDto.job.id}/find-employees" >
 						<span class="glyphicon glyphicon-search"></span></a>
 				</div>		
-				<p class="job-name accent show-job-info-mod-employer" data-job-id="${jobDto.job.id }">
+				<p class="job-name accent show-job-info-mod" data-context="waiting" data-job-id="${jobDto.job.id }">
 					${jobDto.job.jobName }</p>
 				
 				<div class="brief-details">

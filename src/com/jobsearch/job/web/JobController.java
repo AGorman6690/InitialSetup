@@ -239,8 +239,7 @@ public class JobController {
 		}else{
 			jobService.setModel_ViewJob_Employer(model, session, c, jobId, "");
 		}
-		
-		
+
 //		model.addAttribute("jobDto", jobDto);
 //		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		return "/JobInfo_NEW";

@@ -43,7 +43,7 @@ tr .job-line{
 	height: 20px;
 }
 tr .job-line:first-of-type{
-	margin-top: 25px;
+	margin-top: 31px;
 }
 tr .job-line:not(:first-of-type){
 	margin-top: 5px;

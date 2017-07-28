@@ -34,6 +34,11 @@
 /* 	cursor: pointer; */
 }
 
+
+.calendar.style-unselectable-days .ui-datepicker-unselectable,
+.calendar.style-unselectable-days .ui-datepicker-other-month{
+	background: #dad8d8;
+}
 .calendar{
 	padding:10px;
 }
@@ -127,4 +132,13 @@ td.active111 a{
     background: #8e8e8e;
     color: #fff;
 /*     border-radius: 4px; */
+}
+
+.ui-datepicker-today a{
+    background: red !important;
+    /* margin: 0px 20px; */
+    width: auto;
+    padding: 2px;
+    border-radius: 16px;
+    color: white !important;
 }

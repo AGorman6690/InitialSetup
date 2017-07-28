@@ -14,9 +14,10 @@
 .proposal .respond > .sqr-btn{
     background: #197994;
     color: #fff;
-    font-weight: bold;	
+/*     font-weight: bold;	 */
     padding: 10px 25px;
     margin-right: 10px;
+    font-size: 19px;
 }
 .proposal .respond .sqr-btn:hover{
 	background: #77afbf;
@@ -30,9 +31,9 @@
 .proposal-table > tbody > tr:not(.warning-message) > td:first-child{
 	padding-left: 0px;
 }
-.proposal-table:not(.confirm) > tbody > tr > td:first-child{
+.proposal-table:not(.confirm) > tbody > tr > td:not(:first-child){
 /* 	font-size: 18px; */
-	font-weight: bold;
+/* 	font-weight: bold; */
 }
 
 .wrapper.context-employee .context-employer{
@@ -362,19 +363,19 @@ div[data-is-waiting-on-you=true]{
 /* 	background: #ffbdbd; */
 /*     border: 6px solid red; */
 	border: 0;
-    border-left: 35px solid red;
+    border-left: 35px solid red !important;
 }
 div[data-is-accepted="1"]{
 /* 	background: #f7f7f7; */
 /* 	border: 6px solid green; */
 	border: 0;
-	border-left: 35px solid #08a554;
+	border-left: 35px solid #08a554 !important;
 }
 div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]){
 /* 	background: #f7f7f7; */
 /* 	border: 6px solid #888; */
 	border: 0;
-	border-left: 35px solid #c7c7c7;
+	border-left: 35px solid #c7c7c7 !important;
 }
 
 .send-status-warning{

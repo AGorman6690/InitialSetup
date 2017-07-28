@@ -1035,11 +1035,12 @@ public class ApplicationServiceImpl {
 		}
 	}	
 
-	public List<String> getMessages(JobSearchUser sessionUser,Job job, Application application,
+	public List<String> getMessages(JobSearchUser sessionUser, Application application,
 			EmploymentProposalDTO previousProposal,
 			EmploymentProposalDTO currentProposal) {
 		
 		List<String> messages = new ArrayList<>();
+		Job job = jobService.getJob_ByApplicationId(application.getApplicationId());
 		
 		boolean isEmployee = true;
 		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) isEmployee = false;
@@ -1059,7 +1060,7 @@ public class ApplicationServiceImpl {
 			
 			// The applicant accepted other employment
 			if(previousProposal.getFlag_isCanceledDueToApplicantAcceptingOtherEmployment() == 1){
-				messages.add((isEmployee ? "You" : "The applicant" )+ " has accepted other employment.");
+				messages.add((isEmployee ? "You have" : "The applicant has" )+ " accepted other employment.");
 				
 				if(job.getIsPartialAvailabilityAllowed()){
 					messages.add("Because this job allows partial availability,"

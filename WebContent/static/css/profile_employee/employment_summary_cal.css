@@ -25,12 +25,6 @@
 .v2 .ui-datepicker-title{
 	font-size: 23px;
 }
-.ui-datepicker-current-day{
-	background: #163b3d;
-}
-.calendar td.ui-datepicker-current-day a{
-	color: #fff;
-}
 #employment-summary-calendar h1{
 	width: 375px;
 	margin-bottom: 10px;

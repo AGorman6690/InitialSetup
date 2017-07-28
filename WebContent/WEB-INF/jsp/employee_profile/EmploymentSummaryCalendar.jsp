@@ -13,5 +13,5 @@
 	</c:forEach>
 </div>
 <div class="calendar-container hide-prev-next">
-	<div class="calendar v2 hide-unused-rows" data-number-of-months=${monthSpan_employmentSummaryCalendar }></div>
+	<div class="calendar v2 hide-unused-rows style-unselectable-days" data-number-of-months=${monthSpan_employmentSummaryCalendar }></div>
 </div>

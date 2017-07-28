@@ -1,7 +1,10 @@
 <%@ include file="../includes/TagLibs.jsp"%>						
 
 <c:if test="${!empty applicationDto.count_conflictingApplications && 
-					applicationDto.count_conflictingApplications > 0}">			
+					applicationDto.count_conflictingApplications > 0}">
+	<c:set var="isOneConflict"
+	 	value="${applicationDto.count_conflictingApplications == 1 ? '1' : '0' }"></c:set>
+								
 	<c:set var="text_application"
 	 	value="${applicationDto.count_conflictingApplications == 1 ? 'application' : 'applications' }"></c:set>
 	<div class="other-application-conflicts width-500 mar-btm">
@@ -10,8 +13,9 @@
 			<span class="glyphicon glyphicon-menu-down"></span>	
 		</h4>
 		<div id="conflicting-apps-${applicationDto.application.applicationId }"
-				class="alert-message hide-on-load">
-			<p>These proposed work days overlap with the following ${text_application }.</p>
+				class="alert-message ">
+			<p>These proposed work days overlap with ${isOneConflict == '1' ? 'another application'
+				: 'other applications' }.</p>
 			<c:choose>
 				<c:when test="${areConflictsCausedByCounteringWorkDays }">
 					<p class="if-you-accept">If you <span class="bold">accept</span>

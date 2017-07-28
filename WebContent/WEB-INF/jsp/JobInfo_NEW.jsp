@@ -152,7 +152,7 @@
 				</c:forEach>		
 			</div>	
 		</c:if>			
-		<c:if test="${sessionScope.user.profileId == 1}">
+		<c:if test="${sessionScope.user.profileId == 1 && context=='find'}">
 			<div id="desired-wage" class="sub">
 				<h3>Wage Proposal</h3>
 				<p class="instructions employee-context">Please enter a wage proposal ($ / hr)</p>
@@ -165,7 +165,9 @@
 				<p id="work-day-message">
 					<c:choose>
 						<c:when test="${jobDto.job.isPartialAvailabilityAllowed }">
-							<p class="instructions employee-context">Please select the work days you want to work</p>
+							<c:if test="${sessionScope.user.profileId == 1 && context=='find'}">
+								<p class="instructions employee-context">Please select the work days you want to work</p>
+							</c:if>
 							<p>This job allows partial availability.</p>
 							${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} can apply for one or more days.
 						</c:when>
@@ -178,8 +180,11 @@
 			</c:if>
 			<div id="work-days-calendar-container" class="v2 calendar-container
 				 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post read-only' : '' }
-				 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }">
-				<c:if test="${jobDto.job.isPartialAvailabilityAllowed && sessionScope.user.profileId == 1}">
+				 ${!jobDto.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
+				 ${sessionScope.user.profileId == 1 && context=='profile' ? 'read-only' : ''}">
+				<c:if test="${jobDto.job.isPartialAvailabilityAllowed
+					&& sessionScope.user.profileId == 1 
+					&& context=='find' }">
 					<button id="select-all-work-days" class="sqr-btn gray-3">Select all work days</button>		
 				</c:if>
 				<div class="calendar" data-min-date=${jobDto.date_firstWorkDay }

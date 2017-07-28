@@ -395,7 +395,7 @@ public class UserServiceImpl {
 					employee.getUserId(),
 					employee.getProfileId()));
 			
-			applicationDto.setMessages(applicationService.getMessages(employee, applicationDto.getJobDto().getJob(), 
+			applicationDto.setMessages(applicationService.getMessages(employee,
 					applicationDto.getApplication(),
 					applicationDto.getPreviousProposal(),
 					applicationDto.getEmploymentProposalDto()));

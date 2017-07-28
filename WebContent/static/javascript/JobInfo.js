@@ -7,7 +7,9 @@ $(document).ready(function() {
 		var $e = $(this);
 		var jobId = $e.attr("data-job-id");
 		var p = $e.attr("data-p");
-		executeAjaxCall_showJobInfoMod(jobId, "find", p);
+		var context = $e.attr("data-context");
+		
+		executeAjaxCall_showJobInfoMod(jobId, context, p);
 	})
 	
 	$("body").on("click", ".show-ratings-mod", function() {	
@@ -38,10 +40,12 @@ $(document).ready(function() {
 }) 
 function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 	broswerIsWaiting(true);
+	var url = "/JobSearch/preview/job-info/" + jobId + "?c=" + c;
+	if (p != undefined) url +=  "&p=" + p;
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
-		url: "/JobSearch/preview/job-info/" + jobId + "?c=" + c + "&p=" + p,
+		url: url,
 //		url: "/JobSearch/job/" + jobId + "?c=" + c + "&p=" + p,
 		dataType: "html"
 	}).done(function(html) {
