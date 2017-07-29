@@ -64,18 +64,33 @@ public class UserController {
 		return "redirect:/user/profile";
 
 	}	
-
-
+	
+	
+	
+	
+	
+	// Refactored
+	@RequestMapping(value = "/user", method = RequestMethod.GET)
+	public String viewHomepageRequest(Model model, HttpSession session) {				
+		
+		userService.setViewHomepageResponse(model, session);		
+		return userService.getProfileJspName(session);
+	}
 	@RequestMapping(value = "/user/profile", method = RequestMethod.GET)
 	public String getProfile_SessionUser(Model model, HttpSession session) {				
 		userService.setModel_Profile(model, session);		
 		return userService.getProfileJspName(session);
 	}
 	
+	
+	
+	
+	
+	
 	@RequestMapping(value = "/user/profile-employer-new", method = RequestMethod.GET)
 	public String TEMP_EMPLOYERS_getProfile_SessionUser(Model model, HttpSession session) {				
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		userService.setModel_EmployerProfile(sessionUser, model, session);
+		userService.setviewEmployerHomepageResponse(sessionUser, model, session);
 		
 		return "/employer_profile/EmployerProfile";
 	}
@@ -85,7 +100,7 @@ public class UserController {
 	public String TEMP_getProfile_SessionUser(Model model, HttpSession session) {				
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		userService.setModel_EmployeeProfile(sessionUser, model, session);
+		userService.setviewEmployeeHomepageResponse(sessionUser, model, session);
 		return "/employee_profile/Profile_Employee";
 	}
 	

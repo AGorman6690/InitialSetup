@@ -108,21 +108,21 @@ h1{
 }
 .status.status-employment{
 /* 	background: #08a554; */
-	color: #08a554;
+/* 	color: #08a554; */
 	font-weight: bold;
-	border: 6px solid #08a554;
+/* 	border: 6px solid #08a554; */
 }
 div[data-is-waiting-on-you=true]:not([data-is-accepted="1"]) .status.status-application{
 /* 	background: red; */
-	color: red;
+/* 	color: red; */
 	font-weight: bold;
-	border: 6px solid red;	
+/* 	border: 6px solid red;	 */
 }
 div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-application{
 /* 	background: #888; */
-	color: #888;
+/* 	color: #888; */
 	font-weight: bold;
-	border: 6px solid #888;	
+/* 	border: 6px solid #888;	 */
 }
 .job-header{
 	text-align: left;	

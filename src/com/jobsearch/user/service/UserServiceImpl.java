@@ -2,26 +2,20 @@
 package com.jobsearch.user.service;
 
 import java.security.SecureRandom;
-import java.sql.Timestamp;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
-import javax.persistence.Lob;
 import javax.servlet.http.HttpSession;
 
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +27,6 @@ import org.springframework.ui.Model;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.category.service.Category;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
@@ -44,29 +37,25 @@ import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.CalendarDay;
 import com.jobsearch.model.EmployeeSearch;
-import com.jobsearch.model.EmploymentProposalDTO;
-import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.Proposal;
 import com.jobsearch.model.RateCriterion;
-import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.ViewEmployerHomepageResponse;
+import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
-import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
 import com.jobsearch.user.repository.UserRepository;
-import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
-import com.sun.org.apache.xalan.internal.xsltc.compiler.Template;
-
-import javassist.expr.NewArray;
 
 @Service
 public class UserServiceImpl {
@@ -77,21 +66,18 @@ public class UserServiceImpl {
 
 	@Autowired
 	UserRepository repository;
-
 	@Autowired
 	CategoryServiceImpl categoryService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
 	@Autowired
 	VerificationServiceImpl verificationService;
-
 	@Autowired
 	Mailer mailer;
+	@Autowired
+	ProposalServiceImpl proposalService;
 
 	@Value("${host.url}")
 	private String hostUrl;
@@ -224,7 +210,7 @@ public class UserServiceImpl {
 		return repository.getUser(userId);
 	}
 
-	public List<JobSearchUser> getEmployeesByJob(int jobId) {
+	public List<JobSearchUser> getUsersEmployedForJob(int jobId) {
 		return repository.getEmployeesByJob(jobId);
 	}
 
@@ -365,7 +351,7 @@ public class UserServiceImpl {
 
 	}
 
-	public void setModel_EmployeeProfile(JobSearchUser employee, Model model, HttpSession session) {
+	public void setviewEmployeeHomepageResponse(JobSearchUser employee, Model model, HttpSession session) {
 		
 		// Refactor: remove "user" from model. use "userDto" instead.
 
@@ -388,7 +374,7 @@ public class UserServiceImpl {
 					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
 					application.getApplicationId()));
 			
-			applicationDto.setCurrentProposalStatus(applicationService.getCurrentProposalStatus(
+			applicationDto.setCurrentProposalStatus(proposalService.getCurrentProposalStatus(
 					application.getIsOpen(),
 					application.getIsAccepted(),
 					applicationDto.getEmploymentProposalDto().getProposedByUserId(),
@@ -420,7 +406,7 @@ public class UserServiceImpl {
 			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
 			applicationDtos.add(applicationDto);
 			
-			applicationService.inspectNewness(applicationDto);
+			applicationService.inspectNewness(applicationDto.getApplication());
 		}
 		model.addAttribute("applicationDtos", applicationDtos);
 		
@@ -539,62 +525,70 @@ public class UserServiceImpl {
 		return jobDtos_applicationInvites;
 	}
 
-	public void setModel_EmployerProfile(JobSearchUser employer, Model model, HttpSession session) {
+	public void setviewEmployerHomepageResponse(JobSearchUser employer, Model model, HttpSession session) {
 
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
-		
-		// Query the database
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		LocalDateTime now = LocalDateTime.now();
+		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse();		
 		List<Job> jobs = jobService.getJobs_byEmployerAndStatuses(employer.getUserId(),
 				Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
 
-		List<JobDTO> jobDtos = new ArrayList<JobDTO>();
-		if (jobs != null) {
-			for (Job job : jobs) {
+		for (Job job : jobs) {
 
-				JobDTO jobDto = new JobDTO();
-				jobDto.setJob(job);
-				
-				Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-				
-				// *****************************************************************
-				// *****************************************************************
-				// Refactor this count logic.
-				// Consider using streams as used in Employee Profile
-				// *****************************************************************
-				// *****************************************************************
+			EmployerHomepageJob employerHomepageJob = new EmployerHomepageJob();
+			employerHomepageJob.setJob(job);
+			
+			// Wage Proposals
+			List<Proposal> currentProposals = proposalService.getCurrentProposals_byJob(
+					job.getId());
+			
+			employerHomepageJob.setCountWageProposals_sent(
+					currentProposals.stream()
+									.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
+									.count());
 
-				// Wage Proposals
-				jobDto.setCountWageProposals_sent(
-						applicationService.getCountWageProposal_Sent(job.getId(), employer.getUserId(),
-								currentTime));
+			employerHomepageJob.setCountWageProposals_received(
+					currentProposals.stream()
+									.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
+									.count());
+			
+			employerHomepageJob.setCountWageProposals_received_new(
+					currentProposals.stream()
+						.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
+						.filter(p -> p.getIsNew() == 1)
+						.count());		
+			
+			employerHomepageJob.setCountProposals_expired(
+					currentProposals.stream()
+						.filter(p -> p.getExpirationDate() != null)
+						.filter(p -> p.getExpirationDate().isBefore(now))
+						.count());		
 
-				jobDto.setCountWageProposals_received(
-						applicationService.getCountWageProposal_Received(job.getId(), employer.getUserId()));
+			// Applications
+			List<Application> applications = applicationService.getApplications_byJob(job.getId());
+			employerHomepageJob.setCountApplications_total(
+					applications.stream()
+								.filter(a -> a.getIsAccepted() == 0)
+								.filter(a -> a.getIsOpen() == 1)
+								.count());
 
-				jobDto.setCountWageProposals_received_new(
-						applicationService.getCountWageProposal_Received_New(job.getId(), employer.getUserId()));
-				
-				jobDto.setCountProposals_expired(
-						applicationService.getCountProposals_expired(job.getId(), currentTime));
+			employerHomepageJob.setCountApplications_new(
+					applications.stream()
+						.filter(a -> a.getIsNew() == 1)
+						.count());
+			
+			// Employees
+			employerHomepageJob.setCountEmployees_hired(
+					applications.stream()
+						.filter(a -> a.getIsAccepted() == 1)
+						.filter(a -> a.getIsOpen() == 1)
+						.count());
+			
+			// Other job details
+//				jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(),
+//						job.getStartDate_local(), job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
 
-				// Applications
-				jobDto.setCountApplications_total(applicationService.getCountApplications_total(job.getId()));
-
-				jobDto.setCountApplications_new(applicationService.getCountApplications_new(job.getId()));
-
-				jobDto.setCountApplications_received(applicationService.getCountApplications_received(job.getId()));
-
-				jobDto.setCountApplications_declined(applicationService.getCountApplications_declined(job.getId()));
-
-				// Employees
-				jobDto.setCountEmployees_hired(applicationService.getCountEmployees_hired(job.getId()));
-
-				// Other job details
-				jobDto.setDaysUntilStart(DateUtility.getTimeSpan(LocalDate.now(), LocalTime.now(),
-						job.getStartDate_local(), job.getStartTime_local(), DateUtility.TimeSpanUnit.Days));
-
-				jobDtos.add(jobDto);
-			}
+			response.getEmployerHomepageJobs().add(employerHomepageJob);			
 		}
 
 		// Ideally this would be updated every time a page is loaded.
@@ -603,16 +597,15 @@ public class UserServiceImpl {
 		// as opposed to a particular event, this is the best place to put it
 		// becuase
 		// I'm assuming this page loads most often.
-
-		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
-		model.addAttribute("jobDtos", jobDtos);
+		model.addAttribute("response", response);
 	}
 
 	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
 
 		// Query the database
-		List<JobSearchUser> employees = this.getEmployeesByJob(jobId);
+		List<JobSearchUser> employees = this.getUsersEmployedForJob(jobId);
 
 		// Create user dtos
 		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();
@@ -664,9 +657,9 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			this.setModel_EmployeeProfile(sessionUser, model, session);
+			this.setviewEmployeeHomepageResponse(sessionUser, model, session);
 		} else
-			this.setModel_EmployerProfile(sessionUser, model, session);
+			this.setviewEmployerHomepageResponse(sessionUser, model, session);
 
 	}
 
@@ -948,7 +941,7 @@ public class UserServiceImpl {
 		return repository.getCount_nullRatings_givenByUserForJob(jobId, userId);
 	}
 
-	public List<JobSearchUser> getApplicants_byJob_openApplicantions(int jobId) {
+	public List<JobSearchUser> getUsersWithOpenApplicationToJob(int jobId) {
 	
 		return repository.getApplicants_byJob_openApplicantions(jobId);
 	}
@@ -998,6 +991,22 @@ public class UserServiceImpl {
 			
 		}
 		
+		
+	}
+	
+	// Refactored
+	// ******************************************************************************************
+	// ******************************************************************************************	
+
+	public void setViewHomepageResponse(Model model, HttpSession session) {
+	
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+
+		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
+			setviewEmployeeHomepageResponse(sessionUser, model, session);
+		} else
+			setviewEmployerHomepageResponse(sessionUser, model, session);
+
 		
 	}
 

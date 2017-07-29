@@ -37,12 +37,15 @@ import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
+import com.jobsearch.model.Proposal;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.ProgressForJobApplicationProcessResponse;
+import com.jobsearch.responses.ProgressForJobApplicationProcessResponse.ApplicationProgressStatus;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
@@ -54,21 +57,18 @@ public class JobServiceImpl {
 
 	@Autowired
 	JobRepository repository;
-
 	@Autowired
 	CategoryServiceImpl categoryService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	VerificationServiceImpl verificationService;
-
 	@Autowired
 	GoogleClient googleClient;
+	@Autowired
+	ProposalServiceImpl proposalService;
 
 	public void addPosting(JobDTO jobDto, HttpSession session) {
 
@@ -750,8 +750,8 @@ public class JobServiceImpl {
 			jobDto.setWorkDayDtos(getWorkDayDtos(jobId));
 
 			applicationService.updateIsNew(jobDto.getJob(), 0);
-			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(
-					jobDto.getJob().getId());
+//			applicationService.updateWageProposalsStatus_ToViewedButNoActionTaken(
+//					jobDto.getJob().getId());
 
 			break;
 
@@ -783,92 +783,67 @@ public class JobServiceImpl {
 	}
 	
 
-	public void setModel_applicationProgress(int jobId, Model model, HttpSession session) {
+	public void setProgressForJobApplicationProcessResponse(int jobId, Model model, HttpSession session) {
 		
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 			
+			ProgressForJobApplicationProcessResponse response = new ProgressForJobApplicationProcessResponse(); 
 			JobSearchUser sessionUser = SessionContext.getUser(session);
 			LocalDateTime now = LocalDateTime.now();
-		
-			JobDTO jobDto = new JobDTO();
-			jobDto.setUserDtos_applicants(new ArrayList<>());
-			
-			List<JobSearchUser> applicants = 
-					userService.getApplicants_byJob_openApplicantions(jobId);			
-			applicants.addAll(userService.getEmployeesByJob(jobId));
+					
+			List<JobSearchUser> applicants = userService.getUsersWithOpenApplicationToJob(jobId);			
+			applicants.addAll(userService.getUsersEmployedForJob(jobId));
 			
 			for(JobSearchUser applicant : applicants){
 				
-				JobSearchUserDTO userDTO = new JobSearchUserDTO();
-				userDTO.setUser(applicant);
-				userDTO.setRatingValue_overall(userService.getRating(applicant.getUserId()));
+				Application application = applicationService.getApplication(jobId, applicant.getUserId());
+				Proposal currentProposal = proposalService.getCurrentProposal(
+						application.getApplicationId());				
+				Proposal previousProposal = proposalService.getPreviousProposal(
+						application.getApplicationId(), applicant.getUserId());
 				
-				ApplicationDTO applicationDto =  new ApplicationDTO();
 				
-				applicationDto.setApplication(applicationService.getApplication(jobId, applicant.getUserId()));
-				// Applicant
-//				applicationDto.getApplicantDto().setUser(userService.getUser(application.getUserId()));
-//				int applicantId = applicationDto.getApplicantDto().getUser().getUserId();
+				ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
+				applicationProgressStatus.setApplication(application);
 				
-
-				// Proposal
-				applicationDto.setEmploymentProposalDto(applicationService
-						.getCurrentEmploymentProposal(applicationDto.getApplication().getApplicationId()));
-				applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(applicationService						
-						.getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
-				applicationDto.getEmploymentProposalDto().setIsExpired(
-						applicationService.isProposalExpired(
-								applicationDto.getEmploymentProposalDto().getExpirationDate(), now));
-				applicationDto.setPreviousProposal(applicationService.getPreviousProposal(
-						applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
-						applicationDto.getApplication().getApplicationId()));
-
-				// Answers
-				applicationDto.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
-						jobId, applicant.getUserId()));
-
-				applicationDto.setAnswerOptionIds_Selected(
-						applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(
-								applicant.getUserId(), jobId));
-
-				// Job
-//				applicationDto.getJobDto().setJob(jobService.getJob(jobId));
-//				applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(jobId));
-
-				// Misc.
-				// *********************************************************
-				// Refactor:
-				// Place this on the wage proposal dto
-				applicationDto.setTime_untilEmployerApprovalExpires(
-						applicationService.getTime_untilEmployerApprovalExpires(
-								applicationDto.getEmploymentProposalDto().getExpirationDate(), now));
-				// *********************************************************
-//				applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
-//				applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
-
-				
-				applicationDto.setCurrentProposalStatus(
-						applicationService.getCurrentProposalStatus(
-								applicationDto.getApplication().getIsOpen(),
-								applicationDto.getApplication().getIsAccepted(),
-								applicationDto.getEmploymentProposalDto().getProposedByUserId(),
+				// Current proposal
+				applicationProgressStatus.setCurrentProposal(currentProposal);
+				applicationProgressStatus.setIsCurrentProposalExpired(
+						DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
+				applicationProgressStatus.setIsProposedToSessionUser(
+						currentProposal.getProposedByUserId() == sessionUser.getUserId() ? true : false);	
+				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+						proposalService.getTime_untilEmployerApprovalExpires(
+								currentProposal.getExpirationDate(), now));
+				applicationProgressStatus.setCurrentProposalStatus(
+						proposalService.getCurrentProposalStatus(
+								application.getIsOpen(),
+								application.getIsAccepted(),
+								currentProposal.getProposedByUserId(),
 								sessionUser.getUserId(),
 								sessionUser.getProfileId()));
-			
 				
-				applicationService.inspectNewness(applicationDto);
+				// Previous proposal
+				applicationProgressStatus.setPreviousProposal(previousProposal);					
+				
+				// Applicant
+				applicationProgressStatus.setApplicantName(applicant.getFirstName());
+				applicationProgressStatus.setApplicantRating(
+						userService.getRating(applicant.getUserId()));
 
-								
-				userDTO.setApplicationDto(applicationDto);
-				jobDto.getUserDtos_applicants().add(userDTO);
+				// Answers
+				applicationProgressStatus.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
+						jobId, applicant.getUserId()));
+				applicationProgressStatus.setAnswerOptionIds_Selected(
+						applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(
+								applicant.getUserId(), jobId));		
 				
-			}
-			
-			jobDto.setJob(getJob(jobId));
-			jobDto.setWorkDays(getWorkDays(jobId));
-//			jobDto.setApplicationDtos(applicationService.getApplicationDtos_ByJob_OpenApplications(jobId, session));
-//			jobDto.setEmployeeDtos(userService.getEmployeeDtosByJob(jobId));
-			model.addAttribute("jobDto", jobDto);
+				applicationService.inspectNewness(application);
+				proposalService.inspectNewness(currentProposal);
+				
+				response.getApplicationProgressStatuses().add(applicationProgressStatus);				
+			}		
+			model.addAttribute("response", response);
 		}
 	}
 
@@ -1233,7 +1208,7 @@ public class JobServiceImpl {
 		boolean isValidRequest = true;
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 
-			List<JobSearchUser> users_employees = userService.getEmployeesByJob(jobId);
+			List<JobSearchUser> users_employees = userService.getUsersEmployedForJob(jobId);
 			if(users_employees != null){
 				model.addAttribute("json_work_day_dtos",	JSON.stringify(getWorkDayDtos(jobId)));
 				model.addAttribute("jobId", jobId);

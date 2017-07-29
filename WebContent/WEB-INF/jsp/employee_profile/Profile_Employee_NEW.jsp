@@ -119,7 +119,7 @@
 												 ? 'status-employment' : 'status-application' }">
 													 ${applicationDto.application.isAccepted == 1
 													 ? "Employment" : "Application" }</span>										
-											<div class="messages">
+											<div class="messages hide-on-load">
 												<c:forEach items="${applicationDto.messages }" var="message">
 													<p>${message }</p>
 												</c:forEach>

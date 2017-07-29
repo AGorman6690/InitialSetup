@@ -10,56 +10,56 @@
 	<h1>Your Jobs</h1>
 	<div id="jobs-list">
 	
-		<c:forEach items="${jobDtos }" var="jobDto">
-			<div class="job-container" data-job-id="${jobDto.job.id }">
+		<c:forEach items="${response.employerHomepageJobs }" var="employerHomepageJob">
+			<div class="job-container" data-job-id="${employerHomepageJob.job.id }">
 				<div class="action-options">
-					<a class="" href="/JobSearch/job/${jobDto.job.id}/edit" >
+					<a class="" href="/JobSearch/job/${employerHomepageJob.job.id}/edit" >
 						<span class="glyphicon glyphicon-pencil"></span></a>	
-					<a class="" href="/JobSearch/job/${jobDto.job.id}/find-employees" >
+					<a class="" href="/JobSearch/job/${employerHomepageJob.job.id}/find-employees" >
 						<span class="glyphicon glyphicon-search"></span></a>
 				</div>		
-				<p class="job-name accent show-job-info-mod" data-context="waiting" data-job-id="${jobDto.job.id }">
-					${jobDto.job.jobName }</p>
+				<p class="job-name accent show-job-info-mod" data-context="waiting" data-job-id="${employerHomepageJob.job.id }">
+					${employerHomepageJob.job.jobName }</p>
 				
 				<div class="brief-details">
 					<div class="applicants-container">
-						<input type="checkbox" id="employees-${jobDto.job.id }">
+						<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 						<p>Applicants<span class="total total-applicants">
-							${jobDto.countApplications_total }</span>
-							<c:if test="${jobDto.countApplications_new > 0 }">							
-								<span class="new new-applicants">${jobDto.countApplications_new } new</span></c:if></p>						
+							${employerHomepageJob.countApplications_total }</span>
+							<c:if test="${employerHomepageJob.countApplications_new > 0 }">							
+								<span class="new new-applicants">${employerHomepageJob.countApplications_new } new</span></c:if></p>						
 						<div class="application-details">
 							<div>
-								<input type="checkbox" id="employees-${jobDto.job.id }">
-								<p class="${jobDto.countWageProposals_received > 0 ? 'action' : ''}">
+								<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
+								<p class="${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 									Proposals waiting on you
 									<span class="total proposals-waiting-on-you
-										 ${jobDto.countWageProposals_received > 0 ? 'action' : ''}">
-										${jobDto.countWageProposals_received }</span>
-									<c:if test="${jobDto.countWageProposals_received_new > 0 }">							
-										<span class="new new-proposals-waiting-on-you">${jobDto.countWageProposals_received_new } new</span></c:if></p>
+										 ${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
+										${employerHomepageJob.countWageProposals_received }</span>
+									<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">							
+										<span class="new new-proposals-waiting-on-you">${employerHomepageJob.countWageProposals_received_new } new</span></c:if></p>
 							</div>
 							<div>								
-								<input type="checkbox" id="employees-${jobDto.job.id }">
+								<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 								<p>Proposals waiting on applicant
-									<span class="total total-applicants">${jobDto.countWageProposals_sent }</span>
+									<span class="total total-applicants">${employerHomepageJob.countWageProposals_sent }</span>
 							</div>
-							<input type="checkbox" id="employees-${jobDto.job.id }">
-							<p>Expired proposals<span class="total total-applicants">${jobDto.countProposals_expired }</span></p>
+							<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
+							<p>Expired proposals<span class="total total-applicants">${employerHomepageJob.countProposals_expired }</span></p>
 						</div>
 					</div>
-					<input type="checkbox" id="employees-${jobDto.job.id }">
+					<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 					
 						<p>Employees<span class="total total-employees">
-							${jobDto.countEmployees_hired } of ${jobDto.job.positionsPerDay }</span></p>
-	<%-- 					<p class="see-full-details linky-hover" data-job-id="${jobDto.job.id }"> --%>
+							${employerHomepageJob.countEmployees_hired } of ${employerHomepageJob.job.positionsPerDay }</span></p>
+	<%-- 					<p class="see-full-details linky-hover" data-job-id="${employerHomepageJob.job.id }"> --%>
 	<!-- 						<span class="text">Details</span> -->
 	<!-- 						<span class="glyphicon glyphicon-menu-right"></span></p> -->
 					<div>	
 						<p class="show-hide-details see-details linky-hover "
-							data-job-id="${jobDto.job.id }">Show All</p>
+							data-job-id="${employerHomepageJob.job.id }">Show All</p>
 						<p class="show-hide-details hide-details linky-hover"
-							data-job-id="${jobDto.job.id }">Hide All</p>
+							data-job-id="${employerHomepageJob.job.id }">Hide All</p>
 					</div>
 				</div>
 				

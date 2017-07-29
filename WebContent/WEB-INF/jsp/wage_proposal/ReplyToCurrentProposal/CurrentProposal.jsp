@@ -10,7 +10,7 @@
 			: 'Propose A Counter Offer'}</h1>
 	<h1 class="review-context context">Review</h1>		
 	<c:if test="${user.profileId == 1 }">
-		<div class="context-employee counter-context">
+		<div class="context-employee proposal counter-context">
 			<h3 class="blue">This Proposal Expires In</h3>
 			<p class="red-bold">${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</p>
 		</div>
@@ -34,39 +34,43 @@
 			</div>		
 			<div class="proposal wage-proposal" data-proposed-amount="${applicationDto.employmentProposalDto.amount }">
 				<h3 class="blue">Wage Proposal</h3>		
-				<div class="counter-context">				
-					<c:if test="${context != 'employer-make-initial-offer' }">	
-						<div class="proposed-offer">
-							<p class="proposed-amount">${user.profileId == 1 ? "Employer" : "Applicant" }
-								proposed $ ${applicationDto.employmentProposalDto.amount } / hr</p>
-						</div>				
-					</c:if>		
-					<div class="${context == 'employer-make-initial-offer' ? 'initial-offer' : 'counter-offer' }">									
-						<p class="red-bold">${context == 'employer-make-initial-offer'
-							 ? 'Propose a wage' : 'Enter a counter offer' } ($ / hr)</p>
-						<input class="counter-wage-amount" type="text"
-							value="${applicationDto.employmentProposalDto.amount }"/>						
-					</div>	
-				</div>
-				<div class="review-context">
-					<p>You are <span class="accepting-or-proposing"></span> a $<span class="wage-amount"></span> / hr wage 
-				</div>							
+				<div class="action-body">
+					<div class="counter-context">				
+						<c:if test="${context != 'employer-make-initial-offer' }">	
+							<div class="proposed-offer">
+								<p class="proposed-amount">${user.profileId == 1 ? "Employer" : "Applicant" }
+									proposed $ ${applicationDto.employmentProposalDto.amount } / hr</p>
+							</div>				
+						</c:if>		
+						<div class="${context == 'employer-make-initial-offer' ? 'initial-offer' : 'counter-offer' }">									
+							<p class="red-bold">${context == 'employer-make-initial-offer'
+								 ? 'Propose a wage' : 'Enter a counter offer' } ($ / hr)</p>
+							<input class="counter-wage-amount" type="text"
+								value="${applicationDto.employmentProposalDto.amount }"/>						
+						</div>	
+					</div>
+					<div class="review-context">
+						<p>You are <span class="accepting-or-proposing"></span> a $<span class="wage-amount"></span> / hr wage 
+					</div>		
+				</div>					
 			</div>
 			<c:if test="${jobDto.job.isPartialAvailabilityAllowed}">
 				<div class="proposal work-day-proposal" data-proposed-work-days="${datestrings_workDays }">
 					<h3 class="blue">Work Day Proposal</h3>		
-					<div class="conflicting-applications-countering"></div>						
-					<p class="red-bold counter-context">
-						Select ${context != 'employer-make-initial-offer' ? 'or deselect ' : '' } your proposed work days</p>
-					<p class="review-context">You are <span class="accepting-or-proposing"></span> the following work days</p>							
-					
-					<div class="counter-context review-context v2 teal-title proposal-calendar calendar-container wage-proposal-calendar
-						 hide-prev-next hide-unused-rows">	
-						<button class="counter-context sqr-btn gray-3 select-all-work-days-override">
-							Select All Work Days</button>								
-						<div class="calendar counter-calendar ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
-							data-min-date="${jobDto.date_firstWorkDay }"
-							data-number-of-months=${jobDto.months_workDaysSpan }>
+					<div class="action-body">
+						<div class="conflicting-applications-countering"></div>						
+						<p class="red-bold counter-context">
+							Select ${context != 'employer-make-initial-offer' ? 'or deselect ' : '' } your proposed work days</p>
+						<p class="review-context">You are <span class="accepting-or-proposing"></span> the following work days</p>							
+						
+						<div class="counter-context review-context v2 teal-title proposal-calendar calendar-container wage-proposal-calendar
+							 hide-prev-next hide-unused-rows">	
+							<button class="counter-context sqr-btn gray-3 select-all-work-days-override">
+								Select All Work Days</button>								
+							<div class="calendar counter-calendar ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
+								data-min-date="${jobDto.date_firstWorkDay }"
+								data-number-of-months=${jobDto.months_workDaysSpan }>
+							</div>
 						</div>
 					</div>									
 				</div>				

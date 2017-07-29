@@ -772,26 +772,6 @@ public class ApplicationServiceImpl {
 
 	}
 
-	public int getCountWageProposal_Sent(Integer jobId, int userId, Timestamp currentTime) {
-		return repository.getCountWageProposal_Sent(jobId, userId, currentTime);
-	}
-
-	public int getCountWageProposal_Received(Integer jobId, int userId) {
-		return repository.getCountWageProposal_Received(jobId, userId);
-	}
-
-	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
-		return repository.getCountWageProposal_Received_New(jobId, userId);
-	}	
-
-	public int getCountProposals_expired(Integer jobId, Timestamp currentTime) {
-		return repository.getCountProposals_expired(jobId, currentTime);
-	}
-
-	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
-		repository.updateWageProposalsStatus_ToViewedButNoActionTaken(jobId);
-	}
-
 	public List<Question> getDistinctQuestions_byEmployer(int userId) {
 		return repository.getDistinctQuestions_byEmployer(userId);
 	}
@@ -939,26 +919,6 @@ public class ApplicationServiceImpl {
 	//		repository.insertApplicationInvite(applicationInvite);
 
 		}
-	}
-
-	public int getCountApplications_new(Integer jobId) {
-		return repository.getCountApplications_new(jobId);
-	}
-
-	public int getCountApplications_total(Integer jobId) {
-		return repository.getCountApplications_total(jobId);
-	}
-
-	public int getCountApplications_received(Integer jobId) {
-		return repository.getCountApplications_received(jobId);
-	}
-
-	public int getCountApplications_declined(Integer jobId) {
-		return repository.getCountApplications_declined(jobId);
-	}
-
-	public int getCountEmployees_hired(Integer jobId) {
-		return repository.getCountEmployees_hired(jobId);
 	}
 
 	public Integer getCount_applicantsByDay(int dateId, int jobId) {
@@ -1267,46 +1227,15 @@ public class ApplicationServiceImpl {
 	}
 
 
-	public String getCurrentProposalStatus(int application_isOpen, int application_isAccepted,			
-			Integer proposedByUserId_currentProposal, int userId_setStatusFor, int profileId_forUser) {
-		
-		
-		if(application_isAccepted == 1){			
-			if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
-				return "";
-			else return "";			
-		}else if(application_isOpen == 0){
-			return "Application is closed";
-		}else{
-			if(proposedByUserId_currentProposal == userId_setStatusFor){
-				if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
-					return "Waiting for the employer";
-				else return "Waiting for the applicant";						
-			}else{
-				return "Waiting for you";
-			}
-		}
 
+
+
+	public void inspectNewness(Application application) {
+		if(application.getIsNew() == 1)	updateApplicationFlag(application, "IsNew", 0);
 	}
 
-	public Boolean isProposalExpired(LocalDateTime expirationDate, LocalDateTime now) {
-		
-		if(expirationDate != null){
-			if(expirationDate.isBefore(now)) return true;
-			else return false;	
-		}else return null;
-		
-	}
-
-	public void inspectNewness(ApplicationDTO applicationDto) {
-		if(applicationDto.getApplication().getIsNew() == 1){
-			updateApplicationFlag(
-					applicationDto.getApplication(), "IsNew", 0);
-		}
-		
-		if(applicationDto.getEmploymentProposalDto().getIsNew() == 1){
-			updateProposalFlag(applicationDto.getEmploymentProposalDto(), "IsNew", 0);
-		}		
+	public List<Application> getApplications_byJob(Integer jobId) {
+		return repository.getApplications_byJob(jobId);
 	}
 
 

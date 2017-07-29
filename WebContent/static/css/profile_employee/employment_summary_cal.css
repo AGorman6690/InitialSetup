@@ -2,8 +2,8 @@
 	margin-bottom: 50px;
 }
 #employment-summary-calendar .calendar td{
-	width: 150px;
-	height: 150px;
+	width: 100px;
+	height: auto;
 }
 .v2.calendar .ui-datepicker-inline{
 	width: auto;
@@ -34,4 +34,7 @@ td.has-employment{
 }
 .calendar-container .v2 td a{
 	font-size: 20px;
+}
+.v2.calendar .ui-datepicker-inline.ui-datepicker-multi {
+    width: 725px !important;
 }

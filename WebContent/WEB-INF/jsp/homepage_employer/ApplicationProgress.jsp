@@ -2,33 +2,33 @@
 		
 <div class="job-detail" data-job-id="${jobDto.job.id }">
 	<div class="applicants">
-		<c:forEach items="${jobDto.userDtos_applicants }" var="userDto">
+		<c:forEach items="${response.applicationProgressStatuses }" var="applicationProgressStatus">
 			<div class="applicant"
-				data-user-id="${userDto.user.userId }"
-				data-is-accepted="${userDto.applicationDto.application.isAccepted }"
-				data-is-waiting-on-you="${userDto.applicationDto.employmentProposalDto.isProposedToSessionUser }"
-				data-is-expired="${userDto.applicationDto.employmentProposalDto.isExpired ? 1 : 0 }"
-				data-is-favorite="${userDto.applicationDto.application.status == 2 ? 1 : 0 }"
-				data-rating="${userDto.ratingValue_overall }"
-				data-proposed-amount="${userDto.applicationDto.employmentProposalDto.amount }"
+				data-user-id="${applicationProgressStatus.applicantId }"
+				data-is-accepted="${applicationProgressStatus.application.isAccepted }"
+				data-is-waiting-on-you="${applicationProgressStatus.isProposedToSessionUser }"
+				data-is-expired="${applicationProgressStatus.isCurrentProposalExpired ? 1 : 0 }"
+				data-is-favorite="${applicationProgressStatus.application.status == 2 ? 1 : 0 }"
+				data-rating="${applicationProgressStatus.applicantRating }"
+				data-proposed-amount="${applicationProgressStatus.currentProposal.amount }"
 				>
 
 				<div class="status surpress">
 					<span class=" favorite-flag glyphicon glyphicon-flag
-						${applicationDto.application.status == 2 ? 'glyphicon glyphicon-star' :
+						${applicationProgressStatus.application.status == 2 ? 'glyphicon glyphicon-star' :
 							'glyphicon glyphicon-star-empty not-selected' }">
 					</span>
-					<p class="applicant-or-employee">${userDto.applicationDto.application.isAccepted == 1
+					<p class="applicant-or-employee">${applicationProgressStatus.application.isAccepted == 1
 						? 'Employee' : 'Applicant' }</p>
-					<p class="waiting-status ${userDto.applicationDto.employmentProposalDto.isProposedToSessionUser &&
-									userDto.applicationDto.application.isAccepted == 0
-											 ? '' : '' }">${userDto.applicationDto.currentProposalStatus }
+					<p class="waiting-status ${applicationProgressStatus.isProposedToSessionUser &&
+									applicationProgressStatus.application.isAccepted == 0
+											 ? '' : '' }">${applicationProgressStatus.currentProposalStatus }
 											 
 					 </p>
 					 <h3>					 
-						 ${!userDto.applicationDto.employmentProposalDto.isProposedToSessionUser &&
-								userDto.applicationDto.application.isAccepted == 0 ?
-									"Your proposal expires in " += userDto.applicationDto.time_untilEmployerApprovalExpires : ""}
+						 ${!applicationProgressStatus.isProposedToSessionUser &&
+								applicationProgressStatus.application.isAccepted == 0 ?
+									"Your proposal expires in " += applicationProgressStatus.time_untilEmployerApprovalExpires : ""}
 					 </h3>
 					 
 
@@ -41,13 +41,13 @@
 						<%@ include file="./../ratings/Template_RenderRatingsMod.jsp" %>
 						<div class="show-applicant-ratings-mod-0">
 							<c:choose>
-								<c:when test="${empty userDto.ratingValue_overall }">
+								<c:when test="${empty applicationProgressStatus.applicantRating }">
 									No Rating
 								</c:when>
 								<c:otherwise>
 									<input name="input-1" class="rating-loading"
-											value="${userDto.ratingValue_overall }	">									
-									${userDto.ratingValue_overall}
+											value="${applicationProgressStatus.applicantRating }	">									
+									${applicationProgressStatus.applicantRating}
 								</c:otherwise>
 							</c:choose>							 	
 						 </div>
@@ -64,15 +64,15 @@
 					</div>
 								
 				</div>
-				<c:if test="${userDto.applicationDto.questions.size() > 0 }">
+				<c:if test="${applicationProgressStatus.questions.size() > 0 }">
 					<div class="questions surpress">
 						<c:choose>
-							<c:when test="${userDto.applicationDto.application.flag_employerInitiatedContact == 1 }">
+							<c:when test="${applicationProgressStatus.application.flag_employerInitiatedContact == 1 }">
 								<p>You initiated contact. Applicant did not answer questions.</p>
 							</c:when>
 							<c:otherwise>
 								
-								<c:forEach items="${userDto.applicationDto.questions }"
+								<c:forEach items="${applicationProgressStatus.questions }"
 									 var="question" varStatus="status_questions">
 									<div data-question-id="${question.questionId }"
 										class="question-container ${status_questions.first ? 'displayed' : 'not-first' }">
@@ -90,7 +90,7 @@
 					</div>
 				</c:if>					
 				<div>
-					<div class="proposal" data-application-id="${userDto.applicationDto.application.applicationId }">
+					<div class="proposal" data-application-id="${applicationProgressStatus.application.applicationId }">
 						<c:set var="applicationDto" value="${userDto.applicationDto }" />
 						<c:set var="jobDto" value="${userDto.applicationDto.jobDto }" />
 						<%@ include file="../wage_proposal/CurrentProposal.jsp" %>

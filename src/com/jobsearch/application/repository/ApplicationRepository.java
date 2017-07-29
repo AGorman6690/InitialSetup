@@ -425,118 +425,6 @@ public class ApplicationRepository {
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
-	public int getCountWageProposal_Sent(Integer jobId, int userId, Timestamp currentTime) {
-
-		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
-					+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
-					+ " INNER JOIN job j ON j.jobId = a.JobId"
-					+ " WHERE j.JobId = ?"
-					+ " AND wp.ProposedByUserId = ?"
-					+ " AND wp.IsCurrentProposal = 1"
-					+ " AND wp.ExpirationDate > ?"
-					+ " AND a.IsOpen = 1";
-		
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId, currentTime }, Integer.class);
-	}
-
-	public int getCountWageProposal_Received(Integer jobId, int userId) {
-	
-		// This includes the "New" wage proposals
-		
-		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
-				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
-				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ?"
-				+ " AND wp.ProposedToUserId = ?"
-				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND a.IsOpen = 1";
-				
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId }, Integer.class);
-	}
-	
-
-	public int getCountWageProposal_Received_New(Integer jobId, int userId) {
-	
-		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
-				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
-				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ?"
-				+ " AND wp.ProposedToUserId = ?"
-				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND wp.IsNew = 1"
-				+ " AND a.IsOpen = 1";
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,  userId },
-											Integer.class);
-	}
-	
-
-	public int getCountProposals_expired(Integer jobId, Timestamp currentTime) {
-		String sql = "SELECT COUNT(wp.WageProposalId) FROM wage_proposal wp"
-				+ " INNER JOIN application a ON a.applicationId = wp.applicationId"
-				+ " INNER JOIN job j ON j.jobId = a.JobId"
-				+ " WHERE j.JobId = ?"
-				+ " AND wp.IsCurrentProposal = 1"
-				+ " AND wp.ExpirationDate <= ?"
-				+ " AND a.IsOpen = 1";
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId, new Timestamp(System.currentTimeMillis())},
-											Integer.class);
-
-	}
-
-
-	public int getCountApplications_total(Integer jobId) {
-		String sql = "SELECT COUNT(*) FROM application a"
-				+ " WHERE a.JobId = ?"
-				+ " AND a.IsOpen = 1";
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
-	}
-
-	public int getCountApplications_new(Integer jobId) {
-		
-		String sql = "SELECT COUNT(*) FROM application a"
-				+ " WHERE a.JobId = ?"
-				+ " AND a.IsNew = 1";
-	
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
-	}
-	
-	public int getCountApplications_received(Integer jobId) {
-		
-		String sql = "SELECT COUNT(*) FROM application a"
-				+ " WHERE a.JobId = ?"
-				+ " AND ( a.Status = ?"
-				+ " OR a.Status = ?"
-				+ " OR a.Status = ? )";
-				
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId,
-																Application.STATUS_SUBMITTED,
-																Application.STATUS_CONSIDERED,
-																Application.STATUS_PROPOSED_BY_EMPLOYER}, Integer.class);
-	}
-
-	public int getCountApplications_declined(Integer jobId) {
-		
-		String sql = "SELECT COUNT(*) FROM application a"
-				+ " WHERE a.JobId = ?"
-				+ " AND a.Status = ?";
-				
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId, Application.STATUS_DECLINED}, Integer.class);
-	}
-	
-	
-	public int getCountEmployees_hired(Integer jobId) {
-		
-		String sql = "SELECT COUNT(*) FROM employment e"
-				+ " WHERE e.JobId = ?"
-				+ " AND e.WasTerminated = 0";
-				
-		return jdbcTemplate.queryForObject(sql, new Object[]{ jobId }, Integer.class);
-	}
-
 	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
 		
 		String sql = "UPDATE wage_proposal w"
@@ -958,6 +846,15 @@ public class ApplicationRepository {
 		String sql = "DELETE FROM rating WHERE (UserId = ? AND JobId = ?)"
 				+ " OR (RatedByUserId = ? AND JobId = ?)";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
+	}
+
+
+	public List<Application> getApplications_byJob(Integer jobId) {
+		String sql = "SELECT * FROM application a"
+				+ " JOIN job j ON a.JobId = j.JobId"
+				+ " WHERE j.JobId = ?";
+		
+		return ApplicationRowMapper(sql, new Object[]{ jobId });
 	}
 
 

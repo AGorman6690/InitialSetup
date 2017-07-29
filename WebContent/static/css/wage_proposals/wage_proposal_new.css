@@ -8,7 +8,7 @@
 .proposal-table.confirm{
 	margin: auto;
 }
-.proposal .respond{
+.proposal > .respond {
 	text-align: center;
 }
 .proposal .respond > .sqr-btn{
@@ -46,7 +46,9 @@
 .counter-context {
 	transition: display, 2s}
 
-
+.action-body{
+	padding-left: 300px;
+}
 .send-tatus-warning{
 	background: #ffdada;
     padding: 5px;
@@ -58,15 +60,15 @@
 }
 .proposal .button-wrapper p{
     font-weight: bold;
-    font-size: 37px;
+    font-size: 30px;
     color: #197994;
     position: relative;
 }
 .button-wrapper.left p span.text{
-	margin-left: -35px;
+	margin-left: -15px;
 }
 .button-wrapper.right p span.text{
-	margin-right: -35px;
+	margin-right: -15px;
 }
 .button-wrapper.left p span{
 	float: left;
@@ -111,7 +113,7 @@
 	right: 10px;
 }
 .proposal .proposal-content-wrapper{
-	width: 50%;
+/* 	width: 50%; */
 }
 .proposal .button-wrapper,
 .proposal .proposal-content-wrapper{
@@ -124,9 +126,9 @@
 .proposal .button-wrapper .glyphicon{
     /* margin: 5px 0px; */
     color: #163b3d;
-    font-size: 100px;
+    font-size: 50px;
     /* height: 100%; */
-    margin-top: -25px;
+/*     margin-top: -25px; */
 }
 .proposal p{
 /* 	font-size: 19px; */
@@ -141,17 +143,21 @@
 	display: block;
 }
 .proposal h1{
-    margin-bottom: 30px;
-    background: #197994;
+    /* margin-bottom: 30px; */
+    /* background: #197994; */
     /* font-weight: bold; */
-    color: #fff;
+    /* color: #fff; */
     padding: 10px;
     width: 525px;
-    margin: 15px auto 35px;    
+    margin: 15px auto 35px;
+    border-bottom: 6px solid #197994; 
+    background: #fff;
+    color: #000;
+    font-weight: bold;
 }
 .proposal h3.blue{
 
-    font-size: 21px;
+    font-size: 20px;
     font-weight: bold;
     color: #000;
     margin-bottom: 25px;
@@ -161,7 +167,7 @@
     /* box-shadow: 3px 3px 3px #197994; */
     /* background: #197994; */
     background: #fff;
-    border-bottom: 2px solid #197994;
+/*     border-bottom: 2px solid #197994; */
     box-shadow: none;
     width: 320px;
 }
@@ -172,7 +178,7 @@
     width: 1200px;
     margin-left: -600px;
     margin-bottom: 20px;  
-    text-align: center;  
+/*     text-align: center;   */
 }
 .proposal-container h2{
     font-size: 20px;
@@ -186,6 +192,11 @@
 	width: 130px;
 	text-align: center;
     font-size: 30px;
+}
+.respond-to-proposal{
+    width: 800px;
+    margin: auto;
+        text-align: left;
 }
 .counter-offer{
 /* 	padding-top: 40px; */
@@ -359,8 +370,8 @@ span.expiration-time{
 .job-starts-in-message p{
 	margin: 0;
 }
-div[data-is-waiting-on-you=true]{
-/* 	background: #ffbdbd; */
+div[data-is-waiting-on-you=true][data-is-accepted="0"]{
+	background: #ffbdbd;
 /*     border: 6px solid red; */
 	border: 0;
     border-left: 35px solid red !important;

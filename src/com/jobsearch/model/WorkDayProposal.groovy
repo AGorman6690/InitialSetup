@@ -4,6 +4,14 @@ import org.codehaus.jackson.annotate.JsonProperty
 
 import com.google.gson.annotations.JsonAdapter
 
+
+// **********************************************
+// **********************************************
+// This clas is being replaced by "Proposal"
+// **********************************************
+// **********************************************
+
+
 public class WorkDayProposal {
 
 	@JsonProperty

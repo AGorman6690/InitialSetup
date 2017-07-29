@@ -57,11 +57,10 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "/job/{jobId}/application-progress", method = RequestMethod.GET)
-	public String getApplicationProgress(@PathVariable(value = "jobId") int jobId,
+	public String getApplicationProgressRequest(@PathVariable(value = "jobId") int jobId,
 			Model model, HttpSession session) {
 
-		jobService.setModel_applicationProgress(jobId, model, session);
-
+		jobService.setProgressForJobApplicationProcessResponse(jobId, model, session);
 		return "homepage_employer/ApplicationProgress";
 	}
 

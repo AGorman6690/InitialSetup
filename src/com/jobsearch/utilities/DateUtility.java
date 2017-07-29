@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.Date;
@@ -261,6 +262,24 @@ public final class DateUtility {
 		// For example, the result will be in the form "2 days 15:45 hrs"
 		return result;		
 		
+	}
+
+	public static Boolean isDateExpired(LocalDateTime date, LocalDateTime now) {		
+		if(date != null){
+			if(date.isBefore(now)) return true;
+			else return false;	
+		}else return null;		
+	}
+
+
+
+	public static LocalDateTime getLocalDateTime(String dateString) {
+		
+		if(dateString == null) return null;
+		else {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
+			return LocalDateTime.parse(dateString, formatter);	
+		}
 	}
 
 

@@ -13,9 +13,8 @@ class EmploymentProposalDTO {
 			this.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 			this.setApplicationId(proposalBeingRespondedTo.getApplicationId());
 	}
-	public EmploymentProposalDTO() {
-		// TODO Auto-generated constructor stub
-	}
+	public EmploymentProposalDTO() {}
+	
 	Integer applicationId
 	Integer employmentProposalId
 	Integer proposedByUserId
