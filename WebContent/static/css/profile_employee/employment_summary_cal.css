@@ -9,7 +9,6 @@
 	width: auto;
 }
 .calendar .job-name{
-	font-size: 18px;
 	font-weight: bold;
 	color: #197994;
 }
@@ -23,18 +22,26 @@
 	text-align: center;
 }
 .v2 .ui-datepicker-title{
-	font-size: 23px;
+	font-size: 20px;
+	text-align: left;
+	color: #000;	
 }
 #employment-summary-calendar h1{
-	width: 375px;
+	width: 440px;
 	margin-bottom: 10px;
 }
 td.has-employment{
 	background: #f7f7f7;
 }
 .calendar-container .v2 td a{
-	font-size: 20px;
+/* 	font-size: 20px; */
 }
 .v2.calendar .ui-datepicker-inline.ui-datepicker-multi {
     width: 725px !important;
+}
+.ui-datepicker-group{
+	margin-bottom: 40px;
+}
+.calendar .job *{
+	font-size: 16px;
 }

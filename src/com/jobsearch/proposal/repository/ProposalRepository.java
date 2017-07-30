@@ -62,7 +62,8 @@ public class ProposalRepository extends BaseRepository {
 				+ " JOIN application a ON wp.ApplicationId = a.ApplicationId"
 				+ " JOIN job j ON a.JobId = j.JobId"
 				+ " WHERE wp.IsCurrentProposal = 1"
-				+ " AND j.jobId = ?";
+				+ " AND j.jobId = ?"
+				+ " AND a.IsOpen = 1";
 		return ProposalMapper(sql, new Object[]{ jobId });
 	}
 

@@ -1,111 +1,65 @@
 <%@ include file="../includes/TagLibs.jsp"%>
-<!-- ******************************************************* -->
-<!-- Refactor this -->
-<!-- ******************************************************* -->
-
-<c:choose>
-	<c:when test="${sessionScope.user.profileId == 1 &&
-				applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 1 }">
-		<c:if test="${appliationDto.application.isAccepted == 0 }">
-			<p class="confirm-message">The employer accepted your offer</p>
-		</c:if>		
-
-		<table class="proposal-table confirm">
-			<thead>
-				<tr>
-					<th></th>
-					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<th></th>
-					</c:if>
-				</tr>
-			</thead>
-			<tbody>
-				<tr class="current-proposal ${applicationDto.employmentProposalDto.proposedToUserId == user.userId ? 'swarning-message' :'' }">
-					<td><span class="dollar-sign">$</span>
-						<fmt:formatNumber type="number" minFractionDigits="2" 
-						maxFractionDigits="2" value="${applicationDto.employmentProposalDto.amount}"/> / hr
-					</td>			
-					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> 	
-						<td>
-							${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days			
-						</td>
-					</c:if>
-				</tr>	
-			</tbody>
-		</table>			
-		
-			
-	</c:when>
-	<c:otherwise>
-		<table class="proposal-table">
-			<thead>
-				<tr>
-					<th></th>
-					<th></th>
-					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }">
-						<th></th>
-					</c:if>
-				</tr>
-			</thead>
-			<tbody>
-				<c:if test="${!empty applicationDto.previousProposal && applicationDto.application.isAccepted == 0 }">
-					<tr>
-						<td>
-							<p class="">${applicationDto.previousProposal.proposedByUserId == user.userId ? 'Your last proposal' : 
-							user.profileId == 1 ? "Employer's last proposal" : "Applicant's last proposal"}</p>
-						</td>
-						<td><span class="dollar-sign">$</span>
-							<fmt:formatNumber type="number" minFractionDigits="2" 
-							maxFractionDigits="2" value="${applicationDto.previousProposal.amount}"/> / hr
-						</td>			
-						<c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> 	
-							<td>
-								${applicationDto.previousProposal.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days			
-							</td>
-						</c:if>
-					</tr>	
+<div>
+	<div>
+		<div class="a-proposal">
+			<c:if test="${!empty applicationProgressStatus.previousProposal &&
+			 	applicationProgressStatus.application.isAccepted == 0 }">
+				<label class="">${applicationProgressStatus.isProposedToSessionUser ?
+	 				'Your last proposal' :
+	 				sessionScope.user.profileId == 1 ? "Employer's last proposal" :
+	 				"Applicant's last proposal"}</label>
+	 			<div class="proposed-value">
+					<span class="dollar-sign">$</span>
+					<fmt:formatNumber type="number" minFractionDigits="2" 
+						maxFractionDigits="2" 
+						value="${applicationProgressStatus.previousProposal.amount}" /> / hr
+				</div>
+				<div class="proposed-value">
+		 			<c:if test="${param_job.isPartialAvailabilityAllowed }"> 							 
+		 				${applicationProgressStatus.previousProposal.proposedDates.size() } 
+		 				 of 0 days			 
+		 			</c:if> 
+	 			</div>
+			</c:if>
+		</div>
+			<div class="a-proposal">
+			<label class="">${applicationProgressStatus.application.isAccepted == "1" ? "Wage" :
+				applicationProgressStatus.isProposedToSessionUser ?
+				'Your current proposal' : 
+				sessionScope.user.profileId == 1 ? "Employer's current proposal" :
+				"Applicant's current proposal"}</label>			
+			<div class="proposed-value">
+				<span class="dollar-sign">$</span>
+				<fmt:formatNumber type="number" minFractionDigits="2" 
+					maxFractionDigits="2"
+					value="${applicationProgressStatus.currentProposal.amount}"/> / hr
+			</div>
+			<div class="proposed-value">
+				<c:if test="${param_job.isPartialAvailabilityAllowed }"> 	
+					${applicationProgressStatus.currentProposal.proposedDates.size() }
+					 of 0 days			
 				</c:if>
-				<tr class="current-proposal ${applicationDto.employmentProposalDto.proposedToUserId == user.userId ? 'swarning-message' :'' }">
-					<td>
-						<p class="">${applicationDto.application.isAccepted == "1" ? "Wage" :
-							applicationDto.employmentProposalDto.proposedByUserId == user.userId ?
-							'Your current proposal' : 
-							user.profileId == 1 ? "Employer's current proposal" :
-							"Applicant's current proposal"}</p>
-					
-					</td>
-					<td><span class="dollar-sign">$</span>
-						<fmt:formatNumber type="number" minFractionDigits="2" 
-						maxFractionDigits="2" value="${applicationDto.employmentProposalDto.amount}"/> / hr
-					</td>			
-					<c:if test="${jobDto.job.isPartialAvailabilityAllowed }"> 	
-						<td>
-							${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() } of ${jobDto.workDays.size() } days			
-						</td>
-					</c:if>
-				</tr>	
-			</tbody>
-		</table>	
-	</c:otherwise>
-</c:choose>
-
-<c:if test="${applicationDto.employmentProposalDto.isProposedToSessionUser &&
-				applicationDto.application.isAccepted == 0}">	
-				
-	<div class="proposal-item respond">
-		<c:choose>
-			<c:when test="${ sessionScope.user.profileId == 2 || (sessionScope.user.profileId == 1 &&
-				applicationDto.employmentProposalDto.flag_employerAcceptedTheOffer == 0) }">
-				<button class="sqr-btn gray-3 show-mod accept-current-proposal">Accept</button>
-				<button class="sqr-btn gray-3 show-mod counter-current-proposal">Counter</button>	
-			</c:when>
-			<c:otherwise>
-				<button class="sqr-btn gray-3 show-mod accept-current-proposal">Confirm</button>
-			</c:otherwise>
-		</c:choose>
-	
-		<button class="sqr-btn gray-3 show-mod decline-current-proposal">Decline</button>	
-		<div class="render-present-proposal-mod"></div>
+			</div>
+		</div>
 	</div>
-</c:if>	
-
+	
+	<c:if test="${applicationProgressStatus.isProposedToSessionUser &&
+					applicationProgressStatus.application.isAccepted == 0}">	
+					
+		<div class="respond-to-proposal">
+			<c:choose>
+				<c:when test="${sessionScope.user.profileId == 2 || (sessionScope.user.profileId == 1 &&
+						applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 0) }">
+					<button class="sqr-btn blue accept-current-proposal">Accept</button>
+					<button class="sqr-btn blue counter-current-proposal">Counter</button>	
+				</c:when>
+				<c:otherwise>
+					<button class="sqr-btn blue accept-current-proposal">Confirm</button>
+				</c:otherwise>
+			</c:choose>
+		
+			<button class="sqr-btn blue decline-current-proposal">Decline</button>	
+			<div class="render-present-proposal-mod"></div>
+		</div>
+	</c:if>	
+</div>	

@@ -15,7 +15,9 @@
 	display: none;
 }
 .applicant-or-employee{
-	font-size: 28px;
+	font-size: 20px;
+	float: right;
+	font-weight: bold;
 }
 h1{
     width: 275px;

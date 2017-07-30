@@ -54,14 +54,14 @@ public class UserController {
 	public String validateEmail(@RequestParam(name = "userId") int userId, HttpSession session){
 		
 		userService.setSession_EmailValidation(userId, session);
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 	
 	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
 	public String login(HttpSession session, @ModelAttribute("user") JobSearchUser user) {
 
 		userService.setSession_Login(user, session);
-		return "redirect:/user/profile";
+		return "redirect:/user";
 
 	}	
 	
@@ -90,7 +90,7 @@ public class UserController {
 	@RequestMapping(value = "/user/profile-employer-new", method = RequestMethod.GET)
 	public String TEMP_EMPLOYERS_getProfile_SessionUser(Model model, HttpSession session) {				
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		userService.setviewEmployerHomepageResponse(sessionUser, model, session);
+		userService.setViewEmployerHomepageResponse(sessionUser, model, session);
 		
 		return "/employer_profile/EmployerProfile";
 	}
@@ -100,7 +100,7 @@ public class UserController {
 	public String TEMP_getProfile_SessionUser(Model model, HttpSession session) {				
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		userService.setviewEmployeeHomepageResponse(sessionUser, model, session);
+		userService.setViewEmployeeHomepageResponse(sessionUser, model, session);
 		return "/employee_profile/Profile_Employee";
 	}
 	
@@ -166,7 +166,7 @@ public class UserController {
 		jobService.updateEmploymentFlag(jobId, SessionContext.getUser(session).getUserId(),
 				"Flag_EmployeeAcknowledgedEmployerRemoval", 1);
 		
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 	
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
@@ -249,7 +249,7 @@ public class UserController {
 //	@ResponseBody
 	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
 		userService.editEmployeeSettings(user_edited, session);
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 
 

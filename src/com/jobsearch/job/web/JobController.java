@@ -52,7 +52,7 @@ public class JobController {
 
 		jobService.addPosting(jobDto, session);
 		return "";
-		// return "redirect:/user/profile";
+		// return "redirect:/user";
 
 	}
 	
@@ -60,7 +60,7 @@ public class JobController {
 	public String getApplicationProgressRequest(@PathVariable(value = "jobId") int jobId,
 			Model model, HttpSession session) {
 
-		jobService.setProgressForJobApplicationProcessResponse(jobId, model, session);
+		jobService.setApplicationProgressResponse(jobId, model, session);
 		return "homepage_employer/ApplicationProgress";
 	}
 
@@ -78,7 +78,7 @@ public class JobController {
 			HttpSession session) {
 		
 		jobService.leaveJob_employee(session, jobId);
-		return "redirect:/user/profile";
+		return "redirect:/user";
 		
 	}
 
@@ -330,7 +330,7 @@ public class JobController {
 
 		jobService.updateJobStatus(status, jobId);
 
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 
 	@ResponseBody

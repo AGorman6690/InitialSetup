@@ -1,177 +1,16 @@
-
-.proposal.confirm .confirm-message{
-	font-size: 18px;
-	font-weight: bold;
-	text-align: center;
-/* 	color: green; */
-}
-.proposal-table.confirm{
-	margin: auto;
-}
-.proposal > .respond {
-	text-align: center;
-}
-.proposal .respond > .sqr-btn{
-    background: #197994;
-    color: #fff;
-/*     font-weight: bold;	 */
-    padding: 10px 25px;
-    margin-right: 10px;
-    font-size: 19px;
-}
-.proposal .respond .sqr-btn:hover{
-	background: #77afbf;
-}
-.proposal-table > tbody > tr > td{
-	padding: 5px 15px;
-}
-.proposal-table >thead > tr > th{
-	text-align: center;
-}
-.proposal-table > tbody > tr:not(.warning-message) > td:first-child{
-	padding-left: 0px;
-}
-.proposal-table:not(.confirm) > tbody > tr > td:not(:first-child){
-/* 	font-size: 18px; */
-/* 	font-weight: bold; */
-}
-
-.wrapper.context-employee .context-employer{
-	display:none;
-}
-.wrapper.context-employer .context-employee{
-	display:none;
-}
-.counter-context,
-.counter-context {
-	transition: display, 2s}
-
-.action-body{
-	padding-left: 300px;
-}
-.send-tatus-warning{
-	background: #ffdada;
-    padding: 5px;
-}
-.proposal p.red-bold{
-	font-size: 20px;
-	color: red;
-    font-weight: bold;
-}
-.proposal .button-wrapper p{
-    font-weight: bold;
-    font-size: 30px;
-    color: #197994;
-    position: relative;
-}
-.button-wrapper.left p span.text{
-	margin-left: -15px;
-}
-.button-wrapper.right p span.text{
-	margin-right: -15px;
-}
-.button-wrapper.left p span{
-	float: left;
-/* 	position: absolute; */
-/* 	top:25%; */
-}
-.button-wrapper.right p span{
-	float: right;
-}
-.button-wrapper p span:last-child{
-/* 	margin-left: -20px; */
-}
-.accepting-or-proposing{
-	    font-weight: bold;
-    font-size: 23px;
-    color: red;
-}
-.proposal.counter-context .review-context:not(.counter-context){
-	display: none;
-}
-.proposal.review-context .counter-context:not(.review-context){
-	display: none;
-}
-.proposal.accepting-offer-context .proposing-new-offer-context{
-	display: none;
-}
-.proposal.proposing-new-offer-context .accepting-offer-context{
-	display: none;
-}
-.proposal .button-wrapper{
-	width: 24%;
-	vertical-align: middle;	
-    position: absolute;    
-    top: 50%;
-/*     margin-top: -100px; */
-    font-size: 22px;
-}
-.proposal .button-wrapper.left{
-	left: 10px;
-}
-.proposal .button-wrapper.right{
-	right: 10px;
-}
-.proposal .proposal-content-wrapper{
-/* 	width: 50%; */
-}
-.proposal .button-wrapper,
-.proposal .proposal-content-wrapper{
-	display: inline-block;
-}
-.proposal .button-wrapper button{
-	height: 200px;
-	color: #fff;
-}
-.proposal .button-wrapper .glyphicon{
-    /* margin: 5px 0px; */
+.proposal-wrapper h1{
+    width: 800px;
+    margin: 15px auto 25px;
+    background: #fff;
     color: #163b3d;
-    font-size: 50px;
-    /* height: 100%; */
-/*     margin-top: -25px; */
-}
-.proposal p{
-/* 	font-size: 19px; */
-}
-.proposal .render-present-proposal-mod .proposal{
-/* 	text-align: left; */
-}
-.proposal .v2 .ui-datepicker-inline.ui-datepicker-multi{
-	width: auto !important;
-}
-.proposal .ui-datepicker-group{
-	display: block;
-}
-.proposal h1{
-    /* margin-bottom: 30px; */
-    /* background: #197994; */
-    /* font-weight: bold; */
-    /* color: #fff; */
-    padding: 10px;
-    width: 525px;
-    margin: 15px auto 35px;
-    border-bottom: 6px solid #197994; 
-    background: #fff;
-    color: #000;
+    text-align: center;
+    /* padding: 20px; */
+    font-size: 38px;
+    /* color: #197994; */
     font-weight: bold;
+    border-bottom: 2px solid #197994;
+    padding-bottom: 10px;
 }
-.proposal h3.blue{
-
-    font-size: 20px;
-    font-weight: bold;
-    color: #000;
-    margin-bottom: 25px;
-    display: inline-block;
-    padding: 5px 10px;
-    width: 485px;
-    /* box-shadow: 3px 3px 3px #197994; */
-    /* background: #197994; */
-    background: #fff;
-/*     border-bottom: 2px solid #197994; */
-    box-shadow: none;
-    width: 320px;
-}
-
 #make-offer-modal .mod-content,
 .proposal-container .mod-content{
     top: 20px;
@@ -180,158 +19,7 @@
     margin-bottom: 20px;  
 /*     text-align: center;   */
 }
-.proposal-container h2{
-    font-size: 20px;
-    font-weight: bold;
-    margin-top: 0;
-}
-.wage-proposal .proposed-offer .proposed-amount{
-/* 	font-size: 28px; */
-}
-.proposal-container input[type=text]{
-	width: 130px;
-	text-align: center;
-    font-size: 30px;
-}
-.respond-to-proposal{
-    width: 800px;
-    margin: auto;
-        text-align: left;
-}
-.counter-offer{
-/* 	padding-top: 40px; */
-/* 	display: none; */
-}
-.counter-offer h2{
-/* 	color: #9c6363; */
-    width: 400px;
-    margin: auto;
-    border-top: 1px solid #cacaca;
-    padding-top: 15px;
-    margin-bottom: 10px;
-}
-.proposal-container .sqr-btn.gray-2.accept-proposal.selected{
-	background: #4e806b;
-	border: 3px solid #4e806b;
-}
-.proposal-container .sqr-btn.gray-2.counter-proposal.selected{
-	background: #9c6363;
-	border: 3px solid #9c6363;
-}
-.proposal-container .button-group .sqr-btn.gray-2{
-	border: 3px solid #cacaca;
-}
-.proposal-container .button-group{
-    width: 230px;
-    margin: auto;
-    padding: 8px 0px;
-}
-.proposed-values{
-	text-align: left;
-	width: 330px;
-	margin: auto;
-}
-.proposed-values label{
-	font-weight: bold;
-	width: 150px;
-}
-.proposed-values p{
-	font-size: 17px;
-}
-.mod .confirm-message h2{
-    color: #dc0b0b;
-    font-weight: normal;
-    font-size: 18px;
-}
-.time-container{
-	display: inline-block;
-}
-.time-container input{
-	width: 65px;
-}
-.proposed-calendar *:hover{
-    cursor: not-allowed !important;
-}
-.application-proposal-container.action-required{
-/* 	background: #e0d5d5; */
-	border: 2px solid #cacaca;
-/*     border-top: 20px solid #a96d6d; */
-    border-top: 20px solid #b92222;
-}
-td .application-proposal-container.accepted{
-/*     background: #93c1b6; */
-    border: 2px solid #cacaca;     
-    border-top: 20px solid #93c1b6;
-}
-.proposal-status{
-    font-size: 18px;
-    color: #197994;
-    font-weight: bold;	
-}
-.application-proposal-container{
-	padding: 10px;
-	border: 2px solid #cacaca;
-	border-radius: 4px;	
-}
-.application-proposal-container.action-required .proposal-item > p{
-/* 	color: #000; */
-}
-span.expiration-time{
-    font-weight: bold;
-    font-size: 17px;
-}
-.application-proposal-container .proposal-item{
-	display: inline-block;
-	padding: 0px 10px;
-	text-align: left;
-}
-.expiration-time-cont p:last-child{
-    border-bottom: 1px solid #cacaca;
-}
-.proposal-item.work-days .mod-content{
-    width: 1200px;
-    margin-left: -600px;
-    top: 100px;
-}
-.withdraw-application{
-	top: 73px;
-	right: 12px;
-	position: absolute;
-	background: #bb4555;
-    color: #fff;
-}
-.other-application-conflicts .alert-message{
-	text-align: left;
-}
-.conflicting-applications .disposition p{
-	padding-left: 25px;
-}
-.conflicting-applications .disposition ul{
-	margin-left: 40px;
-}
-.proposal-lbl{
-	text-align: left;
-	font-weight: bold;
-}
-.previous-proposal{
-	margin-bottom: 10px;
-}
-.proposal-item.respond{
-	margin-top: 10px;
-}
-.action-required .current-proposal .proposal-item p{
-/* 	font-size: 18px; */
-/* 	font-weight: bold; */
-/* 	color: #b92222;; */
-}
-.glyphicon-calendar{
-    color: #aaa;
-    font-size: 15px;
-    margin-left: 5px;    
-}
-.proposed-values h3{
-	margin-bottom: 20px;
-}
+
 .expiration-container .radio-container label{
 	display: block;
 }
@@ -367,28 +55,116 @@ span.expiration-time{
 .time-container p{
 	text-align: center;
 }
-.job-starts-in-message p{
-	margin: 0;
+.expiration-time-cont p:last-child{
+    border-bottom: 1px solid #cacaca;
 }
-div[data-is-waiting-on-you=true][data-is-accepted="0"]{
-	background: #ffbdbd;
-/*     border: 6px solid red; */
-	border: 0;
-    border-left: 35px solid red !important;
+span.expiration-time{
+    font-weight: bold;
+    font-size: 17px;
 }
-div[data-is-accepted="1"]{
-/* 	background: #f7f7f7; */
-/* 	border: 6px solid green; */
-	border: 0;
-	border-left: 35px solid #08a554 !important;
+.button-wrapper{
+	position: absolute;
+	top: 50%;
+	height: 50px;
+	margin-top: -25px;
 }
-div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]){
-/* 	background: #f7f7f7; */
-/* 	border: 6px solid #888; */
-	border: 0;
-	border-left: 35px solid #c7c7c7 !important;
+.button-wrapper > div{
+	display: table;
+    color: #197994;
+    font-weight: bold;	
+}
+.button-wrapper span{
+    display: table-cell;
+    vertical-align: middle;
+}
+.button-wrapper.left{
+	left: 0px;
+	text-align: left;
+}
+.button-wrapper.right{
+	right: 0px;
+	text-align: right;
+}
+.button-wrapper .text{
+	font-size: 30px;
+	width: 190px;
+}
+.button-wrapper .glyphicon{
+	font-size: 30px;
+}
+.button-wrapper:hover{
+	cursor: pointer;
+}
+.proposal-wrapper{
+	position: relative;
+	text-align: left;
+}
+.proposal-content-wrapper{
+	width: 750px;
+	margin: auto;
+}
+.proposal-wrapper.counter-context .review-context:not(.counter-context){
+	display: none;
+}
+.proposal-wrapper.review-context .counter-context:not(.review-context){
+	display: none;
+}
+.proposal-wrapper.accepting-offer-context .proposing-new-offer-context{
+	display: none;
+}
+.proposal-wrapper.proposing-new-offer-context .accepting-offer-context{
+	display: none;
 }
 
-.send-status-warning{
-	text-align: left;
+.proposal-wrapper.context-employee .context-employer{
+	display:none;
+}
+.proposal-wrapper.context-employer .context-employee{
+	display:none;
+}
+.proposal-item > label{
+	font-weight: bold;
+	font-size: 19px;
+}
+.send-status-warning,
+.proposal-item-content{
+	margin-left: 200px;
+}
+.proposal-wrapper .v2 .ui-datepicker-inline{
+	margin: 0;
+}
+.proposal-item{
+	margin-bottom: 25px;
+}
+.wage-proposal-wrapper .counter-context input{
+    font-size: 30px;
+    width: 150px;
+    text-align: center;
+}
+.proposal-wrapper .send-status-warning p{
+	font-size: 17px;
+}
+.a-proposal > label{
+	width: 290px;
+}
+.a-proposal{
+	margin: 20px 0px;
+}
+.proposed-value{
+	display: inline-block;
+	margin-right: 20px;
+	font-weight: bold;
+}
+.respond-to-proposal{
+	text-align: center;
+}
+[data-is-waiting-on-you="true"][data-is-accepted="0"]{
+/* 	background: #f1b9b9 !important; */
+	border: 7px solid red !important;
+}
+.v2 .calendar .ui-datepicker-inline.ui-datepicker-multi{
+	width: auto !important;
+}
+.v2 .ui-datepicker-group{
+	display: block;
 }

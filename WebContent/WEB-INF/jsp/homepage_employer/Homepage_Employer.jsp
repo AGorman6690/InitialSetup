@@ -24,7 +24,7 @@
 				<div class="brief-details">
 					<div class="applicants-container">
 						<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
-						<p>Applicants<span class="total total-applicants">
+						<p>All applicants<span class="total total-applicants">
 							${employerHomepageJob.countApplications_total }</span>
 							<c:if test="${employerHomepageJob.countApplications_new > 0 }">							
 								<span class="new new-applicants">${employerHomepageJob.countApplications_new } new</span></c:if></p>						

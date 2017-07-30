@@ -247,6 +247,6 @@ function submitRatings(){
 		data: JSON.stringify(submitRatingDtos),
 		dataType: "text",
     }).done(function(response){
-    	window.location = "/JobSearch/user/profile";
+    	window.location = "/JobSearch/user";
     })
 }

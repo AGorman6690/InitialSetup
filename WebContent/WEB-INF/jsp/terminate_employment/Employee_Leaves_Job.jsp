@@ -8,7 +8,7 @@
 			<p>Are you sure you want to leave this job?</p>
 			<div class="pad-top">
 				<a href="/JobSearch/job/${jobId}/leave" class="sqr-btn green">Yes</a>
-				<a href="/JobSearch/user/profile" class="cancel">Cancel</a>
+				<a href="/JobSearch/user" class="cancel">Cancel</a>
 			</div>
 			
 		</c:when>

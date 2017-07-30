@@ -477,7 +477,7 @@ function executeAjaxCall_postJob(jobDto){
 
 	function _success() {
 				
-		window.location.replace("/JobSearch/user/profile");
+		window.location.replace("/JobSearch/user");
 		broswerIsWaiting(false);	
 	}	
 

@@ -1,19 +1,13 @@
 package com.jobsearch.application.service;
 
-import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
-import org.aspectj.weaver.IUnwovenClassFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -22,24 +16,23 @@ import com.jobsearch.application.repository.ApplicationRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.job.service.JobServiceImpl;
-import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
+import com.jobsearch.model.Proposal;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
-import com.jobsearch.model.WageProposalDTO;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.DistanceUtility;
-import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 
@@ -48,19 +41,16 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	ApplicationRepository repository;
-
 	@Autowired
 	CategoryServiceImpl categoryService;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
 	VerificationServiceImpl verificationService;
-
+	@Autowired
+	ProposalServiceImpl proposalService;
 
 	public List<ApplicationDTO> getApplicationDtos_ByJob_OpenApplications(int jobId, HttpSession session) {
 
@@ -996,8 +986,8 @@ public class ApplicationServiceImpl {
 	}	
 
 	public List<String> getMessages(JobSearchUser sessionUser, Application application,
-			EmploymentProposalDTO previousProposal,
-			EmploymentProposalDTO currentProposal) {
+			Proposal previousProposal,
+			Proposal currentProposal) {
 		
 		List<String> messages = new ArrayList<>();
 		Job job = jobService.getJob_ByApplicationId(application.getApplicationId());
@@ -1236,6 +1226,25 @@ public class ApplicationServiceImpl {
 
 	public List<Application> getApplications_byJob(Integer jobId) {
 		return repository.getApplications_byJob(jobId);
+	}
+
+	public List<MessageResponse> getMessagesResponses_applicationsClosedDueToAllPositionsFilled(int userId) {
+		
+		// Applications that were closed due to the employer filling all positions
+		List<Application> applications_closedDueToAllPositionsFilled_unacknowledged =
+				applications_closedDueToAllPositionsFilled_unacknowledged(userId);
+		List<MessageResponse> messageResponses = new ArrayList<>();
+		
+		if(verificationService.isListPopulated(applications_closedDueToAllPositionsFilled_unacknowledged)){
+			for(Application application : applications_closedDueToAllPositionsFilled_unacknowledged){
+				MessageResponse messageResponse = new MessageResponse();
+				messageResponse.setApplication(application);
+				messageResponse.setJob(jobService.getJob(application.getJobId()));
+				messageResponses.add(messageResponse);
+			}
+		}	
+		
+		return messageResponses;
 	}
 
 

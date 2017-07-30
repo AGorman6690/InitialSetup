@@ -91,6 +91,11 @@ public class ProposalServiceImpl {
 
 	}
 
+	public Boolean isProposedToUser(Proposal proposal, int userId) {
+		if(proposal.getProposedToUserId() == userId) return true;
+		else return false ;
+	}
+
 	
 	
 }

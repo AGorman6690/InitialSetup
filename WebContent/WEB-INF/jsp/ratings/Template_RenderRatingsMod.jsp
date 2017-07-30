@@ -1,7 +1,7 @@
 
 
 <div class="show-applicant-ratings-mod">
-	<span class="user-rating" data-user-id=${userDto.user.userId }>${userDto.user.firstName }</span>
+	<span class="user-rating" data-user-id=${param_userId }>${param_userName }</span>
 
 	<div class="ratings-mod-container">
 		<div class="mod simple-header">

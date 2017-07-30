@@ -1,6 +1,6 @@
-<h3 class="blue">Expiration Time</h3>		
+<label >Expiration Time</label>		
 <div>
-	<div class="radio-container">		
+	<div class="radio-container proposal-item-content">		
 		<label><input type="radio" name="exp-time-init" class="one-day-from-now">
 			 1 day from now </label>
 		<label><input type="radio" name="exp-time-init" class="one-day-before">

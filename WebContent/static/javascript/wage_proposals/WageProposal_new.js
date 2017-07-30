@@ -14,17 +14,17 @@ $(document).ready(function() {
 	
 	$("body").on("click", "button.accept-current-proposal, button.counter-current-proposal", function() {
 		var $e = $(this);
-		var $cont = $(this).closest(".proposal");
+		var $cont = $e.closest(".proposal[data-application-id]");
 		var applicationId = $cont.attr("data-application-id");
 		var $e_renderHtml = $cont.find(".render-present-proposal-mod").eq(0);
-		
-//		if(hasCurrentProposalAlreadyBeenImported($e_renderHtml)){
-//			showCurrentProposalMod($e, $cont);
-//		}else{			
+				
 			executeAjaxCall_getCurrentProposal(applicationId, $e_renderHtml, function() {
-				showCurrentProposalMod($e, $cont);
-			})
-//		}		
+				var doShowCounterContest = true
+				if($e.hasClass("accept-current-proposal") == 1) doShowCounterContest = false; 
+				showCounterContext(doShowCounterContest, $e);
+				$cont.find(".mod").show();
+				
+			})		
 	})
 	
 	$("body").on("click", ".cancel-proposal", function() {
@@ -33,7 +33,7 @@ $(document).ready(function() {
 	
 	$("body").on("click", ".edit-proposal", function() {
 		
-		var $cont = $(this).closest(".proposal");
+		var $cont = getProposalWrapper($(this));
 		toggleClasses($cont, "counter-context", "review-context");
 		$cont.find(".proposal-calendar").removeClass("read-only");
 //		g_employmentProposalDto = getEmploymentProposalDto($(this));	
@@ -54,52 +54,45 @@ $(document).ready(function() {
 	
 	
 	$("body").on("click", ".review-proposal", function() {
-		var $wrapper = $(this).closest(".wrapper");
+		var $e = $(this);
+		var $wrapper = getProposalWrapper($e);
 		var employerIsMakingFirstOffer = false;		
 		
 		if($wrapper.hasClass("employer-make-initial-offer")){
 			employerIsMakingFirstOffer = true;
 		}
 		
-
-			
-			
-			var $cont = $(this).closest(".proposal");
-			var isAcceptingTheOffer = true;
-			
-			$cont.find(".proposal-calendar").addClass("read-only");				
-			$cont.addClass("review-context");
-			$cont.removeClass("counter-context");
-			
-			var $wage =  $cont.find(".proposal.wage-proposal").eq(0);
-			var $wage_acceptOrPropose = $wage.find("span.accepting-or-proposing").eq(0);
-			var $workDays_acceptOrPropose = $cont.find(".proposal.work-day-proposal span.accepting-or-proposing").eq(0);
-			
-			$wage.find(".review-context .wage-amount")
-				.html($wage.find("input.counter-wage-amount").eq(0).val())
-
-			
-			
-			if(isCounteringWage($cont) || employerIsMakingFirstOffer){
-				$wage_acceptOrPropose.html("proposing");
-				isAcceptingTheOffer = false;
-			}else{
-				$wage_acceptOrPropose.html("accepting");
-			}
-			
-			if($workDays_acceptOrPropose != undefined){
-				if(isPartialAvailabilityAllowed($wrapper)){
-					if(isCounteringWorkDays($cont) || employerIsMakingFirstOffer ){
-						$workDays_acceptOrPropose.html("proposing");
-						isAcceptingTheOffer = false;
-					}else{
-						$workDays_acceptOrPropose.html("accepting");
-					}			
-				}
-	
+		var $cont = getProposalWrapper($e);
+		var isAcceptingTheOffer = true;
 		
+		$cont.find(".proposal-calendar").addClass("read-only");				
+		$cont.addClass("review-context");
+		$cont.removeClass("counter-context");
+		
+		var $wage =  $cont.find(".wage-proposal-wrapper").eq(0);
+		var $wage_acceptOrPropose = $wage.find("span.accepting-or-proposing").eq(0);
+		var $workDays_acceptOrPropose = $cont.find(".work-day-proposal-wrapper span.accepting-or-proposing").eq(0);
+		
+		$wage.find(".review-context .wage-amount")
+			.html($wage.find("input.counter-wage-amount").eq(0).val())
+					
+		if(isCounteringWage($cont) || employerIsMakingFirstOffer){
+			$wage_acceptOrPropose.html("proposing");
+			isAcceptingTheOffer = false;
+		}else{
+			$wage_acceptOrPropose.html("accepting");
 		}
-
+		
+		if($workDays_acceptOrPropose != undefined){
+			if(isPartialAvailabilityAllowed($wrapper)){
+				if(isCounteringWorkDays($cont) || employerIsMakingFirstOffer ){
+					$workDays_acceptOrPropose.html("proposing");
+					isAcceptingTheOffer = false;
+				}else{
+					$workDays_acceptOrPropose.html("accepting");
+				}			
+			}			
+		}
 		
 		if(isAcceptingTheOffer){
 			$cont.addClass("accepting-offer-context");
@@ -166,6 +159,12 @@ $(document).ready(function() {
 	})
 	
 })
+
+function getProposalWrapper($e) {
+	var $proposalWrapper = $e.closest(".proposal-wrapper");
+	if ($proposalWrapper.length) return $proposalWrapper;
+	else return $e.closest(".respond-to-proposal").find(".proposal-wrapper").eq(0);
+}
 function getApplicationDto_makeInitialOffer($e) {
 	var $wrapper = $e.closest(".wrapper");
 	var applicationDto = {};
@@ -183,9 +182,9 @@ function hasCurrentProposalAlreadyBeenImported($e_renderHtml) {
 	if($e_renderHtml.find(".mod").length) return true;
 	else return false;
 }
-function showCurrentProposalMod($e, $cont) {
-	
-	if($e.hasClass("counter-current-proposal") == 1){
+function showCounterContext(request, $e) {
+	var $cont = getProposalWrapper($e);
+	if(request){
 		$cont.addClass("counter-context");
 		$cont.removeClass("review-context");
 		$cont.find(".proposal-calendar").removeClass("read-only");
@@ -194,10 +193,10 @@ function showCurrentProposalMod($e, $cont) {
 		$cont.find(".review-proposal").click();
 	}
 	
-	$cont.find(".mod").show();
+	
 }
 function isCounteringWorkDays($cont) {
-	var $workDayProposal = $cont.find(".proposal.work-day-proposal").eq(0);
+	var $workDayProposal = $cont.find(".work-day-proposal-wrapper").eq(0);
 	
 	var originalProposedWorkDays = getArrayFromString($workDayProposal.attr("data-proposed-work-days"));
 	var counteredWorkDays = getSelectedDates($workDayProposal.find(".calendar"),
@@ -209,7 +208,7 @@ function isCounteringWorkDays($cont) {
 	
 }
 function isCounteringWage($cont) {
-	var $wageProposal = $cont.find(".proposal.wage-proposal").eq(0);
+	var $wageProposal = $cont.find(".wage-proposal-wrapper").eq(0);
 	var originalProposedWage = parseFloat($wageProposal.attr("data-proposed-amount"));
 	var counteredWage = parseFloat($wageProposal.find("input.counter-wage-amount").eq(0).val());
 	if(originalProposedWage - counteredWage == 0) return false;

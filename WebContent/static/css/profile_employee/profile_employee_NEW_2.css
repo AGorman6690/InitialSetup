@@ -1,3 +1,12 @@
+.containeraaa{
+    width: 1340px;
+    margin: auto;
+}
+#profile-content,
+#other-stuff{
+	display: inline-block;
+    vertical-align: top;
+}
 .job-name{
 	font-size: 20px;
 /* 	text-align: center; */
@@ -5,11 +14,13 @@
 h1{
     width: 300px;
     margin: 50px auto;
-    background: #197994;
-    color: #fff;
+    /* background: #197994; */
+    /* color: #fff; */
     text-align: center;
-    padding: 20px;
+    padding-bottom: 10px;
     font-size: 25px;
+    border-bottom: 3px solid #197994;
+    font-weight: bold;
 }
 .proposal-table{
 /* 	margin: auto; */
@@ -53,7 +64,7 @@ h1{
 }
 #job-list, #job-list-sort{
 /* 	display: inline-block; */
-	margin: 0px auto 25px;;
+	margin: 0px auto;;
 }
 #job-list .application{
 /*     border-bottom: 1px solid #cacaca; */
@@ -95,7 +106,7 @@ h1{
 #job-list .application .status-wrapper .status{
     font-size: 28px;
 }
-#job-list .application .option-2 .status-wrapper .status{
+#job-list .application .status-wrapper .status{
     font-size: 19px;
     margin-left: 25px;
     float: right;
@@ -103,7 +114,7 @@ h1{
 /*     color: #fff; */
     border-radius: 2px;
 }
-#job-list .application .option-2 .status-wrapper{
+#job-list .application .status-wrapper{
 	text-align: left;
 }
 .status.status-employment{
@@ -144,15 +155,21 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
 	padding: 0px 0px 15px 25px;
 /* 	font-size: 18px; */
 }
-
 #job-list .application-proposal-container{
 	border: 0;
 }
 #job-list .expiration-time-cont p:last-child{
 	border:0;
 }
+.employment-job-summary .address{
+	display: inline-block;
+}
+.employment-job-summary .address p{
+	margin-bottom: 2px
+}
 .employment-job-summary label{
 	width: 110px;
+	vertical-align: top;
 /* 	font-weight: bold; */
 /* 	font-size: 18px; */
 /* 	font-style: italic; */
@@ -168,7 +185,7 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
     line-height: 1px;
 }
 #activity{
-	width: 950px;
+	width: 700px;
 	margin: auto;
 	border: 1px solid #cacaca;
 	padding: 20px;
@@ -182,4 +199,42 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
 .total.new{
 	text-decoration: underline;
 	color: red;
+}
+
+
+
+
+
+
+#profile-content{
+	margin-right: 77px;
+    border-right: 1px solid #cacaca;
+    margin-top: 20px;
+}
+#personalInfoContainer {
+	width: 400px !important;
+    text-align: left !important;
+}
+#user-header {
+	width: auto !important;
+}
+#user-rating-details .criteria-name {
+    width: 161px !important;
+    display: inline-block;
+    text-align: left;
+    /* color: #163b3d; */
+    /* font-weight: bold; */
+    font-size: 15px !important;
+}
+#user-rating-details .rating-value .star {
+    font-size: 14px !important;
+}
+.star {
+    font-size: 18px !important;
+}
+.completed-job{
+	width: auto !important;
+}
+.comments-cont h5{
+	text-align: left !important;
 }

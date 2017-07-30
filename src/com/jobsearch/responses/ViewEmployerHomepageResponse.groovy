@@ -2,8 +2,6 @@ package com.jobsearch.responses
 
 import com.jobsearch.job.service.Job
 
-
-
 public class ViewEmployerHomepageResponse{
 	
 	public ViewEmployerHomepageResponse(){

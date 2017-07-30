@@ -1,4 +1,4 @@
-<%@ include file="../includes/Header.jsp"%>
+<%-- <%@ include file="../includes/Header.jsp"%> --%>
 <%@ include file="../includes/resources/TableFilter.jsp" %>
 <%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
 <%@ include file="../includes/resources/StarRatings.jsp" %>
@@ -12,7 +12,7 @@
 <script src="<c:url value="/static/javascript/credentials_employee/credentials_employee.js" />"></script>
 
 
-<div class="container">
+<div class="container111">
 	<div id="personalInfoContainer">	
 		<div id="imageContainer">		
 			<p>${userDto.user.firstName } ${userDto.user.lastName }</p>	
@@ -74,4 +74,4 @@
 	</div>
 </div>
 
-<%@ include file="../includes/Footer.jsp"%>
+<%-- <%@ include file="../includes/Footer.jsp"%> --%>

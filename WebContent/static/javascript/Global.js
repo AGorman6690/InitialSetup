@@ -187,7 +187,7 @@ function selectButton($button){
 
 
 function redirectToProfile(){
-	window.location.replace("/JobSearch/user/profile");
+	window.location.replace("/JobSearch/user");
 }
 
 

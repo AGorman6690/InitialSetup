@@ -46,7 +46,11 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.ViewEmployeeHomepageResponse;
+import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
+import com.jobsearch.responses.ApplicationProgressResponse;
+import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
@@ -351,109 +355,89 @@ public class UserServiceImpl {
 
 	}
 
-	public void setviewEmployeeHomepageResponse(JobSearchUser employee, Model model, HttpSession session) {
+	public void setViewEmployeeHomepageResponse(JobSearchUser employee, Model model, HttpSession session) {
 		
-		// Refactor: remove "user" from model. use "userDto" instead.
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		LocalDateTime now = LocalDateTime.now();
+		ViewEmployeeHomepageResponse response = new ViewEmployeeHomepageResponse();
 
-		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(employee.getUserId());
-		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
-
-		// Applications
+		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(
+				employee.getUserId());
 		for (Application application : applications) {
-
-			ApplicationDTO applicationDto = new ApplicationDTO();
-
-			applicationDto.setApplication(application);
-
-			// Proposal
-			applicationDto.setEmploymentProposalDto(
-					applicationService.getCurrentEmploymentProposal(application.getApplicationId()));
-			applicationDto.getEmploymentProposalDto().setIsProposedToSessionUser(
-					applicationService.getIsProposedToSessionUser(session, applicationDto.getEmploymentProposalDto()));
-			applicationDto.setPreviousProposal(applicationService.getPreviousProposal(
-					applicationDto.getEmploymentProposalDto().getEmploymentProposalId(),
-					application.getApplicationId()));
+						
+			Proposal currentProposal = proposalService.getCurrentProposal(
+					application.getApplicationId());				
+			Proposal previousProposal = proposalService.getPreviousProposal(
+					currentProposal.getEmploymentProposalId(), application.getApplicationId());
 			
-			applicationDto.setCurrentProposalStatus(proposalService.getCurrentProposalStatus(
-					application.getIsOpen(),
-					application.getIsAccepted(),
-					applicationDto.getEmploymentProposalDto().getProposedByUserId(),
-					employee.getUserId(),
-					employee.getProfileId()));
+			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
+			applicationProgressStatus.setApplication(application);
+			applicationProgressStatus.setJob(jobService.getJob(application.getJobId()));
 			
-			applicationDto.setMessages(applicationService.getMessages(employee,
-					applicationDto.getApplication(),
-					applicationDto.getPreviousProposal(),
-					applicationDto.getEmploymentProposalDto()));
-
-			// Job dto
-			applicationDto.getJobDto().setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
-			applicationDto.getJobDto().setWorkDays(jobService.getWorkDays(applicationDto.getJobDto().getJob().getId()));
-			applicationDto.getJobDto()
-					.setMilliseconds_startDate(applicationDto.getJobDto().getJob().getStartDate_local().toEpochDay());
-			applicationDto.getJobDto()
-					.setMilliseconds_endDate(applicationDto.getJobDto().getJob().getEndDate_local().toEpochDay());
-
-			applicationDto.getJobDto()
-					.setDistance(DistanceUtility.getDistance(employee, applicationDto.getJobDto().getJob()));
-
-			// Miscellaneous
-			applicationDto.setTime_untilEmployerApprovalExpires(
-					applicationService.getTime_untilEmployerApprovalExpires(
-							applicationDto.getEmploymentProposalDto().getExpirationDate()));
-
-			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
-			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
-			applicationDtos.add(applicationDto);
+			// Current proposal
+			applicationProgressStatus.setCurrentProposal(currentProposal);
+			applicationProgressStatus.setIsCurrentProposalExpired(
+					DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
+			applicationProgressStatus.setIsProposedToSessionUser(
+					proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));	
+			applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+					proposalService.getTime_untilEmployerApprovalExpires(
+							currentProposal.getExpirationDate(), now));
+			applicationProgressStatus.setCurrentProposalStatus(
+					proposalService.getCurrentProposalStatus(
+							application.getIsOpen(),
+							application.getIsAccepted(),
+							currentProposal.getProposedByUserId(),
+							sessionUser.getUserId(),
+							sessionUser.getProfileId()));
+			applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+					proposalService.getTime_untilEmployerApprovalExpires(
+							currentProposal.getExpirationDate(), now));
 			
-			applicationService.inspectNewness(applicationDto.getApplication());
+			
+			applicationProgressStatus.setPreviousProposal(previousProposal);					
+			
+			applicationProgressStatus.setMessages(applicationService.getMessages(employee,
+					application,
+					previousProposal,
+					currentProposal));
+			
+			response.getApplicationProgressStatuses().add(applicationProgressStatus);			
+			applicationService.inspectNewness(application);		
 		}
-		model.addAttribute("applicationDtos", applicationDtos);
-		
-		JobSearchUserDTO userDto = new JobSearchUserDTO();
-		userDto.setUser(employee);
-		userDto.setCountApplications_open(applications
-				.stream().filter(a -> a.getIsAccepted() == 0 && a.getIsOpen() == 1).count());
-		userDto.setCountJobs_employment(applications
-				.stream().filter(a -> a.getIsAccepted() == 1).count());
-		userDto.setCountProposals_waitingOnYou(applicationDtos
-				.stream()
-				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
-				.filter(aDto -> aDto.getEmploymentProposalDto()
-						.getIsProposedToSessionUser() == true).count());
-		userDto.setCountProposals_waitingOnYou_new(applicationDtos
-				.stream()
-				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
-				.filter(aDto -> aDto.getEmploymentProposalDto().getIsNew() == 1)
-				.count());
-		userDto.setCountProposals_waitingOnOther(applicationDtos
-				.stream()
-				.filter(aDto -> aDto.getApplication().getIsAccepted() == 0)
-				.filter(aDto -> aDto.getEmploymentProposalDto()
-						.getIsProposedToSessionUser() == false).count());
 
+		// Proposals and employment counts
+		response.setCountJobs_employment(response.getApplicationProgressStatuses()
+				.stream()
+				.map(aps -> aps.getApplication())
+				.filter(a -> a.getIsAccepted() == 1)
+				.count());
 		
-		// Jobs the user was terminated from
-		List<Job> jobs_terminated = jobService.getJobs_terminatedFrom_byUser(employee.getUserId());
-		model.addAttribute("jobs_terminated", jobs_terminated);
+		response.setCountProposals_waitingOnYou(response.getApplicationProgressStatuses()
+				.stream()
+				.filter(aps -> aps.getApplication().getIsAccepted() == 0)
+				.filter(aps -> aps.getIsProposedToSessionUser() == true)
+				.count());
 		
-		// Applications that were closed due to the employer filling all positions
-		List<Application> applications_closedDueToAllPositionsFilled_unacknowledged =
-				applicationService.applications_closedDueToAllPositionsFilled_unacknowledged(employee.getUserId());
-		List<ApplicationDTO> applicationDtos_closedDueToAllPositionsFilled_unacknowledged =
-				new ArrayList<ApplicationDTO>();
-		if(verificationService.isListPopulated(applications_closedDueToAllPositionsFilled_unacknowledged)){
-			for(Application application : applications_closedDueToAllPositionsFilled_unacknowledged){
-				ApplicationDTO applicationDto = new ApplicationDTO();
-				applicationDto.setApplication(application);
-				applicationDto.getJobDto().setJob(jobService.getJob(application.getJobId()));
-				applicationDtos_closedDueToAllPositionsFilled_unacknowledged.add(applicationDto);
-			}
-		}		
-		model.addAttribute("applicationDtos_closedDueToAllPositionsFilled_unacknowledged",
-				applicationDtos_closedDueToAllPositionsFilled_unacknowledged);
+		response.setCountProposals_waitingOnYou_new(response.getApplicationProgressStatuses()
+				.stream()
+				.filter(aps -> aps.getApplication().getIsAccepted() == 0)
+				.map(aps -> aps.getCurrentProposal())
+				.filter(p -> p.getIsNew() == 1)
+				.count());
 		
-				 
+		response.setCountProposals_waitingOnOther(response.getApplicationProgressStatuses()
+				.stream()
+				.filter(aps -> aps.getApplication().getIsAccepted() == 0)
+				.filter(aps -> aps.getIsProposedToSessionUser() == false)
+				.count());		
+		
+		// Messages
+		List<MessageResponse> messageResponses_jobsTerminatedFrom =
+				jobService.getMessagesResponses_jobsTermintedFrom(employee.getUserId());		
+		List<MessageResponse> messageResponses_applicationsClosedDueToAllPositionsFilled =
+				applicationService.getMessagesResponses_applicationsClosedDueToAllPositionsFilled(
+						employee.getUserId());
 		
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
@@ -473,59 +457,23 @@ public class UserServiceImpl {
 						.map(cd -> cd.getDate())
 						.collect(Collectors.toList()));
 		
-		model.addAttribute("userDto", userDto);	
+		model.addAttribute("messageResponses_jobsTerminatedFrom",
+				messageResponses_jobsTerminatedFrom);
+		model.addAttribute("messageResponses_applicationsClosedDueToAllPositionsFilled",
+				messageResponses_applicationsClosedDueToAllPositionsFilled);
+		model.addAttribute("response", response);	
 		model.addAttribute("user", employee);	
 		model.addAttribute("monthSpan_employmentSummaryCalendar", monthSpan_employmentSummaryCalendar);
+		
+		
+		setModel_getRatings_byUser(model, sessionUser.getUserId());		
+		model.addAttribute("isViewingOnesSelf", true);
+		
+		
+		
 	}
 
-	private List<CalendarDay> getCalendarDays_employmentSummary(int userId) {
-		
-		List<CalendarDay> calendarDays = new ArrayList<CalendarDay>();
-		
-		int saturdayCount = 0;	
-		LocalDate day = LocalDate.now();
-		
-		while(saturdayCount < 2){
-			
-			CalendarDay calendarDay = new CalendarDay();
-			calendarDay.setDate(day);
-			
-			String dateString = day.format(DateTimeFormatter.ISO_LOCAL_DATE);			
-			List<Job> jobs_employment = jobService.getJobs_employment_byUserAndDate(userId, dateString);
-			
-			calendarDay.setJobDtos(new ArrayList<>());
-			for ( Job job : jobs_employment ){				
-				JobDTO jobDto = new JobDTO();
-				jobDto.setJob(job);
-				jobDto.setWorkDayDto(new WorkDayDto());
-				jobDto.getWorkDayDto().setWorkDay(jobService.getWorkDay(job.getId(), dateString));
-				calendarDay.getJobDtos().add(jobDto);
-			}			
-			calendarDays.add(calendarDay);
-			
-			if (day.getDayOfWeek() == DayOfWeek.SATURDAY) saturdayCount += 1;
-			day = day.plusDays(1);
-		}		
-		return calendarDays;
-	}
-
-	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
-
-		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(userId);
-
-		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
-
-		for (ApplicationInvite applicationInvite : applicationInvites) {
-			JobDTO jobDto = new JobDTO();
-			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
-			jobDto.setApplicationInvite(applicationInvite);
-			jobDtos_applicationInvites.add(jobDto);
-		}
-
-		return jobDtos_applicationInvites;
-	}
-
-	public void setviewEmployerHomepageResponse(JobSearchUser employer, Model model, HttpSession session) {
+	public void setViewEmployerHomepageResponse(JobSearchUser employer, Model model, HttpSession session) {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
@@ -581,7 +529,6 @@ public class UserServiceImpl {
 			employerHomepageJob.setCountEmployees_hired(
 					applications.stream()
 						.filter(a -> a.getIsAccepted() == 1)
-						.filter(a -> a.getIsOpen() == 1)
 						.count());
 			
 			// Other job details
@@ -600,6 +547,53 @@ public class UserServiceImpl {
 		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("response", response);
+	}
+
+	private List<CalendarDay> getCalendarDays_employmentSummary(int userId) {
+		
+		List<CalendarDay> calendarDays = new ArrayList<CalendarDay>();
+		
+		int saturdayCount = 0;	
+		LocalDate day = LocalDate.now();
+		
+		while(saturdayCount < 2){
+			
+			CalendarDay calendarDay = new CalendarDay();
+			calendarDay.setDate(day);
+			
+			String dateString = day.format(DateTimeFormatter.ISO_LOCAL_DATE);			
+			List<Job> jobs_employment = jobService.getJobs_employment_byUserAndDate(userId, dateString);
+			
+			calendarDay.setJobDtos(new ArrayList<>());
+			for ( Job job : jobs_employment ){				
+				JobDTO jobDto = new JobDTO();
+				jobDto.setJob(job);
+				jobDto.setWorkDayDto(new WorkDayDto());
+				jobDto.getWorkDayDto().setWorkDay(jobService.getWorkDay(job.getId(), dateString));
+				calendarDay.getJobDtos().add(jobDto);
+			}			
+			calendarDays.add(calendarDay);
+			
+			if (day.getDayOfWeek() == DayOfWeek.SATURDAY) saturdayCount += 1;
+			day = day.plusDays(1);
+		}		
+		return calendarDays;
+	}
+
+	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
+
+		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(userId);
+
+		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
+
+		for (ApplicationInvite applicationInvite : applicationInvites) {
+			JobDTO jobDto = new JobDTO();
+			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
+			jobDto.setApplicationInvite(applicationInvite);
+			jobDtos_applicationInvites.add(jobDto);
+		}
+
+		return jobDtos_applicationInvites;
 	}
 
 	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
@@ -657,9 +651,9 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			this.setviewEmployeeHomepageResponse(sessionUser, model, session);
+			this.setViewEmployeeHomepageResponse(sessionUser, model, session);
 		} else
-			this.setviewEmployerHomepageResponse(sessionUser, model, session);
+			this.setViewEmployerHomepageResponse(sessionUser, model, session);
 
 	}
 
@@ -1003,9 +997,9 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			setviewEmployeeHomepageResponse(sessionUser, model, session);
+			setViewEmployeeHomepageResponse(sessionUser, model, session);
 		} else
-			setviewEmployerHomepageResponse(sessionUser, model, session);
+			setViewEmployerHomepageResponse(sessionUser, model, session);
 
 		
 	}

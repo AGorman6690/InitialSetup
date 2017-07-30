@@ -43,8 +43,9 @@ import com.jobsearch.model.Skill;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
-import com.jobsearch.responses.ProgressForJobApplicationProcessResponse;
-import com.jobsearch.responses.ProgressForJobApplicationProcessResponse.ApplicationProgressStatus;
+import com.jobsearch.responses.ApplicationProgressResponse;
+import com.jobsearch.responses.ApplicationProgressResponse.ApplicationProgressStatus;
+import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -783,11 +784,12 @@ public class JobServiceImpl {
 	}
 	
 
-	public void setProgressForJobApplicationProcessResponse(int jobId, Model model, HttpSession session) {
+	public void setApplicationProgressResponse(int jobId, Model model, HttpSession session) {
 		
 		if(verificationService.didSessionUserPostJob(session, jobId)){
 			
-			ProgressForJobApplicationProcessResponse response = new ProgressForJobApplicationProcessResponse(); 
+			ApplicationProgressResponse response = new ApplicationProgressResponse(); 
+			response.setJob(getJob(jobId));
 			JobSearchUser sessionUser = SessionContext.getUser(session);
 			LocalDateTime now = LocalDateTime.now();
 					
@@ -811,7 +813,7 @@ public class JobServiceImpl {
 				applicationProgressStatus.setIsCurrentProposalExpired(
 						DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
 				applicationProgressStatus.setIsProposedToSessionUser(
-						currentProposal.getProposedByUserId() == sessionUser.getUserId() ? true : false);	
+						proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));	
 				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
 						proposalService.getTime_untilEmployerApprovalExpires(
 								currentProposal.getExpirationDate(), now));
@@ -830,6 +832,7 @@ public class JobServiceImpl {
 				applicationProgressStatus.setApplicantName(applicant.getFirstName());
 				applicationProgressStatus.setApplicantRating(
 						userService.getRating(applicant.getUserId()));
+				applicationProgressStatus.setApplicantId(applicant.getUserId());
 
 				// Answers
 				applicationProgressStatus.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
@@ -1525,11 +1528,6 @@ public class JobServiceImpl {
 		repository.updateEmploymentFlag(jobId, userId, flag, value);
 
 	}
-
-	public List<Job> getJobs_terminatedFrom_byUser(int userId) {
-		return repository.getJobs_terminatedFrom_byUser(userId);
-	}
-
 	public void setModel_displayMessage_terminmateEmployee(Model model, HttpSession session, int jobId,
 			int userId_emloyee) {
 
@@ -1547,6 +1545,17 @@ public class JobServiceImpl {
 
 	public WorkDay getWorkDay(Integer jobId, String dateString) {
 		return repository.getWorkDay(jobId, dateString);
+	}
+
+	public List<MessageResponse> getMessagesResponses_jobsTermintedFrom(int userId) {
+		List<Job> jobs = repository.getJobs_terminatedFrom_byUser(userId);
+		List<MessageResponse> messageResponses = new ArrayList<>();
+		for (Job job : jobs){
+			MessageResponse messageResponse = new MessageResponse();
+			messageResponse.setJob(job);
+			messageResponses.add(messageResponse);
+		}
+		return messageResponses;
 	}
 
 	

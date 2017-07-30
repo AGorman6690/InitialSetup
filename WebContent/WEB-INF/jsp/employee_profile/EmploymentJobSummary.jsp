@@ -2,9 +2,14 @@
 <div class="employment-job-summary">
 	<div>
 		<label>Job Site</label>
-		<span>${applicationDto.jobDto.job.streetAddress_formatted } <span class="dot">.</span>
-		 ${applicationDto.jobDto.job.city_formatted},
-		  ${applicationDto.jobDto.job.state } <span class="dot">.</span>${applicationDto.jobDto.job.zipCode }</span>
+		<div class="address">
+			<p>${applicationProgressStatus.job.streetAddress_formatted }</p> 
+			<p>${applicationProgressStatus.job.city_formatted }, ${applicationProgressStatus.job.state }</p>
+			<p>${applicationProgressStatus.job.zipCode }</p>
+		 </div>		
+<%-- 		<span>${applicationProgressStatus.job.streetAddress_formatted } <span class="dot">.</span> --%>
+<%-- 		 ${applicationProgressStatus.job.city_formatted}, --%>
+<%-- 		  ${applicationProgressStatus.job.state } <span class="dot">.</span>${applicationProgressStatus.job.zipCode }</span> --%>
 	</div>
 	<div>
 		<label>Wage</label>

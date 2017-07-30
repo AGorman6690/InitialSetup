@@ -1,3 +1,11 @@
+.sqr-btn.blue{
+	padding: 8px 15px;
+	color: #fff;
+	background: #197994;
+}
+.sqr-btn.blue:hover{
+	opacity: 0.6
+}
 .red-bold{
 	font-size: 20px;
     color: red;

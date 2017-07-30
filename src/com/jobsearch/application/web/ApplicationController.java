@@ -51,7 +51,7 @@ public class ApplicationController {
 
 		if (SessionContext.isLoggedIn(session)) {
 			applicationService.applyForJob(applicationDto, session);
-			return "redirect:/user/profile";
+			return "redirect:/user";
 		} else {
 			return "NotLoggedIn";
 		}
@@ -91,7 +91,7 @@ public class ApplicationController {
 		
 		applicationService.updateFlag_applicantAcknowledgesAllPositionsAreFilled(session, applicationId);
 		
-		return "redirect:/user/profile/";
+		return "redirect:/user/";
 		
 	}
 	
@@ -131,7 +131,7 @@ public class ApplicationController {
 		applicationService.updateApplicationFlag(applicationId,
 				Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED, 1);
 		
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 	@RequestMapping(value = "/employer/make-initial-offer", method = RequestMethod.POST)
 	@ResponseBody
@@ -167,7 +167,7 @@ public class ApplicationController {
 			}
 		}		
 		
-		return "redirect:/user/profile";
+		return "redirect:/user";
 	}
 	
 	@RequestMapping(value = "/application/status/update", method = RequestMethod.POST)
