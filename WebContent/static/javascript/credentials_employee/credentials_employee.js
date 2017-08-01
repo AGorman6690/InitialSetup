@@ -9,11 +9,7 @@ $(document).ready(function(){
 		$("#personalInfo .value").each(function(){ $(this).hide() });
 	})
 	
-	$("#save-edits").click(function(){
-		
-		executeAjaxCall_updateUserSettings();
-	})	
-	
+
 	
 //	$("#saveHomeLocation").click(function(){
 //		var user_edited = {};
@@ -108,37 +104,3 @@ function selectCalendarDays_byDaysOfWeek(){
 }
 
 
-
-function executeAjaxCall_updateUserSettings(user_edited){
-	
-	var user_edited = {};
-	
-	user_edited.homeCity = $("#city").val();;
-	user_edited.homeState = $("#state option:selected").val();;
-	user_edited.homeZipCode = $("#zipCode").val();
-	user_edited.maxWorkRadius = $("#miles").val();;
-	user_edited.minimumDesiredPay = $("#dollarsPerHour").val();;	
-	user_edited.about = $("#about").val();
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url: '/JobSearch/user/settings/edit',
-		headers : getAjaxHeaders(),
-		contentType : "application/json",
-		data : JSON.stringify(user_edited),
-			dataType : "text",		
-		success : _success,
-		error : _error,
-		cache: true
-	});
-
-	function _success(response) {
-		broswerIsWaiting(false);	
-		location.reload();
-	}	
-
-	function _error(response) {
-		broswerIsWaiting(false);	
-	}
-}

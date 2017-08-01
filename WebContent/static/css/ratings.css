@@ -154,9 +154,10 @@ table#ratings{
     text-align: left;
 }
 .comments-cont{
-	width: 450px;
+/* 	width: 450px; */
 	margin: auto;
-	
+	text-align: right;
+	margin-top: 10px;
 }
 .comments-cont h5{
 	font-size: 16px;

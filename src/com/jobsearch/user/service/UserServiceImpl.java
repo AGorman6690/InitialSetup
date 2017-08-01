@@ -1,6 +1,5 @@
 
 package com.jobsearch.user.service;
-
 import java.security.SecureRandom;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpSession;
@@ -28,6 +28,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
@@ -46,18 +47,17 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
-import com.jobsearch.responses.ApplicationProgressResponse;
-import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
+import com.jobsearch.service.RatingServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.DistanceUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -82,6 +82,9 @@ public class UserServiceImpl {
 	Mailer mailer;
 	@Autowired
 	ProposalServiceImpl proposalService;
+	@Autowired
+	RatingServiceImpl ratingService;
+
 
 	@Value("${host.url}")
 	private String hostUrl;
@@ -253,9 +256,7 @@ public class UserServiceImpl {
 
 	}
 
-	public List<RateCriterion> getRatingCriteia_toRateEmployee() {
-		return repository.getRatingCriteia_toRateEmployee();
-	}
+
 
 	public Double getRating(int userId) {
 
@@ -268,38 +269,7 @@ public class UserServiceImpl {
 		return repository.getComment(jobId, userId);
 	}
 
-	public void editEmployeeSettings(JobSearchUser user_edited, HttpSession session) {
 
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		user_edited.setUserId(sessionUser.getUserId());
-
-		// Location
-		Coordinate coordinate = GoogleClient.getCoordinate(user_edited);
-		if (coordinate != null) {
-			repository.updateHomeLocation(user_edited, coordinate);
-		}
-
-		// Min desired pay
-		if (verificationService.isPositiveNumber(user_edited.getMinimumDesiredPay())) {
-			repository.updateMinimumDesiredPay(user_edited.getUserId(), user_edited.getMinimumDesiredPay());
-		}
-
-		// Work radius
-		if (verificationService.isPositiveNumber(user_edited.getMaxWorkRadius())) {
-			repository.updateMaxDistanceWillingToWork(user_edited.getUserId(), user_edited.getMaxWorkRadius());
-		}
-
-		// About
-		if (user_edited.getAbout() == null) {
-			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());
-		} else if (sessionUser.getAbout() == null) {
-			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());
-		} else if (!sessionUser.getAbout().matches(user_edited.getAbout())) {
-			repository.updateAbout(user_edited.getUserId(), user_edited.getAbout());
-		}
-
-		this.updateSessionUser(session);
-	}
 
 	public void updateSessionUser(HttpSession session) {
 		JobSearchUser user = getUser(SessionContext.getUser(session).getUserId());
@@ -360,7 +330,8 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
 		ViewEmployeeHomepageResponse response = new ViewEmployeeHomepageResponse();
-
+	
+		// Current activity
 		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(
 				employee.getUserId());
 		for (Application application : applications) {
@@ -405,7 +376,10 @@ public class UserServiceImpl {
 			response.getApplicationProgressStatuses().add(applicationProgressStatus);			
 			applicationService.inspectNewness(application);		
 		}
-
+			
+		// User profile info
+		response.setProfileInfoDto(getProfileInfoDto(employee));
+			
 		// Proposals and employment counts
 		response.setCountJobs_employment(response.getApplicationProgressStatuses()
 				.stream()
@@ -446,11 +420,9 @@ public class UserServiceImpl {
 		// because
 		// I'm assuming this page loads most often.
 		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
-		session.setAttribute("jobs_needRating", jobs_needRating);
+		
 				
 		List<CalendarDay> calendarDays_employmentSummary = getCalendarDays_employmentSummary(employee.getUserId());
-		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
-		
 		int monthSpan_employmentSummaryCalendar =
 				DateUtility.getMonthSpan_new(calendarDays_employmentSummary
 						.stream()
@@ -464,13 +436,27 @@ public class UserServiceImpl {
 		model.addAttribute("response", response);	
 		model.addAttribute("user", employee);	
 		model.addAttribute("monthSpan_employmentSummaryCalendar", monthSpan_employmentSummaryCalendar);
+		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
+		session.setAttribute("jobs_needRating", jobs_needRating);
 		
 		
 		setModel_getRatings_byUser(model, sessionUser.getUserId());		
 		model.addAttribute("isViewingOnesSelf", true);
+	}
+
+	private ProfileInfoDto getProfileInfoDto(JobSearchUser user) {
+		ProfileInfoDto profileInfoDto = new ProfileInfoDto();
+		profileInfoDto.setUser(user);
+		profileInfoDto.setProfileRatingDto(ratingService.getProfileRatingDto(user));
+		profileInfoDto.setCompletedJobsDtos(jobService.getCompletedJobDtos(user));
 		
+		profileInfoDto.setDoesUserHaveEnoughDataToCalculateRating(false);
+		if(profileInfoDto.getCompletedJobsDtos().size() > 0 && 
+				profileInfoDto.getProfileRatingDto().getOverallRating()!= null){
+			profileInfoDto.setDoesUserHaveEnoughDataToCalculateRating(true);
+		}
 		
-		
+		return profileInfoDto;
 	}
 
 	public void setViewEmployerHomepageResponse(JobSearchUser employer, Model model, HttpSession session) {
@@ -625,14 +611,14 @@ public class UserServiceImpl {
 		RatingDTO ratingDto = new RatingDTO();
 
 		if (user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
-			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployee());
+			ratingDto.setRateCriteria(ratingService.getRatingCriteia_toRateEmployee());
 		else
-			ratingDto.setRateCriteria(this.getRatingCriteia_toRateEmployer());
+			ratingDto.setRateCriteria(ratingService.getRatingCriteia_toRateEmployer());
 
 		for (RateCriterion rateCriterion : ratingDto.getRateCriteria()) {
 
 			rateCriterion.setValue(
-					this.getRatingValue_byCriteriaAndUser(rateCriterion.getRateCriterionId(), user.getUserId()));
+					ratingService.getRatingValue_byCriteriaAndUser(rateCriterion.getRateCriterionId(), user.getUserId()));
 			if (rateCriterion.getValue() != null)
 				rateCriterion.setStringValue(String.format("%.1f", rateCriterion.getValue()));
 		}
@@ -641,10 +627,7 @@ public class UserServiceImpl {
 
 	}
 
-	private Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
 
-		return repository.getRatingValue_byCriteriaAndUser(rateCriterionId, userId);
-	}
 
 	public void setModel_Profile(Model model, HttpSession session) {
 
@@ -768,14 +751,11 @@ public class UserServiceImpl {
 		return repository.getUsers_ByFindEmployeesSearch(employeeSearch);
 	}
 
-	public List<RateCriterion> getRatingCriteia_toRateEmployer() {
 
-		return repository.getRateCriteria_toRateEmployer();
-	}
 
 	public void insertRatings_toRateEmployer(int jobId, int userId_emloyee) {
 
-		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployer();
+		List<RateCriterion> rateCriteria = ratingService.getRatingCriteia_toRateEmployer();
 		Job job = jobService.getJob(jobId);
 
 		for (RateCriterion rateCriterion : rateCriteria) {
@@ -786,7 +766,7 @@ public class UserServiceImpl {
 
 	public void insertRatings_toRateEmployees(int jobId, int userId_employee) {
 
-		List<RateCriterion> rateCriteria = this.getRatingCriteia_toRateEmployee();
+		List<RateCriterion> rateCriteria = ratingService.getRatingCriteia_toRateEmployee();
 		Job job = jobService.getJob(jobId);
 		
 		for (RateCriterion rateCriterion : rateCriteria) {
@@ -845,10 +825,6 @@ public class UserServiceImpl {
 		return getUsers_ByFindEmployeesSearch(employeeSearch);
 	}
 
-	public Double getRating_byJobAndUser(Integer jobId, int userId) {
-
-		return repository.getRating_byJobAndUser(jobId, userId);
-	}
 
 	public void setModel_getRatings_byUser(Model model, int userId) {
 
@@ -872,7 +848,7 @@ public class UserServiceImpl {
 			JobDTO jobDto = new JobDTO();
 
 			jobDto.setJob(job_complete);
-			jobDto.setRatingValue_overall(getRating_byJobAndUser(job_complete.getId(),
+			jobDto.setRatingValue_overall(ratingService.getRating_byJobAndUser(job_complete.getId(),
 					userDto.getUser().getUserId()));
 
 			jobDto.setComments(
@@ -1002,6 +978,38 @@ public class UserServiceImpl {
 			setViewEmployerHomepageResponse(sessionUser, model, session);
 
 		
+	}
+
+	public void updateHomeLocation(HttpSession session, String city, String state, String zip) {		
+		Coordinate coordinate = GoogleClient.getCoordinate(
+				GoogleClient.buildAddress(null, city, state, zip));				
+		if (GoogleClient.isValidAddress(coordinate)) {			
+			repository.updateHomeLocation(SessionContext.getUser(session).getUserId(), city,
+					state, zip, coordinate);
+		}		
+		updateSessionUser(session);
+	}
+
+	public void updateMaxWorkRadius(HttpSession session, Integer maxWorkRadius) {
+
+		if (verificationService.isPositiveNumberOrZero(maxWorkRadius)) {
+			repository.updateMaxWorkRadius(
+					SessionContext.getUser(session).getUserId(), maxWorkRadius);
+		}
+		updateSessionUser(session);		
+	}
+
+	public void updateAbout(HttpSession session, String about) {
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		// About
+		if (about == null) {
+			repository.updateAbout(sessionUser.getUserId(), about);
+		} else if (sessionUser.getAbout() == null) {
+			repository.updateAbout(sessionUser.getUserId(), about);
+		} else if (!sessionUser.getAbout().matches(about)) {
+			repository.updateAbout(sessionUser.getUserId(), about);
+		}
+		this.updateSessionUser(session);
 	}
 
 

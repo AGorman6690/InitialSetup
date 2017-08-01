@@ -84,8 +84,8 @@
 					<c:when test="${!empty sessionScope.user }">
 						<c:choose>
 							<c:when test="${sessionScope.user.profileId == 1}">
-								<a id="nav_calendar" class="" href="#">Calendar</a>
 								<a id="nav_profile" class="" href="/JobSearch/user">Profile</a>
+								<a id="nav_calendar" class="" href="#">Calendar</a>								
 								<a id="nav_profile" class="hide-on-load" href="/JobSearch/user/profile/new">Jobs OLD</a>
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 							</c:when>

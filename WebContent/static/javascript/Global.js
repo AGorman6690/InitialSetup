@@ -3,6 +3,10 @@ var global_workDayDtos = [];
 $(document).ready(function(){
 	
 
+	$("input.select-all, textarea.select-all").focus(function() {
+		this.select();
+	})
+
 //	
 	$("#nav_calendar").click(function() {
 		executeAjaxCall_getEventCalendar();

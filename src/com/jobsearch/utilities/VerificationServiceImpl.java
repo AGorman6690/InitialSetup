@@ -63,6 +63,11 @@ public class VerificationServiceImpl {
 		}else return false;
 	}
 
+	public boolean isPositiveNumberOrZero(Integer number){
+		
+		if(number != null && number >= 0) return true;
+		else return false;
+	}
 	
 
 	public boolean didSessionUserPostJob(HttpSession session, int jobId) {

@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp"%>	
 
 <div id="user-rating-details" class="">
-	<c:forEach items="${userDto_ratings.ratingDto.rateCriteria }" var="rateCriterion">
+	<c:forEach items="${response.profileInfoDto.profileRatingDto.rateCriteria }" var="rateCriterion">
 		<div class="criteria-cont">
 			<span class="criteria-name">${rateCriterion.shortName }</span>
 			<span class="rating-value">

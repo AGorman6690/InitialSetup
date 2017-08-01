@@ -245,11 +245,33 @@ public class UserController {
 		
 		return userService.getAvailabliltyStatusMessage_forUserAndJob(userId, jobId);
 	}	
-	@RequestMapping(value = "/user/settings/edit", method = RequestMethod.POST)
-//	@ResponseBody
-	public String editEmployeeSettings(HttpSession session, @RequestBody JobSearchUser user_edited) {
-		userService.editEmployeeSettings(user_edited, session);
-		return "redirect:/user";
+	@RequestMapping(value = "/user/update-home-location", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateHomeLocation(HttpSession session,
+				@RequestParam( name="city") String city,
+				@RequestParam( name="state") String state,
+				@RequestParam( name="zip") String zip  ) {
+	
+		userService.updateHomeLocation(session, city, state, zip);
+		return "";
+	}
+	
+	@RequestMapping(value = "/user/update-max-work-radius", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateMaxWorkRadius(HttpSession session,
+				@RequestParam( name="maxWorkRadius") Integer maxWorkRadius ) {
+	
+		userService.updateMaxWorkRadius(session, maxWorkRadius);
+		return "";
+	}
+	
+	@RequestMapping(value = "/user/update-about", method = RequestMethod.POST)
+	@ResponseBody
+	public String updateAbout(HttpSession session,
+				@RequestParam( name="about") String about ){
+	
+		userService.updateAbout(session, about);
+		return "";
 	}
 
 

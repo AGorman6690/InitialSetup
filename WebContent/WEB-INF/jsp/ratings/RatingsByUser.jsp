@@ -1,53 +1,56 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
-		
+		<div id="user-stats">
 			<c:choose>
-				<c:when test="${!userHasEnoughRatingData}">
+				<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
 					<c:choose>
 						<c:when test="${isViewingOnesSelf }">
 							<p>You have not completed enough jobs in order to calculate a rating at this time</p>	
 						</c:when>
 						<c:otherwise>
-							<p>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName } has not completed enough jobs in order to calculate a rating at this time</p>
+							<p>${response.profileInfoDto.user.firstName } ${response.profileInfoDto.user.lastName }
+								 has not completed enough jobs in order to calculate a rating at this time</p>
 						</c:otherwise>
 					</c:choose>
 				</c:when>			
 				<c:otherwise>	
-					<div id="user-header">
+					<div id="user-ratings" class="personal-info-section">
 						<c:if test="${!isViewingOnesSelf }">
-							<h3>${userDto_ratings.user.firstName } ${userDto_ratings.user.lastName }</h3>
+							<h3>${response.profileInfoDto.user.firstName }
+							 ${response.profileInfoDto.user.lastName }</h3>
 						</c:if>
-						<h3 class="h3">Overall Rating</h3>
-						<p data-toggle-id="user-rating-details">
+						<label>Overall Rating</label>
+						<p id="overall-rating" data-toggle-id="user-rating-details">
 							<input name="input-1" class="rating-loading"
-									value="${userDto_ratings.ratingValue_overall }	">
-							${userDto_ratings.ratingValue_overall }			
+									value="${response.profileInfoDto.profileRatingDto.overallRating }	">
+							${response.profileInfoDto.profileRatingDto.overallRating }			
 						</p>		
 						<%@ include file="./RatingDetails.jsp" %>
 					</div>		
-					<c:if test="${!isViewingOnesSelf && !empty userDto_ratings.user.about }">
+					<c:if test="${!isViewingOnesSelf && !empty response.profileInfoDto.user.about }">
 						<div>
-							<h3 data-toggle-id="about-user" class="h3">About</h3>
+							<label data-toggle-id="about-user" class="h3">About</label>
 							<div id="about-user" class="paragraph">
-								<p>${userDto_ratings.user.about }</p>
+								<p>${response.profileInfoDto.user.about }</p>
 							</div>
 						</div>
 					</c:if>
-					<div id="user-complted-jobs" class="pad-top">
-						<h3 class="h3">Completed Jobs</h3>
+					<div id="user-completed-jobs" class="personal-info-section">
+						<label>Completed Jobs</label>
 						<div id="completed-jobs" class="">
-							<c:forEach items="${userDto_ratings.jobDtos_jobsCompleted }" var="jobDto">
+							<c:forEach items="${response.profileInfoDto.completedJobsDtos }" var="completedJobDto">
 								<div class="completed-job">
-									<h3>${jobDto.job.jobName }</h3>
+									<span class="">${completedJobDto.job.jobName }</span>
 									<input name="input-1" class="rating-loading"
-											value="${jobDto.ratingValue_overall }">${jobDto.ratingValue_overall }
-									<c:if test="${jobDto.comments.size() > 0 }">
+											value="${completedJobDto.rating }">${completedJobDto.rating }
+									<c:if test="${completedJobDto.comments.size() > 0 }">
 										<div class="comments-cont">
-											<h5 data-toggle-id="comments-${jobDto.job.id }">
-												${jobDto.comments.size() == 1 ? 'Comment' : 'Comments' }<span class="glyphicon glyphicon-menu-up"></span>
-											</h5>
-											<div id="comments-${jobDto.job.id }" class="comments">
-												<c:forEach items="${jobDto.comments }" var="comment">
+											<p class="toggle-comments" data-toggle-id="comments-${completedJobDto.job.id }">
+												${completedJobDto.comments.size() == 1 ? 'Comment' : 'Comments' }
+												<span class="glyphicon glyphicon-menu-up"></span>
+											</p>
+											<div id="comments-${completedJobDto.job.id }" class="comments">
+												<c:forEach items="${completedJobDto.comments }" var="comment">
 													<span>${comment }</span>
 												</c:forEach>
 											</div>
@@ -59,3 +62,4 @@
 					</div>		
 				</c:otherwise>
 			</c:choose>
+		</div>

@@ -16,6 +16,9 @@ import com.jobsearch.user.service.UserServiceImpl;
 
 public class SessionContext {
 	
+	@Autowired
+	static UserServiceImpl userService;
+	
 	public static String SESSION_ATTRIBUTE_FILTERED_JOB_IDS = "loadedFilteredJobIds";
 	
 	public static JobSearchUser getUser(HttpSession session) {
@@ -113,7 +116,6 @@ public class SessionContext {
 		session.setAttribute("user", user);
 		
 	}
-
 
 
 }

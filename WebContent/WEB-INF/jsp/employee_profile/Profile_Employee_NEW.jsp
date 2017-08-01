@@ -17,7 +17,8 @@
 <div class="containeraaa">
 
 	<div id="profile-content">
-		<%@ include file="../credentials_employee/Credentials_Employee.jsp" %>
+		<%@ include file="../credentials_employee/Credentials_Employee.jsp" %>			
+		<%@ include file="../ratings/RatingsByUser.jsp" %>
 	</div>
 
 	<c:if test="${!empty messageResponses_jobsTerminatedFrom }">

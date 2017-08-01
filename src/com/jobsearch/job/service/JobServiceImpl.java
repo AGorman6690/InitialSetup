@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.hibernate.loader.plan.exec.process.spi.ReturnReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -27,6 +28,7 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.dtos.CompletedJobDto;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.repository.JobRepository;
@@ -37,6 +39,7 @@ import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
+import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.Skill;
@@ -46,6 +49,7 @@ import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.responses.ApplicationProgressResponse;
 import com.jobsearch.responses.ApplicationProgressResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.MessageResponse;
+import com.jobsearch.service.RatingServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
@@ -70,6 +74,8 @@ public class JobServiceImpl {
 	GoogleClient googleClient;
 	@Autowired
 	ProposalServiceImpl proposalService;
+	@Autowired
+	RatingServiceImpl ratingService;
 
 	public void addPosting(JobDTO jobDto, HttpSession session) {
 
@@ -1557,6 +1563,38 @@ public class JobServiceImpl {
 		}
 		return messageResponses;
 	}
+
+	public List<CompletedJobDto> getCompletedJobDtos(JobSearchUser user) {		
+		List<Job> completedJobs = getCompletedJobs(user);		
+		List<CompletedJobDto> completedJobDtos = new ArrayList<>();
+		for (Job completedJob : completedJobs) {						
+			Double rating = ratingService.getRating_byJobAndUser(completedJob.getId(),
+					user.getUserId());			
+			if(rating != null) {
+				CompletedJobDto completedJobDto = new CompletedJobDto();
+				completedJobDto.setRating(rating);
+				completedJobDto.setJob(completedJob);
+				completedJobDto.setComments(
+						getCommentsGivenToUser_byJob(user.getUserId(), completedJob.getId()));
+				completedJobDtos.add(completedJobDto);
+			}
+		}
+		return completedJobDtos;
+	}
+
+	public List<Job> getCompletedJobs(JobSearchUser user) {		
+		List<Job> completedJobs = new ArrayList<>();
+		if (user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
+			completedJobs = getJobs_ByEmployeeAndJobStatuses(user.getUserId(),
+					Arrays.asList(Job.STATUS_PAST));
+		} else {
+			completedJobs = getJobs_byEmployerAndStatuses(user.getUserId(),
+					Arrays.asList(Job.STATUS_PAST));
+		}
+		return completedJobs;
+	}
+	
+	
 
 	
 }

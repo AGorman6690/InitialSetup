@@ -1,24 +1,25 @@
 package com.jobsearch.responses
 
-import java.util.List;
-
-import com.jobsearch.application.service.Application;
+import com.jobsearch.application.service.Application
+import com.jobsearch.dtos.CompletedJobDto
+import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.job.service.Job
-import com.jobsearch.model.Proposal;
-import com.jobsearch.model.Question;
+import com.jobsearch.model.JobSearchUser
+import com.jobsearch.model.Proposal
 
 class ViewEmployeeHomepageResponse {
-	
+
 	List<ApplicationProgressStatus> ApplicationProgressStatuses
 	long countProposals_waitingOnYou;
 	long countProposals_waitingOnYou_new;
 	long countProposals_waitingOnOther;
 	long countJobs_employment;
+	ProfileInfoDto profileInfoDto;
 	
 	public ViewEmployeeHomepageResponse(){
-		ApplicationProgressStatuses = new ArrayList<>();
+		ApplicationProgressStatuses = new ArrayList<>();	
 	}
-		
+
 	public static class ApplicationProgressStatus{
 		Application application
 		Job job	

@@ -276,10 +276,7 @@ public class UserRepository {
 
 	}
 
-	public List<RateCriterion> getRatingCriteia_toRateEmployee() {
-		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 1 ORDER BY DisplayOrder ASC";
-		return this.RateCriterionRowMapper(sql, new Object[] {});
-	}
+
 
 
 	public void addComment(int userId, int jobId, String comment, int userId_commenter) {
@@ -418,35 +415,26 @@ public class UserRepository {
 	}
 
 
-	public void updateHomeLocation(JobSearchUser user_edited, Coordinate coordinate) {
+	public void updateHomeLocation(int userId, String city, String state, String zip,
+			Coordinate coordinate) {
+		
 		String sql = "UPDATE user SET HomeLat = ?, HomeLng = ?, HomeCity = ?, HomeState = ?,"
 				+ " HomeZipCode = ? WHERE UserId = ?";
 
 		jdbcTemplate.update(sql,
 				new Object[] { coordinate.getLatitude(), coordinate.getLongitude(),
-						user_edited.getHomeCity(), user_edited.getHomeState(),
-						user_edited.getHomeZipCode(), user_edited.getUserId() });
+						city, state, zip, userId });
 
 	}
 
-	public void updateMaxDistanceWillingToWork(int userId, Integer maxWorkRadius) {
+	public void updateMaxWorkRadius(int userId, Integer maxWorkRadius) {
 		String sql = "UPDATE user SET MaxWorkRadius = ? WHERE UserId = ?";
 
 		jdbcTemplate.update(sql,
 				new Object[] { maxWorkRadius, userId });
 	}
 
-	public void updateMinimumDesiredPay(int userId, Double minimumDesiredPay) {
-		String sql = "UPDATE user SET MinimumPay = ? WHERE UserId = ?";
 
-		jdbcTemplate.update(sql,
-				new Object[] { minimumDesiredPay, userId });
-	}
-
-	public List<RateCriterion> getRateCriteria_toRateEmployer() {
-		String sql = "SELECT * FROM ratecriterion WHERE IsUsedToRateEmployee = 0 ORDER BY DisplayOrder ASC";
-		return this.RateCriterionRowMapper(sql, new Object[]{});
-	}
 
 	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {		
 		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, RatedByUserId)"
@@ -462,25 +450,7 @@ public class UserRepository {
 
 	}
 
-	public Double getRating_byJobAndUser(Integer jobId, int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND JobId = ? AND Value is not null";
 
-		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, jobId }, Double.class);
-
-		if (rating == null) return null;
-		else return rating;
-
-	}
-
-	public Double getRatingValue_byCriteriaAndUser(Integer rateCriterionId, int userId) {
-
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? AND RateCriterionId = ? AND Value is not null";
-
-		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId, rateCriterionId }, Double.class);
-
-		if (rating == null) return null;
-		else return rating;
-	}
 
 	public void updateAbout(int userId, String about) {
 		String sql = "UPDATE user SET About = ? WHERE UserId = ?";

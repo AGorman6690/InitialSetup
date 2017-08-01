@@ -112,7 +112,7 @@ public class GoogleClient {
 		return getCoordinate(address);
 	}
 
-	private static String buildAddress(String streetAddress, String city, String state, String zipCode) {
+	public static String buildAddress(String streetAddress, String city, String state, String zipCode) {
 	
 		String address = "";
 		
@@ -146,6 +146,11 @@ public class GoogleClient {
 		GeocodingResult[] results = maps.getLatAndLng(address);
 
 		return results[0];
+	}
+
+	public static boolean isValidAddress(Coordinate coordinate) {
+		if(coordinate == null) return false;
+		else return true;
 	}
 	
 
