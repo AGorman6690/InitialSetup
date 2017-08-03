@@ -19,7 +19,7 @@
 							<h3>${response.profileInfoDto.user.firstName }
 							 ${response.profileInfoDto.user.lastName }</h3>
 						</c:if>
-						<label>Overall Rating</label>
+						<label>Rating</label>
 						<p id="overall-rating" data-toggle-id="user-rating-details">
 							<input name="input-1" class="rating-loading"
 									value="${response.profileInfoDto.profileRatingDto.overallRating }	">
@@ -29,14 +29,14 @@
 					</div>		
 					<c:if test="${!isViewingOnesSelf && !empty response.profileInfoDto.user.about }">
 						<div>
-							<label data-toggle-id="about-user" class="h3">About</label>
+							<label data-toggle-id="about-user" class="">About</label>
 							<div id="about-user" class="paragraph">
 								<p>${response.profileInfoDto.user.about }</p>
 							</div>
 						</div>
 					</c:if>
 					<div id="user-completed-jobs" class="personal-info-section">
-						<label>Completed Jobs</label>
+						<label>Work History</label>
 						<div id="completed-jobs" class="">
 							<c:forEach items="${response.profileInfoDto.completedJobsDtos }" var="completedJobDto">
 								<div class="completed-job">

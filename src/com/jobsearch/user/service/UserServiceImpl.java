@@ -47,6 +47,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.GetRatingsByUserResponse;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
@@ -339,7 +340,7 @@ public class UserServiceImpl {
 			Proposal currentProposal = proposalService.getCurrentProposal(
 					application.getApplicationId());				
 			Proposal previousProposal = proposalService.getPreviousProposal(
-					currentProposal.getEmploymentProposalId(), application.getApplicationId());
+					currentProposal.getProposalId(), application.getApplicationId());
 			
 			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
 			applicationProgressStatus.setApplication(application);
@@ -440,11 +441,11 @@ public class UserServiceImpl {
 		session.setAttribute("jobs_needRating", jobs_needRating);
 		
 		
-		setModel_getRatings_byUser(model, sessionUser.getUserId());		
+//		setModel_getRatings_byUser(model, sessionUser.getUserId());		
 		model.addAttribute("isViewingOnesSelf", true);
 	}
 
-	private ProfileInfoDto getProfileInfoDto(JobSearchUser user) {
+	public ProfileInfoDto getProfileInfoDto(JobSearchUser user) {
 		ProfileInfoDto profileInfoDto = new ProfileInfoDto();
 		profileInfoDto.setUser(user);
 		profileInfoDto.setProfileRatingDto(ratingService.getProfileRatingDto(user));
@@ -488,7 +489,7 @@ public class UserServiceImpl {
 			
 			employerHomepageJob.setCountWageProposals_received_new(
 					currentProposals.stream()
-						.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
+						.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
 						.filter(p -> p.getIsNew() == 1)
 						.count());		
 			
@@ -826,46 +827,10 @@ public class UserServiceImpl {
 	}
 
 
-	public void setModel_getRatings_byUser(Model model, int userId) {
-
-		JobSearchUserDTO userDto = new JobSearchUserDTO();
-		userDto.setUser(getUser(userId));
-
-		List<Job> jobs_completed = new ArrayList<Job>();
-		if (userDto.getUser().getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			jobs_completed = jobService.getJobs_ByEmployeeAndJobStatuses(userId,
-					Arrays.asList(Job.STATUS_PAST));
-		} else {
-			jobs_completed = jobService.getJobs_byEmployerAndStatuses(userId,
-					Arrays.asList(Job.STATUS_PAST));
-		}
-
-		userDto.setRatingValue_overall(getRating(userDto.getUser().getUserId()));
-		userDto.setRatingDto(getRatingDto_byUser(userDto.getUser()));
-
-		userDto.setJobDtos_jobsCompleted(new ArrayList<JobDTO>());
-		for (Job job_complete : jobs_completed) {
-			JobDTO jobDto = new JobDTO();
-
-			jobDto.setJob(job_complete);
-			jobDto.setRatingValue_overall(ratingService.getRating_byJobAndUser(job_complete.getId(),
-					userDto.getUser().getUserId()));
-
-			jobDto.setComments(
-					jobService.getCommentsGivenToUser_byJob(userDto.getUser().getUserId(),
-							job_complete.getId()));
-
-			if(jobDto.getRatingValue_overall() != null) userDto.getJobDtos_jobsCompleted().add(jobDto);
-		}
-
-		boolean userHasEnoughRatingData = false;
-		if(userDto.getJobDtos_jobsCompleted() != null &&
-				userDto.getJobDtos_jobsCompleted().size() > 0 && 
-				userDto.getRatingValue_overall() != null)			
-				userHasEnoughRatingData = true;
-		
-		model.addAttribute("userHasEnoughRatingData", userHasEnoughRatingData);
-		model.addAttribute("userDto_ratings", userDto);
+	public void setGetRatingByUserResponse(Model model, int userId) {
+		GetRatingsByUserResponse response = new GetRatingsByUserResponse();
+		response.setProfileInfoDto(getProfileInfoDto(getUser(userId)));
+		model.addAttribute("response", response);
 	}
 
 	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {

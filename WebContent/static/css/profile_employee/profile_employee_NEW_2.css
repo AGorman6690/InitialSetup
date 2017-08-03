@@ -203,7 +203,7 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
 
 
 
-
+   
 
 
 #profile-content{
@@ -216,10 +216,10 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
 	width: 400px !important;
     text-align: left !important;
 }
-#user-header {
+#profile-content #user-header {
 	width: auto !important;
 }
-#user-rating-details .criteria-name {
+#profile-content #user-rating-details .criteria-name {
     width: 161px !important;
     display: inline-block;
     text-align: left;
@@ -227,15 +227,15 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
     /* font-weight: bold; */
     font-size: 15px !important;
 }
-#user-rating-details .rating-value .star {
+#profile-content #user-rating-details .rating-value .star {
     font-size: 14px !important;
 }
-.star {
+#profile-content .star {
     font-size: 18px !important;
 }
-.completed-job{
+#profile-content .completed-job{
 	width: auto !important;
 }
-.comments-cont h5{
+#profile-content .comments-cont h5{
 	text-align: left !important;
 }

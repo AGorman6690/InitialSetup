@@ -138,7 +138,7 @@ td.active111 a{
     background: red !important;
     /* margin: 0px 20px; */
     width: auto;
-    padding: 2px;
+    padding: 2px 8px;
     border-radius: 16px;
     color: white !important;
 }

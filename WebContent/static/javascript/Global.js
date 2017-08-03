@@ -3,7 +3,7 @@ var global_workDayDtos = [];
 $(document).ready(function(){
 	
 
-	$("input.select-all, textarea.select-all").focus(function() {
+	$("body").on("focusin", "input.select-all, textarea.select-all", function() {
 		this.select();
 	})
 

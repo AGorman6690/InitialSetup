@@ -3,12 +3,12 @@
     margin: 15px auto 25px;
     background: #fff;
     color: #163b3d;
-    text-align: center;
+/*     text-align: center; */
     /* padding: 20px; */
-    font-size: 38px;
+/*     font-size: 38px; */
     /* color: #197994; */
     font-weight: bold;
-    border-bottom: 2px solid #197994;
+/*     border-bottom: 2px solid #197994; */
     padding-bottom: 10px;
 }
 #make-offer-modal .mod-content,
@@ -72,6 +72,7 @@ span.expiration-time{
 	display: table;
     color: #197994;
     font-weight: bold;	
+   	width: 190px;
 }
 .button-wrapper span{
     display: table-cell;
@@ -86,11 +87,11 @@ span.expiration-time{
 	text-align: right;
 }
 .button-wrapper .text{
-	font-size: 30px;
-	width: 190px;
+	font-size: 24px;
 }
 .button-wrapper .glyphicon{
 	font-size: 30px;
+	color: #bbb''
 }
 .button-wrapper:hover{
 	cursor: pointer;
@@ -123,7 +124,7 @@ span.expiration-time{
 	display:none;
 }
 .proposal-item > label{
-	font-weight: bold;
+/* 	font-weight: bold; */
 	font-size: 19px;
 }
 .send-status-warning,
@@ -159,7 +160,7 @@ span.expiration-time{
 	text-align: center;
 }
 [data-is-waiting-on-you="true"][data-is-accepted="0"]{
-/* 	background: #f1b9b9 !important; */
+	background: #ffd0d0  !important;
 	border: 7px solid red !important;
 }
 .v2 .calendar .ui-datepicker-inline.ui-datepicker-multi{

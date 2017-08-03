@@ -36,7 +36,7 @@
 					</span>				
 					<c:if test="${isViewingOnesSelf }">
 						<div id="edit-home-location" class="edit-container">
-							<p><span id="save-home-location" class="save-profile-info linky-hover">Save</span></p>
+							
 							<div>
 								<label>City</label>
 								<input id="city" class="select-all" type="text" value="${response.profileInfoDto.user.homeCity }">
@@ -49,6 +49,7 @@
 								<label>Zip Code</label>
 								<input id="zipCode" class="select-all" type="text" value="${response.profileInfoDto.user.homeZipCode }">
 							</div>
+							<p class="edit-wrapper"><span id="save-home-location" class="save-profile-info">Save</span></p>
 						</div>
 					</c:if>						
 				</div>
@@ -67,9 +68,10 @@
 					</span>				
 					<c:if test="${isViewingOnesSelf }">
 						<div id="edit-max-distance" class="edit-container">
-							<p><span id="save-max-distance" class="save-profile-info linky-hover">Save</span></p>
+							
 							<label>Miles</label>
 							<input id="miles" class="select-all" type="text" value="${response.profileInfoDto.user.maxWorkRadius }">
+							<p class="edit-wrapper"><span id="save-max-distance" class="save-profile-info">Save</span></p>
 						</div>
 					</c:if>			
 				</div>						
@@ -88,8 +90,9 @@
 				</span>				
 				<c:if test="${isViewingOnesSelf }">
 					<div id="edit-aout" class="edit-container">
-						<p><span id="save-about" class="save-profile-info linky-hover">Save</span></p>
+						
 						<textarea id="about" class="select-all">${response.profileInfoDto.user.about }</textarea>
+						<p class="edit-wrapper"><span id="save-about" class="save-profile-info">Save</span></p>
 					</div>
 				</c:if>							
 			</div>	

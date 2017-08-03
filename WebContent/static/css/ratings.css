@@ -196,3 +196,15 @@ body{
 .rate-employer .user-cont h2{
 	width: auto;
 }
+.ratings-mod-container #user-stats{
+    margin: auto;
+    width: 687px;
+}
+.ratings-mod-container #user-stats label{
+	display: block;
+	font-size: 20px;
+	color: #197994;
+	margin: 20px 0px;
+    font-weight: bold;
+    text-align: left;
+}

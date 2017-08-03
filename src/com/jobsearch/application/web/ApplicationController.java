@@ -63,27 +63,12 @@ public class ApplicationController {
 		method = RequestMethod.POST)
 	public String getConflictingApplications(@RequestBody List<String> dateStrings_toFindConflictsWith,
 						@PathVariable( value = "applicationId_withReferenceTo") int applicationId_withReferenceTo,
-						HttpSession session, Model model) {
-	
+						HttpSession session, Model model) {		
 		
-		applicationService.setModel_conflictingApplications(model, session, applicationId_withReferenceTo,
-				dateStrings_toFindConflictsWith);
-	
-		
+		applicationService.setConflictingApplicationsResponse(model, session, applicationId_withReferenceTo,
+				dateStrings_toFindConflictsWith);		
 		return "/wage_proposal/ConflictingApplications"; 
-
 	}	
-	@ResponseBody
-	@RequestMapping(value = "/employment-proposal/respond", method = RequestMethod.POST)
-	public String respondToEmploymentProposal(@RequestBody EmploymentProposalDTO employmentProposalDto,
-//												@RequestParam(name = "c", required = true) String c, 
-												HttpSession session) {
-
-		applicationService.respondToEmploymentProposal(employmentProposalDto, session);
-	
-		return ""; 
-
-	}
 	
 	@RequestMapping(value = "/application/{applicationId}/all-positions-filled/acknowledge", method = RequestMethod.GET)
 	public String acknowledgeAllPositionsAreFilled(@PathVariable(value = "applicationId") int applicationId,
@@ -95,13 +80,7 @@ public class ApplicationController {
 		
 	}
 	
-	@RequestMapping(value = "/application/{applicationId}/current-proposal", method = RequestMethod.GET)
-	public String getProposal(@PathVariable(value = "applicationId") int applicationId,
-								Model model, HttpSession session) {
-		
-		applicationService.setModel_ViewCurrentProposal(model, session, applicationId);
-		return "/wage_proposal/AjaxResponse_Proposal_NEW";
-	}
+
 	
 	@RequestMapping(value = "/job/{jobId}/make-an-offer/initialize", method = RequestMethod.GET)
 	public String getHtml_employerMakeFirstOffer(Model model, HttpSession session,

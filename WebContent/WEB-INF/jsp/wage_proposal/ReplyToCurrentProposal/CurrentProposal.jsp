@@ -1,14 +1,10 @@
 <%@ include file="../../includes/TagLibs.jsp"%>
 <div class="proposal-wrapper ${sessionScope.user.profileId == 1 ? 'context-employee' : 'context-employer' }"
-	data-is-partial-availability-allowed="${jobDto.job.isPartialAvailabilityAllowed}"
+	data-is-partial-availability-allowed="${response.job.isPartialAvailabilityAllowed}"
 	data-user-id-make-offer-to="${user_makeOfferTo.userId }"
-	data-job-id-make-offer-for="${jobDto.job.id }"
+	data-job-id-make-offer-for="${response.job.id }"
 	data-context="${sessionScope.user.profileId == 1 ? 'employee' : 'employer' }">
-	<h1 class="counter-context">
-		${context == 'employer-make-initial-offer' 
-			? 'Make An Offer To ' += user_makeOfferTo.firstName += " " += user_makeOfferTo.lastName
-			: 'Propose A Counter Offer'}</h1>
-	<h1 class="review-context">Review</h1>	
+
 
 	<div class="button-wrapper left">
 		<div class="counter-context cancel-proposal">
@@ -20,6 +16,11 @@
 	</div>
 
 		<div class="proposal-content-wrapper">
+			<h1 class="counter-context">
+				${context == 'employer-make-initial-offer' 
+					? 'Make An Offer To ' += user_makeOfferTo.firstName += " " += user_makeOfferTo.lastName
+					: 'Propose A Counter Offer'}</h1>
+			<h1 class="review-context">Review</h1>			
 			<div class="send-status-warning review-context">
 				<%@ include file="./SendWarningMessage.jsp" %>
 			</div>
@@ -28,7 +29,7 @@
 					<div class="proposal-item counter-context">
 						<label>This Proposal Expires In</label>
 						<div class="proposal-item-content">
-							<p class="red-bold">${applicationDto.employmentProposalDto.time_untilEmployerApprovalExpires }</p>
+							<p class="red-bold">${response.time_untilEmployerApprovalExpires }</p>
 						</div>
 					</div>
 				</c:when>
@@ -40,21 +41,21 @@
 			</c:choose>		
 			
 			<div class="wage-proposal-wrapper proposal-item"
-				data-proposed-amount="${applicationDto.employmentProposalDto.amount }">
+				data-proposed-amount="${response.currentProposal.amount }">
 				<label>Wage Proposal</label>		
 				<div class="proposal-item-content">
 					<div class="counter-context">				
 						<c:if test="${context != 'employer-make-initial-offer' }">	
 							<div class="proposed-offer hide-on-load">
 								<p class="proposed-amount">${user.profileId == 1 ? "Employer" : "Applicant" }
-									proposed $ ${applicationDto.employmentProposalDto.amount } / hr</p>
+									proposed $ ${response.currentProposal.amount } / hr</p>
 							</div>				
 						</c:if>		
 						<div class="${context == 'employer-make-initial-offer' ? 'initial-offer' : 'counter-offer' }">									
 							<p class="red-bold">${context == 'employer-make-initial-offer'
 								 ? 'Propose a wage' : 'Enter a counter offer' } ($ / hr)</p>
-							<input class="counter-wage-amount" type="text"
-								value="${applicationDto.employmentProposalDto.amount }"/>						
+							<input class="select-all counter-wage-amount" type="text"
+								value="${response.currentProposal.amount }"/>						
 						</div>	
 					</div>
 					<div class="review-context">
@@ -62,8 +63,9 @@
 					</div>		
 				</div>					
 			</div>
-			<c:if test="${jobDto.job.isPartialAvailabilityAllowed}">
-				<div class="proposal-item work-day-proposal-wrapper" data-proposed-work-days="${datestrings_workDays }">
+			<c:if test="${response.job.isPartialAvailabilityAllowed }">
+				<div class="proposal-item work-day-proposal-wrapper"
+					 data-proposed-work-days="${response.currentProposal.proposedDates }">
 					<label class="">Work Day Proposal</label>		
 					<div class="proposal-item-content">
 						<div class="conflicting-applications-countering"></div>						
@@ -76,8 +78,8 @@
 							<button class="counter-context sqr-btn gray-3 select-all-work-days-override">
 								Select All Work Days</button>								
 							<div class="calendar counter-calendar ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
-								data-min-date="${jobDto.date_firstWorkDay }"
-								data-number-of-months=${jobDto.months_workDaysSpan }>
+								data-min-date="${response.date_firstWorkDay }"
+								data-number-of-months=${response.monthSpan_allWorkDays }>
 							</div>
 						</div>
 					</div>									

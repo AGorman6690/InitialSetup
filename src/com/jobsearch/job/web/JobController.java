@@ -212,35 +212,18 @@ public class JobController {
 		else return "isNotValid";		
 	}
 	
-	@RequestMapping(value = "/preview/job-info/{jobId}", method = RequestMethod.POST)
-	public String previewJobInfo_ByJobId(Model model, HttpSession session,
+	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.POST)
+	public String getJob(Model model, HttpSession session,
 				@PathVariable(value = "jobId") int jobId,
 				@RequestParam(name = "c", required = true) String c,
-				@RequestParam(name = "p", required = false) Integer p) {
+				@RequestParam(name = "p", required = true) Integer p) {
 
-		// *************************************************
-		// *************************************************
-		// Refactor all of this
-		// *************************************************		
-		// *************************************************
-		
-		
-		
-//		JobDTO jobDto = jobService.getJobDTO_DisplayJobInfo(jobId);
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		if(sessionUser == null){
-			if(p == 1) jobService.setModel_ViewJob_Employee(model, session, c, jobId);
-			else jobService.setModel_ViewJob_Employer(model, session, c, jobId, "");
-			model.addAttribute("isLoggedIn", false);
-		}
-		else if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
-			jobService.setModel_ViewJob_Employee(model, session, c, jobId);	
+		if(p == Profile.PROFILE_ID_EMPLOYEE){
+			jobService.setGetJobResponse_forEmployee(model, session, c, jobId);	
 		}else{
-			jobService.setModel_ViewJob_Employer(model, session, c, jobId, "");
+			jobService.setGetJobResponse_forEmployer(model, session, c, jobId, "");
 		}
 
-//		model.addAttribute("jobDto", jobDto);
-//		model.addAttribute("json_work_day_dtos", JSON.stringify(jobDto.getWorkDayDtos()));
 		return "/JobInfo_NEW";
 	}
 
@@ -294,10 +277,10 @@ public class JobController {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			jobService.setModel_ViewJob_Employee(model, session, c, jobId);
+			jobService.setGetJobResponse_forEmployee(model, session, c, jobId);
 			return "/view_job_employee/ViewJob_Employee";
 		} else if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) {
-			jobService.setModel_ViewJob_Employer(model, session, c, jobId, d);
+			jobService.setGetJobResponse_forEmployer(model, session, c, jobId, d);
 			return "/view_job_employer/ViewJob_Employer";
 		} else {
 			return SessionContext.get404Page();

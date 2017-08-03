@@ -111,7 +111,7 @@
 										.flag_applicantAcknowledgedAllPositionsAreFilled == 0 }">
 							<div class="application "
 								data-application-status="${applicationProgressStatus.application.status }"
-								data-application-id="${applicationProgressStatus.application.applicationId }"
+								data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }"
 								data-employment-proposal-amount="${applicationProgressStatus.currentProposal.amount }"
 								data-job-start-date=""
 								data-job-end-date=""
@@ -131,14 +131,14 @@
 											</c:forEach>
 										</div>
 										<p class="job-name accent show-job-info-mod"
-											data-context="profile" data-job-id="${applicationProgressStatus.job.id }">
+											data-context="profile" data-p="1" data-job-id="${applicationProgressStatus.job.id }">
 											${applicationProgressStatus.job.jobName }</p>
 									</div>
 								</div>
 								<div
 									class="proposal ${sessionScope.user.profileId == 1 &&
 									applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
-									data-application-id="${applicationProgressStatus.application.applicationId }">
+									data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }">
 
 									<c:if
 										test="${applicationProgressStatus.isProposedToSessionUser &&

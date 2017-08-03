@@ -8,13 +8,14 @@ import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;;
 public class Proposal {
 	
 	Integer applicationId
-	Integer employmentProposalId
+	Integer proposalId
 	Integer proposedByUserId
 	Integer proposedToUserId	
 	String amount
 	LocalDateTime employerAcceptedDate
 	LocalDateTime expirationDate
 	Integer isNew
+	Integer isDeclined
 	List<String> proposedDates
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment
 	Integer flag_isCanceledDueToEmployerFillingAllPositions
@@ -32,6 +33,14 @@ public class Proposal {
 	public static String FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = "Flag_IsCanceledDueToEmployerFillingAllPositions"
 	public static String FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT = "Flag_IsCanceledDueToApplicantAcceptingOtherEmployment"
 	public static String FLAG_EMPLOYER_ACCEPTED_THE_OFFER = "Flag_EmployerAcceptedTheOffer";
+	
+	public Proposal(){		
+	}
+	public Proposal(Proposal prposal) {
+		this.setProposedByUserId(prposal.getProposedToUserId());
+		this.setProposedToUserId(prposal.getProposedByUserId());
+		this.setApplicationId(prposal.getApplicationId());
+	}
 
 
 }

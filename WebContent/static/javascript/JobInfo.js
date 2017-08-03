@@ -13,6 +13,15 @@ $(document).ready(function() {
 	})
 	
 	$("body").on("click", ".show-ratings-mod", function() {	
+		
+		// ***********************************************
+		// ***********************************************
+		// Refactor: use the generic "show ratings mod" in Ratings.js
+		// ***********************************************
+		// ***********************************************
+		
+		
+		
 		var $e = $(this);
 		var $modContainer = $e.closest(".ratings-mod-container");
 		if(!$modContainer.find(".mod").eq(0).is(":visible")){			
@@ -40,7 +49,7 @@ $(document).ready(function() {
 }) 
 function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 	broswerIsWaiting(true);
-	var url = "/JobSearch/preview/job-info/" + jobId + "?c=" + c;
+	var url = "/JobSearch/job/" + jobId + "?c=" + c;
 	if (p != undefined) url +=  "&p=" + p;
 	$.ajax({
 		type: "POST",

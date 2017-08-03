@@ -22,7 +22,6 @@ public class ApplicationProgressResponse {
 	public static class ApplicationProgressStatus{
 		Application application
 						
-		int currentProposalId
 		Proposal currentProposal
 		Proposal previousProposal
 		

@@ -111,7 +111,7 @@ public class UserController {
 		JobSearchUserDTO userDto = new JobSearchUserDTO();		
 		userDto.setUser(sessionUser);
 
-		userService.setModel_getRatings_byUser(model, sessionUser.getUserId());
+		userService.setGetRatingByUserResponse(model, sessionUser.getUserId());
 		
 		model.addAttribute("isViewingOnesSelf", true);
 		model.addAttribute("userDto", userDto);
@@ -212,7 +212,7 @@ public class UserController {
 	@RequestMapping(value = "/user/{userId}/ratings", method = RequestMethod.GET)
 	public String getRatings_byUser(Model model, @PathVariable(value = "userId") int userId) {
 		
-		userService.setModel_getRatings_byUser(model, userId);
+		userService.setGetRatingByUserResponse(model, userId);
 		
 		return "/ratings/RatingsByUser";
 	}	

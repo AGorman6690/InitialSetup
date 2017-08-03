@@ -31,6 +31,7 @@ import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.application.ApplicationInvite;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -39,15 +40,14 @@ public class ApplicationRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
 	@Autowired
 	VerificationServiceImpl verificationService;
+	@Autowired
+	ProposalServiceImpl proposalService;
 
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -319,40 +319,7 @@ public class ApplicationRepository {
 
 	}
 
-	public void insertEmploymentProposal(EmploymentProposalDTO employmentProposalDto) {
 
-		try {
-			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
-					.prepareCall("{call insert_employment_proposal(?, ?, ?, ?, ?, ? , ?)}");
-
-			cStmt.setInt(1, employmentProposalDto.getApplicationId());
-			cStmt.setInt(2, employmentProposalDto.getProposedByUserId());
-			cStmt.setInt(3, employmentProposalDto.getProposedToUserId());
-			cStmt.setFloat(4, Float.valueOf(employmentProposalDto.getAmount()));
-			cStmt.setInt(5, employmentProposalDto.getStatus());
-			
-			if(employmentProposalDto.getEmployerAcceptedDate() != null &&
-					employmentProposalDto.getExpirationDate() != null){
-				
-				cStmt.setTimestamp(6, Timestamp.valueOf(employmentProposalDto.getEmployerAcceptedDate()));
-				cStmt.setTimestamp(7, Timestamp.valueOf(employmentProposalDto.getExpirationDate()));
-			}else{
-				cStmt.setTimestamp(6, null);
-				cStmt.setTimestamp(7, null);
-				
-			}
-			
-			ResultSet result = cStmt.executeQuery();		
-			result.next();
-			employmentProposalDto.setEmploymentProposalId(result.getInt("WageProposalId"));
-
-			applicationService.insertEmploymentProsalWorkDays(employmentProposalDto);		
-			
-		} catch (Exception e) {
-			// TODO: handle exception
-			int i = 0;
-		}		
-	}
 
 	public void insertApplication(ApplicationDTO applicationDto) {
 
@@ -375,18 +342,14 @@ public class ApplicationRepository {
 
 			if(newApplicationId != null){
 			
-				// If this was NOT an invite to apply, insert the employment proposal
-//				if(applicationDto.getApplication().getStatus() != Application.STATUS_PROPOSED_BY_EMPLOYER){
-					applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
-					applicationService.insertEmploymentProposal(applicationDto.getEmploymentProposalDto());	
-//				}			
-	
+				applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
+				proposalService.insertProposal(applicationDto.getEmploymentProposalDto());	
+			
 				// Add answers  
 				if(verificationService.isListPopulated(applicationDto.getAnswers())){
 					for (Answer answer : applicationDto.getAnswers()) {
 						answer.setUserId(applicationDto.getApplicantId());
-						applicationService.addAnswer(answer);
-	
+						applicationService.addAnswer(answer);	
 					}	
 				}
 				
@@ -397,16 +360,6 @@ public class ApplicationRepository {
 			e.printStackTrace();
 		}
 
-	}
-
-	public EmploymentProposalDTO getCurrentEmploymentProposal(Integer applicationId) {
-	
-		String sql = "SELECT * FROM wage_proposal WHERE IsCurrentProposal = 1 AND ApplicationId = ?";
-
-		List<EmploymentProposalDTO> result = this.EmploymentProposalDTOMapper(sql, new Object[] { applicationId });
-		
-		if (verificationService.isListPopulated(result)) return result.get(0);
-		else return null;
 	}
 
 	public void updateWageProposalStatus(int wageProposalId, int status) {
@@ -539,7 +492,7 @@ public class ApplicationRepository {
 
 	public List<Application> getApplications_WithAtLeastOneWorkDay(int userId, int reference_applicationId,
 			List<WorkDay> workDays) {
-		
+			
 		String sql = "SELECT * FROM application a WHERE a.ApplicationId IN("
 					+ " SELECT DISTINCT a.ApplicationId FROM application a"
 					+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
@@ -624,14 +577,7 @@ public class ApplicationRepository {
 		return jdbcTemplate.queryForList(sql, new Object[]{ employmentProposalId }, String.class);
 	}
 
-	public void insertEmploymentProsalWorkDay(int employmentProposalId, int workDayId) {
-	
-		String sql = "INSERT INTO employment_proposal_work_day (EmploymentProposalId, WorkDayId)"
-						+ " VALUES (?, ?)";
-		
-		jdbcTemplate.update(sql, new Object[]{ employmentProposalId, workDayId } );
-		
-	}
+
 
 	public List<ApplicationInvite> getApplicationInvites(int userId) {
 		
@@ -651,12 +597,7 @@ public class ApplicationRepository {
 	}
 
 
-	public EmploymentProposalDTO getEmploymentProposalDto(int employmentProposalId) {
 
-		String sql = "SELECT * FROM wage_proposal wp WHERE wp.WageProposalId = ?"; 
-
-		return this.EmploymentProposalDTOMapper(sql, new Object[]{ employmentProposalId }).get(0);
-	}
 
 	public Integer getCount_applicantsByDay(int dateId, int jobId) {
 
@@ -792,14 +733,7 @@ public class ApplicationRepository {
 		else return null;
 	}
 
-	public void updateProposalFlag(Integer employmentProposalId, String proposalFlag, int value) {
-		String sql = "UPDATE wage_proposal wp"
-						+ " SET " + proposalFlag + " = ?"
-						+ " WHERE WageProposalId = ?";
-		
-		jdbcTemplate.update(sql, new Object[]{ value, employmentProposalId });
-		
-	}
+
 
 	public void deleteEmployment(int userId, int jobId) {
 		String sql = "DELETE FROM employment WHERE UserId = ? AND JobId = ?";

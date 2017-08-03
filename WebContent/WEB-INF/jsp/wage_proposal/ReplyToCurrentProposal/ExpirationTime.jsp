@@ -4,7 +4,7 @@
 		<label><input type="radio" name="exp-time-init" class="one-day-from-now">
 			 1 day from now </label>
 		<label><input type="radio" name="exp-time-init" class="one-day-before">
-			 1 day before the first ${jobDto.job.isPartialAvailabilityAllowed ?
+			 1 day before the first ${response.job.isPartialAvailabilityAllowed ?
 			 	 'proposed' : '' } work day begins</label>
 		<label><input type="radio" name="exp-time-init" class="other"> Other</label>
 		<div class="other-container">

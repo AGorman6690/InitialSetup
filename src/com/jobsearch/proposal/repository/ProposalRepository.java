@@ -1,7 +1,9 @@
 package com.jobsearch.proposal.repository;
 
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Proposal;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 
 @Repository
@@ -19,7 +22,8 @@ public class ProposalRepository extends BaseRepository {
 	
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
+	@Autowired
+	ProposalServiceImpl proposalService;
 	
 	public List<Proposal> ProposalMapper(String sql, Object[] args) {
 	
@@ -31,10 +35,11 @@ public class ProposalRepository extends BaseRepository {
 				
 				e.setAmount(String.format("%.2f", rs.getFloat("Amount")));
 				e.setApplicationId(rs.getInt("ApplicationId"));
-				e.setEmploymentProposalId(rs.getInt("WageProposalId"));
+				e.setProposalId(rs.getInt("WageProposalId"));
 				e.setProposedByUserId(rs.getInt("ProposedByUserId"));
 				e.setProposedToUserId(rs.getInt("ProposedToUserId"));
 				e.setIsNew(rs.getInt("IsNew"));
+				e.setIsDeclined(rs.getInt("IsDeclined"));
 				
 				e.setExpirationDate(DateUtility.getLocalDateTime(rs.getString("ExpirationDate")));
 				e.setEmployerAcceptedDate(DateUtility.getLocalDateTime(rs.getString("EmployerAcceptedDate")));
@@ -49,11 +54,69 @@ public class ProposalRepository extends BaseRepository {
 				e.setFlag_employerInitiatedContact(rs.getInt(EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT));
 				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
 
-				e.setProposedDates(getProposedDateStrings(e.getEmploymentProposalId()));
+				e.setProposedDates(getProposedDateStrings(e.getProposalId()));
 				
 				return e;
 			}
 		});
+	}
+	
+	public Proposal getProposal(int proposalId) {
+		String sql = "SELECT * FROM wage_proposal wp WHERE wp.WageProposalId = ?"; 
+		return ProposalMapper(sql, new Object[]{ proposalId }).get(0);
+	}
+	
+	public void insertProposal(Proposal proposal) {
+
+		try {
+			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
+					.prepareCall("{call insert_employment_proposal(?, ?, ?, ?, ?, ? , ?)}");
+
+			cStmt.setInt(1, proposal.getApplicationId());
+			cStmt.setInt(2, proposal.getProposedByUserId());
+			cStmt.setInt(3, proposal.getProposedToUserId());
+			cStmt.setFloat(4, Float.valueOf(proposal.getAmount()));
+			cStmt.setInt(5, -9999); // remove this from the stored procedure
+			
+			if(proposal.getEmployerAcceptedDate() != null &&
+					proposal.getExpirationDate() != null){
+				
+				cStmt.setTimestamp(6, Timestamp.valueOf(proposal.getEmployerAcceptedDate()));
+				cStmt.setTimestamp(7, Timestamp.valueOf(proposal.getExpirationDate()));
+			}else{
+				cStmt.setTimestamp(6, null);
+				cStmt.setTimestamp(7, null);
+				
+			}
+			
+			ResultSet result = cStmt.executeQuery();		
+			result.next();
+			proposal.setProposalId(result.getInt("WageProposalId"));
+
+			proposalService.insertProsalWorkDays(proposal);		
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			int i = 0;
+		}		
+	}
+	
+	public void insertProsalWorkDay(int employmentProposalId, int workDayId) {
+		
+		String sql = "INSERT INTO employment_proposal_work_day (EmploymentProposalId, WorkDayId)"
+						+ " VALUES (?, ?)";
+		
+		jdbcTemplate.update(sql, new Object[]{ employmentProposalId, workDayId } );
+		
+	}
+	
+	public void updateProposalFlag(Integer employmentProposalId, String proposalFlag, int value) {
+		String sql = "UPDATE wage_proposal wp"
+						+ " SET " + proposalFlag + " = ?"
+						+ " WHERE WageProposalId = ?";
+		
+		jdbcTemplate.update(sql, new Object[]{ value, employmentProposalId });
+		
 	}
 
 

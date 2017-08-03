@@ -40,7 +40,8 @@ public class VerificationServiceImpl {
 	@Autowired
 	ApplicationServiceImpl applicationService;	
 	
-
+	// Refactor these to the NumberUtility
+	// *****************************************************************
 	public boolean isPositiveNumber(Integer number){
 		
 		if(number != null && number > 0) return true;
@@ -68,7 +69,7 @@ public class VerificationServiceImpl {
 		if(number != null && number >= 0) return true;
 		else return false;
 	}
-	
+	// *****************************************************************
 
 	public boolean didSessionUserPostJob(HttpSession session, int jobId) {
 
@@ -133,25 +134,6 @@ public class VerificationServiceImpl {
 		else return false;
 	}
 
-	public boolean isAPositionAvaiableEachProposedWorkDay(Integer employmentProposalId, int jobId) {
-		
-		
-		List<WorkDayDto> workDayDtos_jobWorkDay = jobService.getWorkDayDtos(jobId);
-		List<WorkDay> workDays_proposed = jobService.getWorkDays_byProposalId(employmentProposalId);
-		
-		for( WorkDay workDay_proposed : workDays_proposed){			
-			for(WorkDayDto workDayDto_jobWorkDay : workDayDtos_jobWorkDay){
-				if(workDay_proposed.getWorkDayId() ==
-						workDayDto_jobWorkDay.getWorkDay().getWorkDayId()){
-					if(workDayDto_jobWorkDay.getCount_positionsFilled() ==
-							workDayDto_jobWorkDay.getCount_totalPositions())
-						return false;
-				}
-			}			
-		}
-		
-		return true;
-	}
 
 	public boolean isSessionUserAnEmployee(HttpSession session, Integer jobId) {
 		JobSearchUser employee = userService.getEmployee(jobId, SessionContext.getUser(session).getUserId());

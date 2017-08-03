@@ -22,6 +22,7 @@ public class RatingServiceImpl {
 	public Double getRating_byJobAndUser(Integer jobId, int userId) {
 		return repository.getRating_byJobAndUser(jobId, userId);
 	}
+
 	
 	public ProfileRatingDto getProfileRatingDto(JobSearchUser user) {
 

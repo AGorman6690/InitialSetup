@@ -282,7 +282,29 @@ public final class DateUtility {
 		}
 	}
 
+	public static LocalDateTime getFutureDate(LocalDateTime fromDate, Integer daysFromDate,
+			Integer hoursFromDate, Integer minutesFromDate) {
+	
+		LocalDateTime futureDate = fromDate;
+		if(NumberUtility.isPositiveNumber(daysFromDate))
+			futureDate = futureDate.plusDays(daysFromDate);
+		if(NumberUtility.isPositiveNumber(hoursFromDate))
+			futureDate = futureDate.plusHours(hoursFromDate);
+		if(NumberUtility.isPositiveNumber(minutesFromDate))
+			futureDate = futureDate.plusMinutes(minutesFromDate);
+		return futureDate;
+	}
 
+	public static boolean isValidFutrueDate(LocalDateTime earlierDate,
+			LocalDateTime laterDate) {
+		
+		if(earlierDate != null && laterDate != null){	
+			if(earlierDate.isBefore(laterDate)){
+				return true;
+			}else return false;
+		}else return false;	
+
+	}
 
 
 
