@@ -24,7 +24,7 @@ function executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml) {
 	
 	$.ajax({
 		type: "GET",
-		url: "/JobSearch/user/" + userId_applicant + "/ratings",
+		url: "/JobSearch/rating/user/" + userId_applicant,
 		headers: getAjaxHeaders(),
 		dataType: "html",
 	}).done(function (html) {

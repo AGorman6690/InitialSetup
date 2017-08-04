@@ -15,13 +15,13 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.category.service.Category;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Endorsement;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.user.web.AvailabilityDTO;
 import com.jobsearch.utilities.VerificationServiceImpl;
@@ -45,7 +45,7 @@ public class UserRepository {
 
 		String sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where userid = ?";
 
-		return JobSearchUserProfileRowMapper(sql, new Object[] { userId }).get(0);
+		return JobSearchUserRowMapper(sql, new Object[] { userId }).get(0);
 
 	}
 
@@ -123,48 +123,6 @@ public class UserRepository {
 		});
 	}
 
-	public List<JobSearchUser> JobSearchUserProfileRowMapper(String sql, Object[] args) {
-		//*******************************************************
-		// *******************************************************
-		// Why are there two row mappers for job search user????
-		// Address this later.
-		// *******************************************************
-		// *******************************************************
-		return jdbcTemplate.query(sql, args, new RowMapper<JobSearchUser>() {
-			@Override
-			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
-
-				try {
-					JobSearchUser e = new JobSearchUser();
-					e.setUserId(rs.getInt("UserId"));
-					e.setFirstName(rs.getString("FirstName"));
-					e.setLastName(rs.getString("LastName"));
-					e.setEmailAddress(rs.getString("Email"));
-					e.setProfileId(rs.getInt("ProfileId"));
-					e.setHomeLat(rs.getFloat("HomeLat"));
-					e.setHomeLng(rs.getFloat("HomeLng"));
-					e.setHomeCity(rs.getString("HomeCity"));
-					e.setHomeState(rs.getString("HomeState"));
-					e.setHomeZipCode(rs.getString("HomeZipCode"));
-					e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
-					e.setCreateNewPassword(rs.getInt("CreateNewPassword"));
-					e.setMinimumDesiredPay(rs.getDouble("MinimumPay"));
-					e.setStringMinimumDesiredPay(String.format("%.2f", rs.getDouble("MinimumPay")));
-					e.setAbout(rs.getString("About"));
-//					Profile profile = new Profile();
-//					profile.setName(rs.getString("p.ProfileType"));
-
-//					e.setProfile(profile);
-					return e;
-				} catch (Exception e) {
-					return null;
-				}
-
-			}
-		});
-	}
-
-
 	public ArrayList<Profile> ProfilesRowMapper(String sql) {
 
 		List<Profile> list;
@@ -185,32 +143,13 @@ public class UserRepository {
 	}
 
 
-	public List<RateCriterion> RateCriterionRowMapper(String sql, Object[] args) {
 
-		List<RateCriterion> list;
-		list = jdbcTemplate.query(sql, args, new RowMapper<RateCriterion>() {
-
-			@Override
-			public RateCriterion mapRow(ResultSet rs, int rownumber) throws SQLException {
-
-				RateCriterion e = new RateCriterion();
-
-				e.setRateCriterionId(rs.getInt("RateCriterionId"));
-				e.setName(rs.getString("Name"));
-				e.setIsUsedToRateEmployee(rs.getBoolean("IsUsedToRateEmployee"));
-				e.setShortName(rs.getString("ShortName"));
-
-				return e;
-			}
-		});
-		return (List<RateCriterion>) list;
-	}
 
 	public JobSearchUser getUserByEmail(String email) {
 		String sql;
 		sql = "select u.*, p.* from user u inner join profile p on p.profileId = u.profileId where Email = ?";
 
-		List<JobSearchUser> list = JobSearchUserProfileRowMapper(sql, new Object[] { email });
+		List<JobSearchUser> list = JobSearchUserRowMapper(sql, new Object[] { email });
 
 		if(list.size() >0 ){
 			return list.get(0);
@@ -260,65 +199,12 @@ public class UserRepository {
 		return this.ProfilesRowMapper(sql);
 	}
 
-	public void updateRating(RateCriterion rc) {
-		String sql = "UPDATE rating SET Value = ?"
-					+ " WHERE RateCriterionId = ?"
-					+ " AND UserId = ?"
-					+ " AND RatedByUserId = ?"
-					+ " AND JobId = ?";
-
-		jdbcTemplate.update(sql,
-				new Object[] { rc.getValue(),
-						rc.getRateCriterionId(),
-						rc.getUserId_ratee(),
-						rc.getUserId_rater(),
-						rc.getJobId() });
-
-	}
 
 
 
 
-	public void addComment(int userId, int jobId, String comment, int userId_commenter) {
-		String sql = "INSERT INTO comment (JobId, UserId, Comment, UserId_Commenter) VALUES (?, ?, ?, ?)";
 
-		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment, userId_commenter });
 
-	}
-
-	public void deleteComment(int jobId, int employeeId) {
-		String sql = "DELETE FROM comment WHERE JobId = ? AND UserId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { jobId, employeeId });
-
-	}
-
-	public String getComment(int jobId, int userId) {
-		String sql = "SELECT Comment FROM comment WHERE JobId = ? AND UserId = ?";
-
-		String comment = "";
-		try {
-			comment = jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, String.class);
-
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-
-		return comment;
-
-	}
-
-	public Double getRating(int userId) {
-		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value is not null";
-
-		Double rating = jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
-
-//		if (rating == null) {
-//			return -1.0;
-//		} else {
-			return rating;
-//		}
-	}
 
 
 	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
@@ -393,7 +279,7 @@ public class UserRepository {
 		}
 
 		sql += " LIMIT 25";
-		return this.JobSearchUserProfileRowMapper(sql, args.toArray());
+		return this.JobSearchUserRowMapper(sql, args.toArray());
 	}
 
 	public boolean resetPassword(String username, String newPassword) {
@@ -436,12 +322,7 @@ public class UserRepository {
 
 
 
-	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {		
-		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, RatedByUserId)"
-					+ " VALUES (?, ?, ?, ?)";
-		
-		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId, ratedByUserId });
-	}
+
 
 	public void insertEmployment(int userId, int jobId) {
 
@@ -513,20 +394,9 @@ public class UserRepository {
 		return JobSearchUserRowMapper(sql, new Object[]{ jobId });
 	}
 
-	public Double getRating_givenByUser(Integer jobId, int userId) {
-		String sql = "SELECT Value FROM rating WHERE RatedByUserId = ? AND JobId = ?";
-		try {
-			return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Double.class);	
-		} catch (Exception e) {
-			return null;
-		}
-		
-	}
 
-	public Integer getCount_nullRatings_givenByUserForJob(Integer jobId, int userId) {
-		String sql = "SELECT COUNT(*) FROM rating WHERE RatedByUserId = ? AND JobId = ? AND Value IS NULL";
-		return jdbcTemplate.queryForObject(sql, new Object[]{ userId,  jobId }, Integer.class);	
-	}
+
+
 
 	public List<JobSearchUser> getApplicants_byJob_openApplicantions(int jobId) {
 		

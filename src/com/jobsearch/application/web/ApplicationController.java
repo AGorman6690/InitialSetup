@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationDTO;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
+import com.jobsearch.request.ApplyForJobRequest;
+import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
@@ -47,10 +47,10 @@ public class ApplicationController {
 
 	@ResponseBody
 	@RequestMapping(value = "/apply", method = RequestMethod.POST)
-	public String applyForJob(@RequestBody ApplicationDTO applicationDto, HttpSession session) {
+	public String applyForJob(@RequestBody ApplyForJobRequest request, HttpSession session) {
 
 		if (SessionContext.isLoggedIn(session)) {
-			applicationService.applyForJob(applicationDto, session);
+			applicationService.applyForJob(request, session);
 			return "redirect:/user";
 		} else {
 			return "NotLoggedIn";
@@ -70,15 +70,7 @@ public class ApplicationController {
 		return "/wage_proposal/ConflictingApplications"; 
 	}	
 	
-	@RequestMapping(value = "/application/{applicationId}/all-positions-filled/acknowledge", method = RequestMethod.GET)
-	public String acknowledgeAllPositionsAreFilled(@PathVariable(value = "applicationId") int applicationId,
-								HttpSession session) {
-		
-		applicationService.updateFlag_applicantAcknowledgesAllPositionsAreFilled(session, applicationId);
-		
-		return "redirect:/user/";
-		
-	}
+
 	
 
 	
@@ -91,45 +83,35 @@ public class ApplicationController {
 		else return SessionContext.get404Page();
 	}
 	
-	@ResponseBody
-	@RequestMapping(value = "/application/{applicationId}/proposed-work-days", method = RequestMethod.GET)
-	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "applicationId") int applicationId,
-													HttpSession session) {
-		
-		List<WorkDayDto> workDayDtos = applicationService.getWorkDayDtos_proposedWorkDays(applicationId, session);
-		
-		return JSON.stringify(workDayDtos);
-	}
-	
-	
-	@RequestMapping(value = "application-closed-due-to-all-positions-filleed/{applicationId}/acknowledge"
-			, method = RequestMethod.GET)
-	public String acknowledge_applicationClosed_employerFilledAllPositions(
-			@PathVariable(value = "applicationId") int applicationId, HttpSession session) {
 
-		applicationService.updateApplicationFlag(applicationId,
-				Application.FLAG_APPLICANT_ACKNOWLEDGED_ALL_POSITIONS_ARE_FILLED, 1);
-		
-		return "redirect:/user";
-	}
-	@RequestMapping(value = "/employer/make-initial-offer", method = RequestMethod.POST)
+	
+
+	@RequestMapping(value = "/application/employer-make-initial-offer", method = RequestMethod.POST)
 	@ResponseBody
-	public String initiateContact_byEmployer(@RequestBody ApplicationDTO applicationDto,
+	public String initiateContact_byEmployer(@RequestBody MakeInitialOfferByEmployerRequest request,
 			HttpSession session) {
 
-		applicationService.initiateContact_byEmployer(applicationDto, session);
-		
+		applicationService.makeInitialOfferByEmployer(request, session);		
 		return "";
 	}
-
-	
-	@RequestMapping(value = "/employer/initiate-contact/application-invite", method = RequestMethod.POST)
-	@ResponseBody
-	public void inviteToApply(@RequestBody ApplicationInvite applicationInvite, HttpSession session) {
-
-		applicationService.insertApplicationInvite(applicationInvite, session);
+	@RequestMapping(value = "/user/{userId}/make-offer/initialize", method = RequestMethod.GET)
+	public String makeOffer_initialize(Model model, HttpSession session, 
+			@PathVariable(value = "userId") int userId) {
+		
+		userService.setModel_makeOffer_initialize(model, userId, session);
+		
+		return "/find_employees/MakeOffer_SelectJob";
 	}
-	
+	@RequestMapping(value = "/user/{userId}/make-offer/job/{jobId}", method = RequestMethod.GET)
+	public String makeOffer(Model model, HttpSession session, 
+			@PathVariable(value = "userId") int userId,
+			@PathVariable(value = "jobId") int jobId) {
+		
+		userService.setModel_makeOffer(model, userId, jobId, session);
+		
+		return "/wage_proposal/AjaxResponse_Proposal_NEW";
+	}
+		
 	@RequestMapping(value = "/application/{applicationId}/close", method = RequestMethod.GET)
 	public String closeApplication(@PathVariable(value = "applicationId") int applicationId,
 									HttpSession session) {

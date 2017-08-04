@@ -75,16 +75,6 @@ $(document).ready(function(){
 
 
 
-	$("#posted-jobs [data-posted-job-id]").click(function(){
-		
-		var selectedJobId = $(this).attr("data-posted-job-id");
-		$("#jobId_getOnPageLoad").val(selectedJobId);
-		
-		executeAjaxCall_loadJobDto(selectedJobId);
-		
-		$("#what-kind-of-job-container").hide();
-	})
-
 })
 function executeAjaxCall_verifyAvailability(userId, jobId) {
 	broswerIsWaiting(true);
@@ -230,25 +220,6 @@ function initCalendar_findEmployees_workDaysFilter($calendar, workDayDtos){
 	
 }
 
-function executeAjaxCall_loadJobDto(jobId) {
-	$.ajax({
-		type: "GET",
-		url: "/JobSearch/get/job-dto/" + jobId,
-		dataType: "json",
-		success: _success,
-		error: _error,
-	})
-	
-	function _success(jobDto){			
-		showJobInfo(jobDto);
-		$("#findEmployees").click();
-	}
-
-	function _error(){
-		alert("error load job")
-	}
-}
-
 
 function showJobInfo(jobDto){
 	
@@ -300,30 +271,6 @@ function executeAjaxCall_findEmployees(){
 
 	})
 	
-}
-
-
-
-function executeAjaxCall_sendInvite(){
-	
-	var applicationInvite = {};
-
-	
-	applicationInvite.jobId = $("#makeOfferModal select option:selected").attr("data-job-id");
-	applicationInvite.userId = $("#makeOfferModal").attr("data-user-id");
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/employer/initiate-contact/application-invite",
-		headers : getAjaxHeaders(),
-		contentType : "application/json",	
-		data: JSON.stringify(applicationInvite),
-		dataType : "json"
-		
-	}).done(function(){
-		broswerIsWaiting(false);
-	})	
 }
 
 function resetModal(){

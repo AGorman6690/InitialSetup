@@ -1,5 +1,7 @@
 package com.jobsearch.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jobsearch.json.JSON;
+import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.request.RespondToProposalRequest;
 
@@ -35,5 +39,15 @@ public class ProposalController {
 												HttpSession session) {
 		proposalService.respondToProposal(request, session);	
 		return ""; 
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/application/{applicationId}/proposed-work-days", method = RequestMethod.GET)
+	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "applicationId") int applicationId,
+													HttpSession session) {
+		
+		List<WorkDayDto> workDayDtos = proposalService.getWorkDayDtos_proposedWorkDays(applicationId, session);
+		
+		return JSON.stringify(workDayDtos);
 	}
 }

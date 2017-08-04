@@ -21,13 +21,14 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
+import com.jobsearch.request.EditJobRequest;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.service.UserServiceImpl;
 
@@ -36,24 +37,18 @@ public class JobController {
 
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	CategoryServiceImpl categoryService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
 	@ResponseBody
 	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
 	public String postJobs(@RequestBody JobDTO jobDto, HttpSession session) {
-
 		jobService.addPosting(jobDto, session);
 		return "";
-		// return "redirect:/user";
-
 	}
 	
 	@RequestMapping(value = "/job/{jobId}/application-progress", method = RequestMethod.GET)
@@ -62,15 +57,6 @@ public class JobController {
 
 		jobService.setApplicationProgressResponse(jobId, model, session);
 		return "homepage_employer/ApplicationProgress";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/job/{jobId}/work-days", method = RequestMethod.GET)
-	public String getWorkDayDtos_jobInfo(@PathVariable(value = "jobId") int jobId, HttpSession session) {
-
-		List<WorkDayDto> workDayDtos = jobService.getWorkDayDtos(jobId);
-
-		return JSON.stringify(workDayDtos);
 	}
 	
 	@RequestMapping(value = "/job/{jobId}/leave", method = RequestMethod.GET)
@@ -98,7 +84,6 @@ public class JobController {
 		if (SessionContext.isLoggedIn(session)) {
 			jobService.saveFindJobFilter(savedFilter, session);
 		}
-
 		return "";
 	}
 	
@@ -183,26 +168,15 @@ public class JobController {
 	@RequestMapping(value = "/job/{jobId}/work-day/{dateString}/applicants", method = RequestMethod.GET)
 	public String getApplicants_byJobAndDate(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId,
 			@PathVariable(value = "dateString") String dateString) {
-
 		jobService.setModel_getApplicants_byJobAndDate(model, session, jobId, dateString);
-
 		return "/view_job_employer/ApplicationSummary_ByWorkDay";
 	}
 
 	@RequestMapping(value = "/job/{jobId}/employees/by-work-days", method = RequestMethod.POST)
 	public String getEmployees_byJobAndDates(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId,
 			@RequestBody List<String> dateStrings) {
-
 		jobService.setModel_getEmployees_byJobAndDate(model, session, jobId, dateStrings);
-
 		return "/edit_job/Employees_ByDate";
-	}
-	@RequestMapping(value = "/preview/job-info", method = RequestMethod.POST)
-	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
-
-		jobService.setModel_PreviewJobPost(model, jobDto);
-		model.addAttribute("isPreviewingJobPost", true);
-		return "/JobInfo_NEW";
 	}
 
 	@RequestMapping(value = "/validate-address")
@@ -216,95 +190,37 @@ public class JobController {
 	public String getJob(Model model, HttpSession session,
 				@PathVariable(value = "jobId") int jobId,
 				@RequestParam(name = "c", required = true) String c,
-				@RequestParam(name = "p", required = true) Integer p) {
+				@RequestParam(name = "p", required = false) Integer p) {
 
-		if(p == Profile.PROFILE_ID_EMPLOYEE){
-			jobService.setGetJobResponse_forEmployee(model, session, c, jobId);	
-		}else{
-			jobService.setGetJobResponse_forEmployer(model, session, c, jobId, "");
-		}
+		jobService.setGetJobResponse(model, session, c, jobId);	
+		return "/JobInfo_NEW";
+	}
+	
+	@RequestMapping(value = "/job/preview", method = RequestMethod.POST)
+	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
 
+//		jobService.setModel_PreviewJobPost(model, jobDto);
+		model.addAttribute("isPreviewingJobPost", true);
 		return "/JobInfo_NEW";
 	}
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
-		
-		
-//		List<Integer> jobIds_previouslyLoaded = SessionContext.getFilteredJobIds(session);
-//		FindJobFilterDTO lastFilterRequest = SessionContext.getLastFilterRequest(session);
-//		List<JobDTO> jobDTOs = jobService.setModel_FindJobs_PageLoad(model, session,
-//				jobIds_previouslyLoaded, lastFilterRequest);
-//
-//		double maxDistance = jobService.getMaxDistanceJobFromFilterRequest(jobDTOs);
-//		model.addAttribute("filterDto", lastFilterRequest);
-//		model.addAttribute("maxDistance", maxDistance);
-//		model.addAttribute("jobDtos", jobDTOs);
-//		
-		return "/find_jobs_new/Find_Jobs_New";
-		
+		return "/find_jobs_new/Find_Jobs_New";		
 	}
 
 	@RequestMapping(value = "/jobs/find/load-filter", method = RequestMethod.GET)
 	public String loadFindJobFilter(@RequestParam(name = "savedFindJobFilterId") int savedFindJobFilterId, Model model,
 			HttpSession session) {
-
 		jobService.setModel_LoadFindJobsFilter(savedFindJobFilterId, model, session);
-
-
 		return "/find_jobs/Filters";
-
-	}
-
-	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.GET)
-	public String getJob(Model model, HttpSession session, @RequestParam(name = "c", required = true) String c,
-			@RequestParam(name = "p", required = false) Integer p, @RequestParam(name = "d", required = false) String d,
-			@PathVariable(value = "jobId") int jobId) {
-
-		// c is the context in which the job was clicked.
-		// ************************************************************
-		// ************************************************************
-		// (Phase this out. Use the Session User's profile id. No need to pass
-		// it from the browser.)
-		// p is the user's profile id.
-		// ************************************************************
-		// ************************************************************
-		// d is whether the **employer** clicked a data point for the job on his
-		// profile dashboard
-		// (i.e. wage negotiations, applicants, or employees).
-		// For the possible values for the "d" variable, see the initPage()
-		// function in the View_Job_Employer.jsp file
-
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			jobService.setGetJobResponse_forEmployee(model, session, c, jobId);
-			return "/view_job_employee/ViewJob_Employee";
-		} else if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) {
-			jobService.setGetJobResponse_forEmployer(model, session, c, jobId, d);
-			return "/view_job_employer/ViewJob_Employer";
-		} else {
-			return SessionContext.get404Page();
-		}
-
 	}
 
 	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)
 	public String findEmployees_byJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 
 		jobService.setModel_findEmployees_byJob(model, session, jobId);
-
 		return "/find_employees/FindEmployees";
-
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "get/job-dto/{jobId}", method = RequestMethod.GET)
-	public String getJobDto(HttpSession session, @PathVariable(value = "jobId") int jobId) {
-
-		JobDTO jobDto = jobService.getJobDto_ByEmployer(session, jobId);
-
-		return JSON.stringify(jobDto);
-
 	}
 
 	@RequestMapping(value = "/job/{jobId}/update/status/{status}", method = RequestMethod.GET)
@@ -312,27 +228,7 @@ public class JobController {
 			@PathVariable(value = "jobId") int jobId) {
 
 		jobService.updateJobStatus(status, jobId);
-
 		return "redirect:/user";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/post-job/previous-question/load", method = RequestMethod.GET)
-	public String loadPreviousPostedQuestion(@RequestParam(name = "questionId", required = true) int questionId,
-			HttpSession session) {
-
-		// *****************************************************
-		// *****************************************************
-		// Can the getJobDto methond be used in place of this????
-		// The getJobDTO_DisplayJobInfo() should also be responsible
-		// for setting the questions.
-		// This is redundant.
-		// *****************************************************
-		// *****************************************************
-
-		Question postedQuestion = jobService.getQuestion_PreviousPostedQuestion(session, questionId);
-
-		return JSON.stringify(postedQuestion);
 	}
 
 	@ResponseBody
@@ -352,23 +248,6 @@ public class JobController {
 		return "/post_job/PostJob";
 	}
 
-	@RequestMapping(value = "/job/{jobId}/rate-employer", method = RequestMethod.GET)
-	public String viewRateEmployer(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
-
-		if (jobService.setModel_ViewRateEmployer(jobId, model, session))
-			return "/ratings/RateEmployer";
-		else
-			return SessionContext.get404Page();
-	}
-
-	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
-	public String viewRateEmployees(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
-
-		if (jobService.setModel_ViewRateEmployees(jobId, model, session))
-			return "/ratings/RateEmployees";
-		else
-			return SessionContext.get404Page();
-	}
 
 	@RequestMapping(value = "/job/{jobId}/edit", method = RequestMethod.GET)
 	public String viewEditJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
@@ -377,6 +256,13 @@ public class JobController {
 			return "/edit_job/Edit_Job";
 		else
 			return SessionContext.get404Page();
+	}
+	
+	@RequestMapping(value = "/job/edit", method = RequestMethod.POST)
+	@ResponseBody
+	public String editJob(HttpSession session, @RequestBody EditJobRequest request){
+		jobService.editJobRequest(session, request);
+		return "";
 	}
 
 	@RequestMapping(value = "/job/{jobId}/user/{userId}/remove-remaining-work-days", method = RequestMethod.POST)
@@ -388,35 +274,9 @@ public class JobController {
 		return "";
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/job/{jobId}/employee/{userId}/work-days", method = RequestMethod.GET)
-	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "jobId") int jobId,
-			@PathVariable(value = "userId") int userId, HttpSession session) {
 
-		return JSON.stringify(applicationService.getWorkDayDtos_proposedWorkDays(jobId, userId, session));
-	}
 	
-//	@RequestMapping(value = "/job/{jobId}/replace-employee/{userId}", method = RequestMethod.POST)
-//	@ResponseBody
-//	public String replaceEmployee(HttpSession session,
-//									@PathVariable(value = "jobId") int jobId,
-//									@PathVariable(value = "userId") int userId){	
-//
-//		jobService.replaceEmployee(session, jobId, userId);
-//		return "";
-//
-//	}
-		
-	@RequestMapping(value = "/job/{jobId}/edit/work-days", method = RequestMethod.POST)
-	@ResponseBody
-	public String editJob_workDays(HttpSession session,
-									@PathVariable(value = "jobId") int jobId,
-									@RequestBody List<WorkDay> workDays){	
 
-		jobService.editJob_workDays(session, workDays, jobId);
-		return "";
-
-	}
 	
 	@RequestMapping(value = "/job/{jobId}/employee/{userId}/display-termination-message", method = RequestMethod.POST)
 	public String displayMessage_terminateEmployee(@PathVariable(value = "jobId") int jobId,
@@ -427,18 +287,5 @@ public class JobController {
 		return "/terminate_employment/Employer_terminates_employee";
 	}
 	
-
-	// @RequestMapping(value = "/job/{jobId}/edit/work-days/pre-process", method
-	// = RequestMethod.POST)
-	// public String edotditJob(Model model, HttpSession session,
-	// @PathVariable(value = "jobId") int jobId,
-	// @RequestBody List<String> dateStrings_remove) {
-	//
-	// if(jobService.setModel_editJob_removeWorkDays_preProcess(model, session,
-	// jobId, dateStrings_remove))
-	// return "/edit_job/RemoveWorkDays_AffectedEmployees";
-	//
-	// else return SessionContext.get404Page();
-	// }
 
 }

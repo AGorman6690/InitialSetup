@@ -86,17 +86,14 @@
 							<c:when test="${sessionScope.user.profileId == 1}">
 								<a id="nav_profile" class="" href="/JobSearch/user">Profile</a>
 								<a id="nav_calendar" class="" href="#">Calendar</a>								
-								<a id="nav_profile" class="hide-on-load" href="/JobSearch/user/profile/new">Jobs OLD</a>
 								<a id="nav_findJobs" href="/JobSearch/jobs/find">Find Jobs</a>	
 							</c:when>
 							<c:when test="${sessionScope.user.profileId == 2}">
-								<a id="nav_jobs" href="/JobSearch/user">Jobs</a>
-								<a id="nav_jobs" class="hide-on-loa" href="/JobSearch/user/profile-employer-new">Jobs OLD</a>	
+								<a id="nav_jobs" href="/JobSearch/user">Jobs</a>					
 								<a id="nav_postJob" href="/JobSearch/post-job">Post Job</a>							
 								<a id="nav_findEmployees" href="/JobSearch/employees/find">Find Employees</a>
 							</c:when>
 						</c:choose>				
-						<a id="nav_credentials" class="hide-on-load" href="/JobSearch/user/credentials">Profile</a>						
 						<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>		
 					</c:when>
 					<c:otherwise>

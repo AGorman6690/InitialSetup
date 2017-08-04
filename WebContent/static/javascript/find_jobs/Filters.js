@@ -35,7 +35,7 @@ $(document).ready(function(){
 function executeAjaxCall_getJobWorkDays(jobId, $calendar) {
 	$.ajax({
 		type: "GET",
-		url: "/JobSearch/job/" + jobId + "/work-days",
+		url: "/JobSearch/workdays/" + jobId ,
 		headers: getAjaxHeaders(),
 		dataType: "json",			
 	}).done(function(workDayDtos){

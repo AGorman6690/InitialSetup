@@ -76,31 +76,11 @@ $(document).ready(function() {
 	})
 	
 	$("#save-edits").click(function() {
-		var jobId = $("#jobId").val();
-		var $calendar = $("#workDaysCalendar_postJob");
-		
-		
-//		if($("#edit-dates").hasClass("selected")){
-			
-
-//			if(areOriginalWorkDaysBeingRemoved()){
-//				var datesOriginal = getSelectedDates($calendar, "yy-mm-dd", "original");
-//				var datesRemoved = [];
-//				$(datesOriginal).each(function(i, dateString) {
-//					var td = getTdByDate($calendar, dateify(dateString)); 
-//					if($(td).hasClass("not-selected")) datesRemoved.push(dateString);
-//				})
-//
-//				executeAjaxCall_editJob_deleteWorkDays(jobId, datesRemoved);
-//			}
-//			else{
 						
-				
-				var newWorkDays = getWorkDays_forAjaxRequest(workDayDtos);					
-				executeAjaxCall_saveEdits_dates(g_jobId, newWorkDays);	
-//			}
-			
-//		}
+		var editJobRequest = {};
+		editJobRequest.jobId =  $("#jobId").val();
+		editJobRequest.newWorkDays = getWorkDays_forAjaxRequest(workDayDtos);					
+		executeAjaxCall_saveEdits_dates(editJobRequest);	
 		
 	})
 	
@@ -158,7 +138,7 @@ function executeAjaxCall_getEmployeesWorkDays(jobId, userId){
 	broswerIsWaiting(true);
 	$.ajax({
 		type: "GET",
-		url: "/JobSearch/job/" + jobId + "/employee/" + userId + "/work-days",
+		url: "/JobSearch/workdays/job/" + jobId + "/user/" + userId",
 		headers: getAjaxHeaders(),
 		dataType: "json",
 	}).done(function(workDayDtos_response) {
@@ -348,14 +328,14 @@ function getWorkDays_forAjaxRequest(workDayDtos){
 	return workDays;
 }
 
-function executeAjaxCall_saveEdits_dates(jobId, newWorkDays) {
+function executeAjaxCall_saveEdits_dates(editJobRequest) {
 	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
-		url: "/JobSearch/job/" + jobId + "/edit/work-days",
+		url: "/JobSearch/job/edit/",
 		contentType: "application/json",
-		data: JSON.stringify(newWorkDays),
+		data: JSON.stringify(editJobRequest),
 		dataType: "text",
 	}).done(function(response) {
 			broswerIsWaiting(false);

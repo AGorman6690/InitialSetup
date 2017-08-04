@@ -23,7 +23,7 @@ class JobSearchUserDTO {
 	Integer count_availableDays_perFindEmployeesSearch
 	
 	String totalPayment
-	EmploymentProposalDTO acceptedProposal
+
 	
 	ApplicationDTO applicationDto
 	

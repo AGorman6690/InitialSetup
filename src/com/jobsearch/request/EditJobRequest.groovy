@@ -1,4 +1,4 @@
-package com.jobsearch.job.service
+package com.jobsearch.request
 
 import java.awt.TexturePaintContext.Int;
 import java.util.List
@@ -18,10 +18,7 @@ import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.user.rate.RatingDTO
 
-public class EditJobDto {
-	
+public class EditJobRequest {	
 	int jobId
 	List<WorkDay> newWorkDays
-	EmploymentProposalDTO proposalDto
-
 }

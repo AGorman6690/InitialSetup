@@ -4,6 +4,7 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.bases.BaseRepository;
-import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Proposal;
+import com.jobsearch.model.WorkDay;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 
@@ -45,13 +46,13 @@ public class ProposalRepository extends BaseRepository {
 				e.setEmployerAcceptedDate(DateUtility.getLocalDateTime(rs.getString("EmployerAcceptedDate")));
 				
 				e.setFlag_isCanceledDueToApplicantAcceptingOtherEmployment(
-						rs.getInt(EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT));			
+						rs.getInt(Proposal.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT));			
 				e.setFlag_isCanceledDueToEmployerFillingAllPositions(
-						rs.getInt(EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));				
-				e.setFlag_applicationWasReopened(rs.getInt(EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED));
-				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
-				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
-				e.setFlag_employerInitiatedContact(rs.getInt(EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT));
+						rs.getInt(Proposal.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));				
+				e.setFlag_applicationWasReopened(rs.getInt(Proposal.FLAG_APPLICATION_WAS_REOPENED));
+				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(Proposal.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
+				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(Proposal.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
+				e.setFlag_employerInitiatedContact(rs.getInt(Proposal.FLAG_EMPLOYER_INITIATED_CONTACT));
 				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
 
 				e.setProposedDates(getProposedDateStrings(e.getProposalId()));
@@ -59,6 +60,55 @@ public class ProposalRepository extends BaseRepository {
 				return e;
 			}
 		});
+	}
+	
+	public void deleteProposedWorkDays(List<WorkDay> workDays) {
+		String sql = "DELETE FROM employment_proposal_work_day" + " WHERE (";
+
+		ArrayList<Object> args = new ArrayList<Object>();
+		boolean isFirst = true;
+		for (WorkDay workDay : workDays) {
+
+			if (!isFirst)
+				sql += " OR";
+			sql += " WorkDayId = ?";
+			args.add(workDay.getWorkDayId());
+
+			isFirst = false;
+		}
+		sql += " )";
+
+		jdbcTemplate.update(sql, args.toArray());
+
+	}
+	
+	
+	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
+		
+//		http://stackoverflow.com/questions/5816840/delete-i-cant-specify-target-table
+		
+		String sql = "DELETE FROM employment_proposal_work_day WHERE Id IN ("
+					+ " SELECT * FROM ("
+					+ " SELECT DISTINCT ep.Id FROM employment_proposal_work_day ep"
+					+ " JOIN wage_proposal wp ON ep.EmploymentProposalId = wp.WageProposalId"
+					+ " WHERE wp.IsCurrentProposal = 1"
+					+ " AND wp.ApplicationId = ?"
+					+ " AND (";
+		
+		List<Object> args = new ArrayList<Object>();
+		args.add(applicationId);
+		
+		boolean isFirst = true;
+		for(WorkDay workDay : workDays){
+			if(!isFirst) sql += " OR";
+			sql += " ep.WorkDayId = ?";
+			args.add(workDay.getWorkDayId());
+			isFirst = false;
+		}
+		sql += ") ) as ep1 )";
+		
+		jdbcTemplate.update(sql, args.toArray());
+		
 	}
 	
 	public Proposal getProposal(int proposalId) {
@@ -177,7 +227,7 @@ public class ProposalRepository extends BaseRepository {
 		
 	}
 	
-	public List<String> getProposedDateStrings(int employmentProposalId) {
+	public List<String> getProposedDateStrings(int proposalId) {
 		
 		// **************************************************************************
 		//Now that the user needs to specify the work days when applying to
@@ -190,7 +240,7 @@ public class ProposalRepository extends BaseRepository {
 					+ " WHERE ep_wd.EmploymentProposalId = ?"
 					+ " ORDER BY d.Id ASC";
 		
-		return jdbcTemplate.queryForList(sql, new Object[]{ employmentProposalId }, String.class);
+		return jdbcTemplate.queryForList(sql, new Object[]{proposalId }, String.class);
 	}
 	
 }

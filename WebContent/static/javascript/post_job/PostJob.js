@@ -503,7 +503,7 @@ function executeAjaxCall_previewJobPosting(jobDto){
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
-		url: '/JobSearch/preview/job-info',
+		url: '/JobSearch/job/preview/',
 		headers : getAjaxHeaders(),
 		contentType : "application/json",
 		data : JSON.stringify(jobDto),

@@ -14,11 +14,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.databind.deser.Deserializers.Base;
 import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.web.FindJobFilterDTO;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -26,32 +27,32 @@ import com.jobsearch.model.Question;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.QuestionServiceImpl;
+import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
-public class JobRepository {
-
-	@Autowired
-	JdbcTemplate jdbcTemplate;
+public class JobRepository extends BaseRepository {
 
 	@Autowired
 	CategoryServiceImpl categoryService;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
 	@Autowired
 	VerificationServiceImpl verificationService;
+	@Autowired
+	WorkDayServiceImpl workDayService;
+	@Autowired
+	QuestionServiceImpl questionService;
 
-	public List<Job> JobRowMapper(String sql, Object[] args) {
+	private List<Job> JobRowMapper(String sql, Object[] args) {
 
 
 			return jdbcTemplate.query(sql, args, new RowMapper<Job>() {
@@ -146,37 +147,7 @@ public class JobRepository {
 
 	}
 
-	public List<WorkDay> WorkDayMapper(String sql, Object[] args) {
 
-		try {
-
-			return jdbcTemplate.query(sql, args, new RowMapper<WorkDay>() {
-
-				@Override
-				public WorkDay mapRow(ResultSet rs, int rownumber) throws SQLException {
-
-					WorkDay e = new WorkDay();
-
-					e.setWorkDayId(rs.getInt("WorkDayId"));
-					e.setStringStartTime(rs.getString("StartTime"));
-					e.setStringEndTime(rs.getString("EndTime"));
-					e.setDateId(rs.getInt("DateId"));
-					e.setIsComplete(rs.getInt("IsComplete"));
-	
-					// I can't remember why I am swapping the slash and the dash...
-					// I think it's because in the browser, js likes dates with a dash...
-					// Any who.
-					e.setStringDate(jobService.getDate(e.getDateId()).replace("-", "/"));			
-					e.setDate(LocalDate.parse(e.getStringDate().replace("/", "-")));
-					return e;
-				}
-			});
-
-		} catch (Exception e) {
-			return null;
-		}
-
-	}
 
 	public List<Skill> SkillRowMapper(String sql, Object[] args) {
 
@@ -321,11 +292,11 @@ public class JobRepository {
 			// Add the questions
 			for (Question question : jobDto.getQuestions()) {
 				question.setJobId(createdJob.getId());
-				applicationService.addQuestion(question);
+				questionService.addQuestion(question);
 			}
 
 			// Add the work days
-			jobService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
+			workDayService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
 
 			// Add the skills
 			jobService.addSkills(createdJob.getId(), jobDto.getSkills());
@@ -718,27 +689,7 @@ public class JobRepository {
 		return this.JobRowMapper(sql, new Object[] { applicationId }).get(0);
 	}
 
-	public void addWorkDay(int jobId, WorkDay workDay) {
 
-		// *******************************************************
-		// *******************************************************
-		// If the date is in yyyy-mm-dd format, does it need to be
-		// converted to a Sql Date object????
-		// Review this.
-		// *******************************************************
-		// *******************************************************
-
-		String sql = "INSERT INTO work_day (JobId, StartTime, EndTime, DateId, Timestamp_EndDateTime)"
-						+ "  VALUES (?, ?, ?, ?, ?)";
-
-		jdbcTemplate.update(sql, new Object[]{ jobId,
-												workDay.getStringStartTime(),
-												workDay.getStringEndTime(),
-												workDay.getDateId(),
-												workDay.getTimestamp_endDate()});
-
-
-	}
 
 	public Date getEndDate(int jobId) {
 		String sql = "SELECT MAX(d.Date) FROM date d" + " INNER JOIN work_day wd ON wd.DateId = d.Id"
@@ -787,10 +738,6 @@ public class JobRepository {
 
 	}
 
-	public List<WorkDay> getWorkDays(int jobId) {
-		String sql = "SELECT * FROM work_day WHERE JobId = ? ORDER BY DateId ASC";
-		return this.WorkDayMapper(sql, new Object[] { jobId });
-	}
 
 	public void insertSavedFindJob(FindJobFilterDTO filter, JobSearchUser user) {
 
@@ -988,84 +935,7 @@ public class JobRepository {
 		return jdbcTemplate.queryForObject(sql, new Object[] { dateId }, String.class);
 	}
 
-	public Integer getCount_employmentDays_byUserAndWorkDays(int userId, List<WorkDay> workDays) {
 
-		// Find a user's employment in which the work days for theur
-		// employed-for jobs
-		// span the passed-in work days.
-		// The "passed-in work days" are typically the work days in which a user
-		// is
-		// attempting to APPLY for.
-		// ________________________________
-		// For a time conflict to exist, the following conditions MUST be met:
-		// For a particular calendar day:
-		// 1) The START TIME for the applying-for job must be LESS THAN the
-		// END TIME of the employed-for job
-		// ---- AND ----
-		// 2) The END TIME for the applying-for job must GREATER THAN the
-		// START TIME of the employed-for job
-		// Simply said: A time conflict exists if the applying-for job starts
-		// before
-		// an employed-for job ends AND the applying-for job ends after
-		// an employed-for job starts
-		// ____________________________________
-		// I.e.
-		// ---- If ----
-		// the passed work days are (the days you are applying for):
-		// 1-A) 4-1 5:00 to 4-1 13:00
-		// 2-A) 4-2 5:00 to 4-2 13:00
-		// ---- AND ----
-		// the user's employment work days are (the days to compare against):
-		// 1-E) 4-1 11:00 to 4-1 17:00
-		// 2-E) 4-2 15:00 to 4-2 17:00
-		// ---- THEN ----
-		// the returned count would be 1;
-		// 1-A starts before 1-E ends; AND 1-A ends after 1-E starts; thus a
-		// conflict;
-		// Although 2-A starts before 2-E ends, 2-A ends before 2-E starts; thus
-		// NOT a conflict;
-
-		// Main query
-		String sql = "SELECT COUNT(*) FROM work_day wd" + " JOIN employment e ON e.JobId = wd.JobId"
-				+ " JOIN job j ON e.JobId = j.JobId" + " WHERE e.UserId = ?" + " AND e.WasTerminated = 0"
-				+ " AND j.Status != ?" + " AND (";
-
-		List<Object> args = new ArrayList<Object>();
-		args.add(userId);
-		args.add(Job.STATUS_PAST);
-
-		boolean isFirst = true;
-		for (WorkDay workDay : workDays) {
-
-			if (!isFirst)
-				sql += " OR ";
-
-			sql += "(";
-			sql += " wd.DateId = ?";
-			sql += " AND ? < wd.EndTime";
-			sql += " AND ? > wd.StartTime";
-			sql += ")";
-			isFirst = false;
-
-			workDay.setDateId(jobService.getDateId(workDay.getStringDate()));
-
-			args.add(workDay.getDateId());
-			args.add(workDay.getStringStartTime());
-			args.add(workDay.getStringEndTime());
-
-		}
-
-		// Close the AND
-		sql += ")";
-
-		return jdbcTemplate.queryForObject(sql, args.toArray(), Integer.class);
-	}
-
-	public Integer getWorkDayId(int jobId, int dateId) {
-
-		String sql = "SELECT WorkDayId FROM work_day WHERE JobId = ? and DateId = ?";
-		return jdbcTemplate.queryForObject(sql, new Object[] { jobId, dateId }, Integer.class);
-	}
 
 	public Job getConflictingEmployment_byUserAndWorkDay(int jobId_reference, int userId, int DateId) {
 		String sql = "SELECT * FROM job j" + " JOIN employment e ON j.JobId = e.JobId"
@@ -1084,19 +954,8 @@ public class JobRepository {
 			return null;
 	}
 
-	public List<WorkDay> getWorkDays_byProposalId(Integer employmentProposalId) {
-		String sql = "SELECT * FROM work_day wd"
-				+ " JOIN employment_proposal_work_day ep ON wd.WorkDayId = ep.WorkDayId"
-				+ " WHERE ep.EmploymentProposalId = ?";
 
-		return WorkDayMapper(sql, new Object[] { employmentProposalId });
-	}
 
-	public List<String> getWorkDayDateStrings(int jobId) {
-		String sql = "SELECT d.Date FROM date d" + " JOIN work_day wd ON d.Id = wd.DateID" + " WHERE wd.JobId = ?";
-
-		return jdbcTemplate.queryForList(sql, new Object[] { jobId }, String.class);
-	}
 
 //	public void replaceEmployee(int jobId, int userId) {
 //		
@@ -1106,109 +965,17 @@ public class JobRepository {
 //	}
 
 
-	public void deleteProposedWorkDays(List<WorkDay> workDays) {
-		String sql = "DELETE FROM employment_proposal_work_day" + " WHERE (";
 
-		ArrayList<Object> args = new ArrayList<Object>();
-		boolean isFirst = true;
-		for (WorkDay workDay : workDays) {
 
-			if (!isFirst)
-				sql += " OR";
-			sql += " WorkDayId = ?";
-			args.add(workDay.getWorkDayId());
 
-			isFirst = false;
-		}
-		sql += " )";
 
-		jdbcTemplate.update(sql, args.toArray());
-
-	}
-
-	public void deleteWorkDays(List<WorkDay> workDays) {
-		String sql = "DELETE FROM work_day" + " WHERE (";
-
-		ArrayList<Object> args = new ArrayList<Object>();
-		boolean isFirst = true;
-		for (WorkDay workDay : workDays) {
-
-			if (!isFirst)
-				sql += " OR";
-			sql += " WorkDayId = ?";
-			args.add(workDay.getWorkDayId());
-
-			isFirst = false;
-		}
-		sql += " )";
-
-		jdbcTemplate.update(sql, args.toArray());
-
-	}
-
-	public void updateWorkDay(int workDayId, String stringStartTime, String stringEndTime) {
-		String sql = "UPDATE work_day SET StartTime = ?, EndTime = ? WHERE WorkDayId = ?";
-
-		jdbcTemplate.update(sql, new Object[] { stringStartTime, stringEndTime, workDayId });
-
-	}
-
-	public List<WorkDay> getWorkDays_byJobAndDateStrings(int jobId, List<String> dateStrings) {
-		String sql = "SELECT * FROM work_day wd" + " JOIN date d ON wd.DateId = d.Id" + " WHERE wd.JobId = ?"
-				+ " AND (";
-
-		ArrayList<Object> args = new ArrayList<Object>();
-		args.add(jobId);
-
-		boolean isFirst = true;
-		for (String dateString : dateStrings) {
-			if (!isFirst)
-				sql += " OR";
-			sql += " d.Date = ?";
-			args.add(dateString);
-			isFirst = false;
-		}
-		sql += " )";
-		return WorkDayMapper(sql, args.toArray());
-	}
-
-	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
-		String sql = "SELECT Comment FROM comment WHERE UserId = ? and JobId = ?";
-		return jdbcTemplate.queryForList(sql, new Object[] { userId, jobId }, String.class);
-	}
 
 	public void updateJobFlag(int jobId, String flag, int value) {
 		String sql = "UPDATE job SET " + flag + " = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[] { value, jobId });
 	}
 
-	public List<WorkDay> getWorkDays_incomplete_byUser(int jobId, int userId) {
 
-		String sql = "SELECT * FROM work_day wd WHERE wd.WorkDayId IN ("
-				+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd" + " JOIN employment e ON wd.JobId = e.JobId"
-				+ " JOIN application a ON e.JobId = a.JobId AND e.UserId = a.UserId"
-				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-				+ " WHERE e.UserId = ?" + " AND e.JobId = ?" + " AND wp.IsCurrentProposal = 1"
-				+ " AND e.WasTerminated = 0" + " AND wd.IsComplete = 0" + ")";
-
-		return WorkDayMapper(sql, new Object[] { userId, jobId });
-	}
-
-	public void updateWorkDay_isComplete(int workDayId, int value) {
-		String sql = "UPDATE work_day SET IsComplete = ? WHERE WorkDayId = ?";
-		jdbcTemplate.update(sql, new Object[] { value, workDayId });
-	}
-
-	public List<WorkDay> getWorkDays_incomplete(Integer jobId) {
-		String sql = "SELECT * FROM work_day wd WHERE wd.WorkDayId IN ("
-				+ " SELECT DISTINCT wd.WorkDayId FROM work_day wd"
-				+ " WHERE wd.JobId = ?"
-				+ " AND wd.IsComplete = 0"
-				+ ")";
-				
-	return WorkDayMapper(sql, new Object[]{ jobId });
-	}
 
 	public void updateEmploymentFlag(int jobId, int userId, String flag, int value) {
 		String sql = "UPDATE employment SET " + flag + " = ? WHERE jobId = ? AND UserId = ?";
@@ -1303,14 +1070,5 @@ public class JobRepository {
 		return JobRowMapper(sql, new Object[]{ userId, dateString });
 	}
 
-	public WorkDay getWorkDay(Integer jobId, String dateString) {
-		String sql = "SELECT * FROM work_day wd"
-				+ " INNER JOIN job j ON wd.JobId = j.JobId"
-				+ " INNER JOIN date d ON wd.DateId = d.Id"
-				+ " WHERE j.JobId = ?"
-				+ " AND d.Date = ?";
-		
-		return WorkDayMapper(sql, new Object[]{ jobId, dateString }).get(0);
-	}
 
 }

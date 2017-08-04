@@ -111,8 +111,8 @@ $(document).ready(function() {
 		
 		
 		if(employerMakeInitialOffer == "1"){			
-			var applicationDto_makeInitialOffer = getApplicationDto_makeInitialOffer($(this));
-			executeAjaxCall_makeInitialOffer(applicationDto_makeInitialOffer);	
+			var makeInitialOfferByEmployerRequest = getMakeInitialOfferByEmployerRequest($(this));
+			executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest);	
 		}else{
 			var respondToProposalRequest = getRespondToProposalRequest($(this));
 			executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest);	
@@ -154,14 +154,13 @@ function getProposalWrapper($e) {
 	if ($proposalWrapper.length) return $proposalWrapper;
 	else return $e.closest(".respond-to-proposal").find(".proposal-wrapper").eq(0);
 }
-function getApplicationDto_makeInitialOffer($e) {
+function getMakeInitialOfferByEmployerRequest($e) {
 	var $wrapper = $e.closest(".wrapper");
-	var applicationDto = {};
-	applicationDto.application = {};
-	applicationDto.employmentProposalDto = getRespondToProposalRequest($e);
-	applicationDto.applicantId = $wrapper.attr("data-user-id-make-offer-to");
-	applicationDto.jobId = $wrapper.attr("data-job-id-make-offer-for");
-	return applicationDto;	
+	var request = {};
+	applicationDto.respondToProposalRequest = getRespondToProposalRequest($e);
+	request.proposeToUserId = $wrapper.attr("data-user-id-make-offer-to");
+	request.jobId = $wrapper.attr("data-job-id-make-offer-for");
+	return request;	
 }
 function isPartialAvailabilityAllowed($wrapper){
 	if($wrapper.attr("data-is-partial-availability-allowed") == "true") return true;
@@ -222,7 +221,7 @@ function executeAjaxCall_makeInitialOffer(applicationDto){
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
-		url :"/JobSearch/employer/make-initial-offer",
+		url :"/JobSearch/application/employer-make-initial-offer",
 		headers : getAjaxHeaders(),
 		contentType : "application/json",	
 		data: JSON.stringify(applicationDto),

@@ -13,13 +13,15 @@ import com.jobsearch.application.service.Application;
 import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
+import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.service.UserServiceImpl;
@@ -29,16 +31,15 @@ import com.jobsearch.user.service.UserServiceImpl;
 public class VerificationServiceImpl {
 	
 	@Autowired
-	CategoryServiceImpl categoryService;
-	
+	CategoryServiceImpl categoryService;	
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
 	ApplicationServiceImpl applicationService;	
+	@Autowired
+	ProposalServiceImpl proposalService;
 	
 	// Refactor these to the NumberUtility
 	// *****************************************************************
@@ -115,20 +116,9 @@ public class VerificationServiceImpl {
 		else return false;
 	}
 
-	public boolean isEmploymentProposalOpen(EmploymentProposalDTO employmentProposalDto) {
-		
-		if( employmentProposalDto.getStatus() == WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED ||
-				employmentProposalDto.getStatus() == WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN ||
-						employmentProposalDto.getStatus() == WageProposal.STATUS_COUNTERED ||
-								employmentProposalDto.getStatus() == WageProposal.STATUS_PENDING_APPLICANT_APPROVAL){
-			
-			return true;
-		} else return false;
-	}
-
 	public boolean isCurrentProposalProposedToSessionUser(int applicationId, HttpSession session) {
 		
-		EmploymentProposalDTO currentProposal = applicationService.getCurrentEmploymentProposal(applicationId);
+		Proposal currentProposal = proposalService.getCurrentProposal(applicationId);
 		if(currentProposal.getProposedToUserId() == SessionContext.getUser(session).getUserId())
 			return true;
 		else return false;

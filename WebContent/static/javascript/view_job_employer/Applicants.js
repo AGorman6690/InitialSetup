@@ -56,16 +56,16 @@ $(document).ready(function(){
 
 function executeAjaxCall_getRatingsByUser(userId_applicant, $e_renderHtml) {
 	
-	$.ajax({
-		type: "GET",
-		url: "/JobSearch/user/" + userId_applicant + "/ratings",
-		headers: getAjaxHeaders(),
-		dataType: "html",
-	}).done(function (html) {
-		$e_renderHtml.html(html);
-		renderStars($e_renderHtml);
-		$e_renderHtml.closest(".mod").show();		
-	})
+//	$.ajax({
+//		type: "GET",
+//		url: "/JobSearch/user/" + userId_applicant + "/ratings",
+//		headers: getAjaxHeaders(),
+//		dataType: "html",
+//	}).done(function (html) {
+//		$e_renderHtml.html(html);
+//		renderStars($e_renderHtml);
+//		$e_renderHtml.closest(".mod").show();		
+//	})
 	
 }
 function updateApplicationStatus($e){

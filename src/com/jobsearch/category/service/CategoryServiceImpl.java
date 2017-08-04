@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.category.repository.CategoryRepository;
-import com.jobsearch.job.service.JobServiceImpl;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.MathUtility;

@@ -136,7 +136,7 @@
 									<c:forEach items="${question.answerOptions }" var="answerOption">
 										<li class="answer-option">
 											<label>
-												<c:if test="${sessionScope.user.profileId == 1 }">
+												<c:if test="${sessionScope.user.profileId == 1 && response.context == 'find'}">
 													<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
 														name="answer-options-${question.questionId }"
 														data-id="${answerOption.answerOptionId }"

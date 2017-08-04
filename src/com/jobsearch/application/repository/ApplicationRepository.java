@@ -25,13 +25,14 @@ import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.job.service.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Proposal;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.service.AnswerServiceImpl;
 import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -48,6 +49,8 @@ public class ApplicationRepository {
 	VerificationServiceImpl verificationService;
 	@Autowired
 	ProposalServiceImpl proposalService;
+	@Autowired
+	AnswerServiceImpl answerService;
 
 	public List<Application> ApplicationRowMapper(String sql, Object[] args) {
 		return jdbcTemplate.query(sql, args, new RowMapper<Application>() {
@@ -75,78 +78,7 @@ public class ApplicationRepository {
 			}
 		});
 	}
-	
-	
-	public List<ApplicationInvite> ApplicationInviteRowMapper(String sql, Object[] args) {
-		return jdbcTemplate.query(sql, args, new RowMapper<ApplicationInvite>() {
-			@Override
-			public ApplicationInvite mapRow(ResultSet rs, int rownumber) throws SQLException {
 
-				ApplicationInvite applicationInvite = new ApplicationInvite();
-				applicationInvite.setApplicationInviteId(rs.getInt("ApplicationInviteId"));
-				applicationInvite.setJobId(rs.getInt("JobId"));
-				applicationInvite.setUserId(rs.getInt("UserId"));
-
-				return applicationInvite;
-			}
-		});
-	}	
-
-	public List<EmploymentProposalDTO> EmploymentProposalDTOMapper(String sql, Object[] args) {
-		return jdbcTemplate.query(sql, args, new RowMapper<EmploymentProposalDTO>() {
-			@Override
-			public EmploymentProposalDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
-
-				EmploymentProposalDTO e = new EmploymentProposalDTO();
-				
-				e.setAmount(String.format("%.2f", rs.getFloat("Amount")));
-				e.setApplicationId(rs.getInt("ApplicationId"));
-				e.setEmploymentProposalId(rs.getInt("WageProposalId"));
-				e.setStatus(rs.getInt("Status"));
-				e.setProposedByUserId(rs.getInt("ProposedByUserId"));
-				e.setProposedToUserId(rs.getInt("ProposedToUserId"));
-				e.setIsNew(rs.getInt("IsNew"));
-				
-				
-				String expirationDate = rs.getString("ExpirationDate");
-				if(expirationDate != null){
-					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.S");
-					e.setExpirationDate(LocalDateTime.parse(
-							expirationDate, formatter));	
-				}
-				
-				
-				e.setFlag_isCanceledDueToApplicantAcceptingOtherEmployment(
-						rs.getInt(EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT));			
-				e.setFlag_isCanceledDueToEmployerFillingAllPositions(
-						rs.getInt(EmploymentProposalDTO.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));				
-				e.setFlag_applicationWasReopened(rs.getInt(EmploymentProposalDTO.FLAG_APPLICATION_WAS_REOPENED));
-				e.setFlag_aProposedWorkDayWasRemoved(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_WAS_REMOVED));
-				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(EmploymentProposalDTO.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
-				e.setFlag_employerInitiatedContact(rs.getInt(EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT));
-				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
-				
-				
-				Timestamp ts_employerAcceptedDate = rs.getTimestamp("EmployerAcceptedDate");
-				if(ts_employerAcceptedDate != null)
-					e.setEmployerAcceptedDate(ts_employerAcceptedDate.toLocalDateTime());
-								
-				Timestamp ts_expirationDate = rs.getTimestamp("ExpirationDate");
-				if(ts_expirationDate != null)
-					e.setExpirationDate(ts_expirationDate.toLocalDateTime());				
-				
-				e.setDateStrings_proposedDates(
-										applicationService.getProposedDateStrings(
-												e.getEmploymentProposalId()));
-				
-				e.setTime_untilEmployerApprovalExpires(
-						applicationService.getTime_untilEmployerApprovalExpires(e.getExpirationDate()));
-
-				
-				return e;
-			}
-		});
-	}
 	
 	public List<Application> getApplications_ByJob_OpenApplications(int jobId) {
 
@@ -187,31 +119,17 @@ public class ApplicationRepository {
 
 	}
 
-	public void addAnswer(Answer answer) {
-		String sql = "INSERT INTO answer (QuestionId, UserId, Text, AnswerOptionId) VALUES(?, ?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[] { answer.getQuestionId(), answer.getUserId(), answer.getText(),
-				answer.getAnswerOptionId() });
-	}
 
-	public List<Question> getQuestions(int id) {
-		String sql = "SELECT * FROM question WHERE JobId = ? ORDER BY QuestionId ASC";
-		return this.QuestionRowMapper(sql, new Object[] { id });
-	}
+
+
 
 	public List<AnswerOption> getAnswerOptions(int questionId) {
 		String sql = "SELECT * FROM answer_option WHERE QuestionId = ?";
 		return this.AnswerOptionRowMapper(sql, new Object[] { questionId });
 	}
 
-	public Answer getAnswer(int questionId, int userId) {
-		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
-		return this.AnswerRowMapper(sql, new Object[] { questionId, userId }).get(0);
-	}
 
-	public List<Answer> getAnswers(int questionId, int userId) {
-		String sql = "SELECT * FROM answer WHERE QuestionId = ? AND UserId = ?";
-		return this.AnswerRowMapper(sql, new Object[] { questionId, userId });
-	}
+
 
 	public List<AnswerOption> AnswerOptionRowMapper(String sql, Object[] args) {
 
@@ -235,177 +153,50 @@ public class ApplicationRepository {
 
 	}
 
-	public List<Question> QuestionRowMapper(String sql, Object[] args) {
+
+
+
+
+
+
+
+
+	public void insertApplication(Application application, Proposal proposal, List<Answer> answers) {
 
 		try {
-
-			return jdbcTemplate.query(sql, args, new RowMapper<Question>() {
-
-				@Override
-				public Question mapRow(ResultSet rs, int rownumber) throws SQLException {
-					Question e = new Question();
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setFormatId(rs.getInt("FormatId"));
-					e.setText(rs.getString("Question"));
-					e.setJobId(rs.getInt("JobId"));
-					
-					e.setAnswerOptions(applicationService.getAnswerOptions(e.getQuestionId()));
-
-					return e;
-				}
-			});
-
-		} catch (Exception e) {
-			return null;
-		}
-
-	}
-
-	public List<Answer> AnswerRowMapper(String sql, Object[] args) {
-
-		try {
-
-			return jdbcTemplate.query(sql, args, new RowMapper<Answer>() {
-
-				@Override
-				public Answer mapRow(ResultSet rs, int rownumber) throws SQLException {
-					Answer e = new Answer();
-					e.setAnswerOptionId(rs.getInt("AnswerOptionId"));
-					e.setQuestionId(rs.getInt("QuestionId"));
-					e.setText(rs.getString("Text"));
-					e.setUserId(rs.getInt("UserId"));
-
-					
-					if (e.getAnswerOptionId() > 0) {
-						
-						//Set the answer text equal to the selected answer option's text
-						e.setText(applicationService.getAnswerOption(e.getAnswerOptionId()).getText());
-					}
-
-					return e;
-				}
-			});
-
-		} catch (Exception e) {
-			return null;
-		}
-
-	}
-
-	public void addQuestion(Question question) {
-
-		CallableStatement cStmt;
-		try {
-			cStmt = jdbcTemplate.getDataSource().getConnection().prepareCall("{call insert_question(?, ?, ?)}");
-
-			cStmt.setString(1, question.getText());
-			cStmt.setInt(2, question.getFormatId());
-			cStmt.setInt(3, question.getJobId());
-
-			ResultSet result = cStmt.executeQuery();
-			result.next();
-			int createdQuestionId = result.getInt(("QuestionId"));
-
-			if (question.getAnswerOptions() != null) {
-				String sql = "INSERT INTO answer_option (QuestionId, AnswerOption) VALUES (?, ?)";
-				for (AnswerOption answerOption : question.getAnswerOptions()) {
-					jdbcTemplate.update(sql, new Object[] { createdQuestionId, answerOption.getText() });
-				}
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-
-
-	public void insertApplication(ApplicationDTO applicationDto) {
-
-		try {
-
-			// Insert the application
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call insert_application(?, ?, ?)}");
 
-			cStmt.setInt(1, applicationDto.getApplicantId());
-			cStmt.setInt(2, applicationDto.getJobId());
-			cStmt.setInt(3, applicationDto.getApplication().getStatus());
+			cStmt.setInt(1, application.getUserId());
+			cStmt.setInt(2, application.getJobId());
+			cStmt.setInt(3, application.getStatus());
 	
-			
 			ResultSet result = cStmt.executeQuery();
-
-			// Get the new application id from the result
 			result.next();
 			Integer newApplicationId = result.getInt("ApplicationId");
 
-			if(newApplicationId != null){
-			
-				applicationDto.getEmploymentProposalDto().setApplicationId(newApplicationId);
-				proposalService.insertProposal(applicationDto.getEmploymentProposalDto());	
+			if(newApplicationId != null){			
+				proposal.setApplicationId(newApplicationId);
+				proposalService.insertProposal(proposal);	
 			
 				// Add answers  
-				if(verificationService.isListPopulated(applicationDto.getAnswers())){
-					for (Answer answer : applicationDto.getAnswers()) {
-						answer.setUserId(applicationDto.getApplicantId());
-						applicationService.addAnswer(answer);	
+				if(verificationService.isListPopulated(answers)){
+					for (Answer answer : answers) {
+						answer.setUserId(application.getUserId());
+						answerService.addAnswer(answer);	
 					}	
-				}
-				
+				}				
 			}
-
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
-	public void updateWageProposalStatus(int wageProposalId, int status) {
-		String sql = "UPDATE wage_proposal SET Status = ? WHERE WageProposalId = ?";
-		jdbcTemplate.update(sql, new Object[] { status, wageProposalId });
-
-	}
 
 	public AnswerOption getAnswerOption(int answerOptionId) {
 		String sql = "SELECT * FROM answer_option WHERE AnswerOptionId = ?";
 		return AnswerOptionRowMapper(sql, new Object[] { answerOptionId }).get(0);
-	}
-
-	public void updateIsNew(Integer jobId, int value) {
-		String sql = "UPDATE application SET IsNew = ? WHERE JobId = ?";
-		jdbcTemplate.update(sql, new Object[] { value, jobId });
-	}
-
-	public void updateWageProposalsStatus_ToViewedButNoActionTaken(Integer jobId) {
-		
-		String sql = "UPDATE wage_proposal w"
-						 + " INNER JOIN application a ON w.ApplicationId = a.ApplicationId"
-						 + " INNER JOIN job j on j.JobId = a.JobId"
-						 + " SET w.Status = ?"
-						 + " WHERE j.jobid = ?"
-						 + " AND w.status = ?";
-		 
-		 jdbcTemplate.update(sql, new Object[]{ WageProposal.STATUS_VIEWED_BUT_NO_ACTION_TAKEN,
-				 								jobId, WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED });
-		
-	}
-
-	public List<Question> getDistinctQuestions_byEmployer(int userId) {
-		
-		String sql = "SELECT * FROM question q"
-						+ " INNER JOIN job j ON j.JobId = q.JobId"
-						+ " WHERE j.UserId = ?"
-						+ " GROUP BY q.question";
-		
-		return QuestionRowMapper(sql, new Object[]{ userId });	
-	}
-
-	public Question getQuestion(int questionId) {
-		
-		String sql = "SELECT * FROM question WHERE QuestionId = ?";
-		return QuestionRowMapper(sql, new Object[] { questionId }).get(0);
 	}
 
 	public Integer getCount_Employment_ByUserAndJob(int userId, int jobId) {
@@ -561,30 +352,7 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, args.toArray());
 	}
 	
-	public List<String> getProposedDateStrings(int employmentProposalId) {
-		
-		// **************************************************************************
-		//Now that the user needs to specify the work days when applying to
-		//jobs with partial availability, can this method be removed????
-		// Review this.
-		// **************************************************************************
-		String sql = "Select d.Date FROM date d"
-					+ " INNER JOIN work_day wd on wd.DateId = d.Id"
-					+ " INNER JOIN employment_proposal_work_day ep_wd ON ep_wd.WorkDayId = wd.WorkDayId"
-					+ " WHERE ep_wd.EmploymentProposalId = ?"
-					+ " ORDER BY d.Id ASC";
-		
-		return jdbcTemplate.queryForList(sql, new Object[]{ employmentProposalId }, String.class);
-	}
 
-
-
-	public List<ApplicationInvite> getApplicationInvites(int userId) {
-		
-		String sql = "SELECT * FROM application_invite WHERE UserId = ?";
-
-		return ApplicationInviteRowMapper(sql, new Object[]{ userId } );
-	}
 
 
 	public void insertApplicationInvite(ApplicationInvite applicationInvite) {
@@ -630,11 +398,6 @@ public class ApplicationRepository {
 		sql += " AND wp.IsCurrentProposal = 1";
 		
 		return jdbcTemplate.queryForObject(sql, new Object[]{ dateId, jobId }, Integer.class);
-	}
-
-	public void updateWageProposal_isCurrentProposal(Integer employmentProposalId, int isCurrentProposal) {
-		String sql = "UPDATE wage_proposal SET IsCurrentProposal = ? WHERE WageProposalId = ?";
-		jdbcTemplate.update(sql, new Object[]{ isCurrentProposal, employmentProposalId });		
 	}
 
 	public List<Application> getApplications_byJobAndDate(int jobId, int dateId) {
@@ -720,21 +483,6 @@ public class ApplicationRepository {
 	
 	}
 
-	public EmploymentProposalDTO getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
-		String sql = "SELECT * FROM wage_proposal"
-					+ " WHERE WageProposalId IN ("
-					+ " SELECT MAX(WageProposalId) FROM wage_proposal"
-					+ " WHERE WageProposalId != ?"
-					+ " AND ApplicationId = ?"
-					+ ")";
-		
-		List<EmploymentProposalDTO> result = EmploymentProposalDTOMapper(sql, new Object[]{ referenceEmploymentProposalId, applicationId });
-		if(verificationService.isListPopulated(result)) return result.get(0);
-		else return null;
-	}
-
-
-
 	public void deleteEmployment(int userId, int jobId) {
 		String sql = "DELETE FROM employment WHERE UserId = ? AND JobId = ?";
 		jdbcTemplate.update(sql, new Object[]{ userId, jobId });		
@@ -747,40 +495,9 @@ public class ApplicationRepository {
 	}
 
 
-	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
-		
-//		http://stackoverflow.com/questions/5816840/delete-i-cant-specify-target-table
-		
-		String sql = "DELETE FROM employment_proposal_work_day WHERE Id IN ("
-					+ " SELECT * FROM ("
-					+ " SELECT DISTINCT ep.Id FROM employment_proposal_work_day ep"
-					+ " JOIN wage_proposal wp ON ep.EmploymentProposalId = wp.WageProposalId"
-					+ " WHERE wp.IsCurrentProposal = 1"
-					+ " AND wp.ApplicationId = ?"
-					+ " AND (";
-		
-		List<Object> args = new ArrayList<Object>();
-		args.add(applicationId);
-		
-		boolean isFirst = true;
-		for(WorkDay workDay : workDays){
-			if(!isFirst) sql += " OR";
-			sql += " ep.WorkDayId = ?";
-			args.add(workDay.getWorkDayId());
-			isFirst = false;
-		}
-		sql += ") ) as ep1 )";
-		
-		jdbcTemplate.update(sql, args.toArray());
-		
-	}
 
 
-	public void deleteRatings(int userId, int jobId) {
-		String sql = "DELETE FROM rating WHERE (UserId = ? AND JobId = ?)"
-				+ " OR (RatedByUserId = ? AND JobId = ?)";
-		jdbcTemplate.update(sql, new Object[]{ userId, jobId, userId, jobId });		
-	}
+
 
 
 	public List<Application> getApplications_byJob(Integer jobId) {

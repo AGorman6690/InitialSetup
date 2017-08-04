@@ -90,12 +90,10 @@
 	}
 	
 	function areAnswersValid(){
-
 		var isValid = true;
 		var invalidCount = 0;
 		
-		$(".question-container .answer-options-container").each(function(){			
-			
+		$(".question-container .answer-options-container").each(function(){				
 			if($(this).find("input:checked").length > 0){
 				setValidCss($(this).closest(".question-container"));
 			}
@@ -104,8 +102,6 @@
 				isValid = false;
 			}
 		})
-		
-		
 		$(".question-container textarea").each(function(){			
 			
 			if($(this).val() != ""){
@@ -121,69 +117,43 @@
 		else $("#invalid-answers").hide();
 		
 		return isValid;
-		
-
-		
+	
+	}	
+	function getApplyForJobRequest(){		
+		var request = {};
+		request.proposedDates = [];
+		request.jobId = $(".job-info #jobId").val();
+		request.proposedWage = $("#desired-wage input").val();		
+		request.proposedDates = getSelectedDates(
+				$("#work-days-calendar-container .calendar"), "yy-mm-dd", "is-proposed");
+		request.answers = getAnswers();
+		return request;	
 	}
-	
-	
-	function getApplicationDto(){
-		
-		var applicationDto = {};
-		
-		applicationDto.jobId = $(".job-info #jobId").val();
-		applicationDto.employmentProposalDto = getEmploymentProposalDto();
-		applicationDto.answers = getAnswers();		
-	
-		return applicationDto;	
-	}
-
-	
-	function getEmploymentProposalDto(){
-		
-		var employmentProposalDto = {};
-		employmentProposalDto.dateStrings_proposedDates = [];
-		
-		employmentProposalDto.amount = $("#desired-wage input").val();				
-		employmentProposalDto.dateStrings_proposedDates = getSelectedDates(
-									$("#work-days-calendar-container .calendar"), "yy-mm-dd", "is-proposed");
-
-		return employmentProposalDto;
-	}
-	
-	function getAnswers(){
-			
+	function getAnswers(){			
 		var answers = [];
-		var answer = {};
-		
+		var answer = {};		
 		$(".question-container .answer-option input:checked").each(function(){			
 			answer = {};
 			answer.questionId = $(this).attr("data-question-id");
-			answer.answerOptionId = $(this).attr("data-id");
-			
+			answer.answerOptionId = $(this).attr("data-id");			
 			answers.push(answer);
-		})
-		
+		})		
 		$(".question-container textarea").each(function(){			
 			answer = {};
 			answer.questionId = $(this).attr("data-question-id");
-			answer.text = $(this).val();
-			
+			answer.text = $(this).val();			
 			answers.push(answer);	
-		})
-		
+		})		
 		return answers;		
-	}
-	
+	}	
 	function apply(){
-
 		if(isInputValid()){
 			$.ajax({
 				type : "POST",
 				url : '/JobSearch/apply',
 				headers : getAjaxHeaders(),
 				contentType : "application/json",
-				data : JSON.stringify(getApplicationDto()),
+				data : JSON.stringify(getApplyForJobRequest()),
 			}).done(function() {
 				$("#job-info-mod").hide();
 			});

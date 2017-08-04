@@ -33,7 +33,6 @@ import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.job.service.Job;
-import com.jobsearch.job.service.JobServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.CalendarDay;
@@ -47,13 +46,17 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.responses.GetProfileCalendarResponse;
+import com.jobsearch.responses.GetProfileCalendarResponse.CalendarApplication;
 import com.jobsearch.responses.GetRatingsByUserResponse;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
+import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
+import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.user.rate.RatingDTO;
 import com.jobsearch.user.rate.SubmitRatingDTO;
@@ -85,6 +88,8 @@ public class UserServiceImpl {
 	ProposalServiceImpl proposalService;
 	@Autowired
 	RatingServiceImpl ratingService;
+	@Autowired
+	WorkDayServiceImpl workDayService;
 
 
 	@Value("${host.url}")
@@ -226,49 +231,13 @@ public class UserServiceImpl {
 		return repository.getProfiles();
 	}
 
-	public void insertRatings(List<SubmitRatingDTO> submitRatingDTOs, HttpSession session) {
-
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-
-		// For each employee's rating
-		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs) {
-
-			// Rate criterion
-			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
-				rc.setUserId_ratee(submitRatingDto.getUserId_ratee());
-				rc.setUserId_rater(sessionUser.getUserId());
-				rc.setJobId(submitRatingDto.getJobId());
-				repository.updateRating(rc);
-			}
-
-			// Comment
-			deleteComment(submitRatingDto.getJobId(), submitRatingDto.getUserId_ratee());
-			if (submitRatingDto.getCommentString() != "") {
-				repository.addComment(submitRatingDto.getUserId_ratee(), submitRatingDto.getJobId(),
-						submitRatingDto.getCommentString(), sessionUser.getUserId());
-			}
-
-		}
-
-	}
-
-	public void deleteComment(int jobId, int employeeId) {
-		repository.deleteComment(jobId, employeeId);
-
-	}
 
 
 
-	public Double getRating(int userId) {
 
-		// Round to the nearest tenth. 0 is the minimum value.
-		return MathUtility.round(repository.getRating(userId), 1, 0);
-	}
 
-	public String getComment(int jobId, int userId) {
 
-		return repository.getComment(jobId, userId);
-	}
+
 
 
 
@@ -319,8 +288,8 @@ public class UserServiceImpl {
 		Application application = applicationService.getApplication(jobId, userId);
 		applicationService.updateApplicationFlag(application, "IsAccepted", 1);
 		
-		insertRatings_toRateEmployer(jobId, userId);
-		insertRatings_toRateEmployees(jobId, userId);
+		ratingService.insertRatings_toRateEmployer(jobId, userId);
+		ratingService.insertRatings_toRateEmployees(jobId, userId);
 
 		jobService.inspectJob_isStillAcceptingApplications(jobId);
 
@@ -556,7 +525,7 @@ public class UserServiceImpl {
 				JobDTO jobDto = new JobDTO();
 				jobDto.setJob(job);
 				jobDto.setWorkDayDto(new WorkDayDto());
-				jobDto.getWorkDayDto().setWorkDay(jobService.getWorkDay(job.getId(), dateString));
+				jobDto.getWorkDayDto().setWorkDay(workDayService.getWorkDay(job.getId(), dateString));
 				calendarDay.getJobDtos().add(jobDto);
 			}			
 			calendarDays.add(calendarDay);
@@ -566,81 +535,6 @@ public class UserServiceImpl {
 		}		
 		return calendarDays;
 	}
-
-	public List<JobDTO> getJobDtos_ApplicationInvites(int userId) {
-
-		List<ApplicationInvite> applicationInvites = applicationService.getApplicationInvites(userId);
-
-		List<JobDTO> jobDtos_applicationInvites = new ArrayList<JobDTO>();
-
-		for (ApplicationInvite applicationInvite : applicationInvites) {
-			JobDTO jobDto = new JobDTO();
-			jobDto.setJob(jobService.getJob(applicationInvite.getJobId()));
-			jobDto.setApplicationInvite(applicationInvite);
-			jobDtos_applicationInvites.add(jobDto);
-		}
-
-		return jobDtos_applicationInvites;
-	}
-
-	public List<JobSearchUserDTO> getEmployeeDtosByJob(int jobId) {
-
-		// Query the database
-		List<JobSearchUser> employees = this.getUsersEmployedForJob(jobId);
-
-		// Create user dtos
-		List<JobSearchUserDTO> employeeDtos = new ArrayList<JobSearchUserDTO>();
-		for (JobSearchUser employee : employees) {
-
-			JobSearchUserDTO employeeDto = new JobSearchUserDTO();
-
-			employeeDto.setUser(employee);
-			employeeDto.setRatingValue_overall(this.getRating(employee.getUserId()));
-			Application application = applicationService.getApplication(jobId, employee.getUserId());
-			employeeDto.setAcceptedProposal(
-					applicationService.getCurrentEmploymentProposal(application.getApplicationId()));
-			employeeDto.setTotalPayment(applicationService.getTotalPayment(employeeDto.getAcceptedProposal()));
-
-			employeeDtos.add(employeeDto);
-		}
-
-		return employeeDtos;
-	}
-
-	public RatingDTO getRatingDto_byUser(JobSearchUser user) {
-
-		RatingDTO ratingDto = new RatingDTO();
-
-		if (user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
-			ratingDto.setRateCriteria(ratingService.getRatingCriteia_toRateEmployee());
-		else
-			ratingDto.setRateCriteria(ratingService.getRatingCriteia_toRateEmployer());
-
-		for (RateCriterion rateCriterion : ratingDto.getRateCriteria()) {
-
-			rateCriterion.setValue(
-					ratingService.getRatingValue_byCriteriaAndUser(rateCriterion.getRateCriterionId(), user.getUserId()));
-			if (rateCriterion.getValue() != null)
-				rateCriterion.setStringValue(String.format("%.1f", rateCriterion.getValue()));
-		}
-
-		return ratingDto;
-
-	}
-
-
-
-	public void setModel_Profile(Model model, HttpSession session) {
-
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-
-		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
-			this.setViewEmployeeHomepageResponse(sessionUser, model, session);
-		} else
-			this.setViewEmployerHomepageResponse(sessionUser, model, session);
-
-	}
-
 	public void setSession_Login(JobSearchUser user, HttpSession session) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -684,32 +578,6 @@ public class UserServiceImpl {
 
 	}
 
-	public void setModel_findEmployees_pageLoad(Model model, HttpSession session) {
-
-		if (SessionContext.isLoggedIn(session)) {
-
-			JobSearchUser sessionUser = SessionContext.getUser(session);
-
-			List<Job> jobs_current = jobService.getJobs_byEmployerAndStatuses(sessionUser.getUserId(),
-					Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
-
-			List<JobDTO> jobDtos_current = new ArrayList<JobDTO>();
-			for (Job job_current : jobs_current) {
-
-				// ***********************************************
-				// This is a bit overkill.
-				// The model doesn't need this much info.
-				// Address this later.
-				JobDTO jobDto_current = jobService.getJobDTO_DisplayJobInfo(job_current.getId());
-				// *****************************************************
-
-				jobDtos_current.add(jobDto_current);
-			}
-
-			model.addAttribute("jobDtos_current", jobDtos_current);
-		}
-
-	}
 
 	public void setModel_findEmployees_results(Model model, EmployeeSearch employeeSearch) {
 
@@ -729,7 +597,7 @@ public class UserServiceImpl {
 				JobSearchUserDTO userDto = new JobSearchUserDTO();
 
 				userDto.setUser(user);
-				userDto.setRatingValue_overall(this.getRating(user.getUserId()));			
+				userDto.setRatingValue_overall(ratingService.getRating(user.getUserId()));			
 				userDto.setCount_jobsCompleted(
 						jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
 
@@ -754,47 +622,25 @@ public class UserServiceImpl {
 
 
 
-	public void insertRatings_toRateEmployer(int jobId, int userId_emloyee) {
 
-		List<RateCriterion> rateCriteria = ratingService.getRatingCriteia_toRateEmployer();
-		Job job = jobService.getJob(jobId);
 
-		for (RateCriterion rateCriterion : rateCriteria) {
-			repository.insertRating(rateCriterion.getRateCriterionId(), job.getUserId(), job.getId(),
-					userId_emloyee);
-		}
-	}
-
-	public void insertRatings_toRateEmployees(int jobId, int userId_employee) {
-
-		List<RateCriterion> rateCriteria = ratingService.getRatingCriteia_toRateEmployee();
-		Job job = jobService.getJob(jobId);
-		
-		for (RateCriterion rateCriterion : rateCriteria) {
-			repository.insertRating(rateCriterion.getRateCriterionId(), userId_employee, job.getId(),
-					job.getUserId());
-		}
-	}
-
-	public void setModel_viewCalendar_employee(Model model, HttpSession session) {
+	public void setGetProfileCalendarResponse(Model model, HttpSession session) {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-
 		List<Application> applications = applicationService
 				.getApplications_byUser_openOrAccepted(sessionUser.getUserId());
 
-		List<ApplicationDTO> applicationDtos = new ArrayList<ApplicationDTO>();
+		GetProfileCalendarResponse response = new GetProfileCalendarResponse();
 		for (Application application : applications) {
-			ApplicationDTO applicationDto = new ApplicationDTO();
-			applicationDto.setApplication(application);
-			applicationDto.getJobDto().setJob(jobService.getJob(application.getJobId()));
-			applicationDto.setEmploymentProposalDto(
-					applicationService.getCurrentEmploymentProposal(application.getApplicationId()));
-			applicationDtos.add(applicationDto);
+			
+			Proposal currentProposal = proposalService.getCurrentProposal(application.getApplicationId());
+			
+			CalendarApplication calendarApplication = new CalendarApplication();
+			calendarApplication.setApplication(application);
+			calendarApplication.setDates(proposalService.getProposedDates(currentProposal.getProposalId()));
+			response.getCalendarApplications().add(calendarApplication);
 		}
-
-		model.addAttribute("applicationDtos", applicationDtos);
-
+		model.addAttribute("response", response);
 	}
 
 	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
@@ -827,11 +673,7 @@ public class UserServiceImpl {
 	}
 
 
-	public void setGetRatingByUserResponse(Model model, int userId) {
-		GetRatingsByUserResponse response = new GetRatingsByUserResponse();
-		response.setProfileInfoDto(getProfileInfoDto(getUser(userId)));
-		model.addAttribute("response", response);
-	}
+
 
 	public List<JobSearchUser> getEmployees_byJobAndDate(int jobId, List<String> dateStrings) {
 		return repository.getEmployees_byJobAndDate(jobId, dateStrings);
@@ -857,24 +699,14 @@ public class UserServiceImpl {
 		return repository.getEmployees_whoLeft(departureHasBeenAcknowledged, jobId);
 	}
 
-	public void acknowledgeEmployeeLeft(int jobId, int userId, HttpSession session) {
-		if(verificationService.didSessionUserPostJob(session, jobId)){
-			jobService.updateEmploymentFlag(jobId, userId, "Flag_EmployerAcknowledgedEmployeeLeftJob", 1);
-		}
-		
-	}
 
-	public Double getRating_givenByUser(Integer jobId, int userId) {		
-		return repository.getRating_givenByUser(jobId, userId);
-	}
+
 
 	public List<JobSearchUser> getEmployees_byJob_completedWork(int jobId) {
 		return repository.getEmployees_byJob_completedWork(jobId);
 	}
 
-	public Integer getCount_nullRatings_givenByUserForJob(Integer jobId, int userId) {
-		return repository.getCount_nullRatings_givenByUserForJob(jobId, userId);
-	}
+
 
 	public List<JobSearchUser> getUsersWithOpenApplicationToJob(int jobId) {
 	
@@ -893,7 +725,7 @@ public class UserServiceImpl {
 	public String getAvailabliltyStatusMessage_forUserAndJob(int userId, int jobId) {
 		
 		Job job = jobService.getJob(jobId);
-		List<String> workDays = jobService.getWorkDayDateStrings(jobId);		
+		List<String> workDays = workDayService.getWorkDayDateStrings(jobId);		
 		Integer availableDays = jobService.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
 		
 		if(verificationService.didUserApplyForJob(jobId, userId)) return "already-applied";
@@ -914,8 +746,8 @@ public class UserServiceImpl {
 			
 			JobDTO jobDto = new JobDTO();
 			jobDto.setJob(jobService.getJob(jobId));
-			jobDto.setWorkDayDtos(jobService.getWorkDayDtos(jobId));
-			jobDto.setWorkDays(jobService.getWorkDays(jobId));
+			jobDto.setWorkDayDtos(workDayService.getWorkDayDtos(jobId));
+			jobDto.setWorkDays(workDayService.getWorkDays(jobId));
 			jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
 			jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
 
