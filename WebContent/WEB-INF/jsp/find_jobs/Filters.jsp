@@ -77,7 +77,7 @@
 			</div>							
 			<input name="radius" type="text"
 				class="" id="radius" placeholder="Number Of"
-				value="${!empty filterDto.radius ? filterDto.radius : 50 }"></input>	
+				value="${!empty sessionScope.user.maxWorkRadius ? filterDto.radius : 50 }"></input>	
 			<span id="milesFromContainer">Miles From</span>					
 			<input name="radius" type="text"
 				class="" id="city" placeholder="City"

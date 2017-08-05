@@ -32,8 +32,7 @@
     width: 1200px;
     margin: auto;
 }
-.item:not(:first-child),
-#availabilityContainer{
+.item:not(:first-child){
 	padding-top: 35px;
 }
 p.error-message{
@@ -318,7 +317,7 @@ input#maxPay{
 #previous-section{
     font-size: 25px;
     font-weight: bold;
-    color: #197994;
+    color: #163b3d;
     position: absolute;
-    top: 150px;
+    top: 70px;
 }

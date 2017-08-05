@@ -43,9 +43,10 @@ public class GoogleClient {
 	
 		String address = "";		
 		if(streetAddress != null) address += streetAddress;
-		if(city != null) address += city;
-		if(state != null) address += state;
-		if(zipCode != null) address += zipCode;		
+		if(city != null) address += " " + city;
+		if(city != null && state != null) address += ",";
+		if(state != null) address += " " + state;
+		if(zipCode != null) address += " " + zipCode;		
 		return address;
 	}
 

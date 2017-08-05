@@ -75,7 +75,7 @@
 						
 						<div class="counter-context review-context v2 teal-title proposal-calendar
 							 calendar-container wage-proposal-calendar hide-prev-next hide-unused-rows">	
-							<button class="counter-context sqr-btn gray-3 select-all-work-days-override">
+							<button class="hide-on-load counter-context sqr-btn gray-3 select-all-work-days-override">
 								Select All Work Days</button>								
 							<div class="calendar counter-calendar ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
 								data-min-date="${response.date_firstWorkDay }"

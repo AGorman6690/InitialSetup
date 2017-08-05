@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
@@ -202,8 +203,9 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "/job/preview", method = RequestMethod.POST)
-	public String previewJobInfo(Model model, @RequestBody AddJobRequest request) {
+	public String previewJobInfo(Model model, HttpSession session, @RequestBody AddJobRequest request) {
 
+		
 		jobService.setGetJobReponse_forPreviewingJobPost(model, request);
 		
 		return "/JobInfo_NEW";
@@ -211,6 +213,7 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
+		model.addAttribute("address", userService.buildAddress(SessionContext.getUser(session)));
 		return "/find_jobs_new/Find_Jobs_New";		
 	}
 

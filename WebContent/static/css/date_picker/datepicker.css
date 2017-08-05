@@ -30,7 +30,6 @@
     right: 0;
     padding-right: 0;
 }
-
 .ui-datepicker-header {
     position: relative;
     padding-bottom: 10px;
@@ -64,7 +63,7 @@
 
 .ui-datepicker-group{
 	display:inline-block;
-    padding: 0px 20px;
+    padding: 0px 20px 20px;
 }
 
 .ui-datepicker-calendar{

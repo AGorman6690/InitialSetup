@@ -831,5 +831,11 @@ public class UserServiceImpl {
 		this.updateSessionUser(session);
 	}
 
+	public String buildAddress(JobSearchUser user) {
+		if(user != null){
+			return GoogleClient.buildAddress(null, user.getHomeCity(), user.getHomeState(), user.getHomeZipCode());
+		}else return null;
+	}
+
 
 }

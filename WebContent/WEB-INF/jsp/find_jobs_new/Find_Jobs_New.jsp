@@ -9,22 +9,16 @@
 <div class="page-cont">
 	<div id="header">
 		<div id="location-filter">
-			<input id="miles" type="text" placeholder="number" value = "25"/>
+			<input id="miles" type="text" placeholder="number"
+				value="${!empty sessionScope.user.maxWorkRadius ? sessionScope.user.maxWorkRadius : ''}"/>
 			<span>miles from</span>
-			<input id="address" type="text" placeholder="city, state, zip code" value="55119"/>
+			<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '' }"/>
 			<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
 		</div>
 <!-- 		<div id="applied-filters"></div> -->
 	</div>
 	<div id="wrapper" class="${sessionScope.jobs_needRating.size() > 0 ? 'rating-required' : ''}">
 		<div id="other-filters">
-			<div id="side-location-filter" class="filter">
-				<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
-				<input id="miles" type="text" placeholder="number" value = "25"/>
-				<span>Miles From</span>
-				<input id="" class="address" type="text" placeholder="city, state, zip code" value="55119"/>
-				
-			</div>
 <!-- 			<p class="filter-sort-jobs-header">Filters</p> -->
 			<div class="filter">						
 				<div class="filter-name-container">

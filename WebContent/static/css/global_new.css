@@ -106,7 +106,7 @@ a{
 	font-weight: bold;
 }
 .hide-on-load{
-	display: none;
+	display: none !important;
 }
 a.sqr-btn:hover{
 	text-decoration: none;
