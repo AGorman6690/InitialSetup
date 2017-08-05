@@ -1,4 +1,4 @@
-package com.jobsearch.job.repository;
+package com.jobsearch.repository;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -15,11 +15,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.databind.deser.Deserializers.Base;
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.model.Application;
 import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.job.web.FindJobFilterDTO;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -27,10 +26,12 @@ import com.jobsearch.model.Question;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WorkDay;
+import com.jobsearch.request.AddJobRequest;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.QuestionServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.service.WorkDayServiceImpl;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
@@ -260,27 +261,27 @@ public class JobRepository extends BaseRepository {
 		return jobFilterDTO;
 	}
 
-	public void addJob(JobDTO jobDto, JobSearchUser user) {
+	public void addJob(AddJobRequest request, JobSearchUser user) {
 
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call create_Job(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}");
 
-			cStmt.setString(1, jobDto.getJob().getJobName());
+			cStmt.setString(1, request.getJob().getJobName());
 			cStmt.setInt(2, user.getUserId());
-			cStmt.setString(3, jobDto.getJob().getDescription());
-			cStmt.setString(4, jobDto.getJob().getStreetAddress());
-			cStmt.setString(5, jobDto.getJob().getCity());
-			cStmt.setString(6, jobDto.getJob().getState());
-			cStmt.setString(7, jobDto.getJob().getZipCode());
-			cStmt.setFloat(8, jobDto.getJob().getLat());
-			cStmt.setFloat(9, jobDto.getJob().getLng());
+			cStmt.setString(3, request.getJob().getDescription());
+			cStmt.setString(4, request.getJob().getStreetAddress());
+			cStmt.setString(5, request.getJob().getCity());
+			cStmt.setString(6, request.getJob().getState());
+			cStmt.setString(7, request.getJob().getZipCode());
+			cStmt.setFloat(8, request.getJob().getLat());
+			cStmt.setFloat(9, request.getJob().getLng());
 			cStmt.setInt(10, Job.STATUS_FUTURE);
-			cStmt.setBoolean(11, jobDto.getJob().getIsPartialAvailabilityAllowed());
-			cStmt.setInt(12, jobDto.getJob().getPositionsPerDay());
-			cStmt.setString(13, jobDto.getJob().getStreetAddress_formatted());
-			cStmt.setString(14, jobDto.getJob().getCity_formatted());
-			cStmt.setString(15, jobDto.getJob().getZipCode_formatted());
+			cStmt.setBoolean(11, request.getJob().getIsPartialAvailabilityAllowed());
+			cStmt.setInt(12, request.getJob().getPositionsPerDay());
+			cStmt.setString(13, request.getJob().getStreetAddress_formatted());
+			cStmt.setString(14, request.getJob().getCity_formatted());
+			cStmt.setString(15, request.getJob().getZipCode_formatted());
 
 			ResultSet result = cStmt.executeQuery();
 
@@ -290,16 +291,16 @@ public class JobRepository extends BaseRepository {
 			createdJob.setId(result.getInt("JobId"));
 
 			// Add the questions
-			for (Question question : jobDto.getQuestions()) {
+			for (Question question : request.getQuestions()) {
 				question.setJobId(createdJob.getId());
 				questionService.addQuestion(question);
 			}
 
 			// Add the work days
-			workDayService.addWorkDays(createdJob.getId(), jobDto.getWorkDays());
+			workDayService.addWorkDays(createdJob.getId(), request.getWorkDays());
 
 			// Add the skills
-			jobService.addSkills(createdJob.getId(), jobDto.getSkills());
+			jobService.addSkills(createdJob.getId(), request.getSkills());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

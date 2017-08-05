@@ -1,4 +1,4 @@
-package com.jobsearch.user.repository;
+package com.jobsearch.repository;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -11,19 +11,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.category.service.Category;
 import com.jobsearch.google.Coordinate;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.model.EmployeeSearch;
-import com.jobsearch.model.Endorsement;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
-import com.jobsearch.model.RateCriterion;
-import com.jobsearch.model.WorkDay;
 import com.jobsearch.service.JobServiceImpl;
-import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.user.web.AvailabilityDTO;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
@@ -110,14 +104,18 @@ public class UserRepository {
 			@Override
 			public JobSearchUser mapRow(ResultSet rs, int rownumber) throws SQLException {
 				JobSearchUser e = new JobSearchUser();
-				e.setUserId(rs.getInt(1));
-				e.setFirstName(rs.getString(2));
-				e.setLastName(rs.getString(3));
-				e.setEmailAddress(rs.getString(4));
-				e.setProfileId(rs.getInt(9));
+				e.setUserId(rs.getInt("UserId"));
+				e.setFirstName(rs.getString("FirstName"));
+				e.setLastName(rs.getString("LastName"));
+				e.setEmailAddress(rs.getString("Email"));
+				e.setProfileId(rs.getInt("ProfileId"));
 				e.setHomeLat(rs.getFloat("HomeLat"));
 				e.setHomeLng(rs.getFloat("HomeLng"));
 				e.setAbout(rs.getString("About"));
+				e.setMaxWorkRadius(rs.getInt("MaxWorkRadius"));
+				e.setHomeCity(rs.getString("HomeCity"));
+				e.setHomeState(rs.getString("HomeState"));
+				e.setHomeZipCode(rs.getString("HomeZipCode"));
 				return e;
 			}
 		});
@@ -319,10 +317,6 @@ public class UserRepository {
 		jdbcTemplate.update(sql,
 				new Object[] { maxWorkRadius, userId });
 	}
-
-
-
-
 
 	public void insertEmployment(int userId, int jobId) {
 

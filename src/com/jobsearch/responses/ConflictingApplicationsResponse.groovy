@@ -1,7 +1,7 @@
 package com.jobsearch.responses
 
-import com.jobsearch.application.service.Application
-import com.jobsearch.job.service.Job
+import com.jobsearch.model.Application
+import com.jobsearch.model.Job
 
 public class ConflictingApplicationsResponse {
 

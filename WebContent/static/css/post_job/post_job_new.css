@@ -5,6 +5,9 @@
 /* 	display: block; */
 	
 }
+.item p.question-to-job-poster{
+/* 	color: red; */
+}
 .invalid.select-page-section{
 /*     color: #b30000 !important; */
     padding: 5px;
@@ -22,11 +25,15 @@
 	margin: 0px 20px;
 	width: 400px;
 }
+.radio-container label{
+	display: block;
+}
 #postSections{
-    width: 1000px;
+    width: 1200px;
     margin: auto;
 }
-.item{
+.item:not(:first-child),
+#availabilityContainer{
 	padding-top: 35px;
 }
 p.error-message{
@@ -42,7 +49,7 @@ p.error-message{
 	margin: 0px 10px;
 } 
 #datesContainer .calendar-container{
-	display: none;
+	
 }
 #preview-job-posting-container{
 	display: none;
@@ -60,11 +67,10 @@ p.error-message{
 #previous-next-container{
     padding: 25px 0px 0px 0px;
     text-align: center;
-    border-bottom: 1px solid #cacaca;	
+/*     border-bottom: 1px solid #cacaca;	 */
     margin: auto;
     width: 600px;
 }
-
 #proceed-to-preview-job-posting{
 	display:block
 }
@@ -77,12 +83,12 @@ p.error-message{
 #proceed-to-preview-job-posting,
 #editPosting,
 #submitPosting_final{
-	background: #163b3d;
-	color: #ffffff;
-	padding: 10px 20px;
-
-	font-size: 20px;
-    width: 270px;
+    /* background: #163b3d; */
+    /* color: #ffffff; */
+    /* padding: 15px 42px; */
+    font-size: 23px;
+    color: red;
+    font-weight: bold;
 }
 #edit-or-submit-container button,
 #proceed-to-preview-job-posting{
@@ -135,7 +141,14 @@ thead .master-row{
 #postedQuestions [data-question-id]{
 	padding: 10px 10px;
 }
-
+.optional-item-explantion{
+    font-size: 18px;
+    width: 500px;
+    margin: auto;
+    text-align: left;
+    line-height: 1.4em;
+    margin-top: 20px;
+}
 #previous-job-posts [data-posted-job-id]:hover,
 #postedQuestions [data-question-id]:hover{
 	background: #cacaca;
@@ -144,6 +157,11 @@ thead .master-row{
 
 #copy-previous-post-container{
 	display: inline-block;
+}
+#proceed-to-preview-job-posting{
+	right: 0px;
+	top: 15px;
+    position: absolute;
 }
 
 #addedQuestionsContainer{
@@ -250,10 +268,10 @@ input#maxPay{
 	width: 75px;
 	margin: 5px auto;
 }
-#datesContainer .radio-container,
+#availabilityContainer .radio-container,
 #timesContainer .radio-container{
     margin-bottom: 20px;
-    width: 460px;
+    width: 500px;
     margin: auto;
     text-align: left;
     padding: 5px;	
@@ -266,6 +284,7 @@ input#maxPay{
 	width: 1100px;
 	margin: auto;
 	position: relative;
+    padding-top: 55px;	
 }
 .selected-date .select-date-box .glyphicon-ok{
 	font-size: 30px;
@@ -273,6 +292,9 @@ input#maxPay{
 	color: #627071;
 }
 .select-date-box .glyphicon-ok{
+	display: none;
+}
+#show-availability-section{
 	display: none;
 }
 #prev-or-next span{
@@ -294,7 +316,7 @@ input#maxPay{
 }
 #next-section,
 #previous-section{
-    font-size: 33px;
+    font-size: 25px;
     font-weight: bold;
     color: #197994;
     position: absolute;

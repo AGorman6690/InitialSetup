@@ -9,9 +9,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.Application;
+import com.jobsearch.model.Application;
 import com.jobsearch.category.service.Category;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 
 @Repository
 public class CategoryRepository {

@@ -18,7 +18,11 @@ $(document).ready(function(){
 	})
 	
 })
-
+function changePrevNextText($calendar, prevText, nextText){
+		$calendar.find(".ui-icon.ui-icon-circle-triangle-e").eq(0);
+ 		$calendar.find(".ui-icon.ui-icon-circle-triangle-e").eq(0).html(nextText);
+ 		$calendar.find(".ui-icon.ui-icon-circle-triangle-w").eq(0).html(prevText);
+}
 function dateifyWorkDayDtos(workDayDtos) {
 	$(workDayDtos).each(function(i, workDayDto) {
 		workDayDto.date = dateify(workDayDto.workDay.stringDate);

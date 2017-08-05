@@ -8,14 +8,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Question;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.repository.QuestionRepository;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Service

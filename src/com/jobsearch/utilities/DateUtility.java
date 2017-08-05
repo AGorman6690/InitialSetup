@@ -178,66 +178,89 @@ public final class DateUtility {
 		}
 
 	
-	public static LocalDate getMinimumDate(List<WorkDay> workDays) {
-	
-		LocalDate minDate = LocalDate.MAX;
+	public static LocalDate getMinimumDate(List<WorkDay> workDays) {	
 		
-		for(WorkDay workDay : workDays){
-			 
+		// Refactor: eliminate this method. Use getMinimumDate2
+		
+		LocalDate minDate = LocalDate.MAX;		
+		for(WorkDay workDay : workDays){			 
 			if(workDay.getDate() == null) workDay.setDate(LocalDate.parse(workDay.getStringDate()));
-			
 			if(workDay.getDate().isBefore(minDate)) minDate = workDay.getDate();
-		}
-		
+		}		
 		return minDate;
 	}
 	
-	public static LocalDate getMaximumDate(List<WorkDay> workDays) {
-		
-		LocalDate maxDate = LocalDate.MIN;
-		
-		for(WorkDay workDay : workDays){
-			
+	public static LocalDate getMinimumDate2(List<String> dates) {
+		LocalDate minDate = LocalDate.MAX;		
+		for(String date : dates){	
+			LocalDate localDate = LocalDate.parse(date);
+			if(localDate.isBefore(minDate)) minDate = localDate;
+		}		
+		return minDate;
+	}
+
+	
+	public static LocalDate getMaximumDate(List<WorkDay> workDays) {		
+		LocalDate maxDate = LocalDate.MIN;		
+		for(WorkDay workDay : workDays){			
 			if(workDay.getDate() == null) workDay.setDate(LocalDate.parse(workDay.getStringDate()));
-			
 			if(workDay.getDate().isAfter(maxDate)) maxDate = workDay.getDate();
-		}
-		
+		}		
+		return maxDate;
+	}
+	
+	public static LocalDate getMaxDate2(List<String> dates) {
+		LocalDate maxDate = LocalDate.MIN;		
+		for(String date : dates){	
+			LocalDate localDate = LocalDate.parse(date);
+			if(localDate.isAfter(maxDate)) maxDate = localDate;
+		}		
 		return maxDate;
 	}
 
-
 	public static int getMonthSpan(List<WorkDay> workDays) {
-
-		LocalDate minDate = getMinimumDate(workDays);
-		LocalDate maxDate = getMaximumDate(workDays);
 		
-		// Get total months since year 0.
-		// This handles jobs where more than one year is spanned.
-		// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
-		long months_minDate = minDate.getYear() * 12 + minDate.getMonthValue();
-		long months_maxDate = maxDate.getYear() * 12 + maxDate.getMonthValue();
+		// Refactor: eliminate this method. Use getMonthSpan2
 		
-		return (int) (months_maxDate - months_minDate + 1);
+		if(workDays == null || workDays.size() == 0){
+			return 1;
+		}else{
+			LocalDate minDate = getMinimumDate(workDays);
+			LocalDate maxDate = getMaximumDate(workDays);			
+			// Get total months since year 0.
+			// This handles jobs where more than one year is spanned.
+			// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
+			long months_minDate = minDate.getYear() * 12 + minDate.getMonthValue();
+			long months_maxDate = maxDate.getYear() * 12 + maxDate.getMonthValue();			
+			return (int) (months_maxDate - months_minDate + 1);
+		}		
+	}
+	
+	public static int getMonthSpan2(List<String> dates) {
+		if(dates == null || dates.size() == 0){
+			return 1;
+		}else{
+			LocalDate minDate = getMinimumDate2(dates);
+			LocalDate maxDate = getMaxDate2(dates);			
+			// Get total months since year 0.
+			// This handles jobs where more than one year is spanned.
+			// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
+			long months_minDate = minDate.getYear() * 12 + minDate.getMonthValue();
+			long months_maxDate = maxDate.getYear() * 12 + maxDate.getMonthValue();			
+			return (int) (months_maxDate - months_minDate + 1);
+		}		
 	}
 	
 	public static int getMonthSpan_new(List<LocalDate> dates) {
-
 		Optional<LocalDate> minDate = dates.stream().min(Comparator.comparing(LocalDate::toEpochDay));
 		Optional<LocalDate> maxDate = dates.stream().max(Comparator.comparing(LocalDate::toEpochDay));;
-		
 		// Get total months since year 0.
 		// This handles jobs where more than one year is spanned.
 		// NOTE : The native ChronoUnit and Period classes did not accomplish this. 
 		long months_minDate = minDate.get().getYear() * 12 + minDate.get().getMonthValue();
-		long months_maxDate = maxDate.get().getYear() * 12 + maxDate.get().getMonthValue();
-		
+		long months_maxDate = maxDate.get().getYear() * 12 + maxDate.get().getMonthValue();		
 		return (int) (months_maxDate - months_minDate + 1);
 	}
-
-
-
-
 
 	public static String getTimeInBetween(LocalDateTime start, String stringEndDate, String stringEndTime) {
 		
@@ -252,16 +275,12 @@ public final class DateUtility {
 
 		if(days == 1) result += days + " day, ";
 		else if(days > 1) result += days + " days, ";
-
 		result += " " + hours + ":";
-
 		if(minutes < 10) result += "0";
-
 		result += minutes + " hrs";
 
 		// For example, the result will be in the form "2 days 15:45 hrs"
-		return result;		
-		
+		return result;			
 	}
 
 	public static Boolean isDateExpired(LocalDateTime date, LocalDateTime now) {		
@@ -305,6 +324,11 @@ public final class DateUtility {
 		}else return false;	
 
 	}
+
+
+
+
+
 
 
 

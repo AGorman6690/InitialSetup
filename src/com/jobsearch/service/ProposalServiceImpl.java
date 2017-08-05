@@ -1,4 +1,4 @@
-package com.jobsearch.proposal.service;
+package com.jobsearch.service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.model.Application;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
@@ -23,14 +22,10 @@ import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.proposal.repository.ProposalRepository;
+import com.jobsearch.repository.ProposalRepository;
 import com.jobsearch.request.RespondToProposalRequest;
 import com.jobsearch.responses.CurrentProposalResponse;
-import com.jobsearch.service.JobServiceImpl;
-import com.jobsearch.service.RatingServiceImpl;
-import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.NumberUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;

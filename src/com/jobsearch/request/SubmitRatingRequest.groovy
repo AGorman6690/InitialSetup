@@ -1,11 +1,11 @@
-package com.jobsearch.user.rate
+package com.jobsearch.request
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jobsearch.model.RateCriterion;
 
-class SubmitRatingDTO {
+class SubmitRatingRequest {
 
 	@JsonProperty("jobId")
 	int jobId

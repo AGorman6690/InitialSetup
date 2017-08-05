@@ -1,21 +1,15 @@
 package com.jobsearch.model
 
-import com.jobsearch.application.service.Application
-import com.jobsearch.application.service.ApplicationDTO
-import com.jobsearch.job.service.Job
-import com.jobsearch.job.web.FindJobFilterDTO;
-import com.jobsearch.job.web.JobDTO;
-import com.jobsearch.user.rate.RatingDTO
-import com.jobsearch.category.service.Category
+import com.jobsearch.dtos.ApplicationDTO
 import com.jobsearch.category.service.CategoryDTO
-import java.util.List
+import com.jobsearch.job.web.FindJobFilterDTO
+import com.jobsearch.job.web.JobDTO
 
 
 class JobSearchUserDTO {
 
 	JobSearchUser user
 //	
-	RatingDTO ratingDto
 	List<FindJobFilterDTO> savedFindJobFilters;
 	
 	List<String> availableDays;
@@ -49,9 +43,5 @@ class JobSearchUserDTO {
 	Boolean isInvalidEmail_duplicate
 	Boolean isInvalidMatchingEmail
 	Boolean isInvalidProfile
-	
-	JobSearchUserDTO(){
-		this.setRatingDto(new RatingDTO());
-	}
 	
 }

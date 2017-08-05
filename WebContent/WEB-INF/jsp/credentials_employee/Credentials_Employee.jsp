@@ -1,9 +1,9 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 <%@ include file="../includes/resources/TableFilter.jsp" %>
-<%@ include file="../includes/resources/StarRatings.jsp" %>
+<%-- <%@ include file="../includes/resources/StarRatings.jsp" %> --%>
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/credentials/credentials.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/credentials/calendar_availability.css" />
+<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/credentials/calendar_availability.css" /> -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
 
 <script src="<c:url value="/static/javascript/Utilities/Checkboxes.js" />"></script>	
@@ -21,9 +21,9 @@
 					<label>Home Location</label>						
 					<span class="value ${isViewingOnesSelf ? 'editable' : '' }">
 						<c:choose>
-							<c:when test="${response.profileInfoDto.user.homeCity == '' &&
-											 response.profileInfoDto.user.homeState == '' &&
-											 response.profileInfoDto.user.homeZipCode }">
+							<c:when test="${empty response.profileInfoDto.user.homeCity &&
+											 empty response.profileInfoDto.user.homeState &&
+											 empty response.profileInfoDto.user.homeZipCode }">
 								<span class="not-set">Add your home location so employers can find you</span>
 							</c:when>
 							<c:otherwise>
@@ -43,7 +43,7 @@
 							</div>
 							<div>
 								<label>State</label>
-								<select id="state" data-init-value="${response.profileInfoDto.user.homeState }"></select>
+								<select id="state" data-do-show-placeholder="0" data-init-value="${response.profileInfoDto.user.homeState }"></select>
 							</div>
 							<div>
 								<label>Zip Code</label>
@@ -81,7 +81,8 @@
 				<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">							
 					<c:choose>
 						<c:when test="${response.profileInfoDto.user.about == '' }">
-							<span class="not-set">Write something so employers know a little bit about you</span>
+							<span class="not-set">Write something so
+							${sessionScope.user.profileId == 1 ? ' employers' : ' applicants' } know a little bit about you</span>
 						</c:when>
 						<c:otherwise>
 							${response.profileInfoDto.user.about }

@@ -3,8 +3,8 @@ package com.jobsearch.responses;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.jobsearch.application.service.Application
-import com.jobsearch.job.service.Job
+import com.jobsearch.model.Application
+import com.jobsearch.model.Job
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WorkDay;
@@ -17,7 +17,7 @@ public class ApplicationProgressResponse {
 
 	List<ApplicationProgressStatus> ApplicationProgressStatuses
 	Job job
-	int countJobWorkDays;
+//	int countJobWorkDays;
 	
 	public static class ApplicationProgressStatus{
 		Application application
@@ -42,6 +42,7 @@ public class ApplicationProgressResponse {
 		List<Question> questions
 		List<Integer> answerOptionIds_Selected
 		
+		int countJobWorkDays
 		
 	}
 }

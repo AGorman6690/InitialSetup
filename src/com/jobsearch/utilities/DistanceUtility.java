@@ -1,6 +1,6 @@
 package com.jobsearch.utilities;
 
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 
 public final class DistanceUtility {

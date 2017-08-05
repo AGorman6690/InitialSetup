@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.request.RespondToProposalRequest;
+import com.jobsearch.service.ProposalServiceImpl;
 
 @Controller
 @RequestMapping(value = "/proposal" )

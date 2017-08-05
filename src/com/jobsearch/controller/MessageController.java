@@ -8,16 +8,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.model.Application;
+import com.jobsearch.repository.ProposalRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.proposal.repository.ProposalRepository;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.MessageServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Controller
@@ -32,6 +33,8 @@ public class MessageController {
 	ApplicationServiceImpl applicationService;
 	@Autowired
 	UserServiceImpl userService;
+	@Autowired
+	MessageServiceImpl messageService;
 //	@Autowired
 //	VerificationServiceImpl verificationService;
 //	@Autowired
@@ -46,7 +49,7 @@ public class MessageController {
 											@PathVariable(value = "userId") int userId,
 											HttpSession session) {
 
-		userService.acknowledgeEmployeeLeft(jobId, userId, session);
+		messageService.acknowledgeEmployeeLeft(jobId, userId, session);
 		
 		return "redirect:/job/" + jobId + "?c=waiting";
 	}

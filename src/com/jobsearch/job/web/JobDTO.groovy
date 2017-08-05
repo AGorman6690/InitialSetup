@@ -1,22 +1,15 @@
 package com.jobsearch.job.web
 
-import java.awt.TexturePaintContext.Int;
-import java.util.List
-
-import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTestVisitor;
-
-import com.jobsearch.application.service.Application
-import com.jobsearch.application.service.ApplicationDTO
+import com.jobsearch.dtos.ApplicationDTO
 import com.jobsearch.category.service.Category
-import com.jobsearch.job.service.Job;
-import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Application
+import com.jobsearch.model.Job
+import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
 import com.jobsearch.model.Skill
 import com.jobsearch.model.WorkDay
-import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.model.application.ApplicationInvite;
-import com.jobsearch.user.rate.RatingDTO
+import com.jobsearch.model.WorkDayDto
 
 
 public class JobDTO {
@@ -80,7 +73,6 @@ public class JobDTO {
 	 Integer applicationStatus
 	 
 	 List<ApplicationDTO> applicationDtos
-	 ApplicationInvite applicationInvite
 	 
 	 List<JobSearchUser> employees
 	 List<JobSearchUserDTO> employeeDtos
@@ -89,8 +81,7 @@ public class JobDTO {
 	 List<JobSearchUserDTO> userDtos_applicants
 	 
 	 JobSearchUserDTO employerDto
-	 
-	 RatingDTO ratingDto
+
 //	 List<RatingDTO> ratingDtos
 	 Double ratingValue_overall
 	 List<String> comments

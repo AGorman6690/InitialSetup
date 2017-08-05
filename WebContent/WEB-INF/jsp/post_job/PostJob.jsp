@@ -2,6 +2,7 @@
 <%-- <%@ include file="../includes/resources/DatePicker.jsp" %> --%>
 
 <%@ include file="../includes/resources/SelectPageSection.jsp" %>
+<%@ include file="../includes/resources/StarRatings.jsp" %>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />				
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
@@ -43,6 +44,7 @@
 		<div id="postSections" class="select-page-section-container ${!empty postedJobs ? 'hide-on-load' : '' }">
 			<span id="show-general" class="select-page-section selected" data-page-section-id="generalContainer">General</span>
 			<span id="show-dates-section" class="select-page-section" data-page-section-id="datesContainer">Work Days</span>
+			<span id="show-availability-section" class="select-page-section" data-page-section-id="availabilityContainer">Availability</span>
 			<span id="select-times" class="select-page-section" data-page-section-id="timesContainer">Times</span>
 			<span id="show-positions" class="select-page-section" data-page-section-id="positionsContainer">Positions</span>
 			<span id="show-location" class="select-page-section" data-page-section-id="locationContainer">Location</span>
@@ -55,10 +57,6 @@
 		
 		
 			<div id="preview-job-posting-container">
-<!-- 				<div id="edit-or-submit-container"> -->
-<!-- 					<span id="editPosting" class="">Edit Job Posting</span> -->
-<!-- 					<button id="submitPosting_final" class="sqr-btn">Submit Job Posting</button> -->
-<!-- 				</div>	 -->
 				<div id="displayExample_jobInfo">
 				
 				</div>
@@ -66,12 +64,9 @@
 			<div id="post-job-container">
 
 				<div id="previous-next-container">
-					<button id="proceed-to-preview-job-posting" class="sqr-btn">Review Job Posting</button>
 					<div class="error-message-container">
 						<p id="invalid-address-error-message" class="error-message">Invalid address</p>
 					</div>
-		<!-- 			<span id="previous-section">Previous</span> -->
-		<!-- 			<span id="next-section">Next</span> -->
 				</div>
 			
 				<div id="generalContainer" class="page-section">
@@ -99,20 +94,15 @@
 				<div id="datesContainer" class="page-section">
 		
 					<div class="row">
-						<div class="item">
-							<p>Can applicants apply for particular work days?</p>
-<!-- 							<div class=" button-group"> -->
-							<div class="radio-container">
-								<label data-show-id-on-click="work-days-calendar"><input id="yes-partial" type="radio" name="partial-availability">
-								Yes, they can apply for one or more work days</label>
-								<label data-show-id-on-click="work-days-calendar"><input id="no-partial" type="radio" name="partial-availability">
-								No, they have to apply for all work days</label>
-<!-- 								<button id="yes-partial" class="sqr-btn gray-2" data-show-id-on-click="work-days-calendar"> -->
-<!-- 									Yes, they can apply for one or more work days</button> -->
-<!-- 								<button id="no-partial" class="sqr-btn gray-2" data-show-id-on-click="work-days-calendar"> -->
-<!-- 									No, they have to apply for all work days</button> -->
-							</div>
-						</div>					
+<!-- 						<div id="is-partial-availability-allowed-question" class="item"> -->
+<!-- 							<p class="question-to-job-poster">Can applicants apply for particular work days?</p> -->
+<!-- 							<div class="radio-container"> -->
+<!-- 								<label data-show-id-on-click="work-days-calendar"><input id="yes-partial" type="radio" name="partial-availability"> -->
+<!-- 								Yes, they can apply for one or more work days</label> -->
+<!-- 								<label data-show-id-on-click="work-days-calendar"><input id="no-partial" type="radio" name="partial-availability"> -->
+<!-- 								No, they have to apply for all work days</label> -->
+<!-- 							</div> -->
+<!-- 						</div>		 -->
 						<div id="work-days-calendar" class="item calendar-container teal-navigation v2 post-job">
 							<p>Work Days</p>
 							<div class="pad-top">
@@ -121,19 +111,35 @@
 							<div id="workDaysCalendar_postJob" class="calendar" data-is-showing-job="0">
 							</div>											
 							
-						</div>
-					</div>			
-				</div>		
-				
+						
+						</div>		
+					</div>
+				</div>
+
+				<div id="availabilityContainer" class="page-section">		
+					<div class="row">
+						<div id="is-partial-availability-allowed-question" class="item">
+							<p class="question-to-job-poster">Can applicants apply for 1 or more work days?</p>
+<!-- 							<div class=" button-group"> -->
+							<div class="radio-container">
+								<label data-show-id-on-click="work-days-calendar"><input id="yes-partial" type="radio" name="partial-availability">
+								Yes</label>
+								<label data-show-id-on-click="work-days-calendar"><input id="no-partial" type="radio" name="partial-availability">
+								No, they have to apply for all work days</label>
+							</div>
+						</div>			
+					</div>
+				</div>
+								
 				<div id="timesContainer" class="page-section">
 				
 					<p id="no-dates-selected" class="linky-hover pad-top">Please select one or more work days</p>
 					<div id="initial-time-question" class="item pad-top">
-						<p>Is each work day's start time and end time the same?</p>
+						<p class="question-to-job-poster">Is each work day's start time and end time the same?</p>
 						<div class="radio-container">
 							<label data-show-id-on-click="set-one-start-and-end-time"
 								data-hide-id-on-click="times-cont"><input id="same-times" type="radio" name="same-times">
-							Yes, each work day starts and ends at the same time</label>
+							Yes</label>
 							<label data-show-id-on-click="times-cont"
 								data-hide-id-on-click="set-one-start-and-end-time"><input id="different-times" type="radio" name="same-times">
 							No, at least work one day starts or ends at a different time</label>
@@ -197,7 +203,7 @@
 					</div>
 					<div class="item">
 						<p>State</p>						
-						<select id="state" class=""	></select>						
+						<select id="state" class=""></select>						
 					</div>	
 					<div class="item">
 						<p>Zip Code</p>						
@@ -215,6 +221,9 @@
 <!-- 				</div>	 -->
 				
 				<div id="questionsContainer" class="page-section">
+					<h2 class="optional">Optional</h2>
+					<h3 class="optional-item-explantion">Propose questions to the applicants. Ask about their experience, whether they have their own tools, ect.
+						This is optional, but can help you decide which applicant to hire.</h3>
 					<div id="addedQuestionsContainer" class="item">			
 						<p>Questions</p>
 						<div class="question-actions-container">
@@ -283,8 +292,12 @@
 				</div>
 				
 				<div id="employeeSkillsContainer" class="page-section">
+					<h2 class="optional">Optional</h2>
+					<h3 class="optional-item-explantion">List the skills that each applicant should have.
+						This is optional, but can help applicants decide if they are a good match for your job.</h3>
+				
 					<div class="item">
-							<p>Required Employee Skills (optional)</p>					
+							<p>Required Employee Skills</p>					
 							<div id="requiredSkillsContainer" class="list-items-container skills-container">
 								<div class="list-item">
 									<span class="delete-list-item glyphicon glyphicon-remove"></span>
@@ -296,7 +309,7 @@
 							<span class="add-list-item glyphicon glyphicon-plus"></span>								
 					</div>		
 					<div class="item">
-						<p>Desired Employee Skills (optional)</p>						
+						<p>Desired Employee Skills</p>						
 						<div id="desiredSkillsContainer" class="list-items-container skills-container">
 							<div class="list-item">
 								<span class="delete-list-item glyphicon glyphicon-remove"></span>
@@ -314,6 +327,7 @@
 
 				<span id="previous-section" class="linky-hover">Previous</span>
 				<span id="next-section" class="linky-hover">Next</span>
+				<button id="proceed-to-preview-job-posting" class="">Review and submit</button>
 			</div>
 		</div>	
 	</c:otherwise>

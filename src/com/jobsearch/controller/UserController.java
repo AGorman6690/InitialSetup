@@ -1,8 +1,7 @@
-package com.jobsearch.user.web;
+package com.jobsearch.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,20 +19,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.JobSearchUserDTO;
-import com.jobsearch.model.Profile;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
-import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.rate.SubmitRatingDTO;
-import com.jobsearch.user.rate.SubmitRatingDTOs_Wrapper;
-import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 
 @Controller
 // @SessionAttributes({ "user" })

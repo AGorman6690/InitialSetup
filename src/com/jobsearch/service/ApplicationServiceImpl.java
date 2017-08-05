@@ -1,6 +1,5 @@
-package com.jobsearch.application.service;
+package com.jobsearch.service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -12,32 +11,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.jobsearch.application.repository.ApplicationRepository;
+import com.jobsearch.dtos.ApplicationDTO;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.EmploymentProposalDTO;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
-import com.jobsearch.model.Question;
-import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
-import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.model.application.ApplicationInvite;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.repository.ApplicationRepository;
 import com.jobsearch.request.ApplyForJobRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.responses.ConflictingApplicationsResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse.ConflictingApplication;
 import com.jobsearch.responses.MessageResponse;
-import com.jobsearch.service.JobServiceImpl;
-import com.jobsearch.service.RatingServiceImpl;
-import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 

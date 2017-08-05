@@ -1,42 +1,52 @@
 <%@ include file="../includes/TagLibs.jsp"%>
 
 		<div id="user-stats">
-			<c:choose>
-				<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
-					<c:choose>
-						<c:when test="${isViewingOnesSelf }">
-							<p>You have not completed enough jobs in order to calculate a rating at this time</p>	
-						</c:when>
-						<c:otherwise>
-							<p>${response.profileInfoDto.user.firstName } ${response.profileInfoDto.user.lastName }
-								 has not completed enough jobs in order to calculate a rating at this time</p>
-						</c:otherwise>
-					</c:choose>
-				</c:when>			
-				<c:otherwise>	
-					<div id="user-ratings" class="personal-info-section">
-						<c:if test="${!isViewingOnesSelf }">
-							<h3>${response.profileInfoDto.user.firstName }
-							 ${response.profileInfoDto.user.lastName }</h3>
-						</c:if>
-						<label>Rating</label>
-						<p id="overall-rating" data-toggle-id="user-rating-details">
-							<input name="input-1" class="rating-loading"
-									value="${response.profileInfoDto.profileRatingDto.overallRating }	">
-							${response.profileInfoDto.profileRatingDto.overallRating }			
-						</p>		
-						<%@ include file="./RatingDetails.jsp" %>
-					</div>		
-					<c:if test="${!isViewingOnesSelf && !empty response.profileInfoDto.user.about }">
-						<div>
-							<label data-toggle-id="about-user" class="">About</label>
-							<div id="about-user" class="paragraph">
-								<p>${response.profileInfoDto.user.about }</p>
-							</div>
-						</div>
-					</c:if>
-					<div id="user-completed-jobs" class="personal-info-section">
-						<label>Work History</label>
+
+			<div id="user-ratings" class="personal-info-section">
+				<label>Rating</label>
+				<c:if test="${!isViewingOnesSelf }">
+					<h3>${response.profileInfoDto.user.firstName }
+					 ${response.profileInfoDto.user.lastName }</h3>
+				</c:if>
+				<c:choose>
+					<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
+						<c:choose>
+							<c:when test="${isViewingOnesSelf }">
+								<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time</p>	
+							</c:when>
+							<c:otherwise>
+								<p>${response.profileInfoDto.user.firstName } ${response.profileInfoDto.user.lastName }
+									 has not completed enough jobs in order to calculate a rating at this time</p>
+							</c:otherwise>
+						</c:choose>
+					</c:when>			
+					<c:otherwise>		
+							<p id="overall-rating" data-toggle-id="user-rating-details">
+								<input name="input-1" class="rating-loading"
+										value="${response.profileInfoDto.profileRatingDto.overallRating }	">
+								${response.profileInfoDto.profileRatingDto.overallRating }			
+							</p>		
+							<%@ include file="./RatingDetails.jsp" %>				
+					</c:otherwise>
+				</c:choose>					
+						
+
+			</div>		
+			<c:if test="${!isViewingOnesSelf && !empty response.profileInfoDto.user.about }">
+				<div>
+					<label data-toggle-id="about-user" class="">About</label>
+					<div id="about-user" class="paragraph">
+						<p>${response.profileInfoDto.user.about }</p>
+					</div>
+				</div>
+			</c:if>
+			<div id="user-completed-jobs" class="personal-info-section">
+				<label>Work History</label>
+				<c:choose>
+					<c:when test="${empty response.profileInfoDto.completedJobsDtos }">
+						<p class="no-data">You do not have a work history. Apply for some jobs and get one going!</p>
+					</c:when>
+					<c:otherwise>
 						<div id="completed-jobs" class="">
 							<c:forEach items="${response.profileInfoDto.completedJobsDtos }" var="completedJobDto">
 								<div class="completed-job">
@@ -58,8 +68,10 @@
 									</c:if>								
 								</div>			
 							</c:forEach>
-						</div>
-					</div>		
-				</c:otherwise>
-			</c:choose>
+						</div>					
+					</c:otherwise>
+				</c:choose>
+
+			</div>		
+
 		</div>

@@ -280,7 +280,6 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 					resetTimesSection();
 					resetCalendar();
 				}
-				
 				else if(isThisTheSecondDateSelected){
 					$("#no-dates-selected").hide();
 					$("#initial-time-question").show();
@@ -293,6 +292,17 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 					$("#initial-time-question").hide();
 					$("#set-one-start-and-end-time").show();
 				}
+				
+				
+				
+				if(workDayDtos.length > 1){
+//					$("#availabilityContainer").show();
+					$("#show-availability-section").show();
+				}else{
+//					$("#availabilityContainer").hide();
+					$("#show-availability-section").hide();
+				}
+				
 							
 				if($calendar_startAndEndTimes != undefined)
 					initCalendar_setStartAndEndTimes($calendar_startAndEndTimes);
@@ -314,9 +324,17 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
         	
         	return [true, className];
         
+     	},
+     	afterShow: function(){
+     		// For some reason the afterShow method is not firing on the initial caledar load.
+     		// Maybe because this calendar is not initially visible on page load???
+     		changePrevNextText($calendar, "<<", ">>");
+     		
      	}
     });	
 }
+
+
 
 function initCalendar_jobInfo_workDays($calendar, workDayDtos){
 

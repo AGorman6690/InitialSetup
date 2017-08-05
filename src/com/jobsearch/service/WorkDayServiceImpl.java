@@ -11,14 +11,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Application;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.repository.WorkDayRepository;
 import com.jobsearch.utilities.VerificationServiceImpl;
 

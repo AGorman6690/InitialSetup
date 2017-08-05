@@ -4,7 +4,7 @@
 		<div class="a-proposal">
 			<c:if test="${!empty applicationProgressStatus.previousProposal &&
 			 	applicationProgressStatus.application.isAccepted == 0 }">
-				<label class="">${applicationProgressStatus.isProposedToSessionUser ?
+				<label class="">${!applicationProgressStatus.isProposedToSessionUser ?
 	 				'Your last proposal' :
 	 				sessionScope.user.profileId == 1 ? "Employer's last proposal" :
 	 				"Applicant's last proposal"}</label>
@@ -15,7 +15,8 @@
 						value="${applicationProgressStatus.previousProposal.amount}" /> / hr
 				</div>
 				<div class="proposed-value">
-		 			<c:if test="${param_job.isPartialAvailabilityAllowed }"> 							 
+				
+		 			<c:if test="${param_job.isPartialAvailabilityAllowed == 1}"> 							 
 		 				${applicationProgressStatus.previousProposal.proposedDates.size() } 
 		 				 of 0 days			 
 		 			</c:if> 
@@ -24,7 +25,7 @@
 		</div>
 			<div class="a-proposal">
 			<label class="">${applicationProgressStatus.application.isAccepted == "1" ? "Wage" :
-				applicationProgressStatus.isProposedToSessionUser ?
+				!applicationProgressStatus.isProposedToSessionUser ?
 				'Your current proposal' : 
 				sessionScope.user.profileId == 1 ? "Employer's current proposal" :
 				"Applicant's current proposal"}</label>			
@@ -37,7 +38,7 @@
 			<div class="proposed-value">
 				<c:if test="${param_job.isPartialAvailabilityAllowed }"> 	
 					${applicationProgressStatus.currentProposal.proposedDates.size() }
-					 of 0 days			
+					 of ${applicationProgressStatus.countJobWorkDays } ${applicationProgressStatus.countJobWorkDays == 1 ? 'day' : 'days' }			
 				</c:if>
 			</div>
 		</div>

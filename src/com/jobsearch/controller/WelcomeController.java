@@ -1,4 +1,4 @@
-package com.jobsearch.welcome.web;
+package com.jobsearch.controller;
 
 import javax.servlet.http.HttpSession;
 
@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.user.service.UserServiceImpl;
-import com.jobsearch.welcome.service.WelcomeServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
+import com.jobsearch.service.WelcomeServiceImpl;
 
 @Controller
 public class WelcomeController {

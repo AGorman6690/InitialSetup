@@ -1,6 +1,6 @@
 package com.jobsearch.responses
 
-import com.jobsearch.application.service.Application
+import com.jobsearch.model.Application
 
 public class GetProfileCalendarResponse {
 	List<CalendarApplication> calendarApplications

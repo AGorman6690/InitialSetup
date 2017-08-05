@@ -9,17 +9,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Question;
-import com.jobsearch.proposal.repository.ProposalRepository;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.repository.ProposalRepository;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.ProposalServiceImpl;
+import com.jobsearch.service.QuestionServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.service.WorkDayServiceImpl;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Controller
@@ -45,6 +46,8 @@ public class QuestionController {
 	RatingServiceImpl ratingService;
 	@Autowired
 	ProposalServiceImpl proposalService;
+	@Autowired
+	QuestionServiceImpl questionService;
 	
 	@ResponseBody
 	@RequestMapping(value = "/post-job/previous-question/load", method = RequestMethod.GET)
@@ -60,7 +63,7 @@ public class QuestionController {
 		// *****************************************************
 		// *****************************************************
 
-		Question postedQuestion = jobService.getQuestion_PreviousPostedQuestion(session, questionId);
+		Question postedQuestion = questionService.getQuestion_PreviousPostedQuestion(session, questionId);
 
 		return JSON.stringify(postedQuestion);
 	}

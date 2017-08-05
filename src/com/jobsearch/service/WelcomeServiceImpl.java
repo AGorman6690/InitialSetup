@@ -1,16 +1,10 @@
-package com.jobsearch.welcome.service;
-
-import java.util.List;
+package com.jobsearch.service;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-
-import com.jobsearch.model.JobSearchUser;
-import com.jobsearch.model.Profile;
-import com.jobsearch.user.service.UserServiceImpl;
 
 @Service
 public class WelcomeServiceImpl {

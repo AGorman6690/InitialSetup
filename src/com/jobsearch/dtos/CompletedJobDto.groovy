@@ -1,6 +1,6 @@
 package com.jobsearch.dtos
 
-import com.jobsearch.job.service.Job
+import com.jobsearch.model.Job
 
 public class CompletedJobDto {
 	Job job

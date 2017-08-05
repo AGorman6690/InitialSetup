@@ -1,13 +1,15 @@
 package com.jobsearch.responses
 
-import com.jobsearch.application.service.Application
+import com.jobsearch.model.Application
 import com.jobsearch.dtos.CompletedJobDto
 import com.jobsearch.dtos.ProfileInfoDto;
-import com.jobsearch.job.service.Job
+import com.jobsearch.model.Job
 import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.Proposal
 
 class ViewEmployeeHomepageResponse {
+	
+	List<ApplicationProgressResponse> applicationProgressResponses
 
 	List<ApplicationProgressStatus> ApplicationProgressStatuses
 	long countProposals_waitingOnYou;
@@ -18,9 +20,16 @@ class ViewEmployeeHomepageResponse {
 	
 	public ViewEmployeeHomepageResponse(){
 		ApplicationProgressStatuses = new ArrayList<>();	
+		applicationProgressResponses = new ArrayList<>();
 	}
 
 	public static class ApplicationProgressStatus{
+		
+		// ******************************************
+		// Refactor this.
+		// The sub class in ApplicationProgressResponse is identical
+		// ******************************************
+		
 		Application application
 		Job job	
 		

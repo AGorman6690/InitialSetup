@@ -4,24 +4,19 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import org.mockito.verification.VerificationAfterDelay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.dtos.ProfileRatingDto;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.RateCriterion;
 import com.jobsearch.repository.RatingRepository;
+import com.jobsearch.request.SubmitRatingRequest;
 import com.jobsearch.responses.GetRatingsByUserResponse;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.rate.SubmitRatingDTO;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;;
 
@@ -43,26 +38,26 @@ public class RatingServiceImpl {
 		return repository.getRating_byJobAndUser(jobId, userId);
 	}
 	
-	public void insertRatings(List<SubmitRatingDTO> submitRatingDTOs, HttpSession session) {
+	public void insertRatings(List<SubmitRatingRequest> submitRatingDTOs, HttpSession session) {
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		// For each employee's rating
-		for (SubmitRatingDTO submitRatingDto : submitRatingDTOs) {
+		for (SubmitRatingRequest SubmitRatingRequest : submitRatingDTOs) {
 
 			// Rate criterion
-			for (RateCriterion rc : submitRatingDto.getRateCriteria()) {
-				rc.setUserId_ratee(submitRatingDto.getUserId_ratee());
+			for (RateCriterion rc : SubmitRatingRequest.getRateCriteria()) {
+				rc.setUserId_ratee(SubmitRatingRequest.getUserId_ratee());
 				rc.setUserId_rater(sessionUser.getUserId());
-				rc.setJobId(submitRatingDto.getJobId());
+				rc.setJobId(SubmitRatingRequest.getJobId());
 				repository.updateRating(rc);
 			}
 
 			// Comment
-			deleteComment(submitRatingDto.getJobId(), submitRatingDto.getUserId_ratee());
-			if (submitRatingDto.getCommentString() != "") {
-				repository.addComment(submitRatingDto.getUserId_ratee(), submitRatingDto.getJobId(),
-						submitRatingDto.getCommentString(), sessionUser.getUserId());
+			deleteComment(SubmitRatingRequest.getJobId(), SubmitRatingRequest.getUserId_ratee());
+			if (SubmitRatingRequest.getCommentString() != "") {
+				repository.addComment(SubmitRatingRequest.getUserId_ratee(), SubmitRatingRequest.getJobId(),
+						SubmitRatingRequest.getCommentString(), sessionUser.getUserId());
 			}
 
 		}

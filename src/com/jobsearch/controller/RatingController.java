@@ -13,12 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.bases.BaseRepository;
-import com.jobsearch.model.RateCriterion;
+import com.jobsearch.request.SubmitRatingRequest;
 import com.jobsearch.service.RatingServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.rate.SubmitRatingDTO;
-import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
 //@RequestMapping( value = "/ratings")
@@ -57,7 +54,7 @@ public class RatingController{
 	@RequestMapping(value = "/user/rate/employees", method = RequestMethod.POST)
 	@ResponseBody
 	public String rateEmployees(HttpSession session,
-									@RequestBody List<SubmitRatingDTO> submitRatingDtos) {
+									@RequestBody List<SubmitRatingRequest> submitRatingDtos) {
 
 		ratingService.insertRatings(submitRatingDtos, session);
 		return "";

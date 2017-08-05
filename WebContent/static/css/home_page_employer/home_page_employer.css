@@ -1,3 +1,21 @@
+#profile-content,
+#jobs-list{
+	display: inline-block;
+    vertical-align: top;
+}
+h1{
+    width: 400px;
+    margin: 50px 0px 10px -50px;
+    /* background: #197994; */
+    /* color: #fff; */
+    /* text-align: center; */
+    padding-bottom: 10px;
+    font-size: 25px;
+    /* border-bottom: 3px solid #197994; */
+    font-weight: bold;
+    color: #163b3d;
+}
+
 .brief-details p{
 	display: inline-block;
 	font-size: 18px;
@@ -14,19 +32,16 @@
 	font-size: 23px;
 	display: none;
 }
+.a-container{
+	width: 1200px;
+	margin: auto;
+}
 .applicant-or-employee{
 	font-size: 20px;
 	float: right;
 	font-weight: bold;
 }
-h1{
-    width: 275px;
-    background: #197994;
-    color: #fff;
-    padding: 15px;
-    margin: 50px auto;
-    text-align: center;
-}
+
 .application-details{
 	padding-left: 45px;
 }

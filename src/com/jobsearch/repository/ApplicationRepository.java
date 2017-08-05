@@ -1,16 +1,8 @@
-package com.jobsearch.application.repository;
+package com.jobsearch.repository;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,21 +11,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationDTO;
-import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
-import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.Proposal;
-import com.jobsearch.model.Question;
-import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
-import com.jobsearch.model.application.ApplicationInvite;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
 import com.jobsearch.service.AnswerServiceImpl;
-import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.service.ApplicationServiceImpl;
+import com.jobsearch.service.ProposalServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
@@ -352,19 +339,6 @@ public class ApplicationRepository {
 		return ApplicationRowMapper(sql, args.toArray());
 	}
 	
-
-
-
-	public void insertApplicationInvite(ApplicationInvite applicationInvite) {
-		
-		String sql = "INSERT INTO application_invite (JobId, UserId, Status) VALUES (?, ?, ?)";
-		jdbcTemplate.update(sql, new Object[]{ applicationInvite.getJobId(),
-											   applicationInvite.getUserId(),
-											   applicationInvite.getStatus() });
-		
-	}
-
-
 
 
 	public Integer getCount_applicantsByDay(int dateId, int jobId) {

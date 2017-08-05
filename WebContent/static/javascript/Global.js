@@ -213,7 +213,12 @@ function setValidCss($e){
 }
 function setStates(){
 	var $e = $("#state"); 
-	$e.append('<option value="" selected disabled>State</option>');
+	var doShowPlaceHodler = $e.attr("do-show-place-holder");
+	var placeHolder = "";
+	if(doShowPlaceHodler == 1){
+		placeHolder = "State";
+	}
+	$e.append('<option value="" selected disabled>' + placeHolder + '</option>');	
 	$e.append('<option value="Alabama">AL</option>');
 	$e.append('<option value="Alaska">AK</option>');
 	$e.append('<option value="Arizona">AZ</option>');

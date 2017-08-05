@@ -161,7 +161,7 @@ span.expiration-time{
 }
 [data-is-waiting-on-you="true"][data-is-accepted="0"]{
 	background: #ffd0d0  !important;
-	border: 7px solid red !important;
+/* 	border: 7px solid red !important; */
 }
 .v2 .calendar .ui-datepicker-inline.ui-datepicker-multi{
 	width: auto !important;

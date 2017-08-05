@@ -1,4 +1,4 @@
-package com.jobsearch.proposal.repository;
+package com.jobsearch.repository;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.service.ApplicationServiceImpl;
+import com.jobsearch.service.ProposalServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 
 @Repository

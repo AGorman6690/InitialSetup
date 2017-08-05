@@ -1,4 +1,4 @@
-package com.jobsearch.application.web;
+package com.jobsearch.controller;
 
 import java.util.List;
 
@@ -13,20 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationDTO;
-import com.jobsearch.application.service.ApplicationServiceImpl;
-import com.jobsearch.job.service.Job;
-import com.jobsearch.json.JSON;
+import com.jobsearch.dtos.ApplicationDTO;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
-import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.model.application.ApplicationInvite;
 import com.jobsearch.request.ApplyForJobRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Controller

@@ -80,8 +80,7 @@
 				</c:if>					
 				<div>
 					<div class="proposal" data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }">
-						<c:set var="application" value="${applicationProgressStatus.application }" />
-						<c:set var="job" value="${response.job }" />
+						<c:set var="param_job" value="${response.job }" />
 						<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
 					</div>
 				</div>

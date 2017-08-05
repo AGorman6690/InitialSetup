@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.model.Answer;
+import com.jobsearch.service.ApplicationServiceImpl;
 
 @Repository
 public class AnswerRepository extends BaseRepository{

@@ -90,7 +90,8 @@
 	border-bottom: 1px solid #cacaca;
 }
 #work-days-calendar-container .ui-datepicker-title{
-	font-weight: normal;
+    font-weight: bold;
+    font-size: 18px;
 }
 .job-info .map{
     width: 500px;

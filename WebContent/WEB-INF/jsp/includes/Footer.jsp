@@ -3,7 +3,6 @@
 
 </body>
 
-
 			
 		<%@ include file="../includes/resources/DatePicker.jsp" %>
 		<%@ include file="../includes/resources/Modal.jsp"%>	
@@ -32,5 +31,6 @@
 			src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 		<script type="text/javascript"
 			src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+			
 			
 </html>

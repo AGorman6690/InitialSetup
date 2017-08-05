@@ -5,11 +5,16 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/home_page_employer.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/application_progress.css" />
 <script src="/JobSearch/static/javascript/HomePage_Employer.js" type="text/javascript"></script>
+<script src="/JobSearch/static/javascript/Personal_Info.js" type="text/javascript"></script>
 
-<div class="container">
-	<h1>Your Jobs</h1>
-	<div id="jobs-list">
+<div class="a-container">
+	<div id="profile-content">
+		<%@ include file="../credentials_employee/Credentials_Employee.jsp" %>			
+		<%@ include file="../ratings/RatingsByUser.jsp" %>
+	</div>
 	
+	<div id="jobs-list">
+	<h1>Your Jobs</h1>
 		<c:forEach items="${response.employerHomepageJobs }" var="employerHomepageJob">
 			<div class="job-container" data-job-id="${employerHomepageJob.job.id }">
 				<div class="action-options">
@@ -23,14 +28,14 @@
 				
 				<div class="brief-details">
 					<div class="applicants-container">
-						<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
-						<p>All applicants<span class="total total-applicants">
-							${employerHomepageJob.countApplications_total }</span>
-							<c:if test="${employerHomepageJob.countApplications_new > 0 }">							
-								<span class="new new-applicants">${employerHomepageJob.countApplications_new } new</span></c:if></p>						
-						<div class="application-details">
+<%-- 						<input type="checkbox" id="employees-${employerHomepageJob.job.id }"> --%>
+<!-- 						<p>All applicants<span class="total total-applicants"> -->
+<%-- 							${employerHomepageJob.countApplications_total }</span> --%>
+<%-- 							<c:if test="${employerHomepageJob.countApplications_new > 0 }">							 --%>
+<%-- 								<span class="new new-applicants">${employerHomepageJob.countApplications_new } new</span></c:if></p>						 --%>
+<!-- 						<div class="application-details"> -->
 							<div>
-								<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
+								<input checked type="checkbox" id="employees-${employerHomepageJob.job.id }">
 								<p class="${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 									Proposals waiting on you
 									<span class="total proposals-waiting-on-you
@@ -40,14 +45,14 @@
 										<span class="new new-proposals-waiting-on-you">${employerHomepageJob.countWageProposals_received_new } new</span></c:if></p>
 							</div>
 							<div>								
-								<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
+								<input checked type="checkbox" id="employees-${employerHomepageJob.job.id }">
 								<p>Proposals waiting on applicant
 									<span class="total total-applicants">${employerHomepageJob.countWageProposals_sent }</span>
 							</div>
 							<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 							<p>Expired proposals<span class="total total-applicants">${employerHomepageJob.countProposals_expired }</span></p>
 						</div>
-					</div>
+<!-- 					</div> -->
 					<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 					
 						<p>Employees<span class="total total-employees">
@@ -57,16 +62,15 @@
 	<!-- 						<span class="glyphicon glyphicon-menu-right"></span></p> -->
 					<div>	
 						<p class="show-hide-details see-details linky-hover "
-							data-job-id="${employerHomepageJob.job.id }">Show All</p>
+							data-job-id="${employerHomepageJob.job.id }">View Applicants</p>
 						<p class="show-hide-details hide-details linky-hover"
-							data-job-id="${employerHomepageJob.job.id }">Hide All</p>
+							data-job-id="${employerHomepageJob.job.id }">Hide Applicants</p>
 					</div>
 				</div>
 				
 				
 			</div>
 		</c:forEach>
-	</div>
 	<div id="sort-wrapper">
 		<div class="item sort">
 			<input id="surpress-certain-details" type="checkbox" name="surpress-certain-details">
@@ -84,7 +88,9 @@
 	</div>
 	<div id="job-details">
 		
-	</div>	
+	</div>			
+	</div>
+
 </div>
 		<div id="job-info-mod" class="mod simple-header">
 			<div class="mod-content">
@@ -96,4 +102,5 @@
 	src="https://maps.googleapis.com/maps/api/
 		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI">
 </script>
+
 <%@ include file="../includes/Footer.jsp"%>

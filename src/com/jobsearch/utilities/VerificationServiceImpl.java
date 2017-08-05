@@ -9,10 +9,9 @@ import org.springframework.security.config.authentication.UserServiceBeanDefinit
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationServiceImpl;
+import com.jobsearch.model.Application;
 import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
@@ -20,11 +19,12 @@ import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.repository.UserRepository;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.ProposalServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.repository.UserRepository;
-import com.jobsearch.user.service.UserServiceImpl;
 
 // Not sure 
 @Service

@@ -1,4 +1,4 @@
-package com.jobsearch.job.web;
+package com.jobsearch.controller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,20 +17,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.Job;
+import com.jobsearch.model.Job;
+import com.jobsearch.job.web.FindJobFilterDTO;
+import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Question;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
+import com.jobsearch.request.AddJobRequest;
 import com.jobsearch.request.EditJobRequest;
+import com.jobsearch.responses.ValidateAddressResponse;
+import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.service.UserServiceImpl;
 
 @Controller
 public class JobController {
@@ -45,9 +49,9 @@ public class JobController {
 	ApplicationServiceImpl applicationService;
 
 	@ResponseBody
-	@RequestMapping(value = "/job/post", method = RequestMethod.POST)
-	public String postJobs(@RequestBody JobDTO jobDto, HttpSession session) {
-		jobService.addPosting(jobDto, session);
+	@RequestMapping(value = "/job", method = RequestMethod.POST)
+	public String postJobs(@RequestBody AddJobRequest request, HttpSession session) {
+		jobService.addJob(request, session);
 		return "";
 	}
 	
@@ -179,11 +183,12 @@ public class JobController {
 		return "/edit_job/Employees_ByDate";
 	}
 
-	@RequestMapping(value = "/validate-address")
+	@RequestMapping(value = "/job/validate-address")
 	@ResponseBody
-	public String isAddressValid(@RequestParam(name = "address") String address){		
-		if(GoogleClient.isValidAddress(address)) return "isValid";
-		else return "isNotValid";		
+	public String isAddressValid(@RequestParam(name = "address") String address){
+		// Should a GoogleController exist?????
+		ValidateAddressResponse response = jobService.getValidateAddressResponse(address);
+		return JSON.stringify(response);
 	}
 	
 	@RequestMapping(value = "/job/{jobId}", method = RequestMethod.POST)
@@ -197,10 +202,10 @@ public class JobController {
 	}
 	
 	@RequestMapping(value = "/job/preview", method = RequestMethod.POST)
-	public String previewJobInfo(Model model, @RequestBody JobDTO jobDto) {
+	public String previewJobInfo(Model model, @RequestBody AddJobRequest request) {
 
-//		jobService.setModel_PreviewJobPost(model, jobDto);
-		model.addAttribute("isPreviewingJobPost", true);
+		jobService.setGetJobReponse_forPreviewingJobPost(model, request);
+		
 		return "/JobInfo_NEW";
 	}
 

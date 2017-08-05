@@ -109,7 +109,17 @@
 .v2 .added-content{
 	height: 90px;
 }
-
+.v2.hide-select-work-day .added-content{
+	height: auto;
+}
+.v2.hide-select-work-day .select-work-day{
+	display: none !important;
+}
+.v2.hide-select-work-day td.job-work-day *{
+	color: white
+}
+.v2.hide-select-work-day td.job-work-day,
+.v2.hide-select-work-day .added-content,
 .v2.no-partial td.job-work-day,
 .v2.no-partial td.job-work-day a,
 .v2.no-partial td.job-work-day .added-content,

@@ -5,12 +5,9 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.repository.JobRepository;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
-import com.jobsearch.user.service.UserServiceImpl;
+import com.jobsearch.repository.JobRepository;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Service

@@ -1,5 +1,5 @@
 
-package com.jobsearch.user.service;
+package com.jobsearch.service;
 import java.security.SecureRandom;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpSession;
@@ -24,45 +23,33 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.jobsearch.application.service.Application;
-import com.jobsearch.application.service.ApplicationDTO;
-import com.jobsearch.application.service.ApplicationServiceImpl;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.job.service.Job;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.CalendarDay;
 import com.jobsearch.model.EmployeeSearch;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
-import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
-import com.jobsearch.model.application.ApplicationInvite;
-import com.jobsearch.proposal.service.ProposalServiceImpl;
+import com.jobsearch.repository.UserRepository;
 import com.jobsearch.responses.GetProfileCalendarResponse;
 import com.jobsearch.responses.GetProfileCalendarResponse.CalendarApplication;
-import com.jobsearch.responses.GetRatingsByUserResponse;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
-import com.jobsearch.service.JobServiceImpl;
-import com.jobsearch.service.RatingServiceImpl;
-import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.session.SessionContext;
-import com.jobsearch.user.rate.RatingDTO;
-import com.jobsearch.user.rate.SubmitRatingDTO;
-import com.jobsearch.user.repository.UserRepository;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Service
@@ -299,12 +286,20 @@ public class UserServiceImpl {
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
+		
 		ViewEmployeeHomepageResponse response = new ViewEmployeeHomepageResponse();
+		setHomePageResponse_common(model, session);
+		
+		
+		// User profile info
+		response.setProfileInfoDto(getProfileInfoDto(sessionUser));
 	
 		// Current activity
 		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(
 				employee.getUserId());
 		for (Application application : applications) {
+			
+
 						
 			Proposal currentProposal = proposalService.getCurrentProposal(
 					application.getApplicationId());				
@@ -312,8 +307,9 @@ public class UserServiceImpl {
 					currentProposal.getProposalId(), application.getApplicationId());
 			
 			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
+			initializeApplicationProgressStatus(applicationProgressStatus, application.getJobId());
 			applicationProgressStatus.setApplication(application);
-			applicationProgressStatus.setJob(jobService.getJob(application.getJobId()));
+
 			
 			// Current proposal
 			applicationProgressStatus.setCurrentProposal(currentProposal);
@@ -347,8 +343,7 @@ public class UserServiceImpl {
 			applicationService.inspectNewness(application);		
 		}
 			
-		// User profile info
-		response.setProfileInfoDto(getProfileInfoDto(employee));
+
 			
 		// Proposals and employment counts
 		response.setCountJobs_employment(response.getApplicationProgressStatuses()
@@ -366,6 +361,7 @@ public class UserServiceImpl {
 		response.setCountProposals_waitingOnYou_new(response.getApplicationProgressStatuses()
 				.stream()
 				.filter(aps -> aps.getApplication().getIsAccepted() == 0)
+				.filter(aps -> aps.getIsProposedToSessionUser() == true)
 				.map(aps -> aps.getCurrentProposal())
 				.filter(p -> p.getIsNew() == 1)
 				.count());
@@ -383,13 +379,6 @@ public class UserServiceImpl {
 				applicationService.getMessagesResponses_applicationsClosedDueToAllPositionsFilled(
 						employee.getUserId());
 		
-		// Ideally this would be updated every time a page is loaded.
-		// Since a job becomes one-that-needs-a-rating only after the passage of
-		// time,
-		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
-		// because
-		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(employee.getUserId());		
 		
 				
 		List<CalendarDay> calendarDays_employmentSummary = getCalendarDays_employmentSummary(employee.getUserId());
@@ -407,11 +396,25 @@ public class UserServiceImpl {
 		model.addAttribute("user", employee);	
 		model.addAttribute("monthSpan_employmentSummaryCalendar", monthSpan_employmentSummaryCalendar);
 		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
-		session.setAttribute("jobs_needRating", jobs_needRating);
+		
 		
 		
 //		setModel_getRatings_byUser(model, sessionUser.getUserId());		
 		model.addAttribute("isViewingOnesSelf", true);
+	}
+
+	public void initializeApplicationProgressStatus(ApplicationProgressStatus applicationProgressStatus,
+			int jobId) {
+		
+		// Refactor: this is an awkward place for this.
+		// Should this be in a ApplicationProgressStatus constructor???
+		// Consolidate the two ApplicationProgressStatus sub classes
+		
+		Job job = jobService.getJob(jobId);
+		List<WorkDay> workDays = workDayService.getWorkDays(jobId);
+		applicationProgressStatus.setJob(job);
+		applicationProgressStatus.setCountJobWorkDays(workDays.size());
+		
 	}
 
 	public ProfileInfoDto getProfileInfoDto(JobSearchUser user) {
@@ -429,14 +432,23 @@ public class UserServiceImpl {
 		return profileInfoDto;
 	}
 
+
 	public void setViewEmployerHomepageResponse(JobSearchUser employer, Model model, HttpSession session) {
 
+		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
 		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse();		
 		List<Job> jobs = jobService.getJobs_byEmployerAndStatuses(employer.getUserId(),
 				Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
 
+		setHomePageResponse_common(model, session);
+		
+		
+		// User profile info
+		response.setProfileInfoDto(getProfileInfoDto(sessionUser));
+		
+		
 		for (Job job : jobs) {
 
 			EmployerHomepageJob employerHomepageJob = new EmployerHomepageJob();
@@ -494,15 +506,25 @@ public class UserServiceImpl {
 			response.getEmployerHomepageJobs().add(employerHomepageJob);			
 		}
 
+		model.addAttribute("response", response);
+		
+	}
+
+	private void setHomePageResponse_common(Model model, HttpSession session) {
+		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
 		// time,
-		// as opposed to a particular event, this is the best place to put it
-		// becuase
+		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
+		// because
 		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(employer.getUserId());		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(sessionUser.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
-		model.addAttribute("response", response);
+		model.addAttribute("isViewingOnesSelf", true);
+		
+
+		
 	}
 
 	private List<CalendarDay> getCalendarDays_employmentSummary(int userId) {

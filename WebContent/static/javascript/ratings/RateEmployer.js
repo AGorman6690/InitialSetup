@@ -216,21 +216,21 @@ function getSubmitRatingDtos() {
 	$(".user-cont").each(function() {
 		var userId_employee = $(this).attr("data-user-id");
 		
-		var submitRatingDto = {};	
+		var SubmitRatingRequest = {};	
 		
-		submitRatingDto.jobId = jobId;
-		submitRatingDto.userId_ratee = userId_employee;
+		SubmitRatingRequest.jobId = jobId;
+		SubmitRatingRequest.userId_ratee = userId_employee;
 		
-		submitRatingDto.rateCriteria = [];
+		SubmitRatingRequest.rateCriteria = [];
 		$(this).find(".rate-criterion").each(function() {
 			var rateCriterion = {};
 			rateCriterion.rateCriterionId = $(this).attr("data-rate-criterion-id");
 			rateCriterion.value = $(this).attr("data-value");
-			submitRatingDto.rateCriteria.push(rateCriterion);
+			SubmitRatingRequest.rateCriteria.push(rateCriterion);
 		})
-		submitRatingDto.commentString = $(this).find("textarea.comment").eq(0).val();
+		SubmitRatingRequest.commentString = $(this).find("textarea.comment").eq(0).val();
 		
-		submitRatingDtos.push(submitRatingDto);
+		submitRatingDtos.push(SubmitRatingRequest);
 	})
 	
 	return submitRatingDtos;

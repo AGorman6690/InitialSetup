@@ -1,8 +1,11 @@
 package com.jobsearch.responses
 
-import com.jobsearch.job.service.Job
+import com.jobsearch.dtos.ProfileInfoDto;
+import com.jobsearch.model.Job
 
 public class ViewEmployerHomepageResponse{
+	
+	ProfileInfoDto profileInfoDto;
 	
 	public ViewEmployerHomepageResponse(){
 		employerHomepageJobs = new ArrayList<>();

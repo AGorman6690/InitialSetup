@@ -1,8 +1,8 @@
 package com.jobsearch.responses
 
-import com.jobsearch.application.service.Application
+import com.jobsearch.model.Application
 import com.jobsearch.dtos.ProfileInfoDto;
-import com.jobsearch.job.service.Job
+import com.jobsearch.model.Job
 import com.jobsearch.model.Question
 import com.jobsearch.model.Skill
 import com.jobsearch.model.WorkDay
@@ -12,6 +12,7 @@ public class GetJobResponse {
 	Job job
 	Application application
 	List<WorkDayDto> workDayDtos
+	int countWorkDays
 	String json_workDayDtos
 	List<Skill> skillsRequired
 	List<Skill> skillsDesired

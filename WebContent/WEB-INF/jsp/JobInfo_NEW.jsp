@@ -51,6 +51,12 @@
 				
 			</div>
 		</c:if>
+		<c:if test="${context == 'preview-job-post'}">
+			<div id="">
+				<button id="submit-job-post" class="sqr-btn green">Submit</button>
+				
+			</div>
+		</c:if>
 		<c:if test="${response.isPreviewingBeforeSubmittingJobPost }">
 			<div class="to-be-fixed-cont-disabled">
 				<button id="submitPosting_final" class="sqr-btn green to-be-fixed-disalbed">Submit Job Post</button>
@@ -163,11 +169,13 @@
 		</c:if>
 		<div  class="sub">		
 			<h3 id="work-days-label">Work Days</h3>	
-			<c:if test="${response.workDayDtos.size() > 1 }">
+<!-- 			<p class="instructions employee-context">Please select the days you wish to work</p> -->
+			
+			<c:if test="${response.countWorkDays > 1 }">
 				<p id="work-day-message">
 					<c:choose>
 						<c:when test="${response.job.isPartialAvailabilityAllowed }">
-							<c:if test="${sessionScope.user.profileId == 1 && response.context=='find'}">
+							<c:if test="${sessionScope.user.profileId == 1 && response.context =='find'}">
 								<p class="instructions employee-context">Please select the work days you want to work</p>
 							</c:if>
 							<p>This job allows partial availability.</p>
@@ -183,7 +191,7 @@
 			<div id="work-days-calendar-container" class="v2 calendar-container
 				 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post read-only' : '' }
 				 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
-				 ${sessionScope.user.profileId == 1 && response.context=='profile' ? 'read-only' : ''}">
+				 ${sessionScope.user.profileId == 1 && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">
 				<c:if test="${response.job.isPartialAvailabilityAllowed
 					&& sessionScope.user.profileId == 1 
 					&& response.context=='find' }">

@@ -1,16 +1,12 @@
-package com.jobsearch.application.service
+package com.jobsearch.dtos
 
-import java.awt.TexturePaintContext.Int;
-import java.util.List;
-
-import com.jobsearch.job.service.Job
-import com.jobsearch.job.web.JobDTO;
+import com.jobsearch.job.web.JobDTO
 import com.jobsearch.model.Answer
-import com.jobsearch.model.EmploymentProposalDTO;
+import com.jobsearch.model.Application
+import com.jobsearch.model.EmploymentProposalDTO
 import com.jobsearch.model.JobSearchUserDTO
-import com.jobsearch.model.Question;
+import com.jobsearch.model.Question
 import com.jobsearch.model.WageProposal
-import com.jobsearch.model.WorkDay
 
 class ApplicationDTO {
 	

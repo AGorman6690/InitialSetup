@@ -11,6 +11,9 @@
 	href="/JobSearch/static/css/profile_employee/profile_employee_NEW_2.css" />
 <link rel="stylesheet" type="text/css"
 	href="/JobSearch/static/css/profile_employee/employment_summary_cal.css" />
+	
+<script src="/JobSearch/static/javascript/Personal_Info.js" type="text/javascript"></script>
+
 
 
 
