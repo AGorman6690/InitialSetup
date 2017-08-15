@@ -1,7 +1,6 @@
 package com.jobsearch.service;
 
 import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.loader.plan.exec.process.spi.ReturnReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -24,18 +22,16 @@ import org.springframework.ui.Model;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
-import com.jobsearch.model.Application;
-import com.jobsearch.dtos.ApplicationDTO;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.dtos.ApplicationDTO;
 import com.jobsearch.dtos.CompletedJobDto;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.google.GoogleClient;
-import com.jobsearch.model.Job;
 import com.jobsearch.job.web.FindJobFilterDTO;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
-import com.jobsearch.model.EmployeeSearch;
-import com.jobsearch.model.EmploymentProposalDTO;
+import com.jobsearch.model.Application;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
 import com.jobsearch.model.Profile;
@@ -47,6 +43,7 @@ import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.repository.JobRepository;
 import com.jobsearch.request.AddJobRequest;
 import com.jobsearch.request.EditJobRequest;
+import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.responses.ApplicationProgressResponse;
 import com.jobsearch.responses.ApplicationProgressResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.GetJobResponse;
@@ -57,8 +54,6 @@ import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.StringUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
-
-import antlr.StringUtils;
 
 @Service
 public class JobServiceImpl {
@@ -927,18 +922,21 @@ public class JobServiceImpl {
 					+ " " + job.getZipCode_formatted();
 			Double radius = 25.0;
 
-			EmployeeSearch employeeSearch = new EmployeeSearch();
-			employeeSearch.setAddress(address);
+			FindEmployeesRequest request = new FindEmployeesRequest();
+			request.setAddress(address);
+			request.setRadius(radius);
+			request.setDates(workDayService.getWorkDayDateStrings(jobId));
 
-			employeeSearch.setRadius(radius);
-			employeeSearch.setWorkDays(workDayService.getWorkDayDateStrings(jobId));
-
-			userService.setModel_findEmployees_results(model, employeeSearch);
+			userService.setFindEmployeesResponse(model, request);
 
 			model.addAttribute("job", job);
 			// model.addAttribute("doShowResultsOnPageLoad", true);
 		}
 	}
+	
+		
+		
+	
 
 	public void inspectJob_isStillAcceptingApplications(int jobId) {
 

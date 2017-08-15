@@ -23,6 +23,7 @@ import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
@@ -104,10 +105,9 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
-	public String findEmployees(@RequestBody EmployeeSearch employeeSearch, Model model) {
+	public String findEmployees(@RequestBody FindEmployeesRequest request, Model model) {
 
-		userService.setModel_findEmployees_results(model, employeeSearch);
-
+		userService.setFindEmployeesResponse(model, request);
 		return"/find_employees/Results_Find_Employees";
 	}
 

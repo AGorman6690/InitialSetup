@@ -238,26 +238,17 @@ public class ProposalServiceImpl{
 	}
 	
 
-	private void respondToProposal_byEmployer(Proposal proposalBeingRespondedTo,
-			RespondToProposalRequest request,
-			Boolean isAcceptingOffer) {
+	private void respondToProposal_byEmployer(Proposal proposalBeingRespondedTo,			
+		RespondToProposalRequest request, Boolean isAcceptingOffer) {
+
+		Proposal newProposal = getNewProposalFromEmployer(request, proposalBeingRespondedTo);			
+		insertProposal(newProposal);			
 		
+		if(isAcceptingOffer){				
+			updateProposalFlag(newProposal,
+					Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
+		}
 
-
-		
-//		if(	DateUtility.isValidFutrueDate(acceptedDate,
-//						newProposal.getExpirationDate()) ){
-
-			Proposal newProposal = getNewProposalFromEmployer(request);			
-			insertProposal(newProposal);			
-			
-			if(isAcceptingOffer){				
-				updateProposalFlag(newProposal,
-						Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
-//				updateWageProposalStatus(proposalBeingRespondedTo.getEmploymentProposalId(),
-//					WageProposal.STATUS_ACCEPTED);
-			}
-//		}
 	}
 	
 	public Proposal getNewProposalFromEmployer(RespondToProposalRequest request){
@@ -271,15 +262,20 @@ public class ProposalServiceImpl{
 				acceptedDate, request.getDays_offerExpires(),
 				request.getHours_offerExpires(), request.getMinutes_offerExpires());
 		
+		// **********************************************
+		// Refactor: Is this constructor all that useful??????
+		// Find a better way to initialize these properties
 		Proposal newProposal = new Proposal();	
 		if(proposalBeingRespondedTo != null){
 			newProposal = new Proposal(proposalBeingRespondedTo);	
 		}
-			
+		// **********************************************	
+		
 		newProposal.setEmployerAcceptedDate(acceptedDate);
 		newProposal.setExpirationDate(expirationDate);
 		newProposal.setProposedDates(request.getProposal().getProposedDates());
 		newProposal.setAmount(request.getProposal().getAmount());		
+		newProposal.setApplicationId(request.getProposal().getApplicationId());
 		return newProposal;
 	}
 
@@ -339,7 +335,7 @@ public class ProposalServiceImpl{
 		Job job = jobService.getJob_ByApplicationId(proposalBeingRespondedTo.getApplicationId());
 		
 		LocalDateTime now = LocalDateTime.now();		
-		if(DateUtility.isValidFutrueDate(proposalBeingRespondedTo.getExpirationDate(), now) &&
+		if(DateUtility.isValidFutrueDate(now, proposalBeingRespondedTo.getExpirationDate()) &&
 			workDayService.isAPositionAvaiableEachProposedWorkDay(
 						proposalBeingRespondedTo.getProposalId(), job.getId())) {
 

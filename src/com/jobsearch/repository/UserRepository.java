@@ -16,6 +16,7 @@ import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
+import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
@@ -205,7 +206,7 @@ public class UserRepository {
 
 
 
-	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
+	public List<JobSearchUser> getUsers_byFindEmployeesRequest(FindEmployeesRequest request) {
 
 
 		// *******************************************************************
@@ -244,12 +245,12 @@ public class UserRepository {
 		sql += " WHERE ( 3959 * acos( cos( radians(?) ) * cos( radians( u.HomeLat ) ) * cos( radians( u.HomeLng ) - radians(?) ) "
 										+ "+ sin( radians(?) ) * sin( radians( u.HomeLat ) ) ) ) <= u.MaxWorkRadius ";
 
-		args.add(employeeSearch.getLat());
-		args.add(employeeSearch.getLng());
-		args.add(employeeSearch.getLat());
+		args.add(request.getLat());
+		args.add(request.getLng());
+		args.add(request.getLat());
 		
 		
-		if(employeeSearch.getMinimumJobsCompleted() != null){			
+		if(request.getMinimumJobsCompleted() != null){			
 			sql += " AND u.UserId IN ("
 					+ " SELECT u.UserId FROM user u"
 					+ " INNER JOIN employment e ON u.UserId = e.UserId"
@@ -261,11 +262,11 @@ public class UserRepository {
 					+ ")";
 					
 			args.add(Job.STATUS_PAST);
-			args.add(employeeSearch.getMinimumJobsCompleted());
+			args.add(request.getMinimumJobsCompleted());
 			
 		}
 		
-		if(employeeSearch.getMinimumRating() != null){			
+		if(request.getMinimumRating() != null){			
 			sql += " AND u.UserId IN ("
 					+ " SELECT u.UserId FROM user u"
 					+ " INNER JOIN rating r ON u.UserId = r.UserId"
@@ -273,7 +274,7 @@ public class UserRepository {
 					+ " GROUP BY(r.UserId)"
 					+ " HAVING AVG(r.Value) >= ?"
 					+ ")";
-			args.add(employeeSearch.getMinimumRating());
+			args.add(request.getMinimumRating());
 		}
 
 		sql += " LIMIT 25";

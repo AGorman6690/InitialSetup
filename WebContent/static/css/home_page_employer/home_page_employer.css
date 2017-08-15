@@ -18,7 +18,7 @@ h1{
 
 .brief-details p{
 	display: inline-block;
-	font-size: 18px;
+/* 	font-size: 18px; */
 }
 .action-options .glyphicon{
 	float: right;
@@ -80,7 +80,7 @@ h1{
 }
 .job-name{
     color: #197994;
-    font-size: 25px;
+    font-size: 21px;
     margin-bottom: 10px;
     display: inline-block;
 }

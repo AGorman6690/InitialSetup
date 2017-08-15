@@ -3,11 +3,12 @@
 		<div id="user-stats">
 
 			<div id="user-ratings" class="personal-info-section">
-				<label>Rating</label>
+				
 				<c:if test="${!isViewingOnesSelf }">
 					<h3>${response.profileInfoDto.user.firstName }
 					 ${response.profileInfoDto.user.lastName }</h3>
 				</c:if>
+				<label>Rating</label>
 				<c:choose>
 					<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
 						<c:choose>
@@ -32,10 +33,10 @@
 						
 
 			</div>		
-			<c:if test="${!isViewingOnesSelf && !empty response.profileInfoDto.user.about }">
-				<div>
+			<c:if test="${!isViewingOnesSelf && not empty response.profileInfoDto.user.about }">
+				<div class="personal-info-section">
 					<label data-toggle-id="about-user" class="">About</label>
-					<div id="about-user" class="paragraph">
+					<div id="about-user" class="">
 						<p>${response.profileInfoDto.user.about }</p>
 					</div>
 				</div>
@@ -43,8 +44,9 @@
 			<div id="user-completed-jobs" class="personal-info-section">
 				<label>Work History</label>
 				<c:choose>
-					<c:when test="${empty response.profileInfoDto.completedJobsDtos }">
-						<p class="no-data">You do not have a work history. Apply for some jobs and get one going!</p>
+					<c:when test="${empty response.profileInfoDto.completedJobsDtos }">					
+						<p class="no-data">${isViewingOnesSelf ? 'You do not have a work history. Apply for some jobs and get one going!' :
+							'No completed jobs' }</p>
 					</c:when>
 					<c:otherwise>
 						<div id="completed-jobs" class="">

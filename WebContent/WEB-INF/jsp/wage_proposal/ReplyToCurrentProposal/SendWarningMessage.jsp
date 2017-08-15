@@ -13,7 +13,7 @@
 					${user_makeOfferTo.firstName } ${user_makeOfferTo.lastName }
 			</c:when>
 			<c:otherwise>
-				You are about to propose a new offer to the 
+				You are about to send a new proposal to the
 					${sessionScope.user.profileId == 1 ? " employer" : " applicant" }.
 			</c:otherwise>
 		</c:choose>

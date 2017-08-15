@@ -30,16 +30,12 @@ public class ApplicationController {
 
 	@Autowired
 	ApplicationServiceImpl applicationService;
-
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
 	@Autowired
-	VerificationServiceImpl verificationService;
-	
+	VerificationServiceImpl verificationService;	
 
 	@ResponseBody
 	@RequestMapping(value = "/apply", method = RequestMethod.POST)
@@ -52,8 +48,7 @@ public class ApplicationController {
 			return "NotLoggedIn";
 		}
 
-	}
-	
+	}	
 	
 	@RequestMapping(value = "/application/{applicationId_withReferenceTo}/conflicting-applications",
 		method = RequestMethod.POST)
@@ -65,11 +60,7 @@ public class ApplicationController {
 				dateStrings_toFindConflictsWith);		
 		return "/wage_proposal/ConflictingApplications"; 
 	}	
-	
-
-	
-
-	
+		
 	@RequestMapping(value = "/job/{jobId}/make-an-offer/initialize", method = RequestMethod.GET)
 	public String getHtml_employerMakeFirstOffer(Model model, HttpSession session,
 												@PathVariable(value = "jobId") int jobId) {
@@ -79,9 +70,6 @@ public class ApplicationController {
 		else return SessionContext.get404Page();
 	}
 	
-
-	
-
 	@RequestMapping(value = "/application/employer-make-initial-offer", method = RequestMethod.POST)
 	@ResponseBody
 	public String initiateContact_byEmployer(@RequestBody MakeInitialOfferByEmployerRequest request,
@@ -90,6 +78,7 @@ public class ApplicationController {
 		applicationService.makeInitialOfferByEmployer(request, session);		
 		return "";
 	}
+	
 	@RequestMapping(value = "/user/{userId}/make-offer/initialize", method = RequestMethod.GET)
 	public String makeOffer_initialize(Model model, HttpSession session, 
 			@PathVariable(value = "userId") int userId) {
@@ -98,12 +87,13 @@ public class ApplicationController {
 		
 		return "/find_employees/MakeOffer_SelectJob";
 	}
+	
 	@RequestMapping(value = "/user/{userId}/make-offer/job/{jobId}", method = RequestMethod.GET)
 	public String makeOffer(Model model, HttpSession session, 
 			@PathVariable(value = "userId") int userId,
 			@PathVariable(value = "jobId") int jobId) {
 		
-		userService.setModel_makeOffer(model, userId, jobId, session);
+		userService.setInitMakeOfferResponse(model, userId, jobId, session);
 		
 		return "/wage_proposal/AjaxResponse_Proposal_NEW";
 	}
@@ -122,7 +112,7 @@ public class ApplicationController {
 			if(verificationService.didSessionUserPostJob(session, job.getId())){
 				applicationService.closeApplication(applicationId);
 			}
-		}		
+		}	
 		
 		return "redirect:/user";
 	}

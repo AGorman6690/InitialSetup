@@ -45,7 +45,7 @@ public class RatingController{
 			return SessionContext.get404Page();
 	}
 	
-	@RequestMapping(value = "/user/{userId}/ratings", method = RequestMethod.GET)
+	@RequestMapping(value = "/rating/user/{userId}", method = RequestMethod.GET)
 	public String getRatings_byUser(Model model, @PathVariable(value = "userId") int userId) {		
 		ratingService.setGetRatingByUserResponse(model, userId);		
 		return "/ratings/RatingsByUser";

@@ -71,17 +71,11 @@
 				
 				<div id="job-list-sort">
 					<div class="filter-item">
-<!-- 						<div class="filter-item-header"> -->
-<!-- 							<input checked id="all-applications" type="checkbox" -->
-<!-- 								name="filter-item"> <label for="all-applications">Applications -->
-<%-- 								<span class="total">${userDto.countApplications_open }</span> --%>
-<!-- 							</label> -->
-<!-- 						</div> -->
 						<div class=filter-item>
 							<div>
 								<input checked id="waiting-on-you" type="checkbox"
 									name="proposal-status"> <label for="waiting-on-you">Proposals waiting
-									for you <span class="total">${reponse.countProposals_waitingOnYou}</span>
+									for you <span class="total">${response.countProposals_waitingOnYou}</span>
 									<c:if test="${response.countProposals_waitingOnYou_new > 0}">
 										<span class="total new">${response.countProposals_waitingOnYou_new}
 											new</span>
@@ -100,7 +94,7 @@
 						<div class="filter-item-header">
 							<input checked id="all-employment" type="checkbox"
 								name="filter-item"> <label for="all-employment">Employment
-								<span class="total">${resonse.countJobs_employment }</span>
+								<span class="total">${response.countJobs_employment }</span>
 							</label>
 						</div>
 					</div>
@@ -128,7 +122,7 @@
 											 ? 'status-employment' : 'status-application' }">
 												 ${applicationProgressStatus.application.isAccepted == 1
 												 ? "Employment" : "Application" }</span>										
-										<div class="messages hide-on-load">
+										<div class="messages">
 											<c:forEach items="${applicationProgressStatus.messages }" var="message">
 												<p>${message }</p>
 											</c:forEach>
@@ -147,7 +141,7 @@
 										test="${applicationProgressStatus.isProposedToSessionUser &&
 														applicationProgressStatus.application.isAccepted == 0 }">
 										<p class="exp-time black-bold">
-											The employer's offer expires in <span class="red-bold">
+											The employer's ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'acceptence' : 'offer' } expires in <span class="red-bold">
 												${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
 										</p>
 									</c:if>

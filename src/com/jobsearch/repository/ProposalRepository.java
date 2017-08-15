@@ -148,6 +148,7 @@ public class ProposalRepository extends BaseRepository {
 		} catch (Exception e) {
 			// TODO: handle exception
 			int i = 0;
+			
 		}		
 	}
 	

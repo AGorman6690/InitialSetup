@@ -1,7 +1,8 @@
 <%@ include file="../../includes/TagLibs.jsp"%>
-<div class="proposal-wrapper ${sessionScope.user.profileId == 1 ? 'context-employee' : 'context-employer' }"
+<div class="proposal-wrapper ${sessionScope.user.profileId == 1 ? 'context-employee' : 'context-employer' }
+	${context == 'employer-make-initial-offer' ? 'counter-context' : ''}"
 	data-is-partial-availability-allowed="${response.job.isPartialAvailabilityAllowed}"
-	data-user-id-make-offer-to="${user_makeOfferTo.userId }"
+	data-user-id-make-offer-to="${response.proposeToUserId }"
 	data-job-id-make-offer-for="${response.job.id }"
 	data-context="${sessionScope.user.profileId == 1 ? 'employee' : 'employer' }">
 
@@ -42,7 +43,7 @@
 			
 			<div class="wage-proposal-wrapper proposal-item"
 				data-proposed-amount="${response.currentProposal.amount }">
-				<label>Wage Proposal</label>		
+				<label>Wage</label>		
 				<div class="proposal-item-content">
 					<div class="counter-context">				
 						<c:if test="${context != 'employer-make-initial-offer' }">	
@@ -66,7 +67,7 @@
 			<c:if test="${response.job.isPartialAvailabilityAllowed }">
 				<div class="proposal-item work-day-proposal-wrapper"
 					 data-proposed-work-days="${response.currentProposal.proposedDates }">
-					<label class="">Work Day Proposal</label>		
+					<label class="">Work Days</label>		
 					<div class="proposal-item-content">
 						<div class="conflicting-applications-countering"></div>						
 						<p class="red-bold counter-context">

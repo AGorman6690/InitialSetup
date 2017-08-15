@@ -39,30 +39,18 @@ $(document).ready(function(){
 		executeAjaxCall_findEmployees()
 	})
 	
-	
 	$("#find-employees").click(function(){
 		executeAjaxCall_findEmployees();
 	})	
-	
-	
-	
-	
-	
-	
-	
-
 	
 	$("#job-i-might-post").click(function(){
 		$("#filtersContainer").show();
 		$("#what-kind-of-job-container").hide();
 	})
 	
-	$("#makeOfferModal #sendInvite").click(function(){
-		
+	$("#makeOfferModal #sendInvite").click(function(){		
 		executeAjaxCall_sendInvite();
-
 	})
-	
 	
 	$("#selectJob_initiateContact select").change(function(){
 		
@@ -247,7 +235,7 @@ function executeAjaxCall_findEmployees(){
 
 	employeeSearch.radius = $("#miles").val();
 	employeeSearch.address = $("#address").val();
-	employeeSearch.workDays = getSelectedDates($(".calendar"), "yy-mm-dd", "active111");
+	employeeSearch.dates = getSelectedDates($(".calendar"), "yy-mm-dd", "active111");
 	
 	employeeSearch.minimumRating = $("#rating-filter-value").find("input:checked").eq(0).val();
 	employeeSearch.minimumJobsCompleted = $("#jobs-completed-filter-value").find("input:checked").eq(0).val();

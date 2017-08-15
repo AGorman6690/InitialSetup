@@ -55,16 +55,16 @@
 <!-- 					</div> -->
 					<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 					
-						<p>Employees<span class="total total-employees">
+						<p>Accepted proposals<span class="total total-employees">
 							${employerHomepageJob.countEmployees_hired } of ${employerHomepageJob.job.positionsPerDay }</span></p>
 	<%-- 					<p class="see-full-details linky-hover" data-job-id="${employerHomepageJob.job.id }"> --%>
 	<!-- 						<span class="text">Details</span> -->
 	<!-- 						<span class="glyphicon glyphicon-menu-right"></span></p> -->
 					<div>	
 						<p class="show-hide-details see-details linky-hover "
-							data-job-id="${employerHomepageJob.job.id }">View Applicants</p>
+							data-job-id="${employerHomepageJob.job.id }">View proposals</p>
 						<p class="show-hide-details hide-details linky-hover"
-							data-job-id="${employerHomepageJob.job.id }">Hide Applicants</p>
+							data-job-id="${employerHomepageJob.job.id }">Hide proposals</p>
 					</div>
 				</div>
 				
@@ -72,7 +72,7 @@
 			</div>
 		</c:forEach>
 	<div id="sort-wrapper">
-		<div class="item sort">
+		<div class="item sort hide-on-load">
 			<input id="surpress-certain-details" type="checkbox" name="surpress-certain-details">
 			<label for="surpress-certain-details">Less Info</label>
 		</div>		

@@ -13,12 +13,12 @@
 	</div>
 	<div>
 		<label>Wage</label>
-		<span>$ ${applicationDto.employmentProposalDto.amount } / hr</span>
+		<span>$ ${applicationProgressStatus.currentProposal.amount } / hr</span>
 	</div>
 	<div>
 		<label>Schedule</label>
-		<span>${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() }
-		 ${applicationDto.employmentProposalDto.dateStrings_proposedDates.size() == 1 ? 'day' : 'days' }
+		<span>${applicationProgressStatus.currentProposal.proposedDates.size() }
+		 ${applicationProgressStatus.currentProposal.proposedDates.size() == 1 ? 'day' : 'days' }
 		</span>
 	</div>
 </div>

@@ -8,6 +8,10 @@ import com.jobsearch.model.Proposal
 import com.jobsearch.model.WorkDay
 import com.jobsearch.model.WorkDayDto;
 
+// *********************************************************************************
+// Refactor : this needs to be harmonized with InitMakeOfferResponse
+// *********************************************************************************
+
 public class CurrentProposalResponse {
 	Proposal currentProposal
 	Job job
@@ -18,6 +22,8 @@ public class CurrentProposalResponse {
 	String time_untilEmployerApprovalExpires
 //	List<JobWorkDay> jobWorkDays
 	
+	Integer proposeToUserId
+	 
 	public static class JobWorkDay{
 	
 

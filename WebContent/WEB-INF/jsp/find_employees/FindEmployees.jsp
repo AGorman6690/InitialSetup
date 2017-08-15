@@ -33,10 +33,10 @@
 <div id="distance-filter-wrapper">
 	<div id="distance-filter">
 		<input id="miles" type="text" placeholder="number of"
-			value="${not empty employeeSearch ? employeeSearch.radius: '25' }"/>
+			value="${not empty response ? response.radiusSearched : '25' }"/>
 		<span>miles from</span>
 		<input id="address" type="text" placeholder="city, state, zip"
-			value="${not empty employeeSearch ? employeeSearch.address : '55119' }"/>
+			value="${not empty response ? response.addressSearched : '55119' }"/>
 		<button id="find-employees" class="sqr-btn">Find Employees</button>
 	</div>
 </div>
@@ -99,7 +99,7 @@
 	</div>	
 </div>
 <div id="results">
-	<c:if test="${not empty employeeSearch }">
+	<c:if test="${not empty response }">
 		<%@ include file="./Results_Find_Employees.jsp" %>
 	</c:if>	
 </div>

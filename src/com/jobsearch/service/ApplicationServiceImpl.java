@@ -310,6 +310,8 @@ public class ApplicationServiceImpl {
 			// Set the application
 			Application application = new Application();
 			application.setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
+			application.setUserId(request.getProposeToUserId());
+			application.setJobId(request.getJobId());
 
 			Proposal newProposal = proposalService.getNewProposalFromEmployer(
 					request.getRespondToProposalRequest());
@@ -320,12 +322,12 @@ public class ApplicationServiceImpl {
 			insertApplication(application, newProposal, null);	
 			
 			Application newApplication = getApplication(request.getJobId(),	request.getProposeToUserId());
-//			Proposal proposal = proposalService.getCurrentProposal(newApplication.getApplicationId());
+			Proposal currentProposal = proposalService.getCurrentProposal(newApplication.getApplicationId());
 
 			// ******************************************************************
 			// Is this flag needed on both objects?????????			
 			updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
-//			proposalService.updateProposalFlag(proposal, EmploymentProposalDTO.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
+			proposalService.updateProposalFlag(currentProposal, Proposal.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			// ******************************************************************
 		}
 
@@ -377,6 +379,7 @@ public class ApplicationServiceImpl {
 		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) isEmployee = false;
 		
 		if(previousProposal != null){
+			
 			// Employer filed all positions
 			if(previousProposal.getFlag_isCanceledDueToEmployerFillingAllPositions() == 1){
 				if(job.getIsPartialAvailabilityAllowed()){
@@ -429,6 +432,10 @@ public class ApplicationServiceImpl {
 		}
 		
 		
+		if(currentProposal.getFlag_employerAcceptedTheOffer() == 1 && application.getIsAccepted() == 0){
+			messages.add((isEmployee ? "The employer accepted your offer"
+					: "You accepted the applicant's offer" ));
+		}
 		
 		// Employer initiated contact
 		if(currentProposal.getFlag_employerInitiatedContact() == 1){

@@ -2,7 +2,7 @@
 
 
 <c:choose>
-	<c:when test="${empty userDtos }" >
+	<c:when test="${empty response.users }" >
 		<p>No prospective applicants meet your search criteria</p>
 	</c:when>
 	<c:otherwise>
@@ -14,40 +14,54 @@
 					<th>Overall Rating</th>
 					<th>Jobs Completed</th>
 					<th>Home Location</th>
-					<c:if test="${doShowAvailability }">
+					<c:if test="${not empty response.countDatesSearched }">
 						<th>Days Available</th>
 					</c:if>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach items="${userDtos }" var="userDto">
-					<tr data-user-id="${userDto.user.userId }"
-						data-user-name="${userDto.user.firstName }">
+			
+				<c:forEach items="${response.users }" var="user">
+				
+					<tr data-user-id="${user.user.userId }"
+						data-user-name="${user.user.firstName }">
+						
 						<td>
-							<span class="make-an-offer linky-hover" data-user-id="${userDto.user.userId }">
+							<span class="make-an-offer linky-hover" data-user-id="${user.user.userId }">
 								Make An Offer
 							</span>
 							<div class="make-offer-container"></div>
-						</td>
+						</td>	
+										
 						<td>
+							<c:set var="param_userId" value="${user.user.userId }" ></c:set>
+							<c:set var="param_userName" value="${user.user.firstName}" ></c:set>
 							<%@ include file="./../ratings/Template_RenderRatingsMod.jsp" %>
 						</td>
+						
 						<td class="center">
+							<c:set var="param_userOverallRating" value="${user.overallRating }" ></c:set>
 							<%@ include file="./../ratings/RenderStars.jsp" %>
 						</td>
-						<td class="center">${userDto.count_jobsCompleted }</td>
-						<td>${userDto.user.homeCity}, ${userDto.user.homeState }</td> 
-						<c:if test="${doShowAvailability }">
+							
+						<td class="center">${user.countJobsCompleted }</td>
+						
+						<td>${user.user.homeCity}, ${user.user.homeState }</td> 
+						
+						<c:if test="${!empty response.countDatesSearched }">
 							<td class="days-available">
 								<span class="toggle-availability-calendar">
-									${userDto.count_availableDays_perFindEmployeesSearch } of 
-									${employeeSearch.workDays.size() }
+									${user.countDaysAvailable } of 
+									${response.countDatesSearched }
 								</span>	
 																
 							</td>		
-						</c:if>					
+						</c:if>	
+									
 					</tr>
+					
 				</c:forEach>
+				 
 			</tbody>
 		</table>
 	</c:otherwise>

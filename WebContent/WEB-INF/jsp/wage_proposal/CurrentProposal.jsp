@@ -3,7 +3,7 @@
 	<div>
 		<div class="a-proposal">
 			<c:if test="${!empty applicationProgressStatus.previousProposal &&
-			 	applicationProgressStatus.application.isAccepted == 0 }">
+ 			 	applicationProgressStatus.application.isAccepted == 0 }">
 				<label class="">${!applicationProgressStatus.isProposedToSessionUser ?
 	 				'Your last proposal' :
 	 				sessionScope.user.profileId == 1 ? "Employer's last proposal" :
@@ -11,14 +11,14 @@
 	 			<div class="proposed-value">
 					<span class="dollar-sign">$</span>
 					<fmt:formatNumber type="number" minFractionDigits="2" 
-						maxFractionDigits="2" 
+ 						maxFractionDigits="2"
 						value="${applicationProgressStatus.previousProposal.amount}" /> / hr
 				</div>
 				<div class="proposed-value">
 				
-		 			<c:if test="${param_job.isPartialAvailabilityAllowed == 1}"> 							 
+		 			<c:if test="${param_job.isPartialAvailabilityAllowed}"> 							 
 		 				${applicationProgressStatus.previousProposal.proposedDates.size() } 
-		 				 of 0 days			 
+		 				 of ${applicationProgressStatus.countJobWorkDays } ${applicationProgressStatus.countJobWorkDays == 1 ? 'day' : 'days' }		 
 		 			</c:if> 
 	 			</div>
 			</c:if>

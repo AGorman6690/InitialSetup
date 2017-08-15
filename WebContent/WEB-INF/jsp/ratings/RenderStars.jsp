@@ -7,12 +7,12 @@
 <!-- ********************************************************** -->
 <!-- ********************************************************** -->
 <c:choose>
-	<c:when test="${empty userDto.ratingValue_overall }">
+	<c:when test="${empty param_userOverallRating }">
 		No Rating
 	</c:when>
 	<c:otherwise>
 		<input name="input-1" class="rating-loading"
-				value="${userDto.ratingValue_overall }	">									
-		${userDto.ratingValue_overall}
+				value="${param_userOverallRating }	">									
+		${param_userOverallRating}
 	</c:otherwise>
 </c:choose>	

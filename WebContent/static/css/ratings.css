@@ -1,5 +1,5 @@
 .show-applicant-ratings-mod{
-	text-align: center;
+/* 	text-align: center; */
 }
 .show-applicant-ratings-mod .user-rating:hover{
 	cursor: pointer;
@@ -207,4 +207,11 @@ body{
 	margin: 20px 0px;
     font-weight: bold;
     text-align: left;
+}
+#user-ratings h3{
+	font-weight: bold;
+	text-align: center;
+}
+.personal-info-section p{
+	margin-left: 20px;
 }

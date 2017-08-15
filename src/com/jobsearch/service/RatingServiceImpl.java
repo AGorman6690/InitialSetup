@@ -189,6 +189,7 @@ public class RatingServiceImpl {
 		GetRatingsByUserResponse response = new GetRatingsByUserResponse();
 		response.setProfileInfoDto(userService.getProfileInfoDto(user));
 		model.addAttribute("response", response);
+		model.addAttribute("isViewingOnesSelf", false);
 	}
 
 	public void deleteRatings(int userId, int jobId) {

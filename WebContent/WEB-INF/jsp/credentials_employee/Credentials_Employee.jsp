@@ -80,7 +80,7 @@
 				<label>About</label>
 				<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">							
 					<c:choose>
-						<c:when test="${response.profileInfoDto.user.about == '' }">
+						<c:when test="${response.profileInfoDto.user.about == '' || empty response.profileInfoDto.user.about }">
 							<span class="not-set">Write something so
 							${sessionScope.user.profileId == 1 ? ' employers' : ' applicants' } know a little bit about you</span>
 						</c:when>
@@ -90,7 +90,7 @@
 					</c:choose>
 				</span>				
 				<c:if test="${isViewingOnesSelf }">
-					<div id="edit-aout" class="edit-container">
+					<div id="edit-about" class="edit-container">
 						
 						<textarea id="about" class="select-all">${response.profileInfoDto.user.about }</textarea>
 						<p class="edit-wrapper"><span id="save-about" class="save-profile-info">Save</span></p>

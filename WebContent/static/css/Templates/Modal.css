@@ -57,15 +57,15 @@
 
 /* Modal Header */
 .mod-header {
-    padding: 2px 16px;
-/*     background-color: #5B7BA3; */
-/*     color: white; */
-/*     border-top-right-radius:5px; */
-/*     border-top-left-radius:5px; */
+/*     padding: 2px 16px; */
+    /* background-color: #5B7BA3; */
+    /* color: white; */
+    /* border-top-right-radius: 5px; */
+    /* border-top-left-radius: 5px; */
     color: #163b3d;
     background: #ffffff;
-    border-bottom: 1px solid #cacaca;
-    text-align: center;
+    /* border-bottom: 1px solid #cacaca; */
+    text-align: right;
 }
 
 .mod-header h2{
@@ -130,13 +130,13 @@
 	font-family:'Glyphicons Halflings';
 	content: "\e014";
 	    float: none;
-    margin: 10px;
+/*     margin: 10px; */
     font-size: 25px;
 	cursor:pointer;
     color: #bbbbbb;
 }
 .mod.simple-header .mod-header{
-    background: #f4f4f4;
+/*     background: #f4f4f4; */
 }
 .mod.simple-header .mod-header:hover{
     cursor: pointer;

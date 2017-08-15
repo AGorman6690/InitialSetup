@@ -155,9 +155,9 @@ function getProposalWrapper($e) {
 	else return $e.closest(".respond-to-proposal").find(".proposal-wrapper").eq(0);
 }
 function getMakeInitialOfferByEmployerRequest($e) {
-	var $wrapper = $e.closest(".wrapper");
+	var $wrapper = $e.closest(".proposal-wrapper");
 	var request = {};
-	applicationDto.respondToProposalRequest = getRespondToProposalRequest($e);
+	request.respondToProposalRequest = getRespondToProposalRequest($e);
 	request.proposeToUserId = $wrapper.attr("data-user-id-make-offer-to");
 	request.jobId = $wrapper.attr("data-job-id-make-offer-for");
 	return request;	

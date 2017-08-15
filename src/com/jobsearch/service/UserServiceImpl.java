@@ -32,7 +32,6 @@ import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Application;
 import com.jobsearch.model.CalendarDay;
-import com.jobsearch.model.EmployeeSearch;
 import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.JobSearchUserDTO;
@@ -41,12 +40,18 @@ import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.repository.UserRepository;
+import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.responses.GetProfileCalendarResponse;
+import com.jobsearch.responses.InitMakeOfferResponse;
 import com.jobsearch.responses.GetProfileCalendarResponse.CalendarApplication;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
+import com.jobsearch.responses.CurrentProposalResponse;
+import com.jobsearch.responses.FindEmployeesResponse;
+import com.jobsearch.responses.GetJobResponse;
+import com.jobsearch.responses.FindEmployeesResponse.FindEmployeeUser;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.DateUtility;
@@ -305,6 +310,7 @@ public class UserServiceImpl {
 					application.getApplicationId());				
 			Proposal previousProposal = proposalService.getPreviousProposal(
 					currentProposal.getProposalId(), application.getApplicationId());
+			Job job = jobService.getJob(application.getJobId());
 			
 			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
 			initializeApplicationProgressStatus(applicationProgressStatus, application.getJobId());
@@ -338,6 +344,8 @@ public class UserServiceImpl {
 					application,
 					previousProposal,
 					currentProposal));
+			
+			applicationProgressStatus.setJob(job);
 			
 			response.getApplicationProgressStatuses().add(applicationProgressStatus);			
 			applicationService.inspectNewness(application);		
@@ -396,6 +404,7 @@ public class UserServiceImpl {
 		model.addAttribute("user", employee);	
 		model.addAttribute("monthSpan_employmentSummaryCalendar", monthSpan_employmentSummaryCalendar);
 		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
+		
 		
 		
 		
@@ -601,45 +610,48 @@ public class UserServiceImpl {
 	}
 
 
-	public void setModel_findEmployees_results(Model model, EmployeeSearch employeeSearch) {
+	public void setFindEmployeesResponse(Model model, FindEmployeesRequest request){
 
-		List<JobSearchUserDTO> userDtos = new ArrayList<JobSearchUserDTO>();
-
-		if (GoogleClient.isValidAddress(employeeSearch.getAddress())) {
+		if (GoogleClient.isValidAddress(request.getAddress()) && 
+				verificationService.isPositiveNumber(request.getRadius())) {
 			
-			Coordinate coordinate = GoogleClient.getCoordinate(employeeSearch.getAddress());
-			employeeSearch.setLat(coordinate.getLatitude());
-			employeeSearch.setLng(coordinate.getLongitude());
-
-			List<JobSearchUser> users = this.getUsers_ByFindEmployeesSearch(employeeSearch);
-			boolean doShowAvailability = true;
-			if(employeeSearch.getWorkDays().size() == 0) doShowAvailability = false; 
-
+			Coordinate coordinate = GoogleClient.getCoordinate(request.getAddress());
+			request.setLat(coordinate.getLatitude());
+			request.setLng(coordinate.getLongitude());
+			
+			FindEmployeesResponse response = new FindEmployeesResponse();
+			response.setAddressSearched(request.getAddress());
+			response.setRadiusSearched(request.getRadius());
+					
+			if(verificationService.isListPopulated(request.getDates())){			
+				response.setCountDatesSearched(request.getDates().size());
+			}
+			
+			response.setUsers(new ArrayList<>());
+			List<JobSearchUser> users = this.getUsers_ByFindEmployeesRequest(request);
 			for (JobSearchUser user : users) {
-				JobSearchUserDTO userDto = new JobSearchUserDTO();
+				
+				FindEmployeeUser findEmployeeUser = new FindEmployeeUser();
 
-				userDto.setUser(user);
-				userDto.setRatingValue_overall(ratingService.getRating(user.getUserId()));			
-				userDto.setCount_jobsCompleted(
+				findEmployeeUser.setUser(user);
+				findEmployeeUser.setOverallRating(ratingService.getRating(user.getUserId()));			
+				findEmployeeUser.setCountJobsCompleted(
 						jobService.getCount_JobsCompleted_ByUser(user.getUserId()));
 
-				if(doShowAvailability){
-					userDto.setCount_availableDays_perFindEmployeesSearch(
+				if(request.getDates() != null){
+					findEmployeeUser.setCountDaysAvailable(
 							jobService.getCount_availableDays_ByUserAndWorkDays(user.getUserId(),
-									employeeSearch.getWorkDays()));	
+									request.getDates()));	
 				}
 				
-				userDtos.add(userDto);
-			}
-			model.addAttribute("employeeSearch", employeeSearch);
-			model.addAttribute("doShowAvailability", doShowAvailability);
-			model.addAttribute("userDtos", userDtos);
+				response.getUsers().add(findEmployeeUser);
+			}			
+			model.addAttribute("response", response);		
 		}
-
 	}
 
-	public List<JobSearchUser> getUsers_ByFindEmployeesSearch(EmployeeSearch employeeSearch) {
-		return repository.getUsers_ByFindEmployeesSearch(employeeSearch);
+	public List<JobSearchUser> getUsers_ByFindEmployeesRequest(FindEmployeesRequest request) {
+		return repository.getUsers_byFindEmployeesRequest(request);
 	}
 
 
@@ -665,35 +677,37 @@ public class UserServiceImpl {
 		model.addAttribute("response", response);
 	}
 
-	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
 
-		EmployeeSearch employeeSearch = new EmployeeSearch();
+	// Update to use the new models
+	// ****************************************************************************	
+	// ****************************************************************************	
+//	public List<JobSearchUser> getApplicants_whoAreAvailableButDidNotApplyForDate(int jobId, String dateString) {
 
-		JobDTO jobDto_findEmployees = new JobDTO();
-		jobDto_findEmployees.setJob(jobService.getJob(jobId));
-		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
+//		EmployeeSearch employeeSearch = new EmployeeSearch();
+//
+//		JobDTO jobDto_findEmployees = new JobDTO();
+//		jobDto_findEmployees.setJob(jobService.getJob(jobId));
+//		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
+//	
+//		return getUsers_ByFindEmployeesRequest(employeeSearch);		
 
-//		employeeSearch.setJobDto(jobDto_findEmployees);
-//		employeeSearch.setJobId_onlyIncludeApplicantsOfThisJob_butExcludeApplicantsOnTheseWorkDays(jobId);
+//	}
 
-		return getUsers_ByFindEmployeesSearch(employeeSearch);
+//	public List<JobSearchUser> getUsers_whoAreAvailableButHaveNotApplied(int jobId, String dateString) {
 
-	}
 
-	public List<JobSearchUser> getUsers_whoAreAvailableButHaveNotApplied(int jobId, String dateString) {
+//		EmployeeSearch employeeSearch = new EmployeeSearch();
+//
+//		JobDTO jobDto_findEmployees = new JobDTO();
+//		jobDto_findEmployees.setJob(jobService.getJob(jobId));
+//		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
+//
+//		return getUsers_ByFindEmployeesRequest(employeeSearch);
+		
+//	}
 
-		EmployeeSearch employeeSearch = new EmployeeSearch();
-
-		JobDTO jobDto_findEmployees = new JobDTO();
-		jobDto_findEmployees.setJob(jobService.getJob(jobId));
-		jobDto_findEmployees.getWorkDays().add((new WorkDay(dateString)));
-
-//		employeeSearch.setJobDto(jobDto_findEmployees);
-//		employeeSearch.setJobId_excludeApplicantsOfThisJob(jobId);
-
-		return getUsers_ByFindEmployeesSearch(employeeSearch);
-	}
-
+// ****************************************************************************
+	// ****************************************************************************		
 
 
 
@@ -761,22 +775,39 @@ public class UserServiceImpl {
 				
 	}
 
-	public void setModel_makeOffer(Model model, int userId_makeOfferTo, int jobId, HttpSession session) {
+	public void setInitMakeOfferResponse(Model model, int userId_makeOfferTo, int jobId, HttpSession session) {
 
 		if(!verificationService.didUserApplyForJob(jobId, userId_makeOfferTo) &&
 				verificationService.didSessionUserPostJob(session, jobId)){
 			
-			JobDTO jobDto = new JobDTO();
-			jobDto.setJob(jobService.getJob(jobId));
-			jobDto.setWorkDayDtos(workDayService.getWorkDayDtos(jobId));
-			jobDto.setWorkDays(workDayService.getWorkDays(jobId));
-			jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
-			jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
+//			JobSearchUser sessionUser = SessionContext.getUser(session);			
+//			Proposal proposal = getProposal(proposalId);			
+			Job job = jobService.getJob(jobId);			
+			List<WorkDay> workDays = workDayService.getWorkDays(job.getId()) ;
+			
+			CurrentProposalResponse response = new CurrentProposalResponse();
+			response.setJob(job);
+			response.setProposeToUserId(userId_makeOfferTo);
+//			response.setCurrentProposal(proposal);
+//			response.setJobWorkDays(workDays);
+			response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
+			response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
+//			response.setTime_untilEmployerApprovalExpires(
+//					getTime_untilEmployerApprovalExpires(proposal.getExpirationDate(), LocalDateTime.now()));
+//			response.setTimeUntilStart(DateUtility.getTimeInBetween(
+//					LocalDateTime.now(),
+//					workDays.get(0).getStringDate(),
+//					workDays.get(0).getStringStartTime()));
+			
+			model.addAttribute("response", response);
+//			model.addAttribute("isEmployerMakingFirstOffer", false);
+			
 
-			model.addAttribute("json_workDayDtos", JSON.stringify(jobDto.getWorkDayDtos()));
-			model.addAttribute("jobDto", jobDto);
-			model.addAttribute("user_makeOfferTo", getUser(userId_makeOfferTo));
-			model.addAttribute("context", "employer-make-initial-offer");
+			model.addAttribute("context", "employer-make-initial-offer");						
+			model.addAttribute("response", response);
+			model.addAttribute("json_workDayDtos", JSON.stringify(workDayService.getWorkDayDtos(jobId)));
+//			model.addAttribute("user", sessionUser);
+//			model.addAttribute("isEmployerMakingFirstOffer", false);
 			
 		}
 		
