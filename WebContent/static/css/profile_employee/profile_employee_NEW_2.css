@@ -207,31 +207,3 @@ div[data-is-waiting-on-you=false]:not([data-is-accepted="1"]) .status.status-app
 
 
    
-
-#personalInfoContainer {
-	width: 400px !important;
-    text-align: left !important;
-}
-#profile-content #user-header {
-	width: auto !important;
-}
-#profile-content #user-rating-details .criteria-name {
-    width: 161px !important;
-    display: inline-block;
-    text-align: left;
-    /* color: #163b3d; */
-    /* font-weight: bold; */
-    font-size: 15px !important;
-}
-#profile-content #user-rating-details .rating-value .star {
-    font-size: 14px !important;
-}
-#profile-content .star {
-    font-size: 18px !important;
-}
-#profile-content .completed-job{
-	width: auto !important;
-}
-#profile-content .comments-cont h5{
-	text-align: left !important;
-}

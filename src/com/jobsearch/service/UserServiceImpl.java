@@ -293,7 +293,7 @@ public class UserServiceImpl {
 		LocalDateTime now = LocalDateTime.now();
 		
 		ViewEmployeeHomepageResponse response = new ViewEmployeeHomepageResponse();
-		setHomePageResponse_common(model, session);
+
 		
 		
 		// User profile info
@@ -406,6 +406,16 @@ public class UserServiceImpl {
 		model.addAttribute("calendarDays_employmentSummary", calendarDays_employmentSummary);
 		
 		
+	
+		// Ideally this would be updated every time a page is loaded.
+		// Since a job becomes one-that-needs-a-rating only after the passage of
+		// time,
+		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
+		// because
+		// I'm assuming this page loads most often.
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(sessionUser.getUserId());		
+		session.setAttribute("jobs_needRating", jobs_needRating);
+		model.addAttribute("isViewingOnesSelf", true);
 		
 		
 //		setModel_getRatings_byUser(model, sessionUser.getUserId());		
@@ -450,9 +460,6 @@ public class UserServiceImpl {
 		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse();		
 		List<Job> jobs = jobService.getJobs_byEmployerAndStatuses(employer.getUserId(),
 				Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
-
-		setHomePageResponse_common(model, session);
-		
 		
 		// User profile info
 		response.setProfileInfoDto(getProfileInfoDto(sessionUser));
@@ -517,24 +524,19 @@ public class UserServiceImpl {
 
 		model.addAttribute("response", response);
 		
-	}
-
-	private void setHomePageResponse_common(Model model, HttpSession session) {
 		
-		JobSearchUser sessionUser = SessionContext.getUser(session);
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
 		// time,
 		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
 		// because
 		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(sessionUser.getUserId());		
+		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(sessionUser.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("isViewingOnesSelf", true);
 		
-
-		
 	}
+
 
 	private List<CalendarDay> getCalendarDays_employmentSummary(int userId) {
 		

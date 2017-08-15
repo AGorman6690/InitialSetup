@@ -44,8 +44,11 @@ import com.jobsearch.repository.JobRepository;
 import com.jobsearch.request.AddJobRequest;
 import com.jobsearch.request.EditJobRequest;
 import com.jobsearch.request.FindEmployeesRequest;
+import com.jobsearch.request.FindJobsRequest;
 import com.jobsearch.responses.ApplicationProgressResponse;
 import com.jobsearch.responses.ApplicationProgressResponse.ApplicationProgressStatus;
+import com.jobsearch.responses.FindJobsResponse;
+import com.jobsearch.responses.FindJobsResponse.JobDto_findJobsResponse;
 import com.jobsearch.responses.GetJobResponse;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ValidateAddressResponse;
@@ -154,7 +157,7 @@ public class JobServiceImpl {
 		return repository.getJob(jobId);
 	}
 
-	private List<Job> getJobs_ByFindJobFilter(FindJobFilterDTO filter) {
+	private List<Job> getJobs_ByFindJobFilter(FindJobsRequest request) {
 
 		// ******************************************************
 		// ************************ ******************************
@@ -165,9 +168,9 @@ public class JobServiceImpl {
 		// ******************************************************
 		// ******************************************************
 		// Get the filtered jobs
-		List<Job> filteredJobs = repository.getFilteredJobs(filter);
+		List<Job> jobs = repository.getJobs_byFindJobsRequest(request);
 
-		return filteredJobs;
+		return jobs;
 
 	}
 
@@ -1079,6 +1082,38 @@ public class JobServiceImpl {
 		else
 			response.setIsValid(false);
 		return response;
+	}
+
+	public void setFindJobsResponse(Model model, HttpSession session, FindJobsRequest request) {
+		
+		Coordinate coord = GoogleClient.getCoordinate(request.getAddress());
+		if(coord != null){
+			
+			request.setLat(coord.getLatitude());
+			request.setLng(coord.getLongitude());
+			
+			List<Job> jobs = getJobs_ByFindJobFilter(request);
+			
+			FindJobsResponse response = new FindJobsResponse();
+			response.setJobDtos(new ArrayList<>());
+		
+			for (Job job : jobs) {
+
+				List<WorkDay> workDays = workDayService.getWorkDays(job.getId());
+				double distance = GoogleClient.getDistance(request.getLat(), request.getLng(), job.getLat(),
+						job.getLng());
+				distance = MathUtility.round(distance, 1, 0);
+				
+				JobDto_findJobsResponse jobDto = new JobDto_findJobsResponse();
+				jobDto.setJob(job);
+				jobDto.setWorkDays(workDays);
+				jobDto.setDistance(distance);
+				jobDto.setEmployerRating(ratingService.getRating(job.getUserId()));
+
+				response.getJobDtos().add(jobDto);
+			}			
+			model.addAttribute("response", response);			
+		}		
 	}
 
 }

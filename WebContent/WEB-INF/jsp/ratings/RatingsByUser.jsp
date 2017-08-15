@@ -53,8 +53,10 @@
 							<c:forEach items="${response.profileInfoDto.completedJobsDtos }" var="completedJobDto">
 								<div class="completed-job">
 									<span class="">${completedJobDto.job.jobName }</span>
+									<span class="rating-value">
 									<input name="input-1" class="rating-loading"
 											value="${completedJobDto.rating }">${completedJobDto.rating }
+										</span>
 									<c:if test="${completedJobDto.comments.size() > 0 }">
 										<div class="comments-cont">
 											<p class="toggle-comments" data-toggle-id="comments-${completedJobDto.job.id }">

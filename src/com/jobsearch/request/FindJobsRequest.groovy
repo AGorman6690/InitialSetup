@@ -1,4 +1,4 @@
-package com.jobsearch.job.web
+package com.jobsearch.request
 
 import java.sql.Date
 import java.sql.Time
@@ -15,49 +15,34 @@ import com.jobsearch.google.GoogleClient
 
 import  com.jobsearch.utilities.DateUtility
 
-public class FindJobFilterDTO {
-	
-	// ***************************************************************
-	// ***************************************************************
-	// Eliminate this class.
-	// Just use JobDTO
-	// ***************************************************************
-	// ***************************************************************
-
+public class FindJobsRequest {
 	int id
-	String savedName
+
 	int userId
 	
-	String fromAddress
-	String city
-	String state
-	String zipCode
+	String address
+//	String city
+//	String state
+//	String zipCode
 	float lat
 	float lng
 	Integer radius
-	
-	int[] categoryIds
-	List<Category> categories
-	
-	Date startDate
-	Date endDate
-	Time startTime
-	Time endTime
+		
+
 	String stringStartDate
 	String stringEndDate
 	String stringStartTime
 	String stringEndTime
-	LocalDate endDate_local
-	LocalTime startTime_local
-	LocalDate startDate_local
-	LocalTime endTime_local
+	LocalDate endDate
+	LocalTime startTime
+	LocalDate startDatel
+	LocalTime endTime
 	boolean beforeStartTime
 	boolean beforeEndTime
 	boolean beforeStartDate
 	boolean beforeEndDate
 	
-	List<String> workingDays
-	boolean doMatchAllDays
+	List<String> dates
 	
 	Double duration	
 	boolean isShorterThanDuration
@@ -65,15 +50,10 @@ public class FindJobFilterDTO {
 	int returnJobCount
 	String sortBy
 	boolean isAscending
-	int[] loadedJobIds
+	List<Integer> alreadyLoadedJobIds
 	boolean isAppendingJobs
 	boolean isSortingJobs
-	List<Integer> jobIdsToExclude
-	
-	// 0 = never
-	// 1 = daily
-	int emailFrequencyId;
-	
+
 
 public FindJobFilterDTO(int radius, String fromAddress, int[] categoryIds, String startTime, String endTime,
 			boolean beforeStartTime, boolean beforeEndTime, String startDate, String endDate, boolean beforeStartDate2,

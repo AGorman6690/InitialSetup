@@ -5,8 +5,8 @@ $(document).ready(function(){
 	
 	$("#get-jobs-results").on("click", "#get-more-jobs", function(){
 		var isAppendingJobs = true;
-		var paramString = getParamString(isAppendingJobs);	
-		executeAjaxCall_getFilteredJobs(paramString, true, isAppendingJobs);
+		var findJobsRequest = getFindJobsRequest(isAppendingJobs);	
+		executeAjaxCall_getFilteredJobs(findJobsRequest, true, isAppendingJobs);
 	})
 	
 	$("#location-filter input").focus(function() {
@@ -36,8 +36,8 @@ $(document).ready(function(){
 
 	$("#get-jobs").click(function() {	
 		var isAppendingJobs = false;
-		var paramString = getParamString(isAppendingJobs);	
-		executeAjaxCall_getFilteredJobs(paramString, true, isAppendingJobs);
+		var findJobsRequest = getFindJobsRequest(isAppendingJobs);	
+		executeAjaxCall_getFilteredJobs(findJobsRequest, true, isAppendingJobs);
 	})
 	
 	$("#applied-filters").on("click", "button", function() {
@@ -140,15 +140,17 @@ function applyFilter($e) {
 	$filter.find(".filter-name").click();
 
 }
-function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJobs){
+function executeAjaxCall_getFilteredJobs(findJobsRequest, doSetMap, isAppendingJobs){
 	
 	broswerIsWaiting(true);
 //	if(!$("#mainBottom").is("visible"))	$("#mainBottom").show();
 	
 	$.ajax({
-		type : "GET",
-		url: '/JobSearch/jobs/filter' + urlParameters,
+		type : "POST",
+		url: '/JobSearch/jobs/filter',
 		headers : getAjaxHeaders(),
+		contentType : "application/json",
+		data : JSON.stringify(findJobsRequest),		
 		dataType: "html"
 	}).done(function(html){		
 		
@@ -172,15 +174,16 @@ function executeAjaxCall_getFilteredJobs(urlParameters, doSetMap, isAppendingJob
 		renderStars($e_getJobsResults);
 	})
 }
-function getParamString(isAppendingJobs) {
+function getFindJobsRequest(isAppendingJobs) {
 	
 	var dates = [];
-	var paramString = "";
+	var findJobsRequest = {};
+	findJobsRequest.dates = [];
 	var isBefore;
 	
-	paramString = "?fromAddress=" + $("#address").val();
-	paramString += "&radius=" + $("#miles").val();
-	paramString += "&isAppendingJobs=" + isAppendingJobs;
+	findJobsRequest.address =  $("#address").val();
+	findJobsRequest.radius = $("#miles").val();
+	//paramString += "&isAppendingJobs=" + isAppendingJobs;
 	
 	$("#applied-filters button").each(function(i, e) {
 		var paramName1 = $(e).attr("data-parameter-name-1");
@@ -197,7 +200,7 @@ function getParamString(isAppendingJobs) {
 	})
 	
 
-	return paramString;	
+	return findJobsRequest;	
 	
 }
 

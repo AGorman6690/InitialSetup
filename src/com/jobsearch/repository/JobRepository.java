@@ -27,6 +27,7 @@ import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.request.AddJobRequest;
+import com.jobsearch.request.FindJobsRequest;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.QuestionServiceImpl;
@@ -308,7 +309,7 @@ public class JobRepository extends BaseRepository {
 		}
 	}
 
-	public List<Job> getFilteredJobs(FindJobFilterDTO filter) {
+	public List<Job> getJobs_byFindJobsRequest(FindJobsRequest request) {
 
 		// ****************************************************************
 		// ****************************************************************
@@ -331,99 +332,24 @@ public class JobRepository extends BaseRepository {
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
 				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" 
 				+ " FROM job j"
-				+ " WHERE j.Status < 2"
+				+ " WHERE j.Status <> ?"
 				+ " AND j.Flag_IsNotAcceptingApplications = 0";
 
-		argsList.add(filter.getLat());
-		argsList.add(filter.getLng());
-		argsList.add(filter.getLat());
+		argsList.add(request.getLat());
+		argsList.add(request.getLng());
+		argsList.add(request.getLat());
+		argsList.add(Job.STATUS_PAST);
 
 		String startNextSubQuery = " AND j.JobId IN (";
 		int count_subQueries = 0;
 
-		// **************************************************
-		// Work day sub query
-		// **************************************************
 		String sql_subQuery = null;
-		if (verificationService.isListPopulated(filter.getWorkingDays())) {
-
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
-			if (startNextSubQuery != "")
-				sql_subQuery = startNextSubQuery;
-			else
-				sql_subQuery = "";
-
-			sql_subQuery += " SELECT DISTINCT wd0.jobId";
-			sql_subQuery += " FROM work_day wd0";
-
-			// *************************************
-			// If **ALL** work days are selected.
-			// A job is returned if all their work days was selected by the
-			// user.
-			// *************************************
-			if (filter.getDoMatchAllDays()) {
-
-				int i = 1;
-				for (String workDay : filter.getWorkingDays()) {
-
-					if (i == filter.getWorkingDays().size()) {
-
-						// The WHERE clause must FOLLOW the JOINs
-						sql_subQuery += " WHERE wd0.DateId = ?";
-					} else {
-						sql_subQuery += " INNER JOIN work_day wd" + i + " ON wd" + i + ".JobId = wd" + (i - 1)
-								+ ".JobId" + " AND wd" + i + ".DateId = ?";
-
-					}
-					argsList.add(jobService.getDateId(workDay));
-					i += 1;
-				}
-
-			} else {
-
-				// *************************************
-				// If **At least one** work day was selected.
-				// A job is returned if at least one of their word days was
-				// selected by the user.
-				// *************************************
-				boolean isFirst = true;
-				sql_subQuery += " WHERE (";
-				for (String workDay : filter.getWorkingDays()) {
-
-					if (!isFirst)
-						sql_subQuery += " OR ";
-					sql_subQuery += " wd0.DateId = ?";
-
-					argsList.add(jobService.getDateId(workDay));
-					isFirst = false;
-				}
-
-				// Close the where clause
-				sql_subQuery += ")";
-
-			}
-
-			sql += sql_subQuery;
-
-			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
-			startNextSubQuery = " AND wd0.JobId IN (";
-
+		if (verificationService.isListPopulated(request.getDates())) {
+			// Need to build this
 		}
 
-		// ************************************************
-		// Start date sub query
-		// ************************************************
-		if (filter.getStartDate() != null) {
+		if (request.getStringStartDate() != null) {
 
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
 			else
@@ -432,32 +358,26 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
 			sql_subQuery += " GROUP BY wd.JobId";
-			sql_subQuery += " HAVING MIN(d.Date)";
+			sql_subQuery += " HAVING MIN(d.Id)";
 
-			if (filter.getBeforeStartDate())
+			if (request.getBeforeStartDate()){
 				sql_subQuery += " <= ?";
-			else
+			}				
+			else{
 				sql_subQuery += " >= ?";
-
-			argsList.add(filter.getStartDate());
-
+			}			
+			Integer dateId = jobService.getDateId(request.getStringStartDate());
+			argsList.add(dateId);
 			sql += sql_subQuery;
-
 			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
 		// ************************************************
 		// End date sub query
 		// ************************************************
-		if (filter.getEndDate() != null) {
+		if (request.getStringEndDate() != null) {
 
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
 			else
@@ -468,30 +388,20 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING MAX(d.Date)";
 
-			if (filter.getBeforeEndDate())
+			if (request.getBeforeEndDate())
 				sql_subQuery += " <= ?";
 			else
 				sql_subQuery += " >= ?";
 
-			argsList.add(filter.getEndDate());
-
+			Integer dateId = jobService.getDateId(request.getStringEndDate());
+			argsList.add(dateId);
 			sql += sql_subQuery;
-
 			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
-		// ************************************************
-		// Start time sub query
-		// ************************************************
-		if (filter.getStartTime() != null) {
+		if (request.getStringStartTime() != null) {
 
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
 			else
@@ -500,30 +410,19 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
 
-			if (filter.getBeforeStartTime())
+			if (request.getBeforeStartTime())
 				sql_subQuery += " HAVING MAX(wd.StartTime) <= ?";
 			else
 				sql_subQuery += " HAVING MIN(wd.StartTime) >= ?";
 
-			argsList.add(filter.getStartTime());
-
+			argsList.add(request.getStringStartTime());
 			sql += sql_subQuery;
-
 			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
-		// ************************************************
-		// End time sub query
-		// ************************************************
-		if (filter.getEndTime() != null) {
+		if (request.getEndTime() != null) {
 
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
 			else
@@ -532,30 +431,19 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
 
-			if (filter.getBeforeEndTime())
+			if (request.getBeforeEndTime())
 				sql_subQuery += " HAVING MAX(wd.EndTime) <= ?";
 			else
 				sql_subQuery += " HAVING MIN(wd.EndTime) >= ?";
 
-			argsList.add(filter.getEndTime());
-
+			argsList.add(request.getStringEndTime());
 			sql += sql_subQuery;
-
 			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
-		// ************************************************
-		// Duration sub query
-		// ************************************************
-		if (filter.getEndTime() != null) {
+		if (request.getDuration() != null) {
 
-			// Initialize the sub query's sql string.
-			// If there was a previous sub query, then another sub query needs
-			// to be opened
-			// for this sub query.
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
 			else
@@ -565,18 +453,14 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING COUNT(wd.DateId)";
 
-			if (filter.getIsShorterThanDuration())
+			if (request.getIsShorterThanDuration())
 				sql_subQuery += " <= ?";
 			else
 				sql_subQuery += " >= ?";
 
-			argsList.add(filter.getDuration());
-
+			argsList.add(request.getDuration());
 			sql += sql_subQuery;
-
 			count_subQueries += 1;
-
-			// If there is another sub query, this needs to start it
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
@@ -587,21 +471,15 @@ public class JobRepository extends BaseRepository {
 			i += 1;
 		}
 
-		// Only closed jobs
-		// sql += " WHERE j.Status < 2";
-
-		// Complete the distance filter.
+	
 		sql += " HAVING distance < ?";
-		argsList.add(filter.getRadius());
+		argsList.add(request.getRadius());
 
-		// Skip already-loaded jobs
-		if (filter.getJobIdsToExclude() != null) {
-
-			for (Integer id : filter.getJobIdsToExclude()) {
-				sql += " AND j.jobId <> ?";
-				argsList.add(id);
-			}
+		for (Integer id : request.getAlreadyLoadedJobIds()) {
+			sql += " AND j.jobId <> ?";
+			argsList.add(id);
 		}
+		
 
 		// Order by
 		sql += " ORDER BY ";
