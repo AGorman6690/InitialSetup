@@ -17,7 +17,8 @@
 		</div>
 <!-- 		<div id="applied-filters"></div> -->
 	</div>
-	<div id="wrapper" class="${sessionScope.jobs_needRating.size() > 0 ? 'rating-required' : ''}">
+	<div id="wrapper" class="${sessionScope.jobs_needRating.size() > 0 ? 'rating-required' : ''}
+	 	${not empty response ? 'find-jobs-on-load' : '' }">
 		<div id="other-filters">
 <!-- 			<p class="filter-sort-jobs-header">Filters</p> -->
 			<div class="filter">						
@@ -31,19 +32,20 @@
 				<div class="filter-name-container">
 					<div data-toggle-id="wstart-date-filter">
 						<p class="filter-name">Start Date<span class="glyphicon glyphicon-menu-right"></span></p>
+<!-- 						<p class="applied-filter"></p> -->
 					</div>
 					<div id="start-date-filter" class="dropdown-style">
 						<p class="apply-filter">Apply</p>
 						<div class="radio-container">
 							<label><input data-parameter-name="beforeStartDate" data-parameter-value="1"
-								 data-filter-text="Start before" type="radio"
+								 data-filter-text="Start Before" type="radio"
 								 name="start-date"/>Before</label>
 							<label><input data-parameter-name="beforeStartDate" data-parameter-value="0"
-								 data-filter-text="Start after" type="radio"
+								 data-filter-text="Start After" type="radio"
 								 name="start-date" checked/>After</label>
 						</div>
 						<div class="calendar-container">
-							<div data-parameter-name="startDate" class="calendar v2"></div>
+							<div id="start-date-cal" data-parameter-name="startDate" class="calendar v2"></div>
 						</div>	
 											
 					</div>
@@ -65,7 +67,7 @@
 								 />After</label>
 						</div>		
 						<div class="calendar-container">
-							<div data-parameter-name="endDate" class="calendar v2"></div>
+							<div id="end-date-cal" data-parameter-name="endDate" class="calendar v2"></div>
 						</div>	
 					</div>
 				</div>
@@ -85,7 +87,7 @@
 								 data-filter-text="Start before" type="radio" name="start-time"
 								 checked/>After</label>
 						</div>
-						<select data-parameter-name="startTime" class="time"></select>
+						<select id="start-time-select" data-parameter-name="startTime" class="time"></select>
 					</div>
 				</div>
 			</div>
@@ -105,7 +107,7 @@
 								 data-filter-text="End before" type="radio" name="end-time"/>
 								 After</label>
 						</div>
-						<select data-parameter-name="endTime" class="time"></select>							
+						<select id="end-time-select" data-parameter-name="endTime" class="time"></select>							
 					</div>					
 				</div>
 			</div>
@@ -128,6 +130,7 @@
 					</div>
 				</div>
 			</div>
+<%--
 			<div class="filter">
 				<div class="filter-name-container">
 					<div  data-toggle-id="wwork-days-filter">
@@ -141,11 +144,13 @@
 					</div>
 				</div>
 			</div>	
+ --%>
 			<div id="applied-filters"></div>														
-		</div>
-		
+		</div>		
 		<div id="get-jobs-results-cont">
-			<div id="get-jobs-results"></div>
+			<div id="get-jobs-results">
+<%-- 				<%@ include file="../find_jobs/Render_GetJobs_InitialRequest.jsp"%> --%>
+			</div>
 		</div>	
 		<div id="get-jobs-map-container">
 			<div id="find-jobs-map"></div>

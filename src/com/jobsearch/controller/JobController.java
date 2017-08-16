@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
+import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.request.AddJobRequest;
 import com.jobsearch.request.EditJobRequest;
 import com.jobsearch.request.FindJobsRequest;
@@ -83,12 +84,17 @@ public class JobController {
 	
 	
 
-	@RequestMapping(value = "/jobs/filter", method = RequestMethod.POST)
+	@RequestMapping(value = "/jobs/find/request", method = RequestMethod.POST)
 	public String getFilteredJobs(@RequestBody FindJobsRequest request, HttpSession session, Model model){
 			
-		jobService.setFindJobsResponse(model, session, request);	
+		jobService.setFindJobsResponse(model, session, request);
 		
-		return "/find_jobs/Render_FilteredJobsList";
+		if(request.getIsAppendingJobs()){
+			return "/find_jobs/Render_FilteredJobsList";	
+		}else{
+			return "/find_jobs/Render_GetJobs_InitialRequest";
+		}
+		
 	}
 
 	@RequestMapping(value = "/job/{jobId}/work-day/{dateString}/applicants", method = RequestMethod.GET)
@@ -134,7 +140,18 @@ public class JobController {
 
 	@RequestMapping(value = "/jobs/find", method = RequestMethod.GET)
 	public String viewFindJobs(Model model, HttpSession session) {
-		model.addAttribute("address", userService.buildAddress(SessionContext.getUser(session)));
+		
+		JobSearchUser user = SessionContext.getUser(session);
+		Integer radius = user.getMaxWorkRadius();
+		String address = userService.buildAddress(user);
+		model.addAttribute("address", address);
+		if(address != null && radius != null && radius > 0){
+			FindJobsRequest request = new FindJobsRequest();
+			request.setAddress(address);
+			request.setRadius(radius);			
+			jobService.setFindJobsResponse(model, session, request);
+		}
+		
 		return "/find_jobs_new/Find_Jobs_New";		
 	}
 

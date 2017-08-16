@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -360,7 +361,7 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING MIN(d.Id)";
 
-			if (request.getBeforeStartDate()){
+			if (request.getIsBeforeStartDate()){
 				sql_subQuery += " <= ?";
 			}				
 			else{
@@ -388,7 +389,7 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " GROUP BY wd.JobId";
 			sql_subQuery += " HAVING MAX(d.Date)";
 
-			if (request.getBeforeEndDate())
+			if (request.getIsBeforeEndDate())
 				sql_subQuery += " <= ?";
 			else
 				sql_subQuery += " >= ?";
@@ -410,7 +411,7 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
 
-			if (request.getBeforeStartTime())
+			if (request.getIsBeforeStartTime())
 				sql_subQuery += " HAVING MAX(wd.StartTime) <= ?";
 			else
 				sql_subQuery += " HAVING MIN(wd.StartTime) >= ?";
@@ -421,7 +422,7 @@ public class JobRepository extends BaseRepository {
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
-		if (request.getEndTime() != null) {
+		if (request.getStringEndTime() != null) {
 
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
@@ -431,7 +432,7 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " GROUP BY wd.JobId";
 
-			if (request.getBeforeEndTime())
+			if (request.getIsBeforeEndTime())
 				sql_subQuery += " HAVING MAX(wd.EndTime) <= ?";
 			else
 				sql_subQuery += " HAVING MIN(wd.EndTime) >= ?";
@@ -475,10 +476,13 @@ public class JobRepository extends BaseRepository {
 		sql += " HAVING distance < ?";
 		argsList.add(request.getRadius());
 
-		for (Integer id : request.getAlreadyLoadedJobIds()) {
-			sql += " AND j.jobId <> ?";
-			argsList.add(id);
+		if(CollectionUtils.isNotEmpty(request.getAlreadyLoadedJobIds())){
+			for (Integer id : request.getAlreadyLoadedJobIds()) {
+				sql += " AND j.jobId <> ?";
+				argsList.add(id);
+			}	
 		}
+		
 		
 
 		// Order by

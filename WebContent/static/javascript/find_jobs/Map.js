@@ -4,6 +4,16 @@ function initMap_find_jobs() {
 		lat : 44.954445,
 		lng : -93.091301,
 	};
+	var myStyles =[
+	               {
+	                   featureType: "poi",
+	                   elementType: "labels",
+	                   stylers: [
+	                         { visibility: "off" }
+	                   ]
+	               }
+	           ];
+	
 	var map = new google.maps.Map(document.getElementById('find-jobs-map'), {
 		zoom : 8,
 		center : myLatLng,
@@ -12,7 +22,10 @@ function initMap_find_jobs() {
 //			disableDefaultUI: true,
 	    mapTypeControlOptions: {
 	      mapTypeIds: [google.maps.MapTypeId.ROADMAP]
-	    }
+	    },
+    	styler: myStyles,
+    	clickableIcons: false,
+                
 
 	});	
 }

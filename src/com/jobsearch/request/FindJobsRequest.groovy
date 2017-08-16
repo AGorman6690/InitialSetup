@@ -37,10 +37,10 @@ public class FindJobsRequest {
 	LocalTime startTime
 	LocalDate startDatel
 	LocalTime endTime
-	boolean beforeStartTime
-	boolean beforeEndTime
-	boolean beforeStartDate
-	boolean beforeEndDate
+	boolean isBeforeStartTime
+	boolean isBeforeEndTime
+	boolean isBeforeStartDate
+	boolean isBeforeEndDate
 	
 	List<String> dates
 	

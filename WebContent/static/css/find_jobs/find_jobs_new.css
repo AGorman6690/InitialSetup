@@ -6,7 +6,7 @@
 	width: 45px
 }
 #location-filter{
-	width: 630px;
+	width: 930px;
 	margin: auto;
 	font-size: 18px;
 }
@@ -14,6 +14,12 @@
 /* 	height: 38px; */
 	padding: 15px 27px;
 /*     border: 2px solid #fff;	 */
+}
+#noJobs{
+    margin-top: 20px;
+    color: red;
+    font-size: 23px;
+    font-weight: bold;
 }
 #miles,
 #zip-code,
@@ -44,6 +50,9 @@
     border-bottom: 1px solid #cacaca;
    
 }
+#address{
+	width: 500px;
+}
 #get-jobs-results{
 /* 	width: 400px; */
 /* 	float: right; */
@@ -58,6 +67,12 @@
     width: 400px;
     float: right;
     height: 100%;
+}
+#wrapper:not(.find-jobs-on-load) #get-jobs-results-cont{
+	display: none;
+}
+#wrapper:not(.find-jobs-on-load) #get-jobs-map-container{
+	margin-right: 0px 
 }
 h3 .glyphicon-ok{
 	font-size: 20px;
@@ -318,3 +333,4 @@ html{
 /*     padding: 18px 0px; */
     position: relative;	
 }
+

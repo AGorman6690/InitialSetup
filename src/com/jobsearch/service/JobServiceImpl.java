@@ -10,12 +10,14 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.OptionalDouble;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -1087,33 +1089,52 @@ public class JobServiceImpl {
 	public void setFindJobsResponse(Model model, HttpSession session, FindJobsRequest request) {
 		
 		Coordinate coord = GoogleClient.getCoordinate(request.getAddress());
+		request.setLat(coord.getLatitude());
+		request.setLng(coord.getLongitude());
+		
+		FindJobsResponse response = new FindJobsResponse();
+		response.setLatitudeSearched(request.getLat());
+		response.setLongitudeSearched(request.getLng());
+		
+
 		if(coord != null){
 			
-			request.setLat(coord.getLatitude());
-			request.setLng(coord.getLongitude());
+
 			
 			List<Job> jobs = getJobs_ByFindJobFilter(request);
 			
-			FindJobsResponse response = new FindJobsResponse();
+			
 			response.setJobDtos(new ArrayList<>());
 		
-			for (Job job : jobs) {
+			if(jobs.size() > 0){
 
-				List<WorkDay> workDays = workDayService.getWorkDays(job.getId());
-				double distance = GoogleClient.getDistance(request.getLat(), request.getLng(), job.getLat(),
-						job.getLng());
-				distance = MathUtility.round(distance, 1, 0);
-				
-				JobDto_findJobsResponse jobDto = new JobDto_findJobsResponse();
-				jobDto.setJob(job);
-				jobDto.setWorkDays(workDays);
-				jobDto.setDistance(distance);
-				jobDto.setEmployerRating(ratingService.getRating(job.getUserId()));
-
-				response.getJobDtos().add(jobDto);
-			}			
-			model.addAttribute("response", response);			
+				response.setAppendedJobs(request.getIsAppendingJobs());
+			
+				for (Job job : jobs) {
+	
+					List<WorkDay> workDays = workDayService.getWorkDays(job.getId());
+					double distance = GoogleClient.getDistance(request.getLat(), request.getLng(), job.getLat(),
+							job.getLng());
+					distance = MathUtility.round(distance, 1, 0);
+					JobSearchUser employer = userService.getUser(job.getUserId());
+					
+					JobDto_findJobsResponse jobDto = new JobDto_findJobsResponse();
+					jobDto.setJob(job);
+					jobDto.setWorkDays(workDays);
+					jobDto.setDistance(distance);
+					jobDto.setEmployerOverallRating(ratingService.getRating(employer.getUserId()));
+					jobDto.setEmployerName(employer.getFirstName() + " " + employer.getLastName());
+	
+					response.getJobDtos().add(jobDto);
+				}			
+				Double maxDistance = response.getJobDtos().stream()
+														  .map(jDto -> jDto.getDistance())
+														  .max(Double::compare).get();
+				response.setMaxDistance(maxDistance);
+			}
+			
 		}		
+		model.addAttribute("response", response);	
 	}
 
 }
