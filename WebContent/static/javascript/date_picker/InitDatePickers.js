@@ -297,10 +297,10 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 				
 				if(workDayDtos.length > 1){
 //					$("#availabilityContainer").show();
-					$("#show-availability-section").show();
+					$("#is-partial-availability-allowed-question").show();
 				}else{
 //					$("#availabilityContainer").hide();
-					$("#show-availability-section").hide();
+					$("#is-partial-availability-allowed-question").hide();
 				}
 				
 							
@@ -328,7 +328,27 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
      	afterShow: function(){
      		// For some reason the afterShow method is not firing on the initial caledar load.
      		// Maybe because this calendar is not initially visible on page load???
-     		changePrevNextText($calendar, "<<", ">>");
+//     		changePrevNextText($calendar, "<<", ">>");
+     		
+     		$append = $("#appendges");
+     		$append.empty();
+     		$(workDayDtos).each(function(i, workDayDto) {
+     			
+     			var $clone = $("#clone-start-and-end-times .time-wrapper").clone();
+     			$append.append($clone);
+     			var $date = $($clone.find(".date").eq(0));
+     			var $startTime = $($clone.find(".start-time").eq(0));
+     			var $endTime = $($clone.find(".end-time").eq(0));
+     			
+     			var dateText = $.datepicker.formatDate("D M d", workDayDto.date);
+     			$date.html(dateText);
+    			setTimeOptions($startTime, 30);
+         		setTimeOptions($endTime, 30);
+				
+			})
+			
+			
+
      		
      	}
     });	

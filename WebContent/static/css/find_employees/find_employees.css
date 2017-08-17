@@ -14,7 +14,9 @@
 }
 #distance-filter-wrapper{
 	padding: 20px 0px;
-	background: #197994;
+/* 	background: #197994; */
+    background: #f7f7f7;
+    border-bottom: 1px solid#cacaca;
 }
 #find-employees{
     padding: 16px 29px;
@@ -24,7 +26,7 @@
     margin-left: 20px;
 }
 #distance-filter span{
-    color: #fff;
+/*     color: #fff; */
     font-size: 19px;
 }
 .filter .glyphicon{
