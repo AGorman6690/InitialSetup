@@ -2,7 +2,7 @@ package com.jobsearch.model
 
 import com.jobsearch.dtos.ApplicationDTO
 import com.jobsearch.category.service.CategoryDTO
-import com.jobsearch.job.web.FindJobFilterDTO
+
 import com.jobsearch.job.web.JobDTO
 
 
@@ -10,7 +10,7 @@ class JobSearchUserDTO {
 
 	JobSearchUser user
 //	
-	List<FindJobFilterDTO> savedFindJobFilters;
+	
 	
 	List<String> availableDays;
 	List<String> unavailableDays;

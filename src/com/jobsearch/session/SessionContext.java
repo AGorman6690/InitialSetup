@@ -1,16 +1,12 @@
 package com.jobsearch.session;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
-import com.jobsearch.model.Job;
-import com.jobsearch.job.web.FindJobFilterDTO;
-import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.service.UserServiceImpl;
 
@@ -66,30 +62,6 @@ public class SessionContext {
 //		}
 	}
 
-	public static void appendToFilteredJobIds(HttpSession session, List<Integer> jobIdsToAdd) {
-		
-		if(jobIdsToAdd != null){			
-			
-			@SuppressWarnings("unchecked")
-			List<Integer> jobIds_alreadyFiltered = (List<Integer>) session.getAttribute(SESSION_ATTRIBUTE_FILTERED_JOB_IDS);
-			
-			// If jobs have already been filtered (i.e. the reques t is to "Get More Jobs")
-			if(jobIds_alreadyFiltered != null){
-				jobIdsToAdd.addAll(jobIds_alreadyFiltered);					
-			}
-				
-			setFilteredJobIds(session, jobIdsToAdd);		
-					
-		}
-		
-		
-	}
-
-	public static void setFilteredJobIds(HttpSession session, List<Integer> value) {
-		session.setAttribute(SESSION_ATTRIBUTE_FILTERED_JOB_IDS, value);
-		
-	}
-
 	@SuppressWarnings("unchecked")
 	public static List<Integer> getFilteredJobIds(HttpSession session) {
 		return (List<Integer>) session.getAttribute(SessionContext.SESSION_ATTRIBUTE_FILTERED_JOB_IDS);
@@ -99,22 +71,9 @@ public class SessionContext {
 		
 		return "/error/404";
 	}
-
-	public static FindJobFilterDTO getLastFilterRequest(HttpSession session) {
-		
-		return (FindJobFilterDTO) session.getAttribute("lastFilterRequest");
-	}
-
-	public static void setLastFilterRequest(HttpSession session, FindJobFilterDTO filter) {
-		
-		session.setAttribute("lastFilterRequest", filter);	
-		
-	}
-
-	public static void setUser(HttpSession session, JobSearchUser user) {
-		
-		session.setAttribute("user", user);
-		
+	
+	public static void setUser(HttpSession session, JobSearchUser user) {		
+		session.setAttribute("user", user);		
 	}
 
 
