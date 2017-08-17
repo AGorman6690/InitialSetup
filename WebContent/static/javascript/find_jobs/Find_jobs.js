@@ -42,7 +42,9 @@ $(document).ready(function(){
 	})
 	
 	$("#applied-filters").on("click", "button", function() {
-		$(this).remove();
+		var $e = $(this);
+		clearFilterValue($e);
+		$e.remove();
 		$("#get-jobs").click();
 	})
 	$(".apply-filter").click(function() {
@@ -77,6 +79,19 @@ $(document).ready(function(){
 	}
 	
 })
+function clearFilterValue($e){
+	var filterWrapperId = $e.attr("data-filter-wrapper-id");
+	
+	$("#" + filterWrapperId).find(".calendar td.selected").each(function() {
+		$(this).removeClass("selected");
+	})
+	$("#" + filterWrapperId).find("select option:selected").each(function() {
+		$(this).prop("selected", false);
+	})
+	$("#" + filterWrapperId).find("input").each(function() {
+		$(this).val("");
+	})
+}
 function getAlreadyLoadedJobIds(){
 	var jobIds = [];
 	$("#get-jobs-results .job").each(function() {
@@ -90,37 +105,22 @@ function applyFilter($e) {
 	var filterTextSuffix
 	var filterText = null;
 	var filterValue = null;
-	
-	var parameterName1 = "";
-	var parameterValue1 = "";
-	var parameterName2 = "";
-	var parameterValue2 = "";
-	
+	var filterWrapperId = $e.closest(".dropdown-style").attr("id");
+
 	
 	var $filter = $e.closest(".filter");
 	$filter.find(".remove-filter").show();
-	
-	
-
+		
 	// Filter value
 	if($filter.find(".calendar").length){
 		var $calendar = $filter.find(".calendar");
 		filterValue = getSelectedDate($calendar, "D MM d", "selected");
-		
-		parameterName1 = $calendar.attr("data-parameter-name");
-		parameterValue1 = getSelectedDate($calendar, "yy-mm-dd", "selected");
 	}else if($filter.find("select").length){
 		var $option = $filter.find("select option:selected").eq(0);
 		filterValue = $option.html();
-		
-		parameterName1 = $option.closest("select").attr("data-parameter-name");
-		parameterValue1 = $option.attr("data-filter-value");
 	}else if($filter.find("input[type=text]").length){ 
 		var $input = $filter.find("input[type=text]").eq(0);
 		filterValue = $input.val();
-		
-		parameterName1 = $input.attr("data-parameter-name");
-		parameterValue1 = filterValue;
 	}
 	else{
 		filterValue = null;
@@ -130,39 +130,30 @@ function applyFilter($e) {
 	if($filter.find(".radio-container").length){
 		var $radio = $filter.find("input[type=radio]:checked").eq(0);
 		filterText =  $radio.attr("data-filter-text");
-		
-		parameterName2 = $radio.attr("data-parameter-name");
-		parameterValue2 = $radio.attr("data-parameter-value");
+
 	}else{
 		return null;
 	}
 	filterTextSuffix = $filter.attr("data-filter-text-suffix");	
 	
-	// delete button if filter is already applied
-	$("#applied-filters").find("button[data-parameter-name-1='" + parameterName1 + "']").eq(0).remove();
+	// delete existing button if filter is already applied
+	$("#applied-filters").find("button[data-filter-wrapper-id='" + filterWrapperId + "']").eq(0).remove();
 	
 	// Show applied filter
 	if(filterValue != null && filterText != null){
 		html_appliedFilter = "";
-		html_appliedFilter = "<button" +
-				" data-parameter-name-1='" + parameterName1 + "'" +
-				" data-parameter-value-1='" + parameterValue1 + "'" +
-				" data-parameter-name-2='" + parameterName2 + "'" +
-				" data-parameter-value-2='" + parameterValue2 + "'" +
+		html_appliedFilter = "<button data-filter-wrapper-id=" + filterWrapperId +
 				"><p>"	+ filterText + " " + filterValue;
 		
-		if(filterTextSuffix != undefined) html_appliedFilter += " " + filterTextSuffix;		
-		
+		if(filterTextSuffix != undefined){
+			html_appliedFilter += " " + filterTextSuffix;		
+		}		
 		html_appliedFilter += "</p></button>";
 		$("#applied-filters").append(html_appliedFilter);
 	}
 	
 	$filter.find(".filter-name").click();
-	
-	
-	
-	
-	
+
 //	var $appliedFilter = $filter.find(".applied-filter").eq(0);
 //	$appliedFilter.html(filterText + " " + filterValue);
 //	$appliedFilter.show();
@@ -223,6 +214,9 @@ function getFindJobsRequest() {
 	
 	findJobsRequest.stringEndTime = getSelectedTime($("#end-time-select"));
 	findJobsRequest.isBeforeEndTime = getRadioValue($("#end-time-filter"));
+	
+	findJobsRequest.duration = $("#duration-filter input[type=text]").val();
+	findJobsRequest.isShorterThanDuration = getRadioValue($("#duration-filter"));
 	
 	return findJobsRequest;		
 }

@@ -596,22 +596,6 @@ public class UserServiceImpl {
 
 	}
 
-	public JobSearchUserDTO getUserDTO_FindJobs_PageLoad(HttpSession session) {
-
-		if (SessionContext.isLoggedIn(session)) {
-			JobSearchUserDTO userDto = new JobSearchUserDTO();
-
-			userDto.setUser((JobSearchUser) session.getAttribute("user"));
-			userDto.setSavedFindJobFilters(jobService.getSavedFindJobFilters(userDto.getUser().getUserId()));
-
-			return userDto;
-
-		}
-		return null;
-
-	}
-
-
 	public void setFindEmployeesResponse(Model model, FindEmployeesRequest request){
 
 		if (GoogleClient.isValidAddress(request.getAddress()) && 

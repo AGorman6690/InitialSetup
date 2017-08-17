@@ -63,27 +63,6 @@ public class JobController {
 		
 	}
 
-	@RequestMapping(value = "/jobs/filtered/sort", method = RequestMethod.GET)
-	public String getSortedJobs(@RequestParam(name = "sortBy") String sortBy,
-			@RequestParam(name = "isAscending") boolean isAscending, HttpSession session, Model model) {
-
-		jobService.setModel_SortFilteredJobs(session, model, sortBy, isAscending);
-
-		return "/find_jobs/Render_GetJobs_InitialRequest";
-	}
-
-	@RequestMapping(value = "/jobs/save-find-job-filter", method = RequestMethod.POST)
-	@ResponseBody
-	public String saveFindJobFilter(HttpSession session) {
-
-		if (SessionContext.isLoggedIn(session)) {
-			jobService.saveFindJobFilter(savedFilter, session);
-		}
-		return "";
-	}
-	
-	
-
 	@RequestMapping(value = "/jobs/find/request", method = RequestMethod.POST)
 	public String getFilteredJobs(@RequestBody FindJobsRequest request, HttpSession session, Model model){
 			
@@ -95,13 +74,6 @@ public class JobController {
 			return "/find_jobs/Render_GetJobs_InitialRequest";
 		}
 		
-	}
-
-	@RequestMapping(value = "/job/{jobId}/work-day/{dateString}/applicants", method = RequestMethod.GET)
-	public String getApplicants_byJobAndDate(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId,
-			@PathVariable(value = "dateString") String dateString) {
-		jobService.setModel_getApplicants_byJobAndDate(model, session, jobId, dateString);
-		return "/view_job_employer/ApplicationSummary_ByWorkDay";
 	}
 
 	@RequestMapping(value = "/job/{jobId}/employees/by-work-days", method = RequestMethod.POST)
@@ -153,13 +125,6 @@ public class JobController {
 		}
 		
 		return "/find_jobs_new/Find_Jobs_New";		
-	}
-
-	@RequestMapping(value = "/jobs/find/load-filter", method = RequestMethod.GET)
-	public String loadFindJobFilter(@RequestParam(name = "savedFindJobFilterId") int savedFindJobFilterId, Model model,
-			HttpSession session) {
-		jobService.setModel_LoadFindJobsFilter(savedFindJobFilterId, model, session);
-		return "/find_jobs/Filters";
 	}
 
 	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)

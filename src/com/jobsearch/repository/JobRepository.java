@@ -10,23 +10,18 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.databind.deser.Deserializers.Base;
-import com.jobsearch.model.Application;
 import com.jobsearch.bases.BaseRepository;
 import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.model.Application;
 import com.jobsearch.model.Job;
-import com.jobsearch.job.web.FindJobFilterDTO;
-import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Question;
-import com.jobsearch.model.RateCriterion;
 import com.jobsearch.model.Skill;
-import com.jobsearch.model.WorkDay;
 import com.jobsearch.request.AddJobRequest;
 import com.jobsearch.request.FindJobsRequest;
 import com.jobsearch.service.ApplicationServiceImpl;
@@ -35,6 +30,8 @@ import com.jobsearch.service.QuestionServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.MathUtility;
+import com.jobsearch.utilities.NumberUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
@@ -177,91 +174,8 @@ public class JobRepository extends BaseRepository {
 
 	}
 
-	public List<FindJobFilterDTO> FindJobFilterDtoMapper(String sql, Object[] args) {
 
-		try {
-
-			return jdbcTemplate.query(sql, args, new RowMapper<FindJobFilterDTO>() {
-
-				@Override
-				public FindJobFilterDTO mapRow(ResultSet rs, int rownumber) throws SQLException {
-
-					FindJobFilterDTO jobFilterDTO = buildJobFilterResult(rs);
-
-					// Set Local Dates and Local Times
-					try {
-						jobFilterDTO.setStartDate_local(jobFilterDTO.getStartDate().toLocalDate());
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-
-					try {
-						jobFilterDTO.setEndDate_local(jobFilterDTO.getEndDate().toLocalDate());
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-
-					try {
-						jobFilterDTO.setStartTime_local(jobFilterDTO.getStartTime().toLocalTime());
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-
-					try {
-						jobFilterDTO.setEndTime_local(jobFilterDTO.getEndTime().toLocalTime());
-					} catch (Exception e2) {
-						// TODO: handle exception
-					}
-
-					return jobFilterDTO;
-				}
-			});
-
-		} catch (Exception e) {
-			return null;
-		}
-
-	}
-
-	protected FindJobFilterDTO buildJobFilterResult(ResultSet rs) {
-		FindJobFilterDTO jobFilterDTO = new FindJobFilterDTO();
-		try {
-			jobFilterDTO.setId(rs.getInt("Id"));
-
-			jobFilterDTO.setStartDate(rs.getDate("StartDate"));
-			jobFilterDTO.setBeforeStartDate(rs.getBoolean("IsBeforeStartDate"));
-
-			jobFilterDTO.setStartTime(rs.getTime("StartTime"));
-			jobFilterDTO.setBeforeStartTime(rs.getBoolean("IsBeforeStartTime"));
-
-			jobFilterDTO.setEndDate(rs.getDate("EndDate"));
-			jobFilterDTO.setBeforeEndDate(rs.getBoolean("IsBeforeEndDate"));
-
-			jobFilterDTO.setEndTime(rs.getTime("EndTime"));
-			jobFilterDTO.setBeforeEndTime(rs.getBoolean("IsBeforeEndTime"));
-
-			jobFilterDTO.setDuration(rs.getDouble("Duration"));
-
-			if (jobFilterDTO.getDuration() <= 0) {
-				jobFilterDTO.setDuration(null);
-			}
-
-			jobFilterDTO.setIsShorterThanDuration(rs.getBoolean("IsShorterThanDuration"));
-
-			jobFilterDTO.setSavedName(rs.getString("Name"));
-			jobFilterDTO.setCity(rs.getString("City"));
-			jobFilterDTO.setState(rs.getString("State"));
-			jobFilterDTO.setZipCode(rs.getString("ZipCode"));
-			jobFilterDTO.setRadius(rs.getInt("Radius"));
-			jobFilterDTO.setEmailFrequencyId(rs.getInt("EmailFrequencyId"));
-			jobFilterDTO.setUserId(rs.getInt("UserId"));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return jobFilterDTO;
-	}
+	
 
 	public void addJob(AddJobRequest request, JobSearchUser user) {
 
@@ -443,7 +357,7 @@ public class JobRepository extends BaseRepository {
 			startNextSubQuery = " AND wd.JobId IN (";
 		}
 
-		if (request.getDuration() != null) {
+		if (request.getDuration() != null && NumberUtility.isPositiveNumber(request.getDuration())) {
 
 			if (startNextSubQuery != "")
 				sql_subQuery = startNextSubQuery;
@@ -619,106 +533,6 @@ public class JobRepository extends BaseRepository {
 		String sql = "UPDATE job set Status = ? WHERE JobId = ?";
 		jdbcTemplate.update(sql, new Object[] { status, jobId });
 
-	}
-
-
-	public void insertSavedFindJob(FindJobFilterDTO filter, JobSearchUser user) {
-
-		String columns = "";
-		String values = "";
-		ArrayList<String> columnNames = new ArrayList<String>();
-		ArrayList<Object> args = new ArrayList<Object>();
-
-		columnNames.add("Name");
-		args.add(filter.getSavedName());
-		columnNames.add("Radius");
-		args.add(filter.getRadius());
-		columnNames.add("UserId");
-		args.add(user.getUserId());
-		columnNames.add("EmailFrequencyId");
-		args.add(filter.getEmailFrequencyId());
-
-		if (filter.getCity() != null) {
-			columnNames.add("City");
-			args.add(filter.getCity());
-		}
-
-		if (filter.getState() != null) {
-			columnNames.add("State");
-			args.add(filter.getState());
-		}
-
-		if (filter.getZipCode() != null) {
-			columnNames.add("ZipCode");
-			args.add(filter.getZipCode());
-		}
-
-		if (filter.getStartDate() != null) {
-			columnNames.add("StartDate");
-			columnNames.add("IsBeforeStartDate");
-			args.add(filter.getStartDate());
-			args.add(filter.getBeforeStartDate());
-		}
-
-		if (filter.getEndDate() != null) {
-			columnNames.add("EndDate");
-			columnNames.add("IsBeforeEndDate");
-			args.add(filter.getEndDate());
-			args.add(filter.getBeforeEndDate());
-		}
-
-		if (filter.getStartTime() != null) {
-			columnNames.add("StartTime");
-			columnNames.add("IsBeforeStartTime");
-			args.add(filter.getStartTime());
-			args.add(filter.getBeforeStartTime());
-		}
-
-		if (filter.getEndTime() != null) {
-			columnNames.add("EndTime");
-			columnNames.add("IsBeforeEndTime");
-			args.add(filter.getEndTime());
-			args.add(filter.getBeforeEndTime());
-		}
-
-		if (filter.getDuration() != null) {
-			columnNames.add("Duration");
-			columnNames.add("IsShorterThanDuration");
-			args.add(filter.getDuration());
-			args.add(filter.getIsShorterThanDuration());
-		}
-
-		boolean isFirst = true;
-		for (String columnName : columnNames) {
-			if (isFirst) {
-				columns = " (" + columnName;
-				values = " (?";
-				isFirst = false;
-			} else {
-				columns += ", " + columnName;
-				values += ", ?";
-			}
-		}
-		columns += ")";
-		values += ")";
-
-		String sql = "INSERT INTO saved_find_job_filter" + columns + " VALUES" + values;
-
-		jdbcTemplate.update(sql, args.toArray());
-	}
-
-	public List<FindJobFilterDTO> getSavedFindJobFilters(int userId) {
-		String sql = "SELECT * FROM saved_find_job_filter WHERE UserId = ?";
-		return this.FindJobFilterDtoMapper(sql, new Object[] { userId });
-	}
-
-	public FindJobFilterDTO getSavedFindJobFilter(int savedFindJobFilterId) {
-		String sql = "SELECT * FROM saved_find_job_filter WHERE Id = ?";
-		try {
-			return this.FindJobFilterDtoMapper(sql, new Object[] { savedFindJobFilterId }).get(0);
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	public List<Job> getJobs_byIds(List<Integer> jobIds) {

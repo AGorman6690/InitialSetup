@@ -9,10 +9,10 @@
 
 	<div class="button-wrapper left">
 		<div class="counter-context cancel-proposal">
-			<span class="glyphicon glyphicon-menu-left"></span><span class="text">Cancel</span>
+			<button class="text sqr-btn">Cancel</button>
 		</div>
 		<div class="review-context edit-proposal">
-			<span class="glyphicon glyphicon-menu-left"></span><span class="text">Edit</span>
+			<button class="text sqr-btn">Edit</button>
 		</div>		
 	</div>
 
@@ -89,16 +89,13 @@
 		</div>
 		<div class="button-wrapper right">
 			<div class="counter-context review-proposal">
-				<span class="text">Review</span>
-				<span class="glyphicon glyphicon-menu-right"></span>
+				<button class="text sqr-btn">Review</button>
 			</div>
 			<div class="review-context send-proposal accepting-offer-context">
-				<span class="text">Accept Employment</span>
-				<span class="glyphicon glyphicon-menu-right"></span>
+				<button class="text sqr-btn">Accept Employment</button>
 			</div>	
 			<div class="review-context send-proposal proposing-new-offer-context">
-				<span class="text">Send New Proposal</span>
-				<span class="glyphicon glyphicon-menu-right"></span>
+				<button class="text sqr-btn">Send New Proposal</button>
 			</div>	
 		</div>
 </div>

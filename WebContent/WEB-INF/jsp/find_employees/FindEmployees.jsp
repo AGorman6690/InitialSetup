@@ -32,11 +32,11 @@
 	
 <div id="distance-filter-wrapper">
 	<div id="distance-filter">
-		<input id="miles" type="text" placeholder="number of"
-			value="${not empty response ? response.radiusSearched : '25' }"/>
+		<input id="miles" class="select-all" type="text" placeholder="number of"
+			value="${not empty response ? response.radiusSearched : '' }"/>
 		<span>miles from</span>
-		<input id="address" type="text" placeholder="city, state, zip"
-			value="${not empty response ? response.addressSearched : '55119' }"/>
+		<input id="address" class="select-all" type="text" placeholder="city, state, zip"
+			value="${not empty response ? response.addressSearched : '' }"/>
 		<button id="find-employees" class="sqr-btn">Find Employees</button>
 	</div>
 </div>

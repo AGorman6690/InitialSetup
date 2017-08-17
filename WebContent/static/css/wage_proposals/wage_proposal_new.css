@@ -75,7 +75,7 @@ span.expiration-time{
    	width: 190px;
 }
 .button-wrapper span{
-    display: table-cell;
+/*     display: table-cell; */
     vertical-align: middle;
 }
 .button-wrapper.left{
@@ -88,6 +88,10 @@ span.expiration-time{
 }
 .button-wrapper .text{
 	font-size: 24px;
+    background: #163b3d;
+    color: #fff;
+    font-weight: normal;
+    padding: 10px 25px;
 }
 .button-wrapper .glyphicon{
 	font-size: 30px;

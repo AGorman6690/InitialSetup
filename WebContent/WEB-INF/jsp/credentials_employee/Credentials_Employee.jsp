@@ -59,7 +59,7 @@
 						<c:choose>
 							<c:when test="${empty response.profileInfoDto.user.maxWorkRadius ||
 										response.profileInfoDto.user.maxWorkRadius == 0}">
-								<span class="not-set">Add your maximum traveling distance so employers can find you</span>
+								<span class="not-set">Add the max distance you are willing to travel so employers can find you</span>
 							</c:when>
 							<c:otherwise>
 								${response.profileInfoDto.user.maxWorkRadius } miles
