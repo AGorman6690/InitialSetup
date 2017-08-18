@@ -249,6 +249,10 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 		numberOfMonths: numberOfMonths, 
 		onSelect: function(dateText, inst) {	   
 			
+			
+
+			
+			
 			setValidCss($calendar.find(".invalid"));
 			
 			// This is for post job re-validation
@@ -263,53 +267,62 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 			if(workDayDtos.length == 0) isThisTheFirstDateSelected = true;
 			if(workDayDtos.length == 1) isThisTheSecondDateSelected = true;
 			
-			workDayDtos = onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos);
-			
-						
-			if(isThisTheFirstDateSelected){
-				$calendar.addClass("show-hover-range");
-				$calendar.attr("data-first-date", dateText);
+			// If the user's second click is the same as the first,
+			// then remove hover mode.
+			if(workDayDtos.length == 1 &&
+					(dateify(dateText).getTime() == workDayDtos[0].date.getTime())){
+				$calendar.removeClass("show-hover-range");
 			}
-			else $calendar.removeClass("show-hover-range");
-			
-			
-			// This is only for job posts
-			if($calendar.attr("id") == "workDaysCalendar_postJob"){
-				
-				if(workDayDtos.length == 0){
-					resetTimesSection();
-					resetCalendar();
-				}
-				else if(isThisTheSecondDateSelected){
-					$("#no-dates-selected").hide();
-					$("#initial-time-question").show();
-					$("#set-one-start-and-end-time").hide();
-					$("#times-cont").hide();
-				}
-				else if(workDayDtos.length == 1){
-					$("#times-cont").hide();
-					$("#no-dates-selected").hide();	
-					$("#initial-time-question").hide();
-					$("#set-one-start-and-end-time").show();
-				}
-				
-				
-				
-				if(workDayDtos.length > 1){
-//					$("#availabilityContainer").show();
-					$("#is-partial-availability-allowed-question").show();
-				}else{
-//					$("#availabilityContainer").hide();
-					$("#is-partial-availability-allowed-question").hide();
-				}
+			else{
+				workDayDtos = onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos);
 				
 							
-				if($calendar_startAndEndTimes != undefined)
-					initCalendar_setStartAndEndTimes($calendar_startAndEndTimes);
+				if(isThisTheFirstDateSelected){
+					$calendar.addClass("show-hover-range");
+					$calendar.attr("data-first-date", dateText);
+				}
+				else $calendar.removeClass("show-hover-range");
 				
-				if(workDayDtos_original.length > 0){
+				
+				// This is only for job posts
+				if($calendar.attr("id") == "workDaysCalendar_postJob"){
 					
-				}				
+					if(workDayDtos.length == 0){
+						resetTimesSection();
+						resetCalendar();
+					}
+					else if(isThisTheSecondDateSelected){
+						$("#no-dates-selected").hide();
+						$("#initial-time-question").show();
+						$("#set-one-start-and-end-time").hide();
+						$("#times-cont").hide();
+					}
+					else if(workDayDtos.length == 1){
+						$("#times-cont").hide();
+						$("#no-dates-selected").hide();	
+						$("#initial-time-question").hide();
+						$("#set-one-start-and-end-time").show();
+					}
+					
+					
+					
+					if(workDayDtos.length > 1){
+	//					$("#availabilityContainer").show();
+						$("#dates-wrapper").addClass("multiple-work-days");
+					}else{
+	//					$("#availabilityContainer").hide();
+						$("#dates-wrapper").removeClass("multiple-work-days");
+					}
+					
+								
+					if($calendar_startAndEndTimes != undefined)
+						initCalendar_setStartAndEndTimes($calendar_startAndEndTimes);
+					
+					if(workDayDtos_original.length > 0){
+						
+					}				
+				}
+			
 			}
 		},		        
         beforeShowDay: function (date) {       
@@ -330,22 +343,7 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
      		// Maybe because this calendar is not initially visible on page load???
 //     		changePrevNextText($calendar, "<<", ">>");
      		
-     		$append = $("#appendges");
-     		$append.empty();
-     		$(workDayDtos).each(function(i, workDayDto) {
-     			
-     			var $clone = $("#clone-start-and-end-times .time-wrapper").clone();
-     			$append.append($clone);
-     			var $date = $($clone.find(".date").eq(0));
-     			var $startTime = $($clone.find(".start-time").eq(0));
-     			var $endTime = $($clone.find(".end-time").eq(0));
-     			
-     			var dateText = $.datepicker.formatDate("D M d", workDayDto.date);
-     			$date.html(dateText);
-    			setTimeOptions($startTime, 30);
-         		setTimeOptions($endTime, 30);
-				
-			})
+     		renderWorkDayTimes();
 			
 			
 
@@ -354,6 +352,33 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
     });	
 }
 
+function renderWorkDayTimes(){
+		$append = $("#appendges");
+ 		$append.empty();
+ 		$(workDayDtos).each(function(i, workDayDto) {
+
+ 			
+ 			// create start and end time select boxes for each date
+ 			var $clone = $("#clone-start-and-end-times .time-wrapper").clone();
+ 			$append.append($clone);
+ 			var $date = $($clone.find(".date").eq(0));
+ 			var $startTime = $($clone.find(".start-time").eq(0));
+ 			var $endTime = $($clone.find(".end-time").eq(0));
+ 			
+ 			var dateText = $.datepicker.formatDate("D M d", workDayDto.date);
+ 			$date.html(dateText);
+ 			$date.attr("data-date", $.datepicker.formatDate("yy-mm-dd", workDayDto.date));
+			setTimeOptions($startTime, 30, "start time");
+     		setTimeOptions($endTime, 30, "end time");
+     		
+     		if(workDayDto.workDay.startTime != undefined){
+         		$startTime.find("option[data-filter-value='" + workDayDto.workDay.startTime.toString() + "']").eq(0).prop("selected", true);
+     		}
+     		if(workDayDto.workDay.endTime != undefined){
+         		$endTime.find("option[data-filter-value='" + workDayDto.workDay.endTime.toString() + "']").eq(0).prop("selected", true);
+     		}
+		})
+}
 
 
 function initCalendar_jobInfo_workDays($calendar, workDayDtos){

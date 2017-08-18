@@ -17,6 +17,18 @@ $(document).ready(function(){
 		
 	})
 	
+	$("html").click(function(event) {
+		
+		// If calendar is in hover mode and the user clicks outside of the calendar,
+		// then take the calendar out of hover mode.
+		var $calendarInHoverMode = $("html").find(".calendar.show-hover-range");
+		if($calendarInHoverMode != undefined){
+			if($(event.target).closest(".calendar.show-hover-range").length == 0){
+				$calendarInHoverMode.removeClass("show-hover-range");
+			}
+		}
+	})
+	
 })
 function changePrevNextText($calendar, prevText, nextText){
 		$calendar.find(".ui-icon.ui-icon-circle-triangle-e").eq(0);

@@ -34,8 +34,7 @@ $(document).ready(function(){
 	
 	$("#previous-section").click(function(){		
 		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
-		$selectedSection.prevAll(".select-page-section:visible").first().click();
-				
+		$selectedSection.prevAll(".select-page-section:visible").first().click();				
 	})	
 
 	$("#proceed-to-preview-job-posting").click(function(){
@@ -74,11 +73,8 @@ $(document).ready(function(){
 		$("#show-dates-section").click();
 	})
 	
-	$("#datesContainer #clearCalendar").click(function(){		
+	$("#dates-wrapper #clear-calendar").click(function(){		
 		resetCalendar();
-		resetTimesSection();
-		$("#availabilityContainer").hide();
-		$("#show-availability-section").hide();
 	})
 	
 	$("#startNewJob").click(function(){
@@ -103,15 +99,48 @@ $(document).ready(function(){
 	$("body").on("click", ".skills-container .delete-list-item", function(){		
 		deleteSkill($(this).closest(".list-item"));		
 	})	
+	
+	$("#supreme-times-wrapper").on("change", "select.start-time", function() {
+		var $e = $(this).find("option:selected");
+		var date = $e.closest(".time-wrapper").find(".date").attr("data-date");
+		var workDayDto = getWorkDayDtoByDate(dateify(date), workDayDtos);
+		workDayDto.workDay.startTime = $e.attr("data-filter-value");
+	})
+	$("#supreme-times-wrapper").on("change", "select.end-time", function() {
+		var $e = $(this).find("option:selected");
+		var date = $e.closest(".time-wrapper").find(".date").attr("data-date");
+		var workDayDto = getWorkDayDtoByDate(dateify(date), workDayDtos);
+		workDayDto.workDay.endTime = $e.attr("data-filter-value");
+	})
 		
+	$("#set-all-times").change(function() {
+		if($(this).is(":checked")){
+			$("#set-all-times-wrapper").find("select").show();
+			$("#supreme-times-wrapper").addClass("setting-all-times");
+		}else{
+			$("#set-all-times-wrapper").find("select").hide();
+			$("#supreme-times-wrapper").removeClass("setting-all-times");
+		}
+	})
+	
+	$("select#set-all-start-times").change(function() {
+		var startTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
+		$(workDayDtos).each(function() {
+			this.workDay.startTime = startTime;
+		})
+		renderWorkDayTimes();
+	})
+	$("select#set-all-end-times").change(function() {
+		var endTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
+		$(workDayDtos).each(function() {
+			this.workDay.endTime = endTime;
+		})
+		renderWorkDayTimes();
+	})
+	
 	setStates();
-	setTimeOptions($("#single-start-time"), 30);
-	setTimeOptions($("#single-end-time"), 30);
-	setTimeOptions($("#multiple-start-times"), 30);
-	setTimeOptions($("#multiple-end-times"), 30);
-	setTimeOptions($("#startTime-singleDate"), 30);
-	setTimeOptions($("#endTime-singleDate"), 30);
-	setTimeOptions($("#endTime-singleDate"), 30);
+	setTimeOptions($("#set-all-end-times"), 30, "start time");
+	setTimeOptions($("#set-all-start-times"), 30, "end time");
 	
 	$("body").on("mouseover", "#workDaysCalendar_postJob.show-hover-range td", function(){
 		
@@ -125,6 +154,7 @@ function resetCalendar(){
 	workDayDtos = [];	
 	$calendar_workDays.datepicker("refresh");
 	$calendar_workDays.removeClass("show-hover-range");
+	$("#dates-wrapper").removeClass("multiple-work-days");
 }
 
 

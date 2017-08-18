@@ -38,12 +38,18 @@
 	background: #fff;
 }
 #side-bar > div.incomplete:not(.optional) span::after{
-	background: red;
+/* 	background: red; */
 }
 .item label{
 	width: 230px;
 /* 	font-weight: bold; */
 	vertical-align: top;
+}
+#add-question,
+#clear-calendar{
+	background: #163b3d;
+	color: #fff;
+	padding: 8px 15px;
 }
 .item{
 	
@@ -61,7 +67,7 @@
 	width: 50px;
 }
 .time-wrapper label{
-	width: 120px;
+	width: 160px;
 }
 .time-wrapper{
 	margin-bottom: 15px;
@@ -70,12 +76,18 @@
 	display: block;
 	width: 100%;
 }
-#is-partial-availability-allowed-question{
+#dates-wrapper.multiple-work-days .show-with-multiple-work-days{
+	display: block;
+    min-height: 40px;	
+}
+#dates-wrapper:not(.multiple-work-days) .show-with-multiple-work-days{
 	display: none;
+}
+#is-partial-availability-allowed-question{
 	margin-bottom: 40px;
 }
 #is-partial-availability-allowed-question .radio-container{
-	padding-left: 50px;
+/* 	padding-left: 50px; */
 }
 #work-days-calendar{
     margin-left: -35px;
@@ -87,3 +99,42 @@
 .section h3 span{
 	font-size: 20px;
 	color: #000
+}
+#set-all-end-times,
+#set-all-start-times{
+	display: none;
+}
+#supreme-times-wrapper.setting-all-times #appendges select{
+	background: #cacaca;
+	pointer-events: none;
+}
+#copy-question-container,
+#answer-list{
+	display: inline-block;
+}
+#add-answer{
+	display: block;	
+}
+#copy-or-new-question button{
+    width: 345px;
+    background: #667c7d;
+    color: #fff;
+    padding: 7px 15px;
+}
+#add-question-wrapper{
+    margin-left: 235px;
+}
+#answer-list .list-item{
+	margin-bottom: 10px;
+}
+#create-question-container,
+#answer-list-container{
+	display: none;
+}
+.added-question .glyphicon{
+	margin-right: 10px;
+	color: #888;
+}
+.added-question{
+	margin-bottom: 10px;
+}

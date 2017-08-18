@@ -100,7 +100,7 @@ function removeInvalidCss($container){
 	})
 }
 
-function setTimeOptions($eSelect, increment){
+function setTimeOptions($eSelect, increment, placeholder){
 	
 	
 	//***********************************************************
@@ -112,7 +112,11 @@ function setTimeOptions($eSelect, increment){
 	
 	
 	
-	
+	var firstOption = "<option selected disabled style='color: #888'>";
+	if(placeholder != undefined){
+		firstOption += placeholder;
+	}
+	firstOption += "</option>";
 	
 	
 	
@@ -127,7 +131,8 @@ function setTimeOptions($eSelect, increment){
 	if(increment > 0){
 			
 		$eSelect.empty();
-		$eSelect.append('<option value="" selected style="display: none"></option>');
+//		$eSelect.append('<option value="" selected style="display: none"></option>');
+		$eSelect.append(firstOption);
 		
 		var hourCount;
 		var hour;
