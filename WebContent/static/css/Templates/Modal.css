@@ -66,6 +66,8 @@
     background: #ffffff;
     /* border-bottom: 1px solid #cacaca; */
     text-align: right;
+    padding-top: 5px;
+    padding-right: 10px;    
 }
 
 .mod-header h2{

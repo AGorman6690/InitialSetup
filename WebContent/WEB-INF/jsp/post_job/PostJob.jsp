@@ -120,15 +120,15 @@
 					<h3>Location</h3>					
 					<div class="item-wrapper">
 						<div class="item">
-							<label>Street Address</label>
+							<label>Street Address *</label>
 							<input id="street" type="text" class="" value=""></input>
 						</div>
 						<div class="item">
-							<label>City</label>
+							<label>City *</label>
 							<input id="city" type="text" class="" value=""></input>
 						</div>
 						<div class="item">
-							<label>State</label>
+							<label>State *</label>
 							<select id="state" class=""></select>
 						</div>
 						<div class="item">

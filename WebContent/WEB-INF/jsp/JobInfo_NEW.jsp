@@ -83,7 +83,6 @@
 							<input name="input-1" class="rating-loading"
 								value="${response.profileInfoDto.profileRatingDto.overallRating }">
 									${response.profileInfoDto.profileRatingDto.overallRating }
-							 <span class="glyphicon glyphicon-menu-down"></span>
 						</span>	
 						<div id="user-rating-details-container" class="hide-on-load">												
 							<%@ include file="./ratings/RatingDetails.jsp" %>
@@ -195,7 +194,7 @@
 				<c:if test="${response.job.isPartialAvailabilityAllowed
 					&& sessionScope.user.profileId == 1 
 					&& response.context=='find' }">
-					<button id="select-all-work-days" class="sqr-btn gray-3">Select all work days</button>		
+					<button id="select-all-work-days">Select all work days</button>		
 				</c:if>
 				<div class="calendar" data-min-date=${response.date_firstWorkDay }
 					 data-number-of-months="${response.monthSpan_allWorkDays }"></div>

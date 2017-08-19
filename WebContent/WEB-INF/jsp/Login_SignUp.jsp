@@ -9,6 +9,46 @@
 	<div id="verifyEmail">
 		A verification link has been sent to your email, please login and verify.
 	</div>
+	
+<div id="loginGroup" class="group-container">
+	<div id="loginHeader" class="a-header">
+		<h3>Login</h3>
+	</div>
+	<div id="loginContainer" class="group ${requestedLogin == 0 ? 'do-hide' : '' }">
+		<div class="">
+			<form:form class="" modelAttribute="user" action="/JobSearch/login.do" method="POST"> 
+				<div class="">
+					<label></label>							
+					<span id="errorMessage" class="invalid-message-show">${errorMessage }</span>					
+				</div>						
+				<div class="item">
+					<label>Email Address</label>
+					<form:input type="text" class="" path="username" id="userName"/>
+				</div>
+				<div class="item">
+					<label>Password</label>
+					<form:password class="" path="password" id="login-password"/>
+										
+						
+					<div class="no-label">						
+						<a href="./user/password/reset">Forgot Password?</a>
+					</div>										
+				</div>		
+				<div class="no-label">	
+					<input id="keep-me-signed-in" type="checkbox" value="">
+					<label for="keep-me-signed-in">Keep Me Signed In</label>
+				</div>
+				<div class="no-label">	
+					<input id="login" class="" type="submit" value="Login"/>
+				</div>					
+			</form:form>			
+		</div>
+
+    </div>
+    
+</div>
+	
+  
 <div id="signUpGroup" class="group-container">
 	<div id="setupHeader" class="a-header">
 		<h3>Sign Up</h3>
@@ -70,67 +110,26 @@
 			</div>
 			<div class="item">
 				<label></label>
-				<input id="createAccount" type="submit" value="Create Account" class="square-button" />
+				<input id="create-account" type="submit" value="Create Account" class="" />
 			</div>
 			<div class="item">
 				<label><input type="hidden" name="${_csrf.parameterName}"
 					value="${_csrf.token}" /></label>
 			</div>
 	</div>	
+	
+	<br></br>
+	<br></br>
+	<br></br>
+	<button style="display:block" id="debug1">Sign in as employer (UserId = 1)</button>
+	<button style="display:block" id="debug2">Sign in as employee 1</button>
+	<button style="display:block" id="debug3">Sign in as employee 2</button>
+		
 </div>	
 	
 		
 	
 	
-<div id="loginGroup" class="group-container">
-	<div id="loginHeader" class="a-header">
-		<h3>Login</h3>
-	</div>
-	<div id="loginContainer" class="group ${requestedLogin == 0 ? 'do-hide' : '' }">
-		<div class="">
-			<form:form class="" modelAttribute="user" action="/JobSearch/login.do" method="POST"> 
-				<div class="">
-					<label></label>							
-					<span id="errorMessage" class="invalid-message-show">${errorMessage }</span>					
-				</div>						
-				<div class="item">
-					<label>Email Address</label>
-					<form:input type="text" class="" path="username" id="userName"/>
-				</div>
-				<div class="item">
-					<label>Password</label>
-					<form:password class="" path="password" id="login-password"/>
-										
-						
-					<div class="forgot-password">
-						<label></label>							
-						<a href="./user/password/reset">Forgot Password?</a>
-					</div>	
-									
-				</div>
-				
-		
-				<div class="item">		
-					<div class="checkbox">
-						<label></label>
-					    <label class="checkboxLabel"><input type="checkbox" value="">Keep Me Signed In</label>
-					</div>							
-					<label></label>
-					<input id="login" class="sqr-btn gray-3" type="submit" value="Login"/>
-				</div>					
-			</form:form>			
-		</div>
-		<br></br>
-		<br></br>
-		<br></br>
-		<button style="display:block" id="debug1">Sign in as employer (UserId = 1)</button>
-		<button style="display:block" id="debug2">Sign in as employee 1</button>
-		<button style="display:block" id="debug3">Sign in as employee 2</button>
-    </div>
-    
-</div>
-	
-  
 
 
 	<script>

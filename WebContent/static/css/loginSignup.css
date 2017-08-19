@@ -1,7 +1,7 @@
 
 #loginContainer,
 #signUpContainer  {
-	width:400px;
+	width:430px;
 }
 
 
@@ -15,20 +15,24 @@
 }
 
 .do-hide{
-	display:none;
+/* 	display:none; */
 }
 
 .a-header{
-    color: #ffffff;
-    text-align: center;
-    background-color: #337ab7;
-    height:40px;
-    width:400px;
-    margin:auto;
-    cursor:pointer;
+    /* color: #ffffff; */
+    /* text-align: center; */
+    /* background-color: #337ab7; */
+    height: 40px;
+    width: 430px;
+    margin: auto;
+    cursor: pointer;
     border-radius: 5px;
+    color: #197994;
+    font-weight: bold;
 }
-
+.no-label{
+	margin-left: 167px;
+}
 .a-header h3{
     line-height:40px;
 }
@@ -37,22 +41,21 @@
 	padding:8px 0px;
 }
 
-.group label{
+.item > label{
 	width:160px;
-	text-align:right;
+/* 	text-align:right; */
 	padding-right:10px;
 }
-
+#signup-profiles,
 .group input[type=text],
 .group input[type=password],
 .group input[type=email]{
 	width:225px;
 }
-
-input[type=submit]{
-	width:125px;
+input[type="submit"]{
+	background: #197994;
+	color: #fff;
 }
-
 #loginContainer .checkboxLabel{
 	text-align:left;
 	width:225px;

@@ -35,7 +35,10 @@
 	text-shadow: none !important;
 	color: #b79a1d;
 }
-
+.ratings-mod-container .mod-content{
+    width: 800px !important;
+    margin-left: -400px !important;
+}
 .rated{
 	color: #337ab7 !important;
 }

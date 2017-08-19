@@ -201,11 +201,6 @@ button, body *{
 	 cursor:pointer;
 }
 
-#createAccount{
-	cursor:pointer;	
-}
-
-
 textarea {
     white-space: normal;
 /*     text-align: justify; */

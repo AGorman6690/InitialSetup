@@ -28,6 +28,10 @@
     height: 96%;
     overflow: auto;
 }
+#select-all-work-days{
+    background: #627677;
+    color: #fff;
+}
 #skills,
 #questions,
 #job-description,

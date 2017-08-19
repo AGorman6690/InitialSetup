@@ -4,7 +4,7 @@
 		<div class="a-proposal">
 			<c:if test="${!empty applicationProgressStatus.previousProposal &&
  			 	applicationProgressStatus.application.isAccepted == 0 }">
-				<label class="">${!applicationProgressStatus.isProposedToSessionUser ?
+				<label class="">${applicationProgressStatus.isProposedToSessionUser ?
 	 				'Your last proposal' :
 	 				sessionScope.user.profileId == 1 ? "Employer's last proposal" :
 	 				"Applicant's last proposal"}</label>

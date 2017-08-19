@@ -10,7 +10,7 @@ h1{
     /* color: #fff; */
     /* text-align: center; */
     padding-bottom: 10px;
-    font-size: 25px;
+    font-size: 22px;
     /* border-bottom: 3px solid #197994; */
     font-weight: bold;
     color: #163b3d;
@@ -41,7 +41,10 @@ h1{
 	float: right;
 	font-weight: bold;
 }
-
+.brief-details p span:first-child{
+	width: 300px;
+	display: inline-block;
+}
 .application-details{
 	padding-left: 45px;
 }
@@ -54,7 +57,7 @@ h1{
 }
 .action{
 	color: #ea0010;
-	font-weight: bold;
+/* 	font-weight: bold; */
 }
 .new{
     /* background: #b70707; */
@@ -74,13 +77,13 @@ h1{
 }
 .show-hide-details{
     margin-top: 20px;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: bold;
-    text-align: center;
+/*     text-align: center; */
 }
 .job-name{
     color: #197994;
-    font-size: 21px;
+    font-size: 18px;
     margin-bottom: 10px;
     display: inline-block;
 }

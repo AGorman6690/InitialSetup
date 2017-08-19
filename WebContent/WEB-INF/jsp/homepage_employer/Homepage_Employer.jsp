@@ -41,9 +41,9 @@
 		<%-- 								<span class="new new-applicants">${employerHomepageJob.countApplications_new } new</span></c:if></p>						 --%>
 		<!-- 						<div class="application-details"> -->
 									<div>
-										<input checked type="checkbox" id="employees-${employerHomepageJob.job.id }">
+										<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 										<p class="${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
-											Proposals waiting on you
+											<span>Proposals waiting on you</span>
 											<span class="total proposals-waiting-on-you
 												 ${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 												${employerHomepageJob.countWageProposals_received }</span>
@@ -51,17 +51,22 @@
 												<span class="new new-proposals-waiting-on-you">${employerHomepageJob.countWageProposals_received_new } new</span></c:if></p>
 									</div>
 									<div>								
-										<input checked type="checkbox" id="employees-${employerHomepageJob.job.id }">
-										<p>Proposals waiting on applicant
+										<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
+										<p><span>Proposals waiting on applicant</span>
 											<span class="total total-applicants">${employerHomepageJob.countWageProposals_sent }</span>
 									</div>
 									<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
-									<p>Expired proposals<span class="total total-applicants">${employerHomepageJob.countProposals_expired }</span></p>
+									<p>
+										<span>Expired proposals</span>
+										<span class="total total-applicants">${employerHomepageJob.countProposals_expired }</span>
+									</p>
 								</div>
 		<!-- 					</div> -->
 							<input type="checkbox" id="employees-${employerHomepageJob.job.id }">
 							
-								<p>Accepted proposals<span class="total total-employees">
+								<p>
+									<span>Accepted proposals</span>
+									<span class="total total-employees">
 									${employerHomepageJob.countEmployees_hired } of ${employerHomepageJob.job.positionsPerDay }</span></p>
 			<%-- 					<p class="see-full-details linky-hover" data-job-id="${employerHomepageJob.job.id }"> --%>
 			<!-- 						<span class="text">Details</span> -->
