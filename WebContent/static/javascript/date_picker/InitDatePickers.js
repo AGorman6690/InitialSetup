@@ -344,10 +344,6 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 //     		changePrevNextText($calendar, "<<", ">>");
      		
      		renderWorkDayTimes();
-			
-			
-
-     		
      	}
     });	
 }
@@ -371,11 +367,11 @@ function renderWorkDayTimes(){
 			setTimeOptions($startTime, 30, "start time");
      		setTimeOptions($endTime, 30, "end time");
      		
-     		if(workDayDto.workDay.startTime != undefined){
-         		$startTime.find("option[data-filter-value='" + workDayDto.workDay.startTime.toString() + "']").eq(0).prop("selected", true);
+     		if(workDayDto.workDay.stringStartTime != undefined){
+         		$startTime.find("option[data-filter-value='" + workDayDto.workDay.stringStartTime.toString() + "']").eq(0).prop("selected", true);
      		}
-     		if(workDayDto.workDay.endTime != undefined){
-         		$endTime.find("option[data-filter-value='" + workDayDto.workDay.endTime.toString() + "']").eq(0).prop("selected", true);
+     		if(workDayDto.workDay.stringEndTime != undefined){
+         		$endTime.find("option[data-filter-value='" + workDayDto.workDay.stringEndTime.toString() + "']").eq(0).prop("selected", true);
      		}
 		})
 }

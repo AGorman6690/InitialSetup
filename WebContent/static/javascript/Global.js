@@ -30,6 +30,12 @@ $(document).ready(function(){
 		}
 	})
 	
+//	$("body").on("mouseover", ".glyphicon.enlarge", function() {
+//		$(this).css("font-size", "1.2em");
+//	})
+	
+	
+	
 	$("body").on("mouseover", ".popup", function() {
 		$(this).find(".popuptext").show()
 	})
@@ -196,8 +202,14 @@ function redirectToProfile(){
 
 
 function broswerIsWaiting(isWaiting){
-	if(isWaiting) $("body").addClass("waiting");
-	else $("body").removeClass("waiting");
+	if(isWaiting){
+		$("body").addClass("waiting");
+		$("html").addClass("waiting");
+	}
+	else{
+		$("body").removeClass("waiting");
+		$("html").removeClass("waiting");
+	}
 }
 
 function setInvalidCss($e){
@@ -218,7 +230,7 @@ function setStates(){
 	if(doShowPlaceHodler == 1){
 		placeHolder = "State";
 	}
-	$e.append('<option value="" selected disabled>' + placeHolder + '</option>');	
+	$e.append('<option value="" selected>' + placeHolder + '</option>');	
 	$e.append('<option value="Alabama">AL</option>');
 	$e.append('<option value="Alaska">AK</option>');
 	$e.append('<option value="Arizona">AZ</option>');

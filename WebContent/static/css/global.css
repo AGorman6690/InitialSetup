@@ -1,6 +1,7 @@
 body.waiting * ,
 html.waiting * {
     cursor: progress !important;
+    z-index: 10000;
 }
 
 

@@ -44,19 +44,22 @@
 --%>
 <div id="page-wrapper">
 		<div id="side-bar">
+			
 			<div id="show-general" class="incomplete"><span>General</span></div>
 			<div id="show-work-days" class="incomplete"><span>Work Days</span></div>
 			<div id="show-location" class="incomplete"><span>Location</span></div>
 			<div id="show-questions" class="optional incomplete"><span>Questions</span></div>
 			<div id="show-skills" class="optional incomplete"><span>Skills</span></div>
+			<p id="proceed-to-preview-job-posting" class="pointer">Review then submit</p>	
+			<div class="error-message-container">
+				<p id="invalid-address-error-message" class="error-message">Invalid
+					address</p>
+			</div>				
 		</div>
 
 		<div id="post-job-info" class=" ${!empty postedJobs ? 'hide-on-load-d' : '' }">
 				
-					<div class="error-message-container">
-						<p id="invalid-address-error-message" class="error-message">Invalid
-							address</p>
-					</div>
+
 
 				<div id="general-wrapper" class="section">
 					<h3>General</h3>
@@ -66,7 +69,7 @@
 							<input id="name" name="name" type="text" class="" value=""></input>
 						</div>
 						<div class="item">
-							<label>Description</label>
+							<label>Job Description</label>
 							<textarea id="description" name="description" class="" rows="6"></textarea>
 						</div>
 						<div class="item">
@@ -80,7 +83,7 @@
 				<div id="dates-wrapper" class="section">
 					<h3>Work Days</h3>					
 					<div class="item-wrapper">
-						<button class="sqr-btn" id="clear-calendar">Clear</button>
+						<button class="" id="clear-calendar">Clear</button>
 						<div id="work-days-calendar" class="item calendar-container post-job">							
 							<div id="workDaysCalendar_postJob" class="calendar v2"
 								data-is-showing-job="0"></div>
@@ -130,7 +133,7 @@
 						</div>
 						<div class="item">
 							<label>Zip Code</label>
-							<input id="zipCode" type="text" value=""></input>
+							<input id="zip-code" type="text" value=""></input>
 						</div>
 					</div>
 				</div>
@@ -146,21 +149,25 @@
 						<div id="copy-or-new-question" class="item">
 							<c:if test="${postedQuestions.size() > 0 }">
 								<div id="copy-question-container">
-									<button id="copy-previous-question" class="sqr-btn"
-										data-toggle-id="postedQuestions">Begin with a previous
+									<button id="copy-previous-question"
+										data-toggle-id="posted-questions">Begin with a previous
 										question</button>
-									<div id="postedQuestions" class="dropdown-style">
+									<div id="posted-questions" class="dropdown-style">
 										<c:forEach items="${postedQuestions }" var="question">
-											<div data-question-id="${question.questionId }">${question.text }</div>
+											<p class="pointer" data-question-id="${question.questionId }">${question.text }</p>
 										</c:forEach>
 									</div>
 								</div>
 							</c:if>
-							<button id="create-new-question" class="sqr-btn">Create a
+							<button id="create-new-question">Create a
 								new question</button>
 						</div>
 						<div id="added-questions" class="item">							
 						</div>					
+						<div id="edit-question-actions">
+							<span id="save-question-edits" class="pointer">Save</span>
+							<span id="cancel-question-edits" class="pointer">Cancel</span>
+						</div>
 						<div id="create-question-container" class="item">	
 							<div class="item">
 								<label>Question Format</label>
@@ -176,7 +183,7 @@
 							</div>	
 							<div class="item">
 								<label>Question</label>
-								<textarea id="question" class="" rows="3"></textarea>
+								<textarea id="question" class="" rows="4"></textarea>
 							</div>	
 							<div class="item" id="answer-list-container">
 								<label>Answers</label>
@@ -215,24 +222,22 @@
 	
 						<div class="item">
 							<p>Required Employee Skills</p>
-							<div id="requiredSkillsContainer"
+							<div id="required-skills-container"
 								class="list-items-container skills-container">
-								<div class="list-item">
+								<div class="list-item">									
+									<input type="text">									
 									<span class="delete-list-item glyphicon glyphicon-remove"></span>
-									<span class=""> <input type="text">
-									</span>
 								</div>
 							</div>
 							<span class="add-list-item glyphicon glyphicon-plus"></span>
 						</div>
 						<div class="item">
 							<p>Desired Employee Skills</p>
-							<div id="desiredSkillsContainer"
+							<div id="desired-skills-container"
 								class="list-items-container skills-container">
 								<div class="list-item">
+									<input type="text">
 									<span class="delete-list-item glyphicon glyphicon-remove"></span>
-									<span class="answer-option-container"> <input type="text">
-									</span>
 								</div>
 							</div>
 							<span class="add-list-item glyphicon glyphicon-plus"></span>
@@ -240,7 +245,7 @@
 					</div>
 				</div>
 				
-				<p id="proceed-to-preview-job-posting" class="">Review then submit</p>
+				
 		</div>
 </div>
 	</c:otherwise>
@@ -253,7 +258,7 @@
 	</div>
 </div>
 
-<div id="clone-start-and-end-times">
+<div id="clone-start-and-end-times" class="hide-on-load">
 	
 	<div class="time-wrapper">
 		<label class="date"></label>

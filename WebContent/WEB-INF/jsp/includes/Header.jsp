@@ -68,8 +68,7 @@
 		<div id="user-event-calendar"></div>
 		
 		<c:set var="LaborVaultHost" scope="session" value="${url}"/>
-		
-		
+	
 		<nav id="navBar" class="">
 			<div id="logoContainer">
 				<a id="nav_logo" href="/JobSearch/${!empty sessionScope.user ? 'user' : '' }">Labor Vault</a>

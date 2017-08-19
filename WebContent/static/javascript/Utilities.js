@@ -214,7 +214,7 @@ function formatTime(time){
 function formatTimeTo12Hours(time){
 	//Used to convert hh:mm:ss to h:mm[am or pm]
 	
-	if( TimeRanges == undefined || time == "" ){
+	if( TimeRanges == undefined || time == "" || time == undefined || time == null){
 		return "";
 	}else{
 

@@ -45,19 +45,17 @@
 /* 	font-weight: bold; */
 	vertical-align: top;
 }
-#add-question,
-#clear-calendar{
-	background: #163b3d;
-	color: #fff;
-	padding: 8px 15px;
+button{
+    background: #667c7d;
+    color: #fff;
+    padding: 7px 15px;
 }
-.item{
-	
+
+.item{	
 	margin-bottom: 25px;
 }
 .item-wrapper{
 	padding-left: 50px;
-	padding-top: 25px;
 }
 .section{
 	margin-bottom: 75px;
@@ -95,14 +93,24 @@
 .section h3{
 	font-weight: bold;
 	color: #197994;
+	margin-bottom: 20px;
 }
 .section h3 span{
 	font-size: 20px;
 	color: #000
 }
+#edit-question-actions,
 #set-all-end-times,
 #set-all-start-times{
 	display: none;
+}
+#edit-question-actions{
+    margin-bottom: 15px;
+}
+#save-question-edits{
+	color: #163b3d;
+	font-weight: bold;
+	text-decoration: underline;
 }
 #supreme-times-wrapper.setting-all-times #appendges select{
 	background: #cacaca;
@@ -117,24 +125,59 @@
 }
 #copy-or-new-question button{
     width: 345px;
-    background: #667c7d;
-    color: #fff;
-    padding: 7px 15px;
 }
+#edit-question-actions,
 #add-question-wrapper{
     margin-left: 235px;
 }
-#answer-list .list-item{
+#edit-question-actions span{
+	margin-right: 10px
+}
+.list-item{
 	margin-bottom: 10px;
+}
+.optional-item-explantion{
+	margin-bottom: 30px;
 }
 #create-question-container,
 #answer-list-container{
 	display: none;
 }
+#street,
+#city,
+#question-format,
+#question,
+#answer-list .list-item input{
+	width: 310px;
+}
+#name,
+#description{
+	width: 310px;
+}
+#state,
+#zip-code,
+#positions-per-day{
+	width: 75px;
+}
 .added-question .glyphicon{
 	margin-right: 10px;
+}
+#post-job-info .glyphicon{
 	color: #888;
+	font-size: 16px;
 }
 .added-question{
 	margin-bottom: 10px;
+}
+#added-questions .question-text{
+	font-weight: bold;
+	color: #163b3d;
+}
+.skills-container input{
+	width: 500px;
+}
+#proceed-to-preview-job-posting{
+	margin-top: 20px;
+	font-weight: bold;
+	color: #197994;
 }

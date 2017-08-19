@@ -18,144 +18,86 @@ $(document).ready(function(){
 	
 	$(".delete-answer").click(function(){	
 		deleteAnswerOption(this);
-	})
-	
+	})	
 
-	$("#added-questions").on("click", ".glyphicon-pencil", function(){
-		
+	$("#added-questions").on("click", ".glyphicon-pencil", function(){		
 		var $addedQuestion = $(this).closest(".added-question");
-		hideOtherConrolsVisibilityForQuestionEdit(true, $addedQuestion);
-		showSelectedQuestion();		
-		
-		
-		
-		
-		// Add or remove "selected" class from clicked anchor
-		if($(this).hasClass("selected")) $(this).removeClass("selected")
-		else highlightArrayItem(this, $("#added-questions").find("a"), "selected");
-		
-		if(isAQuestionSelected()){
-
-			showSelectedQuestion();		
-			
-			setClickableness_ForQuestionActions(true, false, true, true);
-			$("#addedQuestionsContainer .question-actions-container").show();
-			setDisplay_createQuestionContainer(true);
-		}
-		else{
-			clearAllInputs($("#create-question-container"));
-			
-			setClickableness_ForQuestionActions(true, true, false, false);
-			enableAllInputFields($("#create-question-container"));
-			$("#addedQuestionsContainer .question-actions-container").hide();
-		}
-
-		clearInvalidContentAndStyle();
-		
+		var questionId = $addedQuestion.attr("data-question-id");
+		$("#questions-wrapper").attr("data-question-id-under-edit", questionId);
+		showQuestion(getQuestion(questionId));		
+		setControlsVisibility_forEditQuestion(true, $addedQuestion);		
+		enableAllInputFields($("#create-question-container"));
 	})
 	
-//	$("body").on("click", "#newQuestion.clickable", function(){
-	$("#create-new-question").click(function(){
-		
+	$("#cancel-question-edits").click(function(){		
+		setControlsVisibility_forEditQuestion(false);
+	})
+	
+	$("#save-question-edits").click(function(){				
+		if(areQuestionInputsValid){
+			var questionId = getQuestionIdUnderEdit();
+			saveEditQuestionChanges(questionId);
+			setControlsVisibility_forEditQuestion(false);	
+			disableAllInputFields($("#create-question-container"));
+		}
+	})
+
+	$("#create-new-question").click(function(){		
 		clearAllInputs($("#create-question-container"));
 		enableAllInputFields($("#create-question-container"));
 		$("#answer-list-container").hide();
-		setClickableness_ForQuestionActions(true, true, false, false);
-		deselectAddedQuestion();
-		setDisplay_createQuestionContainer(true);
+		showCreateQuestionContainer(true);
 	})
 	
 	$("body").on("click", "#add-question.clickable", function(){
 		addQuestion();	
 	})
-	
-	
+		
 	$("body").on("click", ".added-question .glyphicon-trash", function(){
 		var questionId = $(this).closest(".added-question").attr("data-question-id");
 		deleteQuestion(questionId);
 		clearAllInputs($("#create-question-container"));
 		enableAllInputFields($("#create-question-container"));
-		setClickableness_ForQuestionActions(true, true, false, false);
-		
 	})
-	
-	
-	$("body").on("click", "#editQuestion.clickable", function(){
-		
-		enableAllInputFields($("#create-question-container"));
-		$("#editQuestionResponses").show();
-		setClickableness_ForAddedQuestions(false);
-		setClickableness_ForQuestionActions(false, false, false, false);
-	})	
-	
-	$("#cancelEditQuestionChanges").click(function(){
-		
-		showSelectedQuestion();	
-			
-		setClickableness_ForQuestionActions(true, false, true, true);
-		setClickableness_ForAddedQuestions(true);
-		$("#editQuestionResponses").hide();
-	})
-	
-	$("#saveEditQuestionChanges").click(function(){
-		
-		if(areQuestionInputsValid){
-			saveEditQuestionChanges();
-			
-			setClickableness_ForQuestionActions(true, false, true, true);
-			setClickableness_ForAddedQuestions(true);
-			
-			$("#editQuestionResponses").hide();
-			disableAllInputFields($("#create-question-container"));
-		}
-	})
-	
 	
 })
-function hideOtherConrolsVisibilityForQuestionEdit(request, $clickedAddedQuestion){
-	
-	
+function showCreateQuestionContainer(request){
 	if(request){
+		$("#create-question-container").slideDown();
+	}else{
+		$("#create-question-container").slideUp();
+	}
+}
+function getQuestionIdUnderEdit(){
+	return $("#questions-wrapper").attr("data-question-id-under-edit");
+}
+function setControlsVisibility_forEditQuestion(prepareForEdits, $clickedAddedQuestion) {
+	if(prepareForEdits){
+		$("#create-question-container").slideDown();
+		$("#add-question-wrapper").hide();
+		$("#edit-question-actions").slideDown();		
 		$("#copy-or-new-question").hide();
 		$(".added-question").each(function(i, addedQuestion) {
 			if(addedQuestion != $clickedAddedQuestion.get(0))  $(addedQuestion).hide();
 		})
+		
 	}else{
+		$("#create-question-container").slideUp();
+		$("#edit-question-actions").hide();		
+		$("#add-question-wrapper").show();
 		$("#copy-or-new-question").show();
 		$(".added-question").each(function(i, addedQuestion) {
 			$(addedQuestion).show();
 		})
 	}
-	
 }
-function deselectAddedQuestion(){
-	$("#added-questions").find("a.selected").eq(0).removeClass("selected");
-}
-
-function resetEntireQuestionSection(){
-	
-	questions = [];		
-	$("#added-questions").empty();	
-	
-	clearAllInputs($("#create-question-container"));
-	enableAllInputFields($("#create-question-container"));
-	$("#answer-list-container").hide();
-	setClickableness_ForQuestionActions(true, true, false, false);
-	
-}
-
-function clearInvalidContentAndStyle(){
-	removeAllInvalidStyles($("#create-question-container"));
-	$("#invalidAddQuestion").hide();
-}
-
-function saveEditQuestionChanges(){
+function saveEditQuestionChanges(questionId){
 	
 	var newlyEditedQuestion = {};
 	var selectedQuestion = {};
 	
-	selectedQuestion = getSelectedQuestion();
-	newlyEditedQuestion = getQuestion();
+	selectedQuestion = getQuestion(questionId);
+	newlyEditedQuestion = getQuestionFromDOM();
 	
 	// When editing a question, the id must remain the same.
 	// Otherwise the anchor's [data-question-id] needs to be updated.
@@ -170,132 +112,65 @@ function saveEditQuestionChanges(){
 	
 	updateAddedQuestionText(newlyEditedQuestion.questionId, newlyEditedQuestion.text);
 }
-
-function updateAddedQuestionText(questionId, questionText){
-	
-	var element = $("#added-questions").find("[data-question-id='" + questionId + "']")[0];
-	
+function updateAddedQuestionText(questionId, questionText){	
+	var element = $("#added-questions").find("[data-question-id='" + questionId + "'] .question-text")[0];
 	var elementText = getAddedQuestionText(questionText);
-	
-	$(element).html(elementText);
-	
+	$(element).html(elementText);	
 }
-
-function isAQuestionSelected(){
-	if($("#added-questions").find("a.selected").length == 0) return false;
-	else return true;
-}
-
-function setClickableness_ForAddedQuestions(doSetAsClickable){
-	
-	$("#added-questions").find("a").each(function(){
-		if(doSetAsClickable) $(this).addClass("clickable");
-		else $(this).removeClass("clickable");
-	})
-	
-}
-
-
-function setClickableness_ForQuestionActions(doSetNew_asClickable, doSetAdd_asClickable,
-												doSetDelete_asClickable, doSetEdit_asClickable){
-	
-	if(doSetEdit_asClickable) $("#editQuestion").addClass("clickable");
-	else $("#editQuestion").removeClass("clickable");
-	
-	if(doSetDelete_asClickable) $("#deleteQuestion").addClass("clickable");
-	else $("#deleteQuestion").removeClass("clickable");	
-	
-	if(doSetAdd_asClickable) $("#addQuestion").addClass("clickable");
-	else $("#addQuestion").removeClass("clickable");
-	
-	if(doSetNew_asClickable) $("#newQuestion").addClass("clickable");
-	else $("#newQuestion").removeClass("clickable");
-	
-}
-
 function deleteQuestion(questionId){
-	questions = removeArrayElementByIdProp(questionId, questions);
-	
-	//Remove the question from the cart
-	removeElementFromDOM($("#added-questions"), "data-question-id", questionId);
-	
-	setDisplay_addedQuestions();
-	
+	questions = removeArrayElementByIdProp(questionId, questions);	
+	removeElementFromDOM($("#added-questions"), "data-question-id", questionId);	
+	setDisplay_addedQuestions();	
 }
-
 function setDisplay_addedQuestions(){
 	if(questions.length > 0) $("#addedQuestionsContainer").show();
 	else $("#addedQuestionsContainer").hide();
 }
-function showSelectedQuestion(){
-	
-	var selectedQuestion = getSelectedQuestion();
-	
-	showQuestionDto(selectedQuestion);
-
-	
-	disableAllInputFields($("#create-question-container"));			
-	
+function showQuestion(question){	
+	showQuestionDto(question);	
+	disableAllInputFields($("#create-question-container"));		
 }
-
 function showQuestionDto(questionDto){
 	$("#question").val(questionDto.text);
-	
-	// Select the question format
 	$("#question-format option[data-format-id='" + parseInt(questionDto.formatId) + "']").prop("selected", "selected");
-	$("#question-format").trigger("click");
-	
-	
+	$("#question-format").trigger("click");		
 	if(questionDto.answerOptions.length > 0){
 		
-		resetAnswerListContainer();
-		
+		resetAnswerListContainer();		
 		// Add an answer option for every answer option other than the first 2 
 		for(i=0; i<questionDto.answerOptions.length - 2; i++){
 			$("#add-answer").trigger("click");
-		}
-		
+		}		
 		// Populate the answer option inputs
 		$("#answer-list").find(".answer-container input").each(function(i, e){
 			$(this).val(questionDto.answerOptions[i].text);
 		})
 	}
 }
-
 function resetAnswerListContainer(){
 	$("#answer-list").find(".answer-container").each(function(i, e){
 		if(i > 1) $(e).remove();
 	})
 }
-
-function getSelectedQuestion(){
-	
-	var selectedQuestionId = $("#added-questions").find("a.selected").attr("data-question-id");
-	selectedQuestionId = parseInt(selectedQuestionId);
-	
-	var selectedQuestion = {};
+function getQuestion(questionId){	
+	var question = {};
 	$.each(questions, function(){
-		if(this.questionId == selectedQuestionId){
-			selectedQuestion = this;		
+		if(this.questionId == questionId){
+			question = this;		
 		}
-	})
-	
-	return selectedQuestion;
-	
+	})	
+	return question;	
 }
-
 function addAnotherAnswerOption(){
 	var anAnswerContainer = $("#answer-list").find(".answer-container")[0];			
-	var clone = $(anAnswerContainer).clone(true);			
+	var clone = $(anAnswerContainer).clone(true);		
 	
 	//Clear the input
-	$(clone).find("input").val("");
-	
+	$(clone).find("input").val("");	
 	$("#answer-list").find(".list-item").last().after(clone);
 }
 
-function deleteAnswerOption(clickedAnswerOption){
-	
+function deleteAnswerOption(clickedAnswerOption){	
 	// There must remain at least two answer options
 	if($("#answer-list").find(".answer-container").length > 2){
 		$(clickedAnswerOption).closest(".answer-container").remove();
@@ -304,24 +179,20 @@ function deleteAnswerOption(clickedAnswerOption){
 		$(clickedAnswerOption).siblings("input").eq(0).val("");
 	}
 }
-
-
 function addQuestion(){
 	var question = {};
 	if(areQuestionInputsValid()){
-		question = getQuestion();
+		question = getQuestionFromDOM();
 		ongoingQuestionCount += 1;
 		question.questionId = ongoingQuestionCount;
 		questions.push(question);
 		addQuestionToDOM(question);
 		clearAllInputs($("#create-question-container"));
 		slideUp($("#answer-list-container"), 400);
-		setDisplay_addedQuestions();
-		setDisplay_createQuestionContainer(false);
+		showCreateQuestionContainer(false);
 	}
 }
-function getQuestion(){
-	
+function getQuestionFromDOM(){	
 	var question = {};
 	var answerOptionsInputs = []
 	var answerOptions = [];
@@ -343,11 +214,9 @@ function getQuestion(){
 	
 	}else{
 		question.answerOptions = [];
-	}
-	
+	}	
 	return question;
 }
-
 function doesQuestionHaveAnAnswerList(question){
 	if(question.formatId == 2 || question.formatId == 3){
 		return true;
@@ -355,13 +224,12 @@ function doesQuestionHaveAnAnswerList(question){
 		return false;
 	}
 }
-
 function addQuestionToDOM(question){
 	var questionText = getAddedQuestionText(question.text);
 	var html = "<div class='added-question' data-question-id=" + question.questionId + ">";
-	html += "<span class='glyphicon glyphicon-trash'></span>";
-	html += "<span class='glyphicon glyphicon-pencil'></span>";
-	html += "<span data-question-id='" + question.questionId + "' class='no-hover clickable'>";
+	html += "<span class='glyphicon glyphicon-trash enlarge'></span>";
+	html += "<span class='glyphicon glyphicon-pencil enlarge'></span>";
+	html += "<span class='question-text' data-question-id='" + question.questionId + "' class='no-hover clickable'>";
 	html += questionText;			
 	html += "</span>";
 	html += "</div>";
@@ -369,7 +237,6 @@ function addQuestionToDOM(question){
 	$("#added-questions").append(html);
 		
 }
-
 function getAddedQuestionText(questionText){
 	
 	//If the qustion is longer than 20 characters, then only show the first 20.
@@ -377,7 +244,6 @@ function getAddedQuestionText(questionText){
 	else return questionText;
 	
 }
-
 function areQuestionInputsValid(){
 	
 	var $e;
@@ -392,7 +258,6 @@ function areQuestionInputsValid(){
 	else{
 		setValidCss($("#question-format"));
 	}
-
 	
 	//If multiple choice question, verify at least two answers have been given
 	selectedQuestionFormatId = $("#question-format").find("option:selected").eq(0).attr("data-format-id")

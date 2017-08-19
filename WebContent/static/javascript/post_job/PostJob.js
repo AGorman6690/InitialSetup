@@ -11,35 +11,11 @@ $(document).ready(function(){
 	
 	workDayDtos = [];
 	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
-	
-	$("#show-dates-section").click(function() {
-		// ***********************************
-		// see note in 	initCalendar_selectWorkDays::afterShow();
-		// ***********************************
-		changePrevNextText($calendar_workDays, "<<", ">>");
-	})
-	
-	$("#next-section").click(function(){
-		
-		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
 
-		if($selectedSection.attr("id") == "show-skills"){
-			$("#proceed-to-preview-job-posting").click();
-		}
-		else{
-			$selectedSection.nextAll(".select-page-section:visible").first().click();
-		}
-				
-	})	
-	
-	$("#previous-section").click(function(){		
-		var $selectedSection = $(".select-page-section-container").find(".select-page-section.selected").eq(0);			
-		$selectedSection.prevAll(".select-page-section:visible").first().click();				
-	})	
 
 	$("#proceed-to-preview-job-posting").click(function(){
 
-		var addJobRequest = getAddJobRequest()
+		var addJobRequest = getAddJobRequest();
 //		if(arePostJobInputsValid(jobDto)){
 		
 			var addressToValidate = ""
@@ -61,38 +37,27 @@ $(document).ready(function(){
 //		}
 	})
 	
-	$("#editPosting").click(function(){
-		setDisplay_previewJobPost(false);	
-	})
 	
 	$("body").on("click", "#submit-job-post", function(){
 		executeAjaxCall_postJob(getAddJobRequest());
 	})
 	
-	$("#no-dates-selected").click(function(){
-		$("#show-dates-section").click();
-	})
-	
 	$("#dates-wrapper #clear-calendar").click(function(){		
 		resetCalendar();
 	})
-	
-	$("#startNewJob").click(function(){
-		showPostJobSections();
-	})
-	
+
 	$("#previous-job-posts div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));		
 		$(this).closest("#postedJobsContainer").find("[data-toggle-id]").eq(0).click();		
 		$("#postSections").find(".post-section").eq(0).click();
 	})
 	
-	$("#postedQuestions div[data-question-id]").click(function(){
+	$("#posted-questions [data-question-id]").click(function(){
 		importPreviousQuestion($(this).attr("data-question-id"));
 		$("#copy-previous-question").click();		
 	})
 	
-	$("body").on("click", "#employeeSkillsContainer .add-list-item", function(){		
+	$("body").on("click", "#skills-wrapper .add-list-item", function(){		
 		addAnotherSkill($(this).siblings(".list-items-container").eq(0));		
 	})
 	
@@ -104,13 +69,13 @@ $(document).ready(function(){
 		var $e = $(this).find("option:selected");
 		var date = $e.closest(".time-wrapper").find(".date").attr("data-date");
 		var workDayDto = getWorkDayDtoByDate(dateify(date), workDayDtos);
-		workDayDto.workDay.startTime = $e.attr("data-filter-value");
+		workDayDto.workDay.stringStartTime = $e.attr("data-filter-value");
 	})
 	$("#supreme-times-wrapper").on("change", "select.end-time", function() {
 		var $e = $(this).find("option:selected");
 		var date = $e.closest(".time-wrapper").find(".date").attr("data-date");
 		var workDayDto = getWorkDayDtoByDate(dateify(date), workDayDtos);
-		workDayDto.workDay.endTime = $e.attr("data-filter-value");
+		workDayDto.workDay.stringEndTime = $e.attr("data-filter-value");
 	})
 		
 	$("#set-all-times").change(function() {
@@ -126,38 +91,34 @@ $(document).ready(function(){
 	$("select#set-all-start-times").change(function() {
 		var startTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
-			this.workDay.startTime = startTime;
+			this.workDay.stringStartTime = startTime;
 		})
 		renderWorkDayTimes();
 	})
 	$("select#set-all-end-times").change(function() {
 		var endTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
-			this.workDay.endTime = endTime;
+			this.workDay.stringEndTime = endTime;
 		})
 		renderWorkDayTimes();
 	})
 	
 	setStates();
-	setTimeOptions($("#set-all-end-times"), 30, "start time");
-	setTimeOptions($("#set-all-start-times"), 30, "end time");
+	setTimeOptions($("#set-all-end-times"), 30, "end time");
+	setTimeOptions($("#set-all-start-times"), 30, "start time");
 	
-	$("body").on("mouseover", "#workDaysCalendar_postJob.show-hover-range td", function(){
-		
+	$("body").on("mouseover", "#workDaysCalendar_postJob.show-hover-range td", function(){	
 		var hoverDate = getDateFromTdElement(this);
 		var firstDate = dateify($("#workDaysCalendar_postJob").attr("data-first-date"));
 		showHoverDateRange($("#workDaysCalendar_postJob.show-hover-range"), hoverDate, firstDate);		
 	})	
 })
-
 function resetCalendar(){
 	workDayDtos = [];	
 	$calendar_workDays.datepicker("refresh");
 	$calendar_workDays.removeClass("show-hover-range");
 	$("#dates-wrapper").removeClass("multiple-work-days");
 }
-
-
 function resetTimesSection(){
 	$("#times-cont").hide();
 	$("#no-dates-selected").show();	
@@ -169,41 +130,14 @@ function resetTimesSection(){
 	$initalTimeQuestion.hide();
 	$initalTimeQuestion.find("button").each(function(){ $(this).removeClass("selected"); })
 }
-
-function setDisplay_previewJobPost(doShowPreview){
-
-	if(doShowPreview){
-		$("#preview-job-posting-container").show();
-		$("#post-job-container").hide();
-		$("#postSections").hide();		
-	}
-	else{
-		$("#preview-job-posting-container").hide();
-		$("#post-job-container").show();
-		$("#postSections").show();
-	}
-	
-}
-
-function setDisplay_createQuestionContainer(doShow){
-	if(doShow) $("#create-question-container").show();
-	else $("#create-question-container").hide();
-}
-
 function addAnotherSkill($listItemsContainer){
 	var $aSkillContainer = $listItemsContainer.find(".list-item").eq(0);			
 	var clone = $aSkillContainer.clone(true);			
-	
-	//Clear the input
-	$(clone).find("input").val("");
-	
+	$(clone).find("input").val("");	
 	$listItemsContainer.append(clone);
 }
-
-function deleteSkill($clickedListItem){
-	
-	var $listItemsContainer = $clickedListItem.closest(".list-items-container");
-	
+function deleteSkill($clickedListItem){	
+	var $listItemsContainer = $clickedListItem.closest(".list-items-container");	
 	// There must remain at least 1 skill
 	if($listItemsContainer.find(".list-item").length > 1){
 		$clickedListItem.remove();
@@ -212,7 +146,6 @@ function deleteSkill($clickedListItem){
 		$clickedListItem.find("input").eq(0).val("");
 	}
 }
-
 function importPreviousQuestion(questionId){
 	
 	broswerIsWaiting(true);
@@ -236,12 +169,8 @@ function importPreviousQuestion(questionId){
 		clearAllInputs($("#questionsContainer"));
 		enableAllInputFields($("#questionsContainer"));
 		$("#answerListContainer").hide();
-		
-		setClickableness_ForQuestionActions(true, true, false, false);
-		
-		showQuestionDto(questionDto);
-		
-		setDisplay_createQuestionContainer(true);
+		showQuestionDto(questionDto);		
+		showCreateQuestionContainer(true);
 	}	
 
 	function _error() {
@@ -249,7 +178,6 @@ function importPreviousQuestion(questionId){
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
-
 function importPreviousJobPosting(jobId){
 	
 	broswerIsWaiting(true);
@@ -264,26 +192,16 @@ function importPreviousJobPosting(jobId){
 		error : _error,
 		cache: true
 	});
-
 	function _success(jobDto) {		
 		broswerIsWaiting(false);	
 		jobDto.workDayDtos = dateifyWorkDayDtos(jobDto.workDayDtos);
 		setControlValues(jobDto);
-		showPostJobSections();
-
-	}	
-
+	}
 	function _error() {
 		broswerIsWaiting(false);
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
-
-function showPostJobSections(){
-	$(".hide-on-load").each(function(){ $(this).removeClass("hide-on-load") });
-	$("#copy-or-new-container").hide();
-}
-
 function setControlValues(jobDto){
 	
 	$("#name").val(jobDto.job.jobName);
@@ -294,32 +212,13 @@ function setControlValues(jobDto){
 	$("#zipCode").val(jobDto.job.zipCode);
 	
 	// Dates
-//	if(jobDto.job.isPartialAvailabilityAllowed) $("#yes-partial").click();
-//	else $("#no-partial").click();	
-//	workDayDtos = jobDto.workDayDtos;
-//	$calendar_workDays.datepicker("destroy");
 	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
-
-	// Times
-//	if(jobDto.areAllTimesTheSame){
-//		$("#times-are-the-same").click();
-//		$("#single-start-time option[data-filter-value='" +
-//				jobDto.workDayDtos[0].workDay.stringStartTime + "']").prop("selected", true);
-//		$("#single-end-time option[data-filter-value='" +
-//				jobDto.workDayDtos[0].workDay.stringEndTime + "']").prop("selected", true);
-//	}else{
-//		$("#times-are-not-the-same").click();
-//		initCalendar_setStartAndEndTimes($calendar_times);
-//	}
-
-	
 	// Questions
 	resetEntireQuestionSection();	
 	$(jobDto.questions).each(function(){
 		showQuestionDto(this);
 		addQuestion();
-	})
-	
+	})	
 	// Skills
 	var len = jobDto.skillsRequired.length;
 	var $addListItem = $("#requiredSkillsContainer").siblings(".add-list-item").eq(0);
@@ -328,8 +227,7 @@ function setControlValues(jobDto){
 		$e.val(this.text);
 		
 		if(i < len - 1) $addListItem.click();
-	})
-	
+	})	
 	var len = jobDto.skillsDesired.length;
 	var $addListItem = $("#desiredSkillsContainer").siblings(".add-list-item").eq(0);
 	$(jobDto.skillsDesired).each(function(i, e){
@@ -337,24 +235,8 @@ function setControlValues(jobDto){
 		$e.val(this.text);
 		
 		if(i < len - 1) $addListItem.click();
-	})
-	
+	})	
 }
-
-function resetSkills(){
-
-	$("#employeeSkillsContainer").find(".list-item .delete-list-item").each(function(){
-		$(this).click();
-	})
-}
-
-function resetDatesAndTimes(){
-	workDayDtos = [];
-	$("#workDaysCalendar_postJob").datepicker("refresh");
-}
-
-
-
 function getAddJobRequest(){
 	
 	// *********************************************************
@@ -380,8 +262,8 @@ function getAddJobRequest(){
 	addJobRequest.job.streetAddress = $("#street").val();
 	addJobRequest.job.city = $("#city").val();
 	addJobRequest.job.state =$("#state option:selected").html();
-	addJobRequest.job.zipCode = $("#zipCode").val();
-	addJobRequest.job.positionsPerDay = $("#positionsContainer input").val();
+	addJobRequest.job.zipCode = $("#zip-code").val();
+	addJobRequest.job.positionsPerDay = $("#positions-per-day").val();
 	
 	if($("#no-partial").is(":checked")) addJobRequest.job.isPartialAvailabilityAllowed = 0;
 	else addJobRequest.job.isPartialAvailabilityAllowed = 1;
@@ -389,71 +271,39 @@ function getAddJobRequest(){
 	return addJobRequest;	
 }
 
-function getSkills(){
-	
+function getSkills(){	
 	var skills = [];
-	var skill = {};
-	
-	$("#requiredSkillsContainer").find(".list-item input").each(function(){
-		
+	var skill = {};	
+	$("#required-skills-container").find(".list-item input").each(function(){		
 		if($(this).val() != ""){
 			skill = {};
 			skill.text = $(this).val();
-			skill.type = 0;
-			
+			skill.type = 0;			
 			skills.push(skill);
-		}
-		 
+		}		 
 	})
-	
-	$("#desiredSkillsContainer").find(".list-item input").each(function(){
-		
+	$("#desired-skills-container").find(".list-item input").each(function(){		
 		if($(this).val() != ""){
 			skill = {};
 			skill.text = $(this).val();
-			skill.type = 1;
-			
+			skill.type = 1;			
 			skills.push(skill);
-		}
-		 
-	})
-	
-	return skills;
-	
+		}		 
+	})	
+	return skills;	
 }
-
 function getWorkDays(){
-
 	var workDays = [];
-	if($("#same-times").is(":checked")){
-		var singleStartTime = $("#single-start-time").find("option:selected").attr("data-filter-value");
-		var singleEndTime = $("#single-end-time").find("option:selected").attr("data-filter-value");
-	
-		$(workDayDtos).each(function(){			
-			var workDay = {};
-			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
-			workDay.stringStartTime = singleStartTime;
-			workDay.stringEndTime = singleEndTime;			
-			workDays.push(workDay);
-		})
-	}else{
-	
-		$(workDayDtos).each(function(){
-			
-			var workDay = {};
-			workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
-			workDay.stringStartTime = this.workDay.stringStartTime;
-			workDay.stringEndTime = this.workDay.stringEndTime;
-			
-			workDays.push(workDay);
-		})	
-	}
-
-	
+	$(workDayDtos).each(function(){		
+		var workDay = {};
+		workDay.stringDate = $.datepicker.formatDate("yy-mm-dd", this.date);
+		workDay.stringStartTime = this.workDay.stringStartTime;
+		workDay.stringEndTime = this.workDay.stringEndTime;		
+		workDays.push(workDay);
+	})	
 	return workDays;
 }
-
-function executeAjaxCall_postJob(jobDto){
+function executeAjaxCall_postJob(jobDto){	
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
@@ -467,7 +317,6 @@ function executeAjaxCall_postJob(jobDto){
 		redirectToProfile();
 	});
 }
-
 function executeAjaxCall_isAddressValid(address, callback) {
 	$.ajax({
 		type: "GET",
@@ -478,9 +327,7 @@ function executeAjaxCall_isAddressValid(address, callback) {
 		callback(response);
 	})
 }
-
-function executeAjaxCall_previewJobPosting(addJobRequest){
-	
+function executeAjaxCall_previewJobPosting(addJobRequest){	
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
@@ -494,9 +341,5 @@ function executeAjaxCall_previewJobPosting(addJobRequest){
 	}).done( function (html) {
 		broswerIsWaiting(false);
 		showJobInfoMod(html)
-//		renderHtml_jobInfo(html_jobInfo, false, true);
-
 	})
-
-
 }
