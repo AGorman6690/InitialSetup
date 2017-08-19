@@ -1,8 +1,6 @@
 package com.jobsearch.model
 
 import com.jobsearch.dtos.ApplicationDTO
-import com.jobsearch.category.service.CategoryDTO
-
 import com.jobsearch.job.web.JobDTO
 
 
@@ -32,7 +30,6 @@ class JobSearchUserDTO {
 //	
 	
 	Double ratingValue_overall
-	List<CategoryDTO> categoryDtos_jobsCompleted
 	
 	Boolean isInvalidNewUser
 	Boolean isInvalidFirstName

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.jobsearch.model.Application;
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.model.Job;
 import com.jobsearch.json.JSON;
@@ -41,8 +40,6 @@ public class ProposalServiceImpl{
 	ApplicationServiceImpl applicationService;
 	@Autowired
 	WorkDayServiceImpl workDayService;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WorkDayDto;
@@ -36,8 +35,6 @@ public class WorkDayController {
 	ApplicationServiceImpl applicationService;
 	@Autowired
 	WorkDayServiceImpl workDayService;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

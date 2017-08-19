@@ -178,65 +178,7 @@ function importPreviousQuestion(questionId){
 		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
 	}
 }
-function importPreviousJobPosting(jobId){
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "GET",
-		url: '/JobSearch/post-job/previous-post/load?jobId=' + jobId,
-		headers : getAjaxHeaders(),
-//		contentType : "application/json",
-//		data : JSON.stringify(postJobDto),
-		dataType : "json",		
-		success : _success,
-		error : _error,
-		cache: true
-	});
-	function _success(jobDto) {		
-		broswerIsWaiting(false);	
-		jobDto.workDayDtos = dateifyWorkDayDtos(jobDto.workDayDtos);
-		setControlValues(jobDto);
-	}
-	function _error() {
-		broswerIsWaiting(false);
-		alert('DEBUG: error executeAjaxCall_saveFindJobFilter')		
-	}
-}
-function setControlValues(jobDto){
-	
-	$("#name").val(jobDto.job.jobName);
-	$("#description").val(jobDto.job.description);
-	$("#street").val(jobDto.job.streetAddress);
-	$("#city").val(jobDto.job.city);
-	$("#state").val(jobDto.job.state);
-	$("#zipCode").val(jobDto.job.zipCode);
-	
-	// Dates
-	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
-	// Questions
-	resetEntireQuestionSection();	
-	$(jobDto.questions).each(function(){
-		showQuestionDto(this);
-		addQuestion();
-	})	
-	// Skills
-	var len = jobDto.skillsRequired.length;
-	var $addListItem = $("#requiredSkillsContainer").siblings(".add-list-item").eq(0);
-	$(jobDto.skillsRequired).each(function(i, e){
-		var $e = $("#requiredSkillsContainer").find(".list-item input").last();
-		$e.val(this.text);
-		
-		if(i < len - 1) $addListItem.click();
-	})	
-	var len = jobDto.skillsDesired.length;
-	var $addListItem = $("#desiredSkillsContainer").siblings(".add-list-item").eq(0);
-	$(jobDto.skillsDesired).each(function(i, e){
-		var $e = $("#desiredSkillsContainer").find(".list-item input").last();
-		$e.val(this.text);
-		
-		if(i < len - 1) $addListItem.click();
-	})	
-}
+
 function getAddJobRequest(){
 	
 	// *********************************************************

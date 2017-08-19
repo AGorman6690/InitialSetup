@@ -20,7 +20,6 @@ import org.springframework.ui.Model;
 import com.google.maps.model.AddressComponent;
 import com.google.maps.model.AddressComponentType;
 import com.google.maps.model.GeocodingResult;
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.dtos.ApplicationDTO;
 import com.jobsearch.dtos.CompletedJobDto;
 import com.jobsearch.google.Coordinate;
@@ -59,8 +58,6 @@ public class JobServiceImpl {
 
 	@Autowired
 	JobRepository repository;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	ApplicationServiceImpl applicationService;
 	@Autowired
@@ -212,30 +209,6 @@ public class JobServiceImpl {
 	public LocalTime getEndLocalTime(int jobId) {
 		Time time = repository.getEndTime(jobId);
 		return DateUtility.getLocalTime(time);
-	}
-
-	public JobDTO getJobDTO_DisplayJobInfo(int jobId) {
-
-		JobDTO jobDto = new JobDTO();
-
-		Job job = this.getJob(jobId);
-
-		jobDto.setJob(job);
-		jobDto.setWorkDays(workDayService.getWorkDays(jobId));
-		jobDto.setWorkDayDtos(workDayService.getWorkDayDtos(jobId));
-		jobDto.setCategories(categoryService.getCategoriesByJobId(jobId));
-		jobDto.setSkillsRequired(this.getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
-		jobDto.setSkillsDesired(this.getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
-
-		jobDto.setDaysUntilStart(DateUtility.getTimeSpan(job.getStartDate_local(), job.getStartTime_local(),
-				job.getEndDate_local(), job.getEndTime_local(), DateUtility.TimeSpanUnit.Days));
-
-		jobDto.setAreAllTimesTheSame(workDayService.areAllTimesTheSame(jobDto.getWorkDays()));
-
-		jobDto.setDate_firstWorkDay(DateUtility.getMinimumDate(jobDto.getWorkDays()).toString());
-		jobDto.setMonths_workDaysSpan(DateUtility.getMonthSpan(jobDto.getWorkDays()));
-
-		return jobDto;
 	}
 
 	private List<Skill> getSkills_ByType(int jobId, Integer type) {
@@ -417,16 +390,6 @@ public class JobServiceImpl {
 		return repository.getJobs_ByEmployer(userId);
 	}
 
-	public JobDTO getJobDto_PreviousPostedJob(HttpSession session, int jobId) {
-
-		JobDTO jobDto = getJobDto_ByEmployer(session, jobId);
-
-		if (jobDto != null) {
-			jobDto.setQuestions(questionService.getQuestions(jobId));
-			return jobDto;
-		} else
-			return null;
-	}
 
 	public List<Job> getJobs_needRating_byEmployee(int userId) {
 
@@ -467,14 +430,6 @@ public class JobServiceImpl {
 				}
 			}
 		}
-	}
-
-	public JobDTO getJobDto_ByEmployer(HttpSession session, int jobId) {
-
-		if (verificationService.didSessionUserPostJob(session, jobId)) {
-			return this.getJobDTO_DisplayJobInfo(jobId);
-		} else
-			return null;
 	}
 
 	public int getCount_JobsCompleted_ByUser(int userId) {

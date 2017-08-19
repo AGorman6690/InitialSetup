@@ -10,10 +10,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.model.Application;
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.model.Job;
 import com.jobsearch.job.web.JobDTO;
-import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WageProposal;
@@ -29,9 +27,7 @@ import com.jobsearch.session.SessionContext;
 // Not sure 
 @Service
 public class VerificationServiceImpl {
-	
-	@Autowired
-	CategoryServiceImpl categoryService;	
+		
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

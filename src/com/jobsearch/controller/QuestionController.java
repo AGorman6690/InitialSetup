@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Question;
@@ -34,8 +33,6 @@ public class QuestionController {
 	ApplicationServiceImpl applicationService;
 	@Autowired
 	WorkDayServiceImpl workDayService;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

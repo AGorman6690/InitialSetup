@@ -1,7 +1,6 @@
 package com.jobsearch.job.web
 
 import com.jobsearch.dtos.ApplicationDTO
-import com.jobsearch.category.service.Category
 import com.jobsearch.model.Application
 import com.jobsearch.model.Job
 import com.jobsearch.model.JobSearchUser

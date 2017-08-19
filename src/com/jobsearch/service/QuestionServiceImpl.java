@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.google.GoogleClient;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Question;
@@ -21,8 +20,6 @@ public class QuestionServiceImpl {
 
 	@Autowired
 	QuestionRepository repository;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	ApplicationServiceImpl applicationService;
 	@Autowired

@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.bases.BaseRepository;
+import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.service.ApplicationServiceImpl;

@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.request.FindEmployeesRequest;
@@ -36,8 +35,6 @@ public class UserController {
 	UserServiceImpl userService;
 	@Autowired
 	JobServiceImpl jobService;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	ApplicationServiceImpl applicationService;
 	@Autowired

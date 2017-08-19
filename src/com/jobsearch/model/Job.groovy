@@ -4,10 +4,6 @@ import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalTime
 
-import com.jobsearch.category.service.Category
-import com.jobsearch.model.JobSearchUser
-import com.jobsearch.model.WorkDay
-
 
 public class Job {
 	Integer id

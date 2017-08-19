@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.jobsearch.model.Application;
 import com.jobsearch.model.Job;
-import com.jobsearch.model.EmploymentProposalDTO;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;

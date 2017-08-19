@@ -7,8 +7,6 @@
 <script src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
 <script
-	src="<c:url value="/static/javascript/post_job/PostJob_WorkDaysAndTimes.js" />"></script>
-<script
 	src="<c:url value="/static/javascript/post_job/SubmitValidation.js" />"></script>
 <script
 	src="<c:url value="/static/javascript/Utilities/FormUtilities.js" />"></script>
@@ -251,12 +249,6 @@
 	</c:otherwise>
 </c:choose>
 
-<div id="job-info-mod" class="mod simple-header">
-	<div class="mod-content">
-		<div class="mod-header"></div>
-		<div class="mod-body"></div>
-	</div>
-</div>
 
 <div id="clone-start-and-end-times" class="hide-on-load">
 	
@@ -274,4 +266,3 @@
 </script>
 
 <%@ include file="../includes/Footer.jsp"%>
-<%@ include file="../includes/resources/JobInformation.jsp"%>

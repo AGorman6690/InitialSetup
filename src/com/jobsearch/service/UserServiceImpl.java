@@ -23,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.email.Mailer;
 import com.jobsearch.google.Coordinate;
@@ -66,8 +65,6 @@ public class UserServiceImpl {
 
 	@Autowired
 	UserRepository repository;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	JobServiceImpl jobService;
 	@Autowired

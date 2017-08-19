@@ -1,4 +1,5 @@
-<%-- <%@ include file="./DatePicker.jsp"%> --%>
+<%@ include file="../../includes/TagLibs.jsp"%>
+
 
 
 <!-- **************************************************************** -->
@@ -10,9 +11,7 @@
 <!-- **************************************************************** -->
 <!-- **************************************************************** -->
 
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/jobInfo.css" /> -->
 <script src="/JobSearch/static/javascript/JobInfo.js" type="text/javascript"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/calendar_work_day.css" />	 -->
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/job_info/job_info_NEW.css" />
 
 <c:if test="${!empty doSkip_loadGoogleMapsApiForJobInfo && doSkip_loadGoogleMapsApiForJobInfo == 0 }">
@@ -20,3 +19,10 @@
 		src="https://maps.googleapis.com/maps/api/
 			js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&callback=initMap_job_info"></script>
 </c:if>
+
+<div id="job-info-mod" class="mod simple-header">
+	<div class="mod-content">
+		<div class="mod-header"></div>
+		<div class="mod-body"></div>
+	</div>
+</div>

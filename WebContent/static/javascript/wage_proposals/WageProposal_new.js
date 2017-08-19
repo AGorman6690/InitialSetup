@@ -479,11 +479,11 @@ function isSessionUserAnEmployer($e){
 	if($e.closest(".proposal-container").attr("data-session-user-is-employer") == "1") return true;
 	else return false;
 }
-function getExpirationTimeToConfirm(employmentProposalDto){
+function getExpirationTimeToConfirm(){
 
-	var days = employmentProposalDto.days_offerExpires;
-	var hours = employmentProposalDto.hours_offerExpires;
-	var minutes = employmentProposalDto.minutes_offerExpires;
+	var days;
+	var hours;
+	var minutes;
 	var html = "";
 	
 	if(days > 1) html += days + " days ";

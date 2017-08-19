@@ -1,9 +1,5 @@
 package com.jobsearch.model
 
-import com.jobsearch.model.Application
-import com.jobsearch.model.Job
-import com.jobsearch.category.service.Category
-import java.util.List
 
 
 class JobSearchUser {

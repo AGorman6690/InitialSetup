@@ -1,5 +1,4 @@
 <%@ include file="../includes/Header.jsp"%>
-<%@ include file="../includes/resources/SelectPageSection.jsp"%>
 <%@ include file="../includes/resources/TableFilter.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>
 
@@ -182,12 +181,6 @@
 	</div>
 </div>
 </div>
-		<div id="job-info-mod" class="mod simple-header">
-			<div class="mod-content">
-				<div class="mod-header"></div>
-				<div class="mod-body"></div>
-			</div>
-		</div>
 <script
 	src="https://maps.googleapis.com/maps/api/
 		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI">

@@ -12,12 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.jobsearch.dtos.ApplicationDTO;
-import com.jobsearch.category.service.CategoryServiceImpl;
-import com.jobsearch.model.Job;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Application;
+import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
@@ -38,8 +37,6 @@ public class ApplicationServiceImpl {
 
 	@Autowired
 	ApplicationRepository repository;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

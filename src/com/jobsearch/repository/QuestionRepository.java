@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Controller;
 
-import com.jobsearch.bases.BaseRepository;
+import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Question;
 import com.jobsearch.service.ApplicationServiceImpl;

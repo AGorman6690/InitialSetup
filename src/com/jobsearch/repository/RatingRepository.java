@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.bases.BaseRepository;
+import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.model.RateCriterion;
 
 

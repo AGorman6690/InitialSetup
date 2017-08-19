@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.jobsearch.category.service.CategoryServiceImpl;
 import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
@@ -34,8 +33,6 @@ public class JobController {
 	JobServiceImpl jobService;
 	@Autowired
 	UserServiceImpl userService;
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	ApplicationServiceImpl applicationService;
 
@@ -124,7 +121,7 @@ public class JobController {
 			jobService.setFindJobsResponse(model, session, request);
 		}
 		
-		return "/find_jobs_new/Find_Jobs_New";		
+		return "/FindJobs";		
 	}
 
 	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)
@@ -140,15 +137,6 @@ public class JobController {
 
 		jobService.updateJobStatus(status, jobId);
 		return "redirect:/user";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/post-job/previous-post/load", method = RequestMethod.GET)
-	public String loadPreviousJobPost(@RequestParam(name = "jobId", required = true) int jobId, HttpSession session) {
-
-		JobDTO jobDto = jobService.getJobDto_PreviousPostedJob(session, jobId);
-
-		return JSON.stringify(jobDto);
 	}
 
 	@RequestMapping(value = "/post-job", method = RequestMethod.GET)

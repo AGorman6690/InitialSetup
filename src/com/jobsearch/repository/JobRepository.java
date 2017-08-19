@@ -10,13 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.jobsearch.bases.BaseRepository;
-import com.jobsearch.category.service.CategoryServiceImpl;
+import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.model.Application;
 import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
@@ -30,15 +28,12 @@ import com.jobsearch.service.QuestionServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.utilities.DateUtility;
-import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.NumberUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
 public class JobRepository extends BaseRepository {
 
-	@Autowired
-	CategoryServiceImpl categoryService;
 	@Autowired
 	UserServiceImpl userService;
 	@Autowired

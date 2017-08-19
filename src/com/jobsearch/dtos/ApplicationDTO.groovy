@@ -3,7 +3,6 @@ package com.jobsearch.dtos
 import com.jobsearch.job.web.JobDTO
 import com.jobsearch.model.Answer
 import com.jobsearch.model.Application
-import com.jobsearch.model.EmploymentProposalDTO
 import com.jobsearch.model.JobSearchUserDTO
 import com.jobsearch.model.Question
 import com.jobsearch.model.WageProposal
@@ -16,8 +15,6 @@ class ApplicationDTO {
 	List<Answer> answers
 	List<Integer> answerOptionIds_Selected	
 	
-	EmploymentProposalDTO previousProposal
-	EmploymentProposalDTO employmentProposalDto
 	
 	String currentProposalStatus
 	WageProposal currentWageProposal
