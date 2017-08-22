@@ -14,7 +14,6 @@ class JobSearchUser {
 	String password
 	String matchingPassword
 	Profile profile
-//	List<Category> categories
 //	List<Job> jobs
 //	List<Job> activeJobs
 //	List<Job> jobsAppliedTo

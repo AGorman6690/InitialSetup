@@ -100,10 +100,7 @@ public class JobController {
 	
 	@RequestMapping(value = "/job/preview", method = RequestMethod.POST)
 	public String previewJobInfo(Model model, HttpSession session, @RequestBody AddJobRequest request) {
-
-		
 		jobService.setGetJobReponse_forPreviewingJobPost(model, request);
-		
 		return "/JobInfo_NEW";
 	}
 
