@@ -85,8 +85,6 @@ public class JobDTO {
 	 Double ratingValue_overall
 	 List<String> comments
 	 
-	 List<Category> categories
-	 List<Integer> categoryIds
 	 
 	 Double distance
 	 Double distanceFromFilterLocation

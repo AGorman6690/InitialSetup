@@ -12,7 +12,6 @@ public class Job {
 	int openings
 	String jobName
 	String description
-	Category category
 	String streetAddress
 	String city
 	String state
@@ -54,7 +53,6 @@ public class Job {
 
 	Double distanceFromFilterLocation
 	List<Integer> categoryIds
-	List<Category> categories // do away with
 	List<JobSearchUser> employees
 //	List<JobSearchUser> applicants
 //	List<Application> applications
