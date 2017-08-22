@@ -251,13 +251,16 @@ public class JobServiceImpl {
 		response.setSkillsDesired(getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
 		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
-		response.setQuestions(questionService.getQuestionsWithAnswersByJobAndUser(jobId, sessionUser.getUserId()));
 
 		// response.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 		// jobId, sessionUser.getUserId()));
-
-		if (sessionUser != null && sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE) {
+		
+		if (sessionUser != null && sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			response.setQuestions(questionService.getQuestionsWithAnswersByJobAndUser(
+					jobId, sessionUser.getUserId()));
 			response.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
+		}else{
+			response.setQuestions(questionService.getQuestions(jobId));
 		}
 
 		model.addAttribute("response", response);
@@ -320,8 +323,7 @@ public class JobServiceImpl {
 
 				Application application = applicationService.getApplication(jobId, applicant.getUserId());
 				Proposal currentProposal = proposalService.getCurrentProposal(application.getApplicationId());
-				Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId(),
-						applicant.getUserId());
+				Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 
 				ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
 				applicationProgressStatus.setApplication(application);
@@ -354,6 +356,9 @@ public class JobServiceImpl {
 						questionService.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
 				applicationProgressStatus.setAnswerOptionIds_Selected(
 						applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(applicant.getUserId(), jobId));
+				
+				applicationProgressStatus.setMessages(applicationService.getMessages(
+						sessionUser, application, previousProposal, currentProposal));
 
 				applicationService.inspectNewness(application);
 				proposalService.inspectNewness(currentProposal);

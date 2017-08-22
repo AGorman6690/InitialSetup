@@ -83,8 +83,7 @@ public class ApplicationController {
 	public String makeOffer_initialize(Model model, HttpSession session, 
 			@PathVariable(value = "userId") int userId) {
 		
-		userService.setModel_makeOffer_initialize(model, userId, session);
-		
+		userService.setModel_makeOffer_initialize(model, userId, session);		
 		return "/find_employees/MakeOffer_SelectJob";
 	}
 	

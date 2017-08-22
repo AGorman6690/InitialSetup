@@ -49,6 +49,9 @@ html {
 	color: red;
     background: #ffe6e6;
 }
+.warning-message a{
+	color: red !important;
+}
 .warning-message h3{
 	font-size: 21px;
 	margin-top: 10px;

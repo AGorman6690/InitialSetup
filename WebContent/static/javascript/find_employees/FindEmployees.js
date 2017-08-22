@@ -123,6 +123,7 @@ function executeAjaxCall_makeAnOffer_initialize(userId) {
 		dataType: "html",
 		headers: getAjaxHeaders(),
 	}).done(function(html) {
+		
 		broswerIsWaiting(false);
 		var $e = $("#select-a-job");
 		$e.html(html);

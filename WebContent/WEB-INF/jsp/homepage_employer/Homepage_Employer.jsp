@@ -24,7 +24,7 @@
 				<c:forEach items="${response.employerHomepageJobs }" var="employerHomepageJob">
 					<div class="job-container" data-job-id="${employerHomepageJob.job.id }">
 						<div class="action-options">
-							<a class="" href="/JobSearch/job/${employerHomepageJob.job.id}/edit" >
+							<a class="hide-on-load" href="/JobSearch/job/${employerHomepageJob.job.id}/edit" >
 								<span class="glyphicon glyphicon-pencil"></span></a>	
 							<a class="" href="/JobSearch/job/${employerHomepageJob.job.id}/find-employees" >
 								<span class="glyphicon glyphicon-search"></span></a>

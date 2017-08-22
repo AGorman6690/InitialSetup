@@ -12,6 +12,7 @@
 						 response.application.status == 1 ? "Your application has been declined" :
 						 response.application.status == 5 ? "You have withdrawn your application" :
 						 response.application.status == 6 ? "The employer filled all positions for this job. Your application will remain in the employer's inbox." :
+						 response.application.status == -1 ? "The employer initiated contact with you" :
 						 "Application has been accepted" }	
 					</h3>	
 				</div>						
@@ -23,7 +24,7 @@
 	</c:if>
 	<c:if test="${empty sessionScope.user && response.context == 'find' }">
 		<div class="warning-message">	
-			<h3>Please login to apply for a job</h3>
+			<h3><a href="/JobSearch/login-signup?login=true">Please login to apply for a job</a></h3>
 		</div>
 	</c:if>
 	<c:if test="${sessionScope.user.profileId == 1 &&
@@ -124,7 +125,9 @@
 		<c:if test="${response.questions.size() > 0 }">		
 			<div id="questions" class="sub">
 				<h3>Questions</h3>
-				<p class="instructions employee-context">Please answer questions</p>
+				<c:if test="${ response.context =='find'}">
+					<p class="instructions employee-context">Please answer questions</p>
+				</c:if>
 				<c:forEach items="${response.questions }" var="question">
 					<div class="question-container" data-question-id="${question.questionId }"
 					 	data-question-format-id="${question.formatId }">
@@ -159,7 +162,7 @@
 				</c:forEach>		
 			</div>	
 		</c:if>			
-		<c:if test="${sessionScope.user.profileId == 1 && response.context=='find'}">
+		<c:if test="${response.context=='find'}">
 			<div id="desired-wage" class="sub">
 				<h3>Wage Proposal</h3>
 				<p class="instructions employee-context">Please enter a wage proposal ($ / hr)</p>
@@ -174,7 +177,7 @@
 				<p id="work-day-message">
 					<c:choose>
 						<c:when test="${response.job.isPartialAvailabilityAllowed }">
-							<c:if test="${sessionScope.user.profileId == 1 && response.context =='find'}">
+							<c:if test="${ response.context =='find'}">
 								<p class="instructions employee-context">Please select the work days you want to work</p>
 							</c:if>
 							<p>This job allows partial availability.</p>

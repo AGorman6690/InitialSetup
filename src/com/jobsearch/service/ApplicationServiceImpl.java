@@ -112,23 +112,9 @@ public class ApplicationServiceImpl {
 		repository.insertApplication(application, proposal, answers);
 	}
 	
-
-
-
-
-
 	public List<AnswerOption> getAnswerOptions(int questionId) {
-
 		return repository.getAnswerOptions(questionId);
 	}
-
-
-
-
-
-
-
-
 
 	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job,
 			Proposal proposalDto_justAccepted) {
@@ -176,6 +162,9 @@ public class ApplicationServiceImpl {
 //												EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
 	
 					proposalService.insertProposal(modifiedProposal);
+					Proposal newCurrentProposal = proposalService.getCurrentProposal(application.getApplicationId());
+					proposalService.updateProposalFlag(newCurrentProposal,
+							Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS, 1);
 
 				}
 			}
@@ -227,6 +216,11 @@ public class ApplicationServiceImpl {
 				newProposal.setProposedDates(workDayService.removeConflictingWorkDays(
 						currentProposal.getProposedDates(), workDays_toFindConflictsWith));
 				proposalService.insertProposal(newProposal);		
+				
+				Proposal newCurrentProposal = proposalService.getCurrentProposal(
+						conflictingApplication.getApplicationId());
+				proposalService.updateProposalFlag(newCurrentProposal,
+						Proposal.FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT, 1);
 			}				
 		}
 	}
@@ -378,7 +372,7 @@ public class ApplicationServiceImpl {
 		if(previousProposal != null){
 			
 			// Employer filed all positions
-			if(previousProposal.getFlag_isCanceledDueToEmployerFillingAllPositions() == 1){
+			if(currentProposal.getFlag_isCreatedDueToEmployerFillingAllPositions() == 1){
 				if(job.getIsPartialAvailabilityAllowed()){
 					messages.add((isEmployee ? "The employer" : "You" )+ " filled all positions on select work days. The proposal has"
 							+ " been updated to remove the work days that have been filled.");
@@ -390,7 +384,7 @@ public class ApplicationServiceImpl {
 			}
 			
 			// The applicant accepted other employment
-			if(previousProposal.getFlag_isCanceledDueToApplicantAcceptingOtherEmployment() == 1){
+			if(currentProposal.getFlag_isCreatedDueToApplicantAcceptingOtherEmployment() == 1){
 				messages.add((isEmployee ? "You have" : "The applicant has" )+ " accepted other employment.");
 				
 				if(job.getIsPartialAvailabilityAllowed()){
@@ -469,6 +463,10 @@ public class ApplicationServiceImpl {
 																sessionUser.getUserId(),
 																applicationId_withReferenceTo,
 																workDays_toFindConflictsWith);
+				
+				response.setConflictingApplicationsToBeModifiedButRemainAtEmployer(new ArrayList<>());
+				response.setConflictingApplicationsToBeRemoved(new ArrayList<>());
+				response.setConflictingApplicationsToBeSentBackToEmployer(new ArrayList<>());
 
 				for(Application application : conflictingApplications){					
 					ConflictingApplication conflictingApplication = new ConflictingApplication();
@@ -483,7 +481,7 @@ public class ApplicationServiceImpl {
 						if(doesConflictingApplicationNeedToBeModifiedAndSentBackToEmployer(application, session)){
 							response.getConflictingApplicationsToBeSentBackToEmployer().add(conflictingApplication);
 						}else{
-							response.getConflictingApplicationsToBeSentBackToEmployer().add(conflictingApplication);
+							response.getConflictingApplicationsToBeModifiedButRemainAtEmployer().add(conflictingApplication);
 						}						
 					}
 				}		

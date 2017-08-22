@@ -46,10 +46,10 @@
 		<p data-toggle-id="rating-filter-value" class="name">Rating<span class="glyphicon glyphicon-menu-down"></span></p>		
 		<div id="rating-filter-value" class="filter-value-container">
 			<p class="clear apply-filter">Clear</p> 
-			<div>
-				<input id="5-stars" type="radio" name="rating-filter-value" value="5"/>
-				<label for="5-stars">5 stars</label>
-			</div>
+<!-- 			<div> -->
+<!-- 				<input id="5-stars" type="radio" name="rating-filter-value" value="5"/> -->
+<!-- 				<label for="5-stars">5 stars</label> -->
+<!-- 			</div> -->
 			<div>
 				<input id="4-stars" type="radio" name="rating-filter-value" value="4"/>
 				<label for="4-stars">4+ stars</label>

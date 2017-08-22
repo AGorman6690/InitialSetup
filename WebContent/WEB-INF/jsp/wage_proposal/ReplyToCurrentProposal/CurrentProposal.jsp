@@ -8,12 +8,14 @@
 
 
 	<div class="button-wrapper left">
-		<div class="counter-context cancel-proposal">
+		<div class="${response.currentProposal.flag_employerAcceptedTheOffer == 0 ? 'counter-context ' : 'review-context' }cancel-proposal">
 			<button class="text sqr-btn">Cancel</button>
 		</div>
-		<div class="review-context edit-proposal">
-			<button class="text sqr-btn">Edit</button>
-		</div>		
+		<c:if test="${response.currentProposal.flag_employerAcceptedTheOffer == 0 }">
+			<div class="review-context edit-proposal">
+				<button class="text sqr-btn">Edit</button>
+			</div>		
+		</c:if>
 	</div>
 
 		<div class="proposal-content-wrapper">

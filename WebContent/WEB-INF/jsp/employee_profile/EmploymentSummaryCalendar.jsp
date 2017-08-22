@@ -5,8 +5,8 @@
 		<div class="calendar-day" data-date="${calendarDay.date }">
 			<c:forEach items="${calendarDay.jobDtos }" var="jobDto">
 				<div class="job" data-job-name="${jobDto.job.jobName }"
-					data-start-time="${jobDto.workDayDto.workDay.stringStartTime }"
-					data-end-time="${jobDto.workDayDto.workDay.stringEndTime }">
+					data-start-time="${jobDto.workDay.stringStartTime }"
+					data-end-time="${jobDto.workDay.stringEndTime }">
 				</div>
 			</c:forEach>
 		</div>

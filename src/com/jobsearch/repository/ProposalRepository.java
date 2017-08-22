@@ -54,7 +54,9 @@ public class ProposalRepository extends BaseRepository {
 				e.setFlag_aProposedWorkDayTimeWasEdited(rs.getInt(Proposal.FLAG_A_PROPOSED_WORK_DAY_TIME_WAS_EDITED));
 				e.setFlag_employerInitiatedContact(rs.getInt(Proposal.FLAG_EMPLOYER_INITIATED_CONTACT));
 				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
-
+				e.setFlag_isCreatedDueToApplicantAcceptingOtherEmployment(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT));
+				e.setFlag_isCreatedDueToEmployerFillingAllPositions(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));
+				
 				e.setProposedDates(getProposedDateStrings(e.getProposalId()));
 				
 				return e;
@@ -183,21 +185,27 @@ public class ProposalRepository extends BaseRepository {
 
 
 	public Proposal getCurrentProposal(Integer applicationId) {		
-		String sql = "SELECT * FROM wage_proposal WHERE IsCurrentProposal = 1 AND ApplicationId = ?";
+		String sql = "SELECT * FROM wage_proposal "
+				+ "WHERE IsCurrentProposal = 1"
+				+ " AND ApplicationId = ?"
+				+ " AND Flag_IsCanceledDueToApplicantAcceptingOtherEmployment = 0"
+				+ " AND Flag_IsCanceledDueToEmployerFillingAllPositions = 0";
 		List<Proposal> result = this.ProposalMapper(sql, new Object[] { applicationId });		
 		if (verificationService.isListPopulated(result)) return result.get(0);
 		else return null;
 	}
 	
-	public Proposal getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
+	public Proposal getPreviousProposal(int applicationId) {
 		String sql = "SELECT * FROM wage_proposal"
 					+ " WHERE WageProposalId IN ("
 					+ " SELECT MAX(WageProposalId) FROM wage_proposal"
-					+ " WHERE WageProposalId != ?"
+					+ " WHERE isCurrentProposal = 0"
 					+ " AND ApplicationId = ?"
+					+ " AND Flag_IsCanceledDueToApplicantAcceptingOtherEmployment = 0"
+					+ " AND Flag_IsCanceledDueToEmployerFillingAllPositions = 0"
 					+ ")";
 		
-		List<Proposal> result = ProposalMapper(sql, new Object[]{ referenceEmploymentProposalId, applicationId });
+		List<Proposal> result = ProposalMapper(sql, new Object[]{ applicationId });
 		if(verificationService.isListPopulated(result)) return result.get(0);
 		else return null;
 	}

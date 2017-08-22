@@ -116,8 +116,8 @@ public class ProposalServiceImpl{
 		return repository.getCurrentProposal(applicationId);
 	}
 
-	public Proposal getPreviousProposal(Integer referenceEmploymentProposalId, int applicationId) {
-		return repository.getPreviousProposal(referenceEmploymentProposalId, applicationId);
+	public Proposal getPreviousProposal(int applicationId) {
+		return repository.getPreviousProposal(applicationId);
 	}
 
 	public List<String> getProposedDates(Integer proposalId) {

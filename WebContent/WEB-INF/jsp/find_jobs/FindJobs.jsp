@@ -1,6 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>
-<script src="/JobSearch/static/javascript/view_job_employee/SubmitApplication.js" type="text/javascript"></script>
+<script src="/JobSearch/static/javascript/SubmitApplication.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/find_jobs/Map.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/find_jobs/Find_jobs.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/Utilities/FormUtilities.js" type="text/javascript"></script>

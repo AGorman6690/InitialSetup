@@ -111,17 +111,20 @@ public class JobController {
 	public String viewFindJobs(Model model, HttpSession session) {
 		
 		JobSearchUser user = SessionContext.getUser(session);
-		Integer radius = user.getMaxWorkRadius();
-		String address = userService.buildAddress(user);
-		model.addAttribute("address", address);
-		if(address != null && radius != null && radius > 0){
-			FindJobsRequest request = new FindJobsRequest();
-			request.setAddress(address);
-			request.setRadius(radius);			
-			jobService.setFindJobsResponse(model, session, request);
+		if(user != null){
+			Integer radius = user.getMaxWorkRadius();
+			String address = userService.buildAddress(user);
+			model.addAttribute("address", address);
+			if(address != null && radius != null && radius > 0){
+				FindJobsRequest request = new FindJobsRequest();
+				request.setAddress(address);
+				request.setRadius(radius);			
+				jobService.setFindJobsResponse(model, session, request);
+			}			
 		}
+
 		
-		return "/FindJobs";		
+		return "/find_jobs/FindJobs";		
 	}
 
 	@RequestMapping(value = "job/{jobId}/find-employees", method = RequestMethod.GET)

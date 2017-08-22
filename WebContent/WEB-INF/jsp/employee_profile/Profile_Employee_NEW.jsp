@@ -66,45 +66,54 @@
 		<h1>Your Activity</h1>
 		<div id="activity" class="">
 		<c:choose>
-			<c:when test="${response.applicationProgressStatuses.size() > 0 }">
-				
+			<c:when test="${response.applicationProgressStatuses.size() > 0 }">				
 				<div id="job-list-sort">
 					<div class="filter-item">
 						<div class=filter-item>
 							<div>
 								<input checked id="waiting-on-you" type="checkbox"
 									name="proposal-status"> <label for="waiting-on-you">Proposals waiting
-									for you <span class="total">${response.countProposals_waitingOnYou}</span>
+									for you
+								</label>
+								 <span class="total">${response.countProposals_waitingOnYou}</span>
 									<c:if test="${response.countProposals_waitingOnYou_new > 0}">
 										<span class="total new">${response.countProposals_waitingOnYou_new}
 											new</span>
 									</c:if>
-								</label>
 							</div>
 							<div>
 								<input checked id="waiting-on-other" type="checkbox"
 									name="proposal-status"> <label for="waiting-on-other">Proposals waiting
-									for the employer <span class="total">${response.countProposals_waitingOnOther}</span>
+									for the employer 
 								</label>
+								<span class="total">${response.countProposals_waitingOnOther}</span>
 							</div>
 						</div>
 					</div>
 					<div class="filter-item">
 						<div class="filter-item-header">
 							<input checked id="all-employment" type="checkbox"
-								name="filter-item"> <label for="all-employment">Employment
-								<span class="total">${response.countJobs_employment }</span>
+								name="filter-item"> <label for="all-employment">Accepted proposals
+								
 							</label>
+							<span class="total">${response.countJobs_employment }</span>
 						</div>
 					</div>
 				</div>
-
 				<div id="job-list">
 					<c:forEach items="${response.applicationProgressStatuses }"
 						var="applicationProgressStatus">
-						<c:if
-							test="${applicationProgressStatus.application
-										.flag_applicantAcknowledgedAllPositionsAreFilled == 0 }">
+						<c:if test="${applicationProgressStatus.application
+										.flag_applicantAcknowledgedAllPositionsAreFilled == 0 }">							
+							<c:if test="${applicationProgressStatus.messages.size() > 0 }">
+								
+								<div class="messages">
+									<h6>Messages</h6>
+									<c:forEach items="${applicationProgressStatus.messages }" var="message">
+										<p>${message }</p>
+									</c:forEach>
+								</div>
+							</c:if>
 							<div class="application "
 								data-application-status="${applicationProgressStatus.application.status }"
 								data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }"
@@ -115,54 +124,54 @@
 								data-job-distance=""
 								data-is-accepted="${applicationProgressStatus.application.isAccepted }"
 								data-is-waiting-on-you="${applicationProgressStatus.isProposedToSessionUser }">
-								<div class="job-header">
-									<div class="status-wrapper">
-										<span class="status ${applicationProgressStatus.application.isAccepted == 1
-											 ? 'status-employment' : 'status-application' }">
-												 ${applicationProgressStatus.application.isAccepted == 1
-												 ? "Employment" : "Application" }</span>										
-										<div class="messages">
-											<c:forEach items="${applicationProgressStatus.messages }" var="message">
-												<p>${message }</p>
-											</c:forEach>
+								
+
+								<div class="application-content-wrapper">
+									<div class="job-header">
+										<div class="status-wrapper">
+											<span class="status ${applicationProgressStatus.application.isAccepted == 1
+												 ? 'status-employment' : 'status-application' }">
+													 ${applicationProgressStatus.application.isAccepted == 1
+													 ? "Employment" : "Application" }</span>										
+	
+											<p class="job-name accent show-job-info-mod"
+												data-context="profile" data-p="1" data-job-id="${applicationProgressStatus.job.id }">
+												${applicationProgressStatus.job.jobName }</p>
 										</div>
-										<p class="job-name accent show-job-info-mod"
-											data-context="profile" data-p="1" data-job-id="${applicationProgressStatus.job.id }">
-											${applicationProgressStatus.job.jobName }</p>
 									</div>
-								</div>
-								<div
-									class="proposal ${sessionScope.user.profileId == 1 &&
-									applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
-									data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }">
-
-									<c:if
-										test="${applicationProgressStatus.isProposedToSessionUser &&
-														applicationProgressStatus.application.isAccepted == 0 }">
-										<p class="exp-time black-bold">
-											The employer's ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'acceptence' : 'offer' } expires in <span class="red-bold">
-												${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
-										</p>
-									</c:if>
-
-									<c:if
-										test="${!applicationProgressStatus.isProposedToSessionUser }">
-										<p class="waiting-status black-bold">
-											${applicationProgressStatus.currentProposalStatus }</p>
-									</c:if>
-
-									<c:set var="jobDto" value="${applicationDto.jobDto }" />
-									<c:choose>
-										<c:when test="${applicationProgressStatus.application.isAccepted == 1 }">
-											<%@ include file="./EmploymentJobSummary.jsp"%>
-										</c:when>
-										<c:otherwise>
-											<c:set var="param_job" value="${applicationProgressStatus.job }" />
-											
-											<%@ include file="../wage_proposal/CurrentProposal.jsp"%>
-											<div class="render-present-proposal-mod"></div>
-										</c:otherwise>
-									</c:choose>
+									<div
+										class="proposal ${sessionScope.user.profileId == 1 &&
+										applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
+										data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }">
+	
+										<c:if
+											test="${applicationProgressStatus.isProposedToSessionUser &&
+															applicationProgressStatus.application.isAccepted == 0 }">
+											<p class="exp-time black-bold">
+												The employer's ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'acceptence' : 'offer' } expires in <span class="red-bold">
+													${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
+											</p>
+										</c:if>
+	
+										<c:if
+											test="${!applicationProgressStatus.isProposedToSessionUser }">
+											<p class="waiting-status black-bold">
+												${applicationProgressStatus.currentProposalStatus }</p>
+										</c:if>
+	
+										<c:set var="jobDto" value="${applicationDto.jobDto }" />
+										<c:choose>
+											<c:when test="${applicationProgressStatus.application.isAccepted == 1 }">
+												<%@ include file="./EmploymentJobSummary.jsp"%>
+											</c:when>
+											<c:otherwise>
+												<c:set var="param_job" value="${applicationProgressStatus.job }" />
+												
+												<%@ include file="../wage_proposal/CurrentProposal.jsp"%>
+												<div class="render-present-proposal-mod"></div>
+											</c:otherwise>
+										</c:choose>
+									</div>
 								</div>
 							</div>
 						</c:if>

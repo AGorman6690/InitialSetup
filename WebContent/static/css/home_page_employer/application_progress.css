@@ -6,7 +6,7 @@ p.show-hide-details.hide-details{
 }
 p.show-hide-details{
 	display: block;
-    text-decoration: underline;	
+/*     text-decoration: underline;	 */
 }
 #sort-wrapper{
 	text-align: center;
@@ -17,7 +17,7 @@ p.show-hide-details{
     background: #197994;
     color: #fff;	
     display: none;
-    margin-bottom: 2px;
+    margin-bottom: 20px;
 }
 .item.sort label,
 .item.sort p span:first-child{
@@ -71,7 +71,7 @@ p.show-hide-details{
 /* 	background: #f7f7f7; */
 	padding: 15px;
     margin-bottom: 25px;	
-    border: 1px solid #cacaca;
+/*     border: 1px solid #cacaca; */
 }
 #job-details{
 	vertical-align: top;
@@ -138,6 +138,24 @@ span.glyphicon-star-empty.favorite-flag{
     text-align: left;
     padding-left: 50px;
     display: none;
+}
+.messages{
+    /* width: 400px; */
+    /* margin: 0px auto 20px; */
+    /* border: 1px solid #cacaca; */
+    font-size: 18px;
+    /* color: red; */
+    /* font-weight: bold; */
+    padding: 5px;
+    background: #f7f7f7;
+    font-size: 16px
+}
+.messages p{
+	margin-left: 25px;
+}
+.messages h6{
+	font-size: 18px;
+	font-weight: bold;
 }
 .expiration-time .other-container .radio-container{
 	margin-top: 10px;

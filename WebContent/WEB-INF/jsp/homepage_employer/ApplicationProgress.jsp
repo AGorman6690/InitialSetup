@@ -3,6 +3,14 @@
 <div class="job-detail" data-job-id="${response.job.id }">
 	<div class="applicants">
 		<c:forEach items="${response.applicationProgressStatuses }" var="applicationProgressStatus">
+			<c:if test="${applicationProgressStatus.messages.size() > 0 }">				
+				<div class="messages">
+					<h6>Messages</h6>
+					<c:forEach items="${applicationProgressStatus.messages }" var="message">
+						<p>${message }</p>
+					</c:forEach>
+				</div>
+			</c:if>			
 			<div class="applicant"
 				data-user-id="${applicationProgressStatus.applicantId }"
 				data-is-accepted="${applicationProgressStatus.application.isAccepted }"

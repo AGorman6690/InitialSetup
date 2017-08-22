@@ -19,6 +19,8 @@ public class Proposal {
 	List<String> proposedDates
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment
 	Integer flag_isCanceledDueToEmployerFillingAllPositions
+	Integer flag_isCreatedDueToApplicantAcceptingOtherEmployment
+	Integer flag_isCreatedDueToEmployerFillingAllPositions
 	Integer flag_applicationWasReopened
 	Integer flag_aProposedWorkDayWasRemoved
 	Integer flag_aProposedWorkDayTimeWasEdited
@@ -33,6 +35,9 @@ public class Proposal {
 	public static String FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = "Flag_IsCanceledDueToEmployerFillingAllPositions"
 	public static String FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT = "Flag_IsCanceledDueToApplicantAcceptingOtherEmployment"
 	public static String FLAG_EMPLOYER_ACCEPTED_THE_OFFER = "Flag_EmployerAcceptedTheOffer";
+	public static String FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = "Flag_IsCreatedDueToEmployerFillingAllPositions"
+	public static String FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT = "Flag_IsCreatedDueToApplicantAcceptingOtherEmployment"
+
 	
 	public Proposal(){		
 	}

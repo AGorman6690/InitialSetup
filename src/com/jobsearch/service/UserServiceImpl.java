@@ -38,6 +38,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
+import com.jobsearch.model.CalendarDay.CalendarDayJobDto;
 import com.jobsearch.repository.UserRepository;
 import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.responses.GetProfileCalendarResponse;
@@ -305,8 +306,7 @@ public class UserServiceImpl {
 						
 			Proposal currentProposal = proposalService.getCurrentProposal(
 					application.getApplicationId());				
-			Proposal previousProposal = proposalService.getPreviousProposal(
-					currentProposal.getProposalId(), application.getApplicationId());
+			Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 			Job job = jobService.getJob(application.getJobId());
 			
 			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
@@ -552,11 +552,10 @@ public class UserServiceImpl {
 			
 			calendarDay.setJobDtos(new ArrayList<>());
 			for ( Job job : jobs_employment ){				
-				JobDTO jobDto = new JobDTO();
-				jobDto.setJob(job);
-				jobDto.setWorkDayDto(new WorkDayDto());
-				jobDto.getWorkDayDto().setWorkDay(workDayService.getWorkDay(job.getId(), dateString));
-				calendarDay.getJobDtos().add(jobDto);
+				CalendarDayJobDto calendarDayJobDto = new CalendarDayJobDto();
+				calendarDayJobDto.setJob(job);
+				calendarDayJobDto.setWorkDay(workDayService.getWorkDay(job.getId(), dateString));
+				calendarDay.getJobDtos().add(calendarDayJobDto);
 			}			
 			calendarDays.add(calendarDay);
 			
@@ -733,12 +732,20 @@ public class UserServiceImpl {
 	}
 
 	public void setModel_makeOffer_initialize(Model model, int userId, HttpSession session) {
-		List<Job> openJobs = jobService.getJobs_byEmployerAndStatuses(
-				SessionContext.getUser(session).getUserId(),
-				Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
+	
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		if(sessionUser == null){
+			model.addAttribute("notLoggedIn", true);
+		}else{
+			List<Job> openJobs = jobService.getJobs_byEmployerAndStatuses(
+					sessionUser.getUserId(),
+					Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
+			
+			model.addAttribute("openJobs", openJobs);
+			model.addAttribute("user_makeOfferTo", getUser(userId));		
+		}
 		
-		model.addAttribute("openJobs", openJobs);
-		model.addAttribute("user_makeOfferTo", getUser(userId));
+
 	}
 
 	public String getAvailabliltyStatusMessage_forUserAndJob(int userId, int jobId) {

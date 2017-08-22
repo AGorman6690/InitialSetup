@@ -1,4 +1,6 @@
-#results table th,
+#results table th{
+	padding: 0px 25px 10px;
+}
 #results table td{
 	padding: 10px 25px;
 /* 	text-align: center; */
@@ -12,7 +14,7 @@
 #results{
     margin-top: 25px;
     margin-left: 50px;
-    font-size: 18px;
+    font-size: 16px;
 }
 .make-an-offer{
 	font-size: 15px;
@@ -20,5 +22,5 @@
     color: #163b3d;
 }
 #results .user-rating{
-	font-size: 18px;
+	font-size: 16px;
 }

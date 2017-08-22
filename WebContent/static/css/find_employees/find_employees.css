@@ -10,7 +10,7 @@
 }
 #distance-filter input{
 	text-align: center;
-	font-size: 18px;
+	font-size: 16px;
 }
 #distance-filter-wrapper{
 	padding: 20px 0px;
@@ -31,10 +31,10 @@
 }
 .filter .glyphicon{
 	float: right;
-	font-size: 19px;
+	font-size: 15px;
 }
 #filters{
-	width: 290px;
+	width: 240px;
 	padding: 25px;
 	vertical-align: top;
 }
@@ -46,7 +46,7 @@
 	width: 230px;
 }
 .filter .name{
-	font-size: 18px;
+	font-size: 17px;
 	font-weight: bold;
 }
 .filter-value-container{

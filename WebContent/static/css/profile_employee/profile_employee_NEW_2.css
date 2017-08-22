@@ -38,7 +38,7 @@ border-bottom: 2px solid #dad9d9 !important;
 }
 #job-list-sort label{
 	display: inline-block;
-	width: 70%;
+	width: 340px;
 }
 #job-list-sort input{
 	vertical-align: top;
@@ -83,12 +83,22 @@ border-bottom: 2px solid #dad9d9 !important;
     margin-bottom: 25px;    
 }
 .messages{
-/*     width: 400px; */
-    margin: 0px auto 20px;
+    /* width: 400px; */
+    /* margin: 0px auto 20px; */
     /* border: 1px solid #cacaca; */
     font-size: 18px;
-    color: red;
-    font-weight: bold;
+    /* color: red; */
+    /* font-weight: bold; */
+    padding: 5px;
+    background: #f7f7f7;
+    font-size: 16px
+}
+.messages p{
+	margin-left: 25px;
+}
+.messages h6{
+	font-size: 18px;
+	font-weight: bold;
 }
 .application:not(.warning-message){
 /*     background: #f3f3f3; */
