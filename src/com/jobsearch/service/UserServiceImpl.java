@@ -653,6 +653,7 @@ public class UserServiceImpl {
 			
 			CalendarApplication calendarApplication = new CalendarApplication();
 			calendarApplication.setApplication(application);
+			calendarApplication.setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
 			calendarApplication.setDates(proposalService.getProposedDates(currentProposal.getProposalId()));
 			response.getCalendarApplications().add(calendarApplication);
 		}

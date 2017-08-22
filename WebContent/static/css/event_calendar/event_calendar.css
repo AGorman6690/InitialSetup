@@ -168,9 +168,7 @@
 #user-event-calendar #event-calendar-mod{
 	display: block;
 }
-#user-event-calendar #event-calendar-mod .mod-header{
-	background: #f4f4f4;
-}
+
 #user-event-calendar #event-calendar-mod .ui-datepicker-group-first,
 #user-event-calendar #event-calendar-mod .ui-datepicker-group-last{
 	position: absolute;

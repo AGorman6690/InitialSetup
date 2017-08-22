@@ -2,7 +2,19 @@
 $(document).ready(function(){
 	
 	
+	$("body").on("mouseover", ".job-line", function() {
+		var jobId = $(this).attr("data-job-id");
+		$(".job-line[data-job-id=" + jobId + "]").each(function() {
+			$(this).addClass("hover");
+		})
+	})
 	
+		$("body").on("mouseout", ".job-line", function() {
+		var jobId = $(this).attr("data-job-id");
+		$(".job-line[data-job-id=" + jobId + "]").each(function() {
+			$(this).removeClass("hover");
+		})
+	})
 	
 	initCalendar_eventCalendar();
 	
@@ -142,6 +154,7 @@ function setEmploymentLines($calendar){
 		if($(this).attr("data-is-accepted") == "1")	job.isApplication = false;
 		else job.isApplication = true;
 		
+		job.jobId = $(this).attr("data-job-id"); 
 		job.jobName = $(this).attr("data-job-name");
 		job.topMargin_className = getTopMarginClassName(dates[0], $calendar);		
 		job.line_elements = getLineElements(dates);
@@ -161,7 +174,11 @@ function setEmploymentLines($calendar){
 			if(job.isApplication) jobType_className = "application-job";
 			
 			var leftMargin_className = "start-day-" + line_element.leftEndPoint.day;
-			var html = "<div class='job-line " + jobType_className + " "  + job.topMargin_className + " " + leftMargin_className + "'>";
+			var html = "<div class='job-line " 
+				+ jobType_className + " "  
+				+ job.topMargin_className + " " 
+				+ leftMargin_className + "' "
+				+ "data-job-id=" + job.jobId + ">";
 									
 			var additionMargin_endPoint = 30;
 			var tdWidth = 114.444;
