@@ -37,25 +37,12 @@
 #user-event-calendar .calendar-container .calendar td.unavailable{
 	background: #bbbbbb;
 }
-#user-event-calendar .application-count span,
-#user-event-calendar .calendar-container .calendar td.application,
-#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application a{
-/* 	background: #7389b3; */
-	background: #36595a;
-	cursor: pointer;
-}
-#user-event-calendar .calendar-container .calendar td.employment,
-#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
-/* 	background: #629a6f; */
-/* 	background: #7ec3b4; */
-	background: #7ca79d;
-	cursor: pointer;
-}
+
+
 
 #user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application,
 #user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment{
 	background: #fff;
-	cursor: pointer;
 }
 #user-event-calendar .calendar-container .calendar .ui-datepicker-middle td{
 	background: #fff;
@@ -106,7 +93,6 @@
 #user-event-calendar .calendar .ui-datepicker-group:not(.ui-datepicker-group-middle):hover{
 	background: #f8ffe3;
 	border: 2px solid #bbbbbb;
-	cursor: pointer;
 }
 #user-event-calendar .application-count span{
     display: inline-block;
@@ -126,7 +112,9 @@
 #user-event-calendar .popup{
 	top: -78px;	
 }
-
+#user-event-calendar *:hover{
+	cursor: default !important;
+}
 
 #user-event-calendar td.application-hover .application-count{
 	background: #ccd8f5 !important;

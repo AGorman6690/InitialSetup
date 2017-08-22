@@ -187,11 +187,11 @@ function setEmploymentLines($calendar){
 			
 			var leftMargin = tdWidth * (6 - line_element.leftEndPoint.day + 1);
 			
-			if(line_element.leftEndPoint.isFirst){
-				employmentLineWidth -= additionMargin_endPoint;
-				leftMargin -= additionMargin_endPoint;
-			}
-			if(line_element.rightEndPoint.isLast) employmentLineWidth -= additionMargin_endPoint;
+//			if(line_element.leftEndPoint.isFirst){
+//				employmentLineWidth -= additionMargin_endPoint;
+//				leftMargin -= additionMargin_endPoint;
+//			}
+//			if(line_element.rightEndPoint.isLast) employmentLineWidth -= additionMargin_endPoint;
 			
 			if(j == 0) html += job.jobName;
 			else html += "... " + job.jobName;

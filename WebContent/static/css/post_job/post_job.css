@@ -25,6 +25,11 @@
 	width: 100%;
 	display: inline-block;
 }
+#appendges{
+    max-height: 700px;
+    overflow-y: scroll;
+    width: 535px;
+}
 #side-bar > div span::after{
 	content: '';
 	width: 20px;

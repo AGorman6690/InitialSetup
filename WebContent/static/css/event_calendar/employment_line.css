@@ -27,16 +27,21 @@ td div.application[data-job-name]:first-of-type{
 	
 }
 .job-line.hover{
-	background: #197994 !important;
+	background: #163b3d !important;
 }
-tr .job-line.application-job{
-/* 	background: #7389b3; */
-	background: #36595a;
+tr .job-line.application-job,
+#user-event-calendar .application-count span,
+#user-event-calendar .calendar-container .calendar td.application,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.application a{
+	background: #888;
 }
+tr .job-line.employment-job,
+#user-event-calendar .calendar-container .calendar td.employment,
+#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
+	background: #318657;
+}
+tr .job-line.application-job,
 tr .job-line.employment-job{
-/* 	background: #629a6f;	 */
-/* 	background: #7ec3b4; */
-	background: #7ca79d;
     overflow: hidden;	
 }
 tr .job-line{
