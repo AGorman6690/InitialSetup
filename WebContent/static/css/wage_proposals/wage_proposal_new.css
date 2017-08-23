@@ -105,7 +105,7 @@ span.expiration-time{
 	text-align: left;
 }
 .proposal-content-wrapper{
-	width: 750px;
+	width: 950px;
 	margin: auto;
 }
 .proposal-wrapper.counter-context .review-context:not(.counter-context){
@@ -130,24 +130,34 @@ span.expiration-time{
 .proposal-item > label{
 	font-weight: bold;
 	font-size: 19px;
+	width: 180px;
 }
-.send-status-warning,
+.send-status-warning{
+	margin: auto;
+	width: 600px;
+/*     min-height: 160px;	 */
+/*     display: table; */
+}
+.send-status-warning p{
+/* 	display: table-cell; */
+}
 .proposal-item-content{
-	margin-left: 200px;
+	width: 60%;
 }
 .proposal-wrapper .v2 .ui-datepicker-inline{
 	margin: 0;
 }
 .proposal-item{
-	margin-bottom: 25px;
+	margin-bottom: 50px;
 }
-.wage-proposal-wrapper .counter-context input{
+.wage-proposal-wrapper input{
     font-size: 25px;
     width: 150px;
     text-align: center;
 }
 .proposal-wrapper .send-status-warning p{
 	font-size: 17px;
+	font-weight: bold
 }
 .a-proposal > label{
 	width: 290px;
@@ -163,6 +173,12 @@ span.expiration-time{
 .respond-to-proposal{
 	text-align: center;
 }
+.proposal-item *{
+	vertical-align: top;
+}
+.expiration-time.proposal-item label{
+	display: inline-block;
+}
 [data-is-waiting-on-you="true"][data-is-accepted="0"]{
 	background: #ffd0d0  !important;
 /* 	border: 7px solid red !important; */
@@ -172,4 +188,42 @@ span.expiration-time{
 }
 .v2 .ui-datepicker-group{
 	display: block;
+}
+.status-wrapper,
+.proposal-item-content{
+	display: inline-block;
+}
+.status-wrapper button{
+	display: block;
+	background: #e4e4e4;
+    width: 185px;	
+    margin-bottom: 5px;
+}
+.status-wrapper button:hover{
+	cursor: default;
+}
+.status-wrapper button.current-status{
+	background: #163b3d;
+	color: #fff;
+}
+.status-wrapper p{
+	text-align: center;
+	font-weight: bold;
+	display: none;
+}
+.send-proposal-wrapper button{
+	background: #197994;
+	color: #fff;
+	width: 185px;
+	height: 85px;
+}
+.status-wrapper button.current-status:before{
+	font-family:'Glyphicons Halflings';
+	content: "\e013";
+	margin-right: 10px;	
+}
+
+.send-proposal-wrapper{
+    margin-bottom: 50px;
+    margin-left: 743px;
 }

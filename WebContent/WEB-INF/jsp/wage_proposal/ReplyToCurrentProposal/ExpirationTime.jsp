@@ -1,6 +1,7 @@
 <label >Expiration Time</label>		
-<div>
+	
 	<div class="radio-container proposal-item-content">		
+		<p>Specify how much time the applicant has until your offer expires</p>
 		<label><input type="radio" name="exp-time-init" class="one-day-from-now">
 			 1 day from now </label>
 		<label><input type="radio" name="exp-time-init" class="one-day-before">
@@ -26,4 +27,3 @@
 			</div>
 		</div>
 	</div>
-</div>

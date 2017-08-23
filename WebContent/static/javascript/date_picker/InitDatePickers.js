@@ -43,6 +43,8 @@ function initCalendar_new($calendar, workDayDtos){
 					}					
 				}
 			}	
+			
+			
 		},
 		beforeShowDay: function(date){			
 			var classNameToAdd = "";
@@ -64,6 +66,10 @@ function initCalendar_new($calendar, workDayDtos){
 			
 		},
 		afterShow: function(){
+			// if proposal calendar, update whether work days are being accepted/proposed
+			if($calendar.closest(".calendar-container").hasClass("proposal-calendar")){
+				setWorkDayAcceptanceContext();
+			}
 			
 			// If this is a calendar for an applicant counter the proposed work days,
 			// get applications that have overlapping work days, if any.
@@ -102,8 +108,7 @@ function initCalendar_new($calendar, workDayDtos){
 				}else if(workDayDto.hasOpenPositions == "0"){
 					html_message += "<p>All Pos. Filled</p>";
 				}
-				html_message += "</div>";
-				
+				html_message += "</div>";				
 				
 				html += html_time_display;
 				html += html_select_work_day;

@@ -7,37 +7,34 @@
 	data-context="${sessionScope.user.profileId == 1 ? 'employee' : 'employer' }">
 
 
-	<div class="button-wrapper left">
-		<div class="${response.currentProposal.flag_employerAcceptedTheOffer == 0 ? 'counter-context ' : 'review-context' }cancel-proposal">
-			<button class="text sqr-btn">Cancel</button>
-		</div>
-		<c:if test="${response.currentProposal.flag_employerAcceptedTheOffer == 0 }">
-			<div class="review-context edit-proposal">
-				<button class="text sqr-btn">Edit</button>
-			</div>		
-		</c:if>
-	</div>
-
 		<div class="proposal-content-wrapper">
-			<h1 class="counter-context">
+			<h1 class="hide-on-load">
 				${context == 'employer-make-initial-offer' 
 					? 'Make An Offer To ' += user_makeOfferTo.firstName += " " += user_makeOfferTo.lastName
-					: 'Propose A Counter Offer'}</h1>
-			<h1 class="review-context">Review</h1>			
-			<div class="send-status-warning review-context">
+					: 'Proposal'}</h1>
+			<div class="send-status-warning">
 				<%@ include file="./SendWarningMessage.jsp" %>
+			
 			</div>
+				<div class="send-proposal-wrapper">
+					<button class="text proposing-new-offer-context">
+						Send New Proposal</button>		
+					<button class="text accepting-offer-context context-employee">
+						Accept Employment</button>	
+					<button class="text accepting-offer-context context-employer">
+						Accept Offer</button>								
+				</div>											
 			<c:choose>
 				<c:when test="${user.profileId == 1 }">
-					<div class="proposal-item counter-context">
+					<div class="proposal-item">
 						<label>This Proposal Expires In</label>
 						<div class="proposal-item-content">
-							<p class="red-bold">${response.time_untilEmployerApprovalExpires }</p>
+							<p class="red-bold-old">${response.time_untilEmployerApprovalExpires }</p>
 						</div>
 					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="expiration-time proposal-item review-context context-employer">
+					<div class="expiration-time proposal-item">
 						<%@ include file="./ExpirationTime.jsp" %>
 					</div>						
 				</c:otherwise>				
@@ -46,25 +43,19 @@
 			<div class="wage-proposal-wrapper proposal-item"
 				data-proposed-amount="${response.currentProposal.amount }">
 				<label>Wage</label>		
-				<div class="proposal-item-content">
-					<div class="counter-context">				
-						<c:if test="${context != 'employer-make-initial-offer' }">	
-							<div class="proposed-offer hide-on-load">
-								<p class="proposed-amount">${user.profileId == 1 ? "Employer" : "Applicant" }
-									proposed $ ${response.currentProposal.amount } / hr</p>
-							</div>				
-						</c:if>		
-						<div class="${context == 'employer-make-initial-offer' ? 'initial-offer' : 'counter-offer' }">									
-							<p class="red-bold">${context == 'employer-make-initial-offer'
-								 ? 'Propose a wage' : 'Enter a counter offer' } ($ / hr)</p>
-							<input class="select-all counter-wage-amount" type="text"
-								value="${response.currentProposal.amount }"/>						
-						</div>	
-					</div>
-					<div class="review-context">
-						<p>You are <span class="red-bold accepting-or-proposing"></span> a $<span class="wage-amount"></span> / hr wage 
-					</div>		
-				</div>					
+				<div class="proposal-item-content">				
+					<div class="${context == 'employer-make-initial-offer' ? 'initial-offer' : 'counter-offer' }">									
+						<p class="red-bold-old">${context == 'employer-make-initial-offer'
+							 ? 'Propose a wage' : 'Edit to propose a new wage' } ($ / hr)</p>
+						<input class="select-all counter-wage-amount" type="text"
+							value="${response.currentProposal.amount }"/>						
+					</div>	
+				</div>	
+				<div class="status-wrapper">
+					<p>Status</p>
+					<button class="current-status status-accepting">Accepting</button>
+					<button class="status-proposing">Proposing</button>
+				</div>				
 			</div>
 			<c:if test="${response.job.isPartialAvailabilityAllowed }">
 				<div class="proposal-item work-day-proposal-wrapper"
@@ -72,11 +63,9 @@
 					<label class="">Work Days</label>		
 					<div class="proposal-item-content">
 						<div class="conflicting-applications-countering"></div>						
-						<p class="red-bold counter-context">
-							Select ${context != 'employer-make-initial-offer' ? 'or deselect ' : '' } your proposed work days</p>
-						<p class="review-context">You are <span class="red-bold accepting-or-proposing"></span> the following work days</p>							
-						
-						<div class="counter-context review-context v2 teal-title proposal-calendar
+						<p class="red-bold-old">
+							${context == 'employer-make-initial-offer' ? 'Propose work days' : 'Edit to propose a new work day schedule' }</p>					
+						<div class="v2 teal-title proposal-calendar
 							 calendar-container wage-proposal-calendar hide-prev-next hide-unused-rows">	
 							<button class="hide-on-load counter-context sqr-btn gray-3 select-all-work-days-override">
 								Select All Work Days</button>								
@@ -85,19 +74,15 @@
 								data-number-of-months=${response.monthSpan_allWorkDays }>
 							</div>
 						</div>
-					</div>									
-				</div>				
+					</div>		
+					<div class="status-wrapper">
+						<p>Status</p>
+						<button class="current-status status-accepting">Accepting</button>
+						<button class="status-proposing">Proposing</button>
+					</div>													
+				</div>	
+							
 			</c:if>
 		</div>
-		<div class="button-wrapper right">
-			<div class="counter-context review-proposal">
-				<button class="text sqr-btn">Review</button>
-			</div>
-			<div class="review-context send-proposal accepting-offer-context">
-				<button class="text sqr-btn">Accept Employment</button>
-			</div>	
-			<div class="review-context send-proposal proposing-new-offer-context">
-				<button class="text sqr-btn">Send New Proposal</button>
-			</div>	
-		</div>
+
 </div>

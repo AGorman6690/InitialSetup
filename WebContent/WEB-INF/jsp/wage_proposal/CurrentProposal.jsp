@@ -51,8 +51,8 @@
 			<c:choose>
 				<c:when test="${sessionScope.user.profileId == 2 || (sessionScope.user.profileId == 1 &&
 						applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 0) }">
-					<button class="sqr-btn blue accept-current-proposal">Accept</button>
-					<button class="sqr-btn blue counter-current-proposal">Counter</button>	
+					<button class="sqr-btn blue accept-current-proposal">Accept or Counter</button>
+<!-- 					<button class="sqr-btn blue counter-current-proposal">Counter</button>	 -->
 				</c:when>
 				<c:otherwise>
 					<button class="sqr-btn blue accept-current-proposal">Confirm</button>

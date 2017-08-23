@@ -1,12 +1,12 @@
 <%@ include file="../../includes/TagLibs.jsp" %>
 
 <div class="accepting-offer-context">
-	<p class=" red-bold">You are about to accept the
+	<p class=" ">You are about to accept the
 		 ${sessionScope.user.profileId == 1 ? "employer's" : "applicant's" } offer.</p>			
-	<p class=" red-bold context-employee">Once you do, you will be employed for this job.</p>
+	<p class="  context-employee">Once you do, you will be employed for this job.</p>
 </div>
-<div class="proposing-new-offer-context red-bold">
-	<p class=" red-bold">
+<div class="proposing-new-offer-context ">
+	<p class=" ">
 		<c:choose>
 			<c:when test="${context == 'employer-make-initial-offer' }">
 				You are about to make an offer to 
@@ -19,10 +19,10 @@
 		</c:choose>
 	</p>
 </div>
-<p class="context-employer proposing-new-offer-context red-bold">
+<p class="context-employer proposing-new-offer-context ">
 	The applicant will have the option to counter this offer,
 	 however must do so within the time period you specify.</p>
-<p class="context-employer proposing-new-offer-context red-bold">
+<p class="context-employer proposing-new-offer-context ">
 	If the applicant accepts this offer, they will become an employee for this job.</p>	
-<p class="context-employer accepting-offer-context red-bold">
+<p class="context-employer accepting-offer-context ">
 	The applicant must confirm your acceptance within the time period you specify.</p>	

@@ -147,8 +147,44 @@ $(document).ready(function() {
 			$calendar.closest(".mod").show();		
 	})
 	
+	$("body").on("keyup", ".wage-proposal-wrapper input", function() {
+		var $proposal = getProposalContainer();
+		if(isCounteringWage($proposal)){
+			$proposal.find(".wage-proposal-wrapper .status-accepting").removeClass("current-status")
+			$proposal.find(".wage-proposal-wrapper .status-proposing").addClass("current-status")
+		}else{
+			$proposal.find(".wage-proposal-wrapper .status-accepting").addClass("current-status")
+			$proposal.find(".wage-proposal-wrapper .status-proposing").removeClass("current-status")
+		}
+		setProposalAcceptanceContext();
+	})
+	
 })
-
+function getProposalContainer() {
+	return $("body").find(".mod.proposal-container:visible .proposal-wrapper");
+}
+function setProposalAcceptanceContext(){
+	
+	var $proposal = $("body").find(".mod.proposal-container:visible .proposal-wrapper");
+	if($proposal.find(".status-wrapper .status-accepting.current-status").length == 2){
+		$proposal.addClass("accepting-offer-context");
+		$proposal.removeClass("proposing-new-offer-context");
+	}else{
+		$proposal.removeClass("accepting-offer-context");
+		$proposal.addClass("proposing-new-offer-context");
+	}
+}
+function setWorkDayAcceptanceContext(){
+	var $proposal = getProposalContainer();
+	if(isCounteringWorkDays($proposal)){
+		$proposal.find(".work-day-proposal-wrapper .status-accepting").removeClass("current-status")
+		$proposal.find(".work-day-proposal-wrapper .status-proposing").addClass("current-status")
+	}else{
+		$proposal.find(".work-day-proposal-wrapper .status-accepting").addClass("current-status")
+		$proposal.find(".work-day-proposal-wrapper .status-proposing").removeClass("current-status")
+	}
+	setProposalAcceptanceContext();
+}
 function getProposalWrapper($e) {
 	var $proposalWrapper = $e.closest(".proposal-wrapper");
 	if ($proposalWrapper.length) return $proposalWrapper;
@@ -199,7 +235,7 @@ function isCounteringWage($cont) {
 	var $wageProposal = $cont.find(".wage-proposal-wrapper").eq(0);
 	var originalProposedWage = parseFloat($wageProposal.attr("data-proposed-amount"));
 	var counteredWage = parseFloat($wageProposal.find("input.counter-wage-amount").eq(0).val());
-	if(originalProposedWage - counteredWage == 0) return false;
+	if(originalProposedWage - counteredWage == 0.0) return false;
 	else return true;
 	
 }
@@ -262,7 +298,7 @@ function executeAjaxCall_getCurrentProposal(proposalId, $e, callback){
 			$.extend(true, g_workDayDtos_counter, g_workDayDtos_originalProposal);
 
 			initCalendar_new($e.find(".calendar"), g_workDayDtos_originalProposal);
-			
+			setProposalAcceptanceContext();
 			broswerIsWaiting(false);			
 			callback();		
 	})
