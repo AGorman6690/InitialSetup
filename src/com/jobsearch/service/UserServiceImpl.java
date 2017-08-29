@@ -92,7 +92,7 @@ public class UserServiceImpl {
 		JobSearchUserDTO newUserDto = getNewUserDto(proposedUser);
 		newUserDto.setUser(proposedUser);
 
-//		if (!newUserDto.getIsInvalidNewUser()) {
+		if (!newUserDto.getIsInvalidNewUser()) {
 
 			proposedUser.setPassword(encryptPassword(proposedUser.getPassword()));
 
@@ -102,7 +102,7 @@ public class UserServiceImpl {
 					"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
 							+ newUser.getUserId());
 
-//		}
+		}
 
 		return newUserDto;
 	}
@@ -301,51 +301,51 @@ public class UserServiceImpl {
 		List<Application> applications = applicationService.getApplications_byUser_openOrAccepted(
 				employee.getUserId());
 		for (Application application : applications) {
-			
-
-						
+									
 			Proposal currentProposal = proposalService.getCurrentProposal(
 					application.getApplicationId());				
 			Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 			Job job = jobService.getJob(application.getJobId());
 			
-			ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
-			initializeApplicationProgressStatus(applicationProgressStatus, application.getJobId());
-			applicationProgressStatus.setApplication(application);
+			if(applicationService.includeApplication(currentProposal, sessionUser)){
+			
+				ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
+				initializeApplicationProgressStatus(applicationProgressStatus, application.getJobId());
+				applicationProgressStatus.setApplication(application);
 
-			
-			// Current proposal
-			applicationProgressStatus.setCurrentProposal(currentProposal);
-			applicationProgressStatus.setIsCurrentProposalExpired(
-					DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
-			applicationProgressStatus.setIsProposedToSessionUser(
-					proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));	
-			applicationProgressStatus.setTime_untilEmployerApprovalExpires(
-					proposalService.getTime_untilEmployerApprovalExpires(
-							currentProposal.getExpirationDate(), now));
-			applicationProgressStatus.setCurrentProposalStatus(
-					proposalService.getCurrentProposalStatus(
-							application.getIsOpen(),
-							application.getIsAccepted(),
-							currentProposal.getProposedByUserId(),
-							sessionUser.getUserId(),
-							sessionUser.getProfileId()));
-			applicationProgressStatus.setTime_untilEmployerApprovalExpires(
-					proposalService.getTime_untilEmployerApprovalExpires(
-							currentProposal.getExpirationDate(), now));
-			
-			
-			applicationProgressStatus.setPreviousProposal(previousProposal);					
-			
-			applicationProgressStatus.setMessages(applicationService.getMessages(employee,
-					application,
-					previousProposal,
-					currentProposal));
-			
-			applicationProgressStatus.setJob(job);
-			
-			response.getApplicationProgressStatuses().add(applicationProgressStatus);			
-			applicationService.inspectNewness(application);		
+				applicationProgressStatus.setCurrentProposal(currentProposal);
+				applicationProgressStatus.setIsCurrentProposalExpired(
+						DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
+				applicationProgressStatus.setIsProposedToSessionUser(
+						proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));	
+				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+						proposalService.getTime_untilEmployerApprovalExpires(
+								currentProposal.getExpirationDate(), now));
+				applicationProgressStatus.setCurrentProposalStatus(
+						proposalService.getCurrentProposalStatus(
+								application.getIsOpen(),
+								application.getIsAccepted(),
+								currentProposal.getProposedByUserId(),
+								sessionUser.getUserId(),
+								sessionUser.getProfileId()));
+				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+						proposalService.getTime_untilEmployerApprovalExpires(
+								currentProposal.getExpirationDate(), now));
+				
+				
+				applicationProgressStatus.setPreviousProposal(previousProposal);					
+				
+				applicationProgressStatus.setMessages(applicationService.getMessages(employee,
+						application,
+						previousProposal,
+						currentProposal));
+				
+				applicationProgressStatus.setJob(job);
+				
+				response.getApplicationProgressStatuses().add(applicationProgressStatus);			
+				applicationService.inspectNewness(application);	
+				proposalService.inspectNewness(currentProposal, sessionUser);
+			}
 		}
 			
 
@@ -393,6 +393,8 @@ public class UserServiceImpl {
 						.map(cd -> cd.getDate())
 						.collect(Collectors.toList()));
 		
+		
+		
 		model.addAttribute("messageResponses_jobsTerminatedFrom",
 				messageResponses_jobsTerminatedFrom);
 		model.addAttribute("messageResponses_applicationsClosedDueToAllPositionsFilled",
@@ -418,6 +420,7 @@ public class UserServiceImpl {
 //		setModel_getRatings_byUser(model, sessionUser.getUserId());		
 		model.addAttribute("isViewingOnesSelf", true);
 	}
+
 
 	public void initializeApplicationProgressStatus(ApplicationProgressStatus applicationProgressStatus,
 			int jobId) {
@@ -473,13 +476,14 @@ public class UserServiceImpl {
 			
 			employerHomepageJob.setCountWageProposals_sent(
 					currentProposals.stream()
-									.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
-									.count());
+						.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
+//						.filter(p -> p.getIsDeclined())
+						.count());
 
 			employerHomepageJob.setCountWageProposals_received(
 					currentProposals.stream()
-									.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
-									.count());
+						.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
+						.count());
 			
 			employerHomepageJob.setCountWageProposals_received_new(
 					currentProposals.stream()
@@ -497,9 +501,9 @@ public class UserServiceImpl {
 			List<Application> applications = applicationService.getApplications_byJob(job.getId());
 			employerHomepageJob.setCountApplications_total(
 					applications.stream()
-								.filter(a -> a.getIsAccepted() == 0)
-								.filter(a -> a.getIsOpen() == 1)
-								.count());
+						.filter(a -> a.getIsAccepted() == 0)
+						.filter(a -> a.getIsOpen() == 1)
+						.count());
 
 			employerHomepageJob.setCountApplications_new(
 					applications.stream()
@@ -790,10 +794,10 @@ public class UserServiceImpl {
 //					workDays.get(0).getStringDate(),
 //					workDays.get(0).getStringStartTime()));
 			
-			model.addAttribute("response", response);
+//			model.addAttribute("response", response);
 //			model.addAttribute("isEmployerMakingFirstOffer", false);
 			
-
+										   
 			model.addAttribute("context", "employer-make-initial-offer");						
 			model.addAttribute("response", response);
 			model.addAttribute("json_workDayDtos", JSON.stringify(workDayService.getWorkDayDtos(jobId)));

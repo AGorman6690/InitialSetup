@@ -19,6 +19,7 @@ function getCalendarDays(){
 			job.jobName = $(e).attr("data-job-name");
 			job.workDay.startTime = $(e).attr("data-start-time");
 			job.workDay.endTime = $(e).attr("data-end-time");
+			job.id = $(e).attr("data-job-id");
 			calendarDay.jobs.push(job);
 		})
 		
@@ -56,7 +57,7 @@ function getCalendarDays(){
 
 					$(calendarDay.jobs).each(function(j, job) {
 						html += "<div class='job'>";
-						html += "<p class='job-name'>" + job.jobName + "</p>";
+						html += "<p class='job-name show-job-info-mod'data-context='profile' data-p='1' data-job-id=" + job.id  + ">" + job.jobName + "</p>";
 						html += "<p class='start-time'>" + formatTimeTo12Hours(job.workDay.startTime) + "</p>";
 						html += "<p class='end-time'>" + formatTimeTo12Hours(job.workDay.endTime) + "</p>";						
 						html += "</div>";

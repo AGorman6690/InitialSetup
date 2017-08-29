@@ -43,16 +43,11 @@
 <div id="page-wrapper">
 		<div id="side-bar">
 			
-			<div id="show-general" class="incomplete"><span>General</span></div>
-			<div id="show-work-days" class="incomplete"><span>Work Days</span></div>
-			<div id="show-location" class="incomplete"><span>Location</span></div>
-			<div id="show-questions" class="optional incomplete"><span>Questions</span></div>
-			<div id="show-skills" class="optional incomplete"><span>Skills</span></div>
-			<p id="proceed-to-preview-job-posting" class="pointer">Review then submit</p>	
-			<div class="error-message-container">
-				<p id="invalid-address-error-message" class="error-message">Invalid
-					address</p>
-			</div>				
+			<div id="show-general" data-scroll-to="general-wrapper" class="incomplete"><span>General</span></div>
+			<div id="show-work-days" data-scroll-to="dates-wrapper" class="incomplete"><span>Work Days</span></div>
+			<div id="show-location" data-scroll-to="location-wrapper" class="incomplete"><span>Location</span></div>
+			<div id="show-questions" data-scroll-to="questions-wrapper" class="optional incomplete"><span>Questions</span></div>
+			<div id="show-skills" data-scroll-to="skills-wrapper" class="optional incomplete"><span>Skills</span></div>			
 		</div>
 
 		<div id="post-job-info" class=" ${!empty postedJobs ? 'hide-on-load-d' : '' }">
@@ -116,6 +111,10 @@
 			
 				<div id="location-wrapper" class="section">
 					<h3>Location</h3>					
+					<div class="error-message-container">
+						<p id="invalid-address-error-message" class="error-message">Invalid
+							address</p>
+					</div>	
 					<div class="item-wrapper">
 						<div class="item">
 							<label>Street Address *</label>
@@ -243,6 +242,9 @@
 					</div>
 				</div>
 				
+				<div class="section center">
+					<p id="proceed-to-preview-job-posting" class="sqr-btn pointer">Review then submit</p>
+				</div>	
 				
 		</div>
 </div>

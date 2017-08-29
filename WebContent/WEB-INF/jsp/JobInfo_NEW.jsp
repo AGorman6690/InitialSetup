@@ -54,7 +54,7 @@
 		</c:if>
 		<c:if test="${context == 'preview-job-post'}">
 			<div id="">
-				<button id="submit-job-post" class="sqr-btn green">Submit</button>
+				<button id="submit-job-post" class="sqr-btn green">Submit job post</button>
 				
 			</div>
 		</c:if>

@@ -325,45 +325,47 @@ public class JobServiceImpl {
 				Proposal currentProposal = proposalService.getCurrentProposal(application.getApplicationId());
 				Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 
-				ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
-				applicationProgressStatus.setApplication(application);
-				
-				
-				applicationProgressStatus.setCountJobWorkDays(workDays.size());
-
-				// Current proposal
-				applicationProgressStatus.setCurrentProposal(currentProposal);
-				applicationProgressStatus.setIsCurrentProposalExpired(
-						DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));
-				applicationProgressStatus.setIsProposedToSessionUser(
-						proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));
-				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
-						proposalService.getTime_untilEmployerApprovalExpires(currentProposal.getExpirationDate(), now));
-				applicationProgressStatus.setCurrentProposalStatus(proposalService.getCurrentProposalStatus(
-						application.getIsOpen(), application.getIsAccepted(), currentProposal.getProposedByUserId(),
-						sessionUser.getUserId(), sessionUser.getProfileId()));
-
-				// Previous proposal
-				applicationProgressStatus.setPreviousProposal(previousProposal);
-
-				// Applicant
-				applicationProgressStatus.setApplicantName(applicant.getFirstName());
-				applicationProgressStatus.setApplicantRating(ratingService.getRating(applicant.getUserId()));
-				applicationProgressStatus.setApplicantId(applicant.getUserId());
-
-				// Answers
-				applicationProgressStatus.setQuestions(
-						questionService.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
-				applicationProgressStatus.setAnswerOptionIds_Selected(
-						applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(applicant.getUserId(), jobId));
-				
-				applicationProgressStatus.setMessages(applicationService.getMessages(
-						sessionUser, application, previousProposal, currentProposal));
-
-				applicationService.inspectNewness(application);
-				proposalService.inspectNewness(currentProposal);
-
-				response.getApplicationProgressStatuses().add(applicationProgressStatus);
+				if(applicationService.includeApplication(currentProposal, sessionUser)){
+					ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
+					applicationProgressStatus.setApplication(application);
+					
+					
+					applicationProgressStatus.setCountJobWorkDays(workDays.size());
+	
+					// Current proposal
+					applicationProgressStatus.setCurrentProposal(currentProposal);
+					applicationProgressStatus.setIsCurrentProposalExpired(
+							DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));
+					applicationProgressStatus.setIsProposedToSessionUser(
+							proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));
+					applicationProgressStatus.setTime_untilEmployerApprovalExpires(
+							proposalService.getTime_untilEmployerApprovalExpires(currentProposal.getExpirationDate(), now));
+					applicationProgressStatus.setCurrentProposalStatus(proposalService.getCurrentProposalStatus(
+							application.getIsOpen(), application.getIsAccepted(), currentProposal.getProposedByUserId(),
+							sessionUser.getUserId(), sessionUser.getProfileId()));
+	
+					// Previous proposal
+					applicationProgressStatus.setPreviousProposal(previousProposal);
+	
+					// Applicant
+					applicationProgressStatus.setApplicantName(applicant.getFirstName());
+					applicationProgressStatus.setApplicantRating(ratingService.getRating(applicant.getUserId()));
+					applicationProgressStatus.setApplicantId(applicant.getUserId());
+	
+					// Answers
+					applicationProgressStatus.setQuestions(
+							questionService.getQuestionsWithAnswersByJobAndUser(jobId, applicant.getUserId()));
+					applicationProgressStatus.setAnswerOptionIds_Selected(
+							applicationService.getAnswerOptionIds_Selected_ByApplicantAndJob(applicant.getUserId(), jobId));
+					
+					applicationProgressStatus.setMessages(applicationService.getMessages(
+							sessionUser, application, previousProposal, currentProposal));
+	
+					applicationService.inspectNewness(application);
+					proposalService.inspectNewness(currentProposal, sessionUser);
+	
+					response.getApplicationProgressStatuses().add(applicationProgressStatus);
+				}
 			}
 			model.addAttribute("response", response);
 		}

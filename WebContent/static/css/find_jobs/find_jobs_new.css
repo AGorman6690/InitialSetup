@@ -106,6 +106,7 @@ h3 .glyphicon-ok{
 }
 .job .glyphicon-move{
 	float: right;
+	color: #888;
 }
 .remove-filter{
     color: #984242;

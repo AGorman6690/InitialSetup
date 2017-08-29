@@ -1,7 +1,8 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />	
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
+
 	
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>			
 <script src="<c:url value="/static/javascript/Signup.js" />"></script>		
@@ -11,10 +12,8 @@
 	</div>
 	
 <div id="loginGroup" class="group-container">
-	<div id="loginHeader" class="a-header">
-		<h3>Login</h3>
-	</div>
 	<div id="loginContainer" class="group ${requestedLogin == 0 ? 'do-hide' : '' }">
+		<h3>Login</h3>
 		<div class="">
 			<form:form class="" modelAttribute="user" action="/JobSearch/login.do" method="POST"> 
 				<div class="">
@@ -50,12 +49,9 @@
 	
   
 <div id="signUpGroup" class="group-container">
-	<div id="setupHeader" class="a-header">
-		<h3>Sign Up</h3>
-	</div>
-
-    
-	<div id="signUpContainer" class="group ${requestedLogin == 1 ? 'do-hide' : '' }">						
+ 
+	<div id="signUpContainer" class="group ${requestedLogin == 1 ? 'do-hide' : '' }">	
+			<h3>Sign Up</h3>					
 			<div class="item" >
 				<label>First Name</label>
 				<input id="signup-firstName" type="text" class="${invalidFirstName ? 'invalid' : '' }"/>
@@ -102,7 +98,7 @@
 			<div class="item">
 				<label>Profile Type</label>
 				<select id="signup-profiles" class="${invalidProfile ? 'invalid' : '' }">
-					<option value="-1" selected disabled>Select a profile type</option>
+					<option value="-1" selected></option>
 					<c:forEach items="${profiles }" var="profile">
 						<option value="${profile.id }">${profile.altName1 }</option>
 					</c:forEach>				

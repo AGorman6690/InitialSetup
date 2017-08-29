@@ -20,6 +20,7 @@
 				<div class="info-item">
 					<label>Home Location</label>						
 					<span class="value ${isViewingOnesSelf ? 'editable' : '' }">
+						<span class="glyphicon glyphicon-pencil"></span>					
 						<c:choose>
 							<c:when test="${empty response.profileInfoDto.user.homeCity &&
 											 empty response.profileInfoDto.user.homeState &&
@@ -27,6 +28,7 @@
 								<span class="not-set">Add your home location so employers can find you</span>
 							</c:when>
 							<c:otherwise>
+								
 								${response.profileInfoDto.user.homeCity},
 								 ${response.profileInfoDto.user.homeState}
 								  ${response.profileInfoDto.user.homeZipCode }
@@ -55,13 +57,15 @@
 				</div>
 				<div class="info-item">
 					<label>Maximum travel distance</label>
-					<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">							
+					<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">	
+						<span class="glyphicon glyphicon-pencil"></span>		
 						<c:choose>
 							<c:when test="${empty response.profileInfoDto.user.maxWorkRadius ||
 										response.profileInfoDto.user.maxWorkRadius == 0}">
 								<span class="not-set">Add the max distance you are willing to travel so employers can find you</span>
 							</c:when>
 							<c:otherwise>
+							
 								${response.profileInfoDto.user.maxWorkRadius } miles
 							</c:otherwise>
 						</c:choose>
@@ -78,7 +82,8 @@
 			</c:if>
 			<div class="info-item">
 				<label>About</label>
-				<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">							
+				<span class="value ${isViewingOnesSelf ? 'editable' : 'not-editable' }">	
+					<span class="glyphicon glyphicon-pencil"></span>						
 					<c:choose>
 						<c:when test="${response.profileInfoDto.user.about == '' || empty response.profileInfoDto.user.about }">
 							<span class="not-set">Write something so

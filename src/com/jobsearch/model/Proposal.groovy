@@ -16,6 +16,7 @@ public class Proposal {
 	LocalDateTime expirationDate
 	Integer isNew
 	Integer isDeclined
+	Integer isCurrentProposal
 	List<String> proposedDates
 	Integer flag_isCanceledDueToApplicantAcceptingOtherEmployment
 	Integer flag_isCanceledDueToEmployerFillingAllPositions
@@ -26,6 +27,7 @@ public class Proposal {
 	Integer flag_aProposedWorkDayTimeWasEdited
 	Integer flag_employerInitiatedContact
 	Integer flag_employerAcceptedTheOffer
+	Integer flag_acknowledgedIsDeclined
 	
 	// These flags are equal to column names in the wage_proposal table
 	public static String FLAG_APPLICATION_WAS_REOPENED = "Flag_ApplicationWasReopened"
@@ -37,7 +39,7 @@ public class Proposal {
 	public static String FLAG_EMPLOYER_ACCEPTED_THE_OFFER = "Flag_EmployerAcceptedTheOffer";
 	public static String FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS = "Flag_IsCreatedDueToEmployerFillingAllPositions"
 	public static String FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT = "Flag_IsCreatedDueToApplicantAcceptingOtherEmployment"
-
+	public static String FLAG_ACKNOWLEDGED_IS_DECLINED = "Flag_AcknowledgedIsDeclined";
 	
 	public Proposal(){		
 	}

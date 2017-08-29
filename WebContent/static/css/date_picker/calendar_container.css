@@ -16,8 +16,9 @@
 	text-align: center;
 }
 
-.calendar-container{
+.calendar-container *{
 /* 	width:300px; */
+	letter-spacing: normal;
 }
 
 /* .calendar-container a{ */
@@ -138,7 +139,7 @@ td.active111 a{
     background: red !important;
     /* margin: 0px 20px; */
     width: auto;
-    padding: 2px 8px;
-    border-radius: 16px;
+    padding: 0.1em 0.2em;
+    border-radius: 20px;
     color: white !important;
 }

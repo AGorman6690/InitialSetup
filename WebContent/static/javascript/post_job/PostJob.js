@@ -12,7 +12,13 @@ $(document).ready(function(){
 	workDayDtos = [];
 	initCalendar_selectWorkDays($calendar_workDays, $calendar_times, 2);
 
-
+	$("#side-bar [data-scroll-to]").click(function() {
+		var $e = $("#" + $(this).attr("data-scroll-to"));
+	   $('html, body').animate({
+	        scrollTop: $e.offset().top
+	    }, 500);
+	})
+	
 	$("#proceed-to-preview-job-posting").click(function(){
 
 		var addJobRequest = getAddJobRequest();

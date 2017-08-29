@@ -18,6 +18,7 @@ import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.request.ApplyForJobRequest;
+import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
@@ -50,25 +51,14 @@ public class ApplicationController {
 
 	}	
 	
-	@RequestMapping(value = "/application/{applicationId_withReferenceTo}/conflicting-applications",
+	@RequestMapping(value = "/application/conflicting-applications",
 		method = RequestMethod.POST)
-	public String getConflictingApplications(@RequestBody List<String> dateStrings_toFindConflictsWith,
-						@PathVariable( value = "applicationId_withReferenceTo") int applicationId_withReferenceTo,
+	public String getConflictingApplications(@RequestBody ConflictingApplicationsRequest request,
 						HttpSession session, Model model) {		
 		
-		applicationService.setConflictingApplicationsResponse(model, session, applicationId_withReferenceTo,
-				dateStrings_toFindConflictsWith);		
+		applicationService.setConflictingApplicationsResponse(model, session, request);		
 		return "/wage_proposal/ConflictingApplications"; 
 	}	
-		
-	@RequestMapping(value = "/job/{jobId}/make-an-offer/initialize", method = RequestMethod.GET)
-	public String getHtml_employerMakeFirstOffer(Model model, HttpSession session,
-												@PathVariable(value = "jobId") int jobId) {
-		
-		if(applicationService.setModel_employerMakeFirstOffer(model, session, jobId))
-			return "/wage_proposal/AjaxResponse_Proposal_NEW";
-		else return SessionContext.get404Page();
-	}
 	
 	@RequestMapping(value = "/application/employer-make-initial-offer", method = RequestMethod.POST)
 	@ResponseBody

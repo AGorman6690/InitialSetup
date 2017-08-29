@@ -11,6 +11,7 @@ public class ConflictingApplicationsResponse {
 	List<ConflictingApplication> conflictingApplicationsToBeRemoved
 	List<ConflictingApplication> conflictingApplicationsToBeSentBackToEmployer
 	List<ConflictingApplication> conflictingApplicationsToBeModifiedButRemainAtEmployer
+								
 	
 	public ConflictingApplicationsResponse(){
 		conflictingApplications = new ArrayList<>();

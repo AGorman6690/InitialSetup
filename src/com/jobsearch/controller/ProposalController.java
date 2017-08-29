@@ -41,6 +41,12 @@ public class ProposalController {
 		return ""; 
 	}
 	
+	@RequestMapping(value = "/decline/{proposalId}", method = RequestMethod.GET)
+	public String declineProposal(@PathVariable(value = "proposalId") int proposalId, HttpSession session) {
+		proposalService.declineProposal(proposalId, session);	
+		return "redirect:/user/";
+	}
+	
 	@ResponseBody
 	@RequestMapping(value = "/application/{applicationId}/proposed-work-days", method = RequestMethod.GET)
 	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "applicationId") int applicationId,

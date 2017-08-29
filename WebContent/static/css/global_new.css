@@ -94,7 +94,7 @@ button {
 .alert-message{
 	padding: 10px;
     border: 3px solid #ff0000;
-    background: #fffafa;
+/*     background: #fffafa; */
 	border-radius: 3px;
 }
 .alert-text{
@@ -194,6 +194,7 @@ input, select, textarea{
 	padding: 5px 10px;
 /*     border-radius: 3px; */
     border: 1px solid #c8c5c5;	
+    letter-spacing: normal;
 }
 
 .square-button,

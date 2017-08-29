@@ -7,18 +7,19 @@
 	<c:set var="text_application"
 	 	value="${response.conflictingApplications.size() == 1 ? 'application' : 'applications' }"></c:set>
 	<div class="other-application-conflicts width-500 mar-btm">
-		<h4 class="red-bold" data-toggle-id="conflicting-apps-${response.referenceApplication.applicationId }">
-			${response.conflictingApplications.size() } conflicting ${text_application }
-			<span class="glyphicon glyphicon-menu-down"></span>	
-		</h4>
+
 		<div id="conflicting-apps-${response.referenceApplication.applicationId }"
 				class="alert-message ">
+		<h4 class="red-bold" data-toggle-id="conflicting-apps-${response.referenceApplication.applicationId }">
+			${response.conflictingApplications.size() } conflicting ${text_application }
+			
+		</h4>				
 			<p>These proposed work days overlap with ${isOneConflict == '1' ? 'another application'
 				: 'other applications' }.</p>
 			<c:choose>
 				<c:when test="${areConflictsCausedByCounteringWorkDays }">
 					<p class="if-you-accept">If you <span class="bold">accept</span>
-						 these work days, your following ${text_application } will be:</p>		
+						 this offer, your following ${text_application } will be:</p>		
 				</c:when>
 				<c:otherwise>
 					<p class="if-you-accept">If <span class="bold">you accept</span>
@@ -42,12 +43,14 @@
 							</div>
 						</div>
 					</c:if>
-					<c:if test="${response.conflictingApplictionsToBeModifiedButRemainAtEmployer.size() > 0 }">
+					<c:if test="${response.conflictingApplicationsToBeModifiedButRemainAtEmployer.size() > 0 }">
 						<div class="disposition">
-							<p><span class="bold">Modified</span> because this job allows partial availability</p>
+							<p><span class="bold">Modified</span> because
+								 ${response.conflictingApplicationsToBeModifiedButRemainAtEmployer.size() == 1 ? 'the job list below allows' :
+								  'the jobs listed below allow' } partial availability</p>
 							<div class="applications">
 								<ul>
-									<c:forEach items="${response.conflictingApplictionsToBeModifiedButRemainAtEmployer }"
+									<c:forEach items="${response.conflictingApplicationsToBeModifiedButRemainAtEmployer }"
 											var="conflictingApplication">
 											<li>${conflictingApplication.job.jobName }</li>
 									</c:forEach>
@@ -55,12 +58,12 @@
 							</div>
 						</div>
 					</c:if>
-					<c:if test="${response.conflictingApplicationsToillBeSentBackToEmployer.size() > 0 }">
+					<c:if test="${response.conflictingApplicationsToBeSentBackToEmployer.size() > 0 }">
 						<div class="disposition">
-							<p>will be <span class="bold">modified</span> and <span class="bold">sent back</span> to the employer</p>
+							<p><span class="bold">Modified</span> and <span class="bold">sent back</span> to the employer</p>
 							<div class="applications">
 								<ul>
-									<c:forEach items="${response.conflictingApplicationsToillBeSentBackToEmployer }"
+									<c:forEach items="${response.conflictingApplicationsToBeSentBackToEmployer }"
 										var="conflictingApplication">
 										<li>${conflictingApplication.job.jobName }</li>
 									</c:forEach>

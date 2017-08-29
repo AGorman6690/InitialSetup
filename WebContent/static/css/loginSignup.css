@@ -1,7 +1,7 @@
 
 #loginContainer,
 #signUpContainer  {
-	width:430px;
+	width:530px;
 }
 
 
@@ -18,20 +18,11 @@
 /* 	display:none; */
 }
 
-.a-header{
-    /* color: #ffffff; */
-    /* text-align: center; */
-    /* background-color: #337ab7; */
-    height: 40px;
-    width: 430px;
-    margin: auto;
-    cursor: pointer;
-    border-radius: 5px;
+h3{
     color: #197994;
-    font-weight: bold;
 }
 .no-label{
-	margin-left: 167px;
+	margin-left: 217px;
 }
 .a-header h3{
     line-height:40px;
@@ -42,7 +33,7 @@
 }
 
 .item > label{
-	width:160px;
+	width:210px;
 /* 	text-align:right; */
 	padding-right:10px;
 }
@@ -50,7 +41,7 @@
 .group input[type=text],
 .group input[type=password],
 .group input[type=email]{
-	width:225px;
+	width:275px;
 }
 input[type="submit"]{
 	background: #197994;

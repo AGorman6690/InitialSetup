@@ -164,9 +164,6 @@
 .v2 td.hide-time:not(.is-accepted) .time-display{
 	display: none;
 }
-.v2 td.job-work-day.has-conflicting-employment{
-	border: 2px solid #888;
-} 
 
 .v2 td.job-work-day.no-available-positions,
 .v2 td.job-work-day.no-available-positions *,

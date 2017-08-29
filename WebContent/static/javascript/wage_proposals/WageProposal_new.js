@@ -101,7 +101,7 @@ $(document).ready(function() {
 	})
 
 	
-	$("body").on("click", ".send-proposal", function() {
+	$("body").on("click", ".send-proposal-wrapper button", function() {
 		// ************************************************************
 		// Need validation
 		// ************************************************************
@@ -166,7 +166,7 @@ function getProposalContainer() {
 function setProposalAcceptanceContext(){
 	
 	var $proposal = $("body").find(".mod.proposal-container:visible .proposal-wrapper");
-	if($proposal.find(".status-wrapper .status-accepting.current-status").length == 2){
+	if($proposal.find(".proposal-status-wrapper .status-accepting.current-status").length == 2){
 		$proposal.addClass("accepting-offer-context");
 		$proposal.removeClass("proposing-new-offer-context");
 	}else{
@@ -268,13 +268,17 @@ function executeAjaxCall_makeInitialOffer(applicationDto){
 }
 function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,
 		dateStrings_toFindConflictsWith){
+	var conflicingApplicationsRequest = {};
+	conflicingApplicationsRequest.referenceApplicationId = applicationId_withReferenceTo;
+	conflicingApplicationsRequest.datesToFindConflictWith = dateStrings_toFindConflictsWith;
+	
 	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		headers: getAjaxHeaders(),
-		url: "/JobSearch/application/" + applicationId_withReferenceTo + "/conflicting-applications",
+		url: "/JobSearch/application/conflicting-applications",
 		contentType: "application/json",
-		data: JSON.stringify(dateStrings_toFindConflictsWith),
+		data: JSON.stringify(conflicingApplicationsRequest),
 		dataType: "html",
 	}).done(function(html){
 		broswerIsWaiting(false);
@@ -418,7 +422,7 @@ function getRespondToProposalRequest($e){
 	
 	
 	// Wage
-	respondToProposalRequest.proposal.amount = $wageProposal.find(".review-context .wage-amount").eq(0).html();
+	respondToProposalRequest.proposal.amount = $wageProposal.find("input").val();
 	
 	// Work days
 	respondToProposalRequest.proposal.proposedDates = [];

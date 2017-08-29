@@ -72,21 +72,25 @@
 						<div class=filter-item>
 							<div>
 								<input checked id="waiting-on-you" type="checkbox"
-									name="proposal-status"> <label for="waiting-on-you">Proposals waiting
+									name="proposal-status">
+								<label for="waiting-on-you">Proposals waiting
 									for you
+									
+			
+									<span class="total">${response.countProposals_waitingOnYou}</span>						
 								</label>
-								 <span class="total">${response.countProposals_waitingOnYou}</span>
-									<c:if test="${response.countProposals_waitingOnYou_new > 0}">
-										<span class="total new">${response.countProposals_waitingOnYou_new}
-											new</span>
-									</c:if>
+								<c:if test="${response.countProposals_waitingOnYou_new > 0}">
+									<span class="total new">${response.countProposals_waitingOnYou_new}
+										new</span>
+								</c:if>
 							</div>
 							<div>
 								<input checked id="waiting-on-other" type="checkbox"
 									name="proposal-status"> <label for="waiting-on-other">Proposals waiting
 									for the employer 
+									<span class="total">${response.countProposals_waitingOnOther}</span>
 								</label>
-								<span class="total">${response.countProposals_waitingOnOther}</span>
+								
 							</div>
 						</div>
 					</div>
@@ -94,9 +98,9 @@
 						<div class="filter-item-header">
 							<input checked id="all-employment" type="checkbox"
 								name="filter-item"> <label for="all-employment">Accepted proposals
-								
+								<span class="total">${response.countJobs_employment }</span>
 							</label>
-							<span class="total">${response.countJobs_employment }</span>
+							
 						</div>
 					</div>
 				</div>

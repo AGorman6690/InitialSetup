@@ -18,6 +18,10 @@
     background: #f7f7f7;
     border-bottom: 1px solid#cacaca;
 }
+#bottom-content{
+	width: 1400px;
+	margin: auto;
+}
 #find-employees{
     padding: 16px 29px;
     background: #163b3d;

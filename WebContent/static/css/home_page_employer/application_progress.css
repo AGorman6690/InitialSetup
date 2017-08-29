@@ -79,6 +79,7 @@ p.show-hide-details{
 }
 .applicant{
 	position: relative;
+    border-bottom: 1px solid #e4e4e4;	
 }
 span.glyphicon-star.favorite-flag,
 span.glyphicon-star-empty.favorite-flag{

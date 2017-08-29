@@ -6,6 +6,7 @@
 	<p class="  context-employee">Once you do, you will be employed for this job.</p>
 </div>
 <div class="proposing-new-offer-context ">
+<%--
 	<p class=" ">
 		<c:choose>
 			<c:when test="${context == 'employer-make-initial-offer' }">
@@ -18,6 +19,7 @@
 			</c:otherwise>
 		</c:choose>
 	</p>
+ --%>
 </div>
 <p class="context-employer proposing-new-offer-context ">
 	The applicant will have the option to counter this offer,

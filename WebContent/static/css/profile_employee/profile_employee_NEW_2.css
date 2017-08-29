@@ -8,7 +8,7 @@
     vertical-align: top;
 }
 .job-name{
-	font-size: 20px;
+	font-size: 18px;
 /* 	text-align: center; */
 }
 h1{
@@ -58,6 +58,9 @@ border-bottom: 2px solid #dad9d9 !important;
     color: #fff;
     text-align: center;
     font-weight: bold;
+}
+.filter-item label span{
+	float: right;
 }
 #job-list .application:first-child h3{
 	margin-top: 0px;

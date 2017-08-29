@@ -53,11 +53,9 @@ public class ProposalServiceImpl{
 		return repository.getCurrentProposals_byJob(jobId);
 	}
 	
-	public String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {
-		
+	public String getTime_untilEmployerApprovalExpires(LocalDateTime expirationDate) {		
 		LocalDateTime now = LocalDateTime.now();
 		return getTime_untilEmployerApprovalExpires(expirationDate, now);
-
 	}
 	
 	public void deleteProposedWorkDays(List<WorkDay> workDays, int applicationId) {
@@ -151,8 +149,8 @@ public class ProposalServiceImpl{
 	}
 	
 
-	public void inspectNewness(Proposal proposal) {
-		if(proposal.getIsNew() == 1){
+	public void inspectNewness(Proposal proposal, JobSearchUser user) {
+		if(proposal.getProposedToUserId() == user.getUserId() && proposal.getIsNew() == 1){
 			repository.updateFlag(proposal.getProposalId(), "IsNew", 0);
 		}			
 	}
@@ -241,8 +239,9 @@ public class ProposalServiceImpl{
 		Proposal newProposal = getNewProposalFromEmployer(request, proposalBeingRespondedTo);			
 		insertProposal(newProposal);			
 		
-		if(isAcceptingOffer){				
-			updateProposalFlag(newProposal,
+		if(isAcceptingOffer){		
+			Proposal employerProposal = getCurrentProposal(newProposal.getApplicationId());
+			updateProposalFlag(employerProposal,
 					Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
 		}
 
@@ -281,16 +280,18 @@ public class ProposalServiceImpl{
 				proposalFlag, value);
 	}
 	
-	
-	public void declineProposal(Proposal proposal) {
+	public void declineProposal(int proposalId, HttpSession session) {
 		
-		applicationService.updateApplicationStatus(proposal.getApplicationId(),
-				Application.STATUS_DECLINED);
-
-		Application application = applicationService.getApplication(proposal.getApplicationId());
-		applicationService.updateApplicationStatus(application.getApplicationId(),
-			Application.STATUS_DECLINED);
-	
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Proposal proposal = getProposal(proposalId);
+		if(proposal.getIsCurrentProposal() == 1 &&
+				proposal.getProposedToUserId() == sessionUser.getUserId()){
+			
+			applicationService.updateApplicationStatus(proposal.getApplicationId(),
+					Application.STATUS_DECLINED);
+//			applicationService.closeApplication(proposal.getApplicationId());
+			updateProposalFlag(proposal, "IsDeclined", 1);
+		}
 	}
 
 	private void counterProposal_byEmployee(Proposal proposalBeingRespondedTo,
@@ -336,10 +337,6 @@ public class ProposalServiceImpl{
 			workDayService.isAPositionAvaiableEachProposedWorkDay(
 						proposalBeingRespondedTo.getProposalId(), job.getId())) {
 
-
-			applicationService.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
-										Application.STATUS_ACCEPTED);
-
 			applicationService.closeApplication(proposalBeingRespondedTo.getApplicationId());
 
 			userService.insertEmployment(proposalBeingRespondedTo.getProposedToUserId(), job.getId());
@@ -357,6 +354,9 @@ public class ProposalServiceImpl{
 					proposalBeingRespondedTo.getApplicationId(),
 					workDayService.getWorkDays_byProposalId(
 							proposalBeingRespondedTo.getProposalId()));
+			
+			applicationService.updateApplicationStatus(proposalBeingRespondedTo.getApplicationId(),
+					Application.STATUS_ACCEPTED);
 
 		}	
 		

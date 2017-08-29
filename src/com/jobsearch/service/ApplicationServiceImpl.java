@@ -23,6 +23,7 @@ import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.repository.ApplicationRepository;
 import com.jobsearch.request.ApplyForJobRequest;
+import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.responses.ConflictingApplicationsResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse.ConflictingApplication;
@@ -200,14 +201,10 @@ public class ApplicationServiceImpl {
 			}else{
 				
 				Proposal currentProposal = proposalService.getCurrentProposal(conflictingApplication.getApplicationId());
-				proposalService.updateProposalFlag(currentProposal,
-						Proposal.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT, 1);
-				
 				Proposal newProposal = new Proposal(currentProposal);				
-				// If the new proposal will remain in the employer's inbox
+				
 				if(!doesConflictingApplicationNeedToBeModifiedAndSentBackToEmployer(
-						conflictingApplication, session)){
-			
+						conflictingApplication, session)){			
 					newProposal.setProposedByUserId(currentProposal.getProposedByUserId());
 					newProposal.setProposedToUserId(currentProposal.getProposedToUserId());				
 				}
@@ -219,6 +216,9 @@ public class ApplicationServiceImpl {
 				
 				Proposal newCurrentProposal = proposalService.getCurrentProposal(
 						conflictingApplication.getApplicationId());
+				
+				proposalService.updateProposalFlag(currentProposal,
+						Proposal.FLAG_IS_CANCELED_DUE_TO_APPLICANT_ACCEPTING_OTHEREMPLOYMENT, 1);
 				proposalService.updateProposalFlag(newCurrentProposal,
 						Proposal.FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT, 1);
 			}				
@@ -369,7 +369,7 @@ public class ApplicationServiceImpl {
 		boolean isEmployee = true;
 		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) isEmployee = false;
 		
-		if(previousProposal != null){
+		
 			
 			// Employer filed all positions
 			if(currentProposal.getFlag_isCreatedDueToEmployerFillingAllPositions() == 1){
@@ -396,6 +396,7 @@ public class ApplicationServiceImpl {
 							+ (isEmployee ? " your" : " the applicant's" )+ " applicant has been closed.");			}		
 			}
 			
+		if(previousProposal != null){
 			// The application was re-opened
 			if(previousProposal.getFlag_applicationWasReopened() == 1){
 				if(previousProposal.getFlag_aProposedWorkDayWasRemoved() == 1){
@@ -445,23 +446,23 @@ public class ApplicationServiceImpl {
 	}
 
 	public void setConflictingApplicationsResponse(Model model, HttpSession session,
-					int applicationId_withReferenceTo, List<String> dateStrings_toFindConflictsWith) {
+					ConflictingApplicationsRequest request) {
 		
 		ConflictingApplicationsResponse response = new ConflictingApplicationsResponse();
 		
-		Application referenceApplication = getApplication(applicationId_withReferenceTo);
-		Job job = jobService.getJob_ByApplicationId(applicationId_withReferenceTo);
+		Application referenceApplication = getApplication(request.getReferenceApplicationId());
+		Job job = jobService.getJob_ByApplicationId(request.getReferenceApplicationId());
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		if(verificationService.didUserApplyForJob(job.getId(), sessionUser.getUserId())){
 		
 			List<WorkDay> workDays_toFindConflictsWith = workDayService.getWorkDays_byJobAndDateStrings(
-					job.getId(), dateStrings_toFindConflictsWith);
+					job.getId(), request.getDatesToFindConflictWith());
 		
 			if (verificationService.isListPopulated(workDays_toFindConflictsWith)){
 				
 				List<Application> conflictingApplications = getApplications_WithAtLeastOneWorkDay(
 																sessionUser.getUserId(),
-																applicationId_withReferenceTo,
+																request.getReferenceApplicationId(),
 																workDays_toFindConflictsWith);
 				
 				response.setConflictingApplicationsToBeModifiedButRemainAtEmployer(new ArrayList<>());
@@ -491,28 +492,6 @@ public class ApplicationServiceImpl {
 		model.addAttribute("areConflictsCausedByCounteringWorkDays", true);
 		model.addAttribute("response", response);		
 	}
-
-	public boolean setModel_employerMakeFirstOffer(Model model, HttpSession session, int jobId) {
-
-		if(verificationService.didSessionUserPostJob(session, jobId)){
-
-			ApplicationDTO applicationDto = new ApplicationDTO();
-			applicationDto.getJobDto().setJob(jobService.getJob(jobId));
-			applicationDto.getJobDto().setWorkDayDtos(workDayService.getWorkDayDtos(jobId));
-			applicationDto.getJobDto().setWorkDays(workDayService.getWorkDays(jobId));
-
-			applicationDto.getJobDto().setDate_firstWorkDay(DateUtility.getMinimumDate(applicationDto.getJobDto().getWorkDays()).toString());
-			applicationDto.getJobDto().setMonths_workDaysSpan(DateUtility.getMonthSpan(applicationDto.getJobDto().getWorkDays()));
-
-			model.addAttribute("applicationDto", applicationDto);
-			model.addAttribute("isEmployerMakingFirstOffer", true);
-			model.addAttribute("json_workDayDtos", JSON.stringify(applicationDto.getJobDto().getWorkDayDtos()));
-
-			return true;
-		}else return false;
-	}
-
-
 
 	public List<Application> getApplications_byJobAndAtLeastOneWorkDay(int jobId,
 			List<WorkDay> workDays) {
@@ -612,6 +591,21 @@ public class ApplicationServiceImpl {
 		}	
 		
 		return messageResponses;
+	}
+
+
+
+	public  boolean includeApplication(Proposal currentProposal, JobSearchUser sessionUser) {
+		if(currentProposal.getIsDeclined() == 1 ){
+			if(currentProposal.getProposedByUserId() == sessionUser.getUserId()
+					&& currentProposal.getFlag_acknowledgedIsDeclined() == 0){
+				return true;			
+			}else{
+				return false;
+			}			
+		}else{
+			return true;
+		}
 	}
 
 

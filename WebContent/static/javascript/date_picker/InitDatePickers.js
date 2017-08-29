@@ -66,21 +66,11 @@ function initCalendar_new($calendar, workDayDtos){
 			
 		},
 		afterShow: function(){
-			// if proposal calendar, update whether work days are being accepted/proposed
-			if($calendar.closest(".calendar-container").hasClass("proposal-calendar")){
-				setWorkDayAcceptanceContext();
-			}
+//			$calendar.datepicker("setDate", firstDate);	
 			
-			// If this is a calendar for an applicant counter the proposed work days,
-			// get applications that have overlapping work days, if any.
-			if($calendar.hasClass("find-conflicting-applications-on-select")){
-				var $proposalContainer =  $calendar.closest(".proposal-container");
-				var applicationId = $proposalContainer.attr("data-application-id");
-				var dateStrings_counterWorkDays = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");
-				var $e_renderHtml = $proposalContainer.find(".conflicting-applications-countering").eq(0);
-					
-				executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId,
-						dateStrings_counterWorkDays);
+			// if proposal calendar, update whether work days are being accepted/proposed
+			if($calendar.closest(".calendar-container").hasClass("negotiating-context")){
+				setWorkDayAcceptanceContext();
 			}
 			
 			$(workDayDtos).each(function(i, workDayDto){				
@@ -120,7 +110,22 @@ function initCalendar_new($calendar, workDayDtos){
 				
 				var $tr = $(td).closest("tr");
 				if($tr.hasClass("show-row") == 0) $tr.addClass("show-row"); 
-			})				
+			})	
+			
+			// NOTE: The proposed dates must be obtained AFTER the above loop.
+			// If all the job work days are in the next month, all the rows will be hidden 
+			// because the calendar is first initialized to the current month. 
+			if($calendar.hasClass("find-conflicting-applications-on-select")){
+				var $proposalContainer =  $calendar.closest(".proposal-container");
+				var applicationId = $proposalContainer.attr("data-application-id");
+				var dateStrings_counterWorkDays = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");
+				var $e_renderHtml = $proposalContainer.find(".conflicting-applications-countering").eq(0);
+				
+				if(dateStrings_counterWorkDays.length > 0){
+					executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId,
+							dateStrings_counterWorkDays);
+				}
+			}
 		}
 	})
 	

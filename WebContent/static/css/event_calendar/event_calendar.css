@@ -9,8 +9,8 @@
 
 
 #user-event-calendar .calendar-container .calendar td a{
-    width: 100%;
-    display: inline-block;
+/*     width: 100%; */
+/*     display: inline-block; */
 }
 #user-event-calendar .mod .mod-header .glyphicon-remove{
 	float: none;
@@ -144,14 +144,6 @@
 
 #user-event-calendar #event-calendar-mod .ui-datepicker-today a{
 	color: #fff;
-}
-#user-event-calendar #event-calendar-mod .ui-datepicker-today a{
-    background: red !important;
-    /* margin: 0px 20px; */
-    width: auto;
-    padding: 2px;
-    border-radius: 16px;
-    color: white !important;
 }
 #user-event-calendar #event-calendar-mod{
 	display: block;

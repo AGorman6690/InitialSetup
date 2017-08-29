@@ -41,6 +41,7 @@ public class ProposalRepository extends BaseRepository {
 				e.setProposedToUserId(rs.getInt("ProposedToUserId"));
 				e.setIsNew(rs.getInt("IsNew"));
 				e.setIsDeclined(rs.getInt("IsDeclined"));
+				e.setIsCurrentProposal(rs.getInt("IsCurrentProposal"));
 				
 				e.setExpirationDate(DateUtility.getLocalDateTime(rs.getString("ExpirationDate")));
 				e.setEmployerAcceptedDate(DateUtility.getLocalDateTime(rs.getString("EmployerAcceptedDate")));
@@ -56,6 +57,7 @@ public class ProposalRepository extends BaseRepository {
 				e.setFlag_employerAcceptedTheOffer(rs.getInt("Flag_EmployerAcceptedTheOffer"));
 				e.setFlag_isCreatedDueToApplicantAcceptingOtherEmployment(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT));
 				e.setFlag_isCreatedDueToEmployerFillingAllPositions(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));
+				e.setFlag_acknowledgedIsDeclined(rs.getInt(Proposal.FLAG_ACKNOWLEDGED_IS_DECLINED));
 				
 				e.setProposedDates(getProposedDateStrings(e.getProposalId()));
 				
@@ -179,7 +181,11 @@ public class ProposalRepository extends BaseRepository {
 				+ " JOIN job j ON a.JobId = j.JobId"
 				+ " WHERE wp.IsCurrentProposal = 1"
 				+ " AND j.jobId = ?"
-				+ " AND a.IsOpen = 1";
+				+ " AND a.IsOpen = 1"
+				+ " AND ("
+				+ " (wp.IsDeclined = 1 AND wp.Flag_AcknowledgedIsDeclined = 0 AND wp.ProposedByUserId = j.UserId)"
+				+ "	OR"
+				+ "	wp.IsDeclined = 0 )";
 		return ProposalMapper(sql, new Object[]{ jobId });
 	}
 

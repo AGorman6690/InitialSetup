@@ -4,7 +4,8 @@
 	<c:forEach items="${calendarDays_employmentSummary }" var="calendarDay">
 		<div class="calendar-day" data-date="${calendarDay.date }">
 			<c:forEach items="${calendarDay.jobDtos }" var="jobDto">
-				<div class="job" data-job-name="${jobDto.job.jobName }"
+				<div class="job show-job-info-mod" data-job-name="${jobDto.job.jobName }"
+					data-job-id="${jobDto.job.id }"
 					data-start-time="${jobDto.workDay.stringStartTime }"
 					data-end-time="${jobDto.workDay.stringEndTime }">
 				</div>
