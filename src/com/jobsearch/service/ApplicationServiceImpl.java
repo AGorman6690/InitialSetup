@@ -22,6 +22,7 @@ import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.repository.ApplicationRepository;
+import com.jobsearch.request.ApplicationProgressRequest;
 import com.jobsearch.request.ApplyForJobRequest;
 import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
@@ -592,22 +593,48 @@ public class ApplicationServiceImpl {
 		
 		return messageResponses;
 	}
-
-
-
-	public  boolean includeApplication(Proposal currentProposal, JobSearchUser sessionUser) {
+	
+	public  boolean includeApplication(Application application, Proposal currentProposal, JobSearchUser sessionUser) {
+		
+		/* Refactor this*/
+		
 		if(currentProposal.getIsDeclined() == 1 ){
 			if(currentProposal.getProposedByUserId() == sessionUser.getUserId()
 					&& currentProposal.getFlag_acknowledgedIsDeclined() == 0){
 				return true;			
 			}else{
-				return false;
-			}			
+				return false;		
+			}
 		}else{
-			return true;
+			return false;
 		}
 	}
 
-
-
+	public boolean includeApplication(Application application, Proposal currentProposal, JobSearchUser sessionUser,
+			ApplicationProgressRequest request) {
+		
+		/* Refactor this*/
+		
+		boolean includeApplication = false;
+		
+		if(currentProposal.getIsDeclined() == 1 ){
+			if(currentProposal.getProposedByUserId() == sessionUser.getUserId()
+					&& currentProposal.getFlag_acknowledgedIsDeclined() == 0){
+				includeApplication = true;			
+			}
+		}
+		if(request.getShowProposalsWaitingOnYou() && currentProposal.getProposedToUserId() == sessionUser.getUserId()){
+			includeApplication = true;		
+		}		
+		if(request.getShowProposalsWaitingOnOther() && currentProposal.getProposedToUserId() != sessionUser.getUserId()){
+			includeApplication = true;		
+		}		
+		if(request.getShowExpiredProposals() && proposalService.isProposalExpired(currentProposal)){
+			includeApplication = true;			
+		}		
+		if (request.getShowAcceptedProposals() && application.getIsAccepted() == 1){
+			includeApplication = true;		
+		}		
+		return includeApplication;
+	}
 }

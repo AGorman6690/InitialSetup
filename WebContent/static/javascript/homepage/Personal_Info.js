@@ -1,6 +1,24 @@
+var dates_editedAvailability = []
+
 $(document).ready(function(){
-	$("#personal-info .value").click(function() {
-		$(this).closest(".info-item").find(".edit-container").eq(0).toggle();
+	
+	$("#make-edits").click(function(){
+		$(this).hide();
+		$("#save-edits").show();
+		$(".edit-container").each(function(){ $(this).show() });
+		$("#personalInfo .value").each(function(){ $(this).hide() });
+	})
+	
+	$(".cancel-changes").click(function(){
+		$(this).closest(".edit-container").find("input, select").each(function(){
+			$(this).val("");
+		})
+		
+		$(this).closest(".edit-container").siblings("[data-toggle-id]").eq(0).click();
+	})
+	
+	$(".personal-info-item .value").click(function() {
+		$(this).closest(".personal-info-item").find(".edit-container").eq(0).toggle();
 	})
 	
 	$("#save-home-location").click(function(){		
@@ -11,10 +29,11 @@ $(document).ready(function(){
 	})	
 	$("#save-about").click(function(){		
 		updateAbout();
-	})		
+	})	
+	
+	setStates();
+
 })
-
-
 function updateHomeLocation(){	
 	var city = $("#city").val();;
 	var state = $("#state option:selected").val();
@@ -45,3 +64,5 @@ function executeAjaxCall_updateUserSettings(url){
 		location.reload();
 	})
 }
+
+

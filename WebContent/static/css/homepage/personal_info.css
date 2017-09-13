@@ -1,0 +1,45 @@
+.a-container{
+	width: 1200px;
+	margin: auto;
+	padding-top: 25px;
+}
+.personal-info-item{
+	padding-bottom: 25px;
+	padding-left: 20px
+}
+.personal-info-item > label{
+	font-weight: bold;
+	color: #163b3d;
+	margin-left: -20px;
+}
+.edit-container{
+	display: none;
+	margin-top: 15px;
+}
+.editable .glyphicon-pencil{
+	font-size: 16px;
+	color: #bbb;
+}
+.editable:hover{
+	cursor: pointer;
+	text-decoration: underline;
+}
+#about{
+    width: 75%;
+    height: 200px;
+}
+.save-profile-info{
+	margin-top: 20px;
+	display: inline-block;
+	padding: 8px 15px;
+	background: #197994;
+	color: #fff;
+}
+#personal-info-container{
+	padding-right: 15px;
+	border-right: 1px solid #cacaca;
+	margin-right: 40px;
+}
+#image img{
+	display: block;
+}

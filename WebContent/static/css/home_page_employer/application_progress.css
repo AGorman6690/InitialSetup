@@ -1,166 +1,28 @@
-#job-details.surpress .surpress{
-	display: none;
-}
-p.show-hide-details.hide-details{
-	display: none;
-}
-p.show-hide-details{
-	display: block;
-/*     text-decoration: underline;	 */
-}
-#sort-wrapper{
-	text-align: center;
-	width: 600px;
-    margin: auto;
-    height: 60px;
-    line-height: 60px;
-    background: #197994;
-    color: #fff;	
-    display: none;
-    margin-bottom: 20px;
-}
-.item.sort label,
-.item.sort p span:first-child{
-	font-size: 20px;
-	margin-right: 10px;
-}
-.item.sort{
-	display: inline-block;
-	margin: 0px 17px;
-}
-.status h3{
-	font-size: 18px;
-    margin-bottom: 15px;
-    margin-top: 0px;	
-}
-.status h2{
-	padding: 5px;
-/* 	background: #e2e1e1; */
-    margin-top: 0;
-    font-size: 28px;
-}
-.status h2.warning-message{
-    color: red;
-    background: #ffe6e6;	
-    margin: 0px auto;
-}
-.proposal-table{
-	margin: auto;
-}
-.status{
-	margin-top: 35px;
-	text-align: center;
-}
-.show-applicant-ratings-mod{
-	display: inline-block;
-}
-.sort-and-filter-wrapper{
-	display: none;
-}
-.sort-and-filter-wrapper,
-.applicants{
-	vertical-align: top;
-}
-.applicants{
-/* 	margin-left: 50px; */
-	margin-bottom: 40px;
-	width: 600px;
-	margin: auto;
-}
 .applicant{
-/* 	background: #f7f7f7; */
-	padding: 15px;
-    margin-bottom: 25px;	
-/*     border: 1px solid #cacaca; */
+	padding: 10px;
 }
-#job-details{
-	vertical-align: top;
-/* 	display: inline-block; */
+.applicant-container{
+	border-bottom: 1px solid #cacaca;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
 }
-.applicant{
-	position: relative;
-    border-bottom: 1px solid #e4e4e4;	
+.applicant-container:first-child{
+	border-top: 1px solid #cacaca;
+	padding-top: 10px;
 }
-span.glyphicon-star.favorite-flag,
-span.glyphicon-star-empty.favorite-flag{
-    font-size: 19px;
-    margin-top: 5px;
-    /* float: left; */
-    position: absolute;
-    left: 20px;
+.applicant-container:last-child{
+	border-bottom: 0;
 }
-.favorite-flag.glyphicon-star{
-	color: #000;
-}
-.favorite-flag.glyphicon-star-empty{
-	color: #c4c4c4;
-}
-.applicant .rating-container .star{
-	font-size: 21px;
-}
-.questions{
-	padding: 5px;
-/*     background: #ececec; */
-    max-height: 85px;
-    overflow: auto;
-    margin: 20px 0px;
-/*     border: 1px solid #cacaca; */
-	direction: rtl;
-}
-.question-container{
-    margin: 5px 0px;
-    padding: 5px;
-    direction: ltr;
-}
-.questions .question{
+.applicant-or-employee{
     font-weight: bold;
-    font-style: italic;	
+    float: right;
 }
-.questions .answer{
-	padding-left: 30px;
-    font-weight: normal;
+.applicant-header{
+	
 }
-.user-rating{
-	font-size: 22px;
-    color: #197994;
-    font-weight: bold;	
+.applicant-or-employee,
+.favorite-flag{
+	float: right;
+	margin-right: 5px;
+	margint-top: 10px;
 }
-.expiration-time label{
-	display: block;
-	text-align: left;
-}
-.expiration-time .time-input{
-	display: inline-block;	
-}
-.expiration-time .time-input p{
-	margin-bottom: 2px;
-}
-.expiration-time .other-container{
-    text-align: left;
-    padding-left: 50px;
-    display: none;
-}
-.messages{
-    /* width: 400px; */
-    /* margin: 0px auto 20px; */
-    /* border: 1px solid #cacaca; */
-    font-size: 18px;
-    /* color: red; */
-    /* font-weight: bold; */
-    padding: 5px;
-    background: #eaeaea;
-    font-size: 16px
-}
-.messages p{
-	margin-left: 25px;
-}
-.messages h6{
-	font-size: 18px;
-	font-weight: bold;
-}
-.expiration-time .other-container .radio-container{
-	margin-top: 10px;
-}
-.expiration-time .time-input input{
-	font-size: 18px;
-	width: 75px;

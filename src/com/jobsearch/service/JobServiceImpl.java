@@ -37,6 +37,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.repository.JobRepository;
 import com.jobsearch.request.AddJobRequest;
+import com.jobsearch.request.ApplicationProgressRequest;
 import com.jobsearch.request.EditJobRequest;
 import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.request.FindJobsRequest;
@@ -305,7 +306,7 @@ public class JobServiceImpl {
 		model.addAttribute("response", response);
 	}
 
-	public void setApplicationProgressResponse(int jobId, Model model, HttpSession session) {
+	public void setApplicationProgressResponse(int jobId, Model model, HttpSession session, ApplicationProgressRequest request) {
 
 		if (verificationService.didSessionUserPostJob(session, jobId)) {
 
@@ -325,11 +326,11 @@ public class JobServiceImpl {
 				Proposal currentProposal = proposalService.getCurrentProposal(application.getApplicationId());
 				Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 
-				if(applicationService.includeApplication(currentProposal, sessionUser)){
+				if(applicationService.includeApplication(application, currentProposal, sessionUser, request)){
+					
 					ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
 					applicationProgressStatus.setApplication(application);
-					
-					
+										
 					applicationProgressStatus.setCountJobWorkDays(workDays.size());
 	
 					// Current proposal

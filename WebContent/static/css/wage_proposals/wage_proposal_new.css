@@ -26,6 +26,9 @@
 .expiration-container .radio-container label:first-child{
 	margin-bottom: 10px;
 }
+.other-container{
+	display: none;
+}
 .expiration-container .expiration-input-container{
 	width: 460px;
 	margin: auto;
@@ -165,7 +168,7 @@ span.expiration-time{
 	width: 290px;
 }
 .a-proposal{
-	margin: 20px 0px;
+	margin: 10px 0px;
 }
 .proposed-value{
 	display: inline-block;

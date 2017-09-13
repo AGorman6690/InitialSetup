@@ -42,6 +42,9 @@
 	right: -10px;
 	background: #fff;
 }
+#side-bar > div span:hover::after{
+	background: red;
+}
 #side-bar > div.incomplete:not(.optional) span::after{
 /* 	background: red; */
 }

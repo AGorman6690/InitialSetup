@@ -10,16 +10,11 @@ import com.jobsearch.model.Skill
 import com.jobsearch.model.WorkDay
 import com.jobsearch.model.WorkDayDto
 
-
+@Deprecated
 public class JobDTO {
 	 // **********************************************
 	 // **********************************************
-	 // The thought behind this DTO was to create a place to put all the
-	 // miscellaneous information that is sometimes associated with a job object.
-	 // The job class' property list is getting awfully long and confusing.
-	 // So any info that needs to be bundled with a job, for whatever purpose,
-	 // in order to display something to the user, I purpose putting the info here.
-	 // Then the job class can only contain the info related to a job (i.e. the columns in the job table).
+	 // This will eventually be removed
 	 // **********************************************
 	 // **********************************************
 

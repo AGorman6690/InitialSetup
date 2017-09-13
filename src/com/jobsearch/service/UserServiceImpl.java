@@ -307,7 +307,7 @@ public class UserServiceImpl {
 			Proposal previousProposal = proposalService.getPreviousProposal(application.getApplicationId());
 			Job job = jobService.getJob(application.getJobId());
 			
-			if(applicationService.includeApplication(currentProposal, sessionUser)){
+			if(applicationService.includeApplication(application, currentProposal, sessionUser)){
 			
 				ApplicationProgressStatus applicationProgressStatus = new ApplicationProgressStatus();
 				initializeApplicationProgressStatus(applicationProgressStatus, application.getJobId());

@@ -110,6 +110,19 @@ public class ProposalServiceImpl{
 		}else return null;
 	}
 	
+	public Boolean isProposalExpired(Proposal proposal){
+		if(proposal.getExpirationDate() != null){
+			if(ChronoUnit.MINUTES.between(LocalDateTime.now(), proposal.getExpirationDate()) < 0){
+				return true;
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
+		
+	}
+	
 	public Proposal getCurrentProposal(Integer applicationId) {
 		return repository.getCurrentProposal(applicationId);
 	}

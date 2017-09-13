@@ -18,6 +18,7 @@ import com.jobsearch.job.web.JobDTO;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.request.AddJobRequest;
+import com.jobsearch.request.ApplicationProgressRequest;
 import com.jobsearch.request.EditJobRequest;
 import com.jobsearch.request.FindJobsRequest;
 import com.jobsearch.responses.ValidateAddressResponse;
@@ -43,11 +44,11 @@ public class JobController {
 		return "";
 	}
 	
-	@RequestMapping(value = "/job/{jobId}/application-progress", method = RequestMethod.GET)
+	@RequestMapping(value = "/job/{jobId}/application-progress", method = RequestMethod.POST)
 	public String getApplicationProgressRequest(@PathVariable(value = "jobId") int jobId,
-			Model model, HttpSession session) {
+			@RequestBody ApplicationProgressRequest request, Model model, HttpSession session) {
 
-		jobService.setApplicationProgressResponse(jobId, model, session);
+		jobService.setApplicationProgressResponse(jobId, model, session, request);
 		return "homepage_employer/ApplicationProgress";
 	}
 	
