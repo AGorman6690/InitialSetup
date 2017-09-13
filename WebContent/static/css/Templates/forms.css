@@ -68,6 +68,7 @@ label{
 	font-weight:normal;
 
 }
+.radio-container label,
 label[for]{
 	cursor:pointer;	
 }

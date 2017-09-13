@@ -82,8 +82,7 @@
 			<div class="warning-wrapper-1">
 				<div class="warning-wrapper">
 					<div class="send-status-warning">
-						<%@ include file="./SendWarningMessage.jsp" %>
-					
+						<%@ include file="./SendWarningMessage.jsp" %>					
 					</div>
 					<div class="send-proposal-wrapper">
 						<button class="text proposing-new-offer-context">

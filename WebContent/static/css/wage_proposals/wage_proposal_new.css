@@ -20,88 +20,20 @@
 /*     text-align: center;   */
 }
 
-.expiration-container .radio-container label{
-	display: block;
-}
-.expiration-container .radio-container label:first-child{
-	margin-bottom: 10px;
-}
 .other-container{
 	display: none;
+    padding-left: 35px;
+    padding-top: 10px;    
 }
-.expiration-container .expiration-input-container{
-	width: 460px;
-	margin: auto;
-	text-align: left;
-/* 	padding-top: 20px; */
-	padding: 5px;
-}
-.set-expiration label{
-	display: block;
-	font-size: 16px;
-}
-.set-expiration .custom-time-radios{
+.other-container .time-input{
 	display: inline-block;
-	padding-left: 5px;
 }
-.custom-times-inputs{
-	display: inline-block;
-	vertical-align: top;
+.other-container .time-input input{
+	width: 60px;
+    margin-right: 10px;
 }
-.custom-time-radios label:first-child{
-	margin-top: 5px;
-}
-.set-expiration{
+.other-container .radio-container{
 	margin-top: 15px;
-	padding-left: 25px;
-}
-.time-container p{
-	text-align: center;
-}
-.expiration-time-cont p:last-child{
-    border-bottom: 1px solid #cacaca;
-}
-span.expiration-time{
-    font-weight: bold;
-    font-size: 17px;
-}
-.button-wrapper{
-	position: absolute;
-	top: 50%;
-	height: 50px;
-	margin-top: -25px;
-}
-.button-wrapper > div{
-	display: table;
-    color: #197994;
-    font-weight: bold;	
-   	width: 190px;
-}
-.button-wrapper span{
-/*     display: table-cell; */
-    vertical-align: middle;
-}
-.button-wrapper.left{
-	left: 0px;
-	text-align: left;
-}
-.button-wrapper.right{
-	right: 0px;
-	text-align: right;
-}
-.button-wrapper .text{
-	font-size: 24px;
-    background: #163b3d;
-    color: #fff;
-    font-weight: normal;
-    padding: 10px 25px;
-}
-.button-wrapper .glyphicon{
-	font-size: 30px;
-	color: #bbb''
-}
-.button-wrapper:hover{
-	cursor: pointer;
 }
 .proposal-wrapper{
 	position: relative;
@@ -123,7 +55,6 @@ span.expiration-time{
 .proposal-wrapper.proposing-new-offer-context .accepting-offer-context{
 	display: none;
 }
-
 .proposal-wrapper.context-employee .context-employer{
 	display:none;
 }
@@ -150,7 +81,7 @@ span.expiration-time{
 }
 .proposal-wrapper .v2 .ui-datepicker-inline{
 	margin: 0;
-	min-height: 320px;
+/* 	min-height: 320px; */
 }
 .proposal-item{
 	margin-bottom: 50px;
