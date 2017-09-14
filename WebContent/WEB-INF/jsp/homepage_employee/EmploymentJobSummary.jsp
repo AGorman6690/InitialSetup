@@ -7,9 +7,6 @@
 			<p>${applicationProgressStatus.job.city_formatted }, ${applicationProgressStatus.job.state }</p>
 			<p>${applicationProgressStatus.job.zipCode }</p>
 		 </div>		
-<%-- 		<span>${applicationProgressStatus.job.streetAddress_formatted } <span class="dot">.</span> --%>
-<%-- 		 ${applicationProgressStatus.job.city_formatted}, --%>
-<%-- 		  ${applicationProgressStatus.job.state } <span class="dot">.</span>${applicationProgressStatus.job.zipCode }</span> --%>
 	</div>
 	<div>
 		<label>Wage</label>

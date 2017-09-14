@@ -152,7 +152,7 @@
 #user-event-calendar #event-calendar-mod .ui-datepicker-group-first,
 #user-event-calendar #event-calendar-mod .ui-datepicker-group-last{
 	position: absolute;
-	top: 246px;
+/* 	top: 246px; */
 }
 #user-event-calendar #event-calendar-mod .ui-datepicker-group-middle{
 	margin-left: 300px;

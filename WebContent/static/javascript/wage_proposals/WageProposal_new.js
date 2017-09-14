@@ -2,7 +2,12 @@ var g_workDayDtos_originalProposal = [];
 var g_workDayDtos_counter = [];
 
 $(document).ready(function() {
-	
+	$("body").on("click", ".expiration-time input[name=exp-time-init]", function() {
+		$e = $(this);
+		var $otherContainer = $e.closest(".expiration-time").find(".other-container");
+		if($e.hasClass("other")) $otherContainer.show();
+		else $otherContainer.hide();
+	})
 	$("body").on("click", "button.accept-current-proposal, button.counter-current-proposal", function() {
 		var $e = $(this);
 		var $cont = $e.closest(".proposal[data-proposal-id]");

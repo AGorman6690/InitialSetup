@@ -24,7 +24,7 @@
 						<span class="hide-on-load favorite-flag glyphicon glyphicon-flag
 							${applicationProgressStatus.application.status == 2 ? 'glyphicon glyphicon-star' :
 								'glyphicon glyphicon-star-empty not-selected' }"></span>
-						<span class="applicant-or-employee">${applicationProgressStatus.application.isAccepted == 1
+						<span class="hide-on-load applicant-or-employee">${applicationProgressStatus.application.isAccepted == 1
 							? 'Employee' : 'Applicant' }</span>
 					</div>			
 					<div class="applicant-name">

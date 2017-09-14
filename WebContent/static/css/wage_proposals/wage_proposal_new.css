@@ -99,12 +99,13 @@
 	width: 290px;
 }
 .a-proposal{
-	margin: 10px 0px;
+	margin-top: 10px;
 }
 .proposed-value{
 	display: inline-block;
 	margin-right: 20px;
 	font-weight: bold;
+	min-width: 120px;	
 }
 .respond-to-proposal{
 	text-align: center;

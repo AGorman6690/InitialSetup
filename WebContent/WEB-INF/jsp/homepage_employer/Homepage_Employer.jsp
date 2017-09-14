@@ -5,6 +5,7 @@
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/homepage/personal_info.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/home_page_employer.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/application_progress.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/homepage/homepage.css" />
 <script src="/JobSearch/static/javascript/HomePage_Employer.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/homepage/Personal_Info.js" type="text/javascript"></script>
 

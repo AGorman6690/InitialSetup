@@ -36,7 +36,7 @@
 					<label>Zip Code</label>
 					<input id="zipCode" class="select-all" type="text" value="${response.profileInfoDto.user.homeZipCode }">
 				</div>
-				<p class="edit-wrapper"><span id="save-home-location" class="save-profile-info">Save</span></p>
+				<p class="edit-wrapper"><span id="save-home-location" class="sqr-btn save-profile-info">Save</span></p>
 			</div>					
 		</div>
 		<div class="personal-info-item">
@@ -56,7 +56,7 @@
 			<div id="edit-max-distance" class="edit-container">					
 				<label>Miles</label>
 				<input id="miles" class="select-all" type="text" value="${response.profileInfoDto.user.maxWorkRadius }">
-				<p class="edit-wrapper"><span id="save-max-distance" class="save-profile-info">Save</span></p>
+				<p class="edit-wrapper"><span id="save-max-distance" class="sqr-btn save-profile-info">Save</span></p>
 			</div>		
 		</div>						
 	</c:if>
@@ -76,7 +76,7 @@
 		</div>				
 		<div id="edit-about" class="edit-container">			
 			<textarea id="about" class="select-all">${response.profileInfoDto.user.about }</textarea>
-			<p class="edit-wrapper"><span id="save-about" class="save-profile-info">Save</span></p>
+			<p class="edit-wrapper"><span id="save-about" class="sqr-btn save-profile-info">Save</span></p>
 		</div>
 	</div>	
 	<div id="user-ratings" class="personal-info-item">
@@ -87,8 +87,16 @@
 		</c:if>
 		<label>Rating</label>
 		<c:choose>
+			
 			<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
-				<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time</p>	
+				<c:choose>
+					<c:when test="${sessionScope.user.profileId == 1 }">
+						<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time. Obtain a high rating and let that be your bargaining chip!</p>
+					</c:when>
+					<c:otherwise>
+						<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time</p>
+					</c:otherwise>					
+				</c:choose>	
 			</c:when>			
 			<c:otherwise>		
 					<p id="overall-rating" data-toggle-id="user-rating-details">

@@ -1,5 +1,5 @@
 #employment-summary-calendar{
-	margin-bottom: 50px;
+	margin-bottom: 10px;
 }
 #employment-summary-calendar .calendar td{
 	width: 100px;
@@ -13,7 +13,7 @@
 	color: #197994;
 }
 .jobs{
-	height: 100px;
+	height: 80px;
 }
 .jobs p{
 	margin: 0px;

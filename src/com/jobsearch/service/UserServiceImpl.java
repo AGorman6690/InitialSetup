@@ -590,7 +590,7 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		if (sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE)
-			return "/employee_profile/Profile_Employee_NEW";
+			return "/homepage_employee/Homepage_Employee";
 		else
 			return "/homepage_employer/Homepage_Employer";
 

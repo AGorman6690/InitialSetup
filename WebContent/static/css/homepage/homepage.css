@@ -1,0 +1,12 @@
+h1{
+    width: auto;
+    display: inline-block;
+    padding: 10px 15px;
+    /* background: #197994; */
+    color: #197994;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 25px;
+    border-top: 2px solid #163b3d;
+    border-bottom: 2px solid #163b3d;
+}

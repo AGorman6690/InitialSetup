@@ -40,7 +40,16 @@
 				 of ${applicationProgressStatus.countJobWorkDays } ${applicationProgressStatus.countJobWorkDays == 1 ? 'day' : 'days' }			
 			</c:if>
 		</div>
-	</div>
+	</div>	
+	<c:if test="${sessionScope.user.profileId == 1 && applicationProgressStatus.isProposedToSessionUser &&
+							applicationProgressStatus.application.isAccepted == 0 }">
+		<div class="a-proposal">
+			<p class="exp-time black-bold">
+				The employer's ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'acceptence' : 'offer' } expires in <span class="red-bold">
+					${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
+			</p>
+		</div>
+	</c:if>			
 	<c:if test="${applicationProgressStatus.isProposedToSessionUser &&
 					applicationProgressStatus.application.isAccepted == 0}">	
 					

@@ -606,7 +606,7 @@ public class ApplicationServiceImpl {
 				return false;		
 			}
 		}else{
-			return false;
+			return true;
 		}
 	}
 

@@ -1,0 +1,53 @@
+.a-container{
+	width: 1000px;
+	margin: auto;
+}
+#personal-info-container,
+#other-info-content{
+	display: inline-block;
+	vertical-align: top;
+}
+#personal-info-container{
+	width: 400px;
+}
+.filter-item label{
+	width: 340px;
+}
+.filter-item label span.total{
+	float: right;
+	font-weight: bold;
+	color: #197994;
+}
+.application{
+	padding: 10px;
+}
+.application-container{
+	border-bottom: 1px solid #cacaca;
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+}
+.application-container:first-child{
+	border-top: 1px solid #cacaca;
+	padding-top: 10px;
+}
+.application-container:last-child{
+/* 	border-bottom: 0; */
+}
+.application-content .job-name{
+    font-size: 18px;
+    font-weight: bold;
+    color: #197994;
+}
+.proposal{
+	margin-left: 25px;
+}
+
+#activity-content{
+	margin-left: 25px;
+}
+#employment-summary-calendar .calendar-container{
+	margin-top: -20px;
+}
+#proposal-filters{
+	margin-bottom: 12px;
+}
