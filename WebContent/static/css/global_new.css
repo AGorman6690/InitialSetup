@@ -287,11 +287,8 @@ a:visited, a:hover, a{
 
 .accent{
     font-weight: bold;
-/*     color: #5B7BA3; */
-	color:#6d8aaf;
-/*     color:#24599a; */
-    cursor:pointer;
-/*     letter-spacing: 0.5px; */
+	color: #197994;
+    cursor: pointer;
 }
 
 a.accent.no-hover:hover{

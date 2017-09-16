@@ -296,7 +296,7 @@ public class JobRepository extends BaseRepository {
 			sql_subQuery += " SELECT DISTINCT wd.JobId FROM work_day wd";
 			sql_subQuery += " INNER JOIN date d ON d.Id = wd.DateId";
 			sql_subQuery += " GROUP BY wd.JobId";
-			sql_subQuery += " HAVING MAX(d.Date)";
+			sql_subQuery += " HAVING MAX(d.Id)";
 
 			if (request.getIsBeforeEndDate())
 				sql_subQuery += " <= ?";

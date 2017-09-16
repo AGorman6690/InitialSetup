@@ -3,6 +3,12 @@ var filterJobDto = {};
 
 $(document).ready(function(){	
 	
+	$(document).keypress(function(e) {
+	    if(e.which == 13) {
+	        getJobs();
+	    }
+	});
+	
 	$("body").on("click", "#get-more-jobs", function(){
 		var findJobsRequest = getFindJobsRequest();	
 		findJobsRequest.isAppendingJobs = true;		
@@ -13,7 +19,7 @@ $(document).ready(function(){
 	$("#location-filter input").focus(function() {
 		this.select();
 	})
-	$("#address").focus();
+//	$("#address").focus();
 	
 	$(".filter").click(function(event) {
 		var filter_clicked = this;		
@@ -23,74 +29,96 @@ $(document).ready(function(){
 		})
 		
 		// Do not close the filter if "next" or "prev" is clicked on a calendar
-		if(!$(event.target).hasClass("ui-icon")){
-			
+		if(!$(event.target).hasClass("ui-icon")){			
 			// Do not close if part of the filter dropdown was clicked.
 			if(!$(event.target).closest(".dropdown-style").length){
 				if($(filter_clicked).hasClass("expand")) $(filter_clicked).removeClass("expand");
 				else $(filter_clicked).addClass("expand");	
-			}
-			
+			}			
 		}
 	})
 	
 
 	$("#get-jobs").click(function() {	
-		var findJobsRequest = getFindJobsRequest();	
-		findJobsRequest.isAppendingJobs = false;
-		executeAjaxCall_getFilteredJobs(findJobsRequest, true);
+		getJobs();
 	})
 	
 	$("#applied-filters").on("click", "button", function() {
 		var $e = $(this);
 		clearFilterValue($e);
 		$e.remove();
-		$("#get-jobs").click();
+		getJobs();
 	})
-	$(".apply-filter").click(function() {
-		applyFilter($(this));
-		$("#get-jobs").click();
+	$(".apply-filter-container select").change(function() {
+		var $e = $(this)
+		var value = $e.find("option:selected").attr("data-filter-value")
+		setAppliedFilterValue($e, value);
+		getJobsAfterApplyingFilter($e, value)
 	})
-	
+	$(".apply-filter-container input[type=text]").keyup(function() {
+		var $e = $(this)
+		var value = $e.val();
+		setAppliedFilterValue($e, value);
+		getJobsAfterApplyingFilter($e, value)
+	})
+	$(".apply-filter-container input[type=radio]").change(function() {
+		var $e = $(this)
+		var value = getAppliedFilterValue($e);
+		getJobsAfterApplyingFilter($e, value);
+	})	
 	$(".remove-filter").click(function() {
 		var $e = $(this).closest(".dropdown-style"); 
 		$e.attr("data-is-approved", 0);
-		$(this).hide();
-		
+		$(this).hide();		
+	})
+	$(".filter .clear").click(function() {
+		clearFilterValue($(this))
 	})
 	
 	$(".time").each(function(){
 		setTimeOptions($(this), 60);
 	})
-	
-	$(".filter [data-toggle-id]").click(function(event) {
-		var e_clicked = this;
 		
-	})
-	
 	initCalendar_selectSingleDate($("#end-date-filter .calendar"));
 	initCalendar_selectSingleDate($("#start-date-filter .calendar"));	
 	initCalendar_selectWorkDays($("#work-days-filter .calendar"), undefined, 1);
-	
-	
-	
+		
 	if($("#wrapper").hasClass("find-jobs-on-load") == 1){
-		$("#get-jobs").click();
+		getJobs();
 	}
 	
 })
+function getAppliedFilterValue($e){
+	return $e.closest(".filter").attr("data-value");
+}
+function setAppliedFilterValue($e, value){
+	$e.closest(".filter").attr("data-value", value);
+}
+function getJobsAfterApplyingFilter($e, value){	
+	if(value != "" && value != undefined){
+		getJobs($e)
+		$e.closest(".filter").addClass("applied")
+	}
+}
+function getAppliedFilter($e){
+	return $e.closest(".filter");
+}
+function getJobs($triggeredByFilter){
+	var findJobsRequest = getFindJobsRequest();	
+	findJobsRequest.isAppendingJobs = false;
+	executeAjaxCall_getFilteredJobs(findJobsRequest, true);
+}
 function clearFilterValue($e){
-	var filterWrapperId = $e.attr("data-filter-wrapper-id");
-	
-	$("#" + filterWrapperId).find(".calendar td.selected").each(function() {
+	var $filter = $e.closest(".filter")
+	$filter.removeClass("applied")
+	$filter.find(".calendar td.selected").each(function() {
 		$(this).removeClass("selected");
 	})
-	$("#" + filterWrapperId).find("select option:selected").each(function() {
-		$(this).prop("selected", false);
-	})
-	$("#" + filterWrapperId).find("input").each(function() {
+	$filter.find("select option").eq(0).prop("selected", true)
+	$filter.find("input").each(function() {
 		$(this).val("");
 	})
+	getJobs();
 }
 function getAlreadyLoadedJobIds(){
 	var jobIds = [];
@@ -175,12 +203,12 @@ function executeAjaxCall_getFilteredJobs(findJobsRequest, doSetMap){
 		broswerIsWaiting(false);
 		var $e = $("#get-jobs-results");	
 		$("#get-jobs-results-cont").show();
+		$("#other-filters").show();
 //		$("#wrapper").removeClass("find-jobs-on-load");
 		if(isAppendingJobs){
 			if(html.indexOf("RETURN_NO_MORE_JOBS") != -1){
 				$e.addClass("no-more-jobs");
-				doSetMap = false;
-				
+				doSetMap = false;				
 			}
 			else{
 				$("#find-jobs-response").append(html);

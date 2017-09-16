@@ -34,7 +34,11 @@
 	padding:3px 9px;
 /* 	cursor: pointer; */
 }
-
+.calendar-container.no-pad,
+.calendar-container.no-pad .calendar,
+.calendar-container.no-pad .ui-datepicker-inline{
+	padding: 0px;
+}
 
 .calendar.style-unselectable-days .ui-datepicker-unselectable,
 .calendar.style-unselectable-days .ui-datepicker-other-month{
@@ -103,7 +107,20 @@ td.active111 a{
     font-weight: bold;
     font-size: 16px;
 }
-
+.ui-datepicker-next span,
+.ui-datepicker-prev span{
+	display: none
+}
+.ui-datepicker-next::after{
+	content: ">>";
+    font-weight: bold;
+    color: #163b3d;	
+}
+.ui-datepicker-prev::after{
+	content: "<<";
+    font-weight: bold;
+    color: #163b3d;	
+}
 .calendar-container .ui-datepicker-multi{
 	width:100% !important;
 }
@@ -145,4 +162,5 @@ td.active111 a{
     border-radius: 86px;
     color: white !important;
     display: inline-block;
+    margin-top: -3px;    
 }

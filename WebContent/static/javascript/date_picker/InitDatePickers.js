@@ -10,10 +10,14 @@ function initCalendar_selectSingleDate($calendar){
 		onSelect: function(dateText, inst){			
 			var date = dateify(dateText);
 			if(selectedDate != undefined){
+				// if user is deselecting the date
 				if(date.getTime() == selectedDate.getTime()){
 					selectedDate = undefined;
 				}else selectedDate = date;
 			}else selectedDate = date;
+			
+
+				
 			
 		},
 		beforeShowDay: function(date){			
@@ -21,6 +25,18 @@ function initCalendar_selectSingleDate($calendar){
 				if(date.getTime() == selectedDate.getTime()) return [true, "selected"];	
 				else return [true, ""];				
 			}else return [true, ""];						
+		},
+		afterShow: function(){
+			// find jobs calendar
+			if($calendar.hasClass("find-jobs-filter-calendar")){				
+				if(selectedDate != undefined){
+					var value = selectedDate
+					setAppliedFilterValue($calendar, value)
+					getJobsAfterApplyingFilter($calendar, value)
+				}else{
+					clearFilterValue($calendar)
+				}
+			}			
 		}
 	})	
 }

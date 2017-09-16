@@ -9,8 +9,8 @@
 <div class="page-cont">
 	<div id="header">
 		<div id="location-filter">
-			<input id="miles" type="text" placeholder="number"
-				value="${!empty sessionScope.user.maxWorkRadius ? sessionScope.user.maxWorkRadius : ''}"/>
+			<input id="miles" type="text" placeholder="number of"
+				value="${!empty sessionScope.user.maxWorkRadius && sessionScope.user.maxWorkRadius > 0 ? sessionScope.user.maxWorkRadius : ''}"/>
 			<span>miles from</span>
 			<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '' }"/>
 			<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
@@ -21,21 +21,20 @@
 	 	${not empty response ? 'find-jobs-on-load' : '' }">
 		<div id="other-filters">
 <!-- 			<p class="filter-sort-jobs-header">Filters</p> -->
-			<div class="filter">						
+			<div class="filter hide-on-load">						
 				<div class="filter-name-container">
 					<div data-toggle-id="wstart-date-filter">
-						<p class="filter-name">Employer Rating<span class="glyphicon glyphicon-menu-right"></span></p>
+						<p class="filter-name">Employer Rating</p>
 					</div>
 				</div>
 			</div>
 			<div class="filter">						
-				<div class="filter-name-container">
-					<div data-toggle-id="wstart-date-filter">
-						<p class="filter-name">Start Date<span class="glyphicon glyphicon-menu-right"></span></p>
-<!-- 						<p class="applied-filter"></p> -->
-					</div>
-					<div id="start-date-filter" class="dropdown-style">
-						<p class="apply-filter">Apply</p>
+				<div class="filter-name-container">					
+					<p class="filter-name" data-toggle-id="start-date-filter"
+						data-toggle-speed="1">Start Date</p>
+					<span class="clear glyphicon glyphicon-remove"></span>
+				</div>
+					<div id="start-date-filter" class="apply-filter-container">
 						<div class="radio-container">
 							<label><input data-parameter-name="beforeStartDate" data-parameter-value="1"
 								 data-filter-text="Start Before" type="radio"
@@ -44,80 +43,79 @@
 								 data-filter-text="Start After" type="radio"
 								 name="start-date" checked/>After</label>
 						</div>
-						<div class="calendar-container">
-							<div id="start-date-cal" data-parameter-name="startDate" class="calendar v2"></div>
+						<div class="calendar-container no-pad">
+							<div id="start-date-cal" data-parameter-name="startDate"
+								 class="calendar v2 find-jobs-filter-calendar"></div>
 						</div>	
 											
 					</div>
+				
+			</div>
+			<div class="filter">
+				<div class="filter-name-container">
+					<p class="filter-name" data-toggle-id="end-date-filter"
+						data-toggle-speed="1">End Date</p>
+					<span class="clear glyphicon glyphicon-remove"></span>						
+				</div>
+				<div id="end-date-filter" class="apply-filter-container">	
+					<div class="radio-container">
+						<label><input data-parameter-name="beforeEndDate" data-parameter-value="1"
+							 data-filter-text="End before" type="radio" name="end-date"
+							 checked/>Before</label>
+						<label><input data-parameter-name="beforeEndDate" data-parameter-value="0"
+							 data-filter-text="End after" type="radio" name="end-date"
+							 />After</label>
+					</div>		
+					<div class="calendar-container no-pad">
+						<div id="end-date-cal" data-parameter-name="endDate"
+							class="calendar v2 find-jobs-filter-calendar"></div>
+					</div>	
 				</div>
 			</div>
 			<div class="filter">
 				<div class="filter-name-container">
-					<div data-toggle-id="wend-date-filter">
-						<span class="glyphicon glyphicon-menu-right"></span><p class="filter-name">End Date</p>
-					</div>
-					<div id="end-date-filter" class="dropdown-style">
-						<p class="apply-filter">Apply</p>		
-						<div class="radio-container">
-							<label><input data-parameter-name="beforeEndDate" data-parameter-value="1"
-								 data-filter-text="End before" type="radio" name="end-date"
-								 checked/>Before</label>
-							<label><input data-parameter-name="beforeEndDate" data-parameter-value="0"
-								 data-filter-text="End after" type="radio" name="end-date"
-								 />After</label>
-						</div>		
-						<div class="calendar-container">
-							<div id="end-date-cal" data-parameter-name="endDate" class="calendar v2"></div>
-						</div>	
-					</div>
+					<p class="filter-name" data-toggle-id="start-time-filter"
+						data-toggle-speed="1">Start Time</p>
+					<span class="clear glyphicon glyphicon-remove"></span>
 				</div>
-			</div>
-			<div class="filter">
-				<div class="filter-name-container">
-					<div data-toggle-id="wstart-time-filter">
-						<p class="filter-name">Start Time<span class="glyphicon glyphicon-menu-right"></span></p>
+				<div id="start-time-filter" class="apply-filter-container">		
+					<div class="radio-container">
+						<label><input data-parameter-name="beforeStartTime" data-parameter-value="1"
+							 data-filter-text="Start before" type="radio" name="start-time"
+							 />Before</label>
+						<label><input data-parameter-name="beforeStartTime" data-parameter-value="0"
+							 data-filter-text="Start before" type="radio" name="start-time"
+							 checked/>After</label>
 					</div>
-					<div id="start-time-filter" class="dropdown-style">
-						<p class="apply-filter">Apply</p>		
-						<div class="radio-container">
-							<label><input data-parameter-name="beforeStartTime" data-parameter-value="1"
-								 data-filter-text="Start before" type="radio" name="start-time"
-								 />Before</label>
-							<label><input data-parameter-name="beforeStartTime" data-parameter-value="0"
-								 data-filter-text="Start before" type="radio" name="start-time"
-								 checked/>After</label>
-						</div>
-						<select id="start-time-select" data-parameter-name="startTime" class="time"></select>
-					</div>
+					<select id="start-time-select" data-parameter-name="startTime" class="time"></select>
 				</div>
 			</div>
 			
 			<div class="filter">
 				<div class="filter-name-container">
-					<div data-toggle-id="wend-time-filter">
-						<p class="filter-name">End Time<span class="glyphicon glyphicon-menu-right"></span></p>
-					</div>
-					<div id="end-time-filter" class="dropdown-style">
-						<p class="apply-filter">Apply</p>		
-						<div class="radio-container">
-							<label><input data-parameter-name="beforeEndTime" data-parameter-value="1"
-								 data-filter-text="End before" type="radio" name="end-time"
-								 checked/>Before</label>
-							<label><input data-parameter-name="beforeEndTime" data-parameter-value="0"
-								 data-filter-text="End before" type="radio" name="end-time"/>
-								 After</label>
-						</div>
-						<select id="end-time-select" data-parameter-name="endTime" class="time"></select>							
-					</div>					
+					<p class="filter-name" data-toggle-id="end-time-filter"
+						data-toggle-speed="1">End Time</p>
+					<span class="clear glyphicon glyphicon-remove"></span>
 				</div>
+				<div id="end-time-filter" class="apply-filter-container">		
+					<div class="radio-container">
+						<label><input data-parameter-name="beforeEndTime" data-parameter-value="1"
+							 data-filter-text="End before" type="radio" name="end-time"
+							 checked/>Before</label>
+						<label><input data-parameter-name="beforeEndTime" data-parameter-value="0"
+							 data-filter-text="End before" type="radio" name="end-time"/>After</label>
+					</div>
+					<select id="end-time-select" data-parameter-name="endTime" class="time"></select>							
+				</div>					
 			</div>
 			<div class="filter" data-filter-text-suffix="days">
 				<div class="filter-name-container">
-					<div  data-toggle-id="wduration-filter">
-						<p class="filter-name">Duration<span class="glyphicon glyphicon-menu-right"></span></p>
+					<div  >
+						<p class="filter-name" data-toggle-id="duration-filter"
+							data-toggle-speed="1">Duration</p>
+						<span class="clear glyphicon glyphicon-remove"></span>
 					</div>
-					<div id="duration-filter" class="dropdown-style">
-						<p class="apply-filter">Apply</p>		
+					<div id="duration-filter" class="apply-filter-container">	
 						<div class="radio-container">
 							<label><input data-parameter-name="isShorterThanDuration" data-parameter-value="1"
 								 data-filter-text="Shorter than" type="radio" name="duration"/>
@@ -126,7 +124,7 @@
 								 data-filter-text="Longer than" type="radio" name="duration" checked/>
 								 Longer than</label>
 						</div>
-						<input data-parameter-name="duration" type="text" />
+						<input data-parameter-name="duration" type="text" placeholder="days"/>
 					</div>
 				</div>
 			</div>
@@ -136,7 +134,7 @@
 					<div  data-toggle-id="wwork-days-filter">
 						<p class="filter-name">Work Days<span class="glyphicon glyphicon-menu-right"></span></p>
 					</div>
-					<div id="work-days-filter" class="dropdown-style">
+					<div id="work-days-filter" class="apply-filter-container">
 						<p class="apply-filter">Apply</p>		
 						<div class="calendar-container">
 							<div class="calendar v2"></div>
