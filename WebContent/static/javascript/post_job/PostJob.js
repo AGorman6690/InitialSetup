@@ -6,6 +6,7 @@ var workDayDtos = [];
 
 $(document).ready(function(){
 	
+	
 	$calendar_workDays = $("#workDaysCalendar_postJob");
 	$calendar_times= $("#select-times-cal");
 	

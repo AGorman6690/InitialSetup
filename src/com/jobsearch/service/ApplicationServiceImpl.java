@@ -635,6 +635,9 @@ public class ApplicationServiceImpl {
 		if (request.getShowAcceptedProposals() && application.getIsAccepted() == 1){
 			includeApplication = true;		
 		}		
+		if(request.getShowProposalsWaitingOnYou_new() && currentProposal.getIsNew() == 1){
+			includeApplication = true;
+		}
 		return includeApplication;
 	}
 }

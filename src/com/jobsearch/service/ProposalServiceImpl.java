@@ -202,8 +202,7 @@ public class ProposalServiceImpl{
 							request.getProposal().getApplicationId());
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-		
-		
+				
 		boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal());
 
 		if(proposalBeingRespondedTo.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
@@ -218,7 +217,9 @@ public class ProposalServiceImpl{
 					counterProposal_byEmployee(proposalBeingRespondedTo, request.getProposal(),
 							 sessionUser);
 				}				
-			}
+			}			
+			applicationService.inspectNewness(applicationService.getApplication(proposalBeingRespondedTo.getApplicationId()));
+			inspectNewness(proposalBeingRespondedTo, sessionUser);
 		}
 	}
 	

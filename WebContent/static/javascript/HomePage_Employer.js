@@ -8,6 +8,14 @@ $(document).ready(function() {
 		showSortWrapper(true);		
 	})	
 	
+	$(".proposal-detail .new").click(function() {
+		var $proposalDetails = $(this).closest(".proposal-details");
+		var jobId = $proposalDetails.attr("data-job-id");
+		var applicationProgressRequest = getApplicationProgressRequest_newProposals();
+		executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicationProgressRequest);	
+		showSortWrapper(true);		
+	})	
+	
 	$("#surpress-certain-details").click(function() {
 		if($(this).is(":checked")) $("#job-details").addClass("surpress");
 		else $("#job-details").removeClass("surpress");
@@ -26,9 +34,18 @@ function getApplicationProgressRequest($proposalDetails){
 	applicationProgressRequest.showProposalsWaitingOnOther = $proposalDetails.find(".waiting-on-other").prop("checked");
 	applicationProgressRequest.showExpiredProposals = $proposalDetails.find(".expired").prop("checked");
 	applicationProgressRequest.showAcceptedProposals = $proposalDetails.find(".accepted").prop("checked");
+	applicationProgressRequest.showProposalsWaitingOnYou_new = false;
 	return applicationProgressRequest;
 }
-
+function getApplicationProgressRequest_newProposals(){
+	var applicationProgressRequest = {};
+	applicationProgressRequest.showProposalsWaitingOnYou = false
+	applicationProgressRequest.showProposalsWaitingOnOther = false
+	applicationProgressRequest.showExpiredProposals = false
+	applicationProgressRequest.showAcceptedProposals = false
+	applicationProgressRequest.showProposalsWaitingOnYou_new = true;
+	return applicationProgressRequest;
+}
 function executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicationProgressRequest) {
 	$.ajax({
 		type: "POST",

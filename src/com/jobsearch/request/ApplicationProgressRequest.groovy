@@ -5,4 +5,5 @@ public class ApplicationProgressRequest {
 	boolean showProposalsWaitingOnOther
 	boolean showExpiredProposals
 	boolean showAcceptedProposals
+	boolean showProposalsWaitingOnYou_new
 }

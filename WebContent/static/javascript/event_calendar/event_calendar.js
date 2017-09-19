@@ -181,8 +181,8 @@ function setEmploymentLines($calendar){
 				+ "data-job-id=" + job.jobId + ">";
 									
 			var additionMargin_endPoint = 30;
-			var tdWidth = 114.444;
-			
+			var tdWidth = $td.outerWidth();
+			console.log(tdWidth)
 			var employmentLineWidth = tdWidth * (line_element.rightEndPoint.day - line_element.leftEndPoint.day + 1)
 			
 			var leftMargin = tdWidth * (6 - line_element.leftEndPoint.day + 1);

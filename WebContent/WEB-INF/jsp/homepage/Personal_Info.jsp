@@ -94,7 +94,7 @@
 						<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time. Obtain a high rating and let that be your bargaining chip!</p>
 					</c:when>
 					<c:otherwise>
-						<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time</p>
+						<p class="no-data">You have not completed enough jobs in order to calculate a rating at this time.</p>
 					</c:otherwise>					
 				</c:choose>	
 			</c:when>			

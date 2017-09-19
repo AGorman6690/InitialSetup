@@ -29,6 +29,9 @@
     font-size: 18px;
     margin-left: 20px;
 }
+#work-days-filter-value .v2 .ui-datepicker-inline{
+	width: auto;
+}
 #distance-filter span{
 /*     color: #fff; */
     font-size: 19px;
@@ -36,15 +39,20 @@
 .filter .glyphicon{
 	float: right;
 	font-size: 15px;
+	display: none;
 }
 #filters{
-	width: 240px;
-	padding: 25px;
-	vertical-align: top;
+    width: 272px;
+    /* padding: 25px; */
+    vertical-align: top;
+    border-right: 1px solid #cacaca;
+    margin-top: 20px;
 }
 .calendar.v2 td{
-	height: 42px;
-	width: 32px
+height: 33px;
+    width: 25px;
+    font-size: 15px;
+}
 }
 .calendar.v2 .ui-datepicker-inline{
 	width: 230px;

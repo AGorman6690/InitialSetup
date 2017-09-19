@@ -75,8 +75,11 @@ function initCalendar_new($calendar, workDayDtos){
 				
 				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions hide-time hide-select-work-day";
 				else{
-					if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
+					if(workDayDtos.length == 1) classNameToAdd += " is-proposed";
+					else if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
 				}
+				
+				
 				return [true, classNameToAdd];
 			}else return [true, ""];
 			
@@ -275,10 +278,6 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 		numberOfMonths: numberOfMonths, 
 		onSelect: function(dateText, inst) {	   
 			
-			
-
-			
-			
 			setValidCss($calendar.find(".invalid"));
 			
 			// This is for post job re-validation
@@ -297,7 +296,16 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 			// then remove hover mode.
 			if(workDayDtos.length == 1 &&
 					(dateify(dateText).getTime() == workDayDtos[0].date.getTime())){
-				$calendar.removeClass("show-hover-range");
+				
+				// if hovering, stop hovering
+				if($calendar.hasClass("show-hover-range") == 1){
+					$calendar.removeClass("show-hover-range");	
+				}
+				//else remove the user is attempting to remove the 1 day they clicked
+				else{
+					workDayDtos = [];
+				}
+				
 			}
 			else{
 				workDayDtos = onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos);

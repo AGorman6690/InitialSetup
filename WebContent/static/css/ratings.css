@@ -19,7 +19,7 @@
 	padding-top:12px !important;
 	width:125px;
 }
-
+F
 .rating-container .caption span{
 	color: #163B3D;
 	background-color:#ffffff !important;
@@ -35,10 +35,7 @@
 	text-shadow: none !important;
 	color: #92854f;
 }
-.ratings-mod-container .mod-content{
-    width: 800px !important;
-    margin-left: -400px !important;
-}
+
 .rated{
 	color: #337ab7 !important;
 }
@@ -184,12 +181,6 @@ table#ratings{
 }
 
 
-.ratings-mod-container .mod-content{
-    width: 700px;
-    margin-left: -350px;
-    top: 100px;
-/*     border: 5px solid #163b3d; */
-}
 body{
 /* 	min-height: 1100px; */
 }
@@ -198,22 +189,6 @@ body{
 }
 .rate-employer .user-cont h2{
 	width: auto;
-}
-.ratings-mod-container #user-stats{
-    margin: auto;
-    width: 687px;
-}
-.ratings-mod-container #user-stats label{
-	display: block;
-	font-size: 20px;
-	color: #197994;
-	margin: 20px 0px;
-    font-weight: bold;
-    text-align: left;
-}
-#user-ratings h3{
-	font-weight: bold;
-	text-align: center;
 }
 .personal-info-section p{
 	margin-left: 20px;

@@ -239,6 +239,9 @@ p[data-toggle-id]{
 .clear{
 	display: none;
 }
+.show-job-info-mod:hover{
+	background: #e4e4e4;
+}
 .ui-datepicker-next,
 .ui-datepicker-prev{
 	font-size: 14px;

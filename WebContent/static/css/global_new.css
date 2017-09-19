@@ -1,3 +1,26 @@
+.show-job-info-mod:hover{
+	cursor: pointer;
+}
+.red{
+	font-weight: bold;
+	color: red;
+}
+.h{
+    width: auto;
+    display: inline-block;
+    padding: 10px 15px;
+    color: #197994;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 25px;
+    border-top: 2px solid #163b3d;
+    border-bottom: 2px solid #163b3d;
+    
+}
+.blue{
+	font-weight: bold;
+	color: #197994;
+}
 .pointer:hover{
 	cursor: pointer;
 }

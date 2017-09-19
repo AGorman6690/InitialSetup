@@ -6,27 +6,32 @@
 }
 .instructions{
 	color: red;
-	font-size: 19px;
 	font-weight: bold;
-	text-align: center;
 }
 .job-info h2{
 	font-size: 27px;
     font-weight: bold;
     color: #163b3d;
-    margin-bottom: 20px
 }
 .job-info p.employer{
-    font-size: 21px;
+    font-size: 19px;
     font-weight: bold;
     color: #197994;
 }
-#job-info-mod .mod-content{
+.job-info p.employer:hover{
+	cursor: pointer;
+}
+#job-info-mod > .mod-content{
     width: 1200px;
     margin-left: -600px;
     top: 2%;
     height: 96%;
     overflow: auto;
+}
+#job-info-mod > .mod-content,
+.job-info.fixed #apply-for-job-cont{
+    width: 1200px;
+    top: 2%;	
 }
 #select-all-work-days{
     background: #627677;
@@ -36,9 +41,9 @@
 #questions,
 #job-description,
 #map-container{
-	text-align: left;
-	width: 500px;
-	margin: auto;
+/* 	text-align: left; */
+/* 	width: 500px; */
+/* 	margin: auto; */
 }
 /* #work-days-label, */
 /* #location-label{ */
@@ -52,6 +57,10 @@
 	font-weight: bold;
 	color: #197994;
 	margin-top: 55px;
+}
+.job-info #work-days-calendar-container{
+    text-align: center;
+    margin-top: 30px;
 }
 .job-info .sub > h3{
 	font-size: 20px;
@@ -84,9 +93,9 @@
 /* 	font-weight: bold; */
 }
 #work-day-message{
-	font-weight: bold;
-	font-size: 18px;
-    margin: 20px 0px;
+/* 	font-weight: bold; */
+/* 	font-size: 18px; */
+/*     margin: 20px 0px; */
 }
 .break{
 	width: 300px;
@@ -117,22 +126,21 @@
 	font-size: 20px;
 	width: 220px;
 	height: 50px;
+    background: #197994;
 }
 #skills h4{
 	font-size: 17px;
 	font-weight: bold;
 }
-.job-info.fixed .to-be-fixed-cont,
 .job-info.fixed #apply-for-job-cont,
 .job-info.fixed #error-messages{
     position: fixed;
     border-bottom: 1px solid #cacaca;
     margin: auto;
-    width: 100%;
+
 }
-job-info.fixed .to-be-fixed-cont,
 .job-info.fixed #apply-for-job-cont{
-    top: 0px;
+    margin-left: -16px;
     padding: 10px;
     background: rgba(82, 81, 81, 0.85);
 }
@@ -143,7 +151,6 @@ job-info.fixed .to-be-fixed-cont,
 .job-info.fixed #error-messages p:first-child{
 	padding-top: 10px;
 }
-.to-be-fixed-cont,
 #apply-for-job-cont{
 	position: absolute;
 	width: 100%;
@@ -180,9 +187,34 @@ job-info.fixed .to-be-fixed-cont,
 	padding-left: 10px;
 }
 
-
+.sub > label{
+	width: 250px;
+	vertical-align: top;
+	font-weight: bold;
+	color: #163b3d;
+	font-size: 18px;
+}
+.sub{
+	width: 900px;
+	margin: auto;
+	padding-top: 30px;
+}
+.job-info-content{
+	display: inline-block;
+}
 
 #job-info-map{
 	width: 500px;
 	height: 500px;
+}
+#application-success-container{
+	text-align: center;
+	display: none;
+}
+#application-success-container a{
+	background: #197994;
+	color: #fff;
+	width: 300px;
+	display: block;
+	margin: 10px auto;
 }

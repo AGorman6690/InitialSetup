@@ -11,6 +11,10 @@ $(document).ready(function() {
 		$("body").on("click", "#apply-for-job", function(){
 			apply();
 		})
+		
+		$("body").on("click", "#continue-searching", function() {
+			$("#job-info-mod .mod-header").click();
+		})
 				
 	})
 
@@ -146,7 +150,7 @@ $(document).ready(function() {
 		return answers;		
 	}	
 	function apply(){
-		if(isInputValid()){
+//		if(isInputValid()){
 			$.ajax({
 				type : "POST",
 				url : '/JobSearch/apply',
@@ -154,7 +158,8 @@ $(document).ready(function() {
 				contentType : "application/json",
 				data : JSON.stringify(getApplyForJobRequest()),
 			}).done(function() {
-				$("#job-info-mod").hide();
+				$("#job-info-mod .wrapper").hide();
+				$("#application-success-container").slideDown(500);
 			});
-		}
+//		}
 	}

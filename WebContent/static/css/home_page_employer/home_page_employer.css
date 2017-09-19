@@ -15,6 +15,15 @@
 .proposal-detail label{
 	width: 340px;
 }
+.proposal-detail.new-wrapper label{
+	width: 300px;
+}
+.proposal-detail.new-wrapper label span.total{
+	color: red;
+}
+.proposal-detail.new-wrapper{
+	padding-left: 40px;
+}
 .proposal-detail label span.total{
 	float: right;
 	font-weight: bold;

@@ -116,9 +116,10 @@ button{
     margin-bottom: 15px;
 }
 #save-question-edits{
-	color: #163b3d;
-	font-weight: bold;
-	text-decoration: underline;
+    color: #197994;
+    font-weight: bold;
+    /* text-decoration: underline; */
+    font-size: 19px;
 }
 #supreme-times-wrapper.setting-all-times #appendges select{
 	background: #cacaca;

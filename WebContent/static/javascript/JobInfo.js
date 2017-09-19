@@ -19,8 +19,7 @@ $(document).ready(function() {
 		// Refactor: use the generic "show ratings mod" in Ratings.js
 		// ***********************************************
 		// ***********************************************
-		
-		
+				
 		
 		var $e = $(this);
 		var $modContainer = $e.closest(".ratings-mod-container");
@@ -38,12 +37,13 @@ $(document).ready(function() {
 // **********************
 // 			http://stackoverflow.com/questions/6582834/use-a-url-to-link-to-a-google-map-with-a-marker-on-it
 // **********************
-		var lat = $("#map").attr("data-lat");
-		var lng = $("#map").attr("data-lng");
+		var lat = $("#job-info-map").attr("data-lat");
+		var lng = $("#job-info-map").attr("data-lng");
 		var win = window.open("https://www.google.com/maps/place/" + lat + "+" + lng + "/@" + lat + "," + lng + ",15z", "_blank");
 		win.focus();
 	})
 
+	
 	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
 	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);	
 }) 
@@ -63,6 +63,7 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 		broswerIsWaiting(false);
 		showJobInfoMod(html);		
 		executeCallBack(callback);
+		setScrollAction();
 	})
 	
 }
@@ -84,7 +85,7 @@ function showJobInfoMod(html){
 	renderStars($jobInfoMod);
 }
 function setScrollAction() {
-	var $e = $(".to-be-fixed").eq(0);
+	var $e = $("#apply-for-job-cont").eq(0);
 	if($e.length){
 		var $applyCont = $(".to-be-fixed-cont").eq(0);
 		var $jobInfo = $(".job-info");

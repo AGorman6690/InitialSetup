@@ -15,7 +15,7 @@
 		</div>
 	</c:forEach>				
 </div>
-<div id="event-calendar-mod" class="mod simple-header container calendar-container employment-line hide-prev-next">
+<div id="event-calendar-mod" class="mod simple-header container calendar-container employment-line">
 	<div class="mod-content">
 		<div class="mod-header">
 		</div>

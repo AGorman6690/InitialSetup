@@ -44,7 +44,7 @@ public class ApplicationController {
 
 		if (SessionContext.isLoggedIn(session)) {
 			applicationService.applyForJob(request, session);
-			return "redirect:/user";
+			return "";
 		} else {
 			return "NotLoggedIn";
 		}

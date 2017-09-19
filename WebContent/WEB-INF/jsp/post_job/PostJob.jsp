@@ -47,7 +47,8 @@
 			<div id="show-work-days" data-scroll-to="dates-wrapper" class="incomplete"><span>Work Days</span></div>
 			<div id="show-location" data-scroll-to="location-wrapper" class="incomplete"><span>Location</span></div>
 			<div id="show-questions" data-scroll-to="questions-wrapper" class="optional incomplete"><span>Questions</span></div>
-			<div id="show-skills" data-scroll-to="skills-wrapper" class="optional incomplete"><span>Skills</span></div>			
+			<div id="show-skills" data-scroll-to="skills-wrapper" class="optional incomplete"><span>Skills</span></div>
+			<div id="show-submit" data-scroll-to="submit-wrapper" class="incomplete blue"><span>Review then submit</span></div>			
 		</div>
 
 		<div id="post-job-info" class=" ${!empty postedJobs ? 'hide-on-load-d' : '' }">
@@ -242,7 +243,7 @@
 					</div>
 				</div>
 				
-				<div class="section center">
+				<div id="submit-wrapper" class="section center">
 					<p id="proceed-to-preview-job-posting" class="sqr-btn pointer">Review then submit</p>
 				</div>	
 				

@@ -362,8 +362,8 @@ public class JobServiceImpl {
 					applicationProgressStatus.setMessages(applicationService.getMessages(
 							sessionUser, application, previousProposal, currentProposal));
 	
-					applicationService.inspectNewness(application);
-					proposalService.inspectNewness(currentProposal, sessionUser);
+//					applicationService.inspectNewness(application);
+//					proposalService.inspectNewness(currentProposal, sessionUser);
 	
 					response.getApplicationProgressStatuses().add(applicationProgressStatus);
 				}

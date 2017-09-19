@@ -1,0 +1,37 @@
+#user-ratings{
+	text-align: left;
+}
+#user-ratings .personal-info{
+	display: inline-block;
+    width: 500px;	
+}
+#user-ratings .personal-info-section > label{
+	width: 150px;
+	font-size: 18px;
+	font-weight: bold;
+	vertical-align: top;
+	margin-bottom: 40px;
+}
+.ratings-mod-container .mod-content{
+    width: 800px !important;
+    margin-left: -400px !important;
+    top: 10%;
+}
+#user-ratings .personal-info-section{
+	margin-bottom: 25px;
+}
+#user-ratings h3{
+    width: auto;
+    display: inline-block;
+    padding: 10px 15px;
+    color: #197994;
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 25px;
+    border-top: 2px solid #163b3d;
+    border-bottom: 2px solid #163b3d;
+    
+}
+#user-ratings .header{
+	text-align: center;
+}

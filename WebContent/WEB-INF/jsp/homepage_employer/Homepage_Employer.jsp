@@ -53,18 +53,27 @@
 									<span class="total proposals-waiting-on-you
 										 ${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 										${employerHomepageJob.countWageProposals_received }</span>
-									<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">							
-										<span class="new new-proposals-waiting-on-you">${employerHomepageJob.countWageProposals_received_new } new</span>
-									</c:if>
 								</label>
+								<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">
+									<span class="new red pointer">${employerHomepageJob.countWageProposals_received_new } new</span>							
+								</c:if>									
 							</div>
+<%-- 							<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }"> --%>
+<!-- 								<div class="proposal-detail new-wrapper">								 -->
+<%-- 									<input type="checkbox" id="new-${employerHomepageJob.job.id }" class=""> --%>
+<%-- 									<label for="new-${employerHomepageJob.job.id }"> --%>
+<!-- 										<span>New</span> -->
+<%-- 										<span class="total total-applicants">${employerHomepageJob.countWageProposals_received_new } new</span> --%>
+<!-- 									</label> -->
+<!-- 								</div>								 -->
+<%-- 							</c:if>			 --%>
 							<div class="proposal-detail">								
 								<input type="checkbox" id="waiting-on-applicant-${employerHomepageJob.job.id }" class="waiting-on-other">
 								<label for="waiting-on-applicant-${employerHomepageJob.job.id }">
 									<span>Proposals waiting on applicant</span>
 									<span class="total total-applicants">${employerHomepageJob.countWageProposals_sent }</span>
 								</label>
-							</div>
+							</div>											
 							<div class="proposal-detail">
 								<input type="checkbox" id="expired-${employerHomepageJob.job.id }" class="expired">
 								<label for="expired-${employerHomepageJob.job.id }">
