@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -170,7 +170,7 @@ public class JobRepository extends BaseRepository {
 	}
 
 
-	
+
 
 	public void addJob(AddJobRequest request, JobSearchUser user) {
 
@@ -240,7 +240,7 @@ public class JobRepository extends BaseRepository {
 		// https://developers.google.com/maps/articles/phpsqlsearch_v3?csw=1#finding-locations-with-mysql
 		String sql = "SELECT *, "
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
-				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" 
+				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
 				+ " FROM job j"
 				+ " WHERE j.Status <> ?"
 				+ " AND j.Flag_IsNotAcceptingApplications = 0";
@@ -272,10 +272,10 @@ public class JobRepository extends BaseRepository {
 
 			if (request.getIsBeforeStartDate()){
 				sql_subQuery += " <= ?";
-			}				
+			}
 			else{
 				sql_subQuery += " >= ?";
-			}			
+			}
 			Integer dateId = jobService.getDateId(request.getStringStartDate());
 			argsList.add(dateId);
 			sql += sql_subQuery;
@@ -381,7 +381,7 @@ public class JobRepository extends BaseRepository {
 			i += 1;
 		}
 
-	
+
 		sql += " HAVING distance < ?";
 		argsList.add(request.getRadius());
 
@@ -389,10 +389,10 @@ public class JobRepository extends BaseRepository {
 			for (Integer id : request.getAlreadyLoadedJobIds()) {
 				sql += " AND j.jobId <> ?";
 				argsList.add(id);
-			}	
+			}
 		}
-		
-		
+
+
 
 		// Order by
 		sql += " ORDER BY ";
@@ -597,7 +597,7 @@ public class JobRepository extends BaseRepository {
 				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
 				+ " JOIN date d ON wd.DateId = d.Id"
 				+ " WHERE e.UserId = ?"
-				+ " AND e.WasTerminated = 0" 
+				+ " AND e.WasTerminated = 0"
 				+ " AND wp.IsCurrentProposal = 1";
 
 		List<Object> args = new ArrayList<Object>();
@@ -650,10 +650,10 @@ public class JobRepository extends BaseRepository {
 
 
 //	public void replaceEmployee(int jobId, int userId) {
-//		
+//
 //		String sql = "UPDATE employment SET WasTerminated = 1 WHERE JobId = ? AND UserId = ?";
 //		jdbcTemplate.update(sql, new Object[]{ jobId, userId });
-//		
+//
 //	}
 
 
@@ -671,7 +671,7 @@ public class JobRepository extends BaseRepository {
 
 	public void updateEmploymentFlag(int jobId, int userId, String flag, int value) {
 		String sql = "UPDATE employment SET " + flag + " = ? WHERE jobId = ? AND UserId = ?";
-		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });		
+		jdbcTemplate.update(sql, new Object[]{ value, jobId, userId });
 	}
 
 	public List<Job> getJobs_terminatedFrom_byUser(int userId) {
@@ -707,7 +707,7 @@ public class JobRepository extends BaseRepository {
 	}
 
 	public List<Job> getJobs_needRating_byEmployer(int userId) {
-		
+
 		String sql = "SELECT * FROM job j"
 				+ " WHERE j.JobId IN ("
 				+ " SELECT DISTINCT j.JobId FROM job j"
@@ -716,7 +716,7 @@ public class JobRepository extends BaseRepository {
 				+ "	AND j.UserId = ?"
 				+ " )"
 				+ " AND j.JobId NOT IN ("
-				
+
 				// Jobs that allow partial availability
 				+ " SELECT DISTINCT(j.JobId) FROM job j"
 				+ " JOIN application a ON j.JobId = a.JobId"
@@ -729,20 +729,20 @@ public class JobRepository extends BaseRepository {
 //				+ " AND j.IsPartialAvailabilityAllowed = 1"
 				+ " AND j.UserId = ?"
 				+ " AND e.WasTerminated = 0"
-				
+
 //				+ " UNION"
-//				
+//
 //				// Jobs that DO NOT allow partial availability
 //				+ " SELECT DISTINCT(j.JobId) FROM job j"
 //				+ " JOIN application a ON j.JobId = a.JobId"
 //				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
-//				+ " JOIN work_day wd ON j.JobId = wd.JobId"				
+//				+ " JOIN work_day wd ON j.JobId = wd.JobId"
 //				+ " WHERE wd.IsComplete = 0"
 //				+ " AND j.IsPartialAvailabilityAllowed = 0"
 //				+ " AND j.UserId = ?"
-//				+ " AND e.WasTerminated = 0"				
+//				+ " AND e.WasTerminated = 0"
 				+ " )";
-		
+
 		return JobRowMapper(sql, new Object[]{ userId, userId });
 	}
 
@@ -758,7 +758,7 @@ public class JobRepository extends BaseRepository {
 				+ "	AND d.Date = ?"
 				+ " AND wp.IsCurrentProposal = 1"
 				+ " AND wd.IsComplete = 0";
-		
+
 		return JobRowMapper(sql, new Object[]{ userId, dateString });
 	}
 
