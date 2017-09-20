@@ -55,7 +55,7 @@
 										${employerHomepageJob.countWageProposals_received }</span>
 								</label>
 								<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">
-									<span class="new red pointer">${employerHomepageJob.countWageProposals_received_new } new</span>							
+									<span class="new red pointer hide-on-load">${employerHomepageJob.countWageProposals_received_new } new</span>							
 								</c:if>									
 							</div>
 <%-- 							<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }"> --%>

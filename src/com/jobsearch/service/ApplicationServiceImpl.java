@@ -295,7 +295,6 @@ public class ApplicationServiceImpl {
 
 	public void makeInitialOfferByEmployer(MakeInitialOfferByEmployerRequest request, HttpSession session) {
 
-
 		if(verificationService.didSessionUserPostJob(session, request.getJobId()) &&
 				!verificationService.didUserApplyForJob(request.getJobId(), request.getProposeToUserId())){
 
@@ -322,9 +321,7 @@ public class ApplicationServiceImpl {
 			proposalService.updateProposalFlag(currentProposal, Proposal.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			// ******************************************************************
 		}
-
 	}
-
 
 	public void updateApplicationFlag(Application newApplication, String flag, int value) {
 		// Why do i have this??????
@@ -432,7 +429,7 @@ public class ApplicationServiceImpl {
 		
 		// Employer initiated contact
 		if(currentProposal.getFlag_employerInitiatedContact() == 1){
-			messages.add((isEmployee ? "The employer" : "You") + " made you an initial offer");
+			messages.add((isEmployee ? "The employer made you" : "You made") + " the initial offer");
 		}
 		
 		if(currentProposal.getFlag_aProposedWorkDayWasRemoved() == 1){

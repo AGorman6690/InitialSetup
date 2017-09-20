@@ -65,6 +65,7 @@
 
 	<body>
 		<div id="user-event-calendar"></div>
+		<div id="login-signup-mod-wrapper"></div>
 		
 		<c:set var="LaborVaultHost" scope="session" value="${url}"/>
 	

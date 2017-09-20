@@ -443,7 +443,7 @@ public class ProposalServiceImpl{
 			CurrentProposalResponse response = new CurrentProposalResponse();
 			response.setJob(job);
 			response.setCurrentProposal(proposal);
-//			response.setJobWorkDays(workDays);
+			response.setJobWorkDayCount(workDays.size());
 			response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 			response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
 			response.setTime_untilEmployerApprovalExpires(

@@ -44,6 +44,13 @@ $(document).ready(function(){
 //		}
 	})
 	
+	$("#post-job-info .section").mouseover(function() {
+		addHoverClassToSideBarSpan(this.id, true);
+	})
+	$("#post-job-info .section").mouseout(function() {
+		addHoverClassToSideBarSpan(this.id, false);
+	})
+	
 	
 	$("body").on("click", "#submit-job-post", function(){
 		executeAjaxCall_postJob(getAddJobRequest());
@@ -95,14 +102,14 @@ $(document).ready(function(){
 		}
 	})
 	
-	$("select#set-all-start-times").change(function() {
+	$("select#set-all-start-times").click(function() {
 		var startTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
 			this.workDay.stringStartTime = startTime;
 		})
 		renderWorkDayTimes();
 	})
-	$("select#set-all-end-times").change(function() {
+	$("select#set-all-end-times").click(function() {
 		var endTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
 			this.workDay.stringEndTime = endTime;
@@ -120,11 +127,20 @@ $(document).ready(function(){
 		showHoverDateRange($("#workDaysCalendar_postJob.show-hover-range"), hoverDate, firstDate);		
 	})	
 })
+function addHoverClassToSideBarSpan(id, request){
+	var $e = $("[data-scroll-to='" + id + "'] span").eq(0);
+	if(request){
+		$e.addClass("hover");
+	}else{
+		$e.removeClass("hover");
+	}
+}
 function resetCalendar(){
-	workDayDtos = [];	
-	$calendar_workDays.datepicker("refresh");
-	$calendar_workDays.removeClass("show-hover-range");
-	$("#dates-wrapper").removeClass("multiple-work-days");
+	workDayDtos = []
+	$calendar_workDays.datepicker("refresh")
+	$calendar_workDays.removeClass("show-hover-range")
+	$("#dates-wrapper").removeClass("multiple-work-days")
+	$("#set-all-times").prop("checked", false).change();
 }
 function resetTimesSection(){
 	$("#times-cont").hide();

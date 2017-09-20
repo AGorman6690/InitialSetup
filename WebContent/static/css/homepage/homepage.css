@@ -13,3 +13,13 @@ h1{
 .new{
 	margin-left: 8px;
 }
+.messages{
+    margin: 10px 0px;	
+    padding: 5px 20px;
+    background: #ececec;
+}
+.messages h6{
+    font-size: 15px;
+    font-weight: bold;
+    font-style: italic;	
+}

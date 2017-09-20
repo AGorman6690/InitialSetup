@@ -28,3 +28,5 @@
 	If the applicant accepts this offer, they will become an employee for this job.</p>	
 <p class="context-employer accepting-offer-context ">
 	The applicant must confirm your acceptance within the time period you specify.</p>	
+<p class="context-employee proposing-new-offer-context ">
+	You are about to send the employer a new proposal.</p>	

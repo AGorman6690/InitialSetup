@@ -40,7 +40,7 @@
 		<button id="find-employees" class="sqr-btn">Find Employees</button>
 	</div>
 </div>
-<div id="bottom-content">
+<div id="bottom-content" class="${empty response ? 'hide-on-load' : '' }">
 	<div id="filters">
 		<div class="filter">		
 			<p data-toggle-id="rating-filter-value" class="name">Rating<span class="glyphicon glyphicon-menu-down"></span></p>		

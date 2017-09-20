@@ -1,5 +1,5 @@
 .calendar.v2 .ui-datepicker-inline{
-	width: 100%;
+	width: auto;
 }
 .calendar.v2 td{
 	height: 35px;
@@ -248,7 +248,7 @@ p[data-toggle-id]{
 }
 #other-filters{
 /* 	padding: 10px 10px 10px 25px;; */
-	width: 285px;
+	width: 245px;
 	height: 100%;
 /* 	width: 100%; */
 	padding-left: 8px;

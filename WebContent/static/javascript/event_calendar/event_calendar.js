@@ -9,7 +9,7 @@ $(document).ready(function(){
 		})
 	})
 	
-		$("body").on("mouseout", ".job-line", function() {
+	$("body").on("mouseout", ".job-line", function() {
 		var jobId = $(this).attr("data-job-id");
 		$(".job-line[data-job-id=" + jobId + "]").each(function() {
 			$(this).removeClass("hover");

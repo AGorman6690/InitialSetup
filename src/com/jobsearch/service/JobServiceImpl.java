@@ -242,9 +242,9 @@ public class JobServiceImpl {
 
 		GetJobResponse response = new GetJobResponse();
 		response.setJob(job);
-		// response.setWorkDayDtos(getWorkDayDtos(jobId));
+//		 response.setWorkDayDtos(getWorkDayDtos(jobId));
 		response.setCountWorkDays(workDays.size());
-		response.setJson_workDayDtos(JSON.stringify(workDayService.getWorkDayDtos(jobId)));
+		
 		response.setIsPreviewingBeforeSubmittingJobPost(false);
 		response.setProfileInfoDto(userService.getProfileInfoDto(userService.getUser(job.getUserId())));
 		response.setContext(context);
@@ -252,6 +252,14 @@ public class JobServiceImpl {
 		response.setSkillsDesired(getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
 		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
+
+		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
+		if (context.matches("find")){
+			workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
+		}		
+		response.setJson_workDayDtos(JSON.stringify(workDayDtos));
+		
+		
 
 		// response.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
 		// jobId, sessionUser.getUserId()));
@@ -474,6 +482,17 @@ public class JobServiceImpl {
 		return repository.getConflictingEmployment_byUserAndWorkDay(jobId_reference, userId, workDayId);
 	}
 
+
+	public boolean doesUserHaveConflictingEmployment(int jobId_reference, int dateId, int userId ){
+
+		Job conflictingJob = getConflictingEmployment_byUserAndWorkDay(jobId_reference, userId, dateId);
+		if(conflictingJob != null){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	public boolean setModel_viewReplaceEmployees(Model model, HttpSession session, int jobId) {
 
 		boolean isValidRequest = true;

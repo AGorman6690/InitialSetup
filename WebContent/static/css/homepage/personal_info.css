@@ -42,6 +42,7 @@
 }
 #image img{
 	display: block;
+    width: 110px;
 }
 #edit-home-location label{
 	width: 90px;

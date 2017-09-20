@@ -21,7 +21,7 @@ public class CurrentProposalResponse {
 	String timeUntilStart
 	String time_untilEmployerApprovalExpires
 //	List<JobWorkDay> jobWorkDays
-	
+	int jobWorkDayCount;
 	Integer proposeToUserId
 	 
 	public static class JobWorkDay{

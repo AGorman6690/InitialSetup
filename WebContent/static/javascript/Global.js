@@ -123,6 +123,18 @@ $(document).ready(function(){
 	})
 	
 })
+function executeAjaxCall_getLoginSetupPage(c){
+	$.ajax({
+		type: "GET",
+		url: "/JobSearch/login-signup?c=" + c,
+		headers: getAjaxHeaders(),
+		dataType: "html"
+	}).done(function(html) {
+		broswerIsWaiting(false);
+		$("#user-event-calendar").html(html);
+		initCalendar_eventCalendar();
+	})
+}
 function executeCallBack(callback) {
 	if(callback && typeof callback == "function") {
 		callback();

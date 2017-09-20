@@ -10,10 +10,10 @@
 }
 #distance-filter input{
 	text-align: center;
-	font-size: 16px;
+	
 }
 #distance-filter-wrapper{
-	padding: 20px 0px;
+	padding: 12px 0px;
 /* 	background: #197994; */
     background: #f7f7f7;
     border-bottom: 1px solid#cacaca;
@@ -23,7 +23,7 @@
 	margin: auto;
 }
 #find-employees{
-    padding: 16px 29px;
+    padding: 15px 27px;
     background: #163b3d;
     color: #fff;
     font-size: 18px;
@@ -42,10 +42,10 @@
 	display: none;
 }
 #filters{
-    width: 272px;
+    width: 220px;
     /* padding: 25px; */
     vertical-align: top;
-    border-right: 1px solid #cacaca;
+/*     border-right: 1px solid #cacaca; */
     margin-top: 20px;
 }
 .calendar.v2 td{
@@ -82,7 +82,7 @@ height: 33px;
     color: #197994;
 }
 .v2 td.active111{
-	background: #197994;
+	background: #163b3d;
 }
 #filters, #results{
 	display: inline-block;

@@ -783,6 +783,7 @@ public class UserServiceImpl {
 			CurrentProposalResponse response = new CurrentProposalResponse();
 			response.setJob(job);
 			response.setProposeToUserId(userId_makeOfferTo);
+			response.setJobWorkDayCount(workDays.size());
 //			response.setCurrentProposal(proposal);
 //			response.setJobWorkDays(workDays);
 			response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());

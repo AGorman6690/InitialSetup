@@ -255,7 +255,7 @@ function executeAjaxCall_findEmployees(){
 		$e = $("#results");
 		$e.empty();
 		$e.append(html);
-
+		$("#bottom-content").slideDown();
 		renderStars($e);
 
 	})

@@ -36,7 +36,8 @@
 }
 .calendar-container.no-pad,
 .calendar-container.no-pad .calendar,
-.calendar-container.no-pad .ui-datepicker-inline{
+.calendar-container.no-pad .ui-datepicker-inline,
+.calendar-container.no-pad .ui-datepicker-group{
 	padding: 0px;
 }
 
@@ -47,7 +48,12 @@
 .calendar{
 	padding:10px;
 }
-
+.calendar-container.stack .ui-datepicker-group:not(.ui-datepicker-group-first){
+	margin-top: 30px;
+}
+.calendar-container.stack .ui-datepicker-group{
+	display: block;
+}
 .calendar-container.read-only td,
 .calendar-container.read-only a{
 	cursor:default !important;

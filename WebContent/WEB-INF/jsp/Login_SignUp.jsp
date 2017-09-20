@@ -1,9 +1,7 @@
 <%@ include file="./includes/Header.jsp"%>
 
 <link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/inputValidation.css" />	
-<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />	
-
-	
+<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />		
 <script src="<c:url value="/static/javascript/InputValidation.js" />"></script>			
 <script src="<c:url value="/static/javascript/Signup.js" />"></script>		
 	
@@ -26,9 +24,7 @@
 				</div>
 				<div class="item">
 					<label>Password</label>
-					<form:password class="" path="password" id="login-password"/>
-										
-						
+					<form:password class="" path="password" id="login-password"/>						
 					<div class="no-label">						
 						<a href="./user/password/reset">Forgot Password?</a>
 					</div>										
@@ -48,8 +44,7 @@
 </div>
 	
   
-<div id="signUpGroup" class="group-container">
- 
+<div id="signUpGroup" class="group-container"> 
 	<div id="signUpContainer" class="group ${requestedLogin == 1 ? 'do-hide' : '' }">	
 			<h3>Sign Up</h3>					
 			<div class="item" >

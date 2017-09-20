@@ -50,7 +50,8 @@
 					<button class="status-proposing">Proposing</button>
 				</div>				
 			</div>
-			<c:if test="${response.job.isPartialAvailabilityAllowed }">
+			<c:if test="${response.job.isPartialAvailabilityAllowed && 
+							response.jobWorkDayCount > 1}">
 				<div class="proposal-item work-day-proposal-wrapper"
 					 data-proposed-work-days="${response.currentProposal.proposedDates }">
 					<label class="">Work Days</label>		

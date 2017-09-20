@@ -42,6 +42,7 @@
 	right: -10px;
 	background: #fff;
 }
+#side-bar > div span.hover::after,
 #side-bar > div span:hover::after{
 	background: red;
 }
@@ -66,7 +67,7 @@ button{
 	padding-left: 50px;
 }
 .section{
-	margin-bottom: 75px;
+	padding-bottom: 50px;
 }
 .calendar.v2 td{
 	height: 65px;
@@ -102,6 +103,7 @@ button{
 	font-weight: bold;
 	color: #197994;
 	margin-bottom: 20px;
+    margin-top: 0px;	
 }
 .section h3 span{
 	font-size: 20px;

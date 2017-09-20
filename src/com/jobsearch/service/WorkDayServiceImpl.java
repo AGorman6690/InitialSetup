@@ -278,10 +278,9 @@ public class WorkDayServiceImpl {
 	}
 	
 	public List<WorkDayDto> getWorkDayDtos(int jobId) {
-
+		
 		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
 		List<WorkDay> workDays = getWorkDays(jobId);
-
 		for(WorkDay workDay : workDays){
 
 			WorkDayDto workDayDto = new WorkDayDto();
@@ -291,9 +290,19 @@ public class WorkDayServiceImpl {
 			workDayDto.setCount_totalPositions(jobService.getJob(jobId).getPositionsPerDay());
 			workDayDtos.add(workDayDto);
 		}
-
 		return workDayDtos;
+	}	
+	
+
+	public void setWorkDayDtosForApplicant(int userId, List<WorkDayDto> workDayDtos) {		
+		for(WorkDayDto workDayDto : workDayDtos){
+			int jobId = workDayDto.getWorkDay().getJobId();
+			int dateId = workDayDto.getWorkDay().getDateId();
+			boolean doesUserHaveConflictingEmployment = jobService.doesUserHaveConflictingEmployment(jobId, dateId, userId);
+			workDayDto.setHasConflictingEmployment(doesUserHaveConflictingEmployment);
+		}		
 	}
+
 	
 	public List<WorkDay> getWorkDays(int jobId) {
 		return repository.getWorkDays(jobId);
@@ -354,5 +363,7 @@ public class WorkDayServiceImpl {
 			workDayDto.setHasConflictingEmployment(true);
 		else workDayDto.setHasConflictingEmployment(false);
 	}
+
+
 
 }

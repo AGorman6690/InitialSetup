@@ -109,6 +109,7 @@
 }
 .respond-to-proposal{
 	text-align: center;
+    margin-top: 10px;
 }
 .proposal-item *{
 	vertical-align: top;
@@ -138,6 +139,9 @@
 	background: #e4e4e4;
     width: 185px;	
     margin-bottom: 5px;
+}
+.respond-to-proposal .sqr-btn{
+	margin: 0px 5px;
 }
 .proposal-status-wrapper button:hover{
 	cursor: default;
@@ -183,7 +187,9 @@
     padding-top: 20px;
 /* 	min-height: 160px; */
 }
+.employer-accepted-offer .select-all-work-days-override,
 .employer-make-initial-offer .proposal-status-wrapper,
+.employer-make-initial-offer .accepting-offer-context,
 .employer-accepted-offer .proposal-status-wrapper{
 	display: none;
 }

@@ -32,6 +32,7 @@ public class WorkDayRepository extends BaseRepository {
 					WorkDay e = new WorkDay();
 
 					e.setWorkDayId(rs.getInt("WorkDayId"));
+					e.setJobId(rs.getInt("JobId"));
 					e.setStringStartTime(rs.getString("StartTime"));
 					e.setStringEndTime(rs.getString("EndTime"));
 					e.setDateId(rs.getInt("DateId"));

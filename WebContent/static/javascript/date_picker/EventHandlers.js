@@ -26,11 +26,13 @@ $(document).ready(function() {
 function selectAllWorkDays($calendar, workDayDtos){
 	
 	$(workDayDtos).each(function(i, workDayDto) {
-		if(workDayDto.isProposed == "0" || workDayDto.isProposed == false || workDayDto.isProposed == null){
-			var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
-			workDayDto.isProposed = "1";
-			$(td).click();
-		}
+//		if(workDayDto.hasConflictingEmployment == false){
+			if(workDayDto.isProposed == "0" || workDayDto.isProposed == false || workDayDto.isProposed == null){
+				var td = getTdByDate($calendar, dateify(workDayDto.workDay.stringDate));
+				workDayDto.isProposed = "1";
+				$(td).click();
+			}
+//		}
 	})
 }
 
@@ -57,8 +59,11 @@ function onSelect_multiDaySelect_withRange(dateText, days){
         				
 }
 
-function onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos){
+function onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos, inHoverMode){
     
+	//*************************************
+	//Refactor this
+	//*************************************
     var date = new Date(dateText);
 
     if(workDayDtos.length == 1){
@@ -66,7 +71,12 @@ function onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos){
     		workDayDtos = removeWorkDayDto(date, workDayDtos);	
     	}
     	else{
-    		attemptToAddDateRange_workDayDtos(date, workDayDtos);
+    		if(inHoverMode){
+    			attemptToAddDateRange_workDayDtos(date, workDayDtos);
+    		}else{
+    			workDayDtos = addOrRemoveWorkDayDtoByDate(date, workDayDtos);      	
+    		}
+    		
     	}
     }
     else {

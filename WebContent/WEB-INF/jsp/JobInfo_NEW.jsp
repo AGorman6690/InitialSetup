@@ -199,7 +199,7 @@
 						</c:choose>
 					</p> 
 				</c:if>
-				<div id="work-days-calendar-container" class="v2 calendar-container
+				<div id="work-days-calendar-container" class="v2 calendar-container no-pad stack hide-unused-rows
 					 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post hide-select-work-day read-only' : '' }
 					 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
 					 ${sessionScope.user.profileId == 1 && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">

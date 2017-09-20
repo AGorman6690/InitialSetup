@@ -71,7 +71,8 @@ function getProposalContainer() {
 }
 function setProposalAcceptanceContext(){	
 	var $proposal = $("body").find(".mod.proposal-container:visible .proposal-wrapper");
-	if($proposal.find(".proposal-status-wrapper .status-accepting.current-status").length == 2){
+	var totalProposalItems = $proposal.find(".proposal-status-wrapper").length
+	if($proposal.find(".proposal-status-wrapper .status-accepting.current-status").length == totalProposalItems){
 		$proposal.addClass("accepting-offer-context");
 		$proposal.removeClass("proposing-new-offer-context");
 	}else{

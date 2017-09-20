@@ -12,15 +12,8 @@
 					data-rating="${applicationProgressStatus.applicantRating }"
 					data-proposed-amount="${applicationProgressStatus.currentProposal.amount }"
 					>
-					<c:if test="${applicationProgressStatus.messages.size() > 0 }">				
-						<div class="messages">
-							<h6>Messages</h6>
-							<c:forEach items="${applicationProgressStatus.messages }" var="message">
-								<p>${message }</p>
-							</c:forEach>
-						</div>
-					</c:if>					
-					<div class="applicant-header">
+				
+					<div class="applicant-header hide-on-load">
 						<span class="hide-on-load favorite-flag glyphicon glyphicon-flag
 							${applicationProgressStatus.application.status == 2 ? 'glyphicon glyphicon-star' :
 								'glyphicon glyphicon-star-empty not-selected' }"></span>
@@ -44,6 +37,14 @@
 							</c:choose>							 	
 						 </div>
 					</div>
+					<c:if test="${applicationProgressStatus.messages.size() > 0 }">				
+						<div class="messages">
+							<h6>Messages</h6>
+							<c:forEach items="${applicationProgressStatus.messages }" var="message">
+								<p>${message }</p>
+							</c:forEach>
+						</div>
+					</c:if>						
 					<c:if test="${applicationProgressStatus.questions.size() > 0 }">
 						<div class="questions surpress hide-on-load">
 							<c:choose>

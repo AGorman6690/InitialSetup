@@ -1,8 +1,11 @@
 $(document).ready(function() {
 
 		$("body").on("click", "#select-all-work-days", function() {
+//			selectAllWorkDays($("#work-days-calendar-container .calendar"), workDayDtos);
 			$(workDayDtos).each(function() {
-				this.isProposed = "1";
+				if(this.hasConflictingEmployment == false){
+					this.isProposed = "1";
+				}
 			})
 			$("#work-days-calendar-container .calendar").datepicker("refresh");
 		})

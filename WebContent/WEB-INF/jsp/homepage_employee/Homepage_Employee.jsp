@@ -98,14 +98,6 @@
 								var="applicationProgressStatus">
 								<c:if test="${applicationProgressStatus.application
 												.flag_applicantAcknowledgedAllPositionsAreFilled == 0 }">							
-									<c:if test="${applicationProgressStatus.messages.size() > 0 }">									
-										<div class="messages">
-											<h6>Messages</h6>
-											<c:forEach items="${applicationProgressStatus.messages }" var="message">
-												<p>${message }</p>
-											</c:forEach>
-										</div>
-									</c:if>
 									<div class="application-container">
 										<div class="application"
 											data-application-status="${applicationProgressStatus.application.status }"
@@ -122,9 +114,17 @@
 												<p class="job-name show-job-info-mod"
 													data-context="profile" data-p="1" data-job-id="${applicationProgressStatus.job.id }">
 													${applicationProgressStatus.job.jobName }</p>
+												
 												<div class="proposal ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'confirm' : '' }"
 													data-proposal-id="${applicationProgressStatus.currentProposal.proposalId }">
-		<%-- 											<c:set var="jobDto" value="${applicationDto.jobDto }" /> --%>
+													<c:if test="${applicationProgressStatus.messages.size() > 0 }">									
+														<div class="messages">
+															<h6>Messages</h6>
+															<c:forEach items="${applicationProgressStatus.messages }" var="message">
+																<p>${message }</p>
+															</c:forEach>
+														</div>
+													</c:if>														
 													<c:choose>
 														<c:when test="${applicationProgressStatus.application.isAccepted == 1 }">
 															<%@ include file="./EmploymentJobSummary.jsp"%>

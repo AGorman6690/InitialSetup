@@ -8,6 +8,7 @@ import org.codehaus.jackson.annotate.JsonProperty
 public class WorkDay {
 	
 	int workDayId 
+	int jobId
 	
 	@JsonProperty("millisecondsDate")
 	String millisecondsDate

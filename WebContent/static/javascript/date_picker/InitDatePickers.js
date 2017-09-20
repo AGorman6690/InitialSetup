@@ -49,18 +49,14 @@ function initCalendar_new($calendar, workDayDtos){
 		numberOfMonths: getNumberOfMonths($calendar),
 		onSelect: function(dateText, inst){			
 			if($(inst.input).closest(".calendar-container").hasClass("read-only") == 0){
-
-				var workDayDto = getWorkDayDtoByDate(dateify(dateText), workDayDtos);
-				
+				var workDayDto = getWorkDayDtoByDate(dateify(dateText), workDayDtos);				
 				if(workDayDto != undefined){					
 					if(workDayDto.hasConflictingEmployment != "1"){
 						if(workDayDto.isProposed == "1") workDayDto.isProposed = "0";
 						else workDayDto.isProposed = "1";
 					}					
 				}
-			}	
-			
-			
+			}			
 		},
 		beforeShowDay: function(date){			
 			var classNameToAdd = "";
@@ -77,8 +73,7 @@ function initCalendar_new($calendar, workDayDtos){
 				else{
 					if(workDayDtos.length == 1) classNameToAdd += " is-proposed";
 					else if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
-				}
-				
+				}	
 				
 				return [true, classNameToAdd];
 			}else return [true, ""];
@@ -299,7 +294,7 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 				
 				// if hovering, stop hovering
 				if($calendar.hasClass("show-hover-range") == 1){
-					$calendar.removeClass("show-hover-range");	
+					$calendar.removeClass("show-hover-range");
 				}
 				//else remove the user is attempting to remove the 1 day they clicked
 				else{
@@ -308,8 +303,11 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 				
 			}
 			else{
-				workDayDtos = onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos);
-				
+				var inHoverMode = false;
+				if($calendar.hasClass("show-hover-range") == 1){
+					inHoverMode = true;
+				}
+				workDayDtos = onSelect_multiDaySelect_withRange_workDayDtos(dateText, workDayDtos, inHoverMode);
 							
 				if(isThisTheFirstDateSelected){
 					$calendar.addClass("show-hover-range");
