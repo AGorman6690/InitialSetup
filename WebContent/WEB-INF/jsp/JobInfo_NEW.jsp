@@ -243,7 +243,8 @@
 	<a href="/JobSearch/job/${response.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
 </div>
 <div id="application-success-container">
-	<p>Your application has been received!</p>
+	<p id="submit-application-success">Your application has been received!</p>
+	<p id="submit-application-fail">Oh no. Something went wrong. Your application was not received.</p>
 	<div>
 		<a id="continue-searching" class="sqr-btn">Continue searching for jobs</a>
 		<a class="sqr-btn" href="/JobSearch/user">Back to profile</a>

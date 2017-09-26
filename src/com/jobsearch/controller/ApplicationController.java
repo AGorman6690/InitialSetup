@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jobsearch.dtos.ApplicationDTO;
+import com.jobsearch.json.JSON;
 import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.request.ApplyForJobRequest;
 import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
+import com.jobsearch.responses.ApplyForJobResponse;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
@@ -39,12 +41,12 @@ public class ApplicationController {
 	VerificationServiceImpl verificationService;	
 
 	@ResponseBody
-	@RequestMapping(value = "/apply", method = RequestMethod.POST)
+	@RequestMapping(value = "/application", method = RequestMethod.POST)
 	public String applyForJob(@RequestBody ApplyForJobRequest request, HttpSession session) {
 
 		if (SessionContext.isLoggedIn(session)) {
-			applicationService.applyForJob(request, session);
-			return "";
+			ApplyForJobResponse response = applicationService.applyForJob(request, session);
+			return JSON.stringify(response);
 		} else {
 			return "NotLoggedIn";
 		}

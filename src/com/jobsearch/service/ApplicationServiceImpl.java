@@ -1,9 +1,12 @@
 package com.jobsearch.service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,12 +23,14 @@ import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.model.Proposal;
+import com.jobsearch.model.Question;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.repository.ApplicationRepository;
 import com.jobsearch.request.ApplicationProgressRequest;
 import com.jobsearch.request.ApplyForJobRequest;
 import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
+import com.jobsearch.responses.ApplyForJobResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse.ConflictingApplication;
 import com.jobsearch.responses.MessageResponse;
@@ -51,11 +56,8 @@ public class ApplicationServiceImpl {
 	WorkDayServiceImpl workDayService;	
 	@Autowired
 	RatingServiceImpl ratingService;	
-
-
-
-	
-
+	@Autowired
+	QuestionServiceImpl questionService;
 
 	public List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
 		return repository.getAnswerOptionIds_Selected_ByApplicantAndJob(userId, jobId);
@@ -74,23 +76,14 @@ public class ApplicationServiceImpl {
 		return repository.getApplication(applicationId);
 	}
 
-	public void applyForJob(ApplyForJobRequest request, HttpSession session) {
-
+	public ApplyForJobResponse applyForJob(ApplyForJobRequest request, HttpSession session) {
 		
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-
-		// ****************************************
-		// ****************************************
-		// Verification needed:
-		// Verify at least one application work day is within the job work days.
-		// Verify the job is accepting applications.
-		// Verify answers.
-		// ****************************************
-		// ****************************************
-
-		if(verificationService.isPositiveNumber(request.getProposedWage()) && 
-				sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE && 
-				!verificationService.didUserApplyForJob(request.getJobId(), sessionUser.getUserId())){
+		ApplyForJobResponse response = new ApplyForJobResponse();
+		
+		if(validateSubmitApplication(request, session)){
+			response.setSuccess(true);
+			
+			JobSearchUser sessionUser = SessionContext.getUser(session);
 			
 			Application application = new Application();
 			application.setUserId(sessionUser.getUserId());
@@ -106,7 +99,75 @@ public class ApplicationServiceImpl {
 //			proposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
 
 			insertApplication(application, proposal, request.getAnswers());
+		}else{
+			response.setSuccess(false);
 		}
+		
+		return response;
+	}
+
+
+	private boolean validateSubmitApplication(ApplyForJobRequest request, HttpSession session) {
+		
+		boolean valid = true;
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Job job = jobService.getJob(request.getJobId());
+
+		if (verificationService.didUserApplyForJob(request.getJobId(), sessionUser.getUserId())){
+			valid = false;
+		}
+		
+		if (job.getFlag_isNotAcceptingApplications() == 1){
+			valid = false;
+		}
+		
+		// Proposed amount
+		if (!verificationService.isPositiveNumber(request.getProposedWage())){
+			valid = false; 
+		}
+		
+		// Proposed dates		
+		if (job.getIsPartialAvailabilityAllowed()){
+			boolean atLeastOneWorkDayProposed = false;
+			List<WorkDay> workDays = workDayService.getWorkDays(request.getJobId());
+			for (WorkDay workDay : workDays){
+				for (String dateString : request.getProposedDates()){
+					if(LocalDate.parse(dateString).equals(LocalDate.parse(workDay.getStringDate().replace("/", "-")))){
+						atLeastOneWorkDayProposed = true;
+						break;
+					}
+				}
+				if (atLeastOneWorkDayProposed){
+					break;
+				}
+			}
+			if (!atLeastOneWorkDayProposed){
+				valid = false;
+			}			
+		}else{
+			request.setProposedDates(workDayService.getWorkDayDateStrings(request.getJobId()));
+		}
+		
+		// Conflicting employment
+		if (jobService.doesUserHaveConflictingEmployment(request.getJobId(), request.getProposedDates(), sessionUser.getUserId())){
+			valid = false;
+		}
+		
+		List<Question> questions = questionService.getQuestions(request.getJobId());
+		if (questions != null && questions.size() > 0){			
+			for (Question question : questions){
+				List<Answer> answers = request.getAnswers().stream()
+									.filter(a -> a.getQuestionId() == question.getQuestionId())
+									.collect(Collectors.toList());				
+				if (answers == null || answers.size() == 0){
+					valid = false;
+					break;							
+				}				
+			}			
+		}		
+		
+		return valid;
+	
 	}
 
 

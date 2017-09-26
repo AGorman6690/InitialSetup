@@ -153,16 +153,26 @@ $(document).ready(function() {
 		return answers;		
 	}	
 	function apply(){
+
 //		if(isInputValid()){
 			$.ajax({
 				type : "POST",
-				url : '/JobSearch/apply',
+				url : '/JobSearch/application',
 				headers : getAjaxHeaders(),
 				contentType : "application/json",
 				data : JSON.stringify(getApplyForJobRequest()),
-			}).done(function() {
+				dataType: "json"
+			}).done(function(response) {
+				if(response.success === true){
+					$("#submit-application-success").show();
+					$("#submit-application-fail").hide();
+				}else{
+					$("#submit-application-success").hide();
+					$("#submit-application-fail").show();
+				}				
 				$("#job-info-mod .wrapper").hide();
-				$("#application-success-container").slideDown(500);
+				$("#application-success-container").slideDown(500);	
+				
 			});
 //		}
 	}

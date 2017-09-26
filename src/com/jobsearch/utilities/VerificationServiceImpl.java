@@ -54,7 +54,7 @@ public class VerificationServiceImpl {
 	
 	public boolean isPositiveNumber(String number) {
 		
-		if(number != null){
+		if(number != null && number != ""){
 			Double number_fromString = Double.valueOf(number);
 			if(number_fromString == null || number_fromString <= 0) return false;
 			else return true;

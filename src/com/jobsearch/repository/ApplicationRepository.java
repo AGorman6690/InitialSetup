@@ -164,6 +164,7 @@ public class ApplicationRepository {
 
 			if(newApplicationId != null){			
 				proposal.setApplicationId(newApplicationId);
+				
 				proposalService.insertProposal(proposal);	
 			
 				// Add answers  

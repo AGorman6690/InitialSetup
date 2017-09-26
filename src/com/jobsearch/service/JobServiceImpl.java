@@ -493,6 +493,18 @@ public class JobServiceImpl {
 		}
 	}
 	
+	public boolean doesUserHaveConflictingEmployment(int jobId, List<String> dates, int userId) {
+		if (dates != null && dates.size() > 0){
+			for (String date : dates){
+				int dateId = getDateId(date);
+				if (doesUserHaveConflictingEmployment(jobId, dateId, userId)){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
 	public boolean setModel_viewReplaceEmployees(Model model, HttpSession session, int jobId) {
 
 		boolean isValidRequest = true;
@@ -791,5 +803,7 @@ public class JobServiceImpl {
 		}		
 		model.addAttribute("response", response);	
 	}
+
+
 
 }
