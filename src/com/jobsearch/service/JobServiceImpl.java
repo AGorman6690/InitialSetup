@@ -346,15 +346,17 @@ public class JobServiceImpl {
 					applicationProgressStatus.setIsCurrentProposalExpired(
 							DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));
 					applicationProgressStatus.setIsProposedToSessionUser(
-							proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));
+							proposalService.isProposedToUser(currentProposal, sessionUser));
 					applicationProgressStatus.setTime_untilEmployerApprovalExpires(
 							proposalService.getTime_untilEmployerApprovalExpires(currentProposal.getExpirationDate(), now));
 					applicationProgressStatus.setCurrentProposalStatus(proposalService.getCurrentProposalStatus(
 							application.getIsOpen(), application.getIsAccepted(), currentProposal.getProposedByUserId(),
 							sessionUser.getUserId(), sessionUser.getProfileId()));
+					applicationProgressStatus.setCurrentProposalLabel(proposalService.getProposalLabel(currentProposal, sessionUser));
 	
 					// Previous proposal
 					applicationProgressStatus.setPreviousProposal(previousProposal);
+					applicationProgressStatus.setPreviousProposalLabel(proposalService.getProposalLabel(previousProposal, sessionUser));
 	
 					// Applicant
 					applicationProgressStatus.setApplicantName(applicant.getFirstName());

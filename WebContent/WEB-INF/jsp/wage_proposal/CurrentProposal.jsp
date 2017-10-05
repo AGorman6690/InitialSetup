@@ -21,13 +21,10 @@
 	 			</c:if> 
  			</div>
 		</c:if>
-	</div>
+	</div>												
 	<div class="a-proposal">
 		<label class="">${applicationProgressStatus.application.isAccepted == "1" ? "Wage" :
-			!applicationProgressStatus.isProposedToSessionUser ?
-			'Your current proposal' : 
-			sessionScope.user.profileId == 1 ? "Employer's current proposal" :
-			"Applicant's current proposal"}</label>			
+			applicationProgressStatus.currentProposalLabel }</label>			
 		<div class="proposed-value">
 			<span class="dollar-sign">$</span>
 			<fmt:formatNumber type="number" minFractionDigits="2" 
@@ -41,27 +38,38 @@
 			</c:if>
 		</div>
 	</div>	
-	<c:if test="${sessionScope.user.profileId == 1 && applicationProgressStatus.isProposedToSessionUser &&
-							applicationProgressStatus.application.isAccepted == 0 }">
-		<div class="a-proposal">
-			<p class="exp-time black-bold">
-				The employer's ${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'acceptence' : 'offer' } expires in <span class="red-bold">
-					${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
-			</p>
-		</div>
+	<c:if test="${ applicationProgressStatus.application.isAccepted == 0 && 
+					applicationProgressStatus.currentProposal.flag_hasExpired == 0 }">
+					
+		<c:if test="${ (applicationProgressStatus.isProposedToSessionUser && 
+					sessionScope.user.profileId == 1) || 
+					(!applicationProgressStatus.isProposedToSessionUser && 
+					sessionScope.user.profileId == 2)}">
+			<div class="a-proposal">
+				<p class="exp-time black-bold">
+					${sessionScope.user.profileId == 1 ? "The employer's" : "Your" }
+					${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? ' acceptence' : ' offer' } expires in <span class="red-bold">
+						${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
+				</p>
+			</div>
+		</c:if>
 	</c:if>			
 	<c:if test="${applicationProgressStatus.isProposedToSessionUser &&
 					applicationProgressStatus.application.isAccepted == 0}">	
-					
 		<div class="respond-to-proposal">
 			<c:choose>
-				<c:when test="${sessionScope.user.profileId == 2 || (sessionScope.user.profileId == 1 &&
-						applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 0) }">
-					<button class="sqr-btn blue accept-current-proposal">Accept or Counter</button>
-<!-- 					<button class="sqr-btn blue counter-current-proposal">Counter</button>	 -->
+				<c:when test="${applicationProgressStatus.isCurrentProposalExpired }">
+					<c:if test="${sessionScope.user.profileId == 2 }">
+						<button class="sqr-btn blue accept-current-proposal make-new-offer">Make new offer</button>
+					</c:if>
+				 </c:when>					
+				<c:when test="${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 }">
+					<c:if test="${sessionScope.user.profileId == 1 }">
+						<button class="sqr-btn blue accept-current-proposal">Confirm</button>
+					</c:if>					
 				</c:when>
 				<c:otherwise>
-					<button class="sqr-btn blue accept-current-proposal">Confirm</button>
+					<button class="sqr-btn blue accept-current-proposal">Accept or Counter</button>
 				</c:otherwise>
 			</c:choose>
 		

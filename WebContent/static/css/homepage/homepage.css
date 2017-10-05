@@ -17,9 +17,14 @@ h1{
     margin: 10px 0px;	
     padding: 5px 20px;
     background: #ececec;
+    box-shadow: 3px 3px 6px #cacaca;
 }
 .messages h6{
     font-size: 15px;
     font-weight: bold;
     font-style: italic;	
+}
+.messages p{
+	font-size: 15px;
+    font-style: italic;
 }

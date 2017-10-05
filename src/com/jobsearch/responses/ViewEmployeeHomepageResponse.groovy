@@ -37,6 +37,9 @@ class ViewEmployeeHomepageResponse {
 		Proposal currentProposal
 		Proposal previousProposal
 		
+		String currentProposalLabel
+		String previousProposalLabel
+		
 		String currentProposalStatus
 		Boolean isCurrentProposalExpired
 		Boolean isProposedToSessionUser

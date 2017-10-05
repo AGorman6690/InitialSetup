@@ -7,4 +7,5 @@ public class RespondToProposalRequest {
 	Integer days_offerExpires
 	Integer hours_offerExpires
 	Integer minutes_offerExpires
+	Boolean isRespondingToAnExpiredProposal
 }

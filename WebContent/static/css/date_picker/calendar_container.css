@@ -160,14 +160,11 @@ td.active111 a{
 
 .ui-datepicker-today a{
     background: red !important;
-    /* margin: 0px 20px; */
     width: 26px;
     height: 26px;
     line-height: 27px;
-    /* padding: 0.1em 0.2em; */
     border-radius: 86px;
     color: white !important;
     display: inline-block;
-    margin-top: -3px;    
-    margin-left: -1px;
+	text-align: center''
 }

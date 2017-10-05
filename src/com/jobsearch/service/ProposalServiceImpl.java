@@ -110,6 +110,8 @@ public class ProposalServiceImpl{
 		}else return null;
 	}
 	
+	// Proposals now have a flag for whether it has expired.
+	@Deprecated
 	public Boolean isProposalExpired(Proposal proposal){
 		if(proposal.getExpirationDate() != null){
 			if(ChronoUnit.MINUTES.between(LocalDateTime.now(), proposal.getExpirationDate()) < 0){
@@ -190,26 +192,47 @@ public class ProposalServiceImpl{
 
 	}
 
-	public Boolean isProposedToUser(Proposal proposal, int userId) {
-		if(proposal.getProposedToUserId() == userId) return true;
+	public Boolean isProposedToUser(Proposal proposal, JobSearchUser user) {
+		if(proposal.getFlag_hasExpired() == 1){
+			if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+				return false;
+			}else{
+				return true;
+			}
+		}else if(proposal.getProposedToUserId() == user.getUserId()) return true;
 		else return false ;
 	}
 
 
 	public void respondToProposal(RespondToProposalRequest request, HttpSession session) {
 
-		Proposal proposalBeingRespondedTo = getCurrentProposal(
-							request.getProposal().getApplicationId());
-
+		Proposal proposalBeingRespondedTo = getCurrentProposal(request.getProposal().getApplicationId());
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 				
-		boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal());
-
-		if(proposalBeingRespondedTo.getProposedToUserId() == SessionContext.getUser(session).getUserId() &&
-				proposalBeingRespondedTo.getIsDeclined() == 0){
-
-			if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){		
-				respondToProposal_byEmployer(proposalBeingRespondedTo, request, isAcceptingOffer);
+		// validate
+		boolean valid = true;
+		if(proposalBeingRespondedTo.getIsDeclined() == 1){
+			valid = false;
+		}
+		else if(request.getIsRespondingToAnExpiredProposal()){
+			if(!userService.isEmployer(sessionUser)){
+				valid = false;
+			}
+		}else if(proposalBeingRespondedTo.getProposedToUserId() != 
+				SessionContext.getUser(session).getUserId()){
+			valid = false;
+		}
+				
+		if(valid){			
+			boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal());
+			if(userService.isEmployer(sessionUser)){		
+				Proposal newProposal = getNewProposalFromEmployer(request, proposalBeingRespondedTo);			
+				insertProposal(newProposal);					
+				if(!request.getIsRespondingToAnExpiredProposal() && isAcceptingOffer){		
+					Proposal employerProposal = getCurrentProposal(newProposal.getApplicationId());
+					updateProposalFlag(employerProposal,
+							Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
+				}					
 			}else{
 				if(isAcceptingOffer){							
 					approveProposal_byEmployee(proposalBeingRespondedTo, session);	
@@ -222,6 +245,7 @@ public class ProposalServiceImpl{
 			inspectNewness(proposalBeingRespondedTo, sessionUser);
 		}
 	}
+
 	
 	private boolean getIsAcceptingProposal(Proposal proposalBeingRespondedTo,
 			Proposal newProposal) {
@@ -246,21 +270,6 @@ public class ProposalServiceImpl{
 		return isAcceptingOffer;
 	}
 	
-
-	private void respondToProposal_byEmployer(Proposal proposalBeingRespondedTo,			
-		RespondToProposalRequest request, Boolean isAcceptingOffer) {
-
-		Proposal newProposal = getNewProposalFromEmployer(request, proposalBeingRespondedTo);			
-		insertProposal(newProposal);			
-		
-		if(isAcceptingOffer){		
-			Proposal employerProposal = getCurrentProposal(newProposal.getApplicationId());
-			updateProposalFlag(employerProposal,
-					Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
-		}
-
-	}
-	
 	public Proposal getNewProposalFromEmployer(RespondToProposalRequest request){
 		 return getNewProposalFromEmployer(request, null);
 	}
@@ -272,14 +281,14 @@ public class ProposalServiceImpl{
 				acceptedDate, request.getDays_offerExpires(),
 				request.getHours_offerExpires(), request.getMinutes_offerExpires());
 		
-		// **********************************************
-		// Refactor: Is this constructor all that useful??????
-		// Find a better way to initialize these properties
-		Proposal newProposal = new Proposal();	
-		if(proposalBeingRespondedTo != null){
-			newProposal = new Proposal(proposalBeingRespondedTo);	
+		Proposal newProposal = new Proposal();			
+		if(request.getIsRespondingToAnExpiredProposal() != null && request.getIsRespondingToAnExpiredProposal()){
+			newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedByUserId());
+			newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedToUserId());
+		}else{
+			newProposal.setProposedByUserId(proposalBeingRespondedTo.getProposedToUserId());
+			newProposal.setProposedToUserId(proposalBeingRespondedTo.getProposedByUserId());
 		}
-		// **********************************************	
 		
 		newProposal.setEmployerAcceptedDate(acceptedDate);
 		newProposal.setExpirationDate(expirationDate);
@@ -460,6 +469,37 @@ public class ProposalServiceImpl{
 			model.addAttribute("isEmployerMakingFirstOffer", false);
 		}
 //	}	
+
+	public String getProposalLabel(Proposal proposal, JobSearchUser sessionUser) {
+		if(proposal != null){
+			if(proposal.getFlag_hasExpired() == 1){
+				if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+					return "Employer's expired offer";
+				}else{
+					return "Your expired offer";
+				}
+			}else if(!isProposedToUser(proposal, sessionUser)){
+				return "Your current offer";
+			}else if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+				return "The employer's current offer";			
+			}else{
+				return "The applicant's current offer";
+			}
+		}else{
+			return null;
+		}
+	}
+
+	public void setAcceptedAndExpirationDates(Proposal proposal, RespondToProposalRequest request) {
+		LocalDateTime acceptedDate = LocalDateTime.now();
+		LocalDateTime expirationDate = DateUtility.getFutureDate(
+				acceptedDate, request.getDays_offerExpires(),
+				request.getHours_offerExpires(), request.getMinutes_offerExpires());
+		
+		proposal.setEmployerAcceptedDate(acceptedDate);
+		proposal.setExpirationDate(expirationDate);
+
+	}
 
 	
 }

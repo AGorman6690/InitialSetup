@@ -32,6 +32,7 @@ import com.jobsearch.request.ConflictingApplicationsRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.responses.ApplyForJobResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse;
+import com.jobsearch.responses.CurrentProposalResponse;
 import com.jobsearch.responses.ConflictingApplicationsResponse.ConflictingApplication;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.session.SessionContext;
@@ -356,28 +357,41 @@ public class ApplicationServiceImpl {
 
 	public void makeInitialOfferByEmployer(MakeInitialOfferByEmployerRequest request, HttpSession session) {
 
+		// *****************************************
+		// *****************************************
+		// Refactor:
+		// Why does MakeInitialOfferByEmployerRequest class have a RespondToProposalRequest????
+		// All thats needed is the proposed amount and proposed dates.
+		// This class seems unnecessary...
+		// *****************************************
+		// *****************************************
+			
+		
 		if(verificationService.didSessionUserPostJob(session, request.getJobId()) &&
 				!verificationService.didUserApplyForJob(request.getJobId(), request.getProposeToUserId())){
 
-			// Set the application
+			// set the application
 			Application application = new Application();
 			application.setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
 			application.setUserId(request.getProposeToUserId());
 			application.setJobId(request.getJobId());
 
-			Proposal newProposal = proposalService.getNewProposalFromEmployer(
-					request.getRespondToProposalRequest());
+			// set the proposal
+			Proposal newProposal = new Proposal();			
 			newProposal.setProposedToUserId(request.getProposeToUserId());
-			newProposal.setProposedByUserId(
-					SessionContext.getUser(session).getUserId());
+			newProposal.setProposedByUserId(SessionContext.getUser(session).getUserId());
+			newProposal.setProposedDates(request.getRespondToProposalRequest().getProposal().getProposedDates());
+			newProposal.setAmount(request.getRespondToProposalRequest().getProposal().getAmount());
+			proposalService.setAcceptedAndExpirationDates(newProposal, request.getRespondToProposalRequest());
 			
+			// insert
 			insertApplication(application, newProposal, null);	
 			
+			// set flats
+			// ******************************************************************
+			// Is this flag needed on both objects?????????		
 			Application newApplication = getApplication(request.getJobId(),	request.getProposeToUserId());
 			Proposal currentProposal = proposalService.getCurrentProposal(newApplication.getApplicationId());
-
-			// ******************************************************************
-			// Is this flag needed on both objects?????????			
 			updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			proposalService.updateProposalFlag(currentProposal, Proposal.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
 			// ******************************************************************
@@ -419,8 +433,7 @@ public class ApplicationServiceImpl {
 
 
 	public List<String> getMessages(JobSearchUser sessionUser, Application application,
-			Proposal previousProposal,
-			Proposal currentProposal) {
+			Proposal previousProposal, Proposal currentProposal) {
 		
 		List<String> messages = new ArrayList<>();
 		Job job = jobService.getJob_ByApplicationId(application.getApplicationId());
@@ -438,7 +451,7 @@ public class ApplicationServiceImpl {
 				}else{
 					messages.add((isEmployee ? "The employer" : "You" ) + " filled all positions.");
 					messages.add((isEmployee ? "Your" : "The applicant's" ) + " proposal will remain in"
-							+ (isEmployee ? " the employer's" : " your" ) + " inbox" );
+							+ (isEmployee ? " the employer's" : " your" ) + " inbox." );
 				}
 			}
 			
@@ -462,7 +475,7 @@ public class ApplicationServiceImpl {
 					if(isEmployee){
 						messages.add("The employer deleted work days from the job posting that affect"
 								+ " your employment.");
-						messages.add("The employer is required to submit you a new proposal");
+						messages.add("The employer is required to submit you a new proposal.");
 					}else{
 						messages.add("You deleted work days from the job posting that affect the"
 								+ " employee's schedule.");
@@ -472,7 +485,7 @@ public class ApplicationServiceImpl {
 					if(isEmployee){
 						messages.add("The employer edited the start and end times that affect"
 								+ " your employment.");
-						messages.add("The employer is required to submit you a new proposal");
+						messages.add("The employer is required to submit you a new proposal.");
 					}else{
 						messages.add("You edited the start and end times that affect the employee's"
 								+ " schedule.");
@@ -485,20 +498,29 @@ public class ApplicationServiceImpl {
 		
 		if(currentProposal.getFlag_employerAcceptedTheOffer() == 1 && application.getIsAccepted() == 0){
 			messages.add((isEmployee ? "The employer accepted your offer"
-					: "You accepted the applicant's offer" ));
+					: "You accepted the applicant's offer." ));
 		}
 		
 		// Employer initiated contact
 		if(currentProposal.getFlag_employerInitiatedContact() == 1){
-			messages.add((isEmployee ? "The employer made you" : "You made") + " the initial offer");
+			messages.add((isEmployee ? "The employer made you" : "You made") + " the initial offer.");
 		}
 		
 		if(currentProposal.getFlag_aProposedWorkDayWasRemoved() == 1){
 			messages.add((isEmployee ? "The employer" : "You") + " deleted work days from the job post"
-					+ " that affected" + (isEmployee ? " your" : " the applicant's") + " proposal");
+					+ " that affected" + (isEmployee ? " your" : " the applicant's") + " proposal.");
 		}else if(currentProposal.getFlag_aProposedWorkDayTimeWasEdited() == 1){
 			messages.add((isEmployee ? "The employer" : "You") + " updatyed the start and end "
-					+ " times that affect the current proposal");			
+					+ " times that affect the current proposal.");			
+		}
+		
+		// Expiration
+		if(currentProposal.getFlag_hasExpired() == 1){
+			if(isEmployee){
+				messages.add("The employer's offer has expired. The employer has the next action.");	
+			}else{
+				messages.add("Your offer has expired.");
+			}
 		}
 		
 		return messages;
@@ -684,10 +706,13 @@ public class ApplicationServiceImpl {
 		if(request.getShowProposalsWaitingOnYou() && currentProposal.getProposedToUserId() == sessionUser.getUserId()){
 			includeApplication = true;		
 		}		
-		if(request.getShowProposalsWaitingOnOther() && currentProposal.getProposedToUserId() != sessionUser.getUserId()){
+		if(request.getShowProposalsWaitingOnOther() 
+				&& currentProposal.getProposedToUserId() != sessionUser.getUserId()
+				&& currentProposal.getFlag_hasExpired() == 0
+				&& application.getIsAccepted() == 0){
 			includeApplication = true;		
 		}		
-		if(request.getShowExpiredProposals() && proposalService.isProposalExpired(currentProposal)){
+		if(request.getShowExpiredProposals() && currentProposal.getFlag_hasExpired() == 1){
 			includeApplication = true;			
 		}		
 		if (request.getShowAcceptedProposals() && application.getIsAccepted() == 1){

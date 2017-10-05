@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.model.Profile;
 import com.jobsearch.service.UserServiceImpl;
 
 public class SessionContext {
@@ -16,6 +18,8 @@ public class SessionContext {
 	static UserServiceImpl userService;
 	
 	public static String SESSION_ATTRIBUTE_FILTERED_JOB_IDS = "loadedFilteredJobIds";
+	
+	private static JobSearchUser sessionUser;
 	
 	public static JobSearchUser getUser(HttpSession session) {
 		return (JobSearchUser) session.getAttribute("user");
@@ -75,6 +79,19 @@ public class SessionContext {
 	public static void setUser(HttpSession session, JobSearchUser user) {		
 		session.setAttribute("user", user);		
 	}
+
+	public static boolean isEmployee(HttpSession session) {
+		if(getUser(session).getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+			return true;
+		}else{
+			return false;	
+		}		
+	}
+
+
+	public JobSearchUser getSessionUser() { return sessionUser; }
+
+	public void setSessionUser(JobSearchUser sessionUser) { this.sessionUser = sessionUser; }
 
 
 }

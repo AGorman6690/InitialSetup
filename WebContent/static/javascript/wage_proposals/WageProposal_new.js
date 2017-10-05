@@ -1,5 +1,6 @@
 var g_workDayDtos_originalProposal = [];
 var g_workDayDtos_counter = [];
+var proposalView = {};
 
 $(document).ready(function() {
 	$("body").on("click", ".expiration-time input[name=exp-time-init]", function() {
@@ -13,12 +14,30 @@ $(document).ready(function() {
 		var $cont = $e.closest(".proposal[data-proposal-id]");
 		var proposalId = $cont.attr("data-proposal-id");
 		var $e_renderHtml = $cont.find(".render-present-proposal-mod").eq(0);
+		
+		proposalView = initProposalView();
+		if($e.hasClass("make-new-offer")){
+			proposalView.isRespondingToAnExpiredProposal = true;
+		}
+		
 				
 		executeAjaxCall_getCurrentProposal(proposalId, $e_renderHtml, function() {
+			
 			var doShowCounterContest = true
 			if($e.hasClass("accept-current-proposal") == 1) doShowCounterContest = false; 
 //			showCounterContext(doShowCounterContest, $e);
-			$cont.find(".mod").show();				
+			$cont.find(".mod").show(function() {
+				
+				if(proposalView.isRespondingToAnExpiredProposal === true){
+					var $proposal = getProposalContainer();					
+					setProposalAcceptanceContextToAccepting(false, $proposal);
+					hideProposalStatusWrappers(true, $proposal);
+				}			
+			});	
+			
+			
+
+			
 		})		
 	})	
 	$("body").on("click", ".send-proposal-wrapper button", function() {
@@ -66,13 +85,30 @@ $(document).ready(function() {
 	})
 	
 })
+function initProposalView(){
+	proposalView = {};
+	proposalView.isRespondingToAnExpiredProposal = false;
+	return proposalView;
+}
+function hideProposalStatusWrappers(request, $proposal){
+	$proposal.find(".proposal-status-wrapper").each(function(){
+		hideE(request, $(this));
+	})
+}
 function getProposalContainer() {
 	return $("body").find(".mod.proposal-container:visible .proposal-wrapper");
 }
 function setProposalAcceptanceContext(){	
-	var $proposal = $("body").find(".mod.proposal-container:visible .proposal-wrapper");
+	var $proposal = getProposalContainer();
 	var totalProposalItems = $proposal.find(".proposal-status-wrapper").length
 	if($proposal.find(".proposal-status-wrapper .status-accepting.current-status").length == totalProposalItems){
+		setProposalAcceptanceContextToAccepting(true, $proposal);
+	}else{
+		setProposalAcceptanceContextToAccepting(false, $proposal);
+	}
+}
+function setProposalAcceptanceContextToAccepting(request, $proposal){
+	if(request){
 		$proposal.addClass("accepting-offer-context");
 		$proposal.removeClass("proposing-new-offer-context");
 	}else{
@@ -97,6 +133,7 @@ function getMakeInitialOfferByEmployerRequest($e) {
 	request.respondToProposalRequest = getRespondToProposalRequest($e);
 	request.proposeToUserId = $wrapper.attr("data-user-id-make-offer-to");
 	request.jobId = $wrapper.attr("data-job-id-make-offer-for");
+//	request.isRespondingToAnExpiredProposal = false;
 	return request;	
 }
 function isCounteringWorkDays($cont) {
@@ -205,7 +242,8 @@ function getRespondToProposalRequest($e){
 	var isEmployerMakingInitalOffer = getIsEmployerMakingInitalOffer($proposalContainer);
 	respondToProposalRequest.proposal.proposalId = $proposalContainer.attr("data-proposal-id");
 	respondToProposalRequest.proposal.applicationId = $proposalContainer.attr("data-application-id");
-		
+	
+	respondToProposalRequest.isRespondingToAnExpiredProposal = proposalView.isRespondingToAnExpiredProposal;
 	// Wage
 	respondToProposalRequest.proposal.amount = $wageProposal.find("input").val();
 	

@@ -123,6 +123,13 @@ $(document).ready(function(){
 	})
 	
 })
+function hideE(req, $e){
+	if(req){
+		$e.hide();
+	}else{
+		$e.show();
+	}
+}
 function executeAjaxCall_getLoginSetupPage(c){
 	$.ajax({
 		type: "GET",

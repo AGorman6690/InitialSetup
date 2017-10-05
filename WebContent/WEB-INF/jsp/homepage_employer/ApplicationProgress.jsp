@@ -74,12 +74,12 @@
 						<c:set var="param_job" value="${response.job }" />
 						<%@ include file="../wage_proposal/CurrentProposal.jsp" %>
 					</div>	
-					<div class="expiration-time">					 
-						<p>${!applicationProgressStatus.isProposedToSessionUser &&
-							applicationProgressStatus.application.isAccepted == 0 ?
-								"Your proposal expires in " += applicationProgressStatus.time_untilEmployerApprovalExpires : ""}
-						</p>
-					</div>								
+<!-- 					<div class="expiration-time">					  -->
+<%-- 						<p>${!applicationProgressStatus.isProposedToSessionUser && --%>
+<%-- 							applicationProgressStatus.application.isAccepted == 0 ? --%>
+<%-- 								"Your proposal expires in " += applicationProgressStatus.time_untilEmployerApprovalExpires : ""} --%>
+<!-- 						</p> -->
+<!-- 					</div>								 -->
 				</div>
 			</div>
 		</c:forEach>

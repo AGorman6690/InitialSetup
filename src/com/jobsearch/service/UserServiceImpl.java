@@ -317,7 +317,7 @@ public class UserServiceImpl {
 				applicationProgressStatus.setIsCurrentProposalExpired(
 						DateUtility.isDateExpired(currentProposal.getExpirationDate(), now));								
 				applicationProgressStatus.setIsProposedToSessionUser(
-						proposalService.isProposedToUser(currentProposal, sessionUser.getUserId()));	
+						proposalService.isProposedToUser(currentProposal, sessionUser));	
 				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
 						proposalService.getTime_untilEmployerApprovalExpires(
 								currentProposal.getExpirationDate(), now));
@@ -331,9 +331,11 @@ public class UserServiceImpl {
 				applicationProgressStatus.setTime_untilEmployerApprovalExpires(
 						proposalService.getTime_untilEmployerApprovalExpires(
 								currentProposal.getExpirationDate(), now));
+				applicationProgressStatus.setCurrentProposalLabel(proposalService.getProposalLabel(currentProposal, sessionUser));
 				
 				
-				applicationProgressStatus.setPreviousProposal(previousProposal);					
+				applicationProgressStatus.setPreviousProposal(previousProposal);		
+				applicationProgressStatus.setPreviousProposalLabel(proposalService.getProposalLabel(previousProposal, sessionUser));
 				
 				applicationProgressStatus.setMessages(applicationService.getMessages(employee,
 						application,
@@ -477,17 +479,20 @@ public class UserServiceImpl {
 			employerHomepageJob.setCountWageProposals_sent(
 					currentProposals.stream()
 						.filter(p -> p.getProposedByUserId() == sessionUser.getUserId())
-//						.filter(p -> p.getIsDeclined())
+						.filter(p -> p.getExpirationDate().isAfter(now))
 						.count());
 
 			employerHomepageJob.setCountWageProposals_received(
 					currentProposals.stream()
 						.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
+						.filter(p -> p.getExpirationDate() == null || p.getExpirationDate().isAfter(now))
 						.count());
 			
 			employerHomepageJob.setCountWageProposals_received_new(
 					currentProposals.stream()
 						.filter(p -> p.getProposedToUserId() == sessionUser.getUserId())
+//						.filter(p -> p.getExpirationDate() != null)
+						.filter(p -> p.getExpirationDate() == null ||  p.getExpirationDate().isAfter(now))
 						.filter(p -> p.getIsNew() == 1)
 						.count());		
 			
@@ -862,6 +867,14 @@ public class UserServiceImpl {
 		if(user != null){
 			return GoogleClient.buildAddress(null, user.getHomeCity(), user.getHomeState(), user.getHomeZipCode());
 		}else return null;
+	}
+
+	public boolean isEmployer(JobSearchUser user) {
+		if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
+			return true;
+		}else{
+			return false;
+		}	
 	}
 
 

@@ -58,8 +58,14 @@ public class ProposalRepository extends BaseRepository {
 				e.setFlag_isCreatedDueToApplicantAcceptingOtherEmployment(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_APPLICANT_ACCEPTING_OTHER_EMPLOYMENT));
 				e.setFlag_isCreatedDueToEmployerFillingAllPositions(rs.getInt(Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS));
 				e.setFlag_acknowledgedIsDeclined(rs.getInt(Proposal.FLAG_ACKNOWLEDGED_IS_DECLINED));
-
+				e.setFlag_hasExpired(rs.getInt(Proposal.FLAG_HAS_EXPIRED));
+				
 				e.setProposedDates(getProposedDateStrings(e.getProposalId()));
+				
+				// Check if the proposal has expired
+				if(e.getFlag_hasExpired() == 0 && proposalService.isProposalExpired(e)){
+					proposalService.updateProposalFlag(e, Proposal.FLAG_HAS_EXPIRED, 1);
+				}
 
 				return e;
 			}
@@ -188,17 +194,29 @@ public class ProposalRepository extends BaseRepository {
 		return ProposalMapper(sql, new Object[]{ jobId });
 	}
 
+	// *************************************************************
+	// *************************************************************
+	// Note: consider adding a column to the proposal that indicates the proposal is "Canceled"
+	// That would eliminate the several [flag name] = 0 conditions below
+	// *************************************************************
+	// *************************************************************
 	public Proposal getCurrentProposal(Integer applicationId) {
 		String sql = "SELECT * FROM wage_proposal "
 				+ "WHERE IsCurrentProposal = 1"
 				+ " AND ApplicationId = ?"
 				+ " AND Flag_IsCanceledDueToApplicantAcceptingOtherEmployment = 0"
 				+ " AND Flag_IsCanceledDueToEmployerFillingAllPositions = 0";
+//				+ " AND Flag_HasExpired = 0";
 		List<Proposal> result = this.ProposalMapper(sql, new Object[] { applicationId });
 		if (verificationService.isListPopulated(result)) return result.get(0);
 		else return null;
 	}
 
+	/// ******************************************************************
+	/// ******************************************************************
+	// Note: see note above
+	/// ******************************************************************
+	/// ******************************************************************
 	public Proposal getPreviousProposal(int applicationId) {
 		String sql = "SELECT * FROM wage_proposal"
 					+ " WHERE WageProposalId IN ("
@@ -207,6 +225,7 @@ public class ProposalRepository extends BaseRepository {
 					+ " AND ApplicationId = ?"
 					+ " AND Flag_IsCanceledDueToApplicantAcceptingOtherEmployment = 0"
 					+ " AND Flag_IsCanceledDueToEmployerFillingAllPositions = 0"
+					+ " AND Flag_HasExpired = 0"
 					+ ")";
 
 		List<Proposal> result = ProposalMapper(sql, new Object[]{ applicationId });
