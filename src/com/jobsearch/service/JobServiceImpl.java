@@ -77,30 +77,39 @@ public class JobServiceImpl {
 	QuestionServiceImpl questionService;
 
 	public void addJob(AddJobRequest request, HttpSession session) {
-
-		if (StringUtility.isNotBlank(request.getJob().getCity())
-				&& StringUtility.isNotBlank(request.getJob().getState())
-				&& StringUtility.isNotBlank(request.getJob().getStreetAddress())) {
-
-			if (verificationService.isValidLocation(request.getJob())
-					&& workDayService.areValidWorkDays(request.getWorkDays())) {
-
+		
+		boolean valid = true;
+		if(StringUtility.isBlank(request.getJob().getCity())
+				|| StringUtility.isBlank(request.getJob().getState())
+				|| StringUtility.isBlank(request.getJob().getStreetAddress())) {
+			valid = false;
+		}else if (!workDayService.areValidWorkDays(request.getWorkDays())) {
+			valid = false;
+		}else if(StringUtility.isBlank(request.getJob().getJobName())){
+			valid = false;
+		}else if(StringUtility.isBlank(request.getJob().getDescription())){
+			valid = false;
+		}
+		
+		// ****************************************************************		
+		// ****************************************************************
+		// if questions are supplied, then they should be validated...
+		// ****************************************************************
+		// ****************************************************************		
 				
-				
-				
-				// Address was validated in the previous ajax request.
-				// Does it need to be validated again at this point??
-				// I'm thinking not. This "addJob" is a callback function to the
-				// "validate address" function. The user would unable to change
-				// the
-				// address after is was validated, but before the job was added.
-				Coordinate coordinate = GoogleClient.getCoordinate(request.getJob());
-				request.getJob().setLat(coordinate.getLatitude());
-				request.getJob().setLng(coordinate.getLongitude());
-				JobSearchUser user = SessionContext.getUser(session);
-				formatAddress(request.getJob());
-				repository.addJob(request, user);
-			}
+		if(valid){					
+			// Address was validated in the previous ajax request.
+			// Does it need to be validated again at this point??
+			// I'm thinking not. This "addJob" is a callback function to the
+			// "validate address" function. The user would unable to change
+			// the
+			// address after is was validated, but before the job was added.
+			Coordinate coordinate = GoogleClient.getCoordinate(request.getJob());
+			request.getJob().setLat(coordinate.getLatitude());
+			request.getJob().setLng(coordinate.getLongitude());
+			JobSearchUser user = SessionContext.getUser(session);
+			formatAddress(request.getJob());
+			repository.addJob(request, user);			
 		}
 	}
 

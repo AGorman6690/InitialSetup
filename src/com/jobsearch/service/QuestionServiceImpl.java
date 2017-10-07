@@ -2,6 +2,7 @@ package com.jobsearch.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpSession;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jobsearch.google.GoogleClient;
+import com.jobsearch.model.Answer;
 import com.jobsearch.model.AnswerOption;
 import com.jobsearch.model.Question;
 import com.jobsearch.repository.QuestionRepository;
@@ -99,6 +101,22 @@ public class QuestionServiceImpl {
 		repository.addQuestion(question);
 	}
 
-
+	public boolean areAllQuestionsAnswered(List<Answer> allAnswers, int jobId) {
+		
+		boolean valid = true;		
+		List<Question> questions = getQuestions(jobId);
+		if(questions != null && questions.size() > 0){			
+			for (Question question : questions){
+				List<Answer> answers = allAnswers.stream()
+									.filter(a -> a.getQuestionId() == question.getQuestionId())
+									.collect(Collectors.toList());				
+				if (answers == null || answers.size() == 0){
+					valid = false;
+					break;							
+				}				
+			}			
+		}		
+		return valid;
+	}
 	
 }

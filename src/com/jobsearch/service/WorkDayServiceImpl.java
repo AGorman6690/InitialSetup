@@ -190,9 +190,9 @@ public class WorkDayServiceImpl {
 	
 	public boolean areValidWorkDays(List<WorkDay> workDays) {
 
-		if(workDays == null) return false;
-		else if(workDays.size() == 0) return false;
-		else{
+		if(workDays == null || workDays.size() == 0){
+			return false;
+		}else{
 
 			// Validate the string date and times can be parsed to
 			// LocalDate and LocalTime objects
@@ -210,7 +210,6 @@ public class WorkDayServiceImpl {
 
 			}
 		}
-
 		return true;
 	}
 	
@@ -355,6 +354,15 @@ public class WorkDayServiceImpl {
 		if(workDayDto.getJob_conflictingEmployment() != null)
 			workDayDto.setHasConflictingEmployment(true);
 		else workDayDto.setHasConflictingEmployment(false);
+	}
+
+	public Integer getWorkDayCount(Integer jobId) {
+		List<WorkDay> workDays = getWorkDays(jobId);
+		if(workDays == null){
+			return null;
+		}else{
+			return workDays.size();
+		}
 	}
 
 

@@ -59,6 +59,7 @@ public class ApplicationServiceImpl {
 	RatingServiceImpl ratingService;	
 	@Autowired
 	QuestionServiceImpl questionService;
+	
 
 	public List<Integer> getAnswerOptionIds_Selected_ByApplicantAndJob(int userId, int jobId) {
 		return repository.getAnswerOptionIds_Selected_ByApplicantAndJob(userId, jobId);
@@ -79,96 +80,43 @@ public class ApplicationServiceImpl {
 
 	public ApplyForJobResponse applyForJob(ApplyForJobRequest request, HttpSession session) {
 		
-		ApplyForJobResponse response = new ApplyForJobResponse();
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Job job = jobService.getJob(request.getJobId());
 		
-		if(validateSubmitApplication(request, session)){
-			response.setSuccess(true);
-			
-			JobSearchUser sessionUser = SessionContext.getUser(session);
-			
+		Proposal proposal = new Proposal();
+		proposal.setProposedByUserId(sessionUser.getUserId());
+		proposal.setProposedToUserId(job.getUserId());
+		proposal.setAmount(request.getProposedWage());
+		proposal.setProposedDates(request.getProposedDates());
+				
+		// Validate
+		boolean valid = true;		
+		if(verificationService.didUserApplyForJob(request.getJobId(), sessionUser.getUserId())){
+			valid = false;
+		}else if(job.getFlag_isNotAcceptingApplications() == 1){
+			valid = false;
+		}else if(!proposalService.isValidProposal(proposal, job)){
+			valid = false;
+		}else if(jobService.doesUserHaveConflictingEmployment(request.getJobId(), request.getProposedDates(), sessionUser.getUserId())){
+			valid = false;
+		}else if(!questionService.areAllQuestionsAnswered(request.getAnswers(), request.getJobId())){
+			valid = false;
+		}
+		
+		ApplyForJobResponse response = new ApplyForJobResponse();
+		if(valid){				
 			Application application = new Application();
 			application.setUserId(sessionUser.getUserId());
 			application.setJobId(request.getJobId());
 			application.setStatus(Application.STATUS_SUBMITTED);
-			
-			Job appliedToJob = jobService.getJob(request.getJobId());
-			Proposal proposal = new Proposal();
-			proposal.setProposedByUserId(sessionUser.getUserId());
-			proposal.setProposedToUserId(appliedToJob.getUserId());
-			proposal.setAmount(request.getProposedWage());
-			proposal.setProposedDates(request.getProposedDates());
-//			proposal.setStatus(WageProposal.STATUS_SUBMITTED_BUT_NOT_VIEWED);
-
 			insertApplication(application, proposal, request.getAnswers());
+			response.setSuccess(true);		
 		}else{
 			response.setSuccess(false);
 		}
 		
 		return response;
 	}
-
-
-	private boolean validateSubmitApplication(ApplyForJobRequest request, HttpSession session) {
-		
-		boolean valid = true;
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		Job job = jobService.getJob(request.getJobId());
-
-		if (verificationService.didUserApplyForJob(request.getJobId(), sessionUser.getUserId())){
-			valid = false;
-		}
-		
-		if (job.getFlag_isNotAcceptingApplications() == 1){
-			valid = false;
-		}
-		
-		// Proposed amount
-		if (!verificationService.isPositiveNumber(request.getProposedWage())){
-			valid = false; 
-		}
-		
-		// Proposed dates		
-		if (job.getIsPartialAvailabilityAllowed()){
-			boolean atLeastOneWorkDayProposed = false;
-			List<WorkDay> workDays = workDayService.getWorkDays(request.getJobId());
-			for (WorkDay workDay : workDays){
-				for (String dateString : request.getProposedDates()){
-					if(LocalDate.parse(dateString).equals(LocalDate.parse(workDay.getStringDate().replace("/", "-")))){
-						atLeastOneWorkDayProposed = true;
-						break;
-					}
-				}
-				if (atLeastOneWorkDayProposed){
-					break;
-				}
-			}
-			if (!atLeastOneWorkDayProposed){
-				valid = false;
-			}			
-		}
-		
-		// Conflicting employment
-		if (jobService.doesUserHaveConflictingEmployment(request.getJobId(), request.getProposedDates(), sessionUser.getUserId())){
-			valid = false;
-		}
-		
-		// Answers
-		List<Question> questions = questionService.getQuestions(request.getJobId());
-		if (questions != null && questions.size() > 0){			
-			for (Question question : questions){
-				List<Answer> answers = request.getAnswers().stream()
-									.filter(a -> a.getQuestionId() == question.getQuestionId())
-									.collect(Collectors.toList());				
-				if (answers == null || answers.size() == 0){
-					valid = false;
-					break;							
-				}				
-			}			
-		}		
-		
-		return valid;	
-	}
-
 
 	public void insertApplication(Application application, Proposal proposal, List<Answer> answers) {
 		repository.insertApplication(application, proposal, answers);
@@ -202,13 +150,17 @@ public class ApplicationServiceImpl {
 
 		for (Application conflictingApplication : conflictingApplications){
 			
-			if(doesConflictingApplicationNeedToBeRemoved(conflictingApplication)){				
+			Proposal currentProposal = proposalService.getCurrentProposal(conflictingApplication.getApplicationId());
+			List<String> resolvedWorkDays = workDayService.removeConflictingWorkDays(
+					currentProposal.getProposedDates(), workDays_toFindConflictsWith);
+			
+			if(doesConflictingApplicationNeedToBeRemoved(conflictingApplication) 
+					|| resolvedWorkDays.size() == 0){				
 				updateApplicationStatus(conflictingApplication.getApplicationId(),
 						Application.STATUS_CANCELLED_DUE_TO_TIME_CONFLICT);
 				closeApplication(conflictingApplication.getApplicationId());		
 			}else{
-				
-				Proposal currentProposal = proposalService.getCurrentProposal(conflictingApplication.getApplicationId());
+								
 				Proposal newProposal = new Proposal(currentProposal);				
 				
 				if(!doesConflictingApplicationNeedToBeModifiedAndSentBackToEmployer(
@@ -218,8 +170,7 @@ public class ApplicationServiceImpl {
 				}
 
 				newProposal.setAmount(currentProposal.getAmount());
-				newProposal.setProposedDates(workDayService.removeConflictingWorkDays(
-						currentProposal.getProposedDates(), workDays_toFindConflictsWith));
+				newProposal.setProposedDates(resolvedWorkDays);
 				proposalService.insertProposal(newProposal, currentProposal);		
 				
 				Proposal newCurrentProposal = proposalService.getCurrentProposal(
@@ -478,8 +429,12 @@ public class ApplicationServiceImpl {
 		
 		Application referenceApplication = getApplication(request.getReferenceApplicationId());
 		Job job = jobService.getJob_ByApplicationId(request.getReferenceApplicationId());
+		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		if(verificationService.didUserApplyForJob(job.getId(), sessionUser.getUserId())){
+			
+			Integer countWorkDays = workDayService.getWorkDayCount(job.getId());
+			response.setJobHasOnlyOneWorkDay(countWorkDays == 1 ? true : false);
 		
 			List<WorkDay> workDays_toFindConflictsWith = workDayService.getWorkDays_byJobAndDateStrings(
 					job.getId(), request.getDatesToFindConflictWith());
@@ -492,8 +447,9 @@ public class ApplicationServiceImpl {
 																workDays_toFindConflictsWith);
 				
 				response.setConflictingApplicationsToBeModifiedButRemainAtEmployer(new ArrayList<>());
-				response.setConflictingApplicationsToBeRemoved(new ArrayList<>());
+				response.setConflictingApplicationsToBeRemoved_jobDoesNotAllowPartial(new ArrayList<>());
 				response.setConflictingApplicationsToBeSentBackToEmployer(new ArrayList<>());
+				response.setConflictingApplicationsToBeRemoved_applicantHasNoAvailability(new ArrayList<>());
 
 				for(Application application : conflictingApplications){					
 					ConflictingApplication conflictingApplication = new ConflictingApplication();
@@ -501,11 +457,18 @@ public class ApplicationServiceImpl {
 					conflictingApplication.setJob(jobService.getJob_ByApplicationId(application.getApplicationId()));
 					response.getConflictingApplications().add(conflictingApplication);
 					
+
+					
+					
 					// Determine what action needs to be taken on the conflicting application
 					if(doesConflictingApplicationNeedToBeRemoved(application)){
-						response.getConflictingApplicationsToBeRemoved().add(conflictingApplication);
-					}else{						
-						if(doesConflictingApplicationNeedToBeModifiedAndSentBackToEmployer(application, session)){
+						response.getConflictingApplicationsToBeRemoved_jobDoesNotAllowPartial().add(conflictingApplication);
+					}else{								
+						List<String> resolvedWorkDays = workDayService.removeConflictingWorkDays(
+								request.getDatesToFindConflictWith(), workDays_toFindConflictsWith);
+						if(resolvedWorkDays.size() == 0){
+							response.getConflictingApplicationsToBeRemoved_applicantHasNoAvailability().add(conflictingApplication);
+						}else if(doesConflictingApplicationNeedToBeModifiedAndSentBackToEmployer(application, session)){
 							response.getConflictingApplicationsToBeSentBackToEmployer().add(conflictingApplication);
 						}else{
 							response.getConflictingApplicationsToBeModifiedButRemainAtEmployer().add(conflictingApplication);

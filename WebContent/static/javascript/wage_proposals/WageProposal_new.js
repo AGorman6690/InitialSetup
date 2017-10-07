@@ -22,7 +22,8 @@ $(document).ready(function() {
 		
 				
 		executeAjaxCall_getCurrentProposal(proposalId, $e_renderHtml, function() {
-			
+			var $response = $cont.find(".current-proposal-response").eq(0);
+			var applicationId = $response.attr("data-application-id");
 			var doShowCounterContest = true
 			if($e.hasClass("accept-current-proposal") == 1) doShowCounterContest = false; 
 //			showCounterContext(doShowCounterContest, $e);
@@ -32,7 +33,16 @@ $(document).ready(function() {
 					var $proposal = getProposalContainer();					
 					setProposalAcceptanceContextToAccepting(false, $proposal);
 					hideProposalStatusWrappers(true, $proposal);
-				}			
+				}		
+				
+				// If there is only one work day, then a calendar will not be shown.
+				// Thus the conflict search cannot be triggered by the calendar init.
+				if(g_workDayDtos_originalProposal.length == 1){
+					var dateString = [];
+					var $e_renderHtml = getConflictingApplicationsContainer($cont);
+					dateString.push(g_workDayDtos_originalProposal[0].workDay.stringDate);
+					executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId, dateString);
+				}
 			});	
 			
 			

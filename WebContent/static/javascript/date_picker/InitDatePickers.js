@@ -133,7 +133,7 @@ function initCalendar_new($calendar, workDayDtos){
 				var $proposalContainer =  $calendar.closest(".proposal-container");
 				var applicationId = $proposalContainer.attr("data-application-id");
 				var dateStrings_counterWorkDays = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");
-				var $e_renderHtml = $proposalContainer.find(".conflicting-applications-countering").eq(0);
+				var $e_renderHtml = 
 				
 //				if(dateStrings_counterWorkDays.length > 0){
 					executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId,
@@ -144,6 +144,9 @@ function initCalendar_new($calendar, workDayDtos){
 	})
 	
 	$calendar.datepicker("setDate", firstDate);	
+}
+function getConflictingApplicationsContainer($e){
+	return $e.find(".conflicting-applications-countering").eq(0);
 }
 
 function initCalendar_showWorkDays($calendar, workDayDtos){

@@ -6,6 +6,14 @@ var workDayDtos = [];
 
 $(document).ready(function(){
 	
+	$("#location-wrapper h3").click(function(){
+		// ************************************
+		// For debugging.
+		$("#street").val("2217 Bonnie Lane");
+		$("#city").val("St. Paul");
+		$("#state").find("option[value=Minnesota]").prop("selected", true);
+	})
+	
 	
 	$calendar_workDays = $("#workDaysCalendar_postJob");
 	$calendar_times= $("#select-times-cal");
@@ -229,9 +237,13 @@ function getAddJobRequest(){
 	addJobRequest.job.state =$("#state option:selected").html();
 	addJobRequest.job.zipCode = $("#zip-code").val();
 	
-	if($("#no-partial").is(":checked")) addJobRequest.job.isPartialAvailabilityAllowed = 0;
-	else addJobRequest.job.isPartialAvailabilityAllowed = 1;
-	
+	if(addJobRequest.workDays.length == 1){
+		addJobRequest.job.isPartialAvailabilityAllowed = 0;
+	}else{
+		if($("#no-partial").is(":checked")) addJobRequest.job.isPartialAvailabilityAllowed = 0;
+		else addJobRequest.job.isPartialAvailabilityAllowed = 1;		
+	}
+
 	return addJobRequest;	
 }
 

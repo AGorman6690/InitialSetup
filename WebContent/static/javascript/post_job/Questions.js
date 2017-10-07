@@ -63,9 +63,9 @@ $(document).ready(function(){
 })
 function showCreateQuestionContainer(request){
 	if(request){
-		$("#create-question-container").slideDown();
+		$("#create-question-container").slideDown(600);
 	}else{
-		$("#create-question-container").slideUp();
+		$("#create-question-container").slideUp(600);
 	}
 }
 function getQuestionIdUnderEdit(){
