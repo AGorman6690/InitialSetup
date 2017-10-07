@@ -1,12 +1,7 @@
 package com.jobsearch.responses
 
-import java.lang.invoke.DirectMethodHandle.StaticAccessor
-import java.util.Arrays;
-
 import com.jobsearch.model.Job
 import com.jobsearch.model.Proposal
-import com.jobsearch.model.WorkDay
-import com.jobsearch.model.WorkDayDto;
 
 // *********************************************************************************
 // Refactor : this needs to be harmonized with InitMakeOfferResponse

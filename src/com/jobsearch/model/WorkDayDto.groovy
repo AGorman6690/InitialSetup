@@ -1,15 +1,6 @@
 package com.jobsearch.model
 
-import java.time.LocalDate
-
-import org.codehaus.jackson.annotate.JsonProperty
-import org.springframework.aop.aspectj.RuntimeTestWalker.ThisInstanceOfResidueTestVisitor;
-
-import com.jobsearch.model.Application
 import com.jobsearch.dtos.ApplicationDTO
-import com.jobsearch.model.Job
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;
 
 public class WorkDayDto {
 	

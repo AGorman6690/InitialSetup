@@ -1,15 +1,6 @@
 package com.jobsearch.model
 
-import java.awt.TexturePaintContext.Int;
 import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.List
-
-import com.jobsearch.model.Job
-import com.jobsearch.model.Answer;
-import com.jobsearch.model.JobSearchUser
-import com.jobsearch.model.Question
-import com.jobsearch.model.WageProposal
 
 public class Application {
 	

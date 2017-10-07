@@ -1,9 +1,6 @@
 package com.jobsearch.model
 
-import java.lang.invoke.DirectMethodHandle.StaticAccessor;
 import java.time.LocalDateTime
-
-import com.sun.org.apache.xml.internal.resolver.helpers.PublicId;;
 
 public class Proposal {
 	
