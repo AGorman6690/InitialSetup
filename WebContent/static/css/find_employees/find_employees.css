@@ -7,6 +7,7 @@
 #distance-filter{
     width: 940px;
     margin: auto;	
+    height: 37px;
 }
 #distance-filter input{
 	text-align: center;
@@ -14,26 +15,41 @@
 }
 #distance-filter-wrapper{
 	padding: 12px 0px;
-/* 	background: #197994; */
-    background: #f7f7f7;
+	background: #197994;
+/*     background: #f7f7f7; */
     border-bottom: 1px solid#cacaca;
 }
 #bottom-content{
 	width: 1400px;
 	margin: auto;
 }
-#find-employees{
-    padding: 15px 27px;
-    background: #163b3d;
-    color: #fff;
-    font-size: 18px;
+#bottom-content.no-data{
+	display: none;
+}
+#distance-filter span{
+	color: #fff;
+}
+#distance-filter #find-employees{
+/*     padding: 15px 27px; */
+/*     background: #163b3d; */
+/*     color: #fff; */
+/*     font-size: 18px; */
+/*     margin-left: 20px; */
+
     margin-left: 20px;
+    font-size: 24px;
+/*     color: #888; */
+    line-height: 36px;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+    
 }
 #work-days-filter-value .v2 .ui-datepicker-inline{
 	width: auto;
 }
-#distance-filter span{
-/*     color: #fff; */
+#distance-filter #miles-from{
+	margin: 0px 10px;
     font-size: 19px;
 }
 .filter .glyphicon{

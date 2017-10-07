@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -23,6 +24,7 @@ import com.jobsearch.model.WageProposal;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.repository.ProposalRepository;
+import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.request.RespondToProposalRequest;
 import com.jobsearch.responses.CurrentProposalResponse;
 import com.jobsearch.session.SessionContext;
@@ -146,8 +148,7 @@ public class ProposalServiceImpl{
 	
 	public String getCurrentProposalStatus(int application_isOpen, int application_isAccepted,			
 			Integer proposedByUserId_currentProposal, int userId_setStatusFor, int profileId_forUser) {
-		
-		
+
 		if(application_isAccepted == 1){			
 			if(profileId_forUser == Profile.PROFILE_ID_EMPLOYEE)
 				return "";
@@ -164,6 +165,52 @@ public class ProposalServiceImpl{
 			}
 		}
 
+	}
+	
+	public void setModel_employerToMakeInitialProposal(int userId, Integer jobId, Model model, HttpSession session) {
+
+		JobSearchUser user = userService.getUser(userId);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		
+		boolean valid = true;
+		if(user == null){
+			valid = false;
+		}else if(userService.isEmployer(user)){
+			valid = false;
+		}else if(jobId != null){
+			if(!userService.didSessionUserPostJob(session, jobId)){
+				valid = false;
+			}
+		}
+				
+		if(valid){			
+			CurrentProposalResponse response = new CurrentProposalResponse();
+			
+			String json_workDayDtos = "";
+			if(jobId != null){
+				Job job = jobService.getJob(jobId);
+				List<WorkDay> workDays = workDayService.getWorkDays(job.getId()) ;		
+				response.setJobWorkDayCount(workDays.size());
+				response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
+				response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
+				json_workDayDtos = JSON.stringify(workDayService.getWorkDayDtos(jobId));
+			}
+			
+			
+			List<Job> openJobs = new ArrayList<Job>();
+			if(sessionUser != null){
+				openJobs = jobService.getJobs_byEmployerAndStatuses(sessionUser.getUserId(),
+						Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));	
+			}			
+			
+			response.setEmployerOpenJobs(openJobs);
+			response.setJobId_makeInitialOfferFor(jobId);
+			response.setUserId_makeInitialProposalTo(userId);
+			response.setUserName_makeInitialProposalTo(user.getFirstName());
+			model.addAttribute("context", "employer-make-initial-offer");						
+			model.addAttribute("response", response);	
+			model.addAttribute("json_workDayDtos", json_workDayDtos);
+		}			
 	}
 
 	public Boolean isProposedToUser(Proposal proposal, JobSearchUser user) {
@@ -230,6 +277,51 @@ public class ProposalServiceImpl{
 			inspectNewness(proposalBeingRespondedTo, sessionUser);
 		}
 	}
+	
+
+	public void insertInitialProposalByEmployer(MakeInitialOfferByEmployerRequest request, HttpSession session) {
+
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		Job job = jobService.getJob(request.getJobId());
+		
+		Proposal newProposal = new Proposal();
+		newProposal.setProposedByUserId(sessionUser.getUserId());
+		newProposal.setProposedToUserId(request.getProposeToUserId());
+		newProposal.setAmount(request.getRespondToProposalRequest().getProposal().getAmount());
+		newProposal.setProposedDates(request.getRespondToProposalRequest().getProposal().getProposedDates());
+		setAcceptedAndExpirationDates(newProposal, request.getRespondToProposalRequest());
+		
+		// validate
+		boolean valid = true;
+		if(userService.didUserApplyForJob(request.getJobId(), request.getProposeToUserId())){
+			valid = false;
+		}else if(!userService.didUserPostJob(sessionUser, request.getJobId())){
+			valid = false;
+		}
+		else if(!isValidProposal(newProposal, job)){
+			valid = false;
+		}		
+
+		if(valid){	
+			
+			// create the application
+			Application application = new Application();
+			application.setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
+			application.setUserId(request.getProposeToUserId());
+			application.setJobId(request.getJobId());
+			applicationService.insertApplication(application, newProposal, null);	
+			
+			// set flats
+			// ******************************************************************
+			// Is this flag needed on both objects?????????		
+			Application newApplication = applicationService.getApplication(request.getJobId(),	request.getProposeToUserId());
+			Proposal currentProposal = getCurrentProposal(newApplication.getApplicationId());
+			applicationService.updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
+			updateProposalFlag(currentProposal, Proposal.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
+			// ******************************************************************
+		}
+	}
+	
 
 	
 	public boolean isValidProposal(Proposal proposal, Job job) {
@@ -384,26 +476,26 @@ public class ProposalServiceImpl{
 		}
 		
 		repository.insertProposal(newProposal);
-	}
-	
+	}	
 	
 	public Proposal getProposal(int proposalId) {
 		return repository.getProposal(proposalId);
 	}
 
 	public void setCurrentProposalResponse(Model model, HttpSession session, int proposalId) {
-		// **************************************
-		// **************************************
-		// Need verification:
-		// 1) is current proposal?
-		// 2) is proposed to session user?
-		// 3) is not expired (if employee)
-		// **************************************
-		// **************************************		
-//		if(verificationService.isCurrentProposalProposedToSessionUser(applicationId, session)){
 
-			JobSearchUser sessionUser = SessionContext.getUser(session);			
-			Proposal proposal = getProposal(proposalId);			
+		Proposal proposal = getProposal(proposalId);
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		boolean valid = true;
+		if(!isProposedToUser(proposal, sessionUser)){
+			valid = false;
+		}else if(proposal.getIsCurrentProposal() == 0){
+			valid = false;
+		}else if(!userService.isEmployer(sessionUser) && proposal.getFlag_hasExpired() == 1){
+			valid = false;
+		}
+		
+		if(valid){						
 			Job job = jobService.getJob_ByApplicationId(proposal.getApplicationId());			
 			List<WorkDay> workDays = workDayService.getWorkDays(job.getId()) ;
 			
@@ -426,7 +518,7 @@ public class ProposalServiceImpl{
 			model.addAttribute("user", sessionUser);
 			model.addAttribute("isEmployerMakingFirstOffer", false);
 		}
-//	}	
+	}	
 
 	public String getProposalLabel(Proposal proposal, JobSearchUser sessionUser) {
 		if(proposal != null){

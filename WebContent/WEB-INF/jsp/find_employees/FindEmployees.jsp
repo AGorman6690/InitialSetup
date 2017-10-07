@@ -33,14 +33,14 @@
 <div id="distance-filter-wrapper">
 	<div id="distance-filter">
 		<input id="miles" class="select-all" type="text" placeholder="number of"
-			value="${not empty response ? response.radiusSearched : '' }"/>
-		<span>miles from</span>
+			value="${not empty response ? response.radiusSearched : '50' }"/>
+		<span id="miles-from">miles from</span>
 		<input id="address" class="select-all" type="text" placeholder="city, state, zip"
-			value="${not empty response ? response.addressSearched : '' }"/>
-		<button id="find-employees" class="sqr-btn">Find Employees</button>
+			value="${not empty response ? response.addressSearched : '55119' }"/>
+		<span id="find-employees" class="glyphicon glyphicon-search"></span>
 	</div>
 </div>
-<div id="bottom-content" class="${empty response ? 'hide-on-load' : '' }">
+<div id="bottom-content" class="${empty response ? 'no-data' : '' }">
 	<div id="filters">
 		<div class="filter">		
 			<p data-toggle-id="rating-filter-value" class="name">Rating<span class="glyphicon glyphicon-menu-down"></span></p>		
@@ -103,12 +103,10 @@
 		</c:if>	
 	</div>
 </div>
-<div id="select-a-job"></div>
-
 <div class="proposal-container">
 	<div id="make-offer-modal" class="proposal counter-context respond"></div>
 </div>
-
+<input id="job-id-on-load" value="${response.jobId }"type="hidden">
 
 <!-- <div class="proposal-container"> -->
 <!-- 	<div id="make-offer-modal" class="proposal counter-context"> -->

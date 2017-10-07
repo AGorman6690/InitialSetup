@@ -45,8 +45,9 @@ html {
 	background: #197994;
 	font-weight: normal;
 }
-.sqr-btn.blue:hover{
-	opacity: 0.6
+button:hover,
+.sqr-btn:hover{
+	opacity: 0.7;
 }
 .red-bold{
 /* 	font-size: 20px; */

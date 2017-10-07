@@ -621,7 +621,7 @@ public class JobServiceImpl {
 
 	public void setModel_findEmployees_byJob(Model model, HttpSession session, int jobId) {
 
-		if (verificationService.didSessionUserPostJob(session, jobId)) {
+		if (userService.didSessionUserPostJob(session, jobId)) {
 
 			Job job = getJob(jobId);
 			String address = job.getStreetAddress_formatted() + " " + job.getCity_formatted() + " " + job.getState()
@@ -633,7 +633,7 @@ public class JobServiceImpl {
 			request.setRadius(radius);
 			request.setDates(workDayService.getWorkDayDateStrings(jobId));
 
-			userService.setFindEmployeesResponse(model, request);
+			userService.setFindEmployeesResponse(model, request, jobId);
 
 			model.addAttribute("job", job);
 			// model.addAttribute("doShowResultsOnPageLoad", true);
@@ -646,7 +646,7 @@ public class JobServiceImpl {
 
 	public void editJob_removeRemainingWorkDays_forUser(int jobId, int userId, HttpSession session) {
 
-		if (verificationService.didSessionUserPostJob(session, jobId)) {
+		if (userService.didSessionUserPostJob(session, jobId)) {
 
 			List<WorkDay> workDays_incomplete = workDayService.getWorkDays_incomplete_byUser(jobId, userId);
 

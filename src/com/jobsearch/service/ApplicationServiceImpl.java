@@ -251,49 +251,6 @@ public class ApplicationServiceImpl {
 		else return false;
 	}
 
-	public void makeInitialOfferByEmployer(MakeInitialOfferByEmployerRequest request, HttpSession session) {
-
-		// *****************************************
-		// *****************************************
-		// Refactor:
-		// Why does MakeInitialOfferByEmployerRequest class have a RespondToProposalRequest????
-		// All thats needed is the proposed amount and proposed dates.
-		// This class seems unnecessary...
-		// *****************************************
-		// *****************************************
-			
-		
-		if(verificationService.didSessionUserPostJob(session, request.getJobId()) &&
-				!verificationService.didUserApplyForJob(request.getJobId(), request.getProposeToUserId())){
-
-			// set the application
-			Application application = new Application();
-			application.setStatus(Application.STATUS_PROPOSED_BY_EMPLOYER);
-			application.setUserId(request.getProposeToUserId());
-			application.setJobId(request.getJobId());
-
-			// set the proposal
-			Proposal newProposal = new Proposal();			
-			newProposal.setProposedToUserId(request.getProposeToUserId());
-			newProposal.setProposedByUserId(SessionContext.getUser(session).getUserId());
-			newProposal.setProposedDates(request.getRespondToProposalRequest().getProposal().getProposedDates());
-			newProposal.setAmount(request.getRespondToProposalRequest().getProposal().getAmount());
-			proposalService.setAcceptedAndExpirationDates(newProposal, request.getRespondToProposalRequest());
-			
-			// insert
-			insertApplication(application, newProposal, null);	
-			
-			// set flats
-			// ******************************************************************
-			// Is this flag needed on both objects?????????		
-			Application newApplication = getApplication(request.getJobId(),	request.getProposeToUserId());
-			Proposal currentProposal = proposalService.getCurrentProposal(newApplication.getApplicationId());
-			updateApplicationFlag(newApplication, Application.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
-			proposalService.updateProposalFlag(currentProposal, Proposal.FLAG_EMPLOYER_INITIATED_CONTACT, 1);
-			// ******************************************************************
-		}
-	}
-
 	public void updateApplicationFlag(Application newApplication, String flag, int value) {
 		// Why do i have this??????
 		// Just pass teh application id...

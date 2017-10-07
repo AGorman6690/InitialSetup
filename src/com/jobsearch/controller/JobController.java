@@ -148,7 +148,6 @@ public class JobController {
 		return "/post_job/PostJob";
 	}
 
-
 	@RequestMapping(value = "/job/{jobId}/edit", method = RequestMethod.GET)
 	public String viewEditJob(Model model, HttpSession session, @PathVariable(value = "jobId") int jobId) {
 
@@ -173,10 +172,6 @@ public class JobController {
 		jobService.editJob_removeRemainingWorkDays_forUser(jobId, userId, session);
 		return "";
 	}
-
-
-	
-
 	
 	@RequestMapping(value = "/job/{jobId}/employee/{userId}/display-termination-message", method = RequestMethod.POST)
 	public String displayMessage_terminateEmployee(@PathVariable(value = "jobId") int jobId,

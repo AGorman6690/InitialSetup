@@ -68,6 +68,7 @@ public class VerificationServiceImpl {
 	}
 	// *****************************************************************
 
+	@Deprecated
 	public boolean didSessionUserPostJob(HttpSession session, int jobId) {
 
 		Job job = jobService.getJob(jobId);
@@ -103,6 +104,7 @@ public class VerificationServiceImpl {
 	
 	}
 
+	@Deprecated
 	public boolean didUserApplyForJob(int jobId, int userId) {
 
 		

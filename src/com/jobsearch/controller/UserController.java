@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.request.FindEmployeesRequest;
+import com.jobsearch.responses.UserApplicationStatusResponse;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
@@ -55,8 +56,6 @@ public class UserController {
 
 	}	
 		
-	
-	// Refactored
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public String viewHomepageRequest(Model model, HttpSession session) {				
 		
@@ -69,6 +68,17 @@ public class UserController {
 
 		userService.setGetProfileCalendarResponse(model, session);
 		return "/event_calendar/Event_Calendar";
+	}
+	
+	@RequestMapping(value = "/user/{userId}/job/{jobId}/application-status", method = RequestMethod.GET)
+	@ResponseBody
+	public String getUserApplicationStatusResponse(
+			@PathVariable(value = "userId") int userId,
+			@PathVariable(value = "jobId") int jobId,
+			HttpSession session) {
+
+		UserApplicationStatusResponse response = userService.getUserApplicationStatusResponse(userId, jobId, session);
+		return JSON.stringify(response);
 	}
 
 	@ResponseBody
@@ -103,7 +113,7 @@ public class UserController {
 	@RequestMapping(value = "/find/employees/results", method = RequestMethod.POST)
 	public String findEmployees(@RequestBody FindEmployeesRequest request, Model model) {
 
-		userService.setFindEmployeesResponse(model, request);
+		userService.setFindEmployeesResponse(model, request, null);
 		return"/find_employees/Results_Find_Employees";
 	}
 

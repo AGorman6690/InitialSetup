@@ -45,6 +45,7 @@ import com.jobsearch.responses.GetProfileCalendarResponse;
 import com.jobsearch.responses.InitMakeOfferResponse;
 import com.jobsearch.responses.GetProfileCalendarResponse.CalendarApplication;
 import com.jobsearch.responses.MessageResponse;
+import com.jobsearch.responses.UserApplicationStatusResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse;
 import com.jobsearch.responses.ViewEmployeeHomepageResponse.ApplicationProgressStatus;
 import com.jobsearch.responses.ViewEmployerHomepageResponse;
@@ -598,7 +599,7 @@ public class UserServiceImpl {
 
 	}
 
-	public void setFindEmployeesResponse(Model model, FindEmployeesRequest request){
+	public void setFindEmployeesResponse(Model model, FindEmployeesRequest request, Integer jobId){
 
 		if (GoogleClient.isValidAddress(request.getAddress()) && 
 				verificationService.isPositiveNumber(request.getRadius())) {
@@ -610,6 +611,7 @@ public class UserServiceImpl {
 			FindEmployeesResponse response = new FindEmployeesResponse();
 			response.setAddressSearched(request.getAddress());
 			response.setRadiusSearched(request.getRadius());
+			response.setJobId(jobId);
 					
 			if(verificationService.isListPopulated(request.getDates())){			
 				response.setCountDatesSearched(request.getDates().size());
@@ -738,30 +740,13 @@ public class UserServiceImpl {
 		return repository.getApplicants_byJob_openApplicantions(jobId);
 	}
 
-	public void setModel_makeOffer_initialize(Model model, int userId, HttpSession session) {
-	
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		if(sessionUser == null){
-			model.addAttribute("notLoggedIn", true);
-		}else{
-			List<Job> openJobs = jobService.getJobs_byEmployerAndStatuses(
-					sessionUser.getUserId(),
-					Arrays.asList(Job.STATUS_PRESENT, Job.STATUS_FUTURE));
-			
-			model.addAttribute("openJobs", openJobs);
-			model.addAttribute("user_makeOfferTo", getUser(userId));		
-		}
-		
-
-	}
-
 	public String getAvailabliltyStatusMessage_forUserAndJob(int userId, int jobId) {
 		
 		Job job = jobService.getJob(jobId);
 		List<String> workDays = workDayService.getWorkDayDateStrings(jobId);		
 		Integer availableDays = jobService.getCount_availableDays_ByUserAndWorkDays(userId, workDays);
 		
-		if(verificationService.didUserApplyForJob(jobId, userId)) return "already-applied";
+		if(didUserApplyForJob(jobId, userId)) return "already-applied";
 		else if(job.getIsPartialAvailabilityAllowed()){
 			if(availableDays > 0) return "available";
 			else return "unavailable";
@@ -772,50 +757,18 @@ public class UserServiceImpl {
 				
 	}
 
-	public void setInitMakeOfferResponse(Model model, int userId_makeOfferTo, int jobId, HttpSession session) {
+	public boolean didSessionUserPostJob(HttpSession session, int jobId) {
+		Job job = jobService.getJob(jobId);		
+		JobSearchUser sessionUser = SessionContext.getUser(session);
+		return sessionUser.getUserId() == job.getUserId() ? true : false;
+	}
 
-		if(!verificationService.didUserApplyForJob(jobId, userId_makeOfferTo) &&
-				verificationService.didSessionUserPostJob(session, jobId)){
-			
-//			JobSearchUser sessionUser = SessionContext.getUser(session);			
-//			Proposal proposal = getProposal(proposalId);			
-			Job job = jobService.getJob(jobId);			
-			List<WorkDay> workDays = workDayService.getWorkDays(job.getId()) ;
-			
-			CurrentProposalResponse response = new CurrentProposalResponse();
-			response.setJob(job);
-			response.setProposeToUserId(userId_makeOfferTo);
-			response.setJobWorkDayCount(workDays.size());
-//			response.setCurrentProposal(proposal);
-//			response.setJobWorkDays(workDays);
-			response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
-			response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
-//			response.setTime_untilEmployerApprovalExpires(
-//					getTime_untilEmployerApprovalExpires(proposal.getExpirationDate(), LocalDateTime.now()));
-//			response.setTimeUntilStart(DateUtility.getTimeInBetween(
-//					LocalDateTime.now(),
-//					workDays.get(0).getStringDate(),
-//					workDays.get(0).getStringStartTime()));
-			
-//			model.addAttribute("response", response);
-//			model.addAttribute("isEmployerMakingFirstOffer", false);
-			
-										   
-			model.addAttribute("context", "employer-make-initial-offer");						
-			model.addAttribute("response", response);
-			model.addAttribute("json_workDayDtos", JSON.stringify(workDayService.getWorkDayDtos(jobId)));
-//			model.addAttribute("user", sessionUser);
-//			model.addAttribute("isEmployerMakingFirstOffer", false);
-			
-		}
-		
-		
+
+	public boolean didUserApplyForJob(int jobId, int userId) {		
+		Application application = applicationService.getApplication(jobId, userId);		
+		return application != null ? true : false; 
 	}
 	
-	// Refactored
-	// ******************************************************************************************
-	// ******************************************************************************************	
-
 	public void setViewHomepageResponse(Model model, HttpSession session) {
 	
 		JobSearchUser sessionUser = SessionContext.getUser(session);
@@ -879,5 +832,29 @@ public class UserServiceImpl {
 		return isEmployer(user);
 	}
 
+	public UserApplicationStatusResponse getUserApplicationStatusResponse(int userId, int jobId, HttpSession session) {		
+		
+		if(didSessionUserPostJob(session, jobId)){			
+			UserApplicationStatusResponse response = new UserApplicationStatusResponse();				
+			Application application = applicationService.getApplication(jobId, userId);
+			response.setHasApplied(application != null ? true : false);		
+			if(application != null){
+				JobSearchUser user = getUser(userId);
+				response.setMessage(user.getFirstName() + " has already applied for this job");
+			}
+			return response;
+		}else{
+			return null;
+		}
+	}
 
+	public boolean didUserPostJob(JobSearchUser user, int jobId) {
+		Job job = jobService.getJob(jobId);
+		if(job != null){
+			return job.getUserId() == user.getUserId() ? true : false;
+		}else{
+			return false;	
+		}
+		
+	}
 }

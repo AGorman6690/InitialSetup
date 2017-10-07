@@ -11,6 +11,7 @@ public class FindEmployeesResponse {
 	Integer countDatesSearched
 	Double radiusSearched
 	String addressSearched
+	Integer jobId
 	
 	public static class FindEmployeeUser{
 		JobSearchUser user

@@ -11,6 +11,10 @@
     border-bottom: 2px solid #197994;
     padding-bottom: 10px;
 }
+.disable .disable-able{
+	pointer-events: none;
+	opacity: 0.4;
+}
 #make-offer-modal .mod-content,
 .proposal-container .mod-content{
     top: 20px;

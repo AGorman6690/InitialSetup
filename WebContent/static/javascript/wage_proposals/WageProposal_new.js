@@ -19,8 +19,7 @@ $(document).ready(function() {
 		if($e.hasClass("make-new-offer")){
 			proposalView.isRespondingToAnExpiredProposal = true;
 		}
-		
-				
+
 		executeAjaxCall_getCurrentProposal(proposalId, $e_renderHtml, function() {
 			var $response = $cont.find(".current-proposal-response").eq(0);
 			var applicationId = $response.attr("data-application-id");
@@ -44,10 +43,7 @@ $(document).ready(function() {
 					executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId, dateString);
 				}
 			});	
-			
-			
 
-			
 		})		
 	})	
 	$("body").on("click", ".send-proposal-wrapper button", function() {
@@ -142,7 +138,7 @@ function getMakeInitialOfferByEmployerRequest($e) {
 	var request = {};
 	request.respondToProposalRequest = getRespondToProposalRequest($e);
 	request.proposeToUserId = $wrapper.attr("data-user-id-make-offer-to");
-	request.jobId = $wrapper.attr("data-job-id-make-offer-for");
+	request.jobId = $wrapper.find("#select-job option:selected").attr("data-job-id");
 //	request.isRespondingToAnExpiredProposal = false;
 	return request;	
 }
@@ -180,17 +176,19 @@ function executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest){
 		location.reload(true);		
 	})	
 }
-function executeAjaxCall_makeInitialOffer(applicationDto){	
+function executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest){	
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
-		url :"/JobSearch/application/employer-make-initial-offer",
+		url :"/JobSearch/proposal/employer-make-initial-proposal",
 		headers : getAjaxHeaders(),
 		contentType : "application/json",	
-		data: JSON.stringify(applicationDto),
+		data: JSON.stringify(makeInitialOfferByEmployerRequest),
 		dataType: "text"		
 	}).done(function(response){
-		location.reload(true);
+//		location.reload(true);
+		broswerIsWaiting(false);
+		$("#make-offer-modal .mod").hide();
 	})	
 }
 function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,

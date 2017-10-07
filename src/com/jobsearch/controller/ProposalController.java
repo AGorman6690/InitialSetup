@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.sym.Name;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
@@ -46,5 +48,23 @@ public class ProposalController {
 		return "redirect:/user/";
 	}
 	
+	@RequestMapping(value = "/employer-make-initial-proposal/user/{userId}", method = RequestMethod.GET)
+	public String initiateContact_byEmployer(
+			@PathVariable(value = "userId") int userId,
+			@RequestParam(name = "jobId", required = false) Integer jobId,
+			Model model,
+			HttpSession session) {
 
+		proposalService.setModel_employerToMakeInitialProposal(userId, jobId, model, session);		
+		return "/wage_proposal/AjaxResponse_Proposal_NEW";
+	}
+
+	@RequestMapping(value = "/employer-make-initial-proposal", method = RequestMethod.POST)
+	@ResponseBody
+	public String makeOffer(
+			HttpSession session, 
+			@RequestBody MakeInitialOfferByEmployerRequest request) {
+		proposalService.insertInitialProposalByEmployer(request, session);
+		return "";
+	}
 }
