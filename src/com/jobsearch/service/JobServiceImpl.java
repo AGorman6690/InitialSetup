@@ -253,17 +253,6 @@ public class JobServiceImpl {
 		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
 
-		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
-		if (context.matches("find")){
-			workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
-		}		
-		response.setJson_workDayDtos(JSON.stringify(workDayDtos));
-		
-		
-
-		// response.setQuestions(applicationService.getQuestionsWithAnswersByJobAndUser(
-		// jobId, sessionUser.getUserId()));
-		
 		if (sessionUser != null && sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
 			response.setQuestions(questionService.getQuestionsWithAnswersByJobAndUser(
 					jobId, sessionUser.getUserId()));
@@ -271,8 +260,42 @@ public class JobServiceImpl {
 		}else{
 			response.setQuestions(questionService.getQuestions(jobId));
 		}
+		
+		
+		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
+		if (context.matches("find")){
+			workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
+			response.setWarningMessage(getViewJobWarningMessage(response.getApplication(), job, workDayDtos));	
+
+		}		
+		response.setJson_workDayDtos(JSON.stringify(workDayDtos));
 
 		model.addAttribute("response", response);
+	}
+
+	private String getViewJobWarningMessage(Application application, Job job, List<WorkDayDto> workDayDtos) {
+	
+		String warningMessage = null;
+		
+		if(!job.getIsPartialAvailabilityAllowed() &&
+				workDayDtos.stream().filter(wd -> wd.getHasConflictingEmployment()).count() > 0){
+			warningMessage = "You cannot apply. This job does not allow partial availability and you have a schedule conflict.";
+		}else if(application != null){
+			if(application.getStatus() == 0 || application.getStatus() == 2 || application.getStatus() == 4){
+				warningMessage =  "Your application has been submitted";
+			}else if(application.getStatus() == 1){
+				warningMessage = "Your application has been declined";
+			}else if(application.getStatus() == 5){
+				warningMessage = "You have withdrawn your application";
+			}else if(application.getStatus() == 6){
+				warningMessage = "The employer filled all positions for this job. Your application will remain in the employer's inbox.";
+			}else if(application.getStatus() == -1){
+				warningMessage = "The employer initiated contact with you";
+			}else{
+				warningMessage = "Application has been accepted";
+			}
+		}
+		return warningMessage;
 	}
 
 	public void setGetJobReponse_forPreviewingJobPost(Model model, AddJobRequest request) {

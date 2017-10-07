@@ -3,18 +3,9 @@
 <div class="wrapper ${sessionScope.user.profileId == 1 ? 'employee-context' : 'employer-context'}">
 	<c:if test="${sessionScope.user.profileId == 1 }">
 		<c:choose>
-			<c:when test="${response.context == 'find' && !empty response.application}">						
+			<c:when test="${response.context == 'find' && !empty response.warningMessage}">						
 				<div class="warning-message">	
-					<h3>
-					${response.application.status == 0 ||
-						 response.application.status == 2 ||
-						 response.application.status == 4 ? "Your application has been submitted" :
-						 response.application.status == 1 ? "Your application has been declined" :
-						 response.application.status == 5 ? "You have withdrawn your application" :
-						 response.application.status == 6 ? "The employer filled all positions for this job. Your application will remain in the employer's inbox." :
-						 response.application.status == -1 ? "The employer initiated contact with you" :
-						 "Application has been accepted" }	
-					</h3>	
+					<span>${response.warningMessage }</span>	
 				</div>						
 			</c:when>
 			<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
@@ -29,7 +20,7 @@
 	</c:if>
 	<c:if test="${sessionScope.user.profileId == 1 &&
 						 response.context == 'find' &&
-						 empty response.application &&						 
+						 empty response.warningMessage &&						 
 						empty sessionScope.jobs_needRating}">
 		<c:set var="doShowApplyButton" value="1"></c:set>
 	</c:if>

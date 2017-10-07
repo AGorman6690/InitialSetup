@@ -26,7 +26,7 @@ function filterApplications($e){
 			doShow = true
 		}		
 		var $appContainer = $app.closest(".application-container");
-		doShow ? $appContainer.slideDown() : $appContainer.slideUp();		
+		doShow ? $appContainer.slideDown(800) : $appContainer.slideUp(800);		
 	})
 }
 function getCalendarDays(){

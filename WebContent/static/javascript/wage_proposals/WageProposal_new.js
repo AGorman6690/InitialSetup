@@ -185,6 +185,7 @@ function executeAjaxCall_makeInitialOffer(applicationDto){
 }
 function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,
 		dateStrings_toFindConflictsWith){
+	
 	var conflicingApplicationsRequest = {};
 	conflicingApplicationsRequest.referenceApplicationId = applicationId_withReferenceTo;
 	conflicingApplicationsRequest.datesToFindConflictWith = dateStrings_toFindConflictsWith;
@@ -199,7 +200,27 @@ function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_
 		dataType: "html",
 	}).done(function(html){
 		broswerIsWaiting(false);
-		$e_renderHtml.html(html);
+		
+		// This method of showing/hiding was a quick hack.
+		// Pretty this up later.
+		var show = html.indexOf("other-application-conflicts") === -1 ? false : true;
+		
+		if(show){
+
+			if(!$e_renderHtml.is(":visible")){
+				$e_renderHtml.hide();
+				$e_renderHtml.html(html);
+				slideDown($e_renderHtml, 800);			
+			}else{
+				$e_renderHtml.html(html);
+			}
+
+		}else{
+			slideUp($e_renderHtml, 800, function(){
+				$e_renderHtml.html(html);
+			})			
+		}
+		
 	})
 }
 function executeAjaxCall_getCurrentProposal(proposalId, $e, callback){
@@ -236,6 +257,7 @@ function getRespondToProposalRequest($e){
 	var respondToProposalRequest = {};
 	respondToProposalRequest.proposal = {};
 	
+	var $proposalContentWrapper = $e.closest(".proposal-content-wrapper");
 	var $proposalContainer = $e.closest(".proposal-container");
 	var $wageProposal = $proposalContainer.find(".wage-proposal-wrapper").eq(0);
 	var $workDayProposal = $proposalContainer.find(".work-day-proposal-wrapper").eq(0);
@@ -254,26 +276,26 @@ function getRespondToProposalRequest($e){
 								$calendar, "yy-mm-dd", "is-proposed");
 	
 	// Expiration time
-	if(isSessionUserAnEmployer($e) && respondToProposalRequest.proposal.proposedDates.length > 0){
+	if(isSessionUserAnEmployer($e)){
 		
 		var date_expiration = new Date();
 		var date_now = new Date();
 		
-		// Job does not allow partial availability
-		if($workDayProposal.length == 0){
+		var workDayDto_firstProposedWorkDay;
+		
+		// Job does not allow partial availability. (this is a hack. add some job meta data)
+		if($workDayProposal.length == 0){			
 			workDayDto_firstProposedWorkDay = g_workDayDtos_originalProposal[0];
 		
 		// Get the first date proposed/accepted
 		}else if(respondToProposalRequest.proposal.proposedDates.length > 0){			
-			var date_firstProposedWorkDay = getMinDateFromDateStringsArray(
-					respondToProposalRequest.proposal.proposedDates);
-			
-			var workDayDto_firstProposedWorkDay = getWorkDayDtoByDate(date_firstProposedWorkDay,
-													g_workDayDtos_originalProposal);		
+			var firstDate = getMinDateFromDateStringsArray(respondToProposalRequest.proposal.proposedDates);
+			workDayDto_firstProposedWorkDay = getWorkDayDtoByDate(firstDate, g_workDayDtos_originalProposal);
 		}
-	
-		var dateTime_firstProposedWorkDay = new Date(workDayDto_firstProposedWorkDay.workDay.stringDate +
-				" " + workDayDto_firstProposedWorkDay.workDay.stringStartTime);
+				
+		var dateString = workDayDto_firstProposedWorkDay.workDay.stringDate; 
+		var timeString = workDayDto_firstProposedWorkDay.workDay.stringStartTime
+		var dateTime_firstProposedWorkDay = new Date(dateString + " " + timeString);
 		
 		var days = 0;
 		var hours = 0;

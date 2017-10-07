@@ -165,10 +165,10 @@
 	display: none;
 }
 
-.v2 td.job-work-day.no-available-positions,
-.v2 td.job-work-day.no-available-positions *,
-.v2 td.job-work-day.has-conflicting-employment,
-.v2 td.job-work-day.has-conflicting-employment *{
+.v2.calendar-container td.job-work-day.no-available-positions,
+.v2.calendar-container td.job-work-day.no-available-positions *,
+.v2.calendar-container td.job-work-day.has-conflicting-employment,
+.v2.calendar-container td.job-work-day.has-conflicting-employment *{
 	background: #000;
 	color: #fff;
 }

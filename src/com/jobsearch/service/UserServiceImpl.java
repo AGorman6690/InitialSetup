@@ -877,5 +877,10 @@ public class UserServiceImpl {
 		}	
 	}
 
+	public boolean isEmployer(Integer userId) {
+		JobSearchUser user = getUser(userId);
+		return isEmployer(user);
+	}
+
 
 }

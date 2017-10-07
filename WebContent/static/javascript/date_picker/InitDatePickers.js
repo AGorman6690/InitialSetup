@@ -135,10 +135,10 @@ function initCalendar_new($calendar, workDayDtos){
 				var dateStrings_counterWorkDays = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");
 				var $e_renderHtml = $proposalContainer.find(".conflicting-applications-countering").eq(0);
 				
-				if(dateStrings_counterWorkDays.length > 0){
+//				if(dateStrings_counterWorkDays.length > 0){
 					executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId,
 							dateStrings_counterWorkDays);
-				}
+//				}
 			}
 		}
 	})

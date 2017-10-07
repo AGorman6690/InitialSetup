@@ -11,7 +11,8 @@
 			<c:choose>
 				<c:when test="${!response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating}">
 					<p>${response.profileInfoDto.user.firstName } ${response.profileInfoDto.user.lastName }
-						 has not completed enough jobs in order to calculate a rating at this time</p>
+						 
+						 has not ${response.profileInfoDto.user.profileId == 1 ? 'completed' : 'posted' } enough jobs in order to calculate a rating at this time</p>
 				</c:when>			
 				<c:otherwise>		
 						<p id="overall-rating" data-toggle-id="user-rating-details">

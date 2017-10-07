@@ -1,5 +1,6 @@
 package com.jobsearch.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -194,10 +195,10 @@ public class ProposalServiceImpl{
 
 	public Boolean isProposedToUser(Proposal proposal, JobSearchUser user) {
 		if(proposal.getFlag_hasExpired() == 1){
-			if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
-				return false;
-			}else{
+			if(userService.isEmployer(user)){
 				return true;
+			}else{
+				return false;
 			}
 		}else if(proposal.getProposedToUserId() == user.getUserId()) return true;
 		else return false ;
@@ -208,30 +209,39 @@ public class ProposalServiceImpl{
 
 		Proposal proposalBeingRespondedTo = getCurrentProposal(request.getProposal().getApplicationId());
 		JobSearchUser sessionUser = SessionContext.getUser(session);
-				
+		Job job = jobService.getJob_ByApplicationId(request.getProposal().getApplicationId());
+		
+		Proposal newProposal = new Proposal(proposalBeingRespondedTo);
+		newProposal.setAmount(request.getProposal().getAmount());
+		newProposal.setProposedDates(request.getProposal().getProposedDates());
+		setAcceptedAndExpirationDates(newProposal, request);
+		
 		// validate
 		boolean valid = true;
-		if(proposalBeingRespondedTo.getIsDeclined() == 1){
+		if(proposalBeingRespondedTo.getIsCurrentProposal() == 0){
+			valid = false;
+		}
+		else if(proposalBeingRespondedTo.getIsDeclined() == 1){
 			valid = false;
 		}
 		else if(request.getIsRespondingToAnExpiredProposal()){
 			if(!userService.isEmployer(sessionUser)){
 				valid = false;
 			}
-		}else if(proposalBeingRespondedTo.getProposedToUserId() != 
-				SessionContext.getUser(session).getUserId()){
+		}else if(!isProposedToUser(proposalBeingRespondedTo, sessionUser)){
 			valid = false;
-		}
-				
+		}else if(!isValidProposal(newProposal, job)){
+			valid = false;
+		}		
+
 		if(valid){			
 			boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal());
 			if(userService.isEmployer(sessionUser)){		
-				Proposal newProposal = getNewProposalFromEmployer(request, proposalBeingRespondedTo);			
-				insertProposal(newProposal);					
+				
+				insertProposal(newProposal, proposalBeingRespondedTo, job);					
 				if(!request.getIsRespondingToAnExpiredProposal() && isAcceptingOffer){		
 					Proposal employerProposal = getCurrentProposal(newProposal.getApplicationId());
-					updateProposalFlag(employerProposal,
-							Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
+					updateProposalFlag(employerProposal, Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
 				}					
 			}else{
 				if(isAcceptingOffer){							
@@ -247,6 +257,47 @@ public class ProposalServiceImpl{
 	}
 
 	
+	private boolean isValidProposal(Proposal proposal, Job job) {
+		
+		boolean valid = true;
+		
+		// Proposed amount
+		if (!verificationService.isPositiveNumber(proposal.getAmount())){
+			valid = false; 
+		}
+		
+		// Proposed dates		
+		if (job.getIsPartialAvailabilityAllowed()){
+			boolean atLeastOneWorkDayProposed = false;
+			List<WorkDay> workDays = workDayService.getWorkDays(job.getId());
+			for (WorkDay workDay : workDays){
+				for (String dateString : proposal.getProposedDates()){
+					if(LocalDate.parse(dateString).equals(LocalDate.parse(workDay.getStringDate().replace("/", "-")))){
+						atLeastOneWorkDayProposed = true;
+						break;
+					}
+				}
+				if (atLeastOneWorkDayProposed){
+					break;
+				}
+			}
+			if (!atLeastOneWorkDayProposed){
+				valid = false;
+			}			
+		}
+		
+		// Expiration time
+		if(userService.isEmployer(proposal.getProposedByUserId())){
+			if(proposal.getEmployerAcceptedDate() == null || proposal.getExpirationDate() == null){
+				valid = false;
+			}else if(!DateUtility.isValidFutrueDate(proposal.getEmployerAcceptedDate(), proposal.getExpirationDate())){
+				valid = false;
+			}
+		}
+				
+		return valid;
+	}
+
 	private boolean getIsAcceptingProposal(Proposal proposalBeingRespondedTo,
 			Proposal newProposal) {
 	
@@ -307,13 +358,20 @@ public class ProposalServiceImpl{
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		Proposal proposal = getProposal(proposalId);
-		if(proposal.getIsCurrentProposal() == 1 &&
-				proposal.getProposedToUserId() == sessionUser.getUserId()){
-			
+		
+		boolean valid = true;
+		if(proposal.getIsCurrentProposal() == 0){
+			valid = false;
+		}
+		if(!isProposedToUser(proposal, sessionUser)){
+			valid = false;
+		}
+		
+		if(valid){			
 			applicationService.updateApplicationStatus(proposal.getApplicationId(),
 					Application.STATUS_DECLINED);
-//			applicationService.closeApplication(proposal.getApplicationId());
-			updateProposalFlag(proposal, "IsDeclined", 1);
+			applicationService.closeApplication(proposal.getApplicationId());
+			updateProposalFlag(proposal, "IsDeclined", 1);			
 		}
 	}
 
@@ -402,32 +460,47 @@ public class ProposalServiceImpl{
 		return SessionContext.getUser(session).getUserId() == proposal.getProposedToUserId();
 	}
 	
-	public void insertProposal(Proposal proposal) {
-
-		// *********************************************************
-		// *********************************************************
-		// Verify the work day proposal is valid. i.e. verify at least one of the
-		// proposed date strings is a work day for the particular job.
-		// *********************************************************
-		// *********************************************************
-		
-		if(proposal.getProposedDates().size() > 0 &&
-				NumberUtility.isPositiveNumber(proposal.getAmount())){
-		
-			Proposal currentProposal = getCurrentProposal(proposal.getApplicationId());
-			if(currentProposal != null){
-				updateProposalFlag(currentProposal, "IsCurrentProposal", 0);
-			}
-				
-			// Set date strings, if necessary
-			Job job = jobService.getJob_ByApplicationId(proposal.getApplicationId());		
-			if(!job.getIsPartialAvailabilityAllowed()){
-				proposal.setProposedDates(workDayService.getWorkDayDateStrings(job.getId()));
-			}
-			
-			repository.insertProposal(proposal);
-		}
+	public void insertProposal(Proposal newProposal) {
+		Proposal currentProposal = getCurrentProposal(newProposal.getApplicationId());
+		Job job = jobService.getJob_ByApplicationId(newProposal.getApplicationId());
+		insertProposal(newProposal, currentProposal, job);
 	}
+	
+	public void insertProposal(Proposal newProposal, Proposal currentProposal, Job job) {	
+		
+		// *********************************************************
+		// *********************************************************
+		// The proposal verification is handled before this is called.
+		// If a given command (i.e. apply for job) makes an insert into more than one table,
+		// then all inserts need to be validated before any are made.
+		// *********************************************************
+		// *********************************************************
+		
+		if(currentProposal != null){
+			updateProposalFlag(currentProposal, "IsCurrentProposal", 0);
+		}		
+		
+		// ****************************************************
+		// Design note: If a job does not allow partial, it might seem unnecessary to insert all
+		// the job's work days into the proposal work day table (i.e. there  can never be a subset
+		// of work days), however in order to determine whether
+		// an employee's employment is still active, all the job's work day's "IsComplete" field
+		// is inspected and joined with the proposal work day table. Thus, EVERY proposal needs
+		// to have days in the proposal work days table.
+		// An alternative is to inspect the job's status field, if the job does not allow partial,
+		// to determine if an employee's job is complete (i.e. if a job does not allow partial and
+		// the job's status is complete, then the employee's employment is complete).
+		// If performance is an issue, we can address this later.
+		// ****************************************************
+
+		// Set date strings, if necessary			
+		if(!job.getIsPartialAvailabilityAllowed()){
+			newProposal.setProposedDates(workDayService.getWorkDayDateStrings(job.getId()));
+		}
+		
+		repository.insertProposal(newProposal);
+	}
+	
 	
 	public Proposal getProposal(int proposalId) {
 		return repository.getProposal(proposalId);
@@ -491,14 +564,24 @@ public class ProposalServiceImpl{
 	}
 
 	public void setAcceptedAndExpirationDates(Proposal proposal, RespondToProposalRequest request) {
-		LocalDateTime acceptedDate = LocalDateTime.now();
-		LocalDateTime expirationDate = DateUtility.getFutureDate(
-				acceptedDate, request.getDays_offerExpires(),
-				request.getHours_offerExpires(), request.getMinutes_offerExpires());
 		
-		proposal.setEmployerAcceptedDate(acceptedDate);
-		proposal.setExpirationDate(expirationDate);
+		if(request.getDays_offerExpires() != null || request.getHours_offerExpires() != null
+				|| request.getMinutes_offerExpires() != null){
+			
+			LocalDateTime acceptedDate = LocalDateTime.now();
+			LocalDateTime expirationDate = DateUtility.getFutureDate(
+					acceptedDate, request.getDays_offerExpires(),
+					request.getHours_offerExpires(), request.getMinutes_offerExpires());
+			
+			proposal.setEmployerAcceptedDate(acceptedDate);
+			proposal.setExpirationDate(expirationDate);
+		}
 
+	}
+
+	public void insertProposal(Proposal newProposal, Proposal currentProposal) {
+		Job job = jobService.getJob_ByApplicationId(newProposal.getApplicationId());
+		insertProposal(newProposal, currentProposal, job);
 	}
 
 	

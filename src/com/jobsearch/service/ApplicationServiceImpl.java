@@ -145,8 +145,6 @@ public class ApplicationServiceImpl {
 			if (!atLeastOneWorkDayProposed){
 				valid = false;
 			}			
-		}else{
-			request.setProposedDates(workDayService.getWorkDayDateStrings(request.getJobId()));
 		}
 		
 		// Conflicting employment
@@ -154,6 +152,7 @@ public class ApplicationServiceImpl {
 			valid = false;
 		}
 		
+		// Answers
 		List<Question> questions = questionService.getQuestions(request.getJobId());
 		if (questions != null && questions.size() > 0){			
 			for (Question question : questions){
@@ -167,8 +166,7 @@ public class ApplicationServiceImpl {
 			}			
 		}		
 		
-		return valid;
-	
+		return valid;	
 	}
 
 
@@ -225,7 +223,7 @@ public class ApplicationServiceImpl {
 //					updateWageProposalStatus(currentProposal.getEmploymentProposalId(),
 //												EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
 	
-					proposalService.insertProposal(modifiedProposal);
+					proposalService.insertProposal(modifiedProposal, currentProposal, job);
 					Proposal newCurrentProposal = proposalService.getCurrentProposal(application.getApplicationId());
 					proposalService.updateProposalFlag(newCurrentProposal,
 							Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS, 1);
@@ -275,7 +273,7 @@ public class ApplicationServiceImpl {
 				newProposal.setAmount(currentProposal.getAmount());
 				newProposal.setProposedDates(workDayService.removeConflictingWorkDays(
 						currentProposal.getProposedDates(), workDays_toFindConflictsWith));
-				proposalService.insertProposal(newProposal);		
+				proposalService.insertProposal(newProposal, currentProposal);		
 				
 				Proposal newCurrentProposal = proposalService.getCurrentProposal(
 						conflictingApplication.getApplicationId());
@@ -515,7 +513,7 @@ public class ApplicationServiceImpl {
 		}
 		
 		// Expiration
-		if(currentProposal.getFlag_hasExpired() == 1){
+		if(currentProposal.getFlag_hasExpired() == 1 && application.getIsAccepted() == 0){
 			if(isEmployee){
 				messages.add("The employer's offer has expired. The employer has the next action.");	
 			}else{
@@ -712,7 +710,9 @@ public class ApplicationServiceImpl {
 				&& application.getIsAccepted() == 0){
 			includeApplication = true;		
 		}		
-		if(request.getShowExpiredProposals() && currentProposal.getFlag_hasExpired() == 1){
+		if(request.getShowExpiredProposals()
+				&& currentProposal.getFlag_hasExpired() == 1
+				&& application.getIsAccepted() == 0){
 			includeApplication = true;			
 		}		
 		if (request.getShowAcceptedProposals() && application.getIsAccepted() == 1){

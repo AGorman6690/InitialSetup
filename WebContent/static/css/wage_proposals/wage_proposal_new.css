@@ -147,9 +147,10 @@
 	cursor: default;
 }
 .proposal-status-wrapper button.status-accepting.current-status{
-	background: #163b3d;
+	background: #197994;
 	color: #fff;
 }
+.send-proposal-wrapper button.proposing-new-offer-context,
 .proposal-status-wrapper button.status-proposing.current-status{
 	background: #bb0505;
 	color: #fff;
@@ -192,4 +193,14 @@
 .employer-make-initial-offer .accepting-offer-context,
 .employer-accepted-offer .proposal-status-wrapper{
 	display: none;
+}
+.other-application-conflicts{
+    padding: 10px;
+/*     border: 3px solid #ff0000; */
+    background: #ffe9e9;
+    border-radius: 3px;
+    box-shadow: 3px 3px 6px #cacaca;
+    width: 600px;
+    margin: auto;	
+    margin-bottom: 50px;
 }

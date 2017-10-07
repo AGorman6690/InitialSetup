@@ -23,5 +23,6 @@ public class GetJobResponse {
 	ProfileInfoDto profileInfoDto
 	String date_firstWorkDay
 	int monthSpan_allWorkDays
-	
+//	Boolean cannotApplyBecauseLacksAvailability
+	String warningMessage
 }

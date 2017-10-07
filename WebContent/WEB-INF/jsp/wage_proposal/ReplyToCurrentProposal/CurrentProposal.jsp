@@ -8,12 +8,12 @@
 	data-context="${sessionScope.user.profileId == 1 ? 'employee' : 'employer' }">
 
 
-		<div class="proposal-content-wrapper">
+		<div class="proposal-content-wrapper" data-first-job-work-day="${response.currentProposal.proposedDates[0] }">
 			<h1 class="hide-on-load">
 				${context == 'employer-make-initial-offer' 
 					? 'Make An Offer To ' += user_makeOfferTo.firstName += " " += user_makeOfferTo.lastName
 					: 'Proposal'}</h1>
-						
+			<div class="conflicting-applications-countering"></div>				
 			<c:choose>
 				<c:when test="${user.profileId == 1 }">
 					<div class="proposal-item">
@@ -56,7 +56,7 @@
 					 data-proposed-work-days="${response.currentProposal.proposedDates }">
 					<label class="">Work Days</label>		
 					<div class="proposal-item-content">
-						<div class="conflicting-applications-countering"></div>						
+											
 						<p class="red-bold-old">
 							${context == 'employer-make-initial-offer' ? 'Propose the days you want the applicant to work' 
 							: response.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'Final work days' 

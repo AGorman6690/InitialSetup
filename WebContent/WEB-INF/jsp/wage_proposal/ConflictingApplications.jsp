@@ -6,16 +6,16 @@
 								
 	<c:set var="text_application"
 	 	value="${response.conflictingApplications.size() == 1 ? 'application' : 'applications' }"></c:set>
-	<div class="other-application-conflicts width-500 mar-btm">
+	<div class="other-application-conflicts">
 
 		<div id="conflicting-apps-${response.referenceApplication.applicationId }"
-				class="alert-message ">
+				>
 		<h4 class="red-bold" data-toggle-id="conflicting-apps-${response.referenceApplication.applicationId }">
 			${response.conflictingApplications.size() } conflicting ${text_application }
 			
 		</h4>				
 			<p>These proposed work days overlap with ${isOneConflict == '1' ? 'another application'
-				: 'other applications' }.</p>
+				: 'other applications' } of yours.</p>
 			<c:choose>
 				<c:when test="${areConflictsCausedByCounteringWorkDays }">
 					<p class="if-you-accept">If you <span class="bold">accept</span>
@@ -32,7 +32,7 @@
 				<div class="conflicting-applications ">
 					<c:if test="${response.conflictingApplicationsToBeRemoved.size() > 0 }">
 						<div class="disposition">
-							<p><span class="bold">Removed</span> because this job requires you to apply for all work days</p>
+							<p><span class="bold">Removed</span> because the following ${response.conflictingApplicationsToBeRemoved.size() > 1 ? 'jobs require' : 'job requires'} you to apply for all work days</p>
 							<div class="applications">
 								<ul>
 									<c:forEach items="${response.conflictingApplicationsToBeRemoved }"
@@ -60,7 +60,9 @@
 					</c:if>
 					<c:if test="${response.conflictingApplicationsToBeSentBackToEmployer.size() > 0 }">
 						<div class="disposition">
-							<p><span class="bold">Modified</span> and <span class="bold">sent back</span> to the employer</p>
+							<p><span class="bold">Modified</span> and <span class="bold">sent back to the employer</span> because the following
+								 ${response.conflictingApplicationsToBeSentBackToEmployer.size() == 1 ? 'job allows' :
+								  'jobs allow' } partial availability</p>
 							<div class="applications">
 								<ul>
 									<c:forEach items="${response.conflictingApplicationsToBeSentBackToEmployer }"
