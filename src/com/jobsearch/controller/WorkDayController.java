@@ -55,13 +55,5 @@ public class WorkDayController {
 
 		return JSON.stringify(workDayDtos);
 	}
-	
-	@ResponseBody
-	@RequestMapping(value = "/job/{jobId}/employee/{userId}/work-days", method = RequestMethod.GET)
-	public String getWorkDayDtos_proposedWorkDays(@PathVariable(value = "jobId") int jobId,
-			@PathVariable(value = "userId") int userId, HttpSession session) {
 
-		return JSON.stringify(proposalService.getWorkDayDtos_proposedWorkDays(jobId, userId, session));
-	}
-	
 }

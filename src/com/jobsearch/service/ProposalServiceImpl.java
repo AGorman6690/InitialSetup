@@ -137,33 +137,6 @@ public class ProposalServiceImpl{
 	public List<String> getProposedDates(Integer proposalId) {
 		return repository.getProposedDates(proposalId);
 	}
-	
-	public List<WorkDayDto> getWorkDayDtos_proposedWorkDays(int applicationId, HttpSession session) {
-
-		JobSearchUser sessionUser =  SessionContext.getUser(session);
-		if( ( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE &&
-				verificationService.didUserApplyForJob(jobService.getJob_ByApplicationId(applicationId).getId(),
-														sessionUser.getUserId() ) )
-
-			||
-
-			( sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER &&
-			verificationService.didSessionUserPostJob(session, jobService.getJob_ByApplicationId(applicationId)) ) ){
-
-			return workDayService.getWorkDayDtos_byProposal(getCurrentProposal(applicationId));
-		}else return null;
-	}
-	
-	public List<WorkDayDto> getWorkDayDtos_proposedWorkDays(int jobId, int userId, HttpSession session) {
-
-		Application application = applicationService.getApplication(jobId, userId);
-		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
-		if(application != null){
-			workDayDtos = getWorkDayDtos_proposedWorkDays(application.getApplicationId(), session);
-		}
-		return workDayDtos;
-	}
-	
 
 	public void inspectNewness(Proposal proposal, JobSearchUser user) {
 		if(proposal.getProposedToUserId() == user.getUserId() && proposal.getIsNew() == 1){
