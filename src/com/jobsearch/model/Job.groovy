@@ -19,7 +19,6 @@ public class Job {
 	Float lat
 	Float lng
 	Boolean isPartialAvailabilityAllowed
-	int positionsPerDay
 
 	int flag_isNotAcceptingApplications
 

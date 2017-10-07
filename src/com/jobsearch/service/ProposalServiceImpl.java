@@ -224,7 +224,7 @@ public class ProposalServiceImpl{
 		else if(proposalBeingRespondedTo.getIsDeclined() == 1){
 			valid = false;
 		}
-		else if(request.getIsRespondingToAnExpiredProposal()){
+		else if(proposalBeingRespondedTo.getFlag_hasExpired() == 1){
 			if(!userService.isEmployer(sessionUser)){
 				valid = false;
 			}
@@ -235,11 +235,11 @@ public class ProposalServiceImpl{
 		}		
 
 		if(valid){			
-			boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal());
+			boolean isAcceptingOffer = getIsAcceptingProposal(proposalBeingRespondedTo, request.getProposal(), job);
 			if(userService.isEmployer(sessionUser)){		
 				
 				insertProposal(newProposal, proposalBeingRespondedTo, job);					
-				if(!request.getIsRespondingToAnExpiredProposal() && isAcceptingOffer){		
+				if(proposalBeingRespondedTo.getFlag_hasExpired() == 0 && isAcceptingOffer){		
 					Proposal employerProposal = getCurrentProposal(newProposal.getApplicationId());
 					updateProposalFlag(employerProposal, Proposal.FLAG_EMPLOYER_ACCEPTED_THE_OFFER, 1);		
 				}					
@@ -299,25 +299,28 @@ public class ProposalServiceImpl{
 	}
 
 	private boolean getIsAcceptingProposal(Proposal proposalBeingRespondedTo,
-			Proposal newProposal) {
+			Proposal newProposal, Job job) {
 	
 		boolean isAcceptingOffer = true;
 		if(!proposalBeingRespondedTo.getAmount().matches(newProposal.getAmount()))
 			isAcceptingOffer = false;
-		else if(proposalBeingRespondedTo.getProposedDates().size() !=
-				newProposal.getProposedDates().size())			
-			isAcceptingOffer = false;
-		else{
-			for(String dateString : newProposal.getProposedDates()){
-				if(proposalBeingRespondedTo.getProposedDates()
-						.stream()
-						.filter(ds -> ds.matches(dateString))
-						.count() == 0){
-					isAcceptingOffer = false;
-					break;
+		if(job.getIsPartialAvailabilityAllowed()){
+			if(proposalBeingRespondedTo.getProposedDates().size() !=
+					newProposal.getProposedDates().size())			
+				isAcceptingOffer = false;
+			else{
+				for(String dateString : newProposal.getProposedDates()){
+					if(proposalBeingRespondedTo.getProposedDates()
+							.stream()
+							.filter(ds -> ds.matches(dateString))
+							.count() == 0){
+						isAcceptingOffer = false;
+						break;
+					}
 				}
-			}
+			}		
 		}
+
 		return isAcceptingOffer;
 	}
 	
@@ -427,9 +430,6 @@ public class ProposalServiceImpl{
 			// Update the job after the employment record has been inserted.
 			// The "IsStillAcceptingApplications" property needs to be updated.
 			job = jobService.getJob(job.getId());
-
-			applicationService.resolveApplicationConflicts_withinApplicationsForAJob(job,
-					proposalBeingRespondedTo);
 
 			applicationService.resolveApplicationConflicts_withinApplicationsForUser(session,
 					proposalBeingRespondedTo.getApplicationId(),

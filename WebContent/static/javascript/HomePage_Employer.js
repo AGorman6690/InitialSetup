@@ -47,6 +47,7 @@ function getApplicationProgressRequest_newProposals(){
 	return applicationProgressRequest;
 }
 function executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicationProgressRequest) {
+	broswerIsWaiting(true);
 	$.ajax({
 		type: "POST",
 		url: "/JobSearch/job/" + jobId + "/application-progress",
@@ -55,6 +56,7 @@ function executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicati
 		data: JSON.stringify(applicationProgressRequest), 
 		contentType: "application/json"
 	}).done(function(html) {
+		broswerIsWaiting(false);
 		$proposalList = $proposalDetails.find(".proposal-list");
 		$proposalList.show();
 		$proposalList.html(html);

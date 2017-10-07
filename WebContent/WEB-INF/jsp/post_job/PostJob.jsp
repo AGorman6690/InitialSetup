@@ -65,12 +65,7 @@
 						<div class="item">
 							<label>Job Description</label>
 							<textarea id="description" name="description" class="" rows="6"></textarea>
-						</div>
-						<div class="item">
-							<label>How many positions are you filling per day?</label>
-							<input id="positions-per-day" type="text" class="positive-number"
-								value="">
-						</div>					
+						</div>				
 					</div>
 				</div>
 

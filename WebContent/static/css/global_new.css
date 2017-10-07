@@ -1,3 +1,14 @@
+body.waiting #spinner-wheel{
+/* 	display: block; */
+}
+#spinner-wheel{
+	display: none;
+	width: 100px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+  	z-index: 1;
+}
 .show-job-info-mod:hover{
 	cursor: pointer;
 }

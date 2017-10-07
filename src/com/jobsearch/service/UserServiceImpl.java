@@ -280,9 +280,6 @@ public class UserServiceImpl {
 		
 		ratingService.insertRatings_toRateEmployer(jobId, userId);
 		ratingService.insertRatings_toRateEmployees(jobId, userId);
-
-		jobService.inspectJob_isStillAcceptingApplications(jobId);
-
 	}
 
 	public void setViewEmployeeHomepageResponse(JobSearchUser employee, Model model, HttpSession session) {

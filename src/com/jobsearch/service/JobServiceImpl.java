@@ -631,25 +631,6 @@ public class JobServiceImpl {
 		}
 	}
 	
-		
-		
-	
-
-	public void inspectJob_isStillAcceptingApplications(int jobId) {
-
-		boolean atLeastOneWorkDayIsNotFilled = false;
-		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
-		for (WorkDayDto workDayDto : workDayDtos) {
-			if (workDayDto.getCount_positionsFilled() < workDayDto.getCount_totalPositions()) {
-				atLeastOneWorkDayIsNotFilled = true;
-				break;
-			}
-		}
-
-		if (!atLeastOneWorkDayIsNotFilled)
-			updateJobFlag(jobId, Job.FLAG_IS_NOT_ACCEPTING_APPLICATIONS, 1);
-	}
-
 	private void updateJobFlag(int jobId, String flag, int value) {
 		repository.updateJobFlag(jobId, flag, value);
 	}

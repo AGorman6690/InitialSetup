@@ -70,7 +70,6 @@ public class JobRepository extends BaseRepository {
 					e.setLng(rs.getFloat("Lng"));
 					e.setStatus(rs.getInt("Status"));
 					e.setIsPartialAvailabilityAllowed(rs.getBoolean("IsPartialAvailabilityAllowed"));
-					e.setPositionsPerDay(rs.getInt("PositionsPerDay"));
 					e.setStreetAddress_formatted(rs.getString("StreetAddress_Formatted"));
 					e.setCity_formatted(rs.getString("City_Formatted"));
 					e.setZipCode_formatted(rs.getString("ZipCode_Formatted"));
@@ -189,7 +188,7 @@ public class JobRepository extends BaseRepository {
 			cStmt.setFloat(9, request.getJob().getLng());
 			cStmt.setInt(10, Job.STATUS_FUTURE);
 			cStmt.setBoolean(11, request.getJob().getIsPartialAvailabilityAllowed());
-			cStmt.setInt(12, request.getJob().getPositionsPerDay());
+			cStmt.setInt(12, 0); // eventually remove this. "Positions per day" has been removed
 			cStmt.setString(13, request.getJob().getStreetAddress_formatted());
 			cStmt.setString(14, request.getJob().getCity_formatted());
 			cStmt.setString(15, request.getJob().getZipCode_formatted());

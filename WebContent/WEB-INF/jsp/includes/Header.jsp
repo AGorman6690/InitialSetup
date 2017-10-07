@@ -64,6 +64,9 @@
 	</head>
 
 	<body>
+		<div id="spinner-wheel"> 
+			<img src="/JobSearch/static/images/spinner1.gif">
+		</div>
 		<div id="user-event-calendar"></div>
 		<div id="login-signup-mod-wrapper"></div>
 		

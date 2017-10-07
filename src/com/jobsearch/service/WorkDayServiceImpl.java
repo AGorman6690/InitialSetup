@@ -287,7 +287,6 @@ public class WorkDayServiceImpl {
 			workDayDto.setWorkDay(workDay);
 			workDayDto.setCount_applicants(applicationService.getCount_applicantsByDay(workDay.getDateId(), jobId));
 			workDayDto.setCount_positionsFilled(applicationService.getCount_positionsFilledByDay(workDay.getDateId(), jobId));
-			workDayDto.setCount_totalPositions(jobService.getJob(jobId).getPositionsPerDay());
 			workDayDtos.add(workDayDto);
 		}
 		return workDayDtos;
@@ -326,12 +325,6 @@ public class WorkDayServiceImpl {
 			
 			WorkDayDto workDayDto = new WorkDayDto();
 			workDayDto.setWorkDay(workDay);
-
-			// Positions filled
-			int positionsFilled = applicationService.getCount_positionsFilledByDay(
-					workDay.getDateId(), job.getId());
-			if(positionsFilled < job.getPositionsPerDay()) workDayDto.setHasOpenPositions(true);
-			else workDayDto.setHasOpenPositions(false);
 
 			// Is proposed
 			workDayDto.setIsProposed(applicationService.getIsWorkDayProposed(

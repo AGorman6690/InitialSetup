@@ -3,6 +3,9 @@
 	display: inline-block;
 	vertical-align: top;
 }
+#jobs-list{
+    width: 740px;
+}
 #personal-info-container{
 	width: 400px;
 }

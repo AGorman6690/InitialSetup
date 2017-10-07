@@ -16,7 +16,7 @@ $(document).ready(function(){
 		})
 	})
 	
-	initCalendar_eventCalendar();
+//	initCalendar_eventCalendar();
 	
 	$(".calendar").on("mouseover", "td.application", function(){
 		
@@ -146,7 +146,7 @@ function setEmploymentLines($calendar){
 //		job.line_elements = getLineElements(dates);
 //		jobs_employment.push(job);
 //	})	
-	
+	console.log($("#application-details .application"))
 	$("#application-details .application").each(function(){
 		dates = getDateFromContainer($(this));
 		job = {};
@@ -215,6 +215,8 @@ function getLineElements(jobDates){
 	var previousDate;
 
 	$(jobDates).each(function(i, date){
+		
+		var pushedLineElement = false;
 
 		if(i == 0){			
 			line_element = getNewLineElement(date);
@@ -234,7 +236,8 @@ function getLineElements(jobDates){
 			line_element.rightEndPoint.isLast = true;
 			
 			line_elements.push(line_element);
-						
+			// the previous line element is actually being pushed
+			pushedLineElement = false;
 			// start a new line element whose left end point is this day
 			line_element = getNewLineElement(date);
 			
@@ -250,16 +253,19 @@ function getLineElements(jobDates){
 			
 			
 			line_elements.push(line_element);
+			pushedLineElement = true;
 			
 		}
 		
-		if(i == jobDates.length - 1){
+		if(i == jobDates.length - 1 && !pushedLineElement){
 			
 			// Set the current line element's last day
 			line_element.rightEndPoint.date = date;
 			line_element.rightEndPoint.day = date.getDay();
 			line_element.rightEndPoint.isLast = true;	
 			line_elements.push(line_element);
+			
+			pushedLineElement = true;
 		}
 		
 		previousDate = date;

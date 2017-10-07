@@ -86,7 +86,7 @@
 								<label for="employees-${employerHomepageJob.job.id }">
 									<span>Accepted proposals</span>
 									<span class="total total-employees">
-									${employerHomepageJob.countEmployees_hired } of ${employerHomepageJob.job.positionsPerDay }</span>
+										${employerHomepageJob.countEmployees_hired }</span>
 								</label>
 							</div>
 							<div class="proposal-list"></div>

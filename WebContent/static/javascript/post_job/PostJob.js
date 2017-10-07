@@ -228,7 +228,6 @@ function getAddJobRequest(){
 	addJobRequest.job.city = $("#city").val();
 	addJobRequest.job.state =$("#state option:selected").html();
 	addJobRequest.job.zipCode = $("#zip-code").val();
-	addJobRequest.job.positionsPerDay = $("#positions-per-day").val();
 	
 	if($("#no-partial").is(":checked")) addJobRequest.job.isPartialAvailabilityAllowed = 0;
 	else addJobRequest.job.isPartialAvailabilityAllowed = 1;

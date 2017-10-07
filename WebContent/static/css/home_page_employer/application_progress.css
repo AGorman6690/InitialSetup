@@ -5,6 +5,7 @@
 	border-bottom: 1px solid #cacaca;
 	margin-bottom: 10px;
 	padding-bottom: 10px;
+    box-shadow: 3px 3px 6px #cacaca;	
 }
 .applicant-container:first-child{
 	border-top: 1px solid #cacaca;

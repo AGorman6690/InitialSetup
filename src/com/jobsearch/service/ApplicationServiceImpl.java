@@ -178,60 +178,7 @@ public class ApplicationServiceImpl {
 		return repository.getAnswerOptions(questionId);
 	}
 
-	public void resolveApplicationConflicts_withinApplicationsForAJob(Job job,
-			Proposal proposalDto_justAccepted) {
-		
-		if(job.getFlag_isNotAcceptingApplications() == 1){
-			closeAllOpenApplications(job.getId());
-		}
-		else{
 	
-			List<WorkDay> workDays_toFindConflictsWith = workDayService.getWorkDays_byProposalId(
-											proposalDto_justAccepted.getProposalId());
-			List<WorkDay> workDays_withAllPositionsFilled = new ArrayList<WorkDay>();
-	
-			for ( WorkDay workDay_toFindConflictWith : workDays_toFindConflictsWith ){
-				int positions_filled = getCount_positionsFilledByDay(workDay_toFindConflictWith.getDateId(),
-													job.getId());
-	
-				// This condition should only be an equal sign.
-				// However, until we ensure the positions per day will never be exceeded (see note in respondToEmploymentProposal()),
-				// a greater-than-or-equal-to will be used.
-				if(positions_filled >= job.getPositionsPerDay())
-					workDays_withAllPositionsFilled.add(workDay_toFindConflictWith);
-			}
-	
-			if(workDays_withAllPositionsFilled.size() > 0){
-				List<Application> applications_withConflicts = getOpenApplications_byJob_withAtLeastOneWorkDay(
-						job.getId(), workDays_withAllPositionsFilled);
-	
-				for ( Application application : applications_withConflicts ){
-	
-					// Modify the proposal for the conflicting application
-					Proposal currentProposal = proposalService.getCurrentProposal(
-							application.getApplicationId());
-					
-					Proposal modifiedProposal = currentProposal;
-	
-					modifiedProposal.setProposedDates(workDayService.removeConflictingWorkDays(
-							currentProposal.getProposedDates(), workDays_withAllPositionsFilled));
-	
-					proposalService.updateProposalFlag(currentProposal,
-							Proposal.FLAG_IS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS,
-							1);
-	
-//					updateWageProposalStatus(currentProposal.getEmploymentProposalId(),
-//												EmploymentProposalDTO.STATUS_CANCELED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS);
-	
-					proposalService.insertProposal(modifiedProposal, currentProposal, job);
-					Proposal newCurrentProposal = proposalService.getCurrentProposal(application.getApplicationId());
-					proposalService.updateProposalFlag(newCurrentProposal,
-							Proposal.FLAG_IS_CREATED_DUE_TO_EMPLOYER_FILLING_ALL_POSITIONS, 1);
-
-				}
-			}
-		}
-	}
 
 
 	public void closeAllOpenApplications(Integer jobId) {
@@ -437,34 +384,34 @@ public class ApplicationServiceImpl {
 		Job job = jobService.getJob_ByApplicationId(application.getApplicationId());
 		
 		boolean isEmployee = true;
-		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER) isEmployee = false;
-		
-		
-			
-			// Employer filed all positions
-			if(currentProposal.getFlag_isCreatedDueToEmployerFillingAllPositions() == 1){
-				if(job.getIsPartialAvailabilityAllowed()){
-					messages.add((isEmployee ? "The employer" : "You" )+ " filled all positions on select work days. The proposal has"
-							+ " been updated to remove the work days that have been filled.");
-				}else{
-					messages.add((isEmployee ? "The employer" : "You" ) + " filled all positions.");
-					messages.add((isEmployee ? "Your" : "The applicant's" ) + " proposal will remain in"
-							+ (isEmployee ? " the employer's" : " your" ) + " inbox." );
-				}
+		if(sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYER){
+			isEmployee = false;
+		}
+
+		// Employer filed all positions
+		if(currentProposal.getFlag_isCreatedDueToEmployerFillingAllPositions() == 1){
+			if(job.getIsPartialAvailabilityAllowed()){
+				messages.add((isEmployee ? "The employer" : "You" )+ " filled all positions on select work days. The proposal has"
+						+ " been updated to remove the work days that have been filled.");
+			}else{
+				messages.add((isEmployee ? "The employer" : "You" ) + " filled all positions.");
+				messages.add((isEmployee ? "Your" : "The applicant's" ) + " proposal will remain in"
+						+ (isEmployee ? " the employer's" : " your" ) + " inbox." );
 			}
+		}
+		
+		// The applicant accepted other employment
+		if(currentProposal.getFlag_isCreatedDueToApplicantAcceptingOtherEmployment() == 1){
+			messages.add((isEmployee ? "You have" : "The applicant has" )+ " accepted other employment.");
 			
-			// The applicant accepted other employment
-			if(currentProposal.getFlag_isCreatedDueToApplicantAcceptingOtherEmployment() == 1){
-				messages.add((isEmployee ? "You have" : "The applicant has" )+ " accepted other employment.");
-				
-				if(job.getIsPartialAvailabilityAllowed()){
-					messages.add("Because this job allows partial availability,"
-							+ (isEmployee ? " your" : " the applicant's" )+ " proposed work days have"
-									+ " been updated to resolve the time conflicts.");
-				}else{
-					messages.add("Because this job does not allow partial availability,"
-							+ (isEmployee ? " your" : " the applicant's" )+ " applicant has been closed.");			}		
-			}
+			if(job.getIsPartialAvailabilityAllowed()){
+				messages.add("Because this job allows partial availability,"
+						+ (isEmployee ? " your" : " the applicant's" )+ " proposed work days have"
+								+ " been updated to resolve the time conflicts.");
+			}else{
+				messages.add("Because this job does not allow partial availability,"
+						+ (isEmployee ? " your" : " the applicant's" )+ " applicant has been closed.");			}		
+		}
 			
 		if(previousProposal != null){
 			// The application was re-opened

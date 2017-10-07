@@ -34,19 +34,7 @@ function arePostJobInputsValid(jobDto){
 	else return true;
 	
 }
-function validate_Positions(jobDto){
-	
-	
-	if(!isValidatePositiveNumber(jobDto.job.positionsPerDay)){
-		setInvalidCss($("#positions-per-day"));
-		setInvalidCss($("#show-positions"));
-		return 1;
-	}else{
-		setValidCss($("#positions-per-day"));
-		setValidCss($("#show-positions"));
-		return 0;
-	}
-}
+
 function validate_General(jobDto){
 	
 	var isValid = true;
