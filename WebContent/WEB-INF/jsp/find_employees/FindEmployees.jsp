@@ -6,6 +6,7 @@
 
 
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
+<script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <link href="/JobSearch/static/css/find_employees/find_employees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/find_employees/results.css" rel="stylesheet" />
 
@@ -31,7 +32,7 @@
 <%-- </c:if> --%>
 	
 <div id="distance-filter-wrapper">
-	<div id="distance-filter">
+	<div id="distance-filter" class="validate-input">
 		<input id="miles" class="select-all" type="text" placeholder="number of"
 			value="${not empty response ? response.radiusSearched : '50' }"/>
 		<span id="miles-from">miles from</span>

@@ -47,22 +47,17 @@ $(document).ready(function() {
 		})		
 	})	
 	$("body").on("click", ".send-proposal-wrapper button", function() {
-		// ************************************************************
-		// Need validation
-		// ************************************************************
-		
-		var employerMakeInitialOffer = $(this).closest(".proposal-container")
-							.attr("data-employer-is-making-first-offer");
-		
-		
-		if(employerMakeInitialOffer == "1"){			
-			var makeInitialOfferByEmployerRequest = getMakeInitialOfferByEmployerRequest($(this));
-			executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest);	
-		}else{
-			var respondToProposalRequest = getRespondToProposalRequest($(this));
-			executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest);	
+		$proposalContainer = $(this).closest(".proposal-container");
+		if(validateInputElements($proposalContainer, $("#send-proposal-wrapper"))){
+			var employerMakeInitialOffer = $proposalContainer.attr("data-employer-is-making-first-offer");
+			if(employerMakeInitialOffer == "1"){			
+				var makeInitialOfferByEmployerRequest = getMakeInitialOfferByEmployerRequest($(this));
+				executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest);	
+			}else{
+				var respondToProposalRequest = getRespondToProposalRequest($(this));
+				executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest);	
+			}
 		}
-		
 	})	
 	$("body").on("click", ".send-initial-offer", function() {
 			// ************************************************************

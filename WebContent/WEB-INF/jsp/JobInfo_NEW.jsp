@@ -29,11 +29,10 @@
 		<input id="jobId" type="hidden" value="${response.job.id }">
 		<div class="center">
 			<c:if test="${sessionScope.user.profileId == 1 }">
-				<div id="error-messages">
-					<p id="invalid-answers" class="invalid-message">Please answer the employer's questions</p>
-					<p id="invalid-desired-wage-missing" class="invalid-message">Please enter a wage proposal</p>
-					<p id="invalid-desired-wage-not-positive-number" class="invalid-message">Please enter a positive number for a wage proposal</p>
-					<p id="invalid-work-days" class="invalid-message">Please select one or more work days</p>
+				<div id="submit-application-error">
+					<div class="invalid-input-message">
+						<p>Invalid input</p>
+					</div>
 				</div>
 			</c:if>
 			
@@ -119,14 +118,14 @@
 			</div>	
 		</c:if>	
 		<c:if test="${response.questions.size() > 0 }">		
-			<div id="questions" class="sub">
+			<div id="questions" class="sub validate-input">
 				<label>Questions</label>
 				<div class="job-info-content">
 					<c:if test="${ response.context =='find'}">
 						<p class="instructions employee-context">Please answer questions</p>
 					</c:if>
 					<c:forEach items="${response.questions }" var="question">
-						<div class="question-container" data-question-id="${question.questionId }"
+						<div class="question-container radio-container checkbox-container" data-question-id="${question.questionId }"
 						 	data-question-format-id="${question.formatId }">
 							<p>${question.text }</p>
 							<div class="answer-container">						
@@ -161,11 +160,11 @@
 			</div>	
 		</c:if>			
 		<c:if test="${response.context=='find'}">
-			<div id="desired-wage" class="sub">
+			<div id="desired-wage" class="sub validate-input">
 				<label>Wage Proposal</label>
 				<div class="job-info-content">
 					<p class="instructions employee-context">Please enter a wage proposal ($ / hr)</p>
-					<input type="text" class="requires-positive-number" />
+					<input type="text" data-greater-than="0"/>
 				</div>
 			</div>		
 		</c:if>
@@ -190,7 +189,7 @@
 						</c:choose>
 					</p> 
 				</c:if>
-				<div id="work-days-calendar-container" class="v2 calendar-container no-pad stack hide-unused-rows
+				<div id="work-days-calendar-container" class="v2 validate-input calendar-container no-pad stack hide-unused-rows
 					 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post hide-select-work-day read-only' : '' }
 					 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
 					 ${sessionScope.user.profileId == 1 && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">
@@ -201,7 +200,8 @@
 						<button id="select-all-work-days">Select all work days</button>		
 					</c:if>
 					<div class="calendar" data-min-date=${response.date_firstWorkDay }
-						 data-number-of-months="${response.monthSpan_allWorkDays }"></div>
+						 data-number-of-months="${response.monthSpan_allWorkDays }"
+						 data-selected-class-name="is-proposed"></div>
 				</div>	
 			</div>	
 		</div>

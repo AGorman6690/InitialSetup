@@ -1,43 +1,23 @@
 .invalid{
 /* 	border: 3px solid #b30000 !important; */
 	border: 3px solid red !important;
-    border-radius: 5px;
 }
-
-.invalid-select-input{
-	border: 5px solid #b30000;
-}
-
-.invalid-message{
-	color: #dc0000;
-	margin-bottom: 5px;
+.invalid-input-message-wrapper.visible .add-invalid-input-message:after,
+.invalid-input-message{
+	color: red;
 	display: none;
-}
-
-.invalid-message-show{
-	color: #b30000;
-	margin-bottom: 5px;
-}
-/* .valid-input-existence{ */
-/* 	border: 0px solid #b30000; */
-/* } */
-
-#invalidJobName{
-	margin-left: 95px;
-}
-
-
-.error-message{
-	display:none;
-	color:#b30000;
-}
-
-a.error-message:hover{
-	color:#b30000;
-	text-decoration: none;
 	font-weight: bold;
+	text-align: center;
 }
-
-.error-message-container{
-	padding:5px 0px;
+.invalid-input-message-wrapper.visible .add-invalid-input-message:after{
+	content: 'Invalid input';
+	height: 3em;
+	position: absolute;
+	bottom: 0;
+	display: inline-block;
+}
+.add-invalid-input-message{
+	    position: relative;
+    height: 122px;
+    width: 100px;
 }

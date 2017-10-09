@@ -111,10 +111,6 @@ h3.blue{
     box-shadow: 3px 3px 3px #cacaca;
 	background: #197994;
 }
-.invalid{
-	border: 3px solid #b30000 !important;
-    border-radius: 5px;
-}
 
 button {
   outline: none; 

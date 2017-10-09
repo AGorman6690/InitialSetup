@@ -231,34 +231,36 @@ function showJobInfo(jobDto){
 }
 
 function executeAjaxCall_findEmployees(){
-	var employeeSearch = {};
 
-	employeeSearch.radius = $("#miles").val();
-	employeeSearch.address = $("#address").val();
-	employeeSearch.dates = getSelectedDates($(".calendar"), "yy-mm-dd", "active111");
+	if(validateInputElements($("#distance-filter-wrapper"))){
+		var employeeSearch = {};
 	
-	employeeSearch.minimumRating = $("#rating-filter-value").find("input:checked").eq(0).val();
-	employeeSearch.minimumJobsCompleted = $("#jobs-completed-filter-value").find("input:checked").eq(0).val();
+		employeeSearch.radius = $("#miles").val();
+		employeeSearch.address = $("#address").val();
+		employeeSearch.dates = getSelectedDates($(".calendar"), "yy-mm-dd", "active111");
+		
+		employeeSearch.minimumRating = $("#rating-filter-value").find("input:checked").eq(0).val();
+		employeeSearch.minimumJobsCompleted = $("#jobs-completed-filter-value").find("input:checked").eq(0).val();
+		
+		
+		broswerIsWaiting(true);
+		$.ajax({
+			type: "POST",
+			url: "/JobSearch/find/employees/results",
+			contentType: "application/json",
+			headers : getAjaxHeaders(),
+			data: JSON.stringify(employeeSearch),
+			dataType: "html",
+		}).done(function(html){
+			broswerIsWaiting(false);
+			$e = $("#results");
+			$e.empty();
+			$e.append(html);
+			$("#bottom-content").slideDown();
+			renderStars($e);
 	
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type: "POST",
-		url: "/JobSearch/find/employees/results",
-		contentType: "application/json",
-		headers : getAjaxHeaders(),
-		data: JSON.stringify(employeeSearch),
-		dataType: "html",
-	}).done(function(html){
-		broswerIsWaiting(false);
-		$e = $("#results");
-		$e.empty();
-		$e.append(html);
-		$("#bottom-content").slideDown();
-		renderStars($e);
-
-	})
-	
+		})
+	}
 }
 
 function resetModal(){

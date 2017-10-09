@@ -1,7 +1,7 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
-
+<%@ include file="../includes/resources/InputValidation.jsp" %>
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/homepage/personal_info.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/home_page_employer.css" />
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/home_page_employer/application_progress.css" />

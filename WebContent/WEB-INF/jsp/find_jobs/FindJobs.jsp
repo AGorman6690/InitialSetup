@@ -1,5 +1,6 @@
 <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>
+<%@ include file="../includes/resources/InputValidation.jsp"%>
 <script src="/JobSearch/static/javascript/SubmitApplication.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/find_jobs/Map.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/find_jobs/Find_jobs.js" type="text/javascript"></script>
@@ -9,11 +10,13 @@
 <div class="page-cont">
 	<div id="header">
 		<div id="location-filter">
-			<input id="miles" type="text" placeholder="number of"
-				value="${!empty sessionScope.user.maxWorkRadius && sessionScope.user.maxWorkRadius > 0 ? sessionScope.user.maxWorkRadius : ''}"/>
-			<span>miles from</span>
-			<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '' }"/>
-			<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
+			<div class="validate-input">
+				<input id="miles" type="text" placeholder="number of" data-greater-than="0"
+					value="${!empty sessionScope.user.maxWorkRadius && sessionScope.user.maxWorkRadius > 0 ? sessionScope.user.maxWorkRadius : ''}"/>
+				<span>miles from</span>
+				<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '' }"/>
+				<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
+			</div>
 		</div>
 <!-- 		<div id="applied-filters"></div> -->
 	</div>

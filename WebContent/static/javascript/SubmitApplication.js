@@ -154,7 +154,8 @@ $(document).ready(function() {
 	}	
 	function apply(){
 
-//		if(isInputValid()){
+		if(validateInputElements($("#job-info-mod"), $("#submit-application-error"))){
+
 			$.ajax({
 				type : "POST",
 				url : '/JobSearch/application',
@@ -174,5 +175,5 @@ $(document).ready(function() {
 				$("#application-success-container").slideDown(500);	
 				
 			});
-//		}
+		}
 	}

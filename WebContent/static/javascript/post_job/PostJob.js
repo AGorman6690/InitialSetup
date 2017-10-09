@@ -31,25 +31,23 @@ $(document).ready(function(){
 	$("#proceed-to-preview-job-posting").click(function(){
 
 		var addJobRequest = getAddJobRequest();
-//		if(arePostJobInputsValid(jobDto)){
 		
-			var addressToValidate = ""
-			addressToValidate += addJobRequest.job.streetAddress;
-			addressToValidate += " " + addJobRequest.job.city;
-			addressToValidate += " " + addJobRequest.job.state;
-			addressToValidate += " " + addJobRequest.job.zipCode;
-			
-			executeAjaxCall_isAddressValid(addressToValidate, function(response){
-				response = JSON.parse(response);
-				if(response.isValid == true){			
-					$("#invalid-address-error-message").hide();
-					executeAjaxCall_previewJobPosting(addJobRequest);
-				}else{
-					$("#show-location").click();
-					$("#invalid-address-error-message").show();
-				}				
-			})
-//		}
+		var addressToValidate = "";
+		addressToValidate += addJobRequest.job.streetAddress;
+		addressToValidate += " " + addJobRequest.job.city;
+		addressToValidate += " " + addJobRequest.job.state;
+		addressToValidate += " " + addJobRequest.job.zipCode;
+		
+		executeAjaxCall_isAddressValid(addressToValidate, function(response){
+			response = JSON.parse(response);
+			if(response.isValid == true){			
+				$("#invalid-address-error-message").hide();
+				executeAjaxCall_previewJobPosting(addJobRequest);
+			}else{
+				$("#show-location").click();
+				$("#invalid-address-error-message").show();
+			}				
+		})
 	})
 	
 	$("#post-job-info .section").mouseover(function() {
@@ -279,7 +277,7 @@ function getWorkDays(){
 	})	
 	return workDays;
 }
-function executeAjaxCall_postJob(jobDto){	
+function executeAjaxCall_postJob(jobDto){		
 	broswerIsWaiting(true);
 	$.ajax({
 		type : "POST",
@@ -294,14 +292,17 @@ function executeAjaxCall_postJob(jobDto){
 	});
 }
 function executeAjaxCall_isAddressValid(address, callback) {
-	$.ajax({
-		type: "GET",
-		headers: getAjaxHeaders(),
-		url: "/JobSearch/job/validate-address?address=" + address,
-		dataType: "text"
-	}).done(function(response) {
-		callback(response);
-	})
+	
+	if(validateInputElements($("#post-job-info"), $("#submit-wrapper"))){	
+		$.ajax({
+			type: "GET",
+			headers: getAjaxHeaders(),
+			url: "/JobSearch/job/validate-address?address=" + address,
+			dataType: "text"
+		}).done(function(response) {
+			callback(response);
+		})
+	}
 }
 function executeAjaxCall_previewJobPosting(addJobRequest){	
 	broswerIsWaiting(true);

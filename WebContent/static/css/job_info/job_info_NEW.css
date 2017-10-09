@@ -13,6 +13,13 @@
     font-weight: bold;
     color: #163b3d;
 }
+.job-info .radio-container{
+	display: block;
+}
+.job-info .calendar-container.no-pad .calendar{
+	padding: 5px;
+	margin-left: -5px;
+}
 .job-info p.employer{
     font-size: 19px;
     font-weight: bold;

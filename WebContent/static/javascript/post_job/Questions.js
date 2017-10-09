@@ -1,6 +1,6 @@
 var questions = [];
 var ongoingQuestionCount = 0;
-
+var slideSpeed = 600;
 
 $(document).ready(function(){
 	
@@ -8,8 +8,8 @@ $(document).ready(function(){
 	
 	$("#question-format").click(function(){
 		var questionFormatId = $(this).find("option:selected").eq(0).attr("data-format-id");
-		if(questionFormatId == 2 || questionFormatId == 3) slideDown($("#answer-list-container"), 400);				
-		else slideUp($("#answer-list-container"), 400);				
+		if(questionFormatId == 2 || questionFormatId == 3) slideDown($("#answer-list-container"), slideSpeed);				
+		else slideUp($("#answer-list-container"), slideSpeed);				
 	})
 
 	$("#add-answer").click(function(){ 		
@@ -34,7 +34,7 @@ $(document).ready(function(){
 	})
 	
 	$("#save-question-edits").click(function(){				
-		if(areQuestionInputsValid){
+		if(validateQuestionInputs()){
 			var questionId = getQuestionIdUnderEdit();
 			saveEditQuestionChanges(questionId);
 			setControlsVisibility_forEditQuestion(false);	
@@ -63,9 +63,9 @@ $(document).ready(function(){
 })
 function showCreateQuestionContainer(request){
 	if(request){
-		$("#create-question-container").slideDown(600);
+		$("#create-question-container").slideDown(slideSpeed);
 	}else{
-		$("#create-question-container").slideUp(600);
+		$("#create-question-container").slideUp(slideSpeed);
 	}
 }
 function getQuestionIdUnderEdit(){
@@ -73,19 +73,19 @@ function getQuestionIdUnderEdit(){
 }
 function setControlsVisibility_forEditQuestion(prepareForEdits, $clickedAddedQuestion) {
 	if(prepareForEdits){
-		$("#create-question-container").slideDown();
-		$("#add-question-wrapper").hide();
-		$("#edit-question-actions").slideDown();		
-		$("#copy-or-new-question").hide();
-		$(".added-question").each(function(i, addedQuestion) {
-			if(addedQuestion != $clickedAddedQuestion.get(0))  $(addedQuestion).hide();
-		})
 		
+		$("#add-question-wrapper").hide();
+		$("#edit-question-actions").show();		
+		$("#copy-or-new-question").slideUp(slideSpeed);
+		$(".added-question").each(function(i, addedQuestion) {
+			if(addedQuestion != $clickedAddedQuestion.get(0))  $(addedQuestion).slideUp(slideSpeed);
+		})
+		$("#create-question-container").slideDown(slideSpeed);
 	}else{
-		$("#create-question-container").slideUp();
-		$("#edit-question-actions").hide();		
-		$("#add-question-wrapper").show();
-		$("#copy-or-new-question").show();
+		$("#create-question-container").slideUp(slideSpeed);
+		$("#edit-question-actions").slideUp(slideSpeed);		
+		$("#add-question-wrapper").slideDown(slideSpeed);
+		$("#copy-or-new-question").slideDown(slideSpeed);
 		$(".added-question").each(function(i, addedQuestion) {
 			$(addedQuestion).show();
 		})
@@ -179,16 +179,19 @@ function deleteAnswerOption(clickedAnswerOption){
 		$(clickedAnswerOption).siblings("input").eq(0).val("");
 	}
 }
+function validateQuestionInputs(){
+	return validateInputElements($("#create-question-container"));
+}
 function addQuestion(){
 	var question = {};
-	if(areQuestionInputsValid()){
+	if(validateQuestionInputs()){
 		question = getQuestionFromDOM();
 		ongoingQuestionCount += 1;
 		question.questionId = ongoingQuestionCount;
 		questions.push(question);
 		addQuestionToDOM(question);
 		clearAllInputs($("#create-question-container"));
-		slideUp($("#answer-list-container"), 400);
+		slideUp($("#answer-list-container"), slideSpeed);
 		showCreateQuestionContainer(false);
 	}
 }
@@ -243,53 +246,4 @@ function getAddedQuestionText(questionText){
 	if(questionText.length > 50) return questionText.substring(0, 19) + "..."	
 	else return questionText;
 	
-}
-function areQuestionInputsValid(){
-	
-	var $e;
-	var selectedQuestionFormatId;
-	var invalidCount = 0;
-	
-	//Question format
-	if($("#question-format").find("option:selected").length == 0){
-		invalidCount += 1;
-		setInvalidCss($("#question-format"));
-	}
-	else{
-		setValidCss($("#question-format"));
-	}
-	
-	//If multiple choice question, verify at least two answers have been given
-	selectedQuestionFormatId = $("#question-format").find("option:selected").eq(0).attr("data-format-id")
-	if(selectedQuestionFormatId == 2 || selectedQuestionFormatId ==3){
-		
-		$.each($("#answer-list").find(".answer-container input"), function(i, e){
-			
-			if(i <= 2){
-				if($(e).val() == ""){
-					invalidCount += 1;
-					setInvalidCss($(e));
-				}
-				else setValidCss($(e));
-			}
-				
-		})
-	}
-		
-	//Verify question
-	if($("#question").val() == ""){
-		invalidCount += 1;
-		setInvalidCss($("#question"));
-	}
-	else setValidCss($("#question"))
-
-	
-	$e = $("#invalidAddQuestion");
-	if(invalidCount > 0){
-		$e.show();
-		return false;
-	}else{
-		$e.hide();
-		return true;
-	}
 }

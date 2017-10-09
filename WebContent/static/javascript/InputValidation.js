@@ -1,355 +1,118 @@
 
 $(document).ready(function(){
-	
-	$("body").on("keyup", ".invalid", function(event){		
-		validateUserInput($(this));
+	$("body").on("change", "select.invalid", function(){
+		validateSelect($(this));
 	})
-	
-	$("body").on("change", ".invalid", function(event){		
-		validateUserInput($(this));
+	$("body").on("keyup", "input[type=text].invalid, textarea.invalid", function(){
+		validateTextInput($(this));
 	})
-	
-//	$("body").on("mousedown", ".invalid.calendar *", function(){
-//		
-//			var $calendar = $($(this).closest(".calendar"));
-//			var e = $(this).closest(".calendar").attr("data-selected-days-count");
-//			if($calendar.attr("data-selected-days-count") > 0){
-//				setValidCss($calendar);
-//			}
-//
-//	})
-	
-	$("body").on("change", ".invalid.invalid-positive-number", function(){
-		
-		var value = "";
-		if($(this).id == "times"){
-			validateTimes();	
-		}else if($(this).is("input") || $(this).is("textarea")){
-			value = $(this).val()
-		}else if($(this).is("select")){
-			value = $(this).find(":selected").val();
-		}
-		
-//		validatePositiveNumber($(this), value);
-
+	$("body").on("change", ".radio-container.invalid input[type=radio]", function(){
+		validateRadioContainer($(this).closest(".radio-container"));
 	})
-	
-	
-	$("body").on("mousedown", ".invalid.ui-datepicker td ", function(){
-		$(this).closest(".invalid.ui-datepicker").removeClass("invalid");
-	})
-
 })
-
-function validateUserInput($e) {
-	if($e.is("input") || $e.is("textarea")){
-		if($e.hasClass("requires-positive-number")){
-			
-			if(isValidatePositiveNumber($e.val())){
-				setValidCss($e);
-			}				
-		}else{
-			if($e.val() != "") setValidCss($e);
-		}
-	}else if($e.is("select")){
-		if($e.val() != "") setValidCss($e);
-	}
-	
-	
-	if($e.find("input[type=radio]:checked, input[type=checkbox]:checked").length > 0 )
-		setValidCss($e.closest(".invalid"))
-	
-//	if($e.hasClass("radio-container")){
-//		if(isRadioContainerSelected($e)) setValidCss($e);
-//		else setInvalidCss($e);
-//	}
-}
-
-function isValidatePositiveNumber(value){
-	
-	var isValid = true;
-	if(value == null || value == undefined || value == ""){
-		isValid = false;
-	}
-	else if($.isNumeric(value) == 0){
-		isValid = false;
-	}
-	else if(value < 0){
-		isValid = false;
-	}
-	
-//	if(isValid){
-//		setValidCss($e);
-//		hideErrorMessage($e);	
-//	}else{
-//		setInvalidCss($e);
-//	}
-	
-	return isValid;
-}
-
-
-function validateInput($e, value){
-	if(value == ""){
-		setInvalidCss($e);
-		return 1;
-	}else{
-		setValidCss($e);
-		hideErrorMessage($e);
-		return 0;
-	}
-
-}
-
-function hideErrorMessage($eInput){
-	var errorMessage = $("body").find("[data-message-for='" + $eInput.attr("id") + "']")[0];
-	
-	hide($(errorMessage));
-}
-
-
-
-
-function validateInputExistence($e, value){
-	if(value == ""){
-		setInvalidCss($e);
-		return 1;
-	}else{
-		setValidCss($e);
-		return 0;
-	}
-
-}
-
-function isValidNumberGreaterThan0(value){
-	
-	var result = 1;
-	if($.isNumeric(value) == 0){
-		result = 0;
-	}else if(value <= 0){
-		result = 0
-	}
-	
-	return result;
-}
-
-function validateSelectInput($e, value){
-	
-	if(value < 0 || value == ""){
-		setInvalidCss($e);
-		return 1;
-	}else{
-		setValidCss($e);
-		return 0;
-	}
-
-}
-
-function validateInputValueContains($e, value, valueCannotContain){
-	if(value.indexOf(valueCannotContain) > -1){
-		setInvalidCss($e);
-		return 1;
-	}else{
-		setValidCss($e);
-		return 0;
-	}
-}
-
-function validateJobName(requestedJobName, jobs){
-	//Job names must be unique
-
-	var $eInvalidMessage = $("#invalidJobName");
-	var $eJobName = $(document.getElementsByName('name')[0]);
-	var invalid = 0;
-	
-	//Search each job's name
-	$.each(jobs, function(){
-		if(this.jobName == requestedJobName){
-			invalid = 1;
-		}
+function validateInputElements($cont, $errorMessageCont){
+	var invalidCount = 0;
+	$cont.find(".validate-input").each(function() {
+		var $e = $(this);
+		invalidCount += validateTextInputs($e);
+		invalidCount += validateSelects($e)
+		invalidCount += validateCalendars($e);
+		invalidCount += validateRadioContainers($e);
 	})
-	
-	if(invalid){
-		//Show invalid message
-		$eInvalidMessage.show();
-		
-		//Format input as invalid 
-		setInvalidCss($eJobName);	
-		
-		return 1;
-	}else{
-		
-		//Hide invalid message
-		$eInvalidMessage.hide();
-		
-		//Format input as valid 
-		setValidCss($eJobName);	
-		
-		return 0
-	}
-
-}
-
-function setInvalidCss($e){
-
-	if($e.hasClass("invalid") == 0){
-		$e.addClass("invalid");
-	}	
-}
-
-function validateDates_durations(){
-//	var selectedDates = $("#times").find(".time");
-	var $e = $("#calendarContainer");
-	if(selectedDays.length == 0){
-		setInvalidCss($e);
-		return 0;
-		
-	}else{
-		setValidCss($e);
-		return 1;
-	}
-}
-
-function validateDates(){
-	var selectedDates = $("#times").find(".time");
-	var $e = $("#calendar");
-	if(selectedDates.length == 0){
-		setInvalidCss($e);
-		return 1;
-		
-	}else{
-		setValidCss($e);
-		return 0;
-	}
-}
-
-function validateTimes(){
-	var times = $("#times").find(".time-container input");
-	var result = 0;
-	if(times.length > 0){
-		$.each(times, function(){
-			result += validateInput($(this), $(this).val())
-		})
-		
-	}
-	
-	return result;
-}
-
-function validateTimes_singleStartAndEnd(){
-	var $eStartTime = $("#startTime-singleDate");
-	var $eEndTime = $("#endTime-singleDate");
-
-	var isValid = true;
-	if(!isValidInput($eStartTime.val())){
-		setInvalidCss($eStartTime);
-		isValid = false;
-	}
-	else{
-		setValidCss($eStartTime)
-	}
-
-	if(!isValidInput($eEndTime.val())){
-		setInvalidCss($eEndTime);
-		isValid = false;
-	}
-	else{
-		setValidCss($eEndTime)
-	}
-	
-	return isValid;
-}
-
-//function setInvalidSelectCss($e){
-//	if($e.hasClass("invalid-select-input") == 0){
-//		$e.addClass("invalid-select-input");
-//	}	
-//}
-function setValidCss($e){
-	if($e.hasClass("invalid") == 1){
-		$e.removeClass("invalid");
-	}	
-}
-
-//function setValidSelectCss($e){
-//	if($e.hasClass("invalid") == 1){
-//		$e.removeClass("invalid");
-//	}	
-//}
-
-
-function validateMinimumSelectedCategories(){
-	
-	if($("#selectedCategories").find("button").length  == 0){
-		$("#invalidCategoryInput-None").show();
-		setInvalidCss($("#categoryTree"));
-		return 1;
-	}else{
-		$("#invalidCategoryInput-None").hide();
-		setValidCss($("#categoryTree"));
-		return 0;
-	}
-		
-}
-
-function validateMaximumSelectedCategories(){
-	if($("#selectedCategories").find("button").length  >= 5){
-		$("#invalidCategoryInput-TooMany").show();
-		return 1;
-	}else{
-		$("#invalidCategoryInput-TooMany").hide();
-		return 0;
-	}
-}
-
-function validateAddQuestionInputs(){
-	
-	var $e;
-	var $selectedOption;
-	var result = 0;
-	var answerItems = [];
-	var i;
-	var validAnswerOptionCount = 0;
-	
-	//Verify question format
-	$e = $("#questionFormat");
-	$selectedOption = $($e.find("option:selected")[0]);
-	result += validateInput($e, $selectedOption.html());
-	
-	//If multiple choice question, verify at least two answers have been given
-	if($selectedOption.val() == 2 || $selectedOption.val() ==3){
-		answerItems = $("#answerList").find(".answer-container input");
-		for(i = 0; i < 2; i++){
-			result += validateInput($(answerItems[i]), $(answerItems[i]).val());
+	if(invalidCount > 0){
+		if($errorMessageCont !== undefined){
+			$errorMessageCont.addClass("visible");
+			$errorMessageCont.find(".invalid-input-message").slideUp(300, function(){		
+				$errorMessageCont.find(".invalid-input-message").slideDown(600);
+			})
 		}
-	}
-		
-	//Verify question
-	$e = $("#question");
-	result += validateInput($e, $e.val());
-
-	
-	$e = $("#invalidAddQuestion");
-	if(result > 0){
-		$e.show();
 		return false;
 	}else{
-		$e.hide();
+		if($errorMessageCont !== undefined){
+			$errorMessageCont.find(".invalid-input-message").slideUp(300);
+			$errorMessageCont.removeClass("visible");
+		}
 		return true;
-	}
+	}	
 }
-
-function isValidInput(value){
-	if(value == undefined){
-		return 0;
+function getFindParam(str){
+	return str + ":not(.skip-validation):visible";
+}
+function validateTextInputs($cont){
+	var invalidCount = 0;
+	var findParam = getFindParam("input[type=text]");
+	findParam += "," + getFindParam("textarea");
+	var elements = $cont.find(findParam);
+	$(elements).each(function(i, e){
+		invalidCount += validateTextInput($(e));
+	})	
+	return invalidCount;
+}
+function validateTextInput($input){
+	var valid = true;
+	if($input.attr("data-greater-than-equal-to")){
+		
 	}
-	else if(value == ""){
-		return 0;
+	if($input.val() === ""){
+		valid = false;
 	}
-	else if(value == null){
-		return 0;
+	return inspectValidity($input, valid);	
+}
+function validateSelects($cont){
+	var invalidCount = 0;
+	var elements = $cont.find(getFindParam("select"));
+	$(elements).each(function(i, e){
+		invalidCount += validateSelect($(e));
+	})	
+	return invalidCount;	
+}
+function validateSelect($select){
+	var valid = true;
+	var selectedOption = $select.find("option:selected")[0];
+	if(selectedOption === undefined || selectedOption.text === "" || selectedOption.hasAttribute("disabled") ){
+		valid = false;
 	}
-	else{
+	return inspectValidity($select, valid);	
+}
+function inspectValidity($e, valid){
+	if(valid === false){
+		$e.addClass("invalid");
 		return 1;
+	}else{
+		$e.removeClass("invalid")
+		return 0;
+	}	
+}
+function validateCalendars($cont){
+	var invalidCount = 0;
+	var elements = $cont.find(getFindParam(".calendar"));
+	$(elements).each(function(i, e){
+		invalidCount += validateCalendar($(e));	
+	})	
+	return invalidCount;	
+}
+function validateCalendar($calendar){
+	var valid = true;
+	var className = $calendar.attr("data-selected-class-name");
+	var selectedDates = getSelectedDates($calendar, "yy-mm-dd", className);
+	
+	if(selectedDates.length == 0){
+		valid = false;
 	}
+	return inspectValidity($calendar, valid);	
+}
+function validateRadioContainers($cont){
+	var invalidCount = 0;
+	var elements = $cont.find(getFindParam(".radio-container"));
+	$(elements).each(function(i, e){
+		invalidCount += validateRadioContainer($(e));	
+	})	
+	return invalidCount;	
+}
+function validateRadioContainer($radioContainer){
+	var valid = true;
+	if(!$radioContainer.find("input[type=radio]:checked").length){
+		valid = false;
+	}
+	return inspectValidity($radioContainer, valid);	
 }

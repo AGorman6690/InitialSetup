@@ -54,12 +54,12 @@
 					</div>
 				</c:when>
 				<c:otherwise>
-					<div class="expiration-time proposal-item disable-able">
+					<div class="expiration-time proposal-item disable-able validate-input">
 						<%@ include file="./ExpirationTime.jsp" %>
 					</div>						
 				</c:otherwise>				
 			</c:choose>					
-			<div class="wage-proposal-wrapper proposal-item disable-able"
+			<div class="wage-proposal-wrapper proposal-item disable-able validate-input"
 				data-proposed-amount="${response.currentProposal.amount }">
 				<label>Wage</label>		
 				<div class="proposal-item-content">				
@@ -81,7 +81,7 @@
 			</div>
 			<c:if test="${response.job.isPartialAvailabilityAllowed && 
 							response.jobWorkDayCount > 1}">
-				<div class="proposal-item work-day-proposal-wrapper disable-able"
+				<div class="proposal-item work-day-proposal-wrapper disable-able validate-input"
 					 data-proposed-work-days="${response.currentProposal.proposedDates }">
 					<label class="">Work days</label>		
 					<div class="proposal-item-content">
@@ -97,7 +97,8 @@
 								Select All Work Days</button>								
 							<div class="calendar counter-calendar ${user.profileId == 1 ? 'find-conflicting-applications-on-select' : ''}"
 								data-min-date="${response.date_firstWorkDay }"
-								data-number-of-months=${response.monthSpan_allWorkDays }>
+								data-number-of-months=${response.monthSpan_allWorkDays }
+								data-selected-class-name="is-proposed">
 							</div>
 						</div>
 					</div>		
@@ -114,14 +115,17 @@
 					<div class="send-status-warning">
 						<%@ include file="./SendWarningMessage.jsp" %>					
 					</div>
-					<div class="send-proposal-wrapper">
+					<div id="send-proposal-wrapper" class="send-proposal-wrapper">
 						<button class="text proposing-new-offer-context">
 							${context == 'employer-make-initial-offer' ? 'Send Initial Offer'
 							: 'Send New Proposal' }</button>		
 						<button class="text accepting-offer-context context-employee">
 							Accept Employment</button>	
 						<button class="text accepting-offer-context context-employer">
-							Accept Offer</button>								
+							Accept Offer</button>	
+						<div class="invalid-input-message">
+							Invalid input
+						</div>							
 					</div>
 				</div>
 			</div>				

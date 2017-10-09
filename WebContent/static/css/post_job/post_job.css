@@ -9,7 +9,7 @@
 	position: fixed;
 }
 #post-job-info{
-	width: 750px;
+	width: 835px;
 	margin-left: 250px;
 }
 #page-wrapper{
@@ -65,9 +65,13 @@ button{
 }
 .item-wrapper{
 	padding-left: 50px;
+	overflow: hidden;
 }
 .section{
 	padding-bottom: 50px;
+}
+#clear-calendar{
+	margin-left: 47px;
 }
 .calendar.v2 td{
 	height: 65px;
@@ -98,6 +102,7 @@ button{
 }
 #work-days-calendar{
     margin-left: -35px;
+    margin-top: 10px;    
 }
 .section h3{
 	font-weight: bold;
@@ -116,12 +121,6 @@ button{
 }
 #edit-question-actions{
     margin-bottom: 15px;
-}
-#save-question-edits{
-    color: #197994;
-    font-weight: bold;
-    /* text-decoration: underline; */
-    font-size: 19px;
 }
 #supreme-times-wrapper.setting-all-times #appendges select{
 	background: #cacaca;

@@ -1,7 +1,5 @@
 package com.jobsearch.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.fasterxml.jackson.core.sym.Name;
-import com.jobsearch.json.JSON;
-import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.request.RespondToProposalRequest;
 import com.jobsearch.service.ProposalServiceImpl;

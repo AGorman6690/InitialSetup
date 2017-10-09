@@ -193,6 +193,7 @@ public class ProposalServiceImpl{
 				response.setJobWorkDayCount(workDays.size());
 				response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 				response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
+				response.setJob(job);
 				json_workDayDtos = JSON.stringify(workDayService.getWorkDayDtos(jobId));
 			}
 			

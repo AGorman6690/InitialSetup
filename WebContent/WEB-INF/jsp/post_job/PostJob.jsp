@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css"
 	href="/JobSearch/static/css/post_job/post_job.css" />
 
+<script src="/JobSearch/static/javascript/InputValidation.js" type="text/javascript"></script>
 <script src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
 <script
@@ -40,7 +41,7 @@
 			</div>
 		</c:if>
 --%>
-<div id="page-wrapper">
+	<div id="page-wrapper">
 		<div id="side-bar">
 			
 			<div id="show-general" data-scroll-to="general-wrapper" class="incomplete"><span>General</span></div>
@@ -57,7 +58,7 @@
 
 				<div id="general-wrapper" class="section">
 					<h3>General</h3>
-					<div class="item-wrapper">
+					<div class="item-wrapper validate-input">
 						<div class="item">
 							<label>Job Name</label>
 							<input id="name" name="name" type="text" class="" value=""></input>
@@ -71,13 +72,13 @@
 
 				<div id="dates-wrapper" class="section">
 					<h3>Work Days</h3>					
-					<div class="item-wrapper">
+					<div class="validate-input">
 						<button class="" id="clear-calendar">Clear</button>
-						<div id="work-days-calendar" class="item calendar-container post-job">							
+						<div id="work-days-calendar" class="item calendar-container item-wrapper post-job">							
 							<div id="workDaysCalendar_postJob" class="calendar v2"
-								data-is-showing-job="0"></div>
+								data-is-showing-job="0" data-selected-class-name="selected"></div>
 						</div>
-						<div id="is-partial-availability-allowed-question" class="item show-with-multiple-work-days">
+						<div id="is-partial-availability-allowed-question" class="item-wrapper item show-with-multiple-work-days">
 							<p class="question-to-job-poster">This job has more than one work day. Can applicants apply for 1
 								or more work days?</p>
 							<!-- 							<div class=" button-group"> -->
@@ -90,15 +91,15 @@
 									No, they have to apply for all work days</label>
 							</div>
 						</div>							
-						<div id="supreme-times-wrapper" class="item">
-							<div id="set-all-times-wrapper" class="show-with-multiple-work-days time-wrapper">
+						<div id="supreme-times-wrapper" class="item item-wrapper">
+							<div id="set-all-times-wrapper" class="show-with-multiple-work-days time-wrapper ">
 								
 								<label for="set-all-times"><input type="checkbox" id="set-all-times"></input>Set all times</label>
-								<select id="set-all-start-times"></select>
+								<select id="set-all-start-times" class=""></select>
 								<select id="set-all-end-times"></select>
 							</div>			
 	
-							<div id="appendges">						
+							<div id="appendges" class="">						
 							</div>
 						</div>
 					</div>
@@ -107,11 +108,10 @@
 			
 				<div id="location-wrapper" class="section">
 					<h3>Location</h3>					
-					<div class="error-message-container">
-						<p id="invalid-address-error-message" class="error-message">Invalid
-							address</p>
-					</div>	
-					<div class="item-wrapper">
+					<div class="item-wrapper validate-input">
+						<div id="invalid-address-error-message" class="invalid-input-message">
+							<p>Invalid address</p>
+						</div>						
 						<div class="item">
 							<label>Street Address *</label>
 							<input id="street" type="text" class="" value=""></input>
@@ -126,7 +126,7 @@
 						</div>
 						<div class="item">
 							<label>Zip Code</label>
-							<input id="zip-code" type="text" value=""></input>
+							<input id="zip-code" type="text" class="skip-validation"></input>
 						</div>
 					</div>
 				</div>
@@ -158,50 +158,52 @@
 						<div id="added-questions" class="item">							
 						</div>					
 						<div id="edit-question-actions">
-							<span id="save-question-edits" class="pointer">Save</span>
-							<span id="cancel-question-edits" class="pointer">Cancel</span>
+							<button id="save-question-edits" class=" pointer">Save</button>
+							<button id="cancel-question-edits" class=" pointer">Cancel</button>
 						</div>
-						<div id="create-question-container" class="item">	
-							<div class="item">
-								<label>Question Format</label>
-								<select id="question-format" class="question-formats">
-									<option class="answer-format-item" data-format-id="0">Yes
-										or No</option>
-									<!-- 							  <option class="answer-format-item" data-format-id="1">Short Answer</option> -->
-									<option class="answer-format-item" data-format-id="2">Select
-										one answer</option>
-									<option class="answer-format-item" data-format-id="3">Select
-										one or more answers</option>
-								</select>
-							</div>	
-							<div class="item">
-								<label>Question</label>
-								<textarea id="question" class="" rows="4"></textarea>
-							</div>	
-							<div class="item" id="answer-list-container">
-								<label>Answers</label>
-								<div id="answer-list">
-									<div class="list-item answer-container">
-										<input type="text" class="answer-option">
-										<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
+						<div id="create-question-container" class="item">
+							<div class="validate-input">	
+								<div class="item">
+									<label>Question Format</label>
+									<select id="question-format" class="question-formats">
+										<option class="answer-format-item" data-format-id="0">Yes
+											or No</option>
+										<!-- 							  <option class="answer-format-item" data-format-id="1">Short Answer</option> -->
+										<option class="answer-format-item" data-format-id="2">Select
+											one answer</option>
+										<option class="answer-format-item" data-format-id="3">Select
+											one or more answers</option>
+									</select>
+								</div>	
+								<div class="item">
+									<label>Question</label>
+									<textarea id="question" class="" rows="4"></textarea>
+								</div>	
+								<div class="item" id="answer-list-container">
+									<label>Answers</label>
+									<div id="answer-list">
+										<div class="list-item answer-container">
+											<input type="text" class="answer-option">
+											<span class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
+										</div>
+										<div class="list-item answer-container">
+											<input type="text" class="answer-option">
+											<span
+												class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
+											
+										</div>
+										<span id="add-answer"
+										class="add-list-item glyphicon glyphicon-plus"></span>
 									</div>
-									<div class="list-item answer-container">
-										<input type="text" class="answer-option">
-										<span
-											class="delete-list-item delete-answer glyphicon glyphicon-remove"></span>
-										
-									</div>
-									<span id="add-answer"
-									class="add-list-item glyphicon glyphicon-plus"></span>
+									
 								</div>
-								
+								<div id="add-question-wrapper">
+									<button id="add-question" class="clickable btn-sqr">Add</button>
+									<div id="invalid-add-question" class="invalid-input-message">
+										<p>Invalid input</p>
+									</div>
+								</div>
 							</div>
-							<div id="add-question-wrapper">
-								<button id="add-question" class="clickable btn-sqr">Add</button>
-								<div id="invalidAddQuestion" class="invalid-message">Please
-									fill in all required fields</div>
-							</div>
-	
 						</div>
 					</div>
 				</div>
@@ -240,6 +242,9 @@
 				
 				<div id="submit-wrapper" class="section center">
 					<p id="proceed-to-preview-job-posting" class="sqr-btn pointer">Review then submit</p>
+					<div class="invalid-input-message">
+						<p>Invalid input</p>
+					</div>
 				</div>	
 				
 		</div>

@@ -82,6 +82,11 @@ function initCalendar_new($calendar, workDayDtos){
 		afterShow: function(){
 //			$calendar.datepicker("setDate", firstDate);	
 			
+			if($calendar.hasClass("invalid")){
+				validateCalendar($calendar);	
+			}
+			
+			
 			// if proposal calendar, update whether work days are being accepted/proposed
 			if($calendar.closest(".calendar-container").hasClass("negotiating-context")){
 				setWorkDayAcceptanceContext();
@@ -275,9 +280,7 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 		minDate: new Date(),
 		numberOfMonths: numberOfMonths, 
 		onSelect: function(dateText, inst) {	   
-			
-			setValidCss($calendar.find(".invalid"));
-			
+				
 			// This is for post job re-validation
 			if($("body #postSections").length > 0 )
 				validateSection($calendar);	
@@ -379,6 +382,10 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 //     		changePrevNextText($calendar, "<<", ">>");
      		
      		renderWorkDayTimes();
+     		
+			if($calendar.hasClass("invalid")){
+				validateCalendar($calendar);
+			}
      	}
     });	
 }

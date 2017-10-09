@@ -189,37 +189,39 @@ function applyFilter($e) {
 }
 function executeAjaxCall_getFilteredJobs(findJobsRequest, doSetMap){
 	
-	broswerIsWaiting(true);
-	var isAppendingJobs = findJobsRequest.isAppendingJobs;
-	
-	$.ajax({
-		type : "POST",
-		url: '/JobSearch/jobs/find/request',
-		headers : getAjaxHeaders(),
-		contentType : "application/json",
-		data : JSON.stringify(findJobsRequest),		
-		dataType: "html"
-	}).done(function(html){		
-		broswerIsWaiting(false);
-		var $e = $("#get-jobs-results");	
-		$("#get-jobs-results-cont").show();
-		$("#other-filters").show();
-//		$("#wrapper").removeClass("find-jobs-on-load");
-		if(isAppendingJobs){
-			if(html.indexOf("RETURN_NO_MORE_JOBS") != -1){
-				$e.addClass("no-more-jobs");
-				doSetMap = false;				
-			}
-			else{
-				$("#find-jobs-response").append(html);
-			}
-		}else{
-			$e.removeClass("no-more-jobs");
-			$e.html(html);	
-		}				
-		if(doSetMap) setMap_renderFindJobsResults();		
-		renderStars($e);
-	})
+	if(validateInputElements($("#location-filter"))){
+		broswerIsWaiting(true);
+		var isAppendingJobs = findJobsRequest.isAppendingJobs;
+		
+		$.ajax({
+			type : "POST",
+			url: '/JobSearch/jobs/find/request',
+			headers : getAjaxHeaders(),
+			contentType : "application/json",
+			data : JSON.stringify(findJobsRequest),		
+			dataType: "html"
+		}).done(function(html){		
+			broswerIsWaiting(false);
+			var $e = $("#get-jobs-results");	
+			$("#get-jobs-results-cont").show();
+			$("#other-filters").show();
+	//		$("#wrapper").removeClass("find-jobs-on-load");
+			if(isAppendingJobs){
+				if(html.indexOf("RETURN_NO_MORE_JOBS") != -1){
+					$e.addClass("no-more-jobs");
+					doSetMap = false;				
+				}
+				else{
+					$("#find-jobs-response").append(html);
+				}
+			}else{
+				$e.removeClass("no-more-jobs");
+				$e.html(html);	
+			}				
+			if(doSetMap) setMap_renderFindJobsResults();		
+			renderStars($e);
+		})
+	}
 }
 function getFindJobsRequest() {
 	
