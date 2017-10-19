@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css"
 	href="/JobSearch/static/css/post_job/post_job.css" />
 
-<script src="/JobSearch/static/javascript/InputValidation.js" type="text/javascript"></script>
+<!-- <script src="/JobSearch/static/javascript/InputValidation.js" type="text/javascript"></script> -->
 <script src="<c:url value="/static/javascript/post_job/Questions.js" />"></script>
 <script src="<c:url value="/static/javascript/post_job/PostJob.js" />"></script>
 <script

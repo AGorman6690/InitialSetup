@@ -22,6 +22,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.request.FindEmployeesRequest;
+import com.jobsearch.request.LoginRequest;
+import com.jobsearch.responses.LoginResponse;
 import com.jobsearch.responses.UserApplicationStatusResponse;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
@@ -48,12 +50,15 @@ public class UserController {
 		return "redirect:/user";
 	}
 	
-	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
-	public String login(HttpSession session, @ModelAttribute("user") JobSearchUser user) {
-
-		userService.setSession_Login(user, session);
-		return "redirect:/user";
-
+	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	@ResponseBody
+	public String login(
+			HttpSession session,
+			@RequestBody @ModelAttribute("user") JobSearchUser user) {
+		
+		LoginRequest request = null;
+		LoginResponse response = userService.login(request, session);		
+		return JSON.stringify(response);
 	}	
 		
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
