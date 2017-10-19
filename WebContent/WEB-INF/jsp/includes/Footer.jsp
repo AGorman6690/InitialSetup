@@ -8,6 +8,7 @@
 		<%@ include file="../includes/resources/Modal.jsp"%>	
 		<%@ include file="../includes/resources/EventCalendar.jsp"%>	
 		<%@ include file="../includes/resources/JobInformation.jsp"%>
+		<%@ include file="../includes/resources/InputValidation.jsp"%>
 
 <!-- 		Global Scripts -->	
 		<script src="<c:url value="/static/javascript/NavBar.js" />"></script>	
@@ -17,6 +18,9 @@
 		<script src="<c:url value="/static/javascript/SessionStorage.js" />"></script>	
 		<script src="<c:url value="/static/javascript/Global.js" />"></script>	
 		
+		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/loginSignup.css" />		
+		<script src="/JobSearch/static/javascript/Login_SignUp.js" type="text/javascript"></script>	
+
 		
 		<link href="/JobSearch/static/css/inputValidation.css" rel="stylesheet" />
 		

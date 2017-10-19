@@ -18,6 +18,7 @@ import javax.servlet.http.HttpSession;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -41,8 +42,10 @@ import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.CalendarDay.CalendarDayJobDto;
 import com.jobsearch.repository.UserRepository;
 import com.jobsearch.request.FindEmployeesRequest;
+import com.jobsearch.request.LoginRequest;
 import com.jobsearch.responses.GetProfileCalendarResponse;
 import com.jobsearch.responses.InitMakeOfferResponse;
+import com.jobsearch.responses.LoginResponse;
 import com.jobsearch.responses.GetProfileCalendarResponse.CalendarApplication;
 import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.UserApplicationStatusResponse;
@@ -207,7 +210,6 @@ public class UserServiceImpl {
 
 	public JobSearchUser getUserByEmail(String emailAddress) {
 		return repository.getUserByEmail(emailAddress);
-
 	}
 
 	public JobSearchUser getUser(int userId) {
@@ -571,14 +573,35 @@ public class UserServiceImpl {
 		}		
 		return calendarDays;
 	}
-	public void setSession_Login(JobSearchUser user, HttpSession session) {
+	public LoginResponse login(LoginRequest request, HttpSession session) {
 
+		// ************************************************
+		// ************************************************
+		// I wasn't sure how the authenitcaion was working so I turned it off.
+		// If enchances security, then lets use it, otherwise I dont' see the point.
+		// ************************************************
+		// ************************************************
+//		Authentication auth = new UsernamePasswordAuthenticationToken(
+//				request.getEmailAddress(), request.getPassword());		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		user = this.getUserByEmail(auth.getName());
+		JobSearchUser user = this.getUserByEmail(auth.getName());
+		
+//		JobSearchUser user = getUserByEmail(request.getEmailAddress());
+		
+		LoginResponse response = new LoginResponse();
+		if(user != null){
+			String enc = encryptPassword(request.getPassword());;
+			if(user.getPassword() == encryptPassword(request.getPassword())){
+				response.setSuccess(true);
+				SessionContext.setUser(session, user);
+			}else{
+				response.setSuccess(false);
+			}			
+		}else{
+			response.setSuccess(false);
+		}
 
-		SessionContext.setUser(session, user);
-//		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(user.getUserId());		
-//		session.setAttribute("jobs_needRating", jobs_needRating);			
+		return response;		
 	}
 
 	public void setSession_EmailValidation(int userId, HttpSession session) {

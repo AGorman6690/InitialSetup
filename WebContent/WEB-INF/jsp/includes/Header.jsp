@@ -94,8 +94,8 @@
 						<a id="nav_logOut" href="/JobSearch/logout.do">Log out</a>		
 					</c:when>
 					<c:otherwise>
-						<a href="/JobSearch/login-signup?login=false">Sign Up</a>					
-						<a href="/JobSearch/login-signup?login=true">Login</a>
+						<span class="show-login-sign-up-mod" data-context="sign-up" href="#">Sign Up</span>					
+						<span class="show-login-sign-up-mod" data-context="login" href="#">Login</span>
 					</c:otherwise>
 				</c:choose>
 			</div>
@@ -115,6 +115,7 @@
 			</div>
 		</c:if>
 		
+		<div id="login-sign-up-wrapper"></div>
 
 
 <%-- 	<%@ inlude file="../event_calendar/Event_Calendar.jsp" %> --%>

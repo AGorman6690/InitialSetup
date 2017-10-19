@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,14 +44,10 @@ public class WelcomeController {
 	
 	
 	
-	@RequestMapping(value = "/login-signup", method = RequestMethod.GET)
-	public String login_signUp(Model model,
-					@RequestParam(name = "error", required = false) boolean error,
-					@RequestParam(name = "login", required = false) Boolean login) {
+	@RequestMapping(value = "/login-sign-up/{context}", method = RequestMethod.GET)
+	public String login_signUp(Model model,	@PathVariable(value="context") String context) {
 		
-		welcomeService.setModel_Login_SignUp(error, login, model);
-		
-		
+		model.addAttribute("context", context);		
 		return "Login_SignUp";
 	}
 	
