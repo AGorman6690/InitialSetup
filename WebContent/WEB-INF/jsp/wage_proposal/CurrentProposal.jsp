@@ -46,11 +46,11 @@
 					(!applicationProgressStatus.isProposedToSessionUser && 
 					sessionScope.user.profileId == 2)}">
 			<div class="a-proposal">
-				<p class="exp-time black-bold">
-					${sessionScope.user.profileId == 1 ? "The employer's" : "Your" }
-					${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 ? ' acceptence' : ' offer' } expires in <span class="red-bold">
-						${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
-				</p>
+				<label class="exp-time black-bold">Expiration</label>
+				<div class="proposed-value">
+					<span class="red-bold">${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
+				</div>
+			
 			</div>
 		</c:if>
 	</c:if>			
@@ -65,7 +65,7 @@
 				 </c:when>					
 				<c:when test="${applicationProgressStatus.currentProposal.flag_employerAcceptedTheOffer == 1 }">
 					<c:if test="${sessionScope.user.profileId == 1 }">
-						<button class="sqr-btn blue accept-current-proposal">Confirm</button>
+						<button class="sqr-btn blue accept-current-proposal">Confirm Employment</button>
 					</c:if>					
 				</c:when>
 				<c:otherwise>

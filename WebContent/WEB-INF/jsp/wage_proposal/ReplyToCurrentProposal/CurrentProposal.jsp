@@ -68,7 +68,7 @@
 							 ? 'Propose a wage you want to pay the applicant'
 							 : response.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'Final wage'
 							 : 'Edit to propose a new wage' } ($ / hr)</p>
-						<input class="select-all counter-wage-amount" type="text"
+						<input id="proposed-amount" class="select-all counter-wage-amount" type="text"
 							value="${response.currentProposal.amount }"
 							${response.currentProposal.flag_employerAcceptedTheOffer == 1 ? 'disabled' : '' }/>						
 					</div>	
@@ -116,13 +116,16 @@
 						<%@ include file="./SendWarningMessage.jsp" %>					
 					</div>
 					<div id="send-proposal-wrapper" class="send-proposal-wrapper">
-						<button class="text proposing-new-offer-context">
-							${context == 'employer-make-initial-offer' ? 'Send Initial Offer'
-							: 'Send New Proposal' }</button>		
-						<button class="text accepting-offer-context context-employee">
-							Accept Employment</button>	
-						<button class="text accepting-offer-context context-employer">
-							Accept Offer</button>	
+						<c:choose>
+							<c:when test="${context == 'employer-make-initial-offer' }">
+								<button id="send-initial-proposal" class="text proposing-new-offer-context">Send Initial Offer</button>							
+							</c:when>
+							<c:otherwise>
+								<button id="send-new-proposal" class="text proposing-new-offer-context">Send New Proposal</button>
+								<button id="accept-proposal" class="text accepting-offer-context">
+									${isEmployer ? 'Accept Offer' : 'Accept Employment' }</button>	
+							</c:otherwise>
+						</c:choose>
 						<div class="invalid-input-message">
 							Invalid input
 						</div>							

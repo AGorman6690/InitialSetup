@@ -28,3 +28,20 @@ h1{
 	font-size: 15px;
     font-style: italic;
 }
+.editable:hover::after{
+	font-family: "Glyphicons Halflings";
+	content: "\270f";
+    font-size: 16px;
+    color: #bbb;
+    margin-left: 10px;
+/*     font-size: 20px; */
+}
+.editable::after{
+/* 	    width: 30px; */
+/*     height: 30px; */
+
+}
+.editable span{
+	min-height: 40px;
+	line-height: 40px;
+}

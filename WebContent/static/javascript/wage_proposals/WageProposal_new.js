@@ -9,7 +9,7 @@ $(document).ready(function() {
 		if($e.hasClass("other")) $otherContainer.show();
 		else $otherContainer.hide();
 	})
-	$("body").on("click", "button.accept-current-proposal, button.counter-current-proposal", function() {
+	$("body").on("click", "button.accept-current-proposal", function() {
 		var $e = $(this);
 		var $cont = $e.closest(".proposal[data-proposal-id]");
 		var proposalId = $cont.attr("data-proposal-id");
@@ -20,7 +20,7 @@ $(document).ready(function() {
 			proposalView.isRespondingToAnExpiredProposal = true;
 		}
 
-		executeAjaxCall_getCurrentProposal(proposalId, $e_renderHtml, function() {
+		getCurrentProposal(proposalId, $e_renderHtml, function() {
 			var $response = $cont.find(".current-proposal-response").eq(0);
 			var applicationId = $response.attr("data-application-id");
 			var doShowCounterContest = true
@@ -46,25 +46,34 @@ $(document).ready(function() {
 
 		})		
 	})	
-	$("body").on("click", ".send-proposal-wrapper button", function() {
+	$("body").on("click", "#send-initial-proposal", function() {
 		$proposalContainer = $(this).closest(".proposal-container");
 		if(validateInputElements($proposalContainer, $("#send-proposal-wrapper"))){
-			var employerMakeInitialOffer = $proposalContainer.attr("data-employer-is-making-first-offer");
-			if(employerMakeInitialOffer == "1"){			
-				var makeInitialOfferByEmployerRequest = getMakeInitialOfferByEmployerRequest($(this));
-				executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest);	
-			}else{
-				var respondToProposalRequest = getRespondToProposalRequest($(this));
-				executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest);	
-			}
+			var makeInitialOfferByEmployerRequest = getMakeInitialOfferByEmployerRequest($(this));
+			sendInitialProposal(makeInitialOfferByEmployerRequest);	
+			
 		}
 	})	
-	$("body").on("click", ".send-initial-offer", function() {
-			// ************************************************************
-			// validation was done on .review-proposal event
-			// ************************************************************			
-		executeAjaxCall_sendOffer($(this));
+	$("body").on("click", "#send-new-proposal", function() {
+		$proposalContainer = $(this).closest(".proposal-container");
+		if(validateInputElements($proposalContainer, $("#send-proposal-wrapper"))){
+			var respondToProposalRequest = getOfferNewProposalRequest($(this));
+			offerNewProposal(respondToProposalRequest);	
+		}
 	})	
+	$("body").on("click", "#accept-proposal", function() {
+		$proposalContainer = $(this).closest(".proposal-container");
+		if(validateInputElements($proposalContainer, $("#send-proposal-wrapper"))){
+			var respondToProposalRequest = getAcceptProposalRequest($(this));
+			acceptProposal(respondToProposalRequest);	
+		}
+	})	
+//	$("body").on("click", ".send-initial-offer", function() {
+//			// ************************************************************
+//			// validation was done on .review-proposal event
+//			// ************************************************************			
+//		executeAjaxCall_sendOffer($(this));
+//	})	
 	$("body").on("click", ".select-all-work-days-override", function() {
 		var $calendar = $(this).closest(".proposal-container").find(".counter-calendar").eq(0);
 		selectAllWorkDays($calendar, g_workDayDtos_counter);
@@ -131,10 +140,22 @@ function setWorkDayAcceptanceContext(){
 function getMakeInitialOfferByEmployerRequest($e) {
 	var $wrapper = $e.closest(".proposal-wrapper");
 	var request = {};
-	request.respondToProposalRequest = getRespondToProposalRequest($e);
+	var $calendar = $(".work-day-proposal-wrapper .calendar");
+	
 	request.proposeToUserId = $wrapper.attr("data-user-id-make-offer-to");
-	request.jobId = $wrapper.find("#select-job option:selected").attr("data-job-id");
-//	request.isRespondingToAnExpiredProposal = false;
+	request.jobId = $wrapper.find("#select-job option:selected").attr("data-job-id");	
+	request.amount = $("#proposed-amount").val();
+	
+	if($calendar != undefined){
+		request.proposedDates = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");	
+	}	
+
+	var expirationTime = getExpirationTime();
+	request.days_offerExpires = expirationTime.days;
+	request.hours_offerExpires = expirationTime.hours;
+	request.minutes_offerExpires = expirationTime.minutes;
+	request.expiresFromNow = expirationTime.expiresFromNow;	
+	
 	return request;	
 }
 function isCounteringWorkDays($cont) {
@@ -155,98 +176,74 @@ function isCounteringWage($cont) {
 	var counteredWage = parseFloat($wageProposal.find("input.counter-wage-amount").eq(0).val());
 	if(originalProposedWage - counteredWage == 0.0) return false;
 	else return true;
-	
 }
-function executeAjaxCall_sendRespondToProposalRequest(respondToProposalRequest){
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/proposal/respond",			
-		headers : getAjaxHeaders(),
-		data: JSON.stringify(respondToProposalRequest),
-		contentType : "application/json",	
-		datType: "text"
-	}).done(function(response) {	
-		broswerIsWaiting(false);
-		location.reload(true);		
-	})	
-}
-function executeAjaxCall_makeInitialOffer(makeInitialOfferByEmployerRequest){	
-	broswerIsWaiting(true);
-	$.ajax({
-		type : "POST",
-		url :"/JobSearch/proposal/employer-make-initial-proposal",
-		headers : getAjaxHeaders(),
-		contentType : "application/json",	
-		data: JSON.stringify(makeInitialOfferByEmployerRequest),
-		dataType: "text"		
-	}).done(function(response){
-//		location.reload(true);
-		broswerIsWaiting(false);
-		$("#make-offer-modal .mod").hide();
-	})	
-}
-function executeAjaxCall_getConflitingApplications($e_renderHtml, applicationId_withReferenceTo,
-		dateStrings_toFindConflictsWith){
-	
-	var conflicingApplicationsRequest = {};
-	conflicingApplicationsRequest.referenceApplicationId = applicationId_withReferenceTo;
-	conflicingApplicationsRequest.datesToFindConflictWith = dateStrings_toFindConflictsWith;
-	
-	broswerIsWaiting(true);
-	$.ajax({
-		type: "POST",
-		headers: getAjaxHeaders(),
-		url: "/JobSearch/application/conflicting-applications",
-		contentType: "application/json",
-		data: JSON.stringify(conflicingApplicationsRequest),
-		dataType: "html",
-	}).done(function(html){
-		broswerIsWaiting(false);
-		
-		// This method of showing/hiding was a quick hack.
-		// Pretty this up later.
-		var show = html.indexOf("other-application-conflicts") === -1 ? false : true;
-		
-		if(show){
 
-			if(!$e_renderHtml.is(":visible")){
-				$e_renderHtml.hide();
-				$e_renderHtml.html(html);
-				slideDown($e_renderHtml, 800);			
-			}else{
-				$e_renderHtml.html(html);
-			}
+function getAcceptProposalRequest($e){
 
+	var request = {};
+	var $proposalContainer = $e.closest(".proposal-container");
+	request.applicationId = $proposalContainer.attr("data-application-id");
+
+	if(isSessionUserAnEmployer($e)){
+		var expirationTime = getExpirationTime();
+		request.days_offerExpires = expirationTime.days;
+		request.hours_offerExpires = expirationTime.hours;
+		request.minutes_offerExpires = expirationTime.minutes;
+		request.expiresFromNow = expirationTime.expiresFromNow;
+	}
+	return request;
+}
+function getExpirationTime(){
+	var days = 0;
+	var hours = 0;
+	var minutes = 0;
+	var expiresFromNow = false;
+	if($("input.one-day-from-now[name='exp-time-init']").prop("checked")){
+		days = 1;
+		expiresFromNow = true;
+	}else if($("input.one-day-before[name='exp-time-init']").prop("checked")){
+		days = 1;
+		expiresFromNow = false;
+	}else{
+		days = parseInt($proposalContainer.find(".expiration-time input.days").val());
+		hours = parseInt($proposalContainer.find(".expiration-time input.hours").val());
+		minutes = parseInt($proposalContainer.find(".expiration-time input.minutes").val());	
+		if($("input.one-day-from-now[name='exp-time-other']").prop("checked")){
+			expiresFromNow = true;
 		}else{
-			slideUp($e_renderHtml, 800, function(){
-				$e_renderHtml.html(html);
-			})			
+			expiresFromNow = false;
 		}
-		
-	})
-}
-function executeAjaxCall_getCurrentProposal(proposalId, $e, callback){
-	broswerIsWaiting(true);	
-	$.ajax({
-		type: "GET",
-		url: "/JobSearch/proposal/" + proposalId,
-		header: getAjaxHeaders(),
-		dataType: "html",
-	}).done(function(html) {
-			$e.html(html);
-			$e.find(".mod").eq(0).show();	
-			
-			// Perhaps make another ajax call for obtaining the proposed work days???
-			// The down side is there would be a lag when rendering the calendar...
-			g_workDayDtos_originalProposal = JSON.parse($e.find("#json_workDayDtos").eq(0).html());
-			$.extend(true, g_workDayDtos_counter, g_workDayDtos_originalProposal);
 
-			initCalendar_new($e.find(".calendar"), g_workDayDtos_originalProposal);
-			setProposalAcceptanceContext();
-			broswerIsWaiting(false);			
-			callback();		
-	})
+	}
+	var expirationTime = {};
+	expirationTime.days = days;
+	expirationTime.hours = hours;
+	expirationTime.minutes = minutes;
+	expirationTime.expiresFromNow = expiresFromNow;
+	return expirationTime;
+}
+function getOfferNewProposalRequest($e){
+	
+	var request = {};	
+	var $proposalContainer = $e.closest(".proposal-container");
+	var $wageProposal = $proposalContainer.find(".wage-proposal-wrapper").eq(0);
+	var $calendar = $proposalContainer.find(".calendar");
+	
+	request.applicationId = $proposalContainer.attr("data-application-id");	
+	request.isRespondingToAnExpiredProposal = proposalView.isRespondingToAnExpiredProposal;
+
+	request.amount = $wageProposal.find("input").val();
+	request.proposedDates = getSelectedDates($calendar, "yy-mm-dd", "is-proposed");	
+
+	if(isSessionUserAnEmployer($e)){
+		var expirationTime = getExpirationTime();
+		request.days_offerExpires = expirationTime.days;
+		request.hours_offerExpires = expirationTime.hours;
+		request.minutes_offerExpires = expirationTime.minutes;
+		request.expiresFromNow = expirationTime.expiresFromNow;
+	}
+	
+	return request;
 }
 function getRespondToProposalRequest($e){
 

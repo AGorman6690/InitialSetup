@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jobsearch.request.AcceptProposalRequest;
 import com.jobsearch.request.MakeInitialOfferByEmployerRequest;
 import com.jobsearch.request.RespondToProposalRequest;
 import com.jobsearch.service.ProposalServiceImpl;
@@ -31,9 +32,16 @@ public class ProposalController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/respond", method = RequestMethod.POST)
+	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String respondToProposal(@RequestBody RespondToProposalRequest request, HttpSession session) {
-		proposalService.respondToProposal(request, session);
+		proposalService.offerNewProposal(request, session);
+		return "";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/accept", method = RequestMethod.POST)
+	public String acceptProposal(@RequestBody RespondToProposalRequest request, HttpSession session) {
+		proposalService.acceptProposal(request, session);
 		return "";
 	}
 
@@ -54,7 +62,7 @@ public class ProposalController {
 		return "/wage_proposal/AjaxResponse_Proposal_NEW";
 	}
 
-	@RequestMapping(value = "/employer-make-initial-proposal", method = RequestMethod.POST)
+	@RequestMapping(value = "/initial-proposal", method = RequestMethod.POST)
 	@ResponseBody
 	public String makeOffer(
 			HttpSession session, 

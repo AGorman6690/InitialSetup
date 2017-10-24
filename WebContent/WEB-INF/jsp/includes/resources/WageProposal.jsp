@@ -5,4 +5,5 @@
 
 
 <script src="/JobSearch/static/javascript/wage_proposals/WageProposal_new.js" type="text/javascript"></script>
+<script src="/JobSearch/static/javascript/wage_proposals/WageProposal_Ajax.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/wage_proposals/wage_proposal_new.css" />

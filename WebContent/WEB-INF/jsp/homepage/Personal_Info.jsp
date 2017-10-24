@@ -8,18 +8,19 @@
 	<c:if test="${response.profileInfoDto.user.profileId == 1 }">				
 		<div class="personal-info-item">
 			<label>Home Location</label>						
-			<div class="value editable">
-				<span class="glyphicon glyphicon-pencil"></span>					
+			<div class="value editable">					
 				<c:choose>
 					<c:when test="${empty response.profileInfoDto.user.homeCity &&
 									 empty response.profileInfoDto.user.homeState &&
 									 empty response.profileInfoDto.user.homeZipCode }">
 						<span class="not-set">Add your home location so employers can find you</span>
 					</c:when>
-					<c:otherwise>						
-						${response.profileInfoDto.user.homeCity},
-						 ${response.profileInfoDto.user.homeState}
-						  ${response.profileInfoDto.user.homeZipCode }						
+					<c:otherwise>	
+						<span>					
+							${response.profileInfoDto.user.homeCity},
+							 ${response.profileInfoDto.user.homeState}
+							  ${response.profileInfoDto.user.homeZipCode }
+						 </span>						
 					</c:otherwise>
 				</c:choose>
 			</div>				
@@ -42,14 +43,14 @@
 		<div class="personal-info-item">
 			<label>Maximum travel distance</label>
 			<div class="value editable">	
-				<span class="glyphicon glyphicon-pencil"></span>		
+<!-- 				<span class="glyphicon glyphicon-pencil"></span>		 -->
 				<c:choose>
 					<c:when test="${empty response.profileInfoDto.user.maxWorkRadius ||
 								response.profileInfoDto.user.maxWorkRadius == 0}">
 						<span class="not-set">Add the max distance you are willing to travel so employers can find you</span>
 					</c:when>
 					<c:otherwise>					
-						${response.profileInfoDto.user.maxWorkRadius } miles
+						<span>${response.profileInfoDto.user.maxWorkRadius } miles</span>
 					</c:otherwise>
 				</c:choose>
 			</div>				
@@ -62,15 +63,14 @@
 	</c:if>
 	<div class="personal-info-item">
 		<label>About</label>
-		<div class="value editable">	
-			<span class="glyphicon glyphicon-pencil"></span>						
+		<div class="value editable">						
 			<c:choose>
 				<c:when test="${response.profileInfoDto.user.about == '' || empty response.profileInfoDto.user.about }">
 					<span class="not-set">Write something so
 					${sessionScope.user.profileId == 1 ? ' employers' : ' applicants' } know a little bit about you</span>
 				</c:when>
 				<c:otherwise>
-					${response.profileInfoDto.user.about }
+					<span>${response.profileInfoDto.user.about }</span>
 				</c:otherwise>
 			</c:choose>
 		</div>				

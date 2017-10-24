@@ -322,7 +322,23 @@ public final class DateUtility {
 				return true;
 			}else return false;
 		}else return false;	
+	}
 
+
+
+
+
+	public static LocalDateTime getPastDate(LocalDateTime futureDate, Integer days,
+			Integer hours, Integer minutes) {
+	
+		LocalDateTime pastDate = futureDate;
+		if(NumberUtility.isPositiveNumber(days))
+			pastDate = futureDate.minusDays(days);
+		if(NumberUtility.isPositiveNumber(hours))
+			pastDate = futureDate.minusHours(hours);
+		if(NumberUtility.isPositiveNumber(minutes))
+			pastDate = futureDate.minusMinutes(minutes);
+		return pastDate;
 	}
 
 
