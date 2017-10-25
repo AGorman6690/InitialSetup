@@ -404,4 +404,15 @@ public class UserRepository {
 
 	}
 
+	public void saveEquation(String equation) {
+		String sql = "INSERT INTO calculator_result (expression) Values (?)";
+		jdbcTemplate.update(sql, new Object[]{ equation });
+		
+	}
+
+	public List<String> getExpressions() {
+		String sql = "SELECT expression FROM calculator_result ORDER BY id DESC LIMIT 10";
+		return jdbcTemplate.queryForList(sql, String.class);
+	}
+
 }
