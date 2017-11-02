@@ -140,7 +140,8 @@ public class UserController {
 			@PathVariable(value = "jobId") int jobId) {
 		
 		return userService.getAvailabliltyStatusMessage_forUserAndJob(userId, jobId);
-	}	
+	}
+	
 	@RequestMapping(value = "/user/update-home-location", method = RequestMethod.POST)
 	@ResponseBody
 	public String updateHomeLocation(HttpSession session,

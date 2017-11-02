@@ -45,12 +45,12 @@ public class WelcomeController {
 					@RequestParam(name = "error", required = false) boolean error) {
 			
 	
-//		return "Welcome";
+		return "Welcome";
 		
 		
-		List<String> expressions = temp.getExpressions();
-		model.addAttribute("expressions", expressions);	
-		return "calculator";
+//		List<String> expressions = temp.getExpressions();
+//		model.addAttribute("expressions", expressions);	
+//		return "calculator";
 	}
 
 	@RequestMapping(value = "/equation/save", method = RequestMethod.POST)

@@ -50,6 +50,6 @@
 		</div>
 	
 	</body>
-	<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/calculator.css" />
-	<script src="/JobSearch/static/javascript/calculator.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="static/css/calculator.css" />
+	<script src="/static/javascript/calculator.js" type="text/javascript"></script>
 </html>
