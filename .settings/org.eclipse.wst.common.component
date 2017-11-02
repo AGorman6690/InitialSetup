@@ -4,7 +4,7 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/config"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/tests/UnitTests"/>
-        <property name="context-root" value="JobSearch"/>
         <property name="java-output-path" value="/JobSearch/build/classes"/>
+        <property name="context-root" value="/JobSearch"/>
     </wb-module>
 </project-modules>

@@ -27,7 +27,7 @@
 
 	<div class="job-info ${!empty doShowApplyButton ? 'show-apply-button' : '' }">
 		<input id="jobId" type="hidden" value="${response.job.id }">
-		<div class="center">
+		<div class="">
 			<c:if test="${sessionScope.user.profileId == 1 }">
 				<div id="submit-application-error">
 					<div class="invalid-input-message">
@@ -53,36 +53,51 @@
 					<button id="submitPosting_final" class="sqr-btn green to-be-fixed-disalbed">Submit Job Post</button>
 				</div>
 			</c:if>
-			<h2>${response.job.jobName }</h2>
-			<c:if test="${sessionScope.user.profileId == 1 }">
-				<div class="">
-					<div class="ratings-mod-container">
-					<p class="employer show-ratings-mod user-rating"
-						 data-user-id="${response.profileInfoDto.user.userId }">${response.profileInfoDto.user.firstName }
-						 ${response.profileInfoDto.user.lastName }</p>
-						<div class="mod simple-header">
-							<div class="mod-content">
-								<div class="mod-header"></div>
-								<div class="mod-body">	
-								</div>
+			
+			<div class="header-wrap">
+				<div class="header-item">
+					<label>Job Name</label>
+					<div>${response.job.jobName }</div>
+				</div>
+				<c:if test="${sessionScope.user.profileId == 1 }">
+					<div class="header-item">
+						<label>Employer Name</label>
+						<div>
+							<div class="ratings-mod-container">
+								<span class="linky-hover employer show-ratings-mod user-rating"
+									 data-user-id="${response.profileInfoDto.user.userId }">${response.profileInfoDto.user.firstName }
+									 ${response.profileInfoDto.user.lastName }</span>
+								<div class="mod simple-header">
+									<div class="mod-content">
+										<div class="mod-header"></div>
+										<div class="mod-body">	
+										</div>
+									</div>
+								</div>						 
 							</div>
-						</div>						 
+						</div>
 					</div>
-					<c:choose>
-						<c:when test="${response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating }">			
-							<span data-toggle-id="user-rating-details-container">
-								<input name="input-1" class="rating-loading"
-									value="${response.profileInfoDto.profileRatingDto.overallRating }">
-										${response.profileInfoDto.profileRatingDto.overallRating }
-							</span>	
-							<div id="user-rating-details-container" class="hide-on-load">												
-								<%@ include file="./ratings/RatingDetails.jsp" %>
-							</div>																					
-						</c:when>
-						<c:otherwise>NA</c:otherwise>					
-					</c:choose>
-				</div>	
-			</c:if>
+					<div class="header-item">
+						<label>Employer Rating</label>
+						<div>
+							<c:choose>
+								<c:when test="${response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating }">			
+									<span data-toggle-id="user-rating-details-container">
+										<input name="input-1" class="rating-loading"
+											value="${response.profileInfoDto.profileRatingDto.overallRating }">
+												${response.profileInfoDto.profileRatingDto.overallRating }
+									</span>	
+									<div id="user-rating-details-container" class="hide-on-load">												
+										<%@ include file="./ratings/RatingDetails.jsp" %>
+									</div>																					
+								</c:when>
+								<c:otherwise>NA</c:otherwise>					
+							</c:choose>
+						</div>
+					</div>	
+				</c:if>				
+			</div>
+
 		</div>
 		<div id="job-description" class="sub">
 			<label>Description</label>
@@ -208,7 +223,7 @@
 		<div id="map-section" class="sub">
 			<label id="location-label">Location</label>	
 			<div id="map-container" class="job-info-content">
-				<div id="job-address" class="">
+				<div id="job-address" class="linky-hover">
 					<p class="">${response.job.streetAddress_formatted }</p>
 					<p class="">${response.job.city_formatted}, ${response.job.state }</p>
 					<p class="">${response.job.zipCode_formatted }</p>		

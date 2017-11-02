@@ -21,7 +21,7 @@ td div.application[data-job-name]:first-of-type{
 	background: #b7c7e0;
 	margin-top: 8px;
 }
-.calendar-container .calendar .ui-datepicker-group-middle td.active111 a{
+.calendar-container .calendar .ui-datepicker-group-middle td.active111:not(.ui-datepicker-today) a{
 	color: #000  !important;
 	background: #fff !important;
 	
@@ -36,8 +36,8 @@ tr .job-line.application-job,
 	background: #888;
 }
 tr .job-line.employment-job,
-#user-event-calendar .calendar-container .calendar td.employment,
-#user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{
+#user-event-calendar .calendar-container .calendar td.employment{
+/* #user-event-calendar .calendar-container .calendar .ui-datepicker-group-middle td.employment a{ */
 	background: #318657;
 }
 tr .job-line.application-job,
