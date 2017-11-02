@@ -5,10 +5,6 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/config"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/tests/UnitTests"/>
         <property name="java-output-path" value="/JobSearch/build/classes"/>
-<<<<<<< Updated upstream
         <property name="context-root" value="/JobSearch"/>
-=======
-        <property name="context-root" value="/JobSearch/"/>
->>>>>>> Stashed changes
     </wb-module>
 </project-modules>
