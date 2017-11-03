@@ -504,7 +504,7 @@ public class UserServiceImpl {
 		return calendarDays;
 	}
 	public LoginResponse login(LoginRequest request, HttpSession session) {
-		
+
 		// ***********************************************************************
 		// ***********************************************************************
 		// this is not working. the login needs to be initiated by ajax.
@@ -545,12 +545,13 @@ public class UserServiceImpl {
 	@Deprecated
 	public void setSession_Login(JobSearchUser user, HttpSession session) {
 
+
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		user = this.getUserByEmail(auth.getName());
 
 		SessionContext.setUser(session, user);
 //		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(user.getUserId());		
-//		session.setAttribute("jobs_needRating", jobs_needRating);			
+//		session.setAttribute("jobs_needRating", jobs_needRating);		
 	}
 
 	public void setSession_EmailValidation(int userId, HttpSession session) {

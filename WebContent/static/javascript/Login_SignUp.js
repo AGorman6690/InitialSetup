@@ -144,15 +144,13 @@ function ajaxGet_loginSignUpPage(context){
 	})
 }
 function setContextDisplay(context){
-	
 	if(context === "login"){
 		$("#login-wrapper").slideDown(slideSpeed_loginSignUp);
 		$("#sign-up-wrapper").slideUp(slideSpeed_loginSignUp);
 	}else{
 		$("#login-wrapper").slideUp(slideSpeed_loginSignUp);
 		$("#sign-up-wrapper").slideDown(slideSpeed_loginSignUp);
-	}
-	
+	}	
 	highlightArrayItem($("#login-sign-up-context .context-item[id=" + context + "]"), $("#login-sign-up-context .context-item"), "clicked");
 }
 

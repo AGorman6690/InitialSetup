@@ -38,14 +38,12 @@
 							</div>				
 						</div>	
 					</form:form>	
-				
 											<br></br>
 						<br></br>
 						<br></br>
 						<button style="display:block" id="debug1">Sign in as employer (UserId = 1)</button>
 						<button style="display:block" id="debug2">Sign in as employee 1</button>
 						<button style="display:block" id="debug3">Sign in as employee 2</button>
-											
 				</div>
 				<div id="sign-up-wrapper" class="group-container"> 	
 					<div id="sign-up-input" class="validate-input">			
