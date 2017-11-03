@@ -1,3 +1,11 @@
+#successful-sign-up h4{
+    font-weight: bold;
+    font-size: 20px;
+    color: #163b3d;
+}
+#sign-up-fail{
+	text-align: left;
+}
 #login-sign-up-mod .mod-content{
 	width: 800px;
 	margin: auto;
@@ -13,26 +21,28 @@
 	color: #197994;
 	margin: 0px 10px;
 }
-<<<<<<< 5ec90d7027cd5ef066f8ae031f96671ab74034d3
+#successful-sign-up,
+.sign-up-fail-msg,
 .error-message{
 	display: none;
 }
 .do-hide{
 /* 	display:none; */
-=======
+}
 #login-sign-up-context span.context-item:hover{
 	cursor: pointer
->>>>>>> updates to login and signup
 }
-#login-sign-up-mod label,
+#login-sign-up-mod label{
+	width: 200px;
+}
 #login-sign-up-mod input[type=text],
 #login-sign-up-mod input[type=password],
 #login-sign-up-mod input[type=email],
 select{
-	width: 200px;
+	width: 300px;
 }
 #login-sign-up-mod .group-container{
-	width: 410px;
+	width: 510px;
 	margin: auto;
 }
 #login-sign-up-mod .item{

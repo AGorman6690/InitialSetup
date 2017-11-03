@@ -21,10 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.jobsearch.json.JSON;
 import com.jobsearch.model.JobSearchUser;
+import com.jobsearch.request.CreateUserRequest;
 import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.request.LoginRequest;
 import com.jobsearch.responses.LoginResponse;
 import com.jobsearch.responses.UserApplicationStatusResponse;
+import com.jobsearch.responses.user.CreateUserResponse;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.RatingServiceImpl;
@@ -42,6 +44,15 @@ public class UserController {
 	ApplicationServiceImpl applicationService;
 	@Autowired
 	RatingServiceImpl ratingService;
+	
+	@ResponseBody
+	@RequestMapping(value = "/user", method = RequestMethod.POST)
+	public String createUser(@RequestBody CreateUserRequest request) {
+		
+		CreateUserResponse response = userService.createUser(request);
+		return JSON.stringify(response);
+	}
+	
 
 	@RequestMapping(value = "/email/validate", method = RequestMethod.GET)
 	public String validateEmail(@RequestParam(name = "userId") int userId, HttpSession session){
@@ -50,9 +61,9 @@ public class UserController {
 		return "redirect:/user";
 	}
 	
-	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/login_NEW_BUT_NOT_WORKING", method = RequestMethod.POST)
 	@ResponseBody
-	public String login(
+	public String login_NEW_BUT_NOT_WORKING(
 			HttpSession session,
 			@RequestBody @ModelAttribute("user") JobSearchUser user) {
 		
@@ -60,6 +71,15 @@ public class UserController {
 		LoginResponse response = userService.login(request, session);		
 		return JSON.stringify(response);
 	}	
+	
+	@SuppressWarnings("deprecation")
+	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	public String login(HttpSession session, @ModelAttribute("user") JobSearchUser user) {
+
+		userService.setSession_Login(user, session);
+		return "redirect:/user";
+
+	}
 		
 	@RequestMapping(value = "/user", method = RequestMethod.GET)
 	public String viewHomepageRequest(Model model, HttpSession session) {				
@@ -86,22 +106,7 @@ public class UserController {
 		return JSON.stringify(response);
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/user/sign-up", method = RequestMethod.POST)
-	public String signUp(@RequestBody JobSearchUser user) {
-			// **********************************************************
-		// **********************************************************
-		// For security reasons, do you think we should pass an encrypted userId
-		// in the email-validation url?
-		// **********************************************************
-		// **********************************************************		
-		//		if (user != null) {
-//			model.addAttribute("user", user);
-//			return "EmailValidateMessage";
-//		} else {
-			return JSON.stringify(userService.createUser(user));
-//		}
-	}
+
 
 	@RequestMapping(value = "/employees/find", method = RequestMethod.GET)
 	public String viewFindEmployees(Model model, HttpSession session) {

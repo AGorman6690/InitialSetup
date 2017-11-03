@@ -41,6 +41,7 @@ import com.jobsearch.model.WorkDay;
 import com.jobsearch.model.WorkDayDto;
 import com.jobsearch.model.CalendarDay.CalendarDayJobDto;
 import com.jobsearch.repository.UserRepository;
+import com.jobsearch.request.CreateUserRequest;
 import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.request.LoginRequest;
 import com.jobsearch.responses.GetProfileCalendarResponse;
@@ -57,8 +58,10 @@ import com.jobsearch.responses.FindEmployeesResponse;
 import com.jobsearch.responses.GetJobResponse;
 import com.jobsearch.responses.FindEmployeesResponse.FindEmployeeUser;
 import com.jobsearch.responses.ViewEmployerHomepageResponse.EmployerHomepageJob;
+import com.jobsearch.responses.user.CreateUserResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.StringUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Service
@@ -85,122 +88,59 @@ public class UserServiceImpl {
 	@Autowired
 	WorkDayServiceImpl workDayService;
 
-
 	@Value("${host.url}")
 	private String hostUrl;
 
-	public JobSearchUserDTO createUser(JobSearchUser proposedUser) {
-
-		// proposedUser = new JobSearchUser();
-
-		JobSearchUserDTO newUserDto = getNewUserDto(proposedUser);
-		newUserDto.setUser(proposedUser);
-
-		if (!newUserDto.getIsInvalidNewUser()) {
-
-			proposedUser.setPassword(encryptPassword(proposedUser.getPassword()));
-
-			JobSearchUser newUser = repository.createUser(proposedUser);
-
-			mailer.sendMail(proposedUser.getEmailAddress(), "email verification",
-					"please click the link to verify your email " + hostUrl + "/JobSearch/email/validate?userId="
-							+ newUser.getUserId());
-
+	public CreateUserResponse createUser(CreateUserRequest request) {
+		CreateUserResponse response = new CreateUserResponse();
+		
+		// validate
+		boolean valid = true;
+		if (StringUtility.isBlank(request.getFirstName())){
+			valid = false;
+		}else if (StringUtility.isBlank(request.getLastName())){
+			valid = false;
+		}else if (StringUtility.isBlank(request.getEmailAddress())){
+			valid = false;
+		}else if (StringUtility.isBlank(request.getConfirmEmailAddress())){
+			valid = false;
+		}else if (StringUtility.isBlank(request.getPassword())){
+			valid = false;
+		}else if (StringUtility.isBlank(request.getConfirmPassword())){
+			valid = false;
+		}else if (!request.getPassword().matches(request.getConfirmPassword())){
+			valid = false;
+		}else if (!request.getEmailAddress().matches(request.getConfirmEmailAddress())){
+			valid = false;
+		}else if (request.getProfileId() == null || (request.getProfileId() != Profile.PROFILE_ID_EMPLOYEE 
+				&& request.getProfileId() != Profile.PROFILE_ID_EMPLOYER)){
+			valid = false;
+		}		
+		if (getUserByEmail(request.getEmailAddress()) != null){
+			valid = false;
+			response.setEmailInUse(true);
+		}
+		if (!mailer.isValidEmailAddress(request.getEmailAddress())){
+			valid = false;
+			response.setInvalidEmail(true);
 		}
 
-		return newUserDto;
-	}
-
-	private JobSearchUserDTO getNewUserDto(JobSearchUser proposedUser) {
-
-		JobSearchUserDTO newUserDto = new JobSearchUserDTO();
-		newUserDto.setIsInvalidEmail_duplicate(false);
-		newUserDto.setIsInvalidEmail_format(false);
-		newUserDto.setIsInvalidMatchingEmail(false);
-		newUserDto.setIsInvalidFirstName(false);
-		newUserDto.setIsInvalidLastName(false);
-		newUserDto.setIsInvalidMatchingPassword(false);
-		newUserDto.setIsInvalidNewUser(false);
-		newUserDto.setIsInvalidPassword(false);
-		newUserDto.setIsInvalidProfile(false);
-
-		// Email address
-		if (proposedUser.getEmailAddress() == null || proposedUser.getEmailAddress().matches("")) {
-
-			newUserDto.setIsInvalidEmail_format(true);
-			newUserDto.setIsInvalidNewUser(true);
-		} else {
-			try {
-
-				// Validate the email is the correct format
-				InternetAddress emailAddr = new InternetAddress(proposedUser.getEmailAddress());
-				emailAddr.validate();
-
-				// Validate the email is not used by another user
-				JobSearchUser user = repository.getUserByEmail(proposedUser.getEmailAddress());
-				if (user != null) {
-
-					newUserDto.setIsInvalidEmail_duplicate(true);
-					newUserDto.setIsInvalidNewUser(true);
-				}
-
-			} catch (AddressException ex) {
-
-				newUserDto.setIsInvalidEmail_format(true);
-				newUserDto.setIsInvalidNewUser(true);
+		if (valid){
+			request.setPassword(encryptPassword(request.getPassword()));
+			response = repository.createUser(request); 
+			if (response.getUserId() != null){
+				// **********************************************************
+				// TODO: We should send a verification token, not the user's id
+				// **********************************************************
+				String content = "<h3>Welcome to Labor Vault " + request.getFirstName() + "!<h3>";
+				content += "<div>please click the link to verify your email " + hostUrl + 
+						"/JobSearch/email/validate?userId="	+ response.getUserId() + "</div>";
+								
+				mailer.sendMail(request.getEmailAddress(), "email verification", content);
 			}
 		}
-
-		// Matching email
-		if (proposedUser.getMatchingEmailAddress() == null
-				|| !proposedUser.getEmailAddress().matches(proposedUser.getMatchingEmailAddress())) {
-
-			newUserDto.setIsInvalidMatchingEmail(true);
-			newUserDto.setIsInvalidNewUser(true);
-
-		}
-
-		// Password
-		if (proposedUser.getPassword() == null
-				|| (proposedUser.getPassword().length() < 6 || proposedUser.getPassword().length() > 20)) {
-
-			newUserDto.setIsInvalidPassword(true);
-			newUserDto.setIsInvalidNewUser(true);
-
-		}
-
-		// Matching password
-		if (proposedUser.getMatchingPassword() == null
-				|| !proposedUser.getPassword().matches(proposedUser.getMatchingPassword())) {
-
-			newUserDto.setIsInvalidMatchingPassword(true);
-			newUserDto.setIsInvalidNewUser(true);
-
-		}
-
-		// First name
-		if (proposedUser.getFirstName() == null || proposedUser.getFirstName().matches("")) {
-			newUserDto.setIsInvalidFirstName(true);
-			newUserDto.setIsInvalidNewUser(true);
-		}
-
-		// Last name
-		if (proposedUser.getLastName() == null || proposedUser.getLastName().matches("")) {
-			newUserDto.setIsInvalidLastName(true);
-			newUserDto.setIsInvalidNewUser(true);
-		}
-
-		// Profile Id
-		if (proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYEE
-				&& proposedUser.getProfileId() != Profile.PROFILE_ID_EMPLOYER) {
-
-			newUserDto.setIsInvalidProfile(true);
-			newUserDto.setIsInvalidNewUser(true);
-
-		}
-
-		return newUserDto;
-
+		
+		return response;
 	}
 
 	private String encryptPassword(String password) {
@@ -223,16 +163,6 @@ public class UserServiceImpl {
 	public List<Profile> getProfiles() {
 		return repository.getProfiles();
 	}
-
-
-
-
-
-
-
-
-
-
 
 	public void updateSessionUser(HttpSession session) {
 		JobSearchUser user = getUser(SessionContext.getUser(session).getUserId());
@@ -574,6 +504,14 @@ public class UserServiceImpl {
 		return calendarDays;
 	}
 	public LoginResponse login(LoginRequest request, HttpSession session) {
+		
+		// ***********************************************************************
+		// ***********************************************************************
+		// this is not working. the login needs to be initiated by ajax.
+		// however i cannot get the auth to work without the spring form...
+		// ***********************************************************************
+		// ***********************************************************************
+		
 
 		// ************************************************
 		// ************************************************
@@ -602,6 +540,17 @@ public class UserServiceImpl {
 		}
 
 		return response;		
+	}
+	
+	@Deprecated
+	public void setSession_Login(JobSearchUser user, HttpSession session) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		user = this.getUserByEmail(auth.getName());
+
+		SessionContext.setUser(session, user);
+//		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployee(user.getUserId());		
+//		session.setAttribute("jobs_needRating", jobs_needRating);			
 	}
 
 	public void setSession_EmailValidation(int userId, HttpSession session) {

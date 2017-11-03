@@ -11,29 +11,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.google.Coordinate;
 import com.jobsearch.model.Job;
 import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
+import com.jobsearch.request.CreateUserRequest;
 import com.jobsearch.request.FindEmployeesRequest;
+import com.jobsearch.responses.user.CreateUserResponse;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
-public class UserRepository {
-
-	@Autowired
-	JdbcTemplate jdbcTemplate;
+public class UserRepository extends BaseRepository {
 
 	@Autowired
 	UserServiceImpl userService;
-
 	@Autowired
 	JobServiceImpl jobService;
-
-	@Autowired
-	VerificationServiceImpl verificationService;
 
 	public JobSearchUser getUser(int userId) {
 
@@ -43,44 +39,29 @@ public class UserRepository {
 
 	}
 
-	public JobSearchUser createUser(JobSearchUser user) {
-
+	public CreateUserResponse createUser(CreateUserRequest request) {
+		CreateUserResponse response = new CreateUserResponse();
+	
 		try {
 			CallableStatement cStmt = jdbcTemplate.getDataSource().getConnection()
 					.prepareCall("{call insertUser(?, ?, ?, ?, ?, ?)}");
-
-			cStmt.setString(1, user.getFirstName());
-			cStmt.setString(2, user.getLastName());
-			cStmt.setString(3, user.getEmailAddress());
+			
+			cStmt.setString(1, request.getFirstName());
+			cStmt.setString(2, request.getLastName());
+			cStmt.setString(3, request.getEmailAddress());
 			cStmt.setInt(4, new Integer(1));
-			cStmt.setString(5, user.getPassword());
-			cStmt.setInt(6, user.getProfileId());
+			cStmt.setString(5, request.getPassword());
+			cStmt.setInt(6, request.getProfileId());
 
-			ResultSet result = cStmt.executeQuery();
-
-			JobSearchUser newUser = new JobSearchUser();
-			Profile profile = new Profile();
-			while (result.next()) {
-				newUser = new JobSearchUser();
-				newUser.setUserId(result.getInt("userId"));
-				newUser.setFirstName(result.getString("firstName"));
-				newUser.setLastName(result.getString("lastname"));
-				newUser.setEmailAddress(result.getString("email"));
-
-				profile.setId(result.getInt("profileId"));
-				profile.setName(result.getString("profiletype"));
-
-				newUser.setProfile(profile);
-
-			}
-			return newUser;
-
+			ResultSet result = cStmt.executeQuery();	
+			result.next();
+			response.setUserId(result.getInt("userId"));
+			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return null;
+		return response;
 	}
 
 	public void createAdmin(JobSearchUser user) {

@@ -1,7 +1,14 @@
+var slideSpeed_loginSignUp = 600;
 $(document).ready(function(){
 	
 	$("body").on("click", "#do-login", function() {
-		login();
+//		login();
+	})
+	
+	$("body").on("click", "#do-sign-up", function() {
+		if (validateInputElements($("#sign-up-wrapper"))){
+			signUp();	
+		}
 	})
 	
 	$(".show-login-sign-up-mod").click(function(){
@@ -58,6 +65,46 @@ $(document).ready(function(){
 //	})
 	
 })
+function signUp(){
+	var createUserRequest = {};
+	createUserRequest.firstName = $("#signup-first-name").val();
+	createUserRequest.lastName = $("#signup-last-name").val();
+	createUserRequest.emailAddress = $("#signup-email-address").val();
+	createUserRequest.confirmEmailAddress = $("#signup-confirm-email-address").val();
+	createUserRequest.password = $("#signup-password").val();
+	createUserRequest.confirmPassword = $("#signup-confirm-password").val();
+	createUserRequest.profileId = $("#signup-profiles").find("option:selected").eq(0).val();
+	$.ajax({
+		type : "POST",
+		url: "/JobSearch/user/",
+		data: JSON.stringify(createUserRequest),
+		contentType: "application/json",
+		headers : getAjaxHeaders(),
+		dataType : "json"
+	}).done(function(createUserResponse) {
+		broswerIsWaiting(false);
+		if (createUserResponse.userId !== null){
+			$("#sign-up-input").slideUp(slideSpeed_loginSignUp);
+			$("#successful-sign-up").slideDown(slideSpeed_loginSignUp);
+		}else{
+			var $emailInUseError = $("#sign-up-fail-email-in-use");
+			var $invalidEmailAddress = $("#sign-up-fail-invalid-email");
+			if (createUserResponse.emailInUse){
+				$emailInUseError.show();
+			}else{
+				$emailInUseError.hide();
+			}
+			
+			if (createUserResponse.invalidEmail){
+				$invalidEmailAddress.show();
+			}else{
+				$invalidEmailAddress.hide();
+			}			                        
+			showErrorMessageCont(true, $("#do-sign-up-container"));
+		}
+	
+	})
+}
 function login(){
 	
 	var loginRequest = {};
@@ -97,13 +144,13 @@ function ajaxGet_loginSignUpPage(context){
 	})
 }
 function setContextDisplay(context){
-	var slideSpeed = 600;
+	
 	if(context === "login"){
-		$("#login-wrapper").slideDown(slideSpeed);
-		$("#sign-up-wrapper").slideUp(slideSpeed);
+		$("#login-wrapper").slideDown(slideSpeed_loginSignUp);
+		$("#sign-up-wrapper").slideUp(slideSpeed_loginSignUp);
 	}else{
-		$("#login-wrapper").slideUp(slideSpeed);
-		$("#sign-up-wrapper").slideDown(slideSpeed);
+		$("#login-wrapper").slideUp(slideSpeed_loginSignUp);
+		$("#sign-up-wrapper").slideDown(slideSpeed_loginSignUp);
 	}
 	
 	highlightArrayItem($("#login-sign-up-context .context-item[id=" + context + "]"), $("#login-sign-up-context .context-item"), "clicked");

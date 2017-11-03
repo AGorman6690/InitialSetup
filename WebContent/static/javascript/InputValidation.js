@@ -3,13 +3,44 @@ $(document).ready(function(){
 	$("body").on("change", "select.invalid", function(){
 		validateSelect($(this));
 	})
-	$("body").on("keyup", "input[type=text].invalid, textarea.invalid", function(){
+	$("body").on("keyup", "input[type=text].invalid, input[type=password].invalid, " +
+			"input[type=email].invalid, textarea.invalid", function(){
 		validateTextInput($(this));
 	})
 	$("body").on("change", ".radio-container.invalid input[type=radio]", function(){
 		validateRadioContainer($(this).closest(".radio-container"));
 	})
+	$("body").on("keyup", "[data-must-match]", function(){
+		validateMatchingInput($(this));
+	})
+	$("body").on("keyup", "[data-must-be-matched-by]", function(){
+		var otherId = $(this).attr("data-must-be-matched-by");
+		var $other = $("#" + otherId);
+		if ($other.val() !== ""){
+			validateMatchingInput($other);	
+		}		
+	})
 })
+function showErrorMessageCont(request, $errorMessageCont){
+	if (request){
+		$errorMessageCont.addClass("visible");
+		$errorMessageCont.find(".invalid-input-message").slideUp(300, function(){		
+			$errorMessageCont.find(".invalid-input-message").slideDown(600);
+		})	
+	}else{
+		$errorMessageCont.find(".invalid-input-message").slideUp(300);
+		$errorMessageCont.removeClass("visible");
+	}	
+}
+function validateMatchingInput($e){
+	var otherId = $e.attr("data-must-match");
+	var $other = $("#" + otherId);
+	var valid = true;
+	if ($other.val() != $e.val()){
+		valid = false;
+	}	
+	return inspectValidity($e, valid);
+}
 function validateInputElements($cont, $errorMessageCont){
 	var invalidCount = 0;
 	$cont.find(".validate-input").each(function() {
@@ -21,16 +52,12 @@ function validateInputElements($cont, $errorMessageCont){
 	})
 	if(invalidCount > 0){
 		if($errorMessageCont !== undefined){
-			$errorMessageCont.addClass("visible");
-			$errorMessageCont.find(".invalid-input-message").slideUp(300, function(){		
-				$errorMessageCont.find(".invalid-input-message").slideDown(600);
-			})
+			showErrorMessageCont(true, $errorMessageCont);
 		}
 		return false;
 	}else{
 		if($errorMessageCont !== undefined){
-			$errorMessageCont.find(".invalid-input-message").slideUp(300);
-			$errorMessageCont.removeClass("visible");
+			showErrorMessageCont(false, $errorMessageCont);
 		}
 		return true;
 	}	
@@ -41,6 +68,8 @@ function getFindParam(str){
 function validateTextInputs($cont){
 	var invalidCount = 0;
 	var findParam = getFindParam("input[type=text]");
+	findParam += "," + getFindParam("input[type=password]");
+	findParam += "," + getFindParam("input[type=email]");
 	findParam += "," + getFindParam("textarea");
 	var elements = $cont.find(findParam);
 	$(elements).each(function(i, e){
