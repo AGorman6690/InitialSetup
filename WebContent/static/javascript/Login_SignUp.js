@@ -1,9 +1,9 @@
 var slideSpeed_loginSignUp = 600;
 $(document).ready(function(){
 	
-	$("body").on("click", "#do-login", function() {
+//	$("body").on("click", "#do-login", function() {
 //		login();
-	})
+//	})
 	
 	$("body").on("click", "#do-sign-up", function() {
 		if (validateInputElements($("#sign-up-wrapper"))){
@@ -11,7 +11,7 @@ $(document).ready(function(){
 		}
 	})
 	
-	$(".show-login-sign-up-mod").click(function(){
+	$("body").on("click", ".show-login-sign-up-mod", function(){
 		ajaxGet_loginSignUpPage($(this).attr("data-context"));
 	})
 	

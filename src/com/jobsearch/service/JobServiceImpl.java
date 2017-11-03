@@ -259,8 +259,6 @@ public class JobServiceImpl {
 		response.setContext(context);
 		response.setSkillsRequired(getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
 		response.setSkillsDesired(getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
-		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
-		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
 
 		if (sessionUser != null && sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
 			response.setQuestions(questionService.getQuestionsWithAnswersByJobAndUser(
@@ -270,10 +268,14 @@ public class JobServiceImpl {
 			response.setQuestions(questionService.getQuestions(jobId));
 		}
 		
-		
+		// workdays
+		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
+		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
 		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
 		if (context.matches("find")){
-			workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
+			if (sessionUser != null){
+				workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
+			}
 			response.setWarningMessage(getViewJobWarningMessage(response.getApplication(), job, workDayDtos));	
 
 		}		

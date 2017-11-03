@@ -60,4 +60,7 @@ public class WelcomeController {
 		welcomeService.Logout(session);
 		return "redirect:/";
 	}
+	
+	
+
 }

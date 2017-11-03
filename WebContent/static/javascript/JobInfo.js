@@ -31,7 +31,9 @@ $(document).ready(function() {
 		
 	})
 	
-
+	$("body").on("click", "#edit-job-post", function(){
+		("#job-info-mod .mod-header").click();
+	})
 	
 	$("body").on("click", "#job-address", function(){
 // **********************

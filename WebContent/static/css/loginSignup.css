@@ -1,3 +1,6 @@
+#login-sign-up-mod{
+	z-index: 1000;
+}
 #successful-sign-up h4{
     font-weight: bold;
     font-size: 20px;
@@ -38,7 +41,7 @@
 #login-sign-up-mod input[type=text],
 #login-sign-up-mod input[type=password],
 #login-sign-up-mod input[type=email],
-select{
+#login-sign-up-mod select{
 	width: 300px;
 }
 #login-sign-up-mod .group-container{

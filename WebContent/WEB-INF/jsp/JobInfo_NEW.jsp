@@ -15,7 +15,7 @@
 	</c:if>
 	<c:if test="${empty sessionScope.user && response.context == 'find' }">
 		<div class="warning-message">	
-			<h3><a href="/JobSearch/login-signup?login=true">Please login to apply for a job</a></h3>
+			<h3><span class="show-login-sign-up-mod" data-context="login">Please login to apply for a job</span></h3>
 		</div>
 	</c:if>
 	<c:if test="${sessionScope.user.profileId == 1 &&
@@ -43,9 +43,9 @@
 				</div>
 			</c:if>
 			<c:if test="${context == 'preview-job-post'}">
-				<div id="">
-					<button id="submit-job-post" class="sqr-btn green">Submit job post</button>
-					
+				<div id="submit-job-info-container" class="center">
+					<button id="edit-job-post" class="sqr-btn gray">Edit</button>
+					<button id="submit-job-post" class="sqr-btn blue">Submit job post</button>					
 				</div>
 			</c:if>
 			<c:if test="${response.isPreviewingBeforeSubmittingJobPost }">

@@ -73,7 +73,7 @@ public class UserController {
 	}	
 	
 	@SuppressWarnings("deprecation")
-	@RequestMapping(value = "/user/login", method = RequestMethod.POST)
+	@RequestMapping(value = "/user/login", method = RequestMethod.GET)
 	public String login(HttpSession session, @ModelAttribute("user") JobSearchUser user) {
 
 		userService.setSession_Login(user, session);

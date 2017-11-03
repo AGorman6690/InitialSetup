@@ -5,16 +5,16 @@
 			<div class="mod-header"></div>
 			<div class="mod-body">				
 				<div id="login-sign-up-context">
-					<span id="login" class="context-item">Login</span>
-					<span>/</span>
 					<span id="sign-up" class="context-item">Sign Up</span>
+					<span>/</span>
+					<span id="login" class="context-item">Login</span>									
 				</div>
 				<div id="login-wrapper" class="group-container validate-input">		
-					<form:form class="" modelAttribute="user" action="/JobSearch/login.do" method="GET"> 		
+					<form:form class="" modelAttribute="user" action="/JobSearch/login.do" method="POST"> 		
 						<div class="item">
 							<label>Email Address</label>
 <!-- 							<input id="login-email-address" type="text"/> -->
-							<form:input type="text" class="" path="username" id="login-password"/>
+							<form:input type="text" class="" path="username" id="login-email-address"/>
 						</div>
 						<div class="item">
 							<label>Password</label>
@@ -33,17 +33,19 @@
 	<!-- 							</div> -->
 								<div>	
 <!-- 									<button id="do-login" class="sqr-btn blue">Login</button> -->
-									<input id="login" class="" type="submit" value="Login"/>
+									<input id="do-login" class="sqr-btn blue" type="submit" value="Login"/>
 								</div>					
 							</div>				
 						</div>	
+					</form:form>	
+				
 											<br></br>
 						<br></br>
 						<br></br>
 						<button style="display:block" id="debug1">Sign in as employer (UserId = 1)</button>
 						<button style="display:block" id="debug2">Sign in as employee 1</button>
 						<button style="display:block" id="debug3">Sign in as employee 2</button>
-					</form:form>							
+											
 				</div>
 				<div id="sign-up-wrapper" class="group-container"> 	
 					<div id="sign-up-input" class="validate-input">			
