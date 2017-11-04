@@ -14,6 +14,7 @@ public class WorkDayDto {
 	Boolean hasOpenPositions
 	Boolean isProposed
 	Boolean isAccepted
+	Boolean isComplete
 	
 	Job job_conflictingEmployment
 	List<ApplicationDTO> applicationDtos_conflictingApplications

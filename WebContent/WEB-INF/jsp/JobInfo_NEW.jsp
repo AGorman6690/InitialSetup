@@ -1,7 +1,7 @@
 <%@ include file="./includes/TagLibs.jsp"%>	
 
-<div class="wrapper ${sessionScope.user.profileId == 1 ? 'employee-context' : 'employer-context'}">
-	<c:if test="${sessionScope.user.profileId == 1 }">
+<div class="wrapper ${response.isEmployee ? 'employee-context' : 'employer-context'}">
+	<c:if test="${response.isEmployee }">
 		<c:choose>
 			<c:when test="${response.context == 'find' && !empty response.warningMessage}">						
 				<div class="warning-message">	
@@ -13,30 +13,22 @@
 			</c:when>	
 		</c:choose>
 	</c:if>
-	<c:if test="${empty sessionScope.user && response.context == 'find' }">
+	<c:if test="${!response.isLoggedIn && response.context == 'find' }">
 		<div class="warning-message">	
-			<h3><span class="show-login-sign-up-mod" data-context="login">Please login to apply for a job</span></h3>
+			<h3><span class="show-login-sign-up-mod linky-hover" data-context="login">Please login to apply for a job</span></h3>
 		</div>
 	</c:if>
-	<c:if test="${sessionScope.user.profileId == 1 &&
-						 response.context == 'find' &&
-						 empty response.warningMessage &&						 
-						empty sessionScope.jobs_needRating}">
-		<c:set var="doShowApplyButton" value="1"></c:set>
-	</c:if>
-
-	<div class="job-info ${!empty doShowApplyButton ? 'show-apply-button' : '' }">
+	<div class="job-info ${response.isApplyable ? 'show-apply-button' : '' }">
 		<input id="jobId" type="hidden" value="${response.job.id }">
 		<div class="">
-			<c:if test="${sessionScope.user.profileId == 1 }">
+			<c:if test="${response.isEmployee }">
 				<div id="submit-application-error">
 					<div class="invalid-input-message">
 						<p>Invalid input</p>
 					</div>
 				</div>
-			</c:if>
-			
-			<c:if test="${doShowApplyButton == '1'}">
+			</c:if>			
+			<c:if test="${response.isApplyable }">
 				<div id="apply-for-job-cont">
 					<button id="apply-for-job" class="sqr-btn green">Apply for job</button>
 					
@@ -59,7 +51,7 @@
 					<label>Job Name</label>
 					<div>${response.job.jobName }</div>
 				</div>
-				<c:if test="${sessionScope.user.profileId == 1 }">
+				<c:if test="${response.isEmployee }">
 					<div class="header-item">
 						<label>Employer Name</label>
 						<div>
@@ -155,7 +147,7 @@
 										<c:forEach items="${question.answerOptions }" var="answerOption">
 											<li class="answer-option">
 												<label>
-													<c:if test="${sessionScope.user.profileId == 1 && response.context == 'find'}">
+													<c:if test="${response.isEmployee && response.context == 'find'}">
 														<input type="${question.formatId == 3 ? 'checkbox' : 'radio' }"
 															name="answer-options-${question.questionId }"
 															data-id="${answerOption.answerOptionId }"
@@ -195,21 +187,21 @@
 									<p class="instructions employee-context">Please select the work days you want to work</p>
 								</c:if>
 								<p>This job allows partial availability.</p>
-								<p>${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} can apply for one or more days.</p>
+								<p>${response.isEmployee? 'You' : 'Applicant'} can apply for one or more days.</p>
 							</c:when>
 							<c:otherwise>
 								<p>This job does not allow partial availability.</p>
-								<p>${sessionScope.user.profileId == 1 ? 'You' : 'Applicant'} must apply for all days.</p>
+								<p>${response.isEmployee ? 'You' : 'Applicant'} must apply for all days.</p>
 							</c:otherwise>
 						</c:choose>
 					</p> 
 				</c:if>
 				<div id="work-days-calendar-container" class="v2 validate-input calendar-container no-pad stack hide-unused-rows
-					 hide-prev-next ${sessionScope.user.profileId == 2 ? 'preview-job-post hide-select-work-day read-only' : '' }
+					 hide-prev-next ${!response.isEmployee ? 'preview-job-post hide-select-work-day read-only' : '' }
 					 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
-					 ${sessionScope.user.profileId == 1 && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">
+					 ${response.isEmployee && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">
 					<c:if test="${response.job.isPartialAvailabilityAllowed
-						&& sessionScope.user.profileId == 1 
+						&& response.isEmployee 
 						&& response.context == 'find'
 						&& response.countWorkDays > 1 }">
 						<button id="select-all-work-days">Select all work days</button>		

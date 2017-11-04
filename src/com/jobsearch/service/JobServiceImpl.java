@@ -50,12 +50,14 @@ import com.jobsearch.responses.MessageResponse;
 import com.jobsearch.responses.ValidateAddressResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.DateUtility;
+import com.jobsearch.utilities.JobUtil;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.StringUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+import com.jobsearch.utilities.WorkDayUtil;
 
 @Service
-public class JobServiceImpl {
+public class JobServiceImpl extends BaseService{
 
 	@Autowired
 	JobRepository repository;
@@ -243,44 +245,67 @@ public class JobServiceImpl {
 		repository.updateJobStatus(status, jobId);
 	}
 
-	public void setGetJobResponse(Model model, HttpSession session, String context, int jobId) {
-
-		Job job = getJob(jobId);
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-		List<WorkDay> workDays = workDayService.getWorkDays(jobId);
-
-		GetJobResponse response = new GetJobResponse();
-		response.setJob(job);
-//		 response.setWorkDayDtos(getWorkDayDtos(jobId));
-		response.setCountWorkDays(workDays.size());
+	public void setGetJobResponse(Model model, HttpSession s, String context, int jobId) {
 		
-		response.setIsPreviewingBeforeSubmittingJobPost(false);
-		response.setProfileInfoDto(userService.getProfileInfoDto(userService.getUser(job.getUserId())));
-		response.setContext(context);
-		response.setSkillsRequired(getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
-		response.setSkillsDesired(getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));
+		GetJobResponse response = new GetJobResponse(s);
+		
+		Job job = getJob(jobId);
+		JobSearchUser sessionUser = SessionContext.getUser(s);		
+		response.setJob(job);
 
-		if (sessionUser != null && sessionUser.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+		// application
+		if (isEmployee(s)){
+			response.setApplication(applicationService.getApplication(jobId, getSessionUser(s).getUserId()));
+		}
+		
+		// questions/answers
+		if (response.getApplication() != null){			
 			response.setQuestions(questionService.getQuestionsWithAnswersByJobAndUser(
-					jobId, sessionUser.getUserId()));
-			response.setApplication(applicationService.getApplication(jobId, sessionUser.getUserId()));
+					jobId, sessionUser.getUserId()));			
 		}else{
 			response.setQuestions(questionService.getQuestions(jobId));
 		}
 		
-		// workdays
+		// work days		
+		List<WorkDay> workDays = workDayService.getWorkDays(jobId);
+		List<WorkDayDto> workDayDtos = new ArrayList<WorkDayDto>();
+		for(WorkDay workDay : workDays){
+			WorkDayDto workDayDto = new WorkDayDto();
+			workDayDto.setWorkDay(workDay);
+			workDayDto.setIsComplete(WorkDayUtil.isComplete(workDay));
+			if (context.matches("find") && isEmployee(s)){
+				workDayDto.setHasConflictingEmployment(
+						jobUtil.doesUserHaveEmploymentConflicts(jobId, workDay.getDateId(), getSessionUser(s).getUserId()));	
+			}			
+			workDayDtos.add(workDayDto);
+		}
+			
+		// calendar data
 		response.setDate_firstWorkDay(DateUtility.getMinimumDate(workDays).toString());
 		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
-		List<WorkDayDto> workDayDtos = workDayService.getWorkDayDtos(jobId);
+		
+		// warning message
 		if (context.matches("find")){
-			if (sessionUser != null){
-				workDayService.setWorkDayDtosForApplicant(sessionUser.getUserId(), workDayDtos);
-			}
 			response.setWarningMessage(getViewJobWarningMessage(response.getApplication(), job, workDayDtos));	
-
-		}		
+		}
+		
+		// apply-able
+		if (isEmployee(s) 
+				&& response.getApplication() == null
+				&& context.matches("find")
+				&& getJobs_needRating_byEmployee(getSessionUser(s).getUserId()) == null){
+			response.setIsApplyable(true);
+		}else{
+			response.setIsApplyable(false);
+		}
+			
+		response.setProfileInfoDto(userService.getProfileInfoDto(userService.getUser(job.getUserId())));		
+		response.setSkillsRequired(getSkills_ByType(jobId, Skill.TYPE_REQUIRED_JOB_POSTING));
+		response.setSkillsDesired(getSkills_ByType(jobId, Skill.TYPE_DESIRED_JOB_POSTING));		
+		response.setCountWorkDays(workDays.size());
+		response.setIsPreviewingBeforeSubmittingJobPost(false);
+		response.setContext(context);
 		response.setJson_workDayDtos(JSON.stringify(workDayDtos));
-
 		model.addAttribute("response", response);
 	}
 
@@ -289,7 +314,7 @@ public class JobServiceImpl {
 		String warningMessage = null;
 		
 		if(!job.getIsPartialAvailabilityAllowed() &&
-				workDayDtos.stream().filter(wd -> wd.getHasConflictingEmployment()).count() > 0){
+				workDayDtos.stream().anyMatch(wd -> wd.getHasConflictingEmployment())){
 			warningMessage = "You cannot apply. This job does not allow partial availability and you have a schedule conflict.";
 		}else if(application != null){
 			if(application.getStatus() == 0 || application.getStatus() == 2 || application.getStatus() == 4){
@@ -303,46 +328,55 @@ public class JobServiceImpl {
 			}else if(application.getStatus() == -1){
 				warningMessage = "The employer initiated contact with you";
 			}else{
-				warningMessage = "Application has been accepted";
+				warningMessage = "Your application has been accepted";
 			}
 		}
 		return warningMessage;
 	}
 
 	public void setGetJobReponse_forPreviewingJobPost(Model model, AddJobRequest request) {
+		
+		// TODO: can this be harmonized with setGetJobResponse()?
 
 		GetJobResponse response = new GetJobResponse();
 		response.setJob(request.getJob());
 
+		// location
 		Coordinate coord = GoogleClient.getCoordinate(request.getJob());
 		if (coord != null) {
 			response.getJob().setLat(coord.getLatitude());
 			response.getJob().setLng(coord.getLongitude());
 		}
-
 		formatAddress(request.getJob());
-
-		List<String> dates = request.getWorkDays().stream().map(wd -> wd.getStringDate()).collect(Collectors.toList());
-		response.setDate_firstWorkDay(DateUtility.getMinimumDate2(dates).toString());
-		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan2(dates));
-		response.setSkillsDesired(request.getSkills().stream()
-				.filter(s -> s.getType() == Skill.TYPE_DESIRED_JOB_POSTING).collect(Collectors.toList()));
+		
+		// skills
 		response.setSkillsRequired(request.getSkills().stream()
-				.filter(s -> s.getType() == Skill.TYPE_REQUIRED_JOB_POSTING).collect(Collectors.toList()));
+				.filter(s -> s.getType() == Skill.TYPE_REQUIRED_JOB_POSTING)
+				.collect(Collectors.toList()));
+		response.setSkillsDesired(request.getSkills().stream()
+				.filter(s -> s.getType() == Skill.TYPE_DESIRED_JOB_POSTING)
+				.collect(Collectors.toList()));
+		
+		// questions
 		response.setQuestions(request.getQuestions());
 
-		// for(WorkDay workDay : request.getWorkDays()){
-		// workDay.setDate(LocalDate.parse(workDay.getStringDate()));
-		// }
-		//
+		// work days
 		response.setWorkDayDtos(new ArrayList<>());
 		for (WorkDay workDay : request.getWorkDays()) {
 			WorkDayDto workDayDto = new WorkDayDto();
 			workDayDto.setWorkDay(workDay);
-			workDayDto.setIsProposed(true); // for css purposes only
-			response.getWorkDayDtos().add(workDayDto);
+			workDayDto.setIsProposed(true);			
+			response.getWorkDayDtos().add(workDayDto);			
 		}
+		
+		// calendar data
+		List<String> dates = request.getWorkDays().stream()
+				.map(wd -> wd.getStringDate())
+				.collect(Collectors.toList());
+		response.setDate_firstWorkDay(DateUtility.getMinimumDate2(dates).toString());
+		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan2(dates));
 
+		// response
 		response.setJson_workDayDtos(JSON.stringify(response.getWorkDayDtos()));
 		model.addAttribute("context", "preview-job-post");
 		model.addAttribute("response", response);
@@ -514,11 +548,13 @@ public class JobServiceImpl {
 		}
 	}
 
+	@Deprecated
 	public Job getConflictingEmployment_byUserAndWorkDay(int jobId_reference, int userId, int workDayId) {
 		return repository.getConflictingEmployment_byUserAndWorkDay(jobId_reference, userId, workDayId);
 	}
 
 
+	@Deprecated
 	public boolean doesUserHaveConflictingEmployment(int jobId_reference, int dateId, int userId ){
 
 		Job conflictingJob = getConflictingEmployment_byUserAndWorkDay(jobId_reference, userId, dateId);
@@ -819,6 +855,11 @@ public class JobServiceImpl {
 			
 		}		
 		model.addAttribute("response", response);	
+	}
+
+	public List<Job> getJobs_openByEmployer(int userId) {
+		
+		return repository.getJobs_openByEmployer(userId);
 	}
 
 

@@ -65,16 +65,20 @@ function initCalendar_new($calendar, workDayDtos){
 			if(workDayDto != undefined){				
 				classNameToAdd += "job-work-day";
 				
-				if(workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment hide-time hide-select-work-day";
-				if(workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
-				if(workDayDto.isAccepted == "1") classNameToAdd += " is-accepted";
-				
-				if(workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions hide-time hide-select-work-day";
-				else{
-					if(workDayDtos.length == 1) classNameToAdd += " is-proposed";
-					else if(workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
-				}	
-				
+				if (workDayDto.isComplete){
+					classNameToAdd = " is-complete";
+				}else{
+					if (workDayDto.hasConflictingEmployment == "1") classNameToAdd += " has-conflicting-employment hide-time hide-select-work-day";
+					if (workDayDto.hasConflictingApplications == "1") classNameToAdd += " has-conflicting-applications";
+					if (workDayDto.isAccepted == "1") classNameToAdd += " is-accepted";
+					
+					if (workDayDto.hasOpenPositions == "0") classNameToAdd += " no-available-positions hide-time hide-select-work-day";
+					else{
+						if (workDayDtos.length == 1) classNameToAdd += " is-proposed";
+						else if (workDayDto.isProposed == "1") classNameToAdd += " is-proposed";
+					}						
+				}
+			
 				return [true, classNameToAdd];
 			}else return [true, ""];
 			

@@ -30,6 +30,7 @@ import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.NumberUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
+import com.sun.jmx.snmp.Timestamp;
 
 @Repository
 public class JobRepository extends BaseRepository {
@@ -762,4 +763,22 @@ public class JobRepository extends BaseRepository {
 	}
 
 
+
+	public List<Job> getJobs_openByEmployer(int userId) {
+		
+		// TODO: I don't like the Timestamp_EndDateTime in the work_day table. It de-normalizes the data.
+		// I think a better solution is to create a time table with time strings in increments of 15 minutes.
+		// Then this should query against a DateId and a TimeId.
+		
+		String sql = "SELECT * FROM job j WHERE j.JobId IN"
+				+ " ("
+				+ " SELECT DISTINCT j.JobId FROM job j"
+				+ " JOIN work_day wd ON j.JobId = wd.JobId"
+				+ " WHERE j.UserId = ?"
+				+ " AND wd.Timestamp_EndDateTime > ?"
+				+ ")";
+				
+		String now = DateUtility.getCurrentTimestamp();		
+		return JobRowMapper(sql, new Object[]{ userId, now });
+	}
 }

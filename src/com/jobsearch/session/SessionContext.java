@@ -21,6 +21,7 @@ public class SessionContext {
 	
 	private static JobSearchUser sessionUser;
 	
+
 	public static JobSearchUser getUser(HttpSession session) {
 		return (JobSearchUser) session.getAttribute("user");
 	}
@@ -34,6 +35,7 @@ public class SessionContext {
 		
 	}
 	
+	@Deprecated
 	public static boolean isLoggedIn(HttpSession session) {
 
 		// *************************************
@@ -80,12 +82,18 @@ public class SessionContext {
 		session.setAttribute("user", user);		
 	}
 
+	@Deprecated
 	public static boolean isEmployee(HttpSession session) {
-		if(getUser(session).getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
-			return true;
-		}else{
-			return false;	
+		
+		JobSearchUser user = getUser(session);		
+		if (user != null){
+			if(user.getProfileId() == Profile.PROFILE_ID_EMPLOYEE){
+				return true;
+			}else{
+				return false;	
+			}		
 		}		
+		return false;			
 	}
 
 

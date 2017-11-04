@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 import org.joda.time.DateTime;
 
 import com.jobsearch.model.WorkDay;
+import com.sun.jmx.snmp.Timestamp;
 
 public final class DateUtility {
 	
@@ -301,6 +302,22 @@ public final class DateUtility {
 		}
 	}
 
+	public static LocalDateTime getLocalDateTime(String date, String time) {
+		
+		if(date == null || time == null){
+			return null;
+		}
+		else {
+			LocalDate localDate = LocalDate.parse(date.replace("/", "-"));
+			LocalTime localTime = LocalTime.parse(time);
+			if (localDate == null || localTime == null){
+				return null;
+			}else{
+				return LocalDateTime.of(localDate, localTime);					
+			}
+		}
+	}
+	
 	public static LocalDateTime getFutureDate(LocalDateTime fromDate, Integer daysFromDate,
 			Integer hoursFromDate, Integer minutesFromDate) {
 	
@@ -339,6 +356,14 @@ public final class DateUtility {
 		if(NumberUtility.isPositiveNumber(minutes))
 			pastDate = futureDate.minusMinutes(minutes);
 		return pastDate;
+	}
+
+
+
+
+
+	public static String getCurrentTimestamp() {
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	}
 
 

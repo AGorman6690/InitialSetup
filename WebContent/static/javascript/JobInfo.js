@@ -89,13 +89,12 @@ function showJobInfoMod(html){
 function setScrollAction() {
 	var $e = $("#apply-for-job-cont").eq(0);
 	if($e.length){
-		var $applyCont = $(".to-be-fixed-cont").eq(0);
-		var $jobInfo = $(".job-info");
-		
-		var fixAtScrollAmount = $e.offset().top - 10;
-//		$("body").on("scroll", "#job-info-mod .mod-content", function(){
-		var $window = $("#job-info-mod .mod-content"); 
+		var $jobInfo = $(".job-info");		
+		var fixAtScrollAmount = $e.offset().top + 40;
+		var $window = $("#job-info-mod .mod-content");		
+		// bind the event
 		$window.scroll(function(){
+//			console.log($e.position().top + " : " + $e.offset().top + " : " + $window.scrollTop());
 			if($window.scrollTop() > fixAtScrollAmount){
 				$jobInfo.addClass("fixed");
 			}

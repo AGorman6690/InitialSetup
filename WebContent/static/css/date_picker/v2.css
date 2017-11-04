@@ -7,6 +7,10 @@
 	width: 70px;
 	border: 1px solid #c1c1c1;	
 }
+.v2 td.is-complete,
+.v2 td.is-complete .added-content{
+	background: #cacaca;
+}
 .v2 .calendar td.ui-datepicker-other-month{
 	border: 0
 }

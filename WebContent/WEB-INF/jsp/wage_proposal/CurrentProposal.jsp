@@ -73,7 +73,8 @@
 				</c:otherwise>
 			</c:choose>
 		
-			<a href="/JobSearch/proposal/decline/${applicationProgressStatus.currentProposal.proposalId }" class="sqr-btn blue decline-current-proposal">Decline</a>	
+			<a href="/JobSearch/proposal/decline/${applicationProgressStatus.currentProposal.proposalId }"
+				 class="sqr-btn gray decline-current-proposal">Decline</a>	
 			<div class="render-present-proposal-mod"></div>
 		</div>
 	</c:if>	

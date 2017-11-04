@@ -30,7 +30,9 @@
 <!-- 		<button id="job-i-might-post" class="sqr-btn teal">I am thinking about posting</button> -->
 <!-- 	</div> -->
 <%-- </c:if> --%>
-	
+<div class="main-header-lable">
+	<h1>Find Employees</h1>
+</div>
 <div id="distance-filter-wrapper">
 	<div id="distance-filter" class="validate-input">
 		<input id="miles" class="select-all" type="text" placeholder="number of"

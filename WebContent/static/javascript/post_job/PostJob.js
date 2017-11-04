@@ -30,24 +30,25 @@ $(document).ready(function(){
 	
 	$("#proceed-to-preview-job-posting").click(function(){
 
-		var addJobRequest = getAddJobRequest();
-		
-		var addressToValidate = "";
-		addressToValidate += addJobRequest.job.streetAddress;
-		addressToValidate += " " + addJobRequest.job.city;
-		addressToValidate += " " + addJobRequest.job.state;
-		addressToValidate += " " + addJobRequest.job.zipCode;
-		
-		executeAjaxCall_isAddressValid(addressToValidate, function(response){
-			response = JSON.parse(response);
-			if(response.isValid == true){			
-				$("#invalid-address-error-message").hide();
-				executeAjaxCall_previewJobPosting(addJobRequest);
-			}else{
-				$("#show-location").click();
-				$("#invalid-address-error-message").show();
-			}				
-		})
+		if(validateInputElements($("#post-job-info"), $("#submit-wrapper"))){	
+			var addJobRequest = getAddJobRequest();			
+			var addressToValidate = "";
+			addressToValidate += addJobRequest.job.streetAddress;
+			addressToValidate += " " + addJobRequest.job.city;
+			addressToValidate += " " + addJobRequest.job.state;
+			addressToValidate += " " + addJobRequest.job.zipCode;
+			
+			executeAjaxCall_isAddressValid(addressToValidate, function(response){
+				response = JSON.parse(response);
+				if(response.isValid == true){			
+					$("#invalid-address-error-message").hide();
+					executeAjaxCall_previewJobPosting(addJobRequest);
+				}else{
+					$("#show-location").click();
+					$("#invalid-address-error-message").show();
+				}				
+			})
+		}
 	})
 	
 	$("#post-job-info .section").mouseover(function() {
@@ -56,35 +57,27 @@ $(document).ready(function(){
 	$("#post-job-info .section").mouseout(function() {
 		addHoverClassToSideBarSpan(this.id, false);
 	})
-	
-	
 	$("body").on("click", "#submit-job-post", function(){
 		executeAjaxCall_postJob(getAddJobRequest());
 	})
-	
 	$("#dates-wrapper #clear-calendar").click(function(){		
 		resetCalendar();
 	})
-
 	$("#previous-job-posts div[data-posted-job-id]").click(function(){
 		importPreviousJobPosting($(this).attr("data-posted-job-id"));		
 		$(this).closest("#postedJobsContainer").find("[data-toggle-id]").eq(0).click();		
 		$("#postSections").find(".post-section").eq(0).click();
 	})
-	
 	$("#posted-questions [data-question-id]").click(function(){
 		importPreviousQuestion($(this).attr("data-question-id"));
 		$("#copy-previous-question").click();		
 	})
-	
 	$("body").on("click", "#skills-wrapper .add-list-item", function(){		
 		addAnotherSkill($(this).siblings(".list-items-container").eq(0));		
 	})
-	
 	$("body").on("click", ".skills-container .delete-list-item", function(){		
 		deleteSkill($(this).closest(".list-item"));		
 	})	
-	
 	$("#supreme-times-wrapper").on("change", "select.start-time", function() {
 		var $e = $(this).find("option:selected");
 		var date = $e.closest(".time-wrapper").find(".date").attr("data-date");
@@ -292,17 +285,14 @@ function executeAjaxCall_postJob(jobDto){
 	});
 }
 function executeAjaxCall_isAddressValid(address, callback) {
-	
-	if(validateInputElements($("#post-job-info"), $("#submit-wrapper"))){	
-		$.ajax({
-			type: "GET",
-			headers: getAjaxHeaders(),
-			url: "/JobSearch/job/validate-address?address=" + address,
-			dataType: "text"
-		}).done(function(response) {
-			callback(response);
-		})
-	}
+	$.ajax({
+		type: "GET",
+		headers: getAjaxHeaders(),
+		url: "/JobSearch/job/validate-address?address=" + address,
+		dataType: "text"
+	}).done(function(response) {
+		callback(response);
+	})	
 }
 function executeAjaxCall_previewJobPosting(addJobRequest){	
 	broswerIsWaiting(true);

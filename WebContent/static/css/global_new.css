@@ -1,3 +1,19 @@
+.main-header-lable{
+	text-align: center;
+}
+.main-header-lable h1{
+    width: auto;
+    display: inline-block;
+    padding: 10px 15px;
+    /* background: #197994; */
+    color: #197994;
+    font-weight: bold;
+    font-size: 20px;
+    margin: 10px 0px;
+    border-top: 2px solid #163b3d;
+    border-bottom: 2px solid #163b3d;
+}
+
 body.waiting #spinner-wheel{
 /* 	display: block; */
 }
@@ -38,7 +54,11 @@ body.waiting #spinner-wheel{
 html {
   overflow-y: scroll;
 }
-
+.sqr-btn.gray{
+	color: #fff;;
+	background: #888;
+	font-weight: normal;
+}
 .sqr-btn.blue{
 	padding: 8px 15px;
 	color: #fff;
@@ -238,7 +258,7 @@ input, select, textarea{
     color: #000000;
 /*     border: 1px solid #bbbbbb; */
 	border: 0;
-    padding:5px 10px;
+    padding: 8px 15px;
     display: inline-block;    
 }
 input[type=submit],
@@ -294,15 +314,6 @@ a:visited, a:hover, a{
 .sqr-btn:hover{
 	cursor: pointer;
 }
-.sqr-btn.gray{
-	padding: 15px 20px;
-	color: #000000;
-	background: #f4f4f4;
-	font-size: 19px;
-	margin: 0px 20px;
-	font-weight: normal;
-}
-
 .sqr-btn.green{
 	padding: 10px 25px;
 	color: #ffffff;

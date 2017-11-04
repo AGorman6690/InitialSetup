@@ -65,7 +65,7 @@
     top: 2%;	
 }
 #select-all-work-days{
-    background: #627677;
+    background: #36595a;
     color: #fff;
     margin-bottom: 15px;    
 }
@@ -110,7 +110,7 @@
 }
 #skills li,
 #questions li{
-	list-style: none;
+/* 	list-style: none; */
 }
 /* #skills ul, */
 /* #questions .question-container, */
@@ -189,7 +189,8 @@
 	height: 70px;
 	background: #fff;
 	z-index: 1000;
-	top: -40px;
+	top: -60px;
+	text-align: center;
 }
 .job-info{
 	position: relative;

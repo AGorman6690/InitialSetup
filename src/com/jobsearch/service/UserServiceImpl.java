@@ -65,7 +65,7 @@ import com.jobsearch.utilities.StringUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl extends BaseService {
 
 	private static final Random RANDOM = new SecureRandom();
 	/** Length of password. @see #generateRandomPassword() */
@@ -390,8 +390,7 @@ public class UserServiceImpl {
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
 		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse();		
-		List<Job> jobs = jobService.getJobs_byEmployerAndStatuses(employer.getUserId(),
-				Arrays.asList(Job.STATUS_FUTURE, Job.STATUS_PRESENT));
+		List<Job> jobs = jobService.getJobs_openByEmployer(employer.getUserId());
 		
 		// User profile info
 		response.setProfileInfoDto(getProfileInfoDto(sessionUser));

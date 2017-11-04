@@ -290,18 +290,6 @@ public class WorkDayServiceImpl {
 		}
 		return workDayDtos;
 	}	
-	
-
-	public void setWorkDayDtosForApplicant(int userId, List<WorkDayDto> workDayDtos) {		
-		for(WorkDayDto workDayDto : workDayDtos){
-			int jobId = workDayDto.getWorkDay().getJobId();
-			int dateId = workDayDto.getWorkDay().getDateId();
-			boolean doesUserHaveConflictingEmployment = jobService.doesUserHaveConflictingEmployment(jobId, dateId, userId);
-			workDayDto.setHasConflictingEmployment(doesUserHaveConflictingEmployment);
-		}		
-	}
-
-	
 	public List<WorkDay> getWorkDays(int jobId) {
 		return repository.getWorkDays(jobId);
 	}
