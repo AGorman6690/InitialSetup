@@ -30,7 +30,6 @@ import com.jobsearch.service.WorkDayServiceImpl;
 import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.NumberUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
-import com.sun.jmx.snmp.Timestamp;
 
 @Repository
 public class JobRepository extends BaseRepository {

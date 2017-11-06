@@ -6,6 +6,8 @@ import com.jobsearch.session.SessionContext
 
 public class BaseResponse {
 	
+	public BaseResponse(){}
+	
 	public BaseResponse(HttpSession session){
 		this.isEmployee = SessionContext.isEmployee(session);
 		this.isLoggedIn = SessionContext.isLoggedIn(session);

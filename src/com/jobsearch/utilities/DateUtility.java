@@ -13,12 +13,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.joda.time.DateTime;
 
 import com.jobsearch.model.WorkDay;
-import com.sun.jmx.snmp.Timestamp;
 
 public final class DateUtility {
 	
