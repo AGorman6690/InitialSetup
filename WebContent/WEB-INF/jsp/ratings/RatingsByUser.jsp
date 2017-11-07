@@ -15,11 +15,11 @@
 						 has not ${response.profileInfoDto.user.profileId == 1 ? 'completed' : 'posted' } enough jobs in order to calculate a rating at this time</p>
 				</c:when>			
 				<c:otherwise>		
-						<p id="overall-rating" data-toggle-id="user-rating-details">
-							<input name="input-1" class="rating-loading"
-									value="${response.profileInfoDto.profileRatingDto.overallRating }	">
-							${response.profileInfoDto.profileRatingDto.overallRating }			
-						</p>		
+<!-- 						<p id="overall-rating" data-toggle-id="user-rating-details"> -->
+<!-- 							<input name="input-1" class="rating-loading" -->
+<%-- 									value="${response.profileInfoDto.profileRatingDto.overallRating }	"> --%>
+<%-- 							${response.profileInfoDto.profileRatingDto.overallRating }			 --%>
+<!-- 						</p>		 -->
 						<%@ include file="./RatingDetails.jsp" %>				
 				</c:otherwise>
 			</c:choose>	
@@ -29,7 +29,7 @@
 		<div class="personal-info-section">
 			<label>About</label>
 			<div class="personal-info">
-				<p>${response.profileInfoDto.user.about }</p>
+				<div>${response.profileInfoDto.user.about }</div>
 			</div>
 		</div>				
 	</c:if>
@@ -38,7 +38,7 @@
 		<div class="personal-info">
 			<c:choose>
 				<c:when test="${empty response.profileInfoDto.completedJobsDtos }">					
-					<p class="no-data">No completed jobs at this time</p>
+					<div class="no-data">No completed jobs at this time</div>
 				</c:when>
 				<c:otherwise>
 					<div id="completed-jobs" class="">

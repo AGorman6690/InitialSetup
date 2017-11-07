@@ -35,3 +35,6 @@
 #user-ratings .header{
 	text-align: center;
 }
+#user-ratings .personal-info-section p{
+	margin: 0px;
+}

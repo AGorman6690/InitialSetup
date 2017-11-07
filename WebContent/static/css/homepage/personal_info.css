@@ -16,6 +16,7 @@
 	display: none;
 	margin-top: 15px;
 }
+
 .editable .glyphicon-pencil{
 	font-size: 16px;
 	color: #bbb;
@@ -54,4 +55,19 @@
 #miles,
 #zipCode{
 	width: 75px
+}
+#personal-info .completed-job-name,
+#personal-info .criteria-cont .criteria-name{
+	width: 170px;
+	display: inline-block;
+}
+#personal-info .personal-info-item .rating-value .star{
+	font-size: 17px;
+}
+#personal-info .criteria-cont .criteria-name,
+#personal-info .rating-value{
+	font-size: 16px;
+}
+#personal-info .completed-job{
+	width: auto;
 }

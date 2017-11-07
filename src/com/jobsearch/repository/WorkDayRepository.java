@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import com.jobsearch.controller.BaseRepository;
 import com.jobsearch.model.WorkDay;
 import com.jobsearch.service.JobServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 
 @Repository
 public class WorkDayRepository extends BaseRepository {
@@ -76,9 +77,16 @@ public class WorkDayRepository extends BaseRepository {
 	}
 	
 
-	public void updateWorkDay_isComplete(int workDayId, int value) {
-		String sql = "UPDATE work_day SET IsComplete = ? WHERE WorkDayId = ?";
-		jdbcTemplate.update(sql, new Object[] { value, workDayId });
+	public void setWorkDayAsComplete(int workDayId) {
+		// *****************************************************************
+		// *****************************************************************
+		// this is only for testing so we don't have to actually wait for work days
+		// to complete in real time. 
+		// *****************************************************************
+		// *****************************************************************
+		
+		String sql = "UPDATE work_day SET Timestamp_EndDateTime = ? WHERE WorkDayId = ?";
+		jdbcTemplate.update(sql, new Object[] {DateUtility.getCurrentTimestamp(), workDayId });
 	}
 
 	

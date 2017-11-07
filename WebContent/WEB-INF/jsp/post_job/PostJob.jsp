@@ -14,7 +14,7 @@
 
 
 <c:choose>
-	<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
+	<c:when test="${sessionScope.jobs_needRating.size() > 1 }">
 		<div class="center pad-top-2">
 			<p>You have ${sessionScope.jobs_needRating.size() == 1 ? 'a job that requires' : 'completed jobs that require' }
 				your rating.</p>
@@ -263,9 +263,9 @@
 	
 </div>
 
-<script async defer
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp">
+<!-- <script async defer -->
+<!-- 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI&amp"> -->
 	
-</script>
+<!-- </script> -->
 
 <%@ include file="../includes/Footer.jsp"%>

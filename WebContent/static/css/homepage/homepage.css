@@ -1,3 +1,11 @@
+#rating-required h1{
+	color: #ea0000;
+    border-top: 2px solid #ce1a1a;
+    border-bottom: 2px solid #ce1a1a;	
+}
+#rating-required .job-container{
+	border: 0;
+}
 h1{
     width: auto;
     display: inline-block;
@@ -43,5 +51,5 @@ h1{
 }
 .editable span{
 	min-height: 40px;
-	line-height: 40px;
+/* 	line-height: 40px; */
 }

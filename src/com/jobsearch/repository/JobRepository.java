@@ -685,24 +685,44 @@ public class JobRepository extends BaseRepository {
 
 	public List<Job> getJobs_completedByUser(int userId) {
 		String sql = "SELECT * FROM job j"
-				+ " JOIN application a ON j.JobId = a.JobId"
-				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
-//				+ " WHERE e.UserId = ?"
-//				+ " AND e.WasTerminated = 0"
+				+ " JOIN application a0 ON j.JobId = a0.JobId"
+				+ "	JOIN employment e0 ON a0.JobId = e0.JobId AND a0.UserId = e0.UserId"				
 				+ " WHERE j.JobId NOT IN ("
-				+ " SELECT DISTINCT(j.JobId) FROM job j"
-				+ " JOIN work_day wd ON j.JobId = wd.JobId"
-				+ " JOIN application a ON j.JobId = a.JobId"
+				+ " SELECT DISTINCT a.JobId FROM application a"
 				+ " JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
-				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
-				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
-				+ " WHERE wd.IsComplete = 0"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"	
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"				
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+				+ " WHERE wd.Timestamp_EndDateTime > ?"
 				+ " AND wp.IsCurrentProposal = 1"
 				+ " AND e.UserId = ?"
 				+ " AND e.WasTerminated = 0"
 				+ " )"
-				+ " AND e.UserId = ?";
-		return JobRowMapper(sql, new Object[]{ userId, userId });
+				+ " AND e0.UserId = ?";
+		return JobRowMapper(sql, new Object[]{ DateUtility.getCurrentTimestamp(), userId, userId });
+	}
+	
+	public List<Job> getJobs_withUnratedCompletedShifts_byEmployer(int userId){
+		
+		String sql = "SELECT * FROM job j0"
+				+ " WHERE j0.JobId IN ("
+				+ " SELECT DISTINCT j.JobId FROM job j"
+				+ "	JOIN rating r ON j.JobId = r.JobId AND r.RatedByUserId = j.UserId" 
+				+ " WHERE r.Value IS NULL" // unrated by employer
+				+ "	AND j.UserId = ?" // employer's jobs
+				+ " AND r.UserId NOT IN (" // find employee's with UNFINISHED work days
+				+ " SELECT DISTINCT a.UserId FROM application a"
+				+ "	JOIN employment e ON a.UserId = e.UserId AND a.JobId = e.JobId"
+				+ " JOIN wage_proposal wp ON a.ApplicationId = wp.ApplicationId"
+				+ " JOIN employment_proposal_work_day ep ON wp.WageProposalId = ep.EmploymentProposalId"
+				+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
+				+ " WHERE wd.Timestamp_EndDateTime > ?" // incomplete work day
+				+ " AND wp.IsCurrentProposal = 1"
+				+ " AND a.JobId = j.JobId"
+				+ " )"
+				+ " )";
+		
+		return JobRowMapper(sql, new Object[]{ userId, DateUtility.getCurrentTimestamp() });
 	}
 
 	public List<Job> getJobs_needRating_byEmployer(int userId) {

@@ -183,8 +183,8 @@ public class WorkDayServiceImpl {
 		}else return null;
 	}
 	
-	public void updateWorkDay_isComplete(int workDayId, int value) {
-		repository.updateWorkDay_isComplete(workDayId, value);
+	public void setWorkDayAsComplete(int workDayId) {
+		repository.setWorkDayAsComplete(workDayId);
 
 	}
 	

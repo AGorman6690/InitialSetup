@@ -21,6 +21,9 @@
 		<%@ include file="../homepage/Personal_Info.jsp" %>			
 	</div>	
 	<div id="other-info-content">
+		<div id="required-ratings">
+			<%@ include file="../ratings/RatingRequired.jsp" %>
+		</div>
 		<c:if test="${!empty messageResponses_jobsTerminatedFrom }">
 			<div class="message-container">
 				<c:forEach items="${messageResponses_jobsTerminatedFrom }" var="messageResponse">
@@ -154,10 +157,10 @@
 		</div>
 	</div>
 </div>
-<script
-	src="https://maps.googleapis.com/maps/api/
-		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI">
-</script>
+<!-- <script -->
+<!-- 	src="https://maps.googleapis.com/maps/api/ -->
+<!-- 		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI"> -->
+<!-- </script> -->
 
 <%@ include file="../includes/resources/WageProposal.jsp"%>
 <%@ include file="../includes/Footer.jsp"%>

@@ -237,7 +237,7 @@
 	<br>
 	<br>
 	<br>
-	<a class="square-button-green" href="/JobSearch/job/${response.job.id }/update/status/1">Start Job (for debugging)</a>	
+<%-- 	<a class="square-button-green" href="/JobSearch/job/${response.job.id }/update/status/1">Start Job (for debugging)</a>	 --%>
 	<a href="/JobSearch/job/${response.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
 </div>
 <div id="application-success-container">

@@ -99,11 +99,11 @@
 				</c:choose>	
 			</c:when>			
 			<c:otherwise>		
-					<p id="overall-rating" data-toggle-id="user-rating-details">
-						<input name="input-1" class="rating-loading"
-								value="${response.profileInfoDto.profileRatingDto.overallRating }	">
-						${response.profileInfoDto.profileRatingDto.overallRating }			
-					</p>		
+<!-- 					<p id="overall-rating" data-toggle-id="user-rating-details"> -->
+<!-- 						<input name="input-1" class="rating-loading" -->
+<%-- 								value="${response.profileInfoDto.profileRatingDto.overallRating }	"> --%>
+<%-- 						${response.profileInfoDto.profileRatingDto.overallRating }			 --%>
+<!-- 					</p>		 -->
 					<%@ include file="../ratings/RatingDetails.jsp" %>				
 			</c:otherwise>
 		</c:choose>		
@@ -119,7 +119,7 @@
 				<div id="completed-jobs" class="">
 					<c:forEach items="${response.profileInfoDto.completedJobsDtos }" var="completedJobDto">
 						<div class="completed-job">
-							<span class="">${completedJobDto.job.jobName }</span>
+							<span class="completed-job-name">${completedJobDto.job.jobName }</span>
 							<span class="rating-value">
 							<input name="input-1" class="rating-loading"
 									value="${completedJobDto.rating }">${completedJobDto.rating }

@@ -21,6 +21,7 @@ import com.jobsearch.request.FindEmployeesRequest;
 import com.jobsearch.responses.user.CreateUserResponse;
 import com.jobsearch.service.JobServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
@@ -164,11 +165,11 @@ public class UserRepository extends BaseRepository {
 				+ " AND a.JobId = ?"
 				+ " AND wp.IsCurrentProposal = 1"
 				+ " AND e.WasTerminated = 0"
-				+ " AND wd.IsComplete = 0"
+				+ " AND wd.Timestamp_EndDateTime > ?"
 				+ ")"
 				+ " AND e.JobId = ?";
 
-		return JobSearchUserRowMapper(sql, new Object[]{ jobId, jobId, jobId });
+		return JobSearchUserRowMapper(sql, new Object[]{ jobId, jobId, DateUtility.getCurrentTimestamp(), jobId });
 	}
 
 

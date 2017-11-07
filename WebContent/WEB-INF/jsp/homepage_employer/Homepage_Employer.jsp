@@ -10,10 +10,14 @@
 <script src="/JobSearch/static/javascript/homepage/Personal_Info.js" type="text/javascript"></script>
 
 <div class="a-container">
+
 	<div id="personal-info-container">
 		<%@ include file="../homepage/Personal_Info.jsp" %>			
 	</div>	
 	<div id="jobs-list">
+		<div id="required-ratings">
+			<%@ include file="../ratings/RatingRequired.jsp" %>
+		</div>	
 		<h1>Your Jobs</h1>
 		<c:choose>
 			<c:when test="${response.employerHomepageJobs.size() == 0 }">
@@ -99,9 +103,9 @@
 	</div>
 </div>
 
-<script
-	src="https://maps.googleapis.com/maps/api/
-		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI">
-</script>
+<!-- <script -->
+<!-- 	src="https://maps.googleapis.com/maps/api/ -->
+<!-- 		js?key=AIzaSyAXc_OBQbJCEfhCkBju2_5IfjPqOYRKacI"> -->
+<!-- </script> -->
 
 <%@ include file="../includes/Footer.jsp"%>

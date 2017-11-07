@@ -43,6 +43,7 @@
 <!-- 		Global Links -->
 		<link href="/JobSearch/static/css/global.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/global_new.css" rel="stylesheet" />	
+		<link href="/JobSearch/static/css/global_2.css" rel="stylesheet" />	
 		<link href="/JobSearch/static/css/navBar.css" rel="stylesheet" />
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/forms.css" />	
 		<link rel="stylesheet" type="text/css"	href="/JobSearch/static/css/Templates/headerOptions.css" />	
@@ -102,18 +103,7 @@
 		</nav>
 
 
-		<c:if test="${sessionScope.jobs_needRating.size() > 0 }">
-			<div id="rating-required" class="warning-message">
-				<h3 class="lbl">Your Rating Is Required</h3>
-				<div id="jobNames">
-					<c:forEach items="${jobs_needRating }" var="job">
-						<p><a class="job accent"
-							   href="/JobSearch/job/${job.id }/rate-${sessionScope.user.profileId == 1 ? 'employer' : 'employees' }">
-								${job.jobName }</a></p>
-					</c:forEach>
-				</div>		
-			</div>
-		</c:if>
+
 		
 		<div id="login-sign-up-wrapper"></div>
 

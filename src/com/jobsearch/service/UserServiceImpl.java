@@ -221,9 +221,7 @@ public class UserServiceImpl extends BaseService {
 		LocalDateTime now = LocalDateTime.now();
 		
 		ViewEmployeeHomepageResponse response = new ViewEmployeeHomepageResponse();
-
-		
-		
+			
 		// User profile info
 		response.setProfileInfoDto(getProfileInfoDto(sessionUser));
 	
@@ -462,11 +460,9 @@ public class UserServiceImpl extends BaseService {
 		
 		// Ideally this would be updated every time a page is loaded.
 		// Since a job becomes one-that-needs-a-rating only after the passage of
-		// time,
-		// as opposed to a particular event (i.e. a page load), this is the best place to put it for now
-		// because
-		// I'm assuming this page loads most often.
-		List<Job> jobs_needRating = jobService.getJobs_needRating_byEmployeer(sessionUser.getUserId());		
+		// time, as opposed to a particular event (i.e. a page load), this is the best place to put it for now
+		// because I'm assuming this page loads most often.
+		List<Job> jobs_needRating = jobService.getJobs_withUnratedCompletedShifts_byEmployer(sessionUser.getUserId());		
 		session.setAttribute("jobs_needRating", jobs_needRating);
 		model.addAttribute("isViewingOnesSelf", true);
 		

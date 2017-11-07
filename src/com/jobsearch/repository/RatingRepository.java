@@ -109,38 +109,31 @@ public class RatingRepository extends BaseRepository{
 						rc.getJobId() });
 
 	}
+	
 	public Double getOverallRating(int userId) {
 		String sql = "SELECT AVG(Value) FROM rating WHERE UserId = ? and Value is not null";
 		return jdbcTemplate.queryForObject(sql, new Object[] { userId }, Double.class);
 	}
+	
 	public void addComment(int userId, int jobId, String comment, int userId_commenter) {
 		String sql = "INSERT INTO comment (JobId, UserId, Comment, UserId_Commenter) VALUES (?, ?, ?, ?)";
-
 		jdbcTemplate.update(sql, new Object[] { jobId, userId, comment, userId_commenter });
-
 	}
-
-
 
 	public String getComment(int jobId, int userId) {
 		String sql = "SELECT Comment FROM comment WHERE JobId = ? AND UserId = ?";
-
 		String comment = "";
 		try {
 			comment = jdbcTemplate.queryForObject(sql, new Object[] { jobId, userId }, String.class);
-
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-
 		return comment;
-
 	}
 	
 	public void insertRating(Integer rateCriterionId, int userIdToRate, Integer jobId, Integer ratedByUserId) {		
 		String sql = "INSERT INTO rating (RateCriterionId, UserId, JobId, RatedByUserId)"
-					+ " VALUES (?, ?, ?, ?)";
-		
+					+ " VALUES (?, ?, ?, ?)";		
 		jdbcTemplate.update(sql, new Object[]{ rateCriterionId, userIdToRate, jobId, ratedByUserId });
 	}
 

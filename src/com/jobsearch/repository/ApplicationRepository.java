@@ -21,6 +21,7 @@ import com.jobsearch.service.AnswerServiceImpl;
 import com.jobsearch.service.ApplicationServiceImpl;
 import com.jobsearch.service.ProposalServiceImpl;
 import com.jobsearch.service.UserServiceImpl;
+import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;
 
 @Repository
@@ -412,7 +413,7 @@ public class ApplicationRepository {
 					+ " JOIN work_day wd ON ep.WorkDayId = wd.WorkDayId"
 					+ " WHERE wp.IsCurrentProposal = 1"
 //					+ " AND j.IsPartialAvailabilityAllowed = 1"
-					+ " AND wd.IsComplete = 0"
+					+ " AND wd.Timestamp_EndDateTime > ?"
 					+ " AND a.UserId = ?"
 					+ " AND ( e.WasTerminated = 0 OR e.WasTerminated is NULL )"
 					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1)"
@@ -431,7 +432,7 @@ public class ApplicationRepository {
 //					+ " AND ( a.IsOpen = 1 OR a.IsAccepted = 1)"					
 					+ " )";
 		
-		return ApplicationRowMapper(sql, new Object[]{ userId });
+		return ApplicationRowMapper(sql, new Object[]{ DateUtility.getCurrentTimestamp(), userId });
 	}
 
 	public List<Application> applications_closedDueToAllPositionsFilled_unacknowledged(int userId) {

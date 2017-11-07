@@ -39,10 +39,8 @@ public class RatingController{
 	@RequestMapping(value = "/job/{jobId}/rate-employees", method = RequestMethod.GET)
 	public String viewRateEmployees(@PathVariable(value = "jobId") int jobId, Model model, HttpSession session) {
 
-		if (ratingService.setModel_ViewRateEmployees(jobId, model, session))
-			return "/ratings/RateEmployees";
-		else
-			return SessionContext.get404Page();
+		ratingService.setModel_ViewRateEmployees(jobId, model, session);
+		return "/ratings/RateEmployees";
 	}
 	
 	@RequestMapping(value = "/rating/user/{userId}", method = RequestMethod.GET)
@@ -51,12 +49,12 @@ public class RatingController{
 		return "/ratings/RatingsByUser";
 	}
 	
-	@RequestMapping(value = "/user/rate/employees", method = RequestMethod.POST)
+	@RequestMapping(value = "/ratings/rate/employees", method = RequestMethod.PUT)
 	@ResponseBody
 	public String rateEmployees(HttpSession session,
-									@RequestBody List<SubmitRatingRequest> submitRatingDtos) {
+									@RequestBody List<SubmitRatingRequest> requests) {
 
-		ratingService.insertRatings(submitRatingDtos, session);
+		ratingService.insertRatings(requests, session);
 		return "";
 	}
 

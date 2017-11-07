@@ -236,7 +236,7 @@ public class JobServiceImpl extends BaseService{
 		if (status == Job.STATUS_PAST) {
 			List<WorkDay> workDays = workDayService.getWorkDays(jobId);
 			for (WorkDay workDay : workDays) {
-				workDayService.updateWorkDay_isComplete(workDay.getWorkDayId(), 1);
+				workDayService.setWorkDayAsComplete(workDay.getWorkDayId());
 			}
 		}
 		// ***********************************************************
@@ -816,22 +816,14 @@ public class JobServiceImpl extends BaseService{
 		response.setLatitudeSearched(request.getLat());
 		response.setLongitudeSearched(request.getLng());
 		
-
-		if(coord != null){
-			
-
-			
-			List<Job> jobs = getJobs_ByFindJobFilter(request);
-			
-			
-			response.setJobDtos(new ArrayList<>());
-		
+		if(coord != null){			
+			List<Job> jobs = getJobs_ByFindJobFilter(request);			
+			response.setJobDtos(new ArrayList<>());		
 			if(jobs.size() > 0){
 
 				response.setAppendedJobs(request.getIsAppendingJobs());
 			
-				for (Job job : jobs) {
-	
+				for (Job job : jobs) {	
 					List<WorkDay> workDays = workDayService.getWorkDays(job.getId());
 					double distance = GoogleClient.getDistance(request.getLat(), request.getLng(), job.getLat(),
 							job.getLng());
@@ -851,8 +843,7 @@ public class JobServiceImpl extends BaseService{
 														  .map(jDto -> jDto.getDistance())
 														  .max(Double::compare).get();
 				response.setMaxDistance(maxDistance);
-			}
-			
+			}			
 		}		
 		model.addAttribute("response", response);	
 	}
@@ -860,6 +851,10 @@ public class JobServiceImpl extends BaseService{
 	public List<Job> getJobs_openByEmployer(int userId) {
 		
 		return repository.getJobs_openByEmployer(userId);
+	}
+
+	public List<Job> getJobs_withUnratedCompletedShifts_byEmployer(int userId) {
+		return repository.getJobs_withUnratedCompletedShifts_byEmployer(userId);
 	}
 
 

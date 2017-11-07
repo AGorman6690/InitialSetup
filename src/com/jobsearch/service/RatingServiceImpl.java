@@ -16,6 +16,7 @@ import com.jobsearch.model.RateCriterion;
 import com.jobsearch.repository.RatingRepository;
 import com.jobsearch.request.SubmitRatingRequest;
 import com.jobsearch.responses.GetRatingsByUserResponse;
+import com.jobsearch.responses.rating.ViewRateEmployeesResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;;
@@ -38,12 +39,15 @@ public class RatingServiceImpl {
 		return repository.getRating_byJobAndUser(jobId, userId);
 	}
 	
-	public void insertRatings(List<SubmitRatingRequest> submitRatingDTOs, HttpSession session) {
+	public void insertRatings(List<SubmitRatingRequest> requests, HttpSession session) {
+		
+		// TODO: needs more validation.
+		// should verify each rating criteria's value is valid
 
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 
 		// For each employee's rating
-		for (SubmitRatingRequest SubmitRatingRequest : submitRatingDTOs) {
+		for (SubmitRatingRequest SubmitRatingRequest : requests) {
 
 			// Rate criterion
 			for (RateCriterion rc : SubmitRatingRequest.getRateCriteria()) {
@@ -54,10 +58,9 @@ public class RatingServiceImpl {
 			}
 
 			// Comment
-			deleteComment(SubmitRatingRequest.getJobId(), SubmitRatingRequest.getUserId_ratee());
-			if (SubmitRatingRequest.getCommentString() != "") {
+			if (SubmitRatingRequest.getComment() != "") {
 				repository.addComment(SubmitRatingRequest.getUserId_ratee(), SubmitRatingRequest.getJobId(),
-						SubmitRatingRequest.getCommentString(), sessionUser.getUserId());
+						SubmitRatingRequest.getComment(), sessionUser.getUserId());
 			}
 
 		}
@@ -170,18 +173,14 @@ public class RatingServiceImpl {
 	}
 
 
-	public boolean setModel_ViewRateEmployees(int jobId, Model model, HttpSession session) {
-
+	public void setModel_ViewRateEmployees(int jobId, Model model, HttpSession session) {
 		Job job = jobService.getJob(jobId);
-
-		if(verificationService.didSessionUserPostJob(session, job)){
-			
-			List<JobSearchUser> employees = userService.getEmployees_byJob_completedWork(jobId);
-			model.addAttribute("job", job);
-			model.addAttribute("employees", employees);
-
-			return true;
-		}else return false;
+		if(verificationService.didSessionUserPostJob(session, job)){	
+			ViewRateEmployeesResponse response = new ViewRateEmployeesResponse();
+			response.setJob(job);
+			response.setEmployees(userService.getEmployees_byJob_completedWork(jobId));
+			model.addAttribute("response", response);			
+		}
 	}
 	
 	public void setGetRatingByUserResponse(Model model, int userId) {
