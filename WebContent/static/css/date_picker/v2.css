@@ -6,6 +6,9 @@
 	height: 75px;
 	width: 70px;
 	border: 1px solid #c1c1c1;	
+	    -webkit-transition: background-color 300ms linear;
+    -ms-transition: background-color 300ms linear;
+    transition: background-color 300ms linear;
 }
 .v2 td.is-complete,
 .v2 td.is-complete .added-content{

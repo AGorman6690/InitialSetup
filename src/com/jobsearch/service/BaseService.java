@@ -8,16 +8,23 @@ import com.jobsearch.model.JobSearchUser;
 import com.jobsearch.model.Profile;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.JobUtil;
+import com.jobsearch.utilities.UserUtil;
 
 public class BaseService {
 	
 	@Autowired
 	JobUtil jobUtil;
+	@Autowired
+	UserUtil userUtil;
 	
 	private static JobSearchUser sessionUser;
 	
 	public JobSearchUser getSessionUser(HttpSession session){
 		return SessionContext.getUser(session);	
+	}
+	
+	public Integer getSessionUserId(HttpSession session){
+		return SessionContext.getUser(session).getUserId();	
 	}
 	
 	public boolean isLoggedIn(HttpSession session) {				

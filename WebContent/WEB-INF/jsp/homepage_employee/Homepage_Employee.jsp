@@ -73,11 +73,12 @@
 								<label for="waiting-on-you">
 									<span>Proposals waiting	for you</span>				
 									<span class="total">${response.countProposals_waitingOnYou}</span>						
-<%-- 									<c:if test="${response.countProposals_waitingOnYou_new > 0}"> --%>
-<%-- 										<span class="total new">${response.countProposals_waitingOnYou_new} --%>
-<!-- 											new</span> -->
-<%-- 									</c:if> --%>
+
 								</label>
+								<c:if test="${response.countProposals_waitingOnYou_new > 0}">
+									<span class="total new red-bold">${response.countProposals_waitingOnYou_new}
+										new</span>
+								</c:if>
 							</div>
 							<div class="filter-item">
 								<input checked id="waiting-on-other" type="checkbox" name="proposal-status"

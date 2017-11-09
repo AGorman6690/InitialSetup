@@ -11,9 +11,7 @@
 #employee-list{
 	display: inline-block;
 }
-.if-no input[type=radio]:checked {
-    border: 5px solid #ab2929;
-}
+
 #employee-list{
 	vertical-align: top;
 /* 	margin-right: 75px; */

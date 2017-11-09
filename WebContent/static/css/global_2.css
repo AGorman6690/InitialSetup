@@ -37,8 +37,14 @@
     -ms-transition: background 500ms linear;
     transition: background 500ms linear;    
 }
+.circle-dot-list .list-item.hover::after,
 .circle-dot-list .list-item:hover::after{
 	background: red;
+    -webkit-transition: background-color 100ms linear;
+    -ms-transition: background-color 100ms linear;
+    transition: background-color 100ms linear;
+}
+.fade-background{
     -webkit-transition: background-color 100ms linear;
     -ms-transition: background-color 100ms linear;
     transition: background-color 100ms linear;

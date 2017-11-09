@@ -42,14 +42,20 @@
 		</c:if>
 --%>
 	<div id="page-wrapper">
-		<div id="side-bar">
+		<div id="side-bar" class="circle-dot-list">
 			
-			<div id="show-general" data-scroll-to="general-wrapper" class="incomplete"><span>General</span></div>
-			<div id="show-work-days" data-scroll-to="dates-wrapper" class="incomplete"><span>Work Days</span></div>
-			<div id="show-location" data-scroll-to="location-wrapper" class="incomplete"><span>Location</span></div>
-			<div id="show-questions" data-scroll-to="questions-wrapper" class="optional incomplete"><span>Questions</span></div>
-			<div id="show-skills" data-scroll-to="skills-wrapper" class="optional incomplete"><span>Skills</span></div>
-			<div id="show-submit" data-scroll-to="submit-wrapper" class="incomplete blue"><span>Review then submit</span></div>			
+			<div id="show-general" data-scroll-to="general-wrapper" class="incomplete">
+				<span class="list-item">General</span></div>
+			<div id="show-work-days" data-scroll-to="dates-wrapper" class="incomplete">
+				<span class="list-item">Work Days</span></div>
+			<div id="show-location" data-scroll-to="location-wrapper" class="incomplete">
+				<span class="list-item">Location</span></div>
+			<div id="show-questions" data-scroll-to="questions-wrapper" class="optional incomplete">
+				<span class="list-item">Questions</span></div>
+			<div id="show-skills" data-scroll-to="skills-wrapper" class="optional incomplete">
+				<span class="list-item">Skills</span></div>
+			<div id="show-submit" data-scroll-to="submit-wrapper" class="incomplete blue">
+				<span class="list-item">Review then submit</span></div>			
 		</div>
 
 		<div id="post-job-info" class=" ${!empty postedJobs ? 'hide-on-load-d' : '' }">
@@ -74,7 +80,7 @@
 					<h3>Work Days</h3>					
 					<div class="validate-input">
 						<button class="" id="clear-calendar">Clear</button>
-						<div id="work-days-calendar" class="item calendar-container item-wrapper post-job">							
+						<div id="work-days-calendar" class="item calendar-container item-wrapper post-job requires-validation">							
 							<div id="workDaysCalendar_postJob" class="calendar v2"
 								data-is-showing-job="0" data-selected-class-name="selected"></div>
 						</div>

@@ -1,13 +1,10 @@
  <%@ include file="../includes/Header.jsp"%>
 <%@ include file="../includes/resources/StarRatings.jsp"%>	
 
-<!-- <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rate_employees.css" /> -->
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/rate_employer.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings/rate_employees.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/table.css" />
-<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/inputValidation.css" />
 
-<script src="/JobSearch/static/javascript/ratings/RateEmployer.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings/rate_employees.css" />
+
+<script src="/JobSearch/static/javascript/ratings/Rate.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/ratings/RateEmployees.js" type="text/javascript"></script>
 
 <input id="job-id" type="hidden" value="${response.job.id }">

@@ -188,8 +188,7 @@ p[data-toggle-id]{
 	display: inline-block;	
 }
 .job .employer-rating > span{
-	display: block;
-}
+ /* 	display: block; */}
 #location-filter input{
 	letter-spacing: 0.08em;
 	text-align: center;

@@ -64,16 +64,3 @@ function getSubmitEmployeeRatingsRequest() {
 	
 	return submitRatingRequests;
 }
-function isInputValid() {
-	var isValid = true;
-	var $userCont;		
-	$(".user-cont").each(function(i, userCont) {		
-		$(userCont).find(".rate-criterion").each(function(j, rateCriterion) { 			
-			if(!inspectIsRateCriterionComplete($(rateCriterion))){
-				isValid = false;
-			}
-		})					
-		inspectIsEmployeeCompletelyRated($(userCont), true);				
-	})	
-	return isValid;
-}

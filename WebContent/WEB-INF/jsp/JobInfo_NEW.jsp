@@ -1,6 +1,7 @@
 <%@ include file="./includes/TagLibs.jsp"%>	
 
-<div class="wrapper ${response.isEmployee ? 'employee-context' : 'employer-context'}">
+<div class="wrapper ${response.isEmployee ? 'employee-context' : 'employer-context'}
+			${ response.context =='find' ? 'find-context': ''}">
 	<c:if test="${response.isEmployee }">
 		<c:choose>
 			<c:when test="${response.context == 'find' && !empty response.warningMessage}">						
@@ -198,7 +199,7 @@
 				</c:if>
 				<div id="work-days-calendar-container" class="v2 validate-input calendar-container no-pad stack hide-unused-rows
 					 hide-prev-next ${!response.isEmployee ? 'preview-job-post hide-select-work-day read-only' : '' }
-					 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar' }
+					 ${!response.job.isPartialAvailabilityAllowed ? 'read-only no-partial' : 'proposal-calendar requires-validation' }
 					 ${response.isEmployee && response.context=='profile' ? 'read-only hide-select-work-day' : ''}">
 					<c:if test="${response.job.isPartialAvailabilityAllowed
 						&& response.isEmployee 

@@ -101,14 +101,14 @@ $(document).ready(function(){
 		}
 	})
 	
-	$("select#set-all-start-times").click(function() {
+	$("select#set-all-start-times").change(function() {
 		var startTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
 			this.workDay.stringStartTime = startTime;
 		})
 		renderWorkDayTimes();
 	})
-	$("select#set-all-end-times").click(function() {
+	$("select#set-all-end-times").change(function() {
 		var endTime = $(this).find("option:selected").eq(0).attr("data-filter-value");
 		$(workDayDtos).each(function() {
 			this.workDay.stringEndTime = endTime;

@@ -114,7 +114,7 @@ function inspectValidity($e, valid){
 }
 function validateCalendars($cont){
 	var invalidCount = 0;
-	var elements = $cont.find(getFindParam(".calendar"));
+	var elements = $cont.find(getFindParam(".calendar-container.requires-validation .calendar"));
 	$(elements).each(function(i, e){
 		invalidCount += validateCalendar($(e));	
 	})	

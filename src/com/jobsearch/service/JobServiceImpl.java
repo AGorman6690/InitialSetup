@@ -53,6 +53,7 @@ import com.jobsearch.utilities.DateUtility;
 import com.jobsearch.utilities.JobUtil;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.StringUtility;
+import com.jobsearch.utilities.UserUtil;
 import com.jobsearch.utilities.VerificationServiceImpl;
 import com.jobsearch.utilities.WorkDayUtil;
 
@@ -285,7 +286,7 @@ public class JobServiceImpl extends BaseService{
 		response.setMonthSpan_allWorkDays(DateUtility.getMonthSpan(workDays));
 		
 		// warning message
-		if (context.matches("find")){
+		if (isLoggedIn(s) && context.matches("find")){
 			response.setWarningMessage(getViewJobWarningMessage(response.getApplication(), job, workDayDtos));	
 		}
 		
@@ -293,7 +294,7 @@ public class JobServiceImpl extends BaseService{
 		if (isEmployee(s) 
 				&& response.getApplication() == null
 				&& context.matches("find")
-				&& getJobs_needRating_byEmployee(getSessionUser(s).getUserId()) == null){
+				&& !userUtil.employeeHasOutstandingRatings(getSessionUser(s).getUserId())){
 			response.setIsApplyable(true);
 		}else{
 			response.setIsApplyable(false);
@@ -440,9 +441,12 @@ public class JobServiceImpl extends BaseService{
 					applicationProgressStatus.setMessages(applicationService.getMessages(
 							sessionUser, application, previousProposal, currentProposal));
 	
-//					applicationService.inspectNewness(application);
-//					proposalService.inspectNewness(currentProposal, sessionUser);
-	
+					// Inspect newness
+					if (request.getShowProposalsWaitingOnYou()){
+						applicationService.inspectNewness(application);
+						proposalService.inspectNewness(currentProposal, sessionUser);						
+					}
+
 					response.getApplicationProgressStatuses().add(applicationProgressStatus);
 				}
 			}

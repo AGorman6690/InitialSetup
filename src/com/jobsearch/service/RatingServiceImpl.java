@@ -17,12 +17,13 @@ import com.jobsearch.repository.RatingRepository;
 import com.jobsearch.request.SubmitRatingRequest;
 import com.jobsearch.responses.GetRatingsByUserResponse;
 import com.jobsearch.responses.rating.ViewRateEmployeesResponse;
+import com.jobsearch.responses.rating.ViewRateEmployerResponse;
 import com.jobsearch.session.SessionContext;
 import com.jobsearch.utilities.MathUtility;
 import com.jobsearch.utilities.VerificationServiceImpl;;
 
 @Service
-public class RatingServiceImpl {
+public class RatingServiceImpl extends BaseService {
 	
 	@Autowired
 	RatingRepository repository;
@@ -39,32 +40,28 @@ public class RatingServiceImpl {
 		return repository.getRating_byJobAndUser(jobId, userId);
 	}
 	
-	public void insertRatings(List<SubmitRatingRequest> requests, HttpSession session) {
+	public void rateEmployees(List<SubmitRatingRequest> requests, HttpSession session) {
 		
-		// TODO: needs more validation.
-		// should verify each rating criteria's value is valid
-
-		JobSearchUser sessionUser = SessionContext.getUser(session);
-
-		// For each employee's rating
-		for (SubmitRatingRequest SubmitRatingRequest : requests) {
-
-			// Rate criterion
-			for (RateCriterion rc : SubmitRatingRequest.getRateCriteria()) {
-				rc.setUserId_ratee(SubmitRatingRequest.getUserId_ratee());
-				rc.setUserId_rater(sessionUser.getUserId());
-				rc.setJobId(SubmitRatingRequest.getJobId());
-				repository.updateRating(rc);
+		// validate
+		boolean valid = true;
+		if (requests == null || requests.size() == 0){
+			valid = false;
+		}else {
+			int jobId = requests.get(0).getJobId();
+			if (!userService.didUserPostJob(getSessionUserId(session), jobId)){
+				valid = false;
+			}else if (!requests.stream().map(r -> r.getJobId()).allMatch(i -> i == jobId)){
+				valid = false;
 			}
-
-			// Comment
-			if (SubmitRatingRequest.getComment() != "") {
-				repository.addComment(SubmitRatingRequest.getUserId_ratee(), SubmitRatingRequest.getJobId(),
-						SubmitRatingRequest.getComment(), sessionUser.getUserId());
-			}
-
 		}
-
+		
+		// insert
+		if (valid){
+			for (SubmitRatingRequest request : requests) {
+				insertRating(request, getSessionUserId(session));
+			}	
+		}
+				
 	}
 	
 	public List<String> getCommentsGivenToUser_byJob(int userId, Integer jobId) {
@@ -155,21 +152,19 @@ public class RatingServiceImpl {
 		return MathUtility.round(repository.getOverallRating(userId), 1, 0);
 	}
 	
-	public boolean setModel_ViewRateEmployer(int jobId, Model model, HttpSession session) {
+	public void setModel_ViewRateEmployer(int jobId, Model model, HttpSession session) {
 
 		JobSearchUser user = SessionContext.getUser(session);
 
 		if(applicationService.wasUserEmployedForJob(user.getUserId(), jobId)){
-
+			ViewRateEmployerResponse response = new ViewRateEmployerResponse();
 			Job job = jobService.getJob(jobId);
 			JobSearchUser employer = userService.getUser(job.getUserId());
 
-			model.addAttribute("job", job);
-			model.addAttribute("employer", employer);
-			return true;
+			response.setJob(job);
+			response.setEmployer(employer);
+			model.addAttribute("response", response);
 		}
-		else return false;
-
 	}
 
 
@@ -194,5 +189,39 @@ public class RatingServiceImpl {
 	public void deleteRatings(int userId, int jobId) {
 		repository.deleteRatings(userId, jobId);		
 	}
+
+	public void rateEmployer(SubmitRatingRequest request, HttpSession session) {
+		
+		// validate
+		boolean valid = true;
+		if (!applicationService.wasUserEmployedForJob(getSessionUserId(session), request.getJobId())){
+			valid = false;
+		}else if (!userService.didUserPostJob(request.getUserId_ratee(), request.getJobId())){
+			valid = false;
+		}
+		
+		if (valid){
+			insertRating(request, getSessionUserId(session));
+		}
+				
+	}
+
+	private void insertRating(SubmitRatingRequest request, int userId_rater) {
+		// TODO: needs more validation.
+		// should verify each rating criteria's value is valid	
+				
+		// Rate criterion
+		for (RateCriterion rc : request.getRateCriteria()) {
+			rc.setUserId_ratee(request.getUserId_ratee());
+			rc.setUserId_rater(userId_rater);
+			rc.setJobId(request.getJobId());
+			repository.updateRating(rc);
+		}
+
+		// Comment
+		if (request.getComment() != "") {
+			repository.addComment(request.getUserId_ratee(), request.getJobId(),
+					request.getComment(), userId_rater);
+		}	}
 
 }

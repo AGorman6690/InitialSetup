@@ -816,13 +816,17 @@ public class UserServiceImpl extends BaseService {
 		}
 	}
 
-	public boolean didUserPostJob(JobSearchUser user, int jobId) {
+	public boolean didUserPostJob(int userId, int jobId) {
 		Job job = jobService.getJob(jobId);
 		if(job != null){
-			return job.getUserId() == user.getUserId() ? true : false;
+			return job.getUserId() == userId ? true : false;
 		}else{
 			return false;	
-		}
-		
+		}		
+	}
+	
+	@Deprecated
+	public boolean didUserPostJob(JobSearchUser user, int jobId) {
+		return didUserPostJob(user.getUserId(), jobId);
 	}
 }

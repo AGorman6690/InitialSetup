@@ -1,0 +1,12 @@
+.header.v1{
+	margin-top: 30px;
+}
+
+#ratings-cont .star-rating-cont .caption,
+#ratings-cont .star-rating-cont .clear-rating{
+	display: none;
+}
+
+.if-no input[type=radio]:checked {
+    border: 5px solid #ab2929;
+}
