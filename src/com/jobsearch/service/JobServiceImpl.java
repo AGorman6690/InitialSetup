@@ -849,6 +849,7 @@ public class JobServiceImpl extends BaseService{
 				response.setMaxDistance(maxDistance);
 			}			
 		}		
+		model.addAttribute("doSkip_loadGoogleMapsApiForJobInfo", true);
 		model.addAttribute("response", response);	
 	}
 

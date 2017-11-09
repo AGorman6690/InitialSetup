@@ -241,7 +241,7 @@ public class JobRepository extends BaseRepository {
 				+ "( 3959 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(?) ) "
 				+ "+ sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance"
 				+ " FROM job j"
-//				+ " WHERE j.Status <> ?"
+				+ " WHERE j.Status <> ?"
 				+ " AND j.Flag_IsNotAcceptingApplications = 0";
 
 		argsList.add(request.getLat());
