@@ -32,3 +32,12 @@
 .applicant .rating-container .star{
 /* 	font-size: 20px; */
 }
+.rating-container .star{
+	font-size: 17px;
+}
+.applicant .applicant-name .show-applicant-ratings-mod{
+	display: inline-block;
+}
+.applicant .applicant-name .is-new{
+	margin-left: 10px;
+}

@@ -36,11 +36,11 @@ $(document).ready(function(){
 	
 	
 	$("body").on("mouseover", ".popup", function() {
-		$(this).find(".popuptext").show()
+		$(this).find(".popuptext").addClass("show");
 	})
 	
 	$("body").on("mouseout", ".popup", function() {
-		$(this).find(".popuptext").hide()
+		$(this).find(".popuptext").removeClass("show");
 	})
 	
 	$("body").on("click", ".button-group.invalid button", function() {

@@ -5,6 +5,9 @@
     border-top: 2px solid #163b3d;
     border-bottom: 2px solid #163b3d;
 }
+.header-wrap.top-margin{
+	margin-top: 80px;
+}
 .header-wrap .header-item:last-child > label{
 	margin: 0;
 }
@@ -59,11 +62,7 @@
     height: 96%;
     overflow: auto;
 }
-#job-info-mod > .mod-content,
-.job-info.fixed #apply-for-job-cont{
-    width: 900px;
-    top: 2%;	
-}
+
 #select-all-work-days{
     background: #36595a;
     color: #fff;
@@ -153,7 +152,6 @@
     text-align: center;
     font-size: 27px;
 }
-.to-be-fixed,
 #apply-for-job{
 	font-size: 20px;
 	width: 220px;
@@ -164,32 +162,31 @@
 	font-size: 17px;
 /* 	font-weight: bold; */
 }
-.job-info.fixed #apply-for-job-cont,
-.job-info.fixed #error-messages{
+.job-info.fixed .fix-content-container{
     position: fixed;
     border-bottom: 1px solid #cacaca;
     margin: auto;
 
 }
-.job-info.fixed #apply-for-job-cont{
+#job-info-mod > .mod-content,
+.job-info.fixed .fix-content-container{
+    width: 900px;
+    top: 2%;	
+}
+.job-info.fixed .fix-content-container{
     margin-left: -16px;
     padding: 10px;
     background: rgba(82, 81, 81, 0.85);
+    z-index: 10000;
 }
-.job-info.fixed #error-messages{
-    top: 69px;
-    background: rgb(255, 223, 223);
-}
-.job-info.fixed #error-messages p:first-child{
-	padding-top: 10px;
-}
-#apply-for-job-cont{
+
+.fix-content-container{
 	position: absolute;
 	width: 100%;
 	height: 70px;
 	background: #fff;
 	z-index: 1000;
-	top: -60px;
+	top: -80px;
 	text-align: center;
 }
 .job-info{
@@ -273,14 +270,14 @@ display: inline-block;
     font-weight: normal;
 }
 #submit-job-info-container{
-	margin-bottom: 40px;
+/* 	margin-bottom: 40px; */
 }
-.star,
-.star .glyphicon-star{
+.job-info .star,
+.job-info .star .glyphicon-star{
 	font-size: 17px;
 /* 	height: 30px; */
 /* 	line-height: 30px; */
 }
 .job-info .rating-container{
-	margin: 0ox;
+	margin: 0px;
 }

@@ -272,7 +272,15 @@ public class UserServiceImpl extends BaseService {
 				
 				applicationProgressStatus.setJob(job);
 				
-				response.getApplicationProgressStatuses().add(applicationProgressStatus);			
+				// show the "waiting on you" proposals first
+				// NOTE: could not get the following sort to work:
+//				response.getApplicationProgressStatuses().stream()
+//				 .sorted(Comparator.comparing(ApplicationProgressStatus::getIsProposedToSessionUser));
+				if (applicationProgressStatus.getIsProposedToSessionUser()){
+					response.getApplicationProgressStatuses().add(0, applicationProgressStatus);
+				}else{
+					response.getApplicationProgressStatuses().add(applicationProgressStatus);	
+				}			
 				applicationService.inspectNewness(application);	
 				proposalService.inspectNewness(currentProposal, sessionUser);
 			}

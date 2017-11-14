@@ -1,7 +1,7 @@
 <%@ include file="../includes/TagLibs.jsp" %>
 <c:if test="${sessionScope.jobs_needRating.size() > 0 }">
 	<div id="rating-required" class="warning-message-2">
-		<h1 class="lbl">Your Rating Is Required</h1>
+		<p class="lbl">Your rating is required</p>
 		<div class="job-container">
 			<c:forEach items="${jobs_needRating }" var="job">
 				<p><a class="job accent"

@@ -48,7 +48,7 @@
 			<div class="a-proposal">
 				<label class="exp-time black-bold">Expiration</label>
 				<div class="proposed-value">
-					<span class="red-bold">${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
+					<span class="">${applicationProgressStatus.time_untilEmployerApprovalExpires }</span>
 				</div>
 			
 			</div>

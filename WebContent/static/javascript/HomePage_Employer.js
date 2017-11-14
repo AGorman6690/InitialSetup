@@ -8,13 +8,13 @@ $(document).ready(function() {
 		showSortWrapper(true);		
 	})	
 	
-	$(".proposal-detail .new").click(function() {
-		var $proposalDetails = $(this).closest(".proposal-details");
-		var jobId = $proposalDetails.attr("data-job-id");
-		var applicationProgressRequest = getApplicationProgressRequest_newProposals();
-		executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicationProgressRequest);	
-		showSortWrapper(true);		
-	})	
+//	$(".proposal-detail .new").click(function() {
+//		var $proposalDetails = $(this).closest(".proposal-details");
+//		var jobId = $proposalDetails.attr("data-job-id");
+//		var applicationProgressRequest = getApplicationProgressRequest_newProposals();
+//		executeAjaxCall_getFullDetailsForJob(jobId, $proposalDetails, applicationProgressRequest);	
+//		showSortWrapper(true);		
+//	})	
 	
 	$("#surpress-certain-details").click(function() {
 		if($(this).is(":checked")) $("#job-details").addClass("surpress");
@@ -30,11 +30,11 @@ $(document).ready(function() {
 })
 function getApplicationProgressRequest($proposalDetails){
 	var applicationProgressRequest = {};
-	applicationProgressRequest.showProposalsWaitingOnYou = $proposalDetails.find(".waiting-on-you").prop("checked");
+	applicationProgressRequest.showProposalsWaitingOnYou = $proposalDetails.find(".waiting-on-you.total").prop("checked");
 	applicationProgressRequest.showProposalsWaitingOnOther = $proposalDetails.find(".waiting-on-other").prop("checked");
 	applicationProgressRequest.showExpiredProposals = $proposalDetails.find(".expired").prop("checked");
 	applicationProgressRequest.showAcceptedProposals = $proposalDetails.find(".accepted").prop("checked");
-	applicationProgressRequest.showProposalsWaitingOnYou_new = false;
+	applicationProgressRequest.showProposalsWaitingOnYou_new = $proposalDetails.find(".waiting-on-you.new").prop("checked");
 	return applicationProgressRequest;
 }
 function getApplicationProgressRequest_newProposals(){

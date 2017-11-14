@@ -30,7 +30,7 @@ public class ApplicationProgressResponse {
 		
 		String currentProposalStatus
 		Boolean isCurrentProposalExpired
-		Boolean isProposedToSessionUser
+		boolean isProposedToSessionUser
 		String time_untilEmployerApprovalExpires
 		
 		List<String> messages

@@ -30,7 +30,8 @@
 						<div class="action-options">
 							<a class="hide-on-load" href="/JobSearch/job/${employerHomepageJob.job.id}/edit" >
 								<span class="glyphicon glyphicon-pencil"></span></a>	
-							<a class="" href="/JobSearch/job/${employerHomepageJob.job.id}/find-employees" >
+							<a class="popup" href="/JobSearch/job/${employerHomepageJob.job.id}/find-employees" >
+								<span class="popuptext">Find employees for this job</span>
 								<span class="glyphicon glyphicon-search"></span></a>
 						</div>		
 						<p class="job-name accent show-job-info-mod" data-context="waiting" data-job-id="${employerHomepageJob.job.id }">
@@ -51,27 +52,27 @@
 						</div>		
 						<div class="proposal-details" data-job-id="${employerHomepageJob.job.id }">							
 							<div class="proposal-detail">
-								<input type="checkbox" id="waiting-on-you-${employerHomepageJob.job.id }" class="waiting-on-you">
+								<input type="checkbox" id="waiting-on-you-${employerHomepageJob.job.id }" class="total waiting-on-you">
 								<label for="waiting-on-you-${employerHomepageJob.job.id }" class="${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 									<span>Proposals waiting on you</span>
 									<span class="total proposals-waiting-on-you
 										 ${employerHomepageJob.countWageProposals_received > 0 ? 'action' : ''}">
 										${employerHomepageJob.countWageProposals_received }</span>									
 								</label>
-								<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">
-									<span class="new red pointer">${employerHomepageJob.countWageProposals_received_new } new</span>							
-								</c:if>									
+<%-- 								<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }"> --%>
+<%-- 									<span class="new red pointer">${employerHomepageJob.countWageProposals_received_new } new</span>							 --%>
+<%-- 								</c:if>									 --%>
 							</div>
 								
-<%-- 							<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }"> --%>
-<!-- 								<div class="proposal-detail new-wrapper">								 -->
-<%-- 									<input type="checkbox" id="new-${employerHomepageJob.job.id }" class=""> --%>
-<%-- 									<label for="new-${employerHomepageJob.job.id }"> --%>
-<!-- 										<span>New</span> -->
-<%-- 										<span class="total total-applicants">${employerHomepageJob.countWageProposals_received_new } new</span> --%>
-<!-- 									</label> -->
-<!-- 								</div>								 -->
-<%-- 							</c:if>			 --%>
+							<c:if test="${employerHomepageJob.countWageProposals_received_new > 0 }">
+								<div class="proposal-detail new-wrapper">								
+									<input type="checkbox" id="new-${employerHomepageJob.job.id }" class="new waiting-on-you">
+									<label for="new-${employerHomepageJob.job.id }">
+										<span>New</span>
+										<span class="total">${employerHomepageJob.countWageProposals_received_new } new</span>
+									</label>
+								</div>								
+							</c:if>			
 							<div class="proposal-detail">								
 								<input type="checkbox" id="waiting-on-applicant-${employerHomepageJob.job.id }" class="waiting-on-other">
 								<label for="waiting-on-applicant-${employerHomepageJob.job.id }">

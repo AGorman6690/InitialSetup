@@ -19,7 +19,13 @@ h1{
     border-bottom: 2px solid #163b3d;
 }
 .new{
-	margin-left: 8px;
+	margin-left: 40px;
+}
+.new.filter-item label{
+	width: 300px;
+}
+.new.filter-item label span.total{
+	color: red;
 }
 .messages{
     margin: 10px 0px;	
@@ -52,4 +58,16 @@ h1{
 .editable span{
 	min-height: 40px;
 /* 	line-height: 40px; */
+}
+#rating-required {
+    width: 400px;
+    padding: 5px;
+    text-align: center;
+    margin: auto;
+    background: #f9d8d8;
+    color: red;
+    box-shadow: 3px 3px 3px #cacaca;
+}
+#required-ratings * {
+	color: red;
 }

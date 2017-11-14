@@ -30,7 +30,7 @@ $(document).ready(function(){
 	
 	$("#proceed-to-preview-job-posting").click(function(){
 
-		if(validateInputElements($("#post-job-info"), $("#submit-wrapper"))){	
+		if(1 || validateInputElements($("#post-job-info"), $("#submit-wrapper"))){	
 			var addJobRequest = getAddJobRequest();			
 			var addressToValidate = "";
 			addressToValidate += addJobRequest.job.streetAddress;
@@ -114,6 +114,9 @@ $(document).ready(function(){
 			this.workDay.stringEndTime = endTime;
 		})
 		renderWorkDayTimes();
+	})
+	$("body").on("click", "#edit-job-post", function(){
+		$("#job-info-mod .mod-header").click();
 	})
 	
 	setStates();

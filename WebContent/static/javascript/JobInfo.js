@@ -31,9 +31,7 @@ $(document).ready(function() {
 		
 	})
 	
-	$("body").on("click", "#edit-job-post", function(){
-		("#job-info-mod .mod-header").click();
-	})
+
 	
 	$("body").on("click", "#job-address", function(){
 // **********************
@@ -65,7 +63,7 @@ function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 		broswerIsWaiting(false);
 		showJobInfoMod(html);		
 		executeCallBack(callback);
-		setScrollAction();
+//		setScrollAction();
 	})
 	
 }
@@ -79,7 +77,7 @@ function showJobInfoMod(html){
 	var d = $(".job-info .map").get();
 
 	$jobInfoMod.show();
-	
+	setScrollAction();
 	// **************************************************
 	// Map must be initialized AFTER the modal is shown
 	// **************************************************
@@ -87,14 +85,14 @@ function showJobInfoMod(html){
 	renderStars($jobInfoMod);
 }
 function setScrollAction() {
-	var $e = $("#apply-for-job-cont").eq(0);
+	var $e = $(".fix-content-container").eq(0);
 	if($e.length){
 		var $jobInfo = $(".job-info");		
-		var fixAtScrollAmount = $e.offset().top + 40;
+		var fixAtScrollAmount = $("#job-info-mod .mod-body").position().top + $e.height() - 10;
 		var $window = $("#job-info-mod .mod-content");		
 		// bind the event
 		$window.scroll(function(){
-//			console.log($e.position().top + " : " + $e.offset().top + " : " + $window.scrollTop());
+			console.log($e.position().top + " : " + $e.offset().top + " : " + $window.scrollTop());
 			if($window.scrollTop() > fixAtScrollAmount){
 				$jobInfo.addClass("fixed");
 			}

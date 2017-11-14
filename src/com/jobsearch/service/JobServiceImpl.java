@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -447,9 +448,19 @@ public class JobServiceImpl extends BaseService{
 						proposalService.inspectNewness(currentProposal, sessionUser);						
 					}
 
-					response.getApplicationProgressStatuses().add(applicationProgressStatus);
+					// show the "waiting on you" proposals first
+					// NOTE: could not get the following sort to work:
+//					response.getApplicationProgressStatuses().stream()
+//					 .sorted(Comparator.comparing(ApplicationProgressStatus::getIsProposedToSessionUser));
+					if (applicationProgressStatus.isIsProposedToSessionUser()){
+						response.getApplicationProgressStatuses().add(0, applicationProgressStatus);
+					}else{
+						response.getApplicationProgressStatuses().add(applicationProgressStatus);	
+					}
+					
 				}
 			}
+
 			model.addAttribute("response", response);
 		}
 	}

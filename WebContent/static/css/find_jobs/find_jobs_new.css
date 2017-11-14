@@ -206,7 +206,7 @@ p[data-toggle-id]{
 	overflow: hidden;
 }
 #wrapper.rating-required{
-	top: 300px;
+/* 	top: 300px; */
 }
 .filter-name{
 	width: 100%;

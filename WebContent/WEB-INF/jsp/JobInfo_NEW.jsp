@@ -1,6 +1,6 @@
 <%@ include file="./includes/TagLibs.jsp"%>	
 
-<div class="wrapper ${response.isEmployee ? 'employee-context' : 'employer-context'}
+<div class="job-info wrapper ${response.isEmployee ? 'employee-context' : 'employer-context'}
 			${ response.context =='find' ? 'find-context': ''}">
 	<c:if test="${response.isEmployee }">
 		<c:choose>
@@ -10,7 +10,9 @@
 				</div>						
 			</c:when>
 			<c:when test="${sessionScope.jobs_needRating.size() > 0 }">
-				<p id="jobs-needing-rating-warning">Please rate your previous employer before applying to another job</p>
+				<div class="warning-message">	
+					<span>Please rate your previous employer before applying to another job</span>
+				</div>
 			</c:when>	
 		</c:choose>
 	</c:if>
@@ -19,79 +21,77 @@
 			<h3><span class="show-login-sign-up-mod linky-hover" data-context="login">Please login to apply for a job</span></h3>
 		</div>
 	</c:if>
-	<div class="job-info ${response.isApplyable ? 'show-apply-button' : '' }">
+	<div class=" ${response.isApplyable ? 'show-apply-button' : '' }">
 		<input id="jobId" type="hidden" value="${response.job.id }">
-		<div class="">
-			<c:if test="${response.isEmployee }">
-				<div id="submit-application-error">
-					<div class="invalid-input-message">
-						<p>Invalid input</p>
-					</div>
-				</div>
-			</c:if>			
-			<c:if test="${response.isApplyable }">
-				<div id="apply-for-job-cont">
-					<button id="apply-for-job" class="sqr-btn green">Apply for job</button>
-					
-				</div>
-			</c:if>
-			<c:if test="${context == 'preview-job-post'}">
-				<div id="submit-job-info-container" class="center">
-					<button id="edit-job-post" class="sqr-btn gray">Edit</button>
-					<button id="submit-job-post" class="sqr-btn blue">Submit job post</button>					
-				</div>
-			</c:if>
-			<c:if test="${response.isPreviewingBeforeSubmittingJobPost }">
-				<div class="to-be-fixed-cont-disabled">
-					<button id="submitPosting_final" class="sqr-btn green to-be-fixed-disalbed">Submit Job Post</button>
-				</div>
-			</c:if>
-			
-			<div class="header-wrap">
-				<div class="header-item">
-					<label>Job Name</label>
-					<div>${response.job.jobName }</div>
-				</div>
-				<c:if test="${response.isEmployee }">
-					<div class="header-item">
-						<label>Employer Name</label>
-						<div>
-							<div class="ratings-mod-container">
-								<span class="linky-hover employer show-ratings-mod user-rating"
-									 data-user-id="${response.profileInfoDto.user.userId }">${response.profileInfoDto.user.firstName }
-									 ${response.profileInfoDto.user.lastName }</span>
-								<div class="mod simple-header">
-									<div class="mod-content">
-										<div class="mod-header"></div>
-										<div class="mod-body">	
-										</div>
-									</div>
-								</div>						 
+			<div>
+				<div class="">
+					<c:if test="${response.isEmployee }">
+						<div id="submit-application-error">
+							<div class="invalid-input-message">
+								<p>Invalid input</p>
 							</div>
 						</div>
-					</div>
-					<div class="header-item">
-						<label>Employer Rating</label>
-						<div>
-							<c:choose>
-								<c:when test="${response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating }">			
-									<span data-toggle-id="user-rating-details-container">
-										<input name="input-1" class="rating-loading"
-											value="${response.profileInfoDto.profileRatingDto.overallRating }">
-												${response.profileInfoDto.profileRatingDto.overallRating }
-									</span>	
-									<div id="user-rating-details-container" class="hide-on-load">												
-										<%@ include file="./ratings/RatingDetails.jsp" %>
-									</div>																					
-								</c:when>
-								<c:otherwise>NA</c:otherwise>					
-							</c:choose>
+					</c:if>			
+					<c:if test="${response.isApplyable }">
+						<c:set var="thisIsAHack" value="1" />
+						<div id="apply-for-job-cont" class="fix-content-container">
+							<button id="apply-for-job" class="sqr-btn green">Apply for job</button>					
 						</div>
-					</div>	
-				</c:if>				
-			</div>
+					</c:if>
+					<c:if test="${context == 'preview-job-post'}">
+						<c:set var="thisIsAHack" value="1" />
+						<div id="submit-job-info-container" class="fix-content-container center">
+							<button id="edit-job-post" class="sqr-btn gray">Edit</button>
+							<button id="submit-job-post" class="sqr-btn blue">Submit job post</button>					
+						</div>
+					</c:if>
+				</div>
 
+			</div>
 		</div>
+		<div class="header-wrap ${!empty thisIsAHack ? 'top-margin' : '' }">
+			<div class="header-item">
+				<label>Job Name</label>
+				<div>${response.job.jobName }</div>
+			</div>
+			<c:if test="${response.isEmployee }">
+				<div class="header-item">
+					<label>Employer Name</label>
+					<div>
+						<div class="ratings-mod-container">
+							<span class="linky-hover employer show-ratings-mod user-rating"
+								 data-user-id="${response.profileInfoDto.user.userId }">${response.profileInfoDto.user.firstName }
+								 ${response.profileInfoDto.user.lastName }</span>
+							<div class="mod simple-header">
+								<div class="mod-content">
+									<div class="mod-header"></div>
+									<div class="mod-body">	
+									</div>
+								</div>
+							</div>						 
+						</div>
+					</div>
+				</div>
+				<div class="header-item">
+					<label>Employer Rating</label>
+					<div>
+						<c:choose>
+							<c:when test="${response.profileInfoDto.doesUserHaveEnoughDataToCalculateRating }">			
+								<span data-toggle-id="user-rating-details-container">
+									<input name="input-1" class="rating-loading"
+										value="${response.profileInfoDto.profileRatingDto.overallRating }">
+											${response.profileInfoDto.profileRatingDto.overallRating }
+								</span>	
+								<div id="user-rating-details-container" class="hide-on-load">												
+									<%@ include file="./ratings/RatingDetails.jsp" %>
+								</div>																					
+							</c:when>
+							<c:otherwise>NA</c:otherwise>					
+						</c:choose>
+					</div>
+				</div>	
+			</c:if>				
+		</div>		
 		<div id="job-description" class="sub">
 			<label>Description</label>
 			<div class="job-info-content">
@@ -133,7 +133,8 @@
 						<p class="instructions employee-context">Please answer questions</p>
 					</c:if>
 					<c:forEach items="${response.questions }" var="question">
-						<div class="question-container radio-container checkbox-container" data-question-id="${question.questionId }"
+						<div class="question-container ${question.formatId == 3 ? 'checkbox-container' : 'radio-container' }"
+							data-question-id="${question.questionId }"
 						 	data-question-format-id="${question.formatId }">
 							<p>${question.text }</p>
 							<div class="answer-container">						
@@ -227,8 +228,17 @@
 		</div>	
 	</div>
 	<div id="json_work_day_dtos">${response.json_workDayDtos }</div>
+
+<div id="application-success-container">
+	<p id="submit-application-success">Your application has been received!</p>
+	<p id="submit-application-fail">Oh no. Something went wrong. Your application was not received.</p>
+	<div>
+		<a id="continue-searching" class="sqr-btn">Continue searching for jobs</a>
+		<a class="sqr-btn" href="/JobSearch/user">Back to profile</a>
+	</div>
+</div>
+
 	
-	<br>
 	<br>
 	<br>
 	<br>
@@ -240,12 +250,4 @@
 	<br>
 <%-- 	<a class="square-button-green" href="/JobSearch/job/${response.job.id }/update/status/1">Start Job (for debugging)</a>	 --%>
 	<a href="/JobSearch/job/${response.job.id }/update/status/2"><button class="square-button">Mark Complete (for debugging)</button></a>								
-</div>
-<div id="application-success-container">
-	<p id="submit-application-success">Your application has been received!</p>
-	<p id="submit-application-fail">Oh no. Something went wrong. Your application was not received.</p>
-	<div>
-		<a id="continue-searching" class="sqr-btn">Continue searching for jobs</a>
-		<a class="sqr-btn" href="/JobSearch/user">Back to profile</a>
-	</div>
-</div>
+

@@ -46,9 +46,10 @@ tr .job-line.employment-job{
 }
 tr .job-line{
 	color: #fff;
-	padding-left: 15px;
+	padding-left: 3px;
 	display: block;
 	height: 20px;
+	line-height: 22px;
 }
 tr .job-line:first-of-type{
 	margin-top: 31px;

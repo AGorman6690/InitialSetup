@@ -10,6 +10,9 @@ $(document).ready(function(){
 	$("body").on("change", ".radio-container.invalid input[type=radio]", function(){
 		validateRadioContainer($(this).closest(".radio-container"));
 	})
+	$("body").on("change", ".checkbox-container.invalid input[type=checkbox]", function(){
+		validateCheckboxContainer($(this).closest(".checkbox-container"));
+	})
 	$("body").on("keyup", "[data-must-match]", function(){
 		validateMatchingInput($(this));
 	})
@@ -49,6 +52,7 @@ function validateInputElements($cont, $errorMessageCont){
 		invalidCount += validateSelects($e)
 		invalidCount += validateCalendars($e);
 		invalidCount += validateRadioContainers($e);
+		invalidCount += validateCheckboxContainers($e);
 	})
 	if(invalidCount > 0){
 		if($errorMessageCont !== undefined){
@@ -144,4 +148,19 @@ function validateRadioContainer($radioContainer){
 		valid = false;
 	}
 	return inspectValidity($radioContainer, valid);	
+}
+function validateCheckboxContainers($cont){
+	var invalidCount = 0;
+	var elements = $cont.find(getFindParam(".checkbox-container"));
+	$(elements).each(function(i, e){
+		invalidCount += validateCheckboxContainer($(e));	
+	})	
+	return invalidCount;	
+}
+function validateCheckboxContainer($checkboxContainer){
+	var valid = true;
+	if(!$checkboxContainer.find("input[type=checkbox]:checked").length){
+		valid = false;
+	}
+	return inspectValidity($checkboxContainer, valid);	
 }

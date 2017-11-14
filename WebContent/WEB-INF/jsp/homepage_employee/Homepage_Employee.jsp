@@ -75,11 +75,20 @@
 									<span class="total">${response.countProposals_waitingOnYou}</span>						
 
 								</label>
-								<c:if test="${response.countProposals_waitingOnYou_new > 0}">
-									<span class="total new red-bold">${response.countProposals_waitingOnYou_new}
-										new</span>
-								</c:if>
+<%-- 								<c:if test="${response.countProposals_waitingOnYou_new > 0}"> --%>
+<%-- 									<span class="total new red-bold">${response.countProposals_waitingOnYou_new} --%>
+<!-- 										new</span> -->
+<%-- 								</c:if> --%>
 							</div>
+							<c:if test="${response.countProposals_waitingOnYou_new > 0 }">
+								<div class="filter-item new">								
+									<input type="checkbox" id="new" class="new waiting-on-you">
+									<label for="new">
+										<span>New (not working yet)</span>
+										<span class="total red-bold">${response.countProposals_waitingOnYou_new } new</span>
+									</label>
+								</div>								
+							</c:if>								
 							<div class="filter-item">
 								<input checked id="waiting-on-other" type="checkbox" name="proposal-status"
 									data-waiting-on-you="0">

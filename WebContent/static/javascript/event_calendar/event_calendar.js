@@ -1,7 +1,12 @@
 
 $(document).ready(function(){
 	
+	$("body").on("click", "#user-event-calendar [data-job-id]", function() {
 	
+		var jobId = $(this).attr("data-job-id");
+		executeAjaxCall_showJobInfoMod(jobId, "find");
+		
+	})
 	$("body").on("mouseover", ".job-line", function() {
 		var jobId = $(this).attr("data-job-id");
 		$(".job-line[data-job-id=" + jobId + "]").each(function() {
@@ -165,6 +170,11 @@ function setEmploymentLines($calendar){
 		
 		$(job.line_elements).each(function(j, line_element) {
 			
+			var firstDate = line_element.leftEndPoint.date;
+			if (firstDate == undefined){
+				firstDate = line_element.rightEndPoint.date;
+			}
+			
 			var $td = $(getTdByDate($calendar, line_element.leftEndPoint.date));
 			if($td.length == 0) $td = $(getTdByDate($calendar, line_element.rightEndPoint.date));
 
@@ -178,7 +188,9 @@ function setEmploymentLines($calendar){
 				+ jobType_className + " "  
 				+ job.topMargin_className + " " 
 				+ leftMargin_className + "' "
-				+ "data-job-id=" + job.jobId + ">";
+				+ "data-job-id=" + job.jobId + " "
+				+ "data-first-date=" + $.datepicker.formatDate("yy-mm-dd", firstDate) + ">";
+			
 									
 			var additionMargin_endPoint = 30;
 			var tdWidth = $td.outerWidth();

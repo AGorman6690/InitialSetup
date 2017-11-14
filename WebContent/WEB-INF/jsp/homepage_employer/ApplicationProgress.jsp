@@ -24,6 +24,10 @@
 						<c:set var="param_userId" value="${applicationProgressStatus.applicantId }"></c:set>
 						<c:set var="param_userName" value="${applicationProgressStatus.applicantName }"></c:set>
 						<%@ include file="./../ratings/Template_RenderRatingsMod.jsp" %>
+						<c:if test="${applicationProgressStatus.currentProposal.isNew == 1 &&
+										applicationProgressStatus.isProposedToSessionUser }">
+							<span class="is-new red bold">New</span>
+						</c:if>
 						<div class="show-applicant-ratings-mod-0">
 							<c:choose>
 								<c:when test="${empty applicationProgressStatus.applicantRating }">
