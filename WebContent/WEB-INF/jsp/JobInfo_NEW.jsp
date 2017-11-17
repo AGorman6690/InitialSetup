@@ -24,20 +24,7 @@
 	<div class=" ${response.isApplyable ? 'show-apply-button' : '' }">
 		<input id="jobId" type="hidden" value="${response.job.id }">
 			<div>
-				<div class="">
-					<c:if test="${response.isEmployee }">
-						<div id="submit-application-error">
-							<div class="invalid-input-message">
-								<p>Invalid input</p>
-							</div>
-						</div>
-					</c:if>			
-					<c:if test="${response.isApplyable }">
-						<c:set var="thisIsAHack" value="1" />
-						<div id="apply-for-job-cont" class="fix-content-container">
-							<button id="apply-for-job" class="sqr-btn green">Apply for job</button>					
-						</div>
-					</c:if>
+				<div class="">		
 					<c:if test="${context == 'preview-job-post'}">
 						<c:set var="thisIsAHack" value="1" />
 						<div id="submit-job-info-container" class="fix-content-container center">
@@ -188,12 +175,10 @@
 								<c:if test="${ response.context =='find'}">
 									<p class="instructions employee-context">Please select the work days you want to work</p>
 								</c:if>
-								<p>This job allows partial availability.</p>
-								<p>${response.isEmployee? 'You' : 'Applicant'} can apply for one or more days.</p>
+								<p>This job allows partial availability. ${response.isEmployee? 'You' : 'Applicant'} can apply for one or more days.</p>
 							</c:when>
 							<c:otherwise>
-								<p>This job does not allow partial availability.</p>
-								<p>${response.isEmployee ? 'You' : 'Applicant'} must apply for all days.</p>
+								<p>This job does not allow partial availability. ${response.isEmployee ? 'You' : 'Applicant'} must apply for all days.</p>
 							</c:otherwise>
 						</c:choose>
 					</p> 
@@ -226,6 +211,18 @@
 					data-lat="${response.job.lat }" data-lng="${response.job.lng }"></div>
 			</div>
 		</div>	
+		<c:if test="${response.isApplyable }">
+			<c:set var="thisIsAHack" value="1" />
+			<div id="apply-for-job-cont" class="fix-content-container-1">
+				<button id="apply-for-job" class="sqr-btn green">Apply for job</button>	
+				<div id="submit-application-error">
+					<div class="invalid-input-message">
+						<p>Invalid input</p>
+					</div>
+				</div>				
+			</div>
+
+		</c:if>
 	</div>
 	<div id="json_work_day_dtos">${response.json_workDayDtos }</div>
 

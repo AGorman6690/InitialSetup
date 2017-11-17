@@ -280,6 +280,15 @@ function initCalendar_setStartAndEndTimes($cal){
 function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
 										, numberOfMonths){
 	
+	
+	// ****************************************************************************
+	// ****************************************************************************
+	// TODO: Refactor.
+	// This has become ridiculous.
+	// ****************************************************************************
+	// ****************************************************************************
+	
+	
 	$calendar.datepicker({
 		minDate: new Date(),
 		numberOfMonths: numberOfMonths, 
@@ -385,8 +394,10 @@ function initCalendar_selectWorkDays($calendar, $calendar_startAndEndTimes
      		// Maybe because this calendar is not initially visible on page load???
 //     		changePrevNextText($calendar, "<<", ">>");
      		
-     		renderWorkDayTimes();
-     		
+     		if($calendar.attr("id") == "workDaysCalendar_postJob"){
+     			renderWorkDayTimes();
+     		}
+     			
 			if($calendar.hasClass("invalid")){
 				validateCalendar($calendar);
 			}

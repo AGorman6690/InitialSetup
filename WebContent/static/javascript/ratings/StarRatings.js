@@ -10,7 +10,6 @@ $(document).ready(function() {
 })
 
 function renderStars($e_container){
-	console.log($e_container.find(".rating-loading").length);
 	$e_container.find(".rating-loading").rating({
 		min: 0,
 		max: 5,

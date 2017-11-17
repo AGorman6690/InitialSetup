@@ -5,7 +5,7 @@
 	width: 400px;
 }
 #distance-filter{
-    width: 725px;
+    width: 895px;
     margin: auto;	
     height: 37px;
 }
@@ -19,8 +19,12 @@
 /*     background: #f7f7f7; */
     border-bottom: 1px solid#cacaca;
 }
+#bottom-content.show-days-available{
+	width: 1345px;
+}
 #bottom-content{
-	width: 1400px;
+/* 	width: 1175px; */
+	width: 1345px;
 	margin: auto;
 }
 #bottom-content.no-data{
@@ -28,6 +32,8 @@
 }
 #distance-filter span{
 	color: #fff;
+	margin: 0px 10px;
+    font-size: 19px;
 }
 #distance-filter #find-employees{
 /*     padding: 15px 27px; */
@@ -47,10 +53,6 @@
 }
 #work-days-filter-value .v2 .ui-datepicker-inline{
 	width: auto;
-}
-#distance-filter #miles-from{
-	margin: 0px 10px;
-    font-size: 19px;
 }
 .filter .glyphicon{
 	float: right;

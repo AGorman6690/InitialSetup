@@ -9,12 +9,6 @@ $(document).ready(function(){
 
 })
 
-function showIfNoContainer(request,$e) {
-	var $cont = $e.closest(".rate-criterion").find(".if-no").eq(0);
-	if(request) $cont.slideDown(400);
-	else $cont.slideUp(400);
-}
-
 
 function submitEmployerRating(request){
 

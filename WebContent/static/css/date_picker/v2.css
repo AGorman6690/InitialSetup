@@ -13,6 +13,10 @@
 .v2 td.is-complete,
 .v2 td.is-complete .added-content{
 	background: #cacaca;
+	opacity: 0.7;
+}
+.v2 td.is-complete .select-work-day{
+	display: none;
 }
 .v2 .calendar td.ui-datepicker-other-month{
 	border: 0

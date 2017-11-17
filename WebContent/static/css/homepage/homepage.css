@@ -1,3 +1,6 @@
+.column{
+	padding-top: 25px;
+}
 #rating-required h1{
 	color: #ea0000;
     border-top: 2px solid #ce1a1a;

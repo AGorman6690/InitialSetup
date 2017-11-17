@@ -1,7 +1,15 @@
+html, body, .a-container, #personal-info-container{
+	height: 100%;
+}
+#personal-info-container{
+	background: #f7f7f7;
+	padding-left: 10px;
+	padding-right: 10px;
+	font-size: 15px;
+}
 .a-container{
 	width: 1200px;
 	margin: auto;
-	padding-top: 25px;
 }
 .personal-info-item{
 	padding-bottom: 25px;
@@ -38,8 +46,9 @@
 }
 #personal-info-container{
 	padding-right: 15px;
-	border-right: 1px solid #cacaca;
-	margin-right: 40px;
+	border-left: 1px solid #cacaca;
+    margin-right: 40px;
+    box-shadow: 3px 3px 3px #cacaca;
 }
 #image img{
 	display: block;

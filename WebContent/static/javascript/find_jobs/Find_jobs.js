@@ -9,6 +9,16 @@ $(document).ready(function(){
 	    }
 	});
 	
+	$("body").on("click", ".job", function(e) {
+		if ($(e.target).hasClass("do-not-show-job-info") == 0){
+			if($(e.target).hasClass("job")){
+				showJobInfo($(this));
+			}else{
+				showJobInfo($(this).closest(".job"));
+			}			
+		}
+	})
+	
 	$("body").on("click", "#get-more-jobs", function(){
 		var findJobsRequest = getFindJobsRequest();	
 		findJobsRequest.isAppendingJobs = true;		
@@ -189,7 +199,7 @@ function applyFilter($e) {
 }
 function executeAjaxCall_getFilteredJobs(findJobsRequest, doSetMap){
 	
-	if(validateInputElements($("#location-filter"))){
+	if(validateInputElements($("#location-filter-wrapper"))){
 		broswerIsWaiting(true);
 		var isAppendingJobs = findJobsRequest.isAppendingJobs;
 		

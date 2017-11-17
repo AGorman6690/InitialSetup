@@ -255,9 +255,15 @@ function executeAjaxCall_findEmployees(){
 			broswerIsWaiting(false);
 			$e = $("#results");
 			$e.empty();
-			$e.append(html);
+			$e.append(html);			
 			$("#bottom-content").slideDown();
 			renderStars($e);
+			
+			if ($("#days-available-result").length){
+				$("#bottom-content").addClass("show-days-available");
+			}else{
+				$("#bottom-content").removeClass("show-days-available");
+			}
 	
 		})
 	}

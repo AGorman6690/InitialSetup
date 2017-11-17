@@ -2,10 +2,8 @@
 <%@ include file="../includes/resources/InputValidation.jsp"%>
 <%@ include file="../includes/resources/WageProposal.jsp" %>
 <%@ include file="../includes/resources/StarRatings.jsp" %>
-<%@ include file="../includes/resources/Modal.jsp" %>
 
 
-<script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <script src="<c:url value="/static/javascript/find_employees/FindEmployees.js" />"></script>
 <link href="/JobSearch/static/css/find_employees/find_employees.css" rel="stylesheet" />
 <link href="/JobSearch/static/css/find_employees/results.css" rel="stylesheet" />
@@ -30,16 +28,14 @@
 <!-- 		<button id="job-i-might-post" class="sqr-btn teal">I am thinking about posting</button> -->
 <!-- 	</div> -->
 <%-- </c:if> --%>
-<div class="main-header-lable">
-	<h1>Find Employees</h1>
-</div>
 <div id="distance-filter-wrapper">
 	<div id="distance-filter" class="validate-input">
-		<input id="miles" class="select-all" type="text" placeholder="number of"
-			value="${not empty response ? response.radiusSearched : '50' }"/>
+		<span id="miles-from">Find employees</span>
+		<input id="miles" class="select-all" type="text" placeholder="#"
+			value="${not empty response ? response.radiusSearched : '' }"/>
 		<span id="miles-from">miles from</span>
 		<input id="address" class="select-all" type="text" placeholder="city, state, zip"
-			value="${not empty response ? response.addressSearched : '55119' }"/>
+			value="${not empty response ? response.addressSearched : '' }"/>
 		<span id="find-employees" class="glyphicon glyphicon-search"></span>
 	</div>
 </div>

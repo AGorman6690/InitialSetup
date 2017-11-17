@@ -9,13 +9,14 @@
 
 <div class="page-cont">
 	<div id="header">
-		<div id="location-filter">
-			<div class="validate-input">
-				<input id="miles" type="text" placeholder="number of" data-greater-than="0"
-					value="${!empty sessionScope.user.maxWorkRadius && sessionScope.user.maxWorkRadius > 0 ? sessionScope.user.maxWorkRadius : ''}"/>
+		<div id="location-filter-wrapper">
+			<div id="location-filter" class="validate-input">
+				<span>Find jobs</span>
+				<input id="miles" type="text" placeholder="#" data-greater-than="0"
+					value="${!empty sessionScope.user.maxWorkRadius && sessionScope.user.maxWorkRadius > 0 ? sessionScope.user.maxWorkRadius : '50'}"/>
 				<span>miles from</span>
-				<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '' }"/>
-				<button id="get-jobs" class="sqr-btn green">Get Jobs</button>
+				<input id="address" type="text" placeholder="city, state, zip code" value="${!empty address ? address : '55119' }"/>
+				<span id="get-jobs" class="glyphicon glyphicon-search"></span>
 			</div>
 		</div>
 <!-- 		<div id="applied-filters"></div> -->

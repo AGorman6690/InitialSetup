@@ -11,10 +11,10 @@
 
 <div class="a-container">
 
-	<div id="personal-info-container">
+	<div id="personal-info-container" class="column">
 		<%@ include file="../homepage/Personal_Info.jsp" %>			
 	</div>	
-	<div id="jobs-list">
+	<div id="jobs-list" class="column">
 		<div id="required-ratings">
 			<%@ include file="../ratings/RatingRequired.jsp" %>
 		</div>	

@@ -4,12 +4,7 @@ var workDayDtos = [];
 $(document).ready(function() {
 	
 	$("body").on("click", ".show-job-info-mod", function() {
-		var $e = $(this);
-		var jobId = $e.attr("data-job-id");
-		var p = $e.attr("data-p");
-		var context = $e.attr("data-context");
-		
-		executeAjaxCall_showJobInfoMod(jobId, context, p);
+		showJobInfo($(this));		
 	})
 	
 	$("body").on("click", ".show-ratings-mod", function() {	
@@ -47,6 +42,12 @@ $(document).ready(function() {
 	workDayDtos = parseWorkDayDtosFromDOM($("#json_work_day_dtos"));
 	initCalendar_new($("#work-days-calendar-container .calendar"), workDayDtos);	
 }) 
+function showJobInfo($e){
+	var jobId = $e.attr("data-job-id");
+	var p = $e.attr("data-p");
+	var context = $e.attr("data-context");
+	executeAjaxCall_showJobInfoMod(jobId, context, p);
+}
 function executeAjaxCall_showJobInfoMod(jobId, c, p, callback) {
 	
 	var url = "/JobSearch/job/";

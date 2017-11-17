@@ -3,6 +3,8 @@
 
 
 <link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings/rate_employees.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings/rate.css" />
+<link rel="stylesheet" type="text/css" href="/JobSearch/static/css/ratings/rate_employer.css" />
 
 <script src="/JobSearch/static/javascript/ratings/Rate.js" type="text/javascript"></script>
 <script src="/JobSearch/static/javascript/ratings/RateEmployees.js" type="text/javascript"></script>

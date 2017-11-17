@@ -395,7 +395,7 @@ public class UserServiceImpl extends BaseService {
 		
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		LocalDateTime now = LocalDateTime.now();
-		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse();		
+		ViewEmployerHomepageResponse response = new ViewEmployerHomepageResponse(session);		
 		List<Job> jobs = jobService.getJobs_openByEmployer(employer.getUserId());
 		
 		// User profile info

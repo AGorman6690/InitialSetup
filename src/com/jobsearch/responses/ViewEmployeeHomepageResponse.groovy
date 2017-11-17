@@ -6,21 +6,21 @@ import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.model.Job
 import com.jobsearch.model.JobSearchUser
 import com.jobsearch.model.Proposal
+import javax.servlet.http.HttpSession
 
-class ViewEmployeeHomepageResponse {
+public class ViewEmployeeHomepageResponse extends BaseResponse {
 	
-	List<ApplicationProgressResponse> applicationProgressResponses
-
-	List<ApplicationProgressStatus> ApplicationProgressStatuses
+	List<ApplicationProgressResponse> applicationProgressResponses = new ArrayList<>();
+	List<ApplicationProgressStatus> ApplicationProgressStatuses = new ArrayList<>();
 	long countProposals_waitingOnYou;
 	long countProposals_waitingOnYou_new;
 	long countProposals_waitingOnOther;
 	long countJobs_employment;
 	ProfileInfoDto profileInfoDto;
 	
-	public ViewEmployeeHomepageResponse(){
-		ApplicationProgressStatuses = new ArrayList<>();	
-		applicationProgressResponses = new ArrayList<>();
+	public ViewEmployeeHomepageResponse(){}
+	public ViewEmployeeHomepageResponse(HttpSession session){
+		super(session);
 	}
 
 	public static class ApplicationProgressStatus{

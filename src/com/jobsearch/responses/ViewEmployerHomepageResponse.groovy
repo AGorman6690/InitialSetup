@@ -2,17 +2,20 @@ package com.jobsearch.responses
 
 import com.jobsearch.dtos.ProfileInfoDto;
 import com.jobsearch.model.Job
+import javax.servlet.http.HttpSession
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
 
-public class ViewEmployerHomepageResponse{
-	
+public class ViewEmployerHomepageResponse extends BaseResponse{
+
 	ProfileInfoDto profileInfoDto;
+	List<EmployerHomepageJob> employerHomepageJobs = new ArrayList<>();
 	
-	public ViewEmployerHomepageResponse(){
-		employerHomepageJobs = new ArrayList<>();
+	public ViewEmployerHomepageResponse() {}
+	public ViewEmployerHomepageResponse(HttpSession session) {
+		super(session);
 	}
-	
-	List<EmployerHomepageJob> employerHomepageJobs;
-	
+
 	public static class EmployerHomepageJob{
 		Job job
 		long countWageProposals_sent

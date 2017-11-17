@@ -14,7 +14,7 @@
 					<th>Jobs Completed</th>
 					<th>Home Location</th>
 					<c:if test="${not empty response.countDatesSearched }">
-						<th>Days Available</th>
+						<th id="days-available-result">Days Available</th>
 					</c:if>
 					<th></th>
 				</tr>
@@ -53,7 +53,7 @@
 						
 						
 						<td>
-							<span class="make-an-offer linky-hover" data-user-id="${user.user.userId }">
+							<span class="make-an-offer pointer" data-user-id="${user.user.userId }">
 								Make An Offer
 							</span>
 							<div class="make-offer-container"></div>

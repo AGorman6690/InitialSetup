@@ -349,7 +349,12 @@ public class ProposalServiceImpl{
 		JobSearchUser sessionUser = SessionContext.getUser(session);
 		Job job = jobService.getJob(request.getJobId());
 
-		List<WorkDay> proposedDays = workDayService.getWorkDays_byJobAndDateStrings(request.getJobId(), request.getProposedDates());
+		List<WorkDay> proposedDays;
+		if (job.getIsPartialAvailabilityAllowed()){
+			proposedDays = workDayService.getWorkDays_byJobAndDateStrings(request.getJobId(), request.getProposedDates());
+		}else{
+			proposedDays = workDayService.getWorkDays(job.getId());
+		}
 		LocalDateTime now = LocalDateTime.now();
 		LocalDateTime expiration = getExpirationDate(now, request, proposedDays);
 		
